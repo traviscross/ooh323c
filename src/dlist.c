@@ -117,6 +117,18 @@ void dListRemove (DList* pList, DListNode* node)
    pList->count--;
 }
 
+void dListFindAndRemove(DList* pList, void *data)
+{
+   DListNode *pNode, *pNextNode;
+   for(pNode = pList->head; pNode !=0; pNode = pNextNode){
+      pNextNode = pNode->next;
+      if(pNode->data == data) /* pointer comparison*/
+         break;
+   }
+   if(pNode)
+      dListRemove(pList, pNode);
+}
+   
 DListNode* dListFindByIndex (DList* pList, int index)
 {
    DListNode* curNode;
@@ -137,7 +149,7 @@ DListNode* dListInsertBefore
    DListNode* pListNode = (DListNode*) memAlloc (pctxt, sizeof(DListNode));
  
    if (0 != pListNode) {
-      pListNode->data = pData;
+      pListNode->data = (void*)pData;
 
       if (node == 0) { /* insert before end (as last element) */
          pListNode->next = (DListNode*) 0;
@@ -186,7 +198,7 @@ DListNode* dListInsertAfter
    DListNode* pListNode = (DListNode*) memAlloc (pctxt, sizeof(DListNode));
 
    if (0 != pListNode) {
-      pListNode->data = pData;
+      pListNode->data = (void*)pData;
 
       if (node == 0) { /* insert as head (as first element) */
          pListNode->next = pList->head;
@@ -226,3 +238,4 @@ DListNode* dListInsertAfter
 
    return pListNode;
 }
+

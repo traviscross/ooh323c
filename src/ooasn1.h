@@ -826,7 +826,7 @@ EXTERN DListNode* dListInsertAfter
  *                     already be in the linked list structure.
  */
 EXTERN void  dListRemove (DList* pList, DListNode* node);
-
+void dListFindAndRemove(DList* pList, void* data);
 
 /**
  * This function is used to initialize a singly-linked list

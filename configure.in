@@ -51,5 +51,5 @@ AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname
 
 dnl AC_CONFIG_FILES([src/Makefile media/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile])
 dnl AC_OUTPUT
-AC_OUTPUT(Makefile src/Makefile media/Makefile tests/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile)
+AC_OUTPUT(Makefile src/Makefile media/Makefile tests/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile tests/chansetup/Makefile)
 dnl AC_OUTPUT(media/Makefile)
