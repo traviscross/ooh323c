@@ -111,7 +111,7 @@ int main(int argc, char ** argv)
       
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
-   ret = ooInitializeH323Ep("simple.log", 1, 1, 30, 9, 0, 71, "obj-sys",
+   ret = ooInitializeH323Ep("simple.log", 1, 1, 50, 9, 0, 71, "obj-sys",
                       "Version 0.4", T_H225CallType_pointToPoint, 1720,
                       "objsyscall", "simple", OO_CALLMODE_AUDIOCALL);
    if(ret != OO_OK)
