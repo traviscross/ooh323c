@@ -119,9 +119,6 @@ static char* callStates[] = {
 #define OO_LOGICALCHAN_PROPOSED    71
 #define OO_LOGICALCHAN_ESTABLISHED 72
 
-
-
-
 /**
    Terminal type of the endpoint. Default is 60.
 */

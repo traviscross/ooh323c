@@ -985,13 +985,16 @@ int ooCloseAllLogicalChannels(ooCallData *call)
    temp = call->logicalChans;
    while(temp)
    {
-      /* Sending closelogicalchannel only for outgoing channels*/
-      if(!strcmp(temp->dir, "transmit"))
+      if(temp->state == OO_LOGICALCHAN_ESTABLISHED)
       {
-       ooSendCloseLogicalChannel(call, temp);
-      }
-      else{
-         ooSendRequestCloseLogicalChannel(call, temp);
+         /* Sending closelogicalchannel only for outgoing channels*/
+         if(!strcmp(temp->dir, "transmit"))
+         {
+            ooSendCloseLogicalChannel(call, temp);
+         }
+         else{
+            ooSendRequestCloseLogicalChannel(call, temp);
+         }
       }
       temp = temp->next;
    }

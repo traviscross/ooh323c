@@ -1012,8 +1012,7 @@ int ooAcceptCall(ooCallData *call)
 
    connect->destinationInfo.m.vendorPresent = 1;
    vendor = &connect->destinationInfo.vendor;
-  
-  
+     
    vendor->vendor.t35CountryCode = gH323ep.t35CountryCode;
    vendor->vendor.t35Extension = gH323ep.t35Extension;
    vendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
@@ -1037,7 +1036,7 @@ int ooAcceptCall(ooCallData *call)
    if(gH323ep.fastStart && call->remoteFastStartOLCs.count>0)
    {
       pFS = (ASN1DynOctStr*)ASN1MALLOC(q931msg->pctxt,
-                                call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
+                        call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
       memset(pFS, 0, call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
 
       connect->m.fastStartPresent = TRUE;
@@ -1048,37 +1047,41 @@ int ooAcceptCall(ooCallData *call)
          /* Forward Channel */
          if(olc->forwardLogicalChannelParameters.dataType.t != T_H245DataType_nullData)
          {
-            epCap = ooIsDataTypeSupported(call, &olc->forwardLogicalChannelParameters.dataType,
-                                       T_H245Capability_receiveAudioCapability);
+            epCap = ooIsDataTypeSupported(call,
+                                &olc->forwardLogicalChannelParameters.dataType,
+                                T_H245Capability_receiveAudioCapability);
             if(!epCap)
                continue;
             OOTRACEINFO1("Receive Channel data type supported\n");
             if(olc->forwardLogicalChannelParameters.multiplexParameters.t !=
                T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
-                        {
-               OOTRACEERR4("ERROR:Unknown multiplex parameter type for challen %d "
-                           "(%s, %s)\n", olc->forwardLogicalChannelNumber,
+            {
+               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
+                           "channel %d (%s, %s)\n",
+                           olc->forwardLogicalChannelNumber,
                            call->callType, call->callToken);
                continue;
-                        }
+            }
             if(ooIsSessionEstablished(call, olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "receive"))
                continue;
          }
          else if(olc->m.reverseLogicalChannelParametersPresent)
          {
-            epCap = ooIsDataTypeSupported(call, &olc->reverseLogicalChannelParameters.dataType,
-                                       T_H245Capability_transmitAudioCapability);
+            epCap = ooIsDataTypeSupported(call,
+                                &olc->reverseLogicalChannelParameters.dataType,
+                                T_H245Capability_transmitAudioCapability);
             if(!epCap)
                continue;
             OOTRACEINFO1("Transmit Channel data type supported\n");
             if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
                T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
-                        {
-               OOTRACEERR4("ERROR:Unknown multiplex parameter type for challen %d "
-                           "(%s, %s)\n", olc->forwardLogicalChannelNumber,
+            {
+               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
+                           "channel %d (%s, %s)\n",
+                           olc->forwardLogicalChannelNumber,
                            call->callType, call->callToken);
                continue;
-                        }
+            }
             if(ooIsSessionEstablished(call, olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "transmit"))
                continue;
            
@@ -1086,57 +1089,61 @@ int ooAcceptCall(ooCallData *call)
             h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
             if(!h2250lcp)
             {
-               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No reverse "
-                           "Logical Channel Parameters found. (%s, %s)\n",
-                           call->callType, call->callToken);
+               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
+                           "reverse Logical Channel Parameters found. "
+                           "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
             if(!h2250lcp->m.mediaChannelPresent)
             {
-               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No reverse "
-                           "media channel information found. (%s, %s)\n",
-                           call->callType, call->callToken);
+               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
+                           "reverse media channel information found. "
+                           "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
-            if(h2250lcp->mediaChannel.t != T_H245TransportAddress_unicastAddress)
+            if(h2250lcp->mediaChannel.t !=
+                                         T_H245TransportAddress_unicastAddress)
             {
-               OOTRACEERR3("ERROR:Unsupported media channel address type (%s, %s)\n",
-                            call->callType, call->callToken);
+               OOTRACEERR3("ERROR:Unsupported media channel address type "
+                           "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
      
-                unicastAddress = h2250lcp->mediaChannel.u.unicastAddress;
+            unicastAddress = h2250lcp->mediaChannel.u.unicastAddress;
             if(unicastAddress->t != T_H245UnicastAddress_iPAddress)
             {
-               OOTRACEERR3("ERROR:media channel address type is not IP(%s, %s)\n",
-                            call->callType, call->callToken);
+               OOTRACEERR3("ERROR:media channel address type is not IP"
+                           "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
             remoteRtpPort = unicastAddress->u.iPAddress->tsapIdentifier; 
-           
-                 }
-         respOlc = (H245OpenLogicalChannel*) ASN1MALLOC(pctxt, sizeof(H245OpenLogicalChannel));
+         }
+         respOlc = (H245OpenLogicalChannel*) ASN1MALLOC(pctxt,
+                                               sizeof(H245OpenLogicalChannel));
          memset(respOlc, 0, sizeof(H245OpenLogicalChannel));
 
          respOlc->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
         
-                 ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, q931msg->pctxt);
+         ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, q931msg->pctxt);
         
-                 pChannel = ooFindLogicalChannelByLogicalChannelNo(call, respOlc->forwardLogicalChannelNumber);
+         pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
+                                         respOlc->forwardLogicalChannelNumber);
   
-         if(olc->forwardLogicalChannelParameters.dataType.t == T_H245DataType_nullData)
+         if(olc->forwardLogicalChannelParameters.dataType.t ==
+                                                      T_H245DataType_nullData)
          {
             pChannel->remoteRtpPort = remoteRtpPort;
             if(epCap->startTransmitChannel)
             {  
                epCap->startTransmitChannel(call, pChannel);     
-               OOTRACEINFO3("Transmit channel of type audio started (%s, %s)\n",
-                             call->callType, call->callToken);
+               OOTRACEINFO3("Transmit channel of type audio started "
+                            "(%s, %s)\n", call->callType, call->callToken);
                call->isAudioActive = 1;
             }
             else{
-                   OOTRACEERR3("ERROR:No callback registered to start transmit audio channel"
-                           " (%s, %s)\n", call->callType, call->callToken);
+               OOTRACEERR3("ERROR:No callback registered to start transmit"
+                           " audio channel (%s, %s)\n", call->callType,
+                           call->callToken);
                return OO_FAILED;
             }
          }
@@ -1144,8 +1151,8 @@ int ooAcceptCall(ooCallData *call)
          setPERBuffer(q931msg->pctxt, NULL, 0, 1);
          if(asn1PE_H245OpenLogicalChannel(pctxt, respOlc) != ASN_OK)
          {
-            OOTRACEERR3("ERROR:Encoding of olc failed for faststart (%s, %s)\n",
-                        call->callType, call->callToken);
+            OOTRACEERR3("ERROR:Encoding of olc failed for faststart "
+                        "(%s, %s)\n", call->callType, call->callToken);
             freeContext(pctxt);
             ASN1CRTFREE0(pctxt);
             if(call->callState < OO_CALL_CLEAR)
@@ -1159,12 +1166,11 @@ int ooAcceptCall(ooCallData *call)
          respOlc = NULL;
          olc = NULL;
                  j++;
-          }
-      OOTRACEINFO4("Added %d fast start elements to CONNECT message (%s, %s)\n",
-                   j, call->callType, call->callToken);
+      }
+      OOTRACEINFO4("Added %d fast start elements to CONNECT message "
+                   "(%s, %s)\n",  j, call->callType, call->callToken);
       connect->fastStart.n = j;
       connect->fastStart.elem = pFS;
-
    }
    ooSendH225Msg(call, q931msg);
    OOTRACEINFO3("Built H.225 Connect message (%s, %s)\n", call->callType,
@@ -1263,14 +1269,15 @@ int ooH323MakeCall_helper(ooCallData *call)
    if(strlen(gH323ep.callername)>0)
    {
       setup->m.sourceAddressPresent = TRUE;
-      pAliasAddress = (H225AliasAddress*)ASN1MALLOC(pctxt, sizeof(H225AliasAddress));
+      pAliasAddress = (H225AliasAddress*)ASN1MALLOC(pctxt,
+                                                    sizeof(H225AliasAddress));
       memset(pAliasAddress, 0, sizeof(H225AliasAddress));
       pAliasAddress->t = T_H225AliasAddress_h323_ID;
       pAliasAddress->u.h323_ID.nchars = strlen(gH323ep.callername);
       pAliasAddress->u.h323_ID.data = (ASN116BITCHAR*)ASN1MALLOC(pctxt,
                             strlen(gH323ep.callername)*sizeof(ASN116BITCHAR));
       for(i=0;i<(int)strlen(gH323ep.callername); i++)
-         pAliasAddress->u.h323_ID.data[i] = (ASN116BITCHAR)gH323ep.callername[i];
+        pAliasAddress->u.h323_ID.data[i] = (ASN116BITCHAR)gH323ep.callername[i];
       dListInit(&setup->sourceAddress);
       dListAppend(pctxt, &setup->sourceAddress, pAliasAddress);
    }
@@ -1331,9 +1338,9 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the source Call Signal Address */
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
- /*  ooGetLocalIPAddress(localip);
+  /*  ooGetLocalIPAddress(localip);
    sscanf(localip, "%d.%d.%d.%d", &addr_part1, &addr_part2, &addr_part3,
-                                  &addr_part4);*/
+   &addr_part4);*/
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                &addr_part3, &addr_part4);
 
@@ -1370,7 +1377,7 @@ int ooH323MakeCall_helper(ooCallData *call)
             freeContext(pctxt);
             ASN1CRTFREE0(pctxt);
             if(call->callState < OO_CALL_CLEAR)
-                        {
+            {
                call->callEndReason = OO_HOST_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }

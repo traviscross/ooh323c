@@ -43,7 +43,6 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
       gH323ep.fptraceFile = stdout;
    }
   
-  
    /* Initialize default port ranges that will be used by stack.
       Apps can override these by explicitely setting port ranges
    */

@@ -100,8 +100,6 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
                               cb_OnCallCleared onCallCleared,
                               cb_OnStartLogicalChannel onStartLogicalChannel);
 
-
-
 /**
  * This function is the last function to be invoked after done using the
  * stack. It closes the H323 Endpoint for an application, releasing all
