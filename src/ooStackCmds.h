@@ -82,7 +82,7 @@ EXTERN int ooHangCall(char * callToken);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooStopMonitor();
+EXTERN int ooStopMonitor(void);
 
 /**
  * @}

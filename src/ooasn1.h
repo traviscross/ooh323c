@@ -687,7 +687,7 @@ EXTERN void freeContext (OOCTXT* pctxt);
  *
  * @return             Pointer to newly created context
  */
-EXTERN OOCTXT* newContext ();
+EXTERN OOCTXT* newContext (void);
 
 EXTERN void copyContext (OOCTXT* pdest, OOCTXT* psrc);
 EXTERN int  initSubContext (OOCTXT* pctxt, OOCTXT* psrc);
@@ -826,7 +826,7 @@ EXTERN void sListFree (SList* pList);
  *
  * @return         Pointer to the newly created list.
  */
-EXTERN SList* sListCreate ();
+EXTERN SList* sListCreate (void);
 
 /**
  * This function is used to create a singly-linked list. The memory

@@ -53,7 +53,7 @@ extern "C" {
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCreateH323Listener();
+EXTERN int ooCreateH323Listener(void);
 
 /**
  * This function is used to create a listener for incoming H.245 connections.
@@ -69,7 +69,7 @@ EXTERN int ooCreateH245Listener(ooCallData *call);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAcceptH225Connection();
+EXTERN int ooAcceptH225Connection(void);
 
 /**
  * This function is used to accept an incoming H.245 connection.
@@ -120,7 +120,7 @@ EXTERN int ooCloseH245Connection(ooCallData *call);
  * @param None
  *
  */
-EXTERN int ooMonitorChannels();
+EXTERN int ooMonitorChannels(void);
 
 /**
  * This function is called to stop the monitor channels thread.
@@ -129,7 +129,7 @@ EXTERN int ooMonitorChannels();
  *
  * @return           OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooStopMonitorCalls();
+EXTERN int ooStopMonitorCalls(void);
 
 /**
  * This function is used to receive an H.2250 message received on a calls

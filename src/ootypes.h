@@ -226,7 +226,7 @@ typedef int (*ChannelCallback)(void*);
  * Type of callback function registered at initialization
  * for handling commands
  */
-typedef int (*CommandCallback)();
+typedef int (*CommandCallback)(void);
 
 /** Stores base value for generating new call token */
 int gCallTokenBase;
