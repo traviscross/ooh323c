@@ -1268,10 +1268,9 @@ int ooH323MakeCall_helper(ooCallData *call)
       pAliasAddress->t = T_H225AliasAddress_h323_ID;
       pAliasAddress->u.h323_ID.nchars = strlen(gH323ep.callername);
       pAliasAddress->u.h323_ID.data = (ASN116BITCHAR*)ASN1MALLOC(pctxt,
-                                     strlen(gH323ep.callername)*sizeof(ASN116BITCHAR));
+                            strlen(gH323ep.callername)*sizeof(ASN116BITCHAR));
       for(i=0;i<(int)strlen(gH323ep.callername); i++)
          pAliasAddress->u.h323_ID.data[i] = (ASN116BITCHAR)gH323ep.callername[i];
-
       dListInit(&setup->sourceAddress);
       dListAppend(pctxt, &setup->sourceAddress, pAliasAddress);
    }
@@ -1286,20 +1285,19 @@ int ooH323MakeCall_helper(ooCallData *call)
    {
       setup->sourceInfo.vendor.m.productIdPresent=TRUE;
       setup->sourceInfo.vendor.productId.numocts = ASN1MIN(
-                                                   strlen(gH323ep.productID),
+                              strlen(gH323ep.productID),
                               sizeof(setup->sourceInfo.vendor.productId.data));
       strncpy((char*)setup->sourceInfo.vendor.productId.data,
                 gH323ep.productID, setup->sourceInfo.vendor.productId.numocts);
    }
    else
       setup->sourceInfo.vendor.m.productIdPresent=FALSE;
-
   
    if(gH323ep.versionID)
    {
       setup->sourceInfo.vendor.m.versionIdPresent=TRUE;
       setup->sourceInfo.vendor.versionId.numocts = ASN1MIN(
-                                                   strlen(gH323ep.versionID),
+                              strlen(gH323ep.versionID),
                               sizeof(setup->sourceInfo.vendor.versionId.data));
       strncpy((char*)setup->sourceInfo.vendor.versionId.data,
               gH323ep.versionID, setup->sourceInfo.vendor.versionId.numocts);
@@ -1394,20 +1392,18 @@ int ooH323MakeCall_helper(ooCallData *call)
             }
             return OO_FAILED;
          }
-       
-                 memset(olc, 0, sizeof(H245OpenLogicalChannel));
-
-                 olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
+         memset(olc, 0, sizeof(H245OpenLogicalChannel));
+         olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
          if(call->logicalChanNoCur > call->logicalChanNoMax)
             call->logicalChanNoCur = call->logicalChanNoBase;
        
-                 ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt);
+         ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt);
          /* Do not specify msg buffer let automatic allocation work */
          setPERBuffer(pctxt, NULL, 0, aligned);
          if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
          {
-            OOTRACEERR3("ERROR:Encoding of olc failed for faststart (%s, %s)\n",
-                        call->callType, call->callToken);
+            OOTRACEERR3("ERROR:Encoding of olc failed for faststart (%s, %s)"
+                        "\n", call->callType, call->callToken);
             freeContext(pctxt);
             ASN1CRTFREE0(pctxt);
             if(call->callState < OO_CALL_CLEAR)
@@ -1419,7 +1415,7 @@ int ooH323MakeCall_helper(ooCallData *call)
          }
          pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
          olc = NULL;
-          }
+      }
       OOTRACEINFO4("Added %d fast start elements to SETUP message (%s, %s)\n",
                    i, call->callType, call->callToken);
       setup->fastStart.n = i;
@@ -1459,8 +1455,8 @@ int ooH323MakeCall_helper(ooCallData *call)
    if(gH323ep.fastStart)
       q931msg->userInfo->h323_uu_pdu.h245Tunneling = TRUE;
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built SETUP message (%s, %s)\n", call->callType, call->callToken);
-
+   OOTRACEINFO3("Built SETUP message (%s, %s)\n", call->callType,
+                 call->callToken);
    return OO_OK;
 }
 
@@ -1484,7 +1480,6 @@ int ooH323HangCall(char * callToken)
       call->callEndReason = OO_HOST_CLEARED;
       call->callState = OO_CALL_CLEAR;
    }
-
    return OO_OK;
 }
 
