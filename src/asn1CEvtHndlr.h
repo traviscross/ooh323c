@@ -21,7 +21,7 @@
 /**
  * @defgroup Asn1CEventHandler Asn1CEventHandler
  * Asn1CEventHandler is a structure type used for user-defined event handlers.
- * @ingroup cppruntime
+ * @ingroup cruntime
  * @{
  */
 

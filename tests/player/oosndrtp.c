@@ -15,8 +15,8 @@
  *****************************************************************************/
 
 #include "oosndrtp.h"
-#include "ooports.h"
-#include "oo.h"
+#include "ooCommon.h"
+
 
 static MediaAPI_CreateTxRTPChan   FuncPtr_CreateTxRTPChan = 0;
 static MediaAPI_CloseTxRTPChan    FuncPtr_CloseTxRTPChan = 0;
@@ -41,7 +41,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(media == 0)
    {
-      OOTRACEERR2("ERROR:Failed to load plug-in library %s\n", name);
+      printf("ERROR:Failed to load plug-in library %s\n", name);
       return OO_FAILED;
    }
   
@@ -55,7 +55,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_InitializePlugin == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooInitializePlugin\n");
       return OO_FAILED;
    }
@@ -69,7 +69,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_CreateTxRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooCreateTransmitRTPChannel\n");
       return OO_FAILED;
    }
@@ -83,7 +83,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_CloseTxRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooCloseTransmitRTPChannel\n");
       return OO_FAILED;
    }
@@ -97,7 +97,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_CreateRecvRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooCreateReceiveRTPChannel\n");
       return OO_FAILED;
    }
@@ -111,7 +111,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_CloseRecvRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooCloseReceiveRTPChannel\n");
       return OO_FAILED;
    }
@@ -125,7 +125,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_StartTxWaveFile == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStartTransmitWaveFile\n");
       return OO_FAILED;
    }
@@ -140,7 +140,7 @@ int ooLoadSndRTPPlugin(char * name)
 
    if(FuncPtr_StopTxWaveFile == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStopTransmitWaveFile\n");
       return OO_FAILED;
    }
@@ -154,7 +154,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_StartTxMic == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStartTransmitMic\n");
       return OO_FAILED;
    }
@@ -168,7 +168,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_StopTxMic == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStopTransmitMic\n");
       return OO_FAILED;
    }
@@ -182,7 +182,7 @@ int ooLoadSndRTPPlugin(char * name)
 #endif
    if(FuncPtr_StartRecvAndPlayback == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStartReceiveAudioAndPlayback\n");
       return OO_FAILED;
    }
@@ -197,7 +197,7 @@ int ooLoadSndRTPPlugin(char * name)
 
    if(FuncPtr_StopRecvAndPlayback == 0)
    {
-      OOTRACEERR1("ERROR: Failed to retrieve the address of "
+      printf("ERROR: Failed to retrieve the address of "
                            "ooStopRecvAndPlayback\n");
       return OO_FAILED;
    }
@@ -215,7 +215,7 @@ int ooCreateTransmitRTPChannel(char * destip,
    int channelId=0;
    if(FuncPtr_CreateTxRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_CreateTxRTPChan(&channelId, destip, port);
@@ -227,7 +227,7 @@ int ooCloseTransmitRTPChannel()
    int channelId=0;
    if(FuncPtr_CloseTxRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_CloseTxRTPChan(channelId);
@@ -239,7 +239,7 @@ int ooCreateReceiveRTPChannel(char* localip,
    int channelId = 0;
    if(FuncPtr_CreateRecvRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_CreateRecvRTPChan(&channelId, localip, localport);
@@ -250,7 +250,7 @@ int ooCloseReceiveRTPChannel()
    int channelId = 0;
    if(FuncPtr_CloseRecvRTPChan == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_CloseRecvRTPChan(channelId);
@@ -261,7 +261,7 @@ int ooStartTransmitWaveFile(char * filename)
    int channelId = 0;
    if(FuncPtr_StartTxWaveFile == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StartTxWaveFile(channelId, filename);
@@ -272,7 +272,7 @@ int ooStopTransmitWaveFile()
    int channelId = 0;
    if(FuncPtr_StopTxWaveFile == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StopTxWaveFile(channelId);
@@ -283,7 +283,7 @@ int ooStartTransmitMic()
    int channelId = 0;
    if(FuncPtr_StartTxMic == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StartTxMic(channelId);
@@ -294,7 +294,7 @@ int ooStopTransmitMic()
    int channelId = 0;
    if(FuncPtr_StopTxMic == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StopTxMic(channelId);
@@ -305,7 +305,7 @@ int ooStartReceiveAudioAndPlayback()
    int channelId = 0;
    if(FuncPtr_StartRecvAndPlayback == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StartRecvAndPlayback(channelId);
@@ -316,28 +316,12 @@ int ooStopReceiveAudioAndPlayback()
    int channelId = 0;
    if(FuncPtr_StopRecvAndPlayback == 0)
    {
-      OOTRACEERR1("ERROR: Plugin not available\n");
+      printf("ERROR: Plugin not available\n");
       return OO_FAILED;
    }
    return FuncPtr_StopRecvAndPlayback(channelId);
 }
-/*
-int ooStartReceiveAudioAndRecord(struct ooAppContext* context)
-{
-   int channelId = 0;
-   if(FuncPtr_StopRecvAndPlayback == 0)
-   {
-      OOTRACEERR2(context, "ERROR: Plugin not available");
-      return -1;
-   }
-   return FuncPtr_StopRecvAndPlayback(channelId);
-   return 0;
-}
-int ooStopReceiveAudioAndRecord(struct ooAppContext* context)
-{
-   return 0;
-}
-*/
+
 
 int ooRTPShutDown()
 {
@@ -345,13 +329,13 @@ int ooRTPShutDown()
    ret = ooCloseTransmitRTPChannel();
    if(ret != 0)
    {
-      OOTRACEERR1("ERROR: Closing Transmit RTP Channel\n");
+      printf("ERROR: Closing Transmit RTP Channel\n");
       return OO_FAILED;
    }
    ret = ooCloseReceiveRTPChannel();
    if(ret != 0)
    {
-      OOTRACEERR1( "ERROR: Closing Receive RTP Channel\n");
+      printf("ERROR: Closing Receive RTP Channel\n");
       return OO_FAILED;
    }
    return OO_OK;
@@ -362,19 +346,19 @@ int ooReleaseSndRTPPlugin()
 #ifdef _WIN32
    if(!FreeLibrary(media))
    {
-      OOTRACEWARN1("Warn: Failed to release the plugin\n");
+      printf("Warn: Failed to release the plugin\n");
       return OO_FAILED;
    }
    else
-      OOTRACEINFO1("INFO: Plugin released from memory\n");
+      printf("INFO: Plugin released from memory\n");
 #else
    if(dlclose(media) != 0)
    {
-      OOTRACEWARN1("Warn: Failed to release the plugin\n");
+      printf("Warn: Failed to release the plugin\n");
       return OO_FAILED;
    }
    else
-      OOTRACEINFO1("INFO: Plugin released from memory\n");
+      printf("INFO: Plugin released from memory\n");
 #endif
    media = 0;
    FuncPtr_InitializePlugin = 0;
