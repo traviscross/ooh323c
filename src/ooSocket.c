@@ -385,7 +385,8 @@ int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize,
    int len, addrlen;
 
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
-  
+   addrlen = sizeof(m_addr);
+
    memset (&m_addr, 0, sizeof (m_addr));
      
    if ((len = recvfrom (socket, (char*) pbuf, bufsize, 0,
