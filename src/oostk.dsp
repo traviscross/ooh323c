@@ -89,10 +89,6 @@ SOURCE=.\asn1CEvtHndlr.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\asn1CEvtHndlr.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\context.c
 # End Source File
 # Begin Source File
@@ -161,10 +157,6 @@ SOURCE=.\ooCalls.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\ooCalls.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ooCapability.c
 # End Source File
 # Begin Source File
@@ -189,15 +181,15 @@ SOURCE=.\ooh323ep.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\ooh323ep.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ooports.c
 # End Source File
 # Begin Source File
 
 SOURCE=.\ooq931.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooras.c
 # End Source File
 # Begin Source File
 
@@ -213,19 +205,11 @@ SOURCE=.\ooStackCmds.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\ooStackCmds.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\perutil.c
 # End Source File
 # Begin Source File
 
 SOURCE=.\printHandler.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\printHandler.h
 # End Source File
 # Begin Source File
 
@@ -237,20 +221,16 @@ SOURCE=.\rtctype.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\rtctype.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\SList.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\SList.h
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\asn1CEvtHndlr.h
+# End Source File
 # Begin Source File
 
 SOURCE=".\h323\H235-SECURITY-MESSAGES.h"
@@ -277,6 +257,10 @@ SOURCE=.\ooasn1.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooCalls.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\oochannels.h
 # End Source File
 # Begin Source File
@@ -297,6 +281,10 @@ SOURCE=.\ooh323.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooh323ep.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\oohdr.h
 # End Source File
 # Begin Source File
@@ -313,6 +301,10 @@ SOURCE=.\ooq931.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooras.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\oosndrtp.h
 # End Source File
 # Begin Source File
@@ -321,7 +313,23 @@ SOURCE=.\ooSocket.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooStackCmds.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ootypes.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\printHandler.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\rtctype.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SList.h
 # End Source File
 # End Group
 # End Target
