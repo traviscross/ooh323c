@@ -89,23 +89,27 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    OOTRACEINFO2("\tManufacturer Code - %d\n", manufacturerCode);
    if(productID)
    {
-      gH323ep.productID = (char*)ASN1MALLOC(&gH323ep.ctxt, strlen(productID));
-      memcpy(gH323ep.productID, productID, strlen(productID));
+      gH323ep.productID = (char*)ASN1MALLOC(&gH323ep.ctxt, strlen(productID)+1);
+      memset(gH323ep.productID, 0, strlen(productID)+1);
+      strcpy(gH323ep.productID, productID);
    }
    else{
-      gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys"));
-      memcpy(gH323ep.productID, "objsys", strlen("objsys"));
+      gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys")+1);
+      memset(gH323ep.productID, 0, strlen("objsys")+1);
+      strcpy(gH323ep.productID, "objsys");
    }
    OOTRACEINFO2("\tProductID - %s\n", gH323ep.productID);
   
    if(versionID)
    {
-      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID));
-      memcpy(gH323ep.versionID, versionID, strlen(versionID));
+      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID)+1);
+      memset(gH323ep.versionID, 0, strlen(versionID)+1);
+      strcpy(gH323ep.versionID, versionID);
    }
    else{
-      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("0.4"));
-      memcpy(gH323ep.versionID, "0.4", strlen("0.4"));
+      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("0.4")+1);
+      memset(gH323ep.versionID, 0, strlen("0.4")+1);
+      strcpy(gH323ep.versionID, "0.4");
    }
    OOTRACEINFO2("\tVersionID - %s\n", gH323ep.versionID);
 
@@ -119,21 +123,25 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
   
    if(callerid)
    {
-      gH323ep.callerid = (char *) ASN1MALLOC(&gH323ep.ctxt, strlen(callerid));
-      memcpy(gH323ep.callerid, callerid, strlen(callerid));
+      gH323ep.callerid = (char *) ASN1MALLOC(&gH323ep.ctxt, strlen(callerid)+1);
+      memset(gH323ep.callerid, 0, strlen(callerid)+1);
+      strcpy(gH323ep.callerid, callerid);
    }else{
-      gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsyscall"));
-      memcpy(gH323ep.callerid, "objsyscall", strlen("objsyscall"));
+      gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsyscall")+1);
+      memset(gH323ep.callerid, 0, strlen("objsyscall")+1);
+      strcpy(gH323ep.callerid, "objsyscall");
    }
    OOTRACEINFO2("\tCallerID - %s\n", gH323ep.callerid);
 
    if(callername)
    {
-      gH323ep.callername =(char*)ASN1MALLOC(&gH323ep.ctxt, strlen(callername));
-      memcpy(gH323ep.callername, callername, strlen(callername));
+      gH323ep.callername =(char*)ASN1MALLOC(&gH323ep.ctxt, strlen(callername)+1);
+      memset(gH323ep.callername, 0, strlen(callername)+1);
+      strcpy(gH323ep.callername, callername);
    }else {
-      gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys"));
-      memcpy(gH323ep.callername, "objsys", strlen("objsys"));
+      gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys")+1);
+      memset(gH323ep.callername, 0, strlen("objsys")+1);
+      strcpy(gH323ep.callername, "objsys");
    }
    OOTRACEINFO2("\tCallerName - %s\n", gH323ep.callername);
 
@@ -166,7 +174,7 @@ int ooSetLocalCallSignallingAddress(char * localip, int listenport)
    if(localip)
    {
       memset(gH323ep.signallingIP, 0, sizeof(gH323ep.signallingIP));
-      memcpy(gH323ep.signallingIP, localip, strlen(localip));
+      strcpy(gH323ep.signallingIP, localip);
       OOTRACEINFO2("Signalling IP address is set to %s\n", localip);
    }
   
@@ -260,29 +268,33 @@ int ooSetTermType(int value)
 
 int ooSetProductID(char * productID)
 {
-   gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(productID));
-   memcpy(gH323ep.productID, productID, strlen(productID));
+   gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(productID)+1);
+   memset(gH323ep.productID, 0, strlen(productID)+1);
+   strcpy(gH323ep.productID, productID);
    return OO_OK;
 }
 
 int ooSetVersionID(char * versionID)
 {
-   gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID));
-   memcpy(gH323ep.versionID, versionID, strlen(versionID));
+   gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID)+1);
+   memset(gH323ep.versionID, 0, strlen(versionID)+1);
+   strcpy(gH323ep.versionID, versionID);
    return OO_OK;
 }
 
 int ooSetCallerID(char * callerID)
 {
-   gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerID));
-   memcpy(gH323ep.callerid, callerID, strlen(callerID));
+   gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerID)+1);
+   memset(gH323ep.callerid, 0, strlen(callerID)+1);
+   strcpy(gH323ep.callerid, callerID);
    return OO_OK;
 }
 
 int ooSetCallerName(char * callerName)
 {
-   gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerName));
-   memcpy(gH323ep.callername, callerName, strlen(callerName));
+   gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerName)+1);
+   memset(gH323ep.callername, 0, strlen(callerName)+1);
+   strcpy(gH323ep.callername, callerName);
    return OO_OK;
 }
 

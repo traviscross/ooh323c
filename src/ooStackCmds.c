@@ -29,17 +29,18 @@ int ooMakeCall(char * destip, int port, char*callToken)
    cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
    if(!cmd)
    {
-      OOTRACEERR1("Error:Allocating memory for command structure - MakeCall\n");
+      OOTRACEERR1("Error:Allocating memory for command structure - "
+                  "MakeCall\n");
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(destip));
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(destip)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
       return OO_FAILED;
    }
-   memset(cmd->param1, 0, strlen(destip));
+   memset(cmd->param1, 0, strlen(destip)+1);
    strcpy((char*)cmd->param1, destip);
 
    cmd->param2 = (void*) ASN1MALLOC(&gCtxt, sizeof(int));
@@ -48,22 +49,27 @@ int ooMakeCall(char * destip, int port, char*callToken)
       OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
       return OO_FAILED;
    }
-
    *((int*)cmd->param2) = port;
    /* Generate call token*/
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
+      return OO_FAILED;
+   }
+
    sprintf(callToken, "ooh323c_%d", gCurCallToken++);
   
    if(gCurCallToken > gCallTokenMax)
       gCurCallToken = gCallTokenBase;
 
-   cmd->param3 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   cmd->param3 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
    if(!cmd->param3)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
       return OO_FAILED;
    }
   
-   memcpy(cmd->param3, (void*)callToken, strlen(callToken));
+   strcpy((char*)cmd->param3, callToken);
    dListAppend(&gCtxt, &gCmdList, cmd);
 
 #ifdef _WIN32
@@ -91,13 +97,13 @@ EXTERN int ooAnswerCall(char *callToken)
    }
    cmd->type = OO_CMD_ANSCALL;
 
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - AnsCall\n");
       return OO_FAILED;
    }
-   memcpy(cmd->param1, (void*)callToken, strlen(callToken));
+   strcpy((char*)cmd->param1, callToken);
   
    dListAppend(&gCtxt, &gCmdList, cmd);
   
@@ -127,13 +133,13 @@ EXTERN int ooRejectCall(char* callToken, int cause)
    }
    cmd->type = OO_CMD_REJECTCALL;
 
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - RejectCall\n");
       return OO_FAILED;
    }
-   memcpy(cmd->param1, (void*)callToken, strlen(callToken));
+   strcpy((char*)cmd->param1, callToken);
   
    dListAppend(&gCtxt, &gCmdList, cmd);
   
@@ -163,13 +169,13 @@ EXTERN int ooHangCall(char * callToken)
       return OO_FAILED;
    }
    cmd->type = OO_CMD_HANGCALL;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - HangCall\n");
       return OO_FAILED;
    }
-   memcpy(cmd->param1, (void*)callToken, strlen(callToken));
+   strcpy((char*)cmd->param1, callToken);
   
    dListAppend(&gCtxt, &gCmdList, cmd);
   

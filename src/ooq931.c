@@ -1199,7 +1199,7 @@ int ooH323MakeCall(char *destip, int port, char *callToken)
 
    call = ooCreateCall("outgoing", callToken);
    pctxt = call->pctxt;
-   memcpy(call->remoteIP, destip, strlen(destip));
+   strcpy(call->remoteIP, destip);
    call->remotePort = port;
   
    ret = ooCreateH225Connection(call);
