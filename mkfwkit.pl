@@ -27,6 +27,11 @@ print `cp -f ./configure ./ooh323c-${version}/configure`;
 print `cp -f ./configure.in ./ooh323c-${version}/configure.in`;
 print `cp -f ./ooh323c.dsw ./ooh323c-${version}/ooh323c.dsw`;
 
+mkdir ("ooh323c-${version}/config", 0777);
+print `cp -f -r ./config/* ./ooh323c-${version}/config`;
+print `rm -f ./ooh323c-${version}/config/CVS`;
+
+
 mkdir ("ooh323c-${version}/doc", 0777);
 mkdir ("ooh323c-${version}/doc/H323StackLibrary", 0777);
 mkdir ("ooh323c-${version}/doc/MediaLibrary", 0777);
