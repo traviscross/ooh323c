@@ -469,7 +469,77 @@ ooH323EpCapability* ooIsDataTypeSupported(ooCallData *call, H245DataType *data, 
    }
    return NULL;
 }
-   
+
+
+int ooResetCapPref(ooCallData *call)
+{
+   ooCapPrefs *capPrefs=NULL;
+   if(call)
+      capPrefs = &call->capPrefs;
+   else
+      capPrefs = &gH323ep.capPrefs;
+   memset(capPrefs, 0, sizeof(ooCapPrefs));
+   return OO_OK;
+}
+
+int ooRemoveCapFromCapPref(ooCallData *call, int cap)
+{
+   int i=0, j=0;
+   ooCapPrefs *capPrefs=NULL, oldPrefs;
+   if(call)
+      capPrefs = &call->capPrefs;
+   else
+      capPrefs = &gH323ep.capPrefs;
+
+   memcpy(&oldPrefs, capPrefs, sizeof(ooCapPrefs));
+   memset(capPrefs, 0, sizeof(ooCapPrefs));
+   for(i=0; i<oldPrefs.index; i++)
+   { 
+      if(oldPrefs.order[i] != cap)
+         capPrefs->order[j++] = oldPrefs.order[i];
+   }
+   capPrefs->index = j;
+   return OO_OK;
+}
+
+
+int ooAppendCapToCapPref(ooCallData *call, int cap)
+{
+   ooCapPrefs *capPrefs=NULL;
+   if(call)
+      capPrefs = &call->capPrefs;
+   else
+      capPrefs = &gH323ep.capPrefs;
+
+   ooRemoveCapFromCapPref(call, cap);
+
+   capPrefs->order[capPrefs->index++] = cap;
+   return OO_OK;
+}
+
+int ooPreppendCapToCapPref(ooCallData *call, int cap)
+{
+   int i=0, j=0;
+   ooCapPrefs *capPrefs=NULL, oldPrefs;
+   if(call)
+      capPrefs = &call->capPrefs;
+   else
+      capPrefs = &gH323ep.capPrefs;
+
+   memcpy(&oldPrefs, capPrefs, sizeof(ooCapPrefs));
+   memset(capPrefs, 0, sizeof(ooCapPrefs));
+
+   capPrefs->order[j++] = cap;
+
+   for(i=0; i<oldPrefs.index; i++)
+   { 
+      if(oldPrefs.order[i] != cap)
+         capPrefs->order[j++] = oldPrefs.order[i];
+   }
+   capPrefs->index = j;
+   return OO_OK;
+}
 
       
+
 

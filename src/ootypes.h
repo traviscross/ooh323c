@@ -272,6 +272,10 @@ typedef struct H245Message {
 } H245Message;
 
 struct ooH323EpCapability;
+typedef struct ooCapPrefs {
+  int order[20];
+  int index;
+}ooCapPrefs;
 
 /* Store local and remote media endpoint info, for media type */
 typedef struct ooMediaInfo{
@@ -359,7 +363,7 @@ typedef struct ooCallData {
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
-  
+   ooCapPrefs           capPrefs;  
    ooLogicalChannel*    logicalChans;
    int                  noOfLogicalChannels;
    int                  logicalChanNoBase;
@@ -432,6 +436,7 @@ typedef struct ooEndPoint{
    int callType;
 
    ooH323EpCapability *myCaps;
+   ooCapPrefs     capPrefs;
    int noOfCaps;
    cb_OnAlerting onAlerting;
    cb_OnIncomingCall onIncomingCall;

@@ -61,6 +61,21 @@
 #define OO_CAP_DTMF_Q931    (1<<1)
 #define OO_CAP_DTMF_H245    (1<<2)
 
+
+
+
+
+int caps_supported[10];
+/* Bit macros to work with caps_supported*/
+
+#define BINTSIZE (sizeof(int)*8)
+#define BWORD(i) ((int)((i)/BINTSIZE))
+#define BMASK(i) (1<< ((i)% BINTSIZE))
+#define BISSET(caps,i) (caps[BWORD(i)] & BMASK(i))
+#define BSET(caps,i) (caps[BWORD(i)] |= BMASK(i))
+#define BRESET(caps,i) (caps[BWORD(i)] &= ~BMASK(i))
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
