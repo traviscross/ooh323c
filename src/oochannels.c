@@ -51,7 +51,14 @@ int ooCreateH245Listener(ooCallData *call)
    *(call->h245listenport) = ret;
    call->h245listener = (OOSOCKET*)ASN1MALLOC(call->pctxt, sizeof(OOSOCKET));
    *(call->h245listener) = channelSocket;
-   ooSocketListen(*(call->h245listener), 5);
+   ret = ooSocketListen(*(call->h245listener), 5);
+   if(ret != ASN_OK)
+   {
+      OOTRACEERR3("Error:Unable to listen on H.245 socket (%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+  
    OOTRACEINFO4("H245 listener creation - successful(port %d) (%s, %s)\n",
                 *(call->h245listenport),call->callType, call->callToken);
    return OO_OK;
@@ -1031,8 +1038,12 @@ int ooSendMsg(ooCallData *call, int type)
          return OO_OK;
       }
      
-      if (0 != call->pH245Channel)
+      if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
       {
+         OOTRACEDBGC4("Sending %s H245 message over H.245 channel. "
+                      "(%s, %s)\n", ooGetText(msgType), call->callType,
+                      call->callToken);
+         
          ret = ooSocketSend(call->pH245Channel->sock, msgptr+3, len);
          if(ret == ASN_OK)
          {
@@ -1054,6 +1065,10 @@ int ooSendMsg(ooCallData *call, int type)
             return OO_FAILED;
          }
       }else if(call->isTunnelingActive){
+         OOTRACEDBGC4("Sending %s H245 message as a tunneled message."
+                      "(%s, %s)\n", ooGetText(msgType), call->callType,
+                      call->callToken);
+         
          ret = ooSendAsTunneledMessage(call, msgptr+3,len,msgType);
          if(ret != OO_OK)
          {
