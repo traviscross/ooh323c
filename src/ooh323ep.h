@@ -102,9 +102,55 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
  */
 EXTERN int ooDestroyH323Ep();
 
+/**
+ * This function is used to enable/disable faststart.
+ * @param fastStart   1, to enable and 0, to disable faststart
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetFastStart(int fastStart);
 
+/**
+ * This function is used to enable/disable tunneling.
+ * @param tunneling   1, to enable and 0, to disable tunneling.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetH245Tunneling(int tunneling);
 
+/**
+ * This function is used to set the product ID.
+ * @param productID  New value for the product id.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetProductID(char * productID);
 
+/**
+ * This function is used to set version id.
+ * @param versionID  New value for the version id.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetVersionID(char * versionID);
+
+/**
+ * This function is used to set callerid to be used for outbound
+ * calls
+ * @param callerID  New value for the caller id.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetCallerID(char * callerID);
+
+/**
+ * This function is used to set the caller name, which is used
+ * for display purposes.
+ * @param callerName New value for the caller name.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetCallerName(char * callerName);
 
 /**
  * @}
