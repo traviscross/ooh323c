@@ -29,6 +29,7 @@ Features supported in this package include the following:
   - Call Proceeding
   - Alerting
   - Facility
+  - ReleaseComplete
 
 * H.225/RAS - the following message types are supported
   - GateKeeperRequest / Response
