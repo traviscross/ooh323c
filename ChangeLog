@@ -4,7 +4,10 @@ Release 0.5.1
 3. Improved the capability handling code. Now applications can simply use
    predefined caps such as OO_CAP_ULAW_64k_240 etc, instead of having to
    populate the whole capability structure.
-4. Fixed bugs - Specifically memory bug which causes uncertain behaviour on
+4. Removed the code to load the media library from the main stack library,
+   and now it is part of the applications such as "simple", "player" etc. This
+   change was made in effort to keep stack totally independent of media.
+5. Fixed bugs - Specifically memory bug which causes uncertain behaviour on
    certain embedded systems.
 
 
