@@ -344,6 +344,16 @@ EXTERN int ooSendRequestCloseLogicalChannel(ooCallData *call,
                                             ooLogicalChannel *logicalChan);
 
 /**
+ * This function is used to send a RequestChannelCloseRelease message when the
+ * corresponding timer has expired.
+ * @param call            Handle to the call
+ * @param channelNum      Channel number.
+ *
+ * @return                OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooSendRequestChannelCloseRelease(ooCallData *call, int channelNum);
+
+/**
  * This function handles the received RequestChannelClose message, verifies
  * that the requested channel is forward channel. It sends an acknowledgement
  * for the message followed by CloseLogicalChannel message.
@@ -355,6 +365,17 @@ EXTERN int ooSendRequestCloseLogicalChannel(ooCallData *call,
  */
 EXTERN int ooOnReceivedRequestChannelClose(ooCallData *call,
                                            H245RequestChannelClose *rclc);
+
+/**
+ * This function is used to handle a received RequestChannelCloseReject
+ * response message.
+ * @param call             Handle to the call.
+ * @param rccReject        Pointer to the received reject response message.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooOnReceivedRequestChannelCloseReject
+   (ooCallData *call, H245RequestChannelCloseReject *rccReject);
 
 /**
  * Builds an OLC with an audio capability passed as parameter.
@@ -445,6 +466,16 @@ int ooOpenLogicalChannelTimerExpired(void *pdata);
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
  */
 int ooCloseLogicalChannelTimerExpired(void *pdata);
+
+/**
+ * This is a callback function for handling an expired RequestChannelClose
+ * timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooRequestChannelCloseTimerExpired(void *pdata);
 /**
  * @}
  */

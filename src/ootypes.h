@@ -143,6 +143,7 @@
 #define OO_TCS_TIMER       (1<<2)
 #define OO_OLC_TIMER       (1<<3)
 #define OO_CLC_TIMER       (1<<4)
+#define OO_RCC_TIMER       (1<<5)
 
 /**
   Default port ranges used

@@ -1455,6 +1455,27 @@ int ooOnSendMsg
       else
          OOTRACEINFO3("Sent Message - RequestChannelClose (%s, %s)\n",
                        call->callType, call->callToken);
+      /* Start RequestChannelClose timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback data."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_RCC_TIMER;
+      cbData->channelNumber = associatedChan;
+      if(!ooTimerCreate(call->pctxt, &call->timerList,
+          &ooRequestChannelCloseTimerExpired, gH323ep.logicalChannelTimeout,
+          cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create RequestChannelClose timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
       break;
    case OORequestChannelCloseAck:
       if(call->isTunnelingActive)

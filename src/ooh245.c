@@ -1411,6 +1411,55 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    return ret;
 }
 
+int ooSendRequestChannelCloseRelease(ooCallData *call, int channelNum)
+{
+   int ret = OO_OK;
+   H245Message *ph245msg = NULL;
+   OOCTXT *pctxt;
+   H245IndicationMessage *indication;
+
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_indication);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("ERROR:Failed to create H245 message for "
+                  "RequestChannelCloseRelease message (%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OORequestChannelCloseRelease;
+   ph245msg->logicalChannelNo = channelNum;
+   pctxt = &gH323ep.msgctxt;
+   indication = ph245msg->h245Msg.u.indication;
+   indication->t = T_H245IndicationMessage_requestChannelCloseRelease;
+   indication->u.requestChannelCloseRelease = (H245RequestChannelCloseRelease*)
+                     ASN1MALLOC(pctxt, sizeof(H245RequestChannelCloseRelease));
+   if(!indication->u.requestChannelCloseRelease)
+   {
+      OOTRACEERR3("Error:Failed to allocate memory for "
+                  "RequestChannelCloseRelease message. (%s, %s)\n",
+                   call->callType, call->callToken);
+      ooFreeH245Message(call, ph245msg);
+   }
+
+   indication->u.requestChannelCloseRelease->forwardLogicalChannelNumber =
+                                                                channelNum;
+
+   OOTRACEDBGA4("Built RequestChannelCloseRelease for %d (%s, %s)\n",
+                channelNum, call->callType, call->callToken);
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue the RequestChannelCloseRelease to "
+                 "outbound queue (%s, %s)\n", call->callType, call->callToken);
+   }
+   ooFreeH245Message(call, ph245msg);
+
+   return ret;
+}
+
+
+  
 int ooOnReceivedRequestChannelClose(ooCallData *call,
                                     H245RequestChannelClose *rclc)
 {
@@ -1490,6 +1539,44 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
 
    return ret;
 }
+
+int ooOnReceivedRequestChannelCloseReject
+   (ooCallData *call, H245RequestChannelCloseReject *rccReject)
+{
+   int ret =0;
+   switch(rccReject->cause.t)
+   {
+   case T_H245RequestChannelCloseReject_cause_unspecified:
+      OOTRACEDBGA4("Remote endpoint has rejected request to close logical "
+                   "channel %d - cause unspecified. (%s, %s)\n",
+                   rccReject->forwardLogicalChannelNumber, call->callType,
+                   call->callToken);
+     break;
+   case T_H245RequestChannelCloseReject_cause_extElem1:
+      OOTRACEDBGA4("Remote endpoint has rejected request to close logical "
+                   "channel %d - cause propriatory. (%s, %s)\n",
+                   rccReject->forwardLogicalChannelNumber, call->callType,
+                   call->callToken);  
+      break;
+   default:
+      OOTRACEDBGA4("Remote endpoint has rejected request to close logical "
+                   "channel %d - cause INVALID. (%s, %s)\n",
+                   rccReject->forwardLogicalChannelNumber, call->callType,
+                   call->callToken);
+   }
+   OOTRACEDBGA4("Clearing logical channel %d. (%s, %s)\n",
+                 rccReject->forwardLogicalChannelNumber, call->callType,
+                 call->callToken);
+   ret = ooClearLogicalChannel(call, rccReject->forwardLogicalChannelNumber);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR4("Error: failed to clear logical channel %d.(%s, %s)\n",
+                   rccReject->forwardLogicalChannelNumber, call->callType,
+                   call->callToken);
+   }
+   return ret;
+}
+
 /****/
 int ooOnReceivedCloseLogicalChannel(ooCallData *call,
                                     H245CloseLogicalChannel* clc)
@@ -1544,8 +1631,8 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-     OOTRACEERR3("Error:Failed to enqueue CloseLogicalChannelAck message to outbound queue.(%s, %s)\n",
-                 call->callType, call->callToken);
+     OOTRACEERR3("Error:Failed to enqueue CloseLogicalChannelAck message to "
+                 "outbound queue.(%s, %s)\n", call->callType, call->callToken);
    }
 
    ooFreeH245Message(call, ph245msg);
@@ -1779,6 +1866,45 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
              OOTRACEINFO4("RequestChannelCloseAck received - %d (%s, %s)\n",
                response->u.requestChannelCloseAck->forwardLogicalChannelNumber,
                call->callType, call->callToken);
+             for(i = 0; i<call->timerList.count; i++)
+             {
+               pNode = dListFindByIndex(&call->timerList, i);
+               pTimer = (OOTimer*)pNode->data;
+               if((((ooTimerCallback*)pTimer->cbData)->timerType & OO_RCC_TIMER)                                            &&
+                   ((ooTimerCallback*)pTimer->cbData)->channelNumber ==
+               response->u.requestChannelCloseAck->forwardLogicalChannelNumber)
+               {
+
+                  ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+                  ooTimerDelete(call->pctxt, &call->timerList, pTimer);
+                  OOTRACEDBGC3("Deleted RequestChannelClose Timer. (%s, %s)\n",
+                                call->callType, call->callToken);
+                  break;
+               }
+             }
+             break;
+         case T_H245ResponseMessage_requestChannelCloseReject:
+            OOTRACEINFO4("RequestChannelCloseReject received - %d (%s, %s)\n",
+            response->u.requestChannelCloseReject->forwardLogicalChannelNumber,
+              call->callType, call->callToken);
+             for(i = 0; i<call->timerList.count; i++)
+             {
+               pNode = dListFindByIndex(&call->timerList, i);
+               pTimer = (OOTimer*)pNode->data;
+               if((((ooTimerCallback*)pTimer->cbData)->timerType & OO_RCC_TIMER)                                            &&
+                   ((ooTimerCallback*)pTimer->cbData)->channelNumber ==
+            response->u.requestChannelCloseReject->forwardLogicalChannelNumber)
+               {
+
+                  ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+                  ooTimerDelete(call->pctxt, &call->timerList, pTimer);
+                  OOTRACEDBGC3("Deleted RequestChannelClose Timer. (%s, %s)\n",
+                                call->callType, call->callToken);
+                  break;
+               }
+             }
+             ooOnReceivedRequestChannelCloseReject(call,
+                                        response->u.requestChannelCloseReject);
              break;
          default:
             ;
@@ -2494,27 +2620,53 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
       call->callState = OO_CALL_CLEAR;
       call->callEndReason = OO_HOST_CLEARED;
    }
-
+   ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;
 }
 
 int ooCloseLogicalChannelTimerExpired(void *pdata)
 {
+   int ret;
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
    ooCallData *call = cbData->call;
    ooLogicalChannel *pChannel = NULL;
-   OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
+   OOTRACEINFO3("CloseLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
-   pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
-                                               cbData->channelNumber);
-   if(pChannel)
-      ooClearLogicalChannel(call, pChannel->channelNo);
+
+   ooClearLogicalChannel(call, cbData->channelNumber);
   
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
       call->callEndReason = OO_HOST_CLEARED;
    }
+   ASN1MEMFREEPTR(call->pctxt, cbData);
+   return OO_OK;
+}
 
+int ooRequestChannelCloseTimerExpired(void *pdata)
+{
+   int ret = 0;
+   ooTimerCallback *cbData = (ooTimerCallback*)pdata;
+   ooCallData *call = cbData->call;
+   ooLogicalChannel *pChannel = NULL;
+   OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
+                 call->callToken);
+ 
+   ooSendRequestChannelCloseRelease(call, cbData->channelNumber);
+
+   ret = ooClearLogicalChannel(call, cbData->channelNumber);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR4("Error:Failed to clear logical channel %d. (%s, %s)\n",
+                   cbData->channelNumber, call->callType, call->callToken);
+   }
+
+   if(call->callState < OO_CALL_CLEAR)
+   {
+      call->callState = OO_CALL_CLEAR;
+      call->callEndReason = OO_HOST_CLEARED;
+   }
+   ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;
 }
