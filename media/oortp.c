@@ -122,7 +122,6 @@ int ooCloseTransmitRTPChannel(int channelId)
             exit(0);
          }
       }
-        
    }
    /* Now close the socket */
    if(gXmitChannel.status == OO_CHAN_OPEN)
@@ -530,12 +529,12 @@ static int ooTransmitMicThreadFunc()
    unsigned int i;
    int ret;
    OOLOG2(1, "StartOf:TransmitMicThread");
-   ret = ooOpenMic();/* Open the Mic device*/
-   if(ret < 0)
+   /*   ret = ooOpenMic();/* Open the Mic device*/
+   /*   if(ret < 0)
    {
       OOLOG2(1, "ERROR: Opening the Mic device");
       return -1;
-   }
+   }*/
    /* Start data capture */
    ooStartMicDataCapture(ghWaveIn);
    gXmitMicLoop = 1;
