@@ -193,10 +193,6 @@ SOURCE=.\ooras.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\oosndrtp.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\ooSocket.c
 # End Source File
 # Begin Source File
@@ -302,10 +298,6 @@ SOURCE=.\ooq931.h
 # Begin Source File
 
 SOURCE=.\ooras.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\oosndrtp.h
 # End Source File
 # Begin Source File
 

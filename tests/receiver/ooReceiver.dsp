@@ -88,6 +88,10 @@ LINK32=link.exe
 
 SOURCE=.\ooReceiver.c
 # End Source File
+# Begin Source File
+
+SOURCE=.\oosndrtp.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -95,6 +99,10 @@ SOURCE=.\ooReceiver.c
 # Begin Source File
 
 SOURCE=.\ooReceiver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\oosndrtp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -89,6 +89,10 @@ LINK32=link.exe
 
 SOURCE=.\ooPlayer.c
 # End Source File
+# Begin Source File
+
+SOURCE=.\oosndrtp.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -96,6 +100,10 @@ SOURCE=.\ooPlayer.c
 # Begin Source File
 
 SOURCE=.\ooPlayer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\oosndrtp.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
