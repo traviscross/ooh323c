@@ -38,7 +38,11 @@ Features supported in this package include the following:
    implementation. However, other message types such as RAS can be
    easily supported by following the same implementation pattern.
 
-3. Objective systems has provided a sample media library which can
+3. The stack also supports RAS messages such as GateKeeperRequest,
+   RegistrationRequest, AdmissionRequest and DisengageRequest and
+   corresponding responses.
+
+4. Objective systems has provided a sample media library which can
    send/receive RTP data. It can also play the received audio onto
    speakers and can collect audio from Mic for transmitting as rtp
    stream. Apart from this, it also supports transmitting audio files
@@ -46,10 +50,10 @@ Features supported in this package include the following:
    per second wave file where as linux version supports raw 16 bit audio
    data file.
 
-4. Sample H.323 based audio file player and receiver programs are
+5. Sample H.323 based audio file player and receiver programs are
    provided with this package.
 
-5. This package also contains a sample H.323 VoIP phone application
+6. This package also contains a sample H.323 VoIP phone application
    which opens g711ulaw64k channels and transmits and receives voice.
    It is tested successfully against ohPhone, a widely used open source
    H.323 phone application.
@@ -121,7 +125,7 @@ Getting Started
          >cd tests/simple
         
       To make a call:
-         >./simple <dest-ip>
+         >./simple <dest-ip:port>
       where <dest-ip> is the dotted representation of the destinations IP
       address.
      
@@ -132,9 +136,8 @@ Getting Started
      
 
    7. For testing against ohphone, make sure -n option for ohphone
-      is enabled. This ensures that ohphone does not use gatekeeper,
-      which we do not support in this release. We plan to support it in next
-      release.
+      is enabled. If you want to use gatekeeper, you will have to enable
+      the gatekeeper mode in simple.c
 
 
    Building on Windows
@@ -203,8 +206,8 @@ Getting Started
       You will find simple.log and media.log in the current directory.
 
    8. For testing against ohphone, make sure -n option for ohphone
-      is enabled. This ensures that ohphone does not use gatekeeper,
-      which we do not support in this release and plan to support in
+      is enabled. If you want to use gatekeeper, you will have to enable
+      the gatekeeper support in simple.c.
           next release.
 
 
