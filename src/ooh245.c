@@ -34,140 +34,138 @@ static ASN1OBJID gh245ProtocolID = {
 
 int ooCreateH245Message(H245Message **pph245msg, int type)
 {
-   OOCTXT* pctxt = NULL;
-   pctxt = (OOCTXT*)newContext();
-   if(!pctxt)
-   {
-      OOTRACEERR1("ERROR: Failed to allocate OOCTXT for "
-                         "H245 message creation\n");
-      return OO_FAILED;
-   }
+   OOCTXT* pctxt = &gH323ep.msgctxt;
 
-   *pph245msg = (H245Message*)ASN1MALLOC(pctxt,sizeof(H245Message));
+   *pph245msg = (H245Message*) memAlloc (pctxt, sizeof(H245Message));
+
    if(!(*pph245msg))
    {
       OOTRACEERR1("ERROR:Failed to allocate memory for h245 message\n");
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
       return OO_FAILED;
    }
    else
    {
-      memset(*pph245msg, 0, sizeof(H245Message));
-      (*pph245msg)->pctxt = pctxt;
       (*pph245msg)->h245Msg.t = type;
       switch(type)
       {
          case  T_H245MultimediaSystemControlMessage_request:
-            (*pph245msg)->h245Msg.u.request =
-                                     (H245RequestMessage*)ASN1MALLOC(pctxt,
-                                     sizeof(H245RequestMessage));
+            (*pph245msg)->h245Msg.u.request = (H245RequestMessage*)
+               memAllocZ (pctxt, sizeof(H245RequestMessage));
+
             /*Check for successful mem allocation, and if successful initialize
               mem to zero*/
             if(!(*pph245msg)->h245Msg.u.request)
             {
                OOTRACEERR1("ERROR:Memory allocation for H.245 request"
                                      " message failed\n");
-               freeContext(pctxt);
-               ASN1CRTFREE0(pctxt);
                return OO_FAILED;
             }
-            else
-               memset((*pph245msg)->h245Msg.u.request, 0,
-                                              sizeof(H245RequestMessage));
             break;
+
          case T_H245MultimediaSystemControlMessage_response:
-            (*pph245msg)->h245Msg.u.response =
-                                     (H245ResponseMessage*)ASN1MALLOC(pctxt,
-                                     sizeof(H245ResponseMessage));
+            (*pph245msg)->h245Msg.u.response = (H245ResponseMessage*)
+               memAllocZ (pctxt, sizeof(H245ResponseMessage));
+
             /*Check for successful mem allocation, and if successful initialize
               mem to zero*/
             if(!(*pph245msg)->h245Msg.u.response)
             {
                OOTRACEERR1("ERROR:Memory allocation for H.245 response"
                                      " message failed\n");
-               freeContext(pctxt);
-               ASN1CRTFREE0(pctxt);
                return OO_FAILED;
             }
-            else
-               memset((*pph245msg)->h245Msg.u.response, 0,
-                                          sizeof(H245ResponseMessage));
             break;
+
          case T_H245MultimediaSystemControlMessage_command:
-            (*pph245msg)->h245Msg.u.command =
-                                     (H245CommandMessage*)ASN1MALLOC(pctxt,
-                                     sizeof(H245CommandMessage));
+            (*pph245msg)->h245Msg.u.command = (H245CommandMessage*)
+               memAllocZ (pctxt, sizeof(H245CommandMessage));
+
             /*Check for successful mem allocation, and if successful initialize
               mem to zero*/
             if(!(*pph245msg)->h245Msg.u.command)
             {
                OOTRACEERR1("ERROR:Memory allocation for H.245 command"
                                      " message failed\n");
-               freeContext(pctxt);
-               ASN1CRTFREE0(pctxt);
                return OO_FAILED;
             }
-            else
-               memset((*pph245msg)->h245Msg.u.command, 0,
-                                       sizeof(H245CommandMessage));
             break;
+
          case T_H245MultimediaSystemControlMessage_indication:
-            (*pph245msg)->h245Msg.u.indication =
-                                     (H245IndicationMessage*)ASN1MALLOC(pctxt,
-                                     sizeof(H245IndicationMessage));
+            (*pph245msg)->h245Msg.u.indication = (H245IndicationMessage*)
+               memAllocZ (pctxt, sizeof(H245IndicationMessage));
+
             /*Check for successful mem allocation, and if successful initialize
               mem to zero*/
             if(!(*pph245msg)->h245Msg.u.indication == 0)
             {
                OOTRACEERR1("ERROR:Memory allocation for H.245 indication"
                                      " message failed\n");
-               freeContext(pctxt);
-               ASN1CRTFREE0(pctxt);
                return OO_FAILED;
             }
-            else
-               memset((*pph245msg)->h245Msg.u.indication, 0,
-                                              sizeof(H245IndicationMessage));
             break;
+
          default:
-            freeContext(pctxt);
-            ASN1CRTFREE0(pctxt);
             OOTRACEERR1("ERROR: H245 message type not supported\n");
+            (*pph245msg)->h245Msg.u.extElem1 = 0;
       }
+
       return OO_OK;
    }
 }
 
 int ooFreeH245Message(H245Message *pmsg)
 {
-   OOCTXT *pctxt;
-   if(!pmsg)
-   {
-      pctxt = pmsg->pctxt;
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+   if (0 != pmsg) {
+      memReset (&gH323ep.msgctxt);
    }
- 
    return OO_OK;
 }
 
+#ifndef _COMPACT
+static void ooPrintH245Message
+(OOCallData* call, ASN1OCTET msgbuf, ASN1UINT msglen)
+{
+   OOCTXT ctxt;
+   H245MultimediaSystemControlMessage mmMsg;
+   int ret;
+
+   initContext (&ctxt);
+
+   setPERBuffer (&ctxt, msgbuf, msglen, TRUE);
+
+   initializePrintHandler(&printHandler, "Sending H.245 Message");
+
+   /* Add event handler to list */
+   rtAddEventHandler (&ctxt, &printHandler);
+   ret = asn1PD_H245MultimediaSystemControlMessage(&ctxt, &mmMsg);
+   if(ret != ASN_OK)
+   {
+      OOTRACEERR3("Error decoding H245 message (%s, %s)\n",
+                  call->callType, call->callToken);
+      OOTRACEERR1 (errGetText (&ctxt));
+   }
+   finishPrint();
+   freeContext(&ctxt);  
+}
+#endif
+
+/*
+ * TODO: sizeof msgbuf needs to be passed into this function to allow
+ * check for buffer overflow.  Also, encoding should be done directly
+ * into msgbuf - encode in local buffer and copy is inefficient.
+ */
 int ooGetOutgoingH245Msgbuf(ooCallData *call,
                             ASN1OCTET *msgbuf, int *len, int *msgType)
 {
-   H245Message *p_h245Msg=NULL;
-   H245MultimediaSystemControlMessage *multimediaMsg=NULL, mmMsg;
+   H245Message *p_h245Msg;
+   H245MultimediaSystemControlMessage *multimediaMsg;
    DListNode * p_msgNode=NULL;
    int i =0, ret=0;
-   ASN1BOOL aligned =TRUE, trace =FALSE;
    ASN1OCTET encodeBuf[1024];
    ASN1OCTET* encodeptr=NULL;
    int encodeLen=0;
-   OOCTXT* pctxt=NULL, ctxt;
-   memset(encodeBuf, 0, sizeof(encodeBuf));
-
-   initContext(&ctxt);
-   memset(&mmMsg, 0, sizeof(H245MultimediaSystemControlMessage));
+   OOCTXT* pctxt = &gH323ep.msgctxt;
+   int stat;
 
    if(call->outH245Queue.count == 0)
    {
@@ -181,38 +179,25 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    multimediaMsg = &(p_h245Msg->h245Msg);
   
    /* Encode the Multimedia Control Message */
-   pctxt = p_h245Msg->pctxt;
-   setPERBuffer(pctxt, encodeBuf, sizeof(encodeBuf), aligned);
 
-   if(asn1PE_H245MultimediaSystemControlMessage(pctxt, multimediaMsg)!=ASN_OK)
-   {
-     
-      OOTRACEERR3("ERROR: H245 Message encoding failed (%s, %s)\n",
+   setPERBuffer (pctxt, encodeBuf, sizeof(encodeBuf), TRUE);
+
+   stat = asn1PE_H245MultimediaSystemControlMessage (pctxt, multimediaMsg);
+
+   if (stat != ASN_OK) {
+      OOTRACEERR3 ("ERROR: H245 Message encoding failed (%s, %s)\n",
                    call->callType, call->callToken);
+      OOTRACEERR1 (errGetText (pctxt));
       /* Free memory associated with the message */
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+      memReset (pctxt);
       return OO_FAILED;
    }
   
    encodeptr = encodeGetMsgPtr(pctxt, &encodeLen);
 
-
-   setPERBuffer(&ctxt, encodeptr, encodeLen, 1);
-   initializePrintHandler(&printHandler, "Sending H.245 Message");
-
-   /* Add event handler to list */
-   rtAddEventHandler (&ctxt, &printHandler);
-   ret = asn1PD_H245MultimediaSystemControlMessage(&ctxt, &mmMsg);
-   if(ret != ASN_OK)
-   {
-      OOTRACEERR3("Error decoding H245 message (%s, %s)\n",
-                  call->callType, call->callToken);
-   }
-   finishPrint();
-   rtRemoveEventHandler(&ctxt, &printHandler);
-   freeContext(&ctxt);  
-
+#ifndef _COMPACT
+   ooPrintH245Message (encodePtr, encodeLen);
+#endif
 
    if(!call->isTunnelingActive)
    {
@@ -234,14 +219,12 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    dListRemove(&(call->outH245Queue), p_msgNode);
 
    /* Free memory associated with the message */
-   freeContext(pctxt);
-   ASN1CRTFREE0(pctxt);
+   memReset (pctxt);
   
    if(p_msgNode)
       ASN1MEMFREEPTR(call->pctxt, p_msgNode);     
 
-  
-  return OO_OK;
+   return OO_OK;
 }
 
 
@@ -273,7 +256,7 @@ int ooSendTermCapMsg(ooCallData *call)
 
   /* Set request type as TerminalCapabilitySet */
    request = ph245msg->h245Msg.u.request;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OOTerminalCapabilitySet;
    memset(request, 0, sizeof(H245RequestMessage));
    if(request == NULL)
@@ -526,7 +509,7 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
    int ret;
    H245Message* ph245msg=NULL;
    H245RequestMessage *request;
-   OOCTXT *pctxt=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
    H245MasterSlaveDetermination* pMasterSlave;
 
    /* Check whether Master Slave Determination already in progress */
@@ -549,7 +532,7 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
    request = ph245msg->h245Msg.u.request;
    request->t = T_H245RequestMessage_masterSlaveDetermination;
    request->u.masterSlaveDetermination = (H245MasterSlaveDetermination*)
-            ASN1MALLOC(ph245msg->pctxt, sizeof(H245MasterSlaveDetermination));
+            ASN1MALLOC(pctxt, sizeof(H245MasterSlaveDetermination));
 
   
    pMasterSlave = request->u.masterSlaveDetermination;
@@ -574,7 +557,7 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    int ret=0;
    H245ResponseMessage * response=NULL;
    H245Message *ph245msg=NULL;
-   OOCTXT *pctxt=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
 
    ret = ooCreateH245Message(&ph245msg,
                       T_H245MultimediaSystemControlMessage_response);
@@ -588,7 +571,6 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    ph245msg->msgType = OOMasterSlaveAck;
    response = ph245msg->h245Msg.u.response;
    memset(response, 0, sizeof(H245ResponseMessage));
-   pctxt = ph245msg->pctxt;
    response->t = T_H245ResponseMessage_masterSlaveDeterminationAck;
    response->u.masterSlaveDeterminationAck = (H245MasterSlaveDeterminationAck*)
                    ASN1MALLOC(pctxt, sizeof(H245MasterSlaveDeterminationAck));
@@ -739,7 +721,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
 
    ph245msg->msgType = OOOpenLogicalChannelAck;
    response = ph245msg->h245Msg.u.response;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    memset(response, 0, sizeof(H245ResponseMessage));
    response->t = T_H245ResponseMessage_openLogicalChannelAck;
    response->u.openLogicalChannelAck = (H245OpenLogicalChannelAck*)
@@ -1087,7 +1069,7 @@ int ooSendEndSessionCommand(ooCallData *call)
    ph245msg->msgType = OOEndSessionCommand;
 
    command = ph245msg->h245Msg.u.command;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    memset(command, 0, sizeof(H245CommandMessage));
    command->t = T_H245CommandMessage_endSessionCommand;
    command->u.endSessionCommand = (H245EndSessionCommand*) ASN1MALLOC(pctxt,
@@ -1185,7 +1167,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
       return OO_FAILED;
    }
    ph245msg->msgType = OOCloseLogicalChannel;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    request = ph245msg->h245Msg.u.request;
 
    request->t = T_H245RequestMessage_closeLogicalChannel;
@@ -1195,8 +1177,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    {
       OOTRACEERR3("ERROR:Memory allocation for CloseLogicalChannel failed "
                   "(%s, %s)\n", call->callType, call->callToken);
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+      memReset (pctxt);
       return OO_FAILED;
    }
    clc = request->u.closeLogicalChannel;
@@ -1248,7 +1229,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
       return OO_FAILED;
    }
    ph245msg->msgType = OORequestChannelClose;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    request = ph245msg->h245Msg.u.request;
 
    request->t = T_H245RequestMessage_requestChannelClose;
@@ -1258,8 +1239,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    {
       OOTRACEERR3("ERROR:Memory allocation for RequestCloseLogicalChannel "
                   " failed (%s, %s)\n", call->callType, call->callToken);
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+      memReset (pctxt);
       return OO_FAILED;
    }
 
@@ -1315,7 +1295,7 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
                   "failed (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OORequestChannelCloseAck;
    response = ph245msg->h245Msg.u.response;
    response->t = T_H245ResponseMessage_requestChannelCloseAck;
@@ -1381,7 +1361,7 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
                   call->callToken);
       return OO_FAILED;
    }
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OOCloseLogicalChannelAck;
    response = ph245msg->h245Msg.u.response;
    response->t = T_H245ResponseMessage_closeLogicalChannelAck;
@@ -1537,9 +1517,8 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
    call->remoteTermCapSeqNo = pmsg->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
    if(call->remoteTermCapSet)
    {
-      pctxt = call->remoteTermCapSet->pctxt;
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+      pctxt = &gH323ep.msgctxt;
+      memReset (pctxt);
    }
   
    call->remoteTermCapSet = pmsg;
@@ -1586,7 +1565,7 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
    ph245msg->msgType = OOTerminalCapabilitySetAck;
    response = ph245msg->h245Msg.u.response;
    memset(response, 0, sizeof(H245ResponseMessage));
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    response->t = T_H245ResponseMessage_terminalCapabilitySetAck;
   
    response->u.terminalCapabilitySetAck = (H245TerminalCapabilitySetAck*)
@@ -1743,7 +1722,7 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
 
    ph245msg->msgType = OOOpenLogicalChannel;
    request = ph245msg->h245Msg.u.request;
-   pctxt = ph245msg->pctxt;
+   pctxt = &gH323ep.msgctxt;
    memset(request, 0, sizeof(H245RequestMessage));
 
    request->t = T_H245RequestMessage_openLogicalChannel;

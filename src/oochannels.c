@@ -778,21 +778,12 @@ int ooH245Receive(ooCallData *call)
    int  size =MAXMSGLEN;
    ASN1BOOL aligned = TRUE, trace = FALSE;
    H245Message *pmsg;
-   OOCTXT *pctxt;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
    struct timeval timeout;
    fd_set readfds;
   
-   pctxt = (OOCTXT*)newContext();
-   if(pctxt == NULL)
-   {
-      OOTRACEERR3("ERROR: Failed to allocate ASN1 context for"
-                  " incoming h245 message creation (%s, %s)\n",
-                  call->callType, call->callToken);
-      return OO_FAILED;
-   }
-  
    pmsg = (H245Message*)ASN1MALLOC(pctxt, sizeof(H245Message));
-   pmsg->pctxt = pctxt;
+
    /* First read just TPKT header which is four bytes */
    recvLen = ooSocketRecv (*(call->h245Channel), message, 4);
    /* Since we are working with TCP, need to determine the

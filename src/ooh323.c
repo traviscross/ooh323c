@@ -705,7 +705,7 @@ int ooHandleStartH245FacilityMessage(ooCallData *call, H225Facility_UUIE *facili
 int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
 {
    H245Message *pmsg;
-   OOCTXT *pctxt;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
    int ret=0,i=0;
   
    OOTRACEDBGC3("Checking for tunneled H.245 messages (%s, %s)\n",
@@ -718,20 +718,14 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
       {
          for(i=0; i< (int)pH323UUPdu->h245Control.n; i++)
          {
-            pctxt = (OOCTXT*)newContext();
-  
-            if(pctxt == NULL)
-            {
-               OOTRACEERR3("ERROR: Failed to allocate ASN1 context for"
-                           " incoming h245 message creation (%s, %s)\n",
-                           call->callType, call->callToken);
-               return OO_FAILED;
-            }
             pmsg = (H245Message*)ASN1MALLOC(pctxt, sizeof(H245Message));
-            pmsg->pctxt = pctxt;
-                        setPERBuffer(pctxt, (ASN1OCTET*)pH323UUPdu->h245Control.elem[i].data,
+
+            setPERBuffer(pctxt,
+                         (ASN1OCTET*)pH323UUPdu->h245Control.elem[i].data,
                          pH323UUPdu->h245Control.elem[i].numocts, 1); 
+
             initializePrintHandler(&printHandler, "Tunneled H.245 Message");
+
             /* Add event handler to list */
             rtAddEventHandler (pctxt, &printHandler);
             ret = asn1PD_H245MultimediaSystemControlMessage(pctxt, &(pmsg->h245Msg));

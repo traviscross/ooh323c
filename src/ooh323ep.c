@@ -32,6 +32,7 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
 {
   
    initContext(&(gH323ep.ctxt));
+   initContext(&(gH323ep.msgctxt));
   
    if(tracefile != NULL)
    {

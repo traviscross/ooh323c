@@ -42,7 +42,7 @@ extern "C" {
 #endif /* EXTERN */
 
 /**
- * @defgroup h245 H245 Message Handling
+ * @defgroup h245 H.245 Message Handling
  * @{
  */
 /**

@@ -266,7 +266,6 @@ typedef struct Q931Message {
  and command messages are represented using this structure.
 */
 typedef struct H245Message {
-   OOCTXT* pctxt;
    H245MultimediaSystemControlMessage h245Msg;
    ASN1UINT msgType;
 } H245Message;
@@ -410,7 +409,18 @@ typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 /** Structure to store all the config information related to the
  * endpoint created by an application */
 typedef struct ooEndPoint{
+   /**
+    * This context should be used for allocation of memory for
+    * items within the endpoint structure.
+    */
    OOCTXT ctxt;
+
+   /**
+    * This context should be used for allocation of memory for
+    * message structures.
+    */
+   OOCTXT msgctxt;
+
    FILE *               fptraceFile;
    /** Range of port numbers to be used for TCP connections */
    struct ooH323Ports tcpPorts;
