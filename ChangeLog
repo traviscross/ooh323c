@@ -1,5 +1,5 @@
-Initialize outgoing to 0 in ooh245.c. This can cause failure in
-faststart.
+Patched memheap.c
+Fixed bugs
 Callback functions logic changed.
 Consolidated Text/Error descriptions in oo.c
 
