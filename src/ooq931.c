@@ -265,10 +265,7 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
    }
    else
    {
-     //      (*q931msg)->pctxt = pctxt;
       (*q931msg)->protocolDiscriminator = 8;
-     
-
       (*q931msg)->fromDestination = FALSE;
       (*q931msg)->messageType = msgType;
       return OO_OK;
@@ -1901,8 +1898,8 @@ int ooParseDestination(ooCallData *call, char *dest)
 
 
 /* Build a Facility message and tunnel H.245 message through it */
-int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
-                            int msgType)
+int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
+                            int h245MsgType)
 {
    DListNode *pNode = NULL;
    Q931Message *pQ931Msg = NULL;
@@ -1913,13 +1910,14 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
    H225Facility_UUIE *facility=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
-   OOTRACEDBGA3("Building Facility message for tunneling(%s, %s)\n", call->callType,
-                 call->callToken);
+   OOTRACEDBGA4("Building Facility message for tunneling %s (%s, %s)\n",
+                 ooGetText(h245MsgType), call->callType, call->callToken);
+
    ret = ooCreateQ931Message(&pQ931Msg, Q931FacilityMsg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("ERROR: In allocating memory for facility message (%s, %s)\n",
-                   call->callType, call->callToken);
+      OOTRACEERR3("ERROR: In allocating memory for facility message "
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    pQ931Msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
@@ -1973,25 +1971,15 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
                   "element (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   //   elem->data = (ASN1OCTET*)ASN1MALLOC(pQ931Msg->pctxt,
-   //                                           len*sizeof(ASN1OCTET));
    elem->data = msgbuf;
-   /*   if(!elem->data)
-   {
-      OOTRACEERR3("ERROR:Failed to allocate memory for encoded H.245 "
-                  "control data (%s, %s)\n", call->callType,
-                  call->callToken);
-      return OO_FAILED;
-      }
-      memcpy((void*)elem->data, (void*)msgbuf, len);*/
-   elem->numocts = len;
+   elem->numocts = h245Len;
    pH245Control->elem = elem;
    pH245Control->n = 1;
    ret = ooSendH225Msg(call, pQ931Msg);
    if(ret != OO_OK)
    {
-     OOTRACEERR3("Error:Failed to enqueue Facility(tunneling) message to outbound queue.(%s, %s)\n",
-                 call->callType, call->callToken);
+     OOTRACEERR3("Error:Failed to enqueue Facility(tunneling) message to "
+                 "outbound queue.(%s, %s)\n", call->callType, call->callToken);
    }
 
    memReset(&gH323ep.msgctxt);

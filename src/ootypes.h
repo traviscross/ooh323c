@@ -254,7 +254,6 @@ typedef struct Q931Message {
    unsigned callReference;
    ASN1BOOL fromDestination;
    unsigned messageType; /* Q931MsgTypes  */
-
    DList ies;
    H225H323_UserInformation *userInfo;
 } Q931Message;

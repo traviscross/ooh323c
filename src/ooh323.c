@@ -719,6 +719,8 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
       {
          for(i=0; i< (int)pH323UUPdu->h245Control.n; i++)
          {
+            OOTRACEDBGC3("Retrieving next tunneled H.245 message. (%s, %s)\n",
+                          call->callType, call->callToken);
             pmsg = (H245Message*)ASN1MALLOC(pctxt, sizeof(H245Message));
 
             setPERBuffer(pctxt,
@@ -729,7 +731,8 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
 
             /* Add event handler to list */
             rtAddEventHandler (pctxt, &printHandler);
-            ret = asn1PD_H245MultimediaSystemControlMessage(pctxt, &(pmsg->h245Msg));
+            ret = asn1PD_H245MultimediaSystemControlMessage(pctxt,
+                                                            &(pmsg->h245Msg));
             if(ret != ASN_OK)
             {
                OOTRACEERR3("Error decoding H245 message (%s, %s)\n",

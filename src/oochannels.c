@@ -624,7 +624,10 @@ int ooMonitorChannels()
                       }
                   }
                }
+            }
            
+            if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
+            {
                if(FD_ISSET(call->pH225Channel->sock, &writefds))
                {
                   if(call->pH225Channel->outQueue.count>0)
@@ -650,7 +653,10 @@ int ooMonitorChannels()
                {                          
                   ooH245Receive(call);
                }
-
+            }
+           
+            if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
+            {
                if(FD_ISSET(call->pH245Channel->sock, &writefds))
                {                          
                   if(call->pH245Channel->outQueue.count>0)
@@ -929,7 +935,6 @@ int ooH245Receive(ooCallData *call)
    rtRemoveEventHandler(pctxt, &printHandler);
    ooHandleH245Message(call, pmsg);
    return OO_OK;
-
 }
 
 /* Generic Send Message functionality. Based on type of message to be sent,
@@ -1049,8 +1054,7 @@ int ooSendMsg(ooCallData *call, int type)
             return OO_FAILED;
          }
       }else if(call->isTunnelingActive){
-         /* Tunnel H.245 message */
-         ret = ooSendAsTunneledMessage(call, msgptr+3, len, msgType);
+         ret = ooSendAsTunneledMessage(call, msgptr+3,len,msgType);
          if(ret != OO_OK)
          {
             memFreePtr (call->pctxt, msgptr);

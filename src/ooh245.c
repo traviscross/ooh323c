@@ -1141,6 +1141,8 @@ int ooSendEndSessionCommand(ooCallData *call)
 int ooHandleH245Command(ooCallData *call,
                         H245CommandMessage *command)
 {
+   OOTRACEDBGC3("Handling H.245 command message. (%s, %s)\n", call->callType,
+                 call->callToken);
    switch(command->t)
    {
       case T_H245CommandMessage_endSessionCommand:
@@ -1162,6 +1164,8 @@ int ooHandleH245Command(ooCallData *call,
          OOTRACEWARN3("Warning: Unhandled H245 command message received "
                       "(%s, %s)\n", call->callType, call->callToken);
    }
+   OOTRACEDBGC3("Handling H.245 command message done. (%s, %s)\n",
+                 call->callType, call->callToken);  
    return OO_OK;
 }
 
