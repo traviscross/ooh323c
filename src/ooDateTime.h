@@ -19,12 +19,13 @@
  */
 #ifndef _OOTIME_H_
 #define _OOTIME_H_
-
+#include "ooCommon.h"
 #include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /**
  * This function provides an abstraction for the UNIX 'gettimeofday'
