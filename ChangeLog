@@ -1,3 +1,24 @@
+Release 0.4:
+1. Added support for FastStart and Tunneling.
+2. Added support for external configuration of RTP ip:port. This
+   allows application to use any ip:port combination for media channel.
+   Thus, now it is possible to terminate signalling at one ip address and
+   media at some different ip address. Default uses localip and an RTP port
+   from the range specified by the application.
+3. Display ie added to outgoing SETUP message.
+4. Error handling and logging improved.
+
+
+Release 0.3.1:
+1. Fixes bug reported on source forge as request Id: 1079205
+   Also fixes other many unknown bug related with ooh245.c & ooq931.c function calls.
+
+2. Fixes bug reported on source forge as request Id:1078936
+   Host name can be longer than 20 length, Increased the capacity upto 100 character
+
+3. Fixed problem with pdf documents
+
+
 Release 0.3: New Features
 1. New Design
    a. Allows handling multiple simultaneous calls
