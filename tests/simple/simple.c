@@ -96,12 +96,14 @@ int main(int argc, char ** argv)
    if(!strlen(ourip))
    {
       ooGetLocalIPAddress(ourip);
-      if(!strcmp(ourip, "127.0.0.1"))
-      {
-         printf("Failed to determine local ip, please specify as command line"
-                "option\n");
-         printf("USAGE:\n%s", USAGE);
-      }
+   }
+
+   if(!strcmp(ourip, "127.0.0.1"))
+   {
+      printf("Failed to determine local ip, please specify as command line"
+             "option\n");
+      printf("USAGE:\n%s", USAGE);
+      return -1;
    }
       
           
