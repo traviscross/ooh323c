@@ -732,9 +732,9 @@ int ooSendMasterSlaveDeterminationRelease(ooCallData * call)
 int ooHandleMasterSlaveReject
    (ooCallData *call, H245MasterSlaveDeterminationReject* reject)
 {
-   if(call->retries.msdRetries < DEFAULT_MAX_RETRIES)
+   if(call->msdRetries < DEFAULT_MAX_RETRIES)
    {
-      call->retries.msdRetries++;
+      call->msdRetries++;
       OOTRACEDBGA3("Retrying MasterSlaveDetermination. (%s, %s)\n",
                     call->callType, call->callToken);
       call->masterSlaveState = OO_MasterSlave_Idle;
@@ -1540,6 +1540,33 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
    return ret;
 }
 
+/*
+  We clear channel here. Ideally the remote endpoint should send
+  CloseLogicalChannel and then the channel should be cleared. But there's no
+  timer for this and if remote endpoint misbehaves, the call will keep waiting
+  for CloseLogicalChannel and hence, wouldn't be cleared. In case when remote
+  endpoint sends CloseLogicalChannel, we call ooClearLogicalChannel again,
+  which simply returns OO_OK as channel was already cleared. Other option is
+  to start a timer for call cleanup and if call is not cleaned up within
+  timeout, we clean call forcefully. Note, no such timer is defined in
+  standards.
+*/
+int ooOnReceivedRequestChannelCloseAck
+                       (ooCallData *call, H245RequestChannelCloseAck *rccAck)
+{
+   int ret=OO_OK;
+   /* Remote endpoint is ok to close channel. So let's do it */
+   ret = ooClearLogicalChannel(call, rccAck->forwardLogicalChannelNumber);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR4("Error:Failed to clear logical channel %d. (%s, %s)\n",
+                   rccAck->forwardLogicalChannelNumber, call->callType,
+                   call->callToken);
+   }
+
+   return ret;
+}
+
 int ooOnReceivedRequestChannelCloseReject
    (ooCallData *call, H245RequestChannelCloseReject *rccReject)
 {
@@ -1882,6 +1909,8 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
                   break;
                }
              }
+             ooOnReceivedRequestChannelCloseAck(call,
+                                          response->u.requestChannelCloseAck);
              break;
          case T_H245ResponseMessage_requestChannelCloseReject:
             OOTRACEINFO4("RequestChannelCloseReject received - %d (%s, %s)\n",

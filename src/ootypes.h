@@ -336,10 +336,6 @@ typedef struct OOH323Channel {
    DList        outQueue;
 } OOH323Channel;
 
-typedef struct OORetries {
-   ASN1USINT   msdRetries;
-   ASN1USINT   olcRetries;
-} OORetries;
 
 struct ooCallData;
 
@@ -392,7 +388,7 @@ typedef struct ooCallData {
    int                  logicalChanNoCur;
    int                  isAudioActive;
    DList                timerList;
-   OORetries            retries;
+   ASN1UINT             msdRetries;
    struct ooCallData*   next;
    struct ooCallData*   prev;
 } ooCallData;

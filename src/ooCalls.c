@@ -124,27 +124,12 @@ int ooEndCall(ooCallData *call)
                return OO_OK;
             }
          }
-         if(call->callState >= OO_CALL_CLEAR_CLOLCS)
-         {
-            /* Wait till all the queued H245 messages are sent */
-            if (call->pH245Channel != 0 && call->pH245Channel->outQueue.count > 0)
-            {
-               OOTRACEDBGA4("ooEndCall - Still %d H.245 messages have to be sent"
-                   "(%s, %s)\n", call->pH245Channel->outQueue.count,
-                   call->callType, call->callToken);
-               return OO_OK;
-            }
-            OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. (%s, %s)\n",
-                          call->callType, call->callToken);
-            ooClearAllLogicalChannels(call);
-            if(call->callState < OO_CALL_CLEAR_CLELCS)
-               call->callState = OO_CALL_CLEAR_CLELCS;
-          }
+         return OO_OK;
       }
-      else{
-         if(call->callState < OO_CALL_CLEAR_CLELCS)
-            call->callState = OO_CALL_CLEAR_CLELCS;
-      }
+  
+      if(call->callState < OO_CALL_CLEAR_CLELCS)
+         call->callState = OO_CALL_CLEAR_CLELCS;
+
   
       if(call->h245SessionState == OO_H245SESSION_ACTIVE)
       {
@@ -161,7 +146,7 @@ int ooEndCall(ooCallData *call)
             /* Wait till all the queued H245 messages are sent */
             if(call->pH245Channel != 0 && call->pH245Channel->outQueue.count > 0)
             {
-               OOTRACEDBGA4("ooEndCall - Still %d H.245 messages have to be sent"
+               OOTRACEDBGC4("ooEndCall - Still %d H.245 messages have to be sent"
                          "(%s, %s)\n", call->pH245Channel->outQueue.count,
                             call->callType, call->callToken);
                return OO_OK;
@@ -197,7 +182,7 @@ int ooEndCall(ooCallData *call)
    if(call->callState == OO_CALL_CLEAR_RELEASE)
    {
       /* Wait till all the queued H.2250 messages are sent */
-      if (call->pH225Channel != 0 && call->pH225Channel->outQueue.count > 0)
+      if (call->pH225Channel != 0 && call->pH225Channel->sock != 0 && call->pH225Channel->outQueue.count > 0)
          return OO_OK;
       call->callState = OO_CALL_CLEARED;
      
@@ -667,9 +652,9 @@ int ooClearLogicalChannel(ooCallData *call, int channelNo)
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,channelNo);
    if(!pLogicalChannel)
    {
-      OOTRACEERR4("ERROR:Invalid logical Channel No %d (%s, %s)\n",
+      OOTRACEWARN4("Logical Channel %d doesn't exist (%s, %s)\n",
                   channelNo, call->callType, call->callToken);
-      return OO_FAILED;
+      return OO_OK;
    }
 
    epCap = (ooH323EpCapability*) pLogicalChannel->chanCap;

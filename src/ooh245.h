@@ -378,6 +378,17 @@ int ooOnReceivedRequestChannelCloseReject
    (ooCallData *call, H245RequestChannelCloseReject *rccReject);
 
 /**
+ * This function is used to handle a received RequestChannelCloseAck
+ * response message.
+ * @param call             Handle to the call.
+ * @param rccAck           Pointer to the received ack response message.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooOnReceivedRequestChannelCloseAck
+   (ooCallData *call, H245RequestChannelCloseAck *rccAck);
+
+/**
  * Builds an OLC with an audio capability passed as parameter.
  * @param call             Handle to call for which OLC has to be built.
  * @param olc              Pointer to an OLC structure which will be populated.
