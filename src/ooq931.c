@@ -618,7 +618,8 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
          ieLen--;
          msgbuf[i++] = 5; /* protocol discriminator */
          memcpy((msgbuf + i), ie->data, ieLen);
-         i += ieLen-1;
+         //         i += ieLen-1;
+         i += ieLen;
         
       }
       else if(ie->discriminator == Q931CauseIE)
@@ -626,7 +627,8 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
          msgbuf[i++] = (ieLen>>8);
          msgbuf[i++] = ieLen;
          memcpy((msgbuf+i), ie->data, ieLen);
-         i += ieLen -1;
+         //         i += ieLen -1;
+         i += ieLen;
       }else
       {
          OOTRACEWARN1("Warning: Only UUIE is supported currently\n");
