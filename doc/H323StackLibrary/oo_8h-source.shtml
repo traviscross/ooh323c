@@ -125,83 +125,99 @@
 00014 <span class="comment"> *</span>
 00015 <span class="comment"> *****************************************************************************/</span>
 00016
+00022 <span class="preprocessor">#include "<a class="code" href="ooCommon_8h.shtml">ooCommon.h</a>"</span>
 00023 <span class="preprocessor">#ifndef _OO_H_</span>
 00024 <span class="preprocessor"></span><span class="preprocessor">#define _OO_H_</span>
 00025 <span class="preprocessor"></span>
 00026
 00027 <span class="comment">/* tracing */</span>
-00028 <span class="preprocessor">#ifdef _OOWARNING</span>
-00029 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 2</span>
-00030 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00031 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OOINFO</span>
-00032 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 3</span>
-00033 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00034 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGA</span>
-00035 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 4</span>
-00036 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00037 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGB</span>
-00038 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 5</span>
-00039 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00040 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGC</span>
-00041 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 6</span>
-00042 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00043 <span class="preprocessor"></span>
-00044 <span class="comment">/* Ensure we always log error messages */</span>
-00045 <span class="preprocessor">#ifndef TRACELVL</span>
-00046 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 1</span>
-00047 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-00048 <span class="preprocessor"></span>
-00049 <span class="preprocessor">#define OOTRACEERR1(a)                ooTrace(a)</span>
-00050 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR2(a,b)        ooTrace(a,b)</span>
-00051 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR3(a,b,c)    ooTrace(a,b,c)</span>
-00052 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR4(a,b,c,d)  ooTrace(a,b,c,d)</span>
-00053 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN1(a)       if(TRACELVL &gt; 1) ooTrace(a)</span>
-00054 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN2(a,b)     if(TRACELVL &gt; 1) ooTrace(a,b)</span>
-00055 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN3(a,b,c)   if(TRACELVL &gt; 1) ooTrace(a,b,c)</span>
-00056 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN4(a,b,c,d) if(TRACELVL &gt; 1) ooTrace(a,b,c,d)</span>
-00057 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO1(a)               if(TRACELVL &gt; 2) ooTrace(a)</span>
-00058 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO2(a,b)     if(TRACELVL &gt; 2) ooTrace(a,b)</span>
-00059 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO3(a,b,c)   if(TRACELVL &gt; 2) ooTrace(a,b,c)</span>
-00060 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO4(a,b,c,d) if(TRACELVL &gt; 2) ooTrace(a,b,c,d)</span>
-00061 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO5(a,b,c,d,e) if(TRACELVL &gt; 2) ooTrace(a,b,c,d,e)</span>
-00062 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA1(a)       if(TRACELVL &gt; 3) ooTrace(a)</span>
-00063 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA2(a,b)     if(TRACELVL &gt; 3) ooTrace(a,b)</span>
-00064 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA3(a,b,c)   if(TRACELVL &gt; 3) ooTrace(a,b,c)</span>
-00065 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA4(a,b,c,d) if(TRACELVL &gt; 3) ooTrace(a,b,c,d)</span>
-00066 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB1(a)       if(TRACELVL &gt; 4) ooTrace(a)</span>
-00067 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB2(a,b)     if(TRACELVL &gt; 4) ooTrace(a,b)</span>
-00068 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB3(a,b,c)   if(TRACELVL &gt; 4) ooTrace(a,b,c)</span>
-00069 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB4(a,b,c,d) if(TRACELVL &gt; 4) ooTrace(a,b,c,d)</span>
-00070 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC1(a)       if(TRACELVL &gt; 5) ooTrace(a)</span>
-00071 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC2(a,b)     if(TRACELVL &gt; 5) ooTrace(a,b)</span>
-00072 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC3(a,b,c)   if(TRACELVL &gt; 5) ooTrace(a,b,c)</span>
-00073 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC4(a,b,c,d) if(TRACELVL &gt; 5) ooTrace(a,b,c,d)</span>
-00074 <span class="preprocessor"></span>
-00075 <span class="preprocessor">#ifdef __cplusplus</span>
-00076 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
-00077 <span class="preprocessor">#endif</span>
-00078 <span class="preprocessor"></span>
-00079 <span class="preprocessor">#ifndef EXTERN</span>
-00080 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
-00081 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
-00082 <span class="preprocessor"></span><span class="preprocessor">#else</span>
-00083 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
-00084 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
-00085 <span class="preprocessor">#endif </span><span class="comment">/* EXTERN */</span>
-00086
-00087
-00096 EXTERN <span class="keywordtype">void</span> <a class="code" href="oo_8h.shtml#a27">ooTrace</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * fmtspec, ...);
-00097
-00098 EXTERN <span class="keywordtype">int</span> ooLogAsn1Error(<span class="keywordtype">int</span> stat, <span class="keyword">const</span> <span class="keywordtype">char</span> * fname, <span class="keywordtype">int</span> lno);
-00099 <span class="preprocessor">#ifdef __cplusplus</span>
-00100 <span class="preprocessor"></span>}
-00101 <span class="preprocessor">#endif</span>
-00102 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00028 <span class="preprocessor">#define OOTRCLVLERR  1</span>
+00029 <span class="preprocessor"></span><span class="preprocessor">#define OOTRCLVLWARN 2</span>
+00030 <span class="preprocessor"></span><span class="preprocessor">#define OOTRCLVLINFO 3</span>
+00031 <span class="preprocessor"></span><span class="preprocessor">#define OOTRCLVLDBGA 4</span>
+00032 <span class="preprocessor"></span><span class="preprocessor">#define OOTRCLVLDBGB 5</span>
+00033 <span class="preprocessor"></span><span class="preprocessor">#define OOTRCLVLDBGC 6</span>
+00034 <span class="preprocessor"></span>
+00035 <span class="preprocessor">#ifdef _OOWARNING</span>
+00036 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL OOTRCLVLWARN</span>
+00037 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00038 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OOINFO</span>
+00039 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL OOTRCLVLINFO</span>
+00040 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00041 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGA</span>
+00042 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL OOTRCLVLDBGA</span>
+00043 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00044 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGB</span>
+00045 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL OOTRCLVLDBGB</span>
+00046 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00047 <span class="preprocessor"></span><span class="preprocessor">#ifdef _OODEBUGC</span>
+00048 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL OOTRCLVLDBGC</span>
+00049 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00050 <span class="preprocessor"></span>
+00051 <span class="comment">/* Ensure we always log error messages */</span>
+00052 <span class="preprocessor">#ifndef TRACELVL</span>
+00053 <span class="preprocessor"></span><span class="preprocessor">#define TRACELVL 1</span>
+00054 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+00055 <span class="preprocessor"></span>
+00056 <span class="preprocessor">#define OOTRACEERR1(a)        ooTrace(OOTRCLVLERR,a)</span>
+00057 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR2(a,b)      ooTrace(OOTRCLVLERR,a,b)</span>
+00058 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR3(a,b,c)    ooTrace(OOTRCLVLERR,a,b,c)</span>
+00059 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEERR4(a,b,c,d)  ooTrace(OOTRCLVLERR,a,b,c,d)</span>
+00060 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN1(a)       ooTrace(OOTRCLVLWARN,a)</span>
+00061 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN2(a,b)     ooTrace(OOTRCLVLWARN,a,b)</span>
+00062 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN3(a,b,c)   ooTrace(OOTRCLVLWARN,a,b,c)</span>
+00063 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEWARN4(a,b,c,d) ooTrace(OOTRCLVLWARN,a,b,c,d)</span>
+00064 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO1(a)       ooTrace(OOTRCLVLINFO, a)</span>
+00065 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO2(a,b)     ooTrace(OOTRCLVLINFO,a,b)</span>
+00066 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO3(a,b,c)   ooTrace(OOTRCLVLINFO,a,b,c)</span>
+00067 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO4(a,b,c,d) ooTrace(OOTRCLVLINFO,a,b,c,d)</span>
+00068 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEINFO5(a,b,c,d,e) ooTrace(OOTRCLVLINFO,a,b,c,d,e)</span>
+00069 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA1(a)       ooTrace(OOTRCLVLDBGA,a)</span>
+00070 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA2(a,b)     ooTrace(OOTRCLVLDBGA,a,b)</span>
+00071 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA3(a,b,c)   ooTrace(OOTRCLVLDBGA,a,b,c)</span>
+00072 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA4(a,b,c,d) ooTrace(OOTRCLVLDBGA,a,b,c,d)</span>
+00073 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGA5(a,b,c,d,e) ooTrace(OOTRCLVLDBGA,a,b,c,d,e)</span>
+00074 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB1(a)       ooTrace(OOTRCLVLDBGB,a)</span>
+00075 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB2(a,b)     ooTrace(OOTRCLVLDBGB,a,b)</span>
+00076 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB3(a,b,c)   ooTrace(OOTRCLVLDBGB,a,b,c)</span>
+00077 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGB4(a,b,c,d) ooTrace(OOTRCLVLDBGB,a,b,c,d)</span>
+00078 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC1(a)       ooTrace(OOTRCLVLDBGC,a)</span>
+00079 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC2(a,b)     ooTrace(OOTRCLVLDBGC,a,b)</span>
+00080 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC3(a,b,c)   ooTrace(OOTRCLVLDBGC,a,b,c)</span>
+00081 <span class="preprocessor"></span><span class="preprocessor">#define OOTRACEDBGC4(a,b,c,d) ooTrace(OOTRCLVLDBGC,a,b,c,d)</span>
+00082 <span class="preprocessor"></span>
+00083 <span class="preprocessor">#ifdef __cplusplus</span>
+00084 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
+00085 <span class="preprocessor">#endif</span>
+00086 <span class="preprocessor"></span>
+00087 <span class="preprocessor">#ifndef EXTERN</span>
+00088 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
+00089 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
+00090 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00091 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
+00092 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
+00093 <span class="preprocessor">#endif </span><span class="comment">/* EXTERN */</span>
+00094
+00095
+00102 EXTERN <span class="keywordtype">char</span> * <a class="code" href="oo_8h.shtml#a33">ooGetText</a>(<span class="keywordtype">int</span> code);
+00103
+00112 EXTERN <span class="keywordtype">void</span> <a class="code" href="oo_8h.shtml#a34">ooSetTraceThreshold</a>(OOUINT32 traceLevel);
+00113
+00123 EXTERN <span class="keywordtype">void</span> <a class="code" href="oo_8h.shtml#a35">ooTrace</a>(OOUINT32 traceLevel, <span class="keyword">const</span> <span class="keywordtype">char</span> * fmtspec, ...);
+00124
+00132 <span class="keywordtype">void</span> <a class="code" href="oo_8h.shtml#a36">ooTraceLogMessage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * logMessage);
+00133
+00134
+00135 <span class="keywordtype">int</span> ooLogAsn1Error(<span class="keywordtype">int</span> stat, <span class="keyword">const</span> <span class="keywordtype">char</span> * fname, <span class="keywordtype">int</span> lno);
+00136 <span class="preprocessor">#ifdef __cplusplus</span>
+00137 <span class="preprocessor"></span>}
+00138 <span class="preprocessor">#endif</span>
+00139 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 </div></pre><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -151,7 +151,7 @@
 00044 <span class="preprocessor"></span>
 00050 <span class="comment">/* Basic type definitions */</span>
 00051
-00052 <span class="keyword">typedef</span> <span class="keywordtype">char</span>            OOCHAR;
+<a name="l00052"></a><a class="code" href="ooCommon_8h.shtml#a13">00052</a> <span class="keyword">typedef</span> <span class="keywordtype">char</span>            <a class="code" href="ooCommon_8h.shtml#a13">OOCHAR</a>;
 00053 <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>   OOUCHAR;
 00054 <span class="keyword">typedef</span> <span class="keywordtype">signed</span> <span class="keywordtype">char</span>     OOINT8;
 00055 <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>   OOUINT8;
@@ -216,12 +216,15 @@
 00114 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _DLL */</span>
 00115 <span class="preprocessor">#endif </span><span class="comment">/* EXTERN */</span>
 00116
+00117 <span class="comment">/*</span>
+00118 <span class="comment"> * @} </span>
+00119 <span class="comment"> */</span>
 00120 <span class="preprocessor">#endif </span><span class="comment">/* _OOCOMMON_H_ */</span>
 </div></pre><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

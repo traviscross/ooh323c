@@ -203,215 +203,224 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a16" doxytag="ootypes.h::OO_FASTSTART_REFUSED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_FASTSTART_REFUSED</b>&nbsp;&nbsp;&nbsp;18</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a17" doxytag="ootypes.h::OO_UNKNOWN" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a17">OO_UNKNOWN</a>&nbsp;&nbsp;&nbsp;20</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a17" doxytag="ootypes.h::OO_CALL_ENDREASON_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a17">OO_CALL_ENDREASON_MIN</a>&nbsp;&nbsp;&nbsp;20</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Call Clear Reasons. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="ootypes.h::OO_REMOTE_CLOSED_CONNECTION" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="ootypes.h::OO_UNKNOWN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_UNKNOWN</b>&nbsp;&nbsp;&nbsp;20</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="ootypes.h::OO_REMOTE_CLOSED_CONNECTION" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_REMOTE_CLOSED_CONNECTION</b>&nbsp;&nbsp;&nbsp;21</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="ootypes.h::OO_REMOTE_CLOSED_H245_CONNECTION" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="ootypes.h::OO_REMOTE_CLOSED_H245_CONNECTION" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_REMOTE_CLOSED_H245_CONNECTION</b>&nbsp;&nbsp;&nbsp;22</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="ootypes.h::OO_REMOTE_CLEARED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a21" doxytag="ootypes.h::OO_REMOTE_CLEARED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_REMOTE_CLEARED</b>&nbsp;&nbsp;&nbsp;23</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a21" doxytag="ootypes.h::OO_HOST_CLEARED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a22" doxytag="ootypes.h::OO_HOST_CLEARED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_HOST_CLEARED</b>&nbsp;&nbsp;&nbsp;24</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a22" doxytag="ootypes.h::OO_NORMAL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a23" doxytag="ootypes.h::OO_NORMAL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_NORMAL</b>&nbsp;&nbsp;&nbsp;25</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a23" doxytag="ootypes.h::OO_TotalMessages" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_TotalMessages</b>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a24" doxytag="ootypes.h::OO_CALL_ENDREASON_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_ENDREASON_MAX</b>&nbsp;&nbsp;&nbsp;25</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a24" doxytag="ootypes.h::OO_CALL_CREATED" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a24">OO_CALL_CREATED</a>&nbsp;&nbsp;&nbsp;50</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a25" doxytag="ootypes.h::OO_CALL_STATE_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a25">OO_CALL_STATE_MIN</a>&nbsp;&nbsp;&nbsp;50</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">call states <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a25" doxytag="ootypes.h::OO_CALL_WAITING_ADMISSION" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a26" doxytag="ootypes.h::OO_CALL_CREATED" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CREATED</b>&nbsp;&nbsp;&nbsp;50</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a27" doxytag="ootypes.h::OO_CALL_WAITING_ADMISSION" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_WAITING_ADMISSION</b>&nbsp;&nbsp;&nbsp;51</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a26" doxytag="ootypes.h::OO_CALL_CONNECTING" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a28" doxytag="ootypes.h::OO_CALL_CONNECTING" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CONNECTING</b>&nbsp;&nbsp;&nbsp;52</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a27" doxytag="ootypes.h::OO_CALL_CONNECTED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a29" doxytag="ootypes.h::OO_CALL_CONNECTED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CONNECTED</b>&nbsp;&nbsp;&nbsp;53</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a28" doxytag="ootypes.h::OO_CALL_CLEAR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a30" doxytag="ootypes.h::OO_CALL_CLEAR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR</b>&nbsp;&nbsp;&nbsp;54 /* call marked for clearing */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a29" doxytag="ootypes.h::OO_CALL_CLEAR_CLOLCS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a31" doxytag="ootypes.h::OO_CALL_CLEAR_CLOLCS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR_CLOLCS</b>&nbsp;&nbsp;&nbsp;55 /* Logical Channels closed*/</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a30" doxytag="ootypes.h::OO_CALL_CLEAR_CLELCS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a32" doxytag="ootypes.h::OO_CALL_CLEAR_CLELCS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR_CLELCS</b>&nbsp;&nbsp;&nbsp;56 /* Logical Channels cleared*/</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a31" doxytag="ootypes.h::OO_CALL_CLEAR_ENDSESSION" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a33" doxytag="ootypes.h::OO_CALL_CLEAR_ENDSESSION" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR_ENDSESSION</b>&nbsp;&nbsp;&nbsp;57 /* EndSession command sent*/</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a32" doxytag="ootypes.h::OO_CALL_CLEAR_CLOSEH245" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a34" doxytag="ootypes.h::OO_CALL_CLEAR_CLOSEH245" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR_CLOSEH245</b>&nbsp;&nbsp;&nbsp;58 /* H245 sockets closed*/</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a33" doxytag="ootypes.h::OO_CALL_CLEAR_RELEASE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a35" doxytag="ootypes.h::OO_CALL_CLEAR_RELEASE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEAR_RELEASE</b>&nbsp;&nbsp;&nbsp;59 /* Release Sent */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a34" doxytag="ootypes.h::OO_CALL_CLEARED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a36" doxytag="ootypes.h::OO_CALL_CLEARED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_CLEARED</b>&nbsp;&nbsp;&nbsp;60 /* Call Cleared */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a35" doxytag="ootypes.h::CALL_STATE_BASE" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><b>CALL_STATE_BASE</b>&nbsp;&nbsp;&nbsp;50</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a37" doxytag="ootypes.h::OO_CALL_STATE_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALL_STATE_MAX</b>&nbsp;&nbsp;&nbsp;60</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a36" doxytag="ootypes.h::OO_H245SESSION_INACTIVE" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a36">OO_H245SESSION_INACTIVE</a>&nbsp;&nbsp;&nbsp;61</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a38" doxytag="ootypes.h::OO_H245SESSION_INACTIVE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a38">OO_H245SESSION_INACTIVE</a>&nbsp;&nbsp;&nbsp;61</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">H245 Session state. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a37" doxytag="ootypes.h::OO_H245SESSION_ACTIVE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a39" doxytag="ootypes.h::OO_H245SESSION_ACTIVE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_H245SESSION_ACTIVE</b>&nbsp;&nbsp;&nbsp;62</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a38" doxytag="ootypes.h::OO_LOGICALCHAN_IDLE" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a38">OO_LOGICALCHAN_IDLE</a>&nbsp;&nbsp;&nbsp;70</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a40" doxytag="ootypes.h::OO_LOGICALCHAN_IDLE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a40">OO_LOGICALCHAN_IDLE</a>&nbsp;&nbsp;&nbsp;70</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Logical Channel states. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a39" doxytag="ootypes.h::OO_LOGICALCHAN_PROPOSED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a41" doxytag="ootypes.h::OO_LOGICALCHAN_PROPOSED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_LOGICALCHAN_PROPOSED</b>&nbsp;&nbsp;&nbsp;71</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a40" doxytag="ootypes.h::OO_LOGICALCHAN_ESTABLISHED" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a42" doxytag="ootypes.h::OO_LOGICALCHAN_ESTABLISHED" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_LOGICALCHAN_ESTABLISHED</b>&nbsp;&nbsp;&nbsp;72</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a41">OOTERMTYPE</a>&nbsp;&nbsp;&nbsp;60</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a43">OOTERMTYPE</a>&nbsp;&nbsp;&nbsp;60</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Terminal type of the endpoint.  <a href="#a41"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a42" doxytag="ootypes.h::MAXLOGMSGLEN" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><b>MAXLOGMSGLEN</b>&nbsp;&nbsp;&nbsp;1024</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Terminal type of the endpoint.  <a href="#a43"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a44" doxytag="ootypes.h::MAXLOGMSGLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>MAXLOGMSGLEN</b>&nbsp;&nbsp;&nbsp;2048</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a43" doxytag="ootypes.h::OOQ931MSG" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a43">OOQ931MSG</a>&nbsp;&nbsp;&nbsp;101</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a45" doxytag="ootypes.h::OO_MSGTYPE_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a45">OO_MSGTYPE_MIN</a>&nbsp;&nbsp;&nbsp;101</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Various message types for H225 and H245 messages. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a44" doxytag="ootypes.h::OOH245MSG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a46" doxytag="ootypes.h::OOQ931MSG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOQ931MSG</b>&nbsp;&nbsp;&nbsp;101</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a47" doxytag="ootypes.h::OOH245MSG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOH245MSG</b>&nbsp;&nbsp;&nbsp;102</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a45" doxytag="ootypes.h::OOSetup" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a48" doxytag="ootypes.h::OOSetup" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOSetup</b>&nbsp;&nbsp;&nbsp;103</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a46" doxytag="ootypes.h::OOCallProceeding" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a49" doxytag="ootypes.h::OOCallProceeding" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCallProceeding</b>&nbsp;&nbsp;&nbsp;104</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a47" doxytag="ootypes.h::OOAlert" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a50" doxytag="ootypes.h::OOAlert" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOAlert</b>&nbsp;&nbsp;&nbsp;105</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a48" doxytag="ootypes.h::OOConnect" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a51" doxytag="ootypes.h::OOConnect" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOConnect</b>&nbsp;&nbsp;&nbsp;106</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a49" doxytag="ootypes.h::OOReleaseComplete" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a52" doxytag="ootypes.h::OOReleaseComplete" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOReleaseComplete</b>&nbsp;&nbsp;&nbsp;107</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a50" doxytag="ootypes.h::OOFacility" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a53" doxytag="ootypes.h::OOFacility" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOFacility</b>&nbsp;&nbsp;&nbsp;108</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a51" doxytag="ootypes.h::OOMasterSlaveDetermination" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a54" doxytag="ootypes.h::OOMasterSlaveDetermination" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMasterSlaveDetermination</b>&nbsp;&nbsp;&nbsp;109</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a52" doxytag="ootypes.h::OOMasterSlaveAck" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a55" doxytag="ootypes.h::OOMasterSlaveAck" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMasterSlaveAck</b>&nbsp;&nbsp;&nbsp;110</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a53" doxytag="ootypes.h::OOMasterSlaveReject" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a56" doxytag="ootypes.h::OOMasterSlaveReject" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMasterSlaveReject</b>&nbsp;&nbsp;&nbsp;111</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a54" doxytag="ootypes.h::OOMasterSlaveRelease" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a57" doxytag="ootypes.h::OOMasterSlaveRelease" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMasterSlaveRelease</b>&nbsp;&nbsp;&nbsp;112</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a55" doxytag="ootypes.h::OOTerminalCapabilitySet" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a58" doxytag="ootypes.h::OOTerminalCapabilitySet" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOTerminalCapabilitySet</b>&nbsp;&nbsp;&nbsp;113</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a56" doxytag="ootypes.h::OOTerminalCapabilitySetAck" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a59" doxytag="ootypes.h::OOTerminalCapabilitySetAck" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOTerminalCapabilitySetAck</b>&nbsp;&nbsp;&nbsp;114</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a57" doxytag="ootypes.h::OOTerminalCapabilitySetReject" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a60" doxytag="ootypes.h::OOTerminalCapabilitySetReject" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOTerminalCapabilitySetReject</b>&nbsp;&nbsp;&nbsp;115</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a58" doxytag="ootypes.h::OOOpenLogicalChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a61" doxytag="ootypes.h::OOOpenLogicalChannel" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOOpenLogicalChannel</b>&nbsp;&nbsp;&nbsp;116</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a59" doxytag="ootypes.h::OOOpenLogicalChannelAck" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a62" doxytag="ootypes.h::OOOpenLogicalChannelAck" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOOpenLogicalChannelAck</b>&nbsp;&nbsp;&nbsp;117</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a60" doxytag="ootypes.h::OOOpenLogicalChannelReject" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a63" doxytag="ootypes.h::OOOpenLogicalChannelReject" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOOpenLogicalChannelReject</b>&nbsp;&nbsp;&nbsp;118</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a61" doxytag="ootypes.h::OOOpenLogicalChannelRelease" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a64" doxytag="ootypes.h::OOOpenLogicalChannelRelease" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOOpenLogicalChannelRelease</b>&nbsp;&nbsp;&nbsp;119</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a62" doxytag="ootypes.h::OOEndSessionCommand" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a65" doxytag="ootypes.h::OOEndSessionCommand" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOEndSessionCommand</b>&nbsp;&nbsp;&nbsp;120</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a63" doxytag="ootypes.h::OOCloseLogicalChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a66" doxytag="ootypes.h::OOCloseLogicalChannel" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCloseLogicalChannel</b>&nbsp;&nbsp;&nbsp;121</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a64" doxytag="ootypes.h::OOCloseLogicalChannelAck" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a67" doxytag="ootypes.h::OOCloseLogicalChannelAck" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCloseLogicalChannelAck</b>&nbsp;&nbsp;&nbsp;122</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a65" doxytag="ootypes.h::OORequestChannelClose" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a68" doxytag="ootypes.h::OORequestChannelClose" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OORequestChannelClose</b>&nbsp;&nbsp;&nbsp;123</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a66" doxytag="ootypes.h::OORequestChannelCloseAck" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a69" doxytag="ootypes.h::OORequestChannelCloseAck" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OORequestChannelCloseAck</b>&nbsp;&nbsp;&nbsp;124</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a67" doxytag="ootypes.h::OO_MSGTYPE_BASE" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_MSGTYPE_BASE</b>&nbsp;&nbsp;&nbsp;101</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a70" doxytag="ootypes.h::OO_MSGTYPE_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_MSGTYPE_MAX</b>&nbsp;&nbsp;&nbsp;125</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a68" doxytag="ootypes.h::TCPPORTSSTART" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a68">TCPPORTSSTART</a>&nbsp;&nbsp;&nbsp;12030</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a71" doxytag="ootypes.h::TCPPORTSSTART" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a71">TCPPORTSSTART</a>&nbsp;&nbsp;&nbsp;12030</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default port ranges used. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a69" doxytag="ootypes.h::TCPPORTSEND" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a72" doxytag="ootypes.h::TCPPORTSEND" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TCPPORTSEND</b>&nbsp;&nbsp;&nbsp;12230</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a70" doxytag="ootypes.h::UDPPORTSSTART" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a73" doxytag="ootypes.h::UDPPORTSSTART" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UDPPORTSSTART</b>&nbsp;&nbsp;&nbsp;13030</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a71" doxytag="ootypes.h::UDPPORTSEND" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a74" doxytag="ootypes.h::UDPPORTSEND" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UDPPORTSEND</b>&nbsp;&nbsp;&nbsp;13230</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a72" doxytag="ootypes.h::RTPPORTSSTART" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a75" doxytag="ootypes.h::RTPPORTSSTART" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>RTPPORTSSTART</b>&nbsp;&nbsp;&nbsp;14030</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a73" doxytag="ootypes.h::RTPPORTSEND" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a76" doxytag="ootypes.h::RTPPORTSEND" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>RTPPORTSEND</b>&nbsp;&nbsp;&nbsp;14230</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a74" doxytag="ootypes.h::MAXMSGLEN" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a74">MAXMSGLEN</a>&nbsp;&nbsp;&nbsp;4096</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a77" doxytag="ootypes.h::MAXMSGLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a77">MAXMSGLEN</a>&nbsp;&nbsp;&nbsp;4096</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maximum length for received messages. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a75" doxytag="ootypes.h::OO_CMD_MAKECALL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a78" doxytag="ootypes.h::OO_CMD_MAKECALL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CMD_MAKECALL</b>&nbsp;&nbsp;&nbsp;201</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a76" doxytag="ootypes.h::OO_CMD_ANSCALL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a79" doxytag="ootypes.h::OO_CMD_ANSCALL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CMD_ANSCALL</b>&nbsp;&nbsp;&nbsp;202</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a77" doxytag="ootypes.h::OO_CMD_REJECTCALL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a80" doxytag="ootypes.h::OO_CMD_REJECTCALL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CMD_REJECTCALL</b>&nbsp;&nbsp;&nbsp;203</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a78" doxytag="ootypes.h::OO_CMD_HANGCALL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a81" doxytag="ootypes.h::OO_CMD_HANGCALL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CMD_HANGCALL</b>&nbsp;&nbsp;&nbsp;204</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a79" doxytag="ootypes.h::OO_CMD_STOPMONITOR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a82" doxytag="ootypes.h::OO_CMD_STOPMONITOR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CMD_STOPMONITOR</b>&nbsp;&nbsp;&nbsp;205</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a80">OO_CALLMODE_AUDIOCALL</a>&nbsp;&nbsp;&nbsp;301</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a83">OO_CALLMODE_AUDIOCALL</a>&nbsp;&nbsp;&nbsp;301</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Endpoint call modes.  <a href="#a80"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a81" doxytag="ootypes.h::OO_CALLMODE_AUDIORX" ></a>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Endpoint call modes.  <a href="#a83"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a84" doxytag="ootypes.h::OO_CALLMODE_AUDIORX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALLMODE_AUDIORX</b>&nbsp;&nbsp;&nbsp;302</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a82" doxytag="ootypes.h::OO_CALLMODE_AUDIOTX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a85" doxytag="ootypes.h::OO_CALLMODE_AUDIOTX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALLMODE_AUDIOTX</b>&nbsp;&nbsp;&nbsp;303</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a83" doxytag="ootypes.h::OO_CALLMODE_VIDEOCALL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a86" doxytag="ootypes.h::OO_CALLMODE_VIDEOCALL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALLMODE_VIDEOCALL</b>&nbsp;&nbsp;&nbsp;304</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a84" doxytag="ootypes.h::OO_CALLMODE_FAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a87" doxytag="ootypes.h::OO_CALLMODE_FAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CALLMODE_FAX</b>&nbsp;&nbsp;&nbsp;305</td></tr>
 
 <tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
@@ -485,8 +494,8 @@ typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><b>cb_OnCallClear
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a114" doxytag="ootypes.h::cb_OnCallEstablished" ></a>
 typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><b>cb_OnCallEstablished</b> )(<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a115" doxytag="ootypes.h::cb_OnStartLogicalChannel" ></a>
-typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><b>cb_OnStartLogicalChannel</b> )(<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a115" doxytag="ootypes.h::cb_OnOutgoingCallAdmitted" ></a>
+typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><b>cb_OnOutgoingCallAdmitted</b> )(<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a116" doxytag="ootypes.h::ooEndPoint" ></a>
 typedef <a class="el" href="structooEndPoint.shtml">ooEndPoint</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ootypes_8h.shtml#a116">ooEndPoint</a></td></tr>
@@ -531,7 +540,7 @@ This file contains the definitions of common constants and data structures.
 
 <p>
 Definition in file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr><h2>Define Documentation</h2>
-<a class="anchor" name="a80" doxytag="ootypes.h::OO_CALLMODE_AUDIOCALL" ></a><p>
+<a class="anchor" name="a83" doxytag="ootypes.h::OO_CALLMODE_AUDIOCALL" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -555,10 +564,10 @@ Endpoint call modes.
 <p>
 The call mode of the endpoint dictates what type of channels are created for the calls placed by the endpoint or received by the endpoint.
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00209">209</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.    </td>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00164">164</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="a41" doxytag="ootypes.h::OOTERMTYPE" ></a><p>
+<a class="anchor" name="a43" doxytag="ootypes.h::OOTERMTYPE" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -582,7 +591,7 @@ Terminal type of the endpoint.
 <p>
 Default is 60.
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00123">123</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.    </td>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00103">103</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.    </td>
   </tr>
 </table>
 <hr><h2>Typedef Documentation</h2>
@@ -641,6 +650,6 @@ Contains context for memory allocation, protocol Discriminator, call reference, 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

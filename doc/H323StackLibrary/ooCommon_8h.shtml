@@ -131,74 +131,75 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_OOMsgBuf</b></td></tr>
 
 <tr><td colspan=2><br><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga216" doxytag="ooCommon.h::OOUINT32_MAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a0" doxytag="ooCommon.h::OOUINT32_MAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT32_MAX</b>&nbsp;&nbsp;&nbsp;4294967295U</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga217" doxytag="ooCommon.h::OOINT32_MAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a1" doxytag="ooCommon.h::OOINT32_MAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32_MAX</b>&nbsp;&nbsp;&nbsp;((OOINT32)2147483647L)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga218" doxytag="ooCommon.h::OOINT32_MIN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a2" doxytag="ooCommon.h::OOINT32_MIN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32_MIN</b>&nbsp;&nbsp;&nbsp;((OOINT32)(-OOINT32_MAX-1))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga219" doxytag="ooCommon.h::FALSE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a3" doxytag="ooCommon.h::FALSE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>FALSE</b>&nbsp;&nbsp;&nbsp;0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga220" doxytag="ooCommon.h::TRUE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a4" doxytag="ooCommon.h::TRUE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TRUE</b>&nbsp;&nbsp;&nbsp;1</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga221" doxytag="ooCommon.h::OOERRINVPARAM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a5" doxytag="ooCommon.h::OOERRINVPARAM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRINVPARAM</b>&nbsp;&nbsp;&nbsp;(-50)   /* Invalid parameter    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga222" doxytag="ooCommon.h::OOERRBUFOVFLW" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a6" doxytag="ooCommon.h::OOERRBUFOVFLW" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRBUFOVFLW</b>&nbsp;&nbsp;&nbsp;(-51)   /* Buffer overflow      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga223" doxytag="ooCommon.h::OOERRNOMEM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a7" doxytag="ooCommon.h::OOERRNOMEM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRNOMEM</b>&nbsp;&nbsp;&nbsp;(-52)   /* No dynamic memory available */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga224" doxytag="ooCommon.h::OOMEMALLOC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a8" doxytag="ooCommon.h::OOMEMALLOC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMEMALLOC</b>&nbsp;&nbsp;&nbsp;malloc</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga225" doxytag="ooCommon.h::OOMEMFREE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a9" doxytag="ooCommon.h::OOMEMFREE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMEMFREE</b>&nbsp;&nbsp;&nbsp;free</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga226" doxytag="ooCommon.h::OOMAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a10" doxytag="ooCommon.h::OOMAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMAX</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&gt;(b))?(a):(b))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga227" doxytag="ooCommon.h::OOMIN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a11" doxytag="ooCommon.h::OOMIN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMIN</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&lt;(b))?(a):(b))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga228" doxytag="ooCommon.h::EXTERN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a12" doxytag="ooCommon.h::EXTERN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>EXTERN</b></td></tr>
 
 <tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga37" doxytag="ooCommon.h::OOCHAR" ></a>
-typedef char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCHAR</b></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a13" doxytag="ooCommon.h::OOCHAR" ></a>
+typedef char&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="ooCommon_8h.shtml#a13">OOCHAR</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga38" doxytag="ooCommon.h::OOUCHAR" ></a>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cruntime C Runtime Common Constant and Type Definitions. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a14" doxytag="ooCommon.h::OOUCHAR" ></a>
 typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUCHAR</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga39" doxytag="ooCommon.h::OOINT8" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a15" doxytag="ooCommon.h::OOINT8" ></a>
 typedef signed char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT8</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga40" doxytag="ooCommon.h::OOUINT8" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a16" doxytag="ooCommon.h::OOUINT8" ></a>
 typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT8</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga41" doxytag="ooCommon.h::OOINT16" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a17" doxytag="ooCommon.h::OOINT16" ></a>
 typedef short&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT16</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga42" doxytag="ooCommon.h::OOUINT16" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="ooCommon.h::OOUINT16" ></a>
 typedef unsigned short&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT16</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga43" doxytag="ooCommon.h::OOINT32" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="ooCommon.h::OOINT32" ></a>
 typedef int&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga44" doxytag="ooCommon.h::OOUINT32" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="ooCommon.h::OOUINT32" ></a>
 typedef unsigned int&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT32</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga45" doxytag="ooCommon.h::OOBOOL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a21" doxytag="ooCommon.h::OOBOOL" ></a>
 typedef OOUINT8&nbsp;</td><td class="memItemRight" valign=bottom><b>OOBOOL</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga46" doxytag="ooCommon.h::OOMsgBuf" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a22" doxytag="ooCommon.h::OOMsgBuf" ></a>
 typedef _OOMsgBuf&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMsgBuf</b></td></tr>
 
 </table>
@@ -212,6 +213,6 @@ Definition in file <a class="el" href="ooCommon_8h-source.shtml">ooCommon.h</a>.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -165,38 +165,40 @@
  }</td></tr>
 
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="ooras.h::ooInitRas" ></a>
-EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga1">ooInitRas</a> (int localRasPort, enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga1">ooInitRas</a> (int localRasPort, enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to initialize the Ras module by setting gatekeeper mode and Creating Ras Channel. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="ooras.h::ooRasExplorer" ></a>
-EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga2">ooRasExplorer</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to initialize the Ras module by setting gatekeeper mode and Creating Ras Channel.  <a href="group__ras.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga2">ooDestroyRas</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to destroy RasModule.  <a href="group__ras.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga3" doxytag="ooras.h::ooRasExplorer" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga3">ooRasExplorer</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called periodically to monitor the process the RAS channel. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga3">ooRasFillAlias</a> (OOCTXT *psContext, ooAliases *psAliases, H225_SeqOfH225AliasAddress *psAliasList)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga4">ooRasFillAlias</a> (OOCTXT *psContext, ooAliases *psAliases, H225_SeqOfH225AliasAddress *psAliasList)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Populate Alias list.  <a href="group__ras.shtml#ga3"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga4">ooRasGetSocket</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Populate Alias list.  <a href="group__ras.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga5">ooRasGetSocket</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current RAS socket.  <a href="group__ras.shtml#ga4"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga5">ooRasReceive</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current RAS socket.  <a href="group__ras.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga6">ooRasReceive</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked receive data from RAS port.  <a href="group__ras.shtml#ga5"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga6">ooRasSetGatekeeperMode</a> (enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked receive data from RAS port.  <a href="group__ras.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga7">ooRasSetGatekeeperMode</a> (enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to set a gatekeeper mode.  <a href="group__ras.shtml#ga6"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN enum RasGatekeeperMode&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga7">ooRasGetGatekeeperMode</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to set a gatekeeper mode.  <a href="group__ras.shtml#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN enum RasGatekeeperMode&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga8">ooRasGetGatekeeperMode</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current gatekeeper mode.  <a href="group__ras.shtml#ga7"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga8">ooRasIsRegistered</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current gatekeeper mode.  <a href="group__ras.shtml#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga9">ooRasIsRegistered</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine the registration status of the endpoint with the gatekeeper.  <a href="group__ras.shtml#ga8"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga9">ooRasSendAdmissionRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, enum RasCallModel eModel, ooAliases *psSrcAliases, ooAliases *psDestAliases)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine the registration status of the endpoint with the gatekeeper.  <a href="group__ras.shtml#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga10">ooRasSendAdmissionRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, enum RasCallModel eModel, ooAliases *psSrcAliases, ooAliases *psDestAliases)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request bandwith admission for a call.  <a href="group__ras.shtml#ga9"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga10">ooRasSendDisengageRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request bandwith admission for a call.  <a href="group__ras.shtml#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga11">ooRasSendDisengageRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request call disengage to gatekeeper.  <a href="group__ras.shtml#ga10"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request call disengage to gatekeeper.  <a href="group__ras.shtml#ga11"></a><br><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This file contains functions to support RAS protocol.
@@ -208,6 +210,6 @@ Definition in file <a class="el" href="ooras_8h-source.shtml">ooras.h</a>.<!--EN
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

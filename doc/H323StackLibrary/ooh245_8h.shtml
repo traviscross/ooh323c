@@ -116,7 +116,6 @@
 <code>#include "<a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>"</code><br>
 <code>#include "<a class="el" href="oochannels_8h-source.shtml">oochannels.h</a>"</code><br>
 <code>#include "<a class="el" href="oo_8h-source.shtml">oo.h</a>"</code><br>
-<code>#include "<a class="el" href="oosndrtp_8h-source.shtml">oosndrtp.h</a>"</code><br>
 <code>#include "<a class="el" href="ooq931_8h-source.shtml">ooq931.h</a>"</code><br>
 <code>#include "MULTIMEDIA-SYSTEM-CONTROL.h"</code><br>
 
@@ -157,57 +156,60 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga10">ooOnReceivedOpenLogicalChannelAck</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannelAck *olcAck)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle a received OpenLogicalChannelAck message.  <a href="group__h245.shtml#ga10"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga11">ooSendEndSessionCommand</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga11">ooOnReceivedOpenLogicalChannelRejected</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannelReject *olcRejected)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This message is used to send an EndSession command.  <a href="group__h245.shtml#ga11"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga12">ooHandleH245Command</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CommandMessage *command)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle the received OpenLogicalChannelReject message.  <a href="group__h245.shtml#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga12">ooSendEndSessionCommand</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle a received H245Command message.  <a href="group__h245.shtml#ga12"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga13">ooOnReceivedTerminalCapabilitySetAck</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This message is used to send an EndSession command.  <a href="group__h245.shtml#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga13">ooHandleH245Command</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CommandMessage *command)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called on receiving a TreminalCapabilitySetAck message.  <a href="group__h245.shtml#ga13"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga14">ooCloseAllLogicalChannels</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle a received H245Command message.  <a href="group__h245.shtml#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga14">ooOnReceivedTerminalCapabilitySetAck</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called to close all the open logical channels.  <a href="group__h245.shtml#ga14"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga15">ooSendCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called on receiving a TreminalCapabilitySetAck message.  <a href="group__h245.shtml#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga15">ooCloseAllLogicalChannels</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send out a CloseLogicalChannel message for a particular logical channel.  <a href="group__h245.shtml#ga15"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga16">ooOnReceivedCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CloseLogicalChannel *clc)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called to close all the open logical channels.  <a href="group__h245.shtml#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga16">ooSendCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process a received closeLogicalChannel request.  <a href="group__h245.shtml#ga16"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga17">ooOnReceivedCloseChannelAck</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CloseLogicalChannelAck *clcAck)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send out a CloseLogicalChannel message for a particular logical channel.  <a href="group__h245.shtml#ga16"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga17">ooOnReceivedCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CloseLogicalChannel *clc)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process a received CloseLogicalChannelAck message.  <a href="group__h245.shtml#ga17"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga18">ooHandleH245Message</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structH245Message.shtml">H245Message</a> *pmsg)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process a received closeLogicalChannel request.  <a href="group__h245.shtml#ga17"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga18">ooOnReceivedCloseChannelAck</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245CloseLogicalChannelAck *clcAck)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle received H245 message.  <a href="group__h245.shtml#ga18"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga19">ooOnReceivedTerminalCapabilitySet</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structH245Message.shtml">H245Message</a> *pmsg)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process a received CloseLogicalChannelAck message.  <a href="group__h245.shtml#ga18"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga19">ooHandleH245Message</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structH245Message.shtml">H245Message</a> *pmsg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process received TCS message.  <a href="group__h245.shtml#ga19"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga20">ooH245AcknowledgeTerminalCapabilitySet</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle received H245 message.  <a href="group__h245.shtml#ga19"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga20">ooOnReceivedTerminalCapabilitySet</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structH245Message.shtml">H245Message</a> *pmsg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send a TCSAck message to remote endpoint.  <a href="group__h245.shtml#ga20"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga21">ooOpenLogicalChannels</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to process received TCS message.  <a href="group__h245.shtml#ga20"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga21">ooH245AcknowledgeTerminalCapabilitySet</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to start OpenLogicalChannel procedure for all the channels to be opened for the call.  <a href="group__h245.shtml#ga21"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga22">ooOpenLogicalAudioChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send a TCSAck message to remote endpoint.  <a href="group__h245.shtml#ga21"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga22">ooOpenLogicalChannels</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send OpenLogicalChannel message for audio channel.  <a href="group__h245.shtml#ga22"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga23">ooOpenG711ULaw64KChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to start OpenLogicalChannel procedure for all the channels to be opened for the call.  <a href="group__h245.shtml#ga22"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga23">ooOpenLogicalAudioChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to build a OpenLogicalChannel message using G711ULaw64K capability.  <a href="group__h245.shtml#ga23"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga24">ooSendRequestCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send OpenLogicalChannel message for audio channel.  <a href="group__h245.shtml#ga23"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga24">ooOpenG711ULaw64KChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to request a remote end point to close a logical channel.  <a href="group__h245.shtml#ga24"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga25">ooOnReceivedRequestChannelClose</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245RequestChannelClose *rclc)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to build a OpenLogicalChannel message using G711ULaw64K capability.  <a href="group__h245.shtml#ga24"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga25">ooSendRequestCloseLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function handles the received RequestChannelClose message, verifies that the requested channel is forward channel.  <a href="group__h245.shtml#ga25"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga26">ooBuildOpenLogicalChannelAudio</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannel *olc, <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap, OOCTXT *pctxt)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to request a remote end point to close a logical channel.  <a href="group__h245.shtml#ga25"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga26">ooOnReceivedRequestChannelClose</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245RequestChannelClose *rclc)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds an OLC with an audio capability passed as parameter.  <a href="group__h245.shtml#ga26"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga27">ooSendAsTunneledMessage</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, ASN1OCTET *msgbuf, int len, int msgType)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function handles the received RequestChannelClose message, verifies that the requested channel is forward channel.  <a href="group__h245.shtml#ga26"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga27">ooBuildOpenLogicalChannelAudio</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannel *olc, <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap, OOCTXT *pctxt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function sends an encoded H.245 message buffer as a tunneled H.245 message.  <a href="group__h245.shtml#ga27"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds an OLC with an audio capability passed as parameter.  <a href="group__h245.shtml#ga27"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h245.shtml#ga28">ooSendAsTunneledMessage</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, ASN1OCTET *msgbuf, int len, int msgType)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function sends an encoded H.245 message buffer as a tunneled H.245 message.  <a href="group__h245.shtml#ga28"></a><br><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This file contains functions to support H245 negotiations.
@@ -219,6 +221,6 @@ Definition in file <a class="el" href="ooh245_8h-source.shtml">ooh245.h</a>.<!--
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

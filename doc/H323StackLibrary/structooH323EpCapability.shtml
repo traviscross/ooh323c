@@ -117,23 +117,29 @@
 <table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o0" doxytag="ooH323EpCapability::t" ></a>
-int&nbsp;</td><td class="memItemRight" valign=bottom><b>t</b></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o0" doxytag="ooH323EpCapability::dir" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>dir</b></td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o1" doxytag="ooH323EpCapability::cap" ></a>
-void *&nbsp;</td><td class="memItemRight" valign=bottom><b>cap</b></td></tr>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>cap</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o2" doxytag="ooH323EpCapability::startReceiveChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o2" doxytag="ooH323EpCapability::capType" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>capType</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o3" doxytag="ooH323EpCapability::startReceiveChannel" ></a>
 <a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a>&nbsp;</td><td class="memItemRight" valign=bottom><b>startReceiveChannel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o3" doxytag="ooH323EpCapability::startTransmitChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o4" doxytag="ooH323EpCapability::startTransmitChannel" ></a>
 <a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a>&nbsp;</td><td class="memItemRight" valign=bottom><b>startTransmitChannel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o4" doxytag="ooH323EpCapability::stopReceiveChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o5" doxytag="ooH323EpCapability::stopReceiveChannel" ></a>
 <a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a>&nbsp;</td><td class="memItemRight" valign=bottom><b>stopReceiveChannel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o5" doxytag="ooH323EpCapability::stopTransmitChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o6" doxytag="ooH323EpCapability::stopTransmitChannel" ></a>
 <a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a>&nbsp;</td><td class="memItemRight" valign=bottom><b>stopTransmitChannel</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o7" doxytag="ooH323EpCapability::next" ></a>
+<a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>next</b></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -141,13 +147,13 @@ Structure to store information related to end point capability.
 <p>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00410">410</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00364">364</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ootypes_8h-source.shtml">ootypes.h</a></ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

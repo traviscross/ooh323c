@@ -153,43 +153,45 @@
 00084
 00092 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga5">ooCleanCall</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
 00093
-00107 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* <a class="code" href="group__callmgmt.shtml#ga6">ooAddNewLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> channelNo,
-00108                                   <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span> *type, <span class="keywordtype">char</span> * dir,
-00109                                   <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap);
+00107 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* <a class="code" href="group__callmgmt.shtml#ga6">ooAddNewLogicalChannel</a>
+00108          (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> channelNo, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span> *type,
+00109           <span class="keywordtype">char</span> * dir, <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap);
 00110
 00120 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* <a class="code" href="group__callmgmt.shtml#ga7">ooFindLogicalChannelByLogicalChannelNo</a>
 00121                                   (<a class="code" href="structooCallData.shtml">ooCallData</a> *call,<span class="keywordtype">int</span> channelNo);
 00122
-00133 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga8">ooOnLogicalChannelEstablished</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * pChannel);
-00134
-00145 EXTERN ASN1BOOL <a class="code" href="group__callmgmt.shtml#ga9">ooIsSessionEstablished</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span>* dir);
-00146
-00156 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* <a class="code" href="group__callmgmt.shtml#ga10">ooGetLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID);
-00157
-00166 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga11">ooRemoveLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> ChannelNo);
-00167
-00177 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga12">ooClearLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> channelNo);
-00178
-00185 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga13">ooClearAllLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
-00186
-00196 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga14">ooAddMediaInfo</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, ooMediaInfo mediaInfo);
-00206 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * <a class="code" href="group__callmgmt.shtml#ga15">ooFindLogicalChannelByOLC</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
-00207                                H245OpenLogicalChannel *olc);
-00208
-00220 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * <a class="code" href="group__callmgmt.shtml#ga16">ooFindLogicalChannel</a>
-00221    (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span> *dir, H245DataType * dataType);
-00226 <span class="preprocessor">#ifdef __cplusplus</span>
-00227 <span class="preprocessor"></span>}
-00228 <span class="preprocessor">#endif</span>
-00229 <span class="preprocessor"></span>
-00230
-00231
-00232 <span class="preprocessor">#endif</span>
+00133 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga8">ooOnLogicalChannelEstablished</a>
+00134                               (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * pChannel);
+00135
+00146 EXTERN ASN1BOOL <a class="code" href="group__callmgmt.shtml#ga9">ooIsSessionEstablished</a>
+00147                                   (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span>* dir);
+00148
+00158 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* <a class="code" href="group__callmgmt.shtml#ga10">ooGetLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID);
+00159
+00168 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga11">ooRemoveLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> ChannelNo);
+00169
+00179 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga12">ooClearLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> channelNo);
+00180
+00187 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga13">ooClearAllLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00188
+00198 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga14">ooAddMediaInfo</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, ooMediaInfo mediaInfo);
+00208 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * <a class="code" href="group__callmgmt.shtml#ga15">ooFindLogicalChannelByOLC</a>
+00209                                (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannel *olc);
+00210
+00222 EXTERN <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> * <a class="code" href="group__callmgmt.shtml#ga16">ooFindLogicalChannel</a>
+00223    (<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span> *dir, H245DataType * dataType);
+00228 <span class="preprocessor">#ifdef __cplusplus</span>
+00229 <span class="preprocessor"></span>}
+00230 <span class="preprocessor">#endif</span>
+00231 <span class="preprocessor"></span>
+00232
+00233
+00234 <span class="preprocessor">#endif</span>
 </div></pre><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -132,7 +132,7 @@
 00025 <span class="preprocessor">#include "<a class="code" href="ootypes_8h.shtml">ootypes.h</a>"</span>
 00026 <span class="preprocessor">#include "<a class="code" href="oochannels_8h.shtml">oochannels.h</a>"</span>
 00027 <span class="preprocessor">#include "<a class="code" href="oo_8h.shtml">oo.h</a>"</span>
-00028 <span class="preprocessor">#include "<a class="code" href="oosndrtp_8h.shtml">oosndrtp.h</a>"</span>
+00028 <span class="comment">//#include "oosndrtp.h"</span>
 00029 <span class="preprocessor">#include "<a class="code" href="ooq931_8h.shtml">ooq931.h</a>"</span>
 00030 <span class="preprocessor">#include "MULTIMEDIA-SYSTEM-CONTROL.h"</span>
 00031
@@ -174,58 +174,61 @@
 00165 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga10">ooOnReceivedOpenLogicalChannelAck</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
 00166                                             H245OpenLogicalChannelAck *olcAck);
 00167
-00175 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga11">ooSendEndSessionCommand</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
-00176
-00184 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga12">ooHandleH245Command</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, H245CommandMessage *command);
-00185
-00194 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga13">ooOnReceivedTerminalCapabilitySetAck</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call);
-00195
-00205 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga14">ooCloseAllLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00168
+00177 <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga11">ooOnReceivedOpenLogicalChannelRejected</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
+00178                                     H245OpenLogicalChannelReject *olcRejected);
+00186 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga12">ooSendEndSessionCommand</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00187
+00195 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga13">ooHandleH245Command</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, H245CommandMessage *command);
+00196
+00205 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga14">ooOnReceivedTerminalCapabilitySetAck</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call);
 00206
-00207
-00216 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga15">ooSendCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan);
+00216 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga15">ooCloseAllLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
 00217
-00227 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga16">ooOnReceivedCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
-00228                                            H245CloseLogicalChannel* clc);
-00229
-00238 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga17">ooOnReceivedCloseChannelAck</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call,
-00239                                            H245CloseLogicalChannelAck* clcAck);
+00218
+00227 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga16">ooSendCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan);
+00228
+00238 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga17">ooOnReceivedCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
+00239                                            H245CloseLogicalChannel* clc);
 00240
-00249 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga18">ooHandleH245Message</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structH245Message.shtml">H245Message</a> * pmsg);
-00250
-00260 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga19">ooOnReceivedTerminalCapabilitySet</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structH245Message.shtml">H245Message</a> *pmsg);
+00249 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga18">ooOnReceivedCloseChannelAck</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call,
+00250                                            H245CloseLogicalChannelAck* clcAck);
+00251
+00260 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga19">ooHandleH245Message</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structH245Message.shtml">H245Message</a> * pmsg);
 00261
-00268 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga20">ooH245AcknowledgeTerminalCapabilitySet</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
-00269
-00277 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga21">ooOpenLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
-00278
-00287 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga22">ooOpenLogicalAudioChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
-00288
-00298 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga23">ooOpenG711ULaw64KChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call, <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap);
+00271 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga20">ooOnReceivedTerminalCapabilitySet</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structH245Message.shtml">H245Message</a> *pmsg);
+00272
+00279 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga21">ooH245AcknowledgeTerminalCapabilitySet</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00280
+00288 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga22">ooOpenLogicalChannels</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00289
+00298 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga23">ooOpenLogicalAudioChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
 00299
-00310 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga24">ooSendRequestCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
-00311                                             <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan);
-00312
-00323 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga25">ooOnReceivedRequestChannelClose</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
-00324                                            H245RequestChannelClose *rclc);
-00325
-00336 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga26">ooBuildOpenLogicalChannelAudio</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
-00337                                           H245OpenLogicalChannel *olc,
-00338                                           <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap,
-00339                                           OOCTXT*pctxt);
-00340
-00355 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga27">ooSendAsTunneledMessage</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, ASN1OCTET* msgbuf,
-00356                                    <span class="keywordtype">int</span> len, <span class="keywordtype">int</span> msgType);
-00360 <span class="preprocessor">#ifdef __cplusplus</span>
-00361 <span class="preprocessor"></span>}
-00362 <span class="preprocessor">#endif</span>
-00363 <span class="preprocessor"></span>
-00364 <span class="preprocessor">#endif</span>
+00309 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga24">ooOpenG711ULaw64KChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a>* call, <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap);
+00310
+00321 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga25">ooSendRequestCloseLogicalChannel</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
+00322                                             <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *logicalChan);
+00323
+00334 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga26">ooOnReceivedRequestChannelClose</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
+00335                                            H245RequestChannelClose *rclc);
+00336
+00347 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga27">ooBuildOpenLogicalChannelAudio</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call,
+00348                                           H245OpenLogicalChannel *olc,
+00349                                           <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap,
+00350                                           OOCTXT*pctxt);
+00351
+00366 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__h245.shtml#ga28">ooSendAsTunneledMessage</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, ASN1OCTET* msgbuf,
+00367                                    <span class="keywordtype">int</span> len, <span class="keywordtype">int</span> msgType);
+00371 <span class="preprocessor">#ifdef __cplusplus</span>
+00372 <span class="preprocessor"></span>}
+00373 <span class="preprocessor">#endif</span>
+00374 <span class="preprocessor"></span>
+00375 <span class="preprocessor">#endif</span>
 </div></pre><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -118,55 +118,107 @@
 <p>
 <a href="ooCapability_8h-source.shtml">Go to the source code of this file.</a><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
+<tr><td colspan=2><br><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a0" doxytag="ooCapability.h::OO_AUCAPS_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_AUCAPS_MIN</b>&nbsp;&nbsp;&nbsp;1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a1" doxytag="ooCapability.h::OO_CAP_ULAW_64k_240" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_64k_240</b>&nbsp;&nbsp;&nbsp;1 /* g711 ulaw 64k 240 frs/pkt */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a2" doxytag="ooCapability.h::OO_CAP_ULAW_64k_180" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_64k_180</b>&nbsp;&nbsp;&nbsp;2</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a3" doxytag="ooCapability.h::OO_CAP_ULAW_64k_30" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_64k_30</b>&nbsp;&nbsp;&nbsp;3</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a4" doxytag="ooCapability.h::OO_CAP_ULAW_64k_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_64k_MAX</b>&nbsp;&nbsp;&nbsp;3</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a5" doxytag="ooCapability.h::OO_CAP_ULAW_56k_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_56k_MIN</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a6" doxytag="ooCapability.h::OO_CAP_ULAW_56k_240" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_56k_240</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a7" doxytag="ooCapability.h::OO_CAP_ULAW_56k_180" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_56k_180</b>&nbsp;&nbsp;&nbsp;5</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a8" doxytag="ooCapability.h::OO_CAP_ULAW_56k_30" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_56k_30</b>&nbsp;&nbsp;&nbsp;6</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a9" doxytag="ooCapability.h::OO_CAP_ULAW_56k_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ULAW_56k_MAX</b>&nbsp;&nbsp;&nbsp;6</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a10" doxytag="ooCapability.h::OO_CAP_ALAW_64k_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_64k_MIN</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a11" doxytag="ooCapability.h::OO_CAP_ALAW_64k_240" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_64k_240</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a12" doxytag="ooCapability.h::OO_CAP_ALAW_64k_180" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_64k_180</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a13" doxytag="ooCapability.h::OO_CAP_ALAW_64k_30" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_64k_30</b>&nbsp;&nbsp;&nbsp;9</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a14" doxytag="ooCapability.h::OO_CAP_ALAW_64k_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_64k_MAX</b>&nbsp;&nbsp;&nbsp;9</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a15" doxytag="ooCapability.h::OO_CAP_ALAW_56k_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_56k_MIN</b>&nbsp;&nbsp;&nbsp;10</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a16" doxytag="ooCapability.h::OO_CAP_ALAW_56k_240" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_56k_240</b>&nbsp;&nbsp;&nbsp;10</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a17" doxytag="ooCapability.h::OO_CAP_ALAW_56k_180" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_56k_180</b>&nbsp;&nbsp;&nbsp;11</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="ooCapability.h::OO_CAP_ALAW_56k_30" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_56k_30</b>&nbsp;&nbsp;&nbsp;12</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="ooCapability.h::OO_CAP_ALAW_56k_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_ALAW_56k_MAX</b>&nbsp;&nbsp;&nbsp;12</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="ooCapability.h::OO_CAP_GSM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_GSM</b>&nbsp;&nbsp;&nbsp;13</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a21" doxytag="ooCapability.h::OO_CAP_G729A" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_G729A</b>&nbsp;&nbsp;&nbsp;14</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a22" doxytag="ooCapability.h::OO_CAP_SPEEX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_SPEEX</b>&nbsp;&nbsp;&nbsp;15</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a23" doxytag="ooCapability.h::OO_CAP_G723_1" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_CAP_G723_1</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a24" doxytag="ooCapability.h::OO_AUCAPS_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OO_AUCAPS_MAX</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddAudioCapability</a> (H245AudioCapability audioCap, int dir, <a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddCapability</a> (int cap, int dir, <a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to add audio capabilities to the endpoint.  <a href="group__capmgmt.shtml#ga0"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN H245AudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga1">ooCreateDupAudioCap</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioCap, OOCTXT *pctxt)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to add a new capability to the endpoint.  <a href="group__capmgmt.shtml#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>H245AudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga1">ooCreateAudioCapability</a> (int cap, OOCTXT *pctxt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a duplicate audio capability from the one supplied as parameter.  <a href="group__capmgmt.shtml#ga1"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN H245GSMAudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga2">ooCreateDupGSMAudioCap</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245GSMAudioCapability *gsmCap, OOCTXT *pctxt)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a audio capability structure using the capability type.  <a href="group__capmgmt.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>H245AudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga2">ooCreateG711Capability</a> (int cap, OOCTXT *pctxt)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a duplicate GSM audio capability.  <a href="group__capmgmt.shtml#ga2"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga3">ooIsAudioCapSupported</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioCap, int dir)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a g711 audio capability structure.  <a href="group__capmgmt.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga3">ooIsAudioCapSupported</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioCap, int dir)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to check whether local endpoint supports a particular type of audio capability.  <a href="group__capmgmt.shtml#ga3"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga4">ooCompareAudioCaps</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *cap1, H245AudioCapability *cap2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine whether a particular capability can be supported by the endpoint.  <a href="group__capmgmt.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga4">ooCompareAudioCaps</a> (int cap, H245AudioCapability *audioCap, int dir)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to compare two audio capabilities for a match.  <a href="group__capmgmt.shtml#ga4"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga5">ooCompareG711Caps</a> (H245AudioCapability *cap1, H245AudioCapability *cap2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine a capability match.  <a href="group__capmgmt.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga5">ooCompareUlawCaps</a> (int cap, H245AudioCapability *audioCap, int dir)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to compare two G711 audio capabilities for a match.  <a href="group__capmgmt.shtml#ga5"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga6">ooCompareGSMCaps</a> (H245AudioCapability *cap1, H245AudioCapability *cap2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine a ulaw capability match.  <a href="group__capmgmt.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga6">ooCompareAlawCaps</a> (int cap, H245AudioCapability *audioCap, int dir)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to compare two GSM audio capabilities for a match.  <a href="group__capmgmt.shtml#ga6"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga7">ooIsDataTypeSupported</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245DataType *data, int dir)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine a Alaw capability match.  <a href="group__capmgmt.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga7">ooIsDataTypeSupported</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245DataType *data, int dir)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks whether a particular datatype is supported by the end point.  <a href="group__capmgmt.shtml#ga7"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga8">ooIsAudioDataTypeSupported</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioData, int dir)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Checks whether a particular audio datatype is supported by the end point.  <a href="group__capmgmt.shtml#ga8"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="ooCapability.h::ooIsNonStandardDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsNonStandardDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245NonStandardParameter *nonStandard, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="ooCapability.h::ooIsVideoDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsVideoDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245VideoCapability *videoData, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga11" doxytag="ooCapability.h::ooIsApplicationDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsApplicationDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245DataApplicationCapability *data, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga12" doxytag="ooCapability.h::ooIsEncryptedDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsEncryptedDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245EncryptionMode *encryptionData, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga13" doxytag="ooCapability.h::ooIsH235ControlDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsH235ControlDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245NonStandardParameter *h235Control, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga14" doxytag="ooCapability.h::ooIsH235MediaDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsH235MediaDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245H235Media *h235Media, int dir)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga15" doxytag="ooCapability.h::ooIsMultiplexedStreamDataTypeSupported" ></a>
-EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>ooIsMultiplexedStreamDataTypeSupported</b> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245MultiplexedStreamParameter *multiplexedStream, int dir)</td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine whether a particular datatype can be supported by the endpoint.  <a href="group__capmgmt.shtml#ga7"></a><br><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This file contains Capability management functions.
@@ -178,6 +230,6 @@ Definition in file <a class="el" href="ooCapability_8h-source.shtml">ooCapabilit
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

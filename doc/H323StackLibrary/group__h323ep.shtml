@@ -133,7 +133,7 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga6">ooSetAliasTransportID</a> (char *ipaddress)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set an ip address as an alias.  <a href="#ga6"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga7">ooH323EpRegisterCallbacks</a> (cb_OnAlerting onAlerting, cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga7">ooH323EpRegisterCallbacks</a> (cb_OnAlerting onAlerting, cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="#ga7"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga8">ooDestroyH323Ep</a> (void)</td></tr>
@@ -284,6 +284,12 @@ This function is used to enable the auto answer feature for incoming calls.
         <tr>
           <td class="md" nowrap align="right"></td>
           <td></td>
+          <td class="md" nowrap>cb_OnOutgoingCallAdmitted&nbsp;</td>
+          <td class="mdname" nowrap> <em>onOutgoingCallAdmitted</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
           <td class="md" nowrap>cb_OnOutgoingCall&nbsp;</td>
           <td class="mdname" nowrap> <em>onOutgoingCall</em>, </td>
         </tr>
@@ -297,13 +303,7 @@ This function is used to enable the auto answer feature for incoming calls.
           <td class="md" nowrap align="right"></td>
           <td></td>
           <td class="md" nowrap>cb_OnCallCleared&nbsp;</td>
-          <td class="mdname" nowrap> <em>onCallCleared</em>, </td>
-        </tr>
-        <tr>
-          <td class="md" nowrap align="right"></td>
-          <td></td>
-          <td class="md" nowrap>cb_OnStartLogicalChannel&nbsp;</td>
-          <td class="mdname" nowrap> <em>onStartLogicalChannel</em></td>
+          <td class="mdname" nowrap> <em>onCallCleared</em></td>
         </tr>
         <tr>
           <td></td>
@@ -328,10 +328,10 @@ This function is used to register the H323 Endpoint callback functions.
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign=top><em>onAlerting</em>&nbsp;</td><td>Callback function to be called when alerting message is sent. </td></tr>
     <tr><td valign=top><em>onIncomingCall</em>&nbsp;</td><td>Callback function to be called when a new incoming call is accepted. </td></tr>
+    <tr><td valign=top><em>onOutgoingCallAdmitted</em>&nbsp;</td><td>Callback function to be called when a outgoing call is admitted by gk.</td></tr>
     <tr><td valign=top><em>onOutgoingCall</em>&nbsp;</td><td>Callback function to be called when an outgoing call is placed on behalf of the application. </td></tr>
     <tr><td valign=top><em>onCallEstablished</em>&nbsp;</td><td>Callback function to be called when a call is established with the remote end point. </td></tr>
-    <tr><td valign=top><em>onCallCleared</em>&nbsp;</td><td>Callback function to be called when a call is cleared. </td></tr>
-    <tr><td valign=top><em>onStartLogicalChannel</em>&nbsp;</td><td>Callback function to be called when a logical channel is started.</td></tr>
+    <tr><td valign=top><em>onCallCleared</em>&nbsp;</td><td>Callback function to be called when a call is cleared.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
@@ -916,6 +916,6 @@ This function is used to set version id.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

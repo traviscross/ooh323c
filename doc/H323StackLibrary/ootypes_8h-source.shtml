@@ -160,350 +160,310 @@
 00058 <span class="preprocessor"></span><span class="preprocessor">#define OO_FASTSTART_ACCEPTED        17</span>
 00059 <span class="preprocessor"></span><span class="preprocessor">#define OO_FASTSTART_REFUSED         18</span>
 00060 <span class="preprocessor"></span>
-<a name="l00062"></a><a class="code" href="ootypes_8h.shtml#a17">00062</a> <span class="preprocessor">#define OO_UNKNOWN                       20</span>
-00063 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLOSED_CONNECTION      21</span>
-00064 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLOSED_H245_CONNECTION 22</span>
-00065 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLEARED                23</span>
-00066 <span class="preprocessor"></span><span class="preprocessor">#define OO_HOST_CLEARED                  24</span>
-00067 <span class="preprocessor"></span><span class="preprocessor">#define OO_NORMAL                        25</span>
-00068 <span class="preprocessor"></span>
-00069 <span class="preprocessor">#define OO_TotalMessages  5</span>
+<a name="l00062"></a><a class="code" href="ootypes_8h.shtml#a17">00062</a> <span class="preprocessor">#define OO_CALL_ENDREASON_MIN            20</span>
+00063 <span class="preprocessor"></span><span class="preprocessor">#define OO_UNKNOWN                       20</span>
+00064 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLOSED_CONNECTION      21</span>
+00065 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLOSED_H245_CONNECTION 22</span>
+00066 <span class="preprocessor"></span><span class="preprocessor">#define OO_REMOTE_CLEARED                23</span>
+00067 <span class="preprocessor"></span><span class="preprocessor">#define OO_HOST_CLEARED                  24</span>
+00068 <span class="preprocessor"></span><span class="preprocessor">#define OO_NORMAL                        25</span>
+00069 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_ENDREASON_MAX            25</span>
 00070 <span class="preprocessor"></span>
-00074 <span class="keyword">static</span> <span class="keywordtype">char</span> * messages[] = {
-00075    <span class="stringliteral">"Reason unknown"</span>,
-00076    <span class="stringliteral">"Remote endpoint closed H.225 TCP connection"</span>,
-00077    <span class="stringliteral">"Remote endpoint closed H.245 TCP connection"</span>,
-00078    <span class="stringliteral">"Remote Ended call"</span>,
-00079    <span class="stringliteral">"Local host ended call"</span>,
-00080    <span class="stringliteral">"Normal End of Call"</span>
-00081 };
-00082
-00083
-<a name="l00085"></a><a class="code" href="ootypes_8h.shtml#a24">00085</a> <span class="preprocessor">#define OO_CALL_CREATED           50</span>
-00086 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_WAITING_ADMISSION 51     </span>
-00087 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CONNECTING        52</span>
-00088 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CONNECTED         53</span>
-00089 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CLEAR             54 </span><span class="comment">/* call marked for clearing */</span>
-00090 <span class="preprocessor">#define OO_CALL_CLEAR_CLOLCS      55 </span><span class="comment">/* Logical Channels closed*/</span>
-00091 <span class="preprocessor">#define OO_CALL_CLEAR_CLELCS      56 </span><span class="comment">/* Logical Channels cleared*/</span>
-00092 <span class="preprocessor">#define OO_CALL_CLEAR_ENDSESSION  57 </span><span class="comment">/* EndSession command sent*/</span>
-00093 <span class="preprocessor">#define OO_CALL_CLEAR_CLOSEH245   58 </span><span class="comment">/* H245 sockets closed*/</span>
-00094 <span class="preprocessor">#define OO_CALL_CLEAR_RELEASE     59 </span><span class="comment">/* Release Sent */</span>
-00095 <span class="preprocessor">#define OO_CALL_CLEARED           60 </span><span class="comment">/* Call Cleared */</span>
-00096
-00097 <span class="preprocessor">#define CALL_STATE_BASE 50</span>
-00098 <span class="preprocessor"></span><span class="keyword">static</span> <span class="keywordtype">char</span>* callStates[] = {
-00099    <span class="stringliteral">"OO_CALL_CREATED"</span>,
-00100    <span class="stringliteral">"OO_CALL_CONNECTING"</span>,
-00101    <span class="stringliteral">"OO_CALL_CONNECTED"</span>,
-00102    <span class="stringliteral">"OO_CALL_CLEAR"</span>,
-00103    <span class="stringliteral">"OO_CALL_CLEAR_CLOLCS"</span>,
-00104    <span class="stringliteral">"OO_CALL_CLEAR_CLELCS"</span>,
-00105    <span class="stringliteral">"OO_CALL_CLEAR_ENDSESSION"</span>,
-00106    <span class="stringliteral">"OO_CALL_CLEAR_CLOSEH245"</span>,
-00107    <span class="stringliteral">"OO_CALL_CLEAR_RELEASE"</span>,
-00108    <span class="stringliteral">"OO_CALL_CLEARED"</span>
-00109 };
-00110
-<a name="l00112"></a><a class="code" href="ootypes_8h.shtml#a36">00112</a> <span class="preprocessor">#define OO_H245SESSION_INACTIVE 61</span>
-00113 <span class="preprocessor"></span><span class="preprocessor">#define OO_H245SESSION_ACTIVE 62</span>
-00114 <span class="preprocessor"></span>
-<a name="l00116"></a><a class="code" href="ootypes_8h.shtml#a38">00116</a> <span class="preprocessor">#define OO_LOGICALCHAN_IDLE        70</span>
-00117 <span class="preprocessor"></span><span class="preprocessor">#define OO_LOGICALCHAN_PROPOSED    71</span>
-00118 <span class="preprocessor"></span><span class="preprocessor">#define OO_LOGICALCHAN_ESTABLISHED 72</span>
-00119 <span class="preprocessor"></span>
-<a name="l00123"></a><a class="code" href="ootypes_8h.shtml#a41">00123</a> <span class="preprocessor">#define OOTERMTYPE 60</span>
-00124 <span class="preprocessor"></span>
-00125 <span class="preprocessor">#define MAXLOGMSGLEN 1024</span>
-00126 <span class="preprocessor"></span>
-<a name="l00129"></a><a class="code" href="ootypes_8h.shtml#a43">00129</a> <span class="preprocessor">#define OOQ931MSG                     101</span>
-00130 <span class="preprocessor"></span><span class="preprocessor">#define OOH245MSG                     102</span>
-00131 <span class="preprocessor"></span><span class="preprocessor">#define OOSetup                       103</span>
-00132 <span class="preprocessor"></span><span class="preprocessor">#define OOCallProceeding              104</span>
-00133 <span class="preprocessor"></span><span class="preprocessor">#define OOAlert                       105</span>
-00134 <span class="preprocessor"></span><span class="preprocessor">#define OOConnect                     106</span>
-00135 <span class="preprocessor"></span><span class="preprocessor">#define OOReleaseComplete             107</span>
-00136 <span class="preprocessor"></span><span class="preprocessor">#define OOFacility                    108</span>
-00137 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveDetermination    109</span>
-00138 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveAck              110</span>
-00139 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveReject           111</span>
-00140 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveRelease          112</span>
-00141 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySet       113</span>
-00142 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySetAck    114</span>
-00143 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySetReject 115</span>
-00144 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannel          116</span>
-00145 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelAck       117</span>
-00146 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelReject    118</span>
-00147 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelRelease   119</span>
-00148 <span class="preprocessor"></span><span class="preprocessor">#define OOEndSessionCommand           120</span>
-00149 <span class="preprocessor"></span><span class="preprocessor">#define OOCloseLogicalChannel         121</span>
-00150 <span class="preprocessor"></span><span class="preprocessor">#define OOCloseLogicalChannelAck      122</span>
-00151 <span class="preprocessor"></span><span class="preprocessor">#define OORequestChannelClose  123</span>
-00152 <span class="preprocessor"></span><span class="preprocessor">#define OORequestChannelCloseAck 124</span>
-00153 <span class="preprocessor"></span>
-00154 <span class="preprocessor">#define OO_MSGTYPE_BASE 101</span>
-00155 <span class="preprocessor"></span><span class="keyword">static</span> <span class="keywordtype">char</span> *msgTypes[]={
-00156    <span class="stringliteral">"OOQ931MSG"</span>,
-00157    <span class="stringliteral">"OOH245MSG"</span>,
-00158    <span class="stringliteral">"OOSetup"</span>,
-00159    <span class="stringliteral">"OOCallProceeding"</span>,
-00160    <span class="stringliteral">"OOAlert"</span>,
-00161    <span class="stringliteral">"OOConnect"</span>,
-00162    <span class="stringliteral">"OOReleaseComplete"</span>,
-00163    <span class="stringliteral">"OOFacility"</span>,
-00164    <span class="stringliteral">"OOMasterSlaveDetermination"</span>,
-00165    <span class="stringliteral">"OOMasterSlaveAck"</span>,
-00166    <span class="stringliteral">"OOMasterSlaveReject"</span>,
-00167    <span class="stringliteral">"OOMasterSlaveRelease"</span>,
-00168    <span class="stringliteral">"OOTerminalCapabilitySet"</span>,
-00169    <span class="stringliteral">"OOTerminalCapabilitySetAck"</span>,
-00170    <span class="stringliteral">"OOTerminalCapabilitySetReject"</span>,
-00171    <span class="stringliteral">"OOOpenLogicalChannel"</span>,
-00172    <span class="stringliteral">"OOOpenLogicalChannelAck"</span>,
-00173    <span class="stringliteral">"OOOpenLogicalChannelReject"</span>,
-00174    <span class="stringliteral">"OOOpenLogicalChannelRelease"</span>,
-00175    <span class="stringliteral">"OOEndSessionCommand"</span>,
-00176    <span class="stringliteral">"OOCloseLogicalChannel"</span>,
-00177    <span class="stringliteral">"OOCloseLogicalChannelAck"</span>,
-00178    <span class="stringliteral">"OORequestChannelClose"</span>,
-00179    <span class="stringliteral">"OORequestChannelCloseAck"</span>
-00180 };
-00181
-<a name="l00185"></a><a class="code" href="ootypes_8h.shtml#a68">00185</a> <span class="preprocessor">#define TCPPORTSSTART 12030</span>
-00186 <span class="preprocessor"></span><span class="preprocessor">#define TCPPORTSEND   12230</span>
-00187 <span class="preprocessor"></span><span class="preprocessor">#define UDPPORTSSTART 13030</span>
-00188 <span class="preprocessor"></span><span class="preprocessor">#define UDPPORTSEND   13230</span>
-00189 <span class="preprocessor"></span><span class="preprocessor">#define RTPPORTSSTART 14030</span>
-00190 <span class="preprocessor"></span><span class="preprocessor">#define RTPPORTSEND   14230</span>
-00191 <span class="preprocessor"></span>
-<a name="l00195"></a><a class="code" href="ootypes_8h.shtml#a74">00195</a> <span class="preprocessor">#define MAXMSGLEN 4096</span>
-00196 <span class="preprocessor"></span>
-00197 <span class="preprocessor">#define OO_CMD_MAKECALL    201</span>
-00198 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_ANSCALL     202</span>
-00199 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_REJECTCALL  203</span>
-00200 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_HANGCALL    204</span>
-00201 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_STOPMONITOR 205</span>
-00202 <span class="preprocessor"></span>
-00203
-<a name="l00209"></a><a class="code" href="ootypes_8h.shtml#a80">00209</a> <span class="preprocessor">#define OO_CALLMODE_AUDIOCALL 301</span>
-00210 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_AUDIORX   302</span>
-00211 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_AUDIOTX   303</span>
-00212 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_VIDEOCALL 304</span>
-00213 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_FAX       305</span>
-00214 <span class="preprocessor"></span>
-<a name="l00218"></a><a class="code" href="ootypes_8h.shtml#a88">00218</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a88">ChannelCallback</a>)(<span class="keywordtype">void</span>*);
-00219
-<a name="l00224"></a><a class="code" href="ootypes_8h.shtml#a89">00224</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a89">CommandCallback</a>)(<span class="keywordtype">void</span>);
-00225
-<a name="l00227"></a><a class="code" href="ootypes_8h.shtml#a90">00227</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a90">gCallTokenBase</a>;
-<a name="l00229"></a><a class="code" href="ootypes_8h.shtml#a91">00229</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a91">gCallTokenMax</a>;
-<a name="l00231"></a><a class="code" href="ootypes_8h.shtml#a92">00231</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a92">gCurCallToken</a>;
-00232
-00233 <span class="keywordtype">int</span> gMonitor;
-<a name="l00237"></a><a class="code" href="ootypes_8h.shtml#a94">00237</a> DList <a class="code" href="ootypes_8h.shtml#a94">gCmdList</a>;
-<a name="l00239"></a><a class="code" href="ootypes_8h.shtml#a95">00239</a> OOCTXT <a class="code" href="ootypes_8h.shtml#a95">gCtxt</a>;
-00240
-00243 <span class="preprocessor">#ifdef _WIN32</span>
-00244 <span class="preprocessor"></span>CRITICAL_SECTION <a class="code" href="ootypes_8h.shtml#a96">gCmdMutex</a>;
-00245 <span class="preprocessor">#else</span>
-<a name="l00246"></a><a class="code" href="ootypes_8h.shtml#a96">00246</a> <span class="preprocessor"></span>pthread_mutex_t <a class="code" href="ootypes_8h.shtml#a96">gCmdMutex</a>;
-00247 <span class="preprocessor">#endif</span>
-00248 <span class="preprocessor"></span>
-<a name="l00251"></a><a class="code" href="structooCommand.shtml">00251</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooCommand.shtml">ooCommand</a> {
-00252    <span class="keywordtype">int</span> type;
-00253    <span class="keywordtype">void</span> * param1;
-00254    <span class="keywordtype">void</span> * param2;
-00255    <span class="keywordtype">void</span> * param3;
-00256 } <a class="code" href="structooCommand.shtml">ooCommand</a>;
-<a name="l00261"></a><a class="code" href="structooH323Ports.shtml">00261</a> <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a>
-00262 {
-00263    <span class="keywordtype">int</span> start;
-00264    <span class="keywordtype">int</span> max;
-00265    <span class="keywordtype">int</span> current;
-00266 };
-00267
-<a name="l00273"></a><a class="code" href="structQ931Message.shtml">00273</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structQ931Message.shtml">Q931Message</a> {
-00274    OOCTXT* pctxt; <span class="comment">/* context is used to allocate memory for */</span>
-00275                      <span class="comment">/* different parts of the message */</span>
-00276    <span class="keywordtype">unsigned</span> protocolDiscriminator;
-00277    <span class="keywordtype">unsigned</span> callReference;
-00278    ASN1BOOL fromDestination;
-00279    <span class="keywordtype">unsigned</span> messageType; <span class="comment">/* Q931MsgTypes  */</span>
-00280
-00281    DList ies;
-00282    H225H323_UserInformation *userInfo;
-00283 } <a class="code" href="structQ931Message.shtml">Q931Message</a>;
-00284
-<a name="l00289"></a><a class="code" href="structH245Message.shtml">00289</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structH245Message.shtml">H245Message</a> {
-00290    OOCTXT* pctxt;
-00291    H245MultimediaSystemControlMessage h245Msg;
-00292    ASN1UINT msgType;
-00293 } <a class="code" href="structH245Message.shtml">H245Message</a>;
-00294
-00295 <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>;
-00296
-00297 <span class="comment">/* Store local and remote media endpoint info, for media type */</span>
-00298 <span class="keyword">typedef</span> <span class="keyword">struct </span>ooMediaInfo{
-00299    <span class="keywordtype">char</span>  dir[15]; <span class="comment">/* tx/rx/tx&amp;rx*/</span>
-00300    <span class="keywordtype">char</span>  mediaType[10]; <span class="comment">/* audio/video/data*/</span>
-00301    <span class="keywordtype">int</span>   capType;
-00302    <span class="keywordtype">int</span>   lMediaPort;
-00303    <span class="keywordtype">int</span>   lMediaCntrlPort;
-00304    <span class="keywordtype">char</span>  lMediaIP[20];
-00305    <span class="keyword">struct </span>ooMediaInfo *next;
-00306 } ooMediaInfo;
-00307
-<a name="l00312"></a><a class="code" href="structooLogicalChannel.shtml">00312</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>{
-00313    <span class="keywordtype">int</span> channelNo;
-00314    <span class="keywordtype">int</span> sessionID;
-00315    <span class="keywordtype">char</span> type[10]; <span class="comment">/* audio/video/data */</span>
-00316    <span class="keywordtype">char</span> dir[10]; <span class="comment">/* receive/transmit */</span>
-00317    <span class="keywordtype">char</span>                 remoteIP[20];
-00318    <span class="keywordtype">int</span>                  remoteRtpPort; <span class="comment">/* TODO: Should be renamed mediaPort */</span>
-00319    <span class="keywordtype">int</span>                  remoteRtcpPort; <span class="comment">/* TODO: Should be renamed mediaControlPort */</span>
-00320    <span class="keywordtype">int</span>                  localRtpPort;
-00321    <span class="keywordtype">int</span>                  localRtcpPort;
-00322    <span class="keywordtype">char</span>                 localIP[20];
-00323    <span class="keywordtype">int</span>                  state;        
-00324    <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *chanCap;
-00325    <span class="keyword">struct </span><a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *next;
-00326 }<a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>;
-00327
-00328 <span class="keyword">typedef</span> <span class="keyword">struct </span>ooAliases{
-00329    <span class="keywordtype">int</span> type;
-00330    <span class="keywordtype">char</span> *value;
-00331    <span class="keyword">struct </span>ooAliases *next;
-00332 }ooAliases;
-00333
-<a name="l00338"></a><a class="code" href="structooCallData.shtml">00338</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a> {
-00339    OOCTXT               *pctxt;
-00340    <span class="keywordtype">char</span>                 callToken[20]; <span class="comment">/* ex: ooh323c_call_1 */</span>
-00341    <span class="keywordtype">char</span>                 callType[10]; <span class="comment">/* incoming/outgoing */</span>
-00342    ASN1USINT            callReference;
-00343   
-00344    H225CallIdentifier   callIdentifier;<span class="comment">/* The call identifier for the active </span>
-00345 <span class="comment">                                          call. */</span>
-00346    H225ConferenceIdentifier confIdentifier;
-00347    <span class="keywordtype">int</span>                  callState;
-00348    <span class="keywordtype">int</span>                  callEndReason;
-00349    <span class="keywordtype">int</span>                  h245SessionState;
-00350    <span class="keywordtype">int</span>                  isTunnelingActive;
-00351    <span class="keywordtype">int</span>                  isFastStartActive; <span class="comment">/***TODO - Need to update this field */</span>
-00352   
-00353    ooMediaInfo          *mediaInfo;
-00354    <span class="keywordtype">char</span>                 localIP[20];<span class="comment">/* Local IP address */</span>
-00355    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h225Channel;<span class="comment">/* The h225 channel socket if the channel </span>
-00356 <span class="comment">                                        is established.*/</span>
-00357    <span class="keywordtype">int</span>                  *h225ChanPort;<span class="comment">/* The h225 channel port if the channel </span>
-00358 <span class="comment">                                         is established.*/</span>
-00359    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h245Channel;<span class="comment">/* H.245 channel socket, if the channel is</span>
-00360 <span class="comment">                                        established */</span>
-00361    <span class="keywordtype">int</span>                  *h245ChanPort;
-00362    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h245listener;
-00363    <span class="keywordtype">int</span>                  *h245listenport;
-00364    <span class="keywordtype">char</span>                 remoteIP[20];<span class="comment">/* Remote IP address */</span>
-00365    <span class="keywordtype">int</span>                  remotePort;
-00366    <span class="keywordtype">int</span>                  remoteH245Port;
-00367   
-00368    <span class="keywordtype">int</span>                  sendH225;<span class="comment">/* Number of outgoing H225/Q931 messages </span>
-00369 <span class="comment">                                    queued */</span>
-00370    <span class="keywordtype">int</span>                  sendH245; <span class="comment">/* Number of outgoing H245 messages queued */</span>
-00371    DList                outH225Queue;<span class="comment">/* Outgoing H225/Q931 message queue */</span>
-00372    DList                outH245Queue;<span class="comment">/* Outgoing H245 message queue */</span>
-00373    ASN1OCTET            *remoteDisplayName;
-00374    ooAliases            *remoteAliases;
-00375   <span class="comment">/*   ooAliases            *localAliases;*/</span>
-00376   
-00377    <span class="keywordtype">int</span>                  masterSlaveState;   <span class="comment">/* Master-Slave state */</span>
-00378    ASN1UINT             statusDeterminationNumber;
-00379    <span class="keywordtype">int</span>                  localTermCapState;
-00380    <span class="keywordtype">int</span>                  remoteTermCapState;
-00381    <a class="code" href="structH245Message.shtml">H245Message</a>          *remoteTermCapSet;
-00382    DList                remoteFastStartOLCs;
-00383    ASN1UINT8            remoteTermCapSeqNo;
-00384    ASN1UINT8            localTermCapSeqNo;
-00385   
-00386    <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>*    logicalChans;
-00387    <span class="keywordtype">int</span>                  noOfLogicalChannels;
-00388    <span class="keywordtype">int</span>                  logicalChanNoBase;
-00389    <span class="keywordtype">int</span>                  logicalChanNoMax;
-00390    <span class="keywordtype">int</span>                  logicalChanNoCur;
-00391    <span class="keywordtype">int</span>                  isAudioActive;
-00392    <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a>*   next;
-00393    <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a>*   prev;
-00394 } <a class="code" href="structooCallData.shtml">ooCallData</a>;
-00395
-00396
-<a name="l00398"></a><a class="code" href="ootypes_8h.shtml#a104">00398</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
-<a name="l00400"></a><a class="code" href="ootypes_8h.shtml#a105">00400</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
-<a name="l00402"></a><a class="code" href="ootypes_8h.shtml#a106">00402</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
-<a name="l00404"></a><a class="code" href="ootypes_8h.shtml#a107">00404</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
-00405
-<a name="l00410"></a><a class="code" href="structooH323EpCapability.shtml">00410</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>{
-00411    <span class="keywordtype">int</span> t;
-00412    <span class="keywordtype">void</span> *cap;
-00413    <a class="code" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel;
-00414    <a class="code" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel;
-00415    <a class="code" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel;
-00416    <a class="code" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel;
-00417 }<a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>;
-00418
-00419 <span class="keyword">typedef</span> int (*cb_OnAlerting)(<a class="code" href="structooCallData.shtml">ooCallData</a> * call);
-00420 <span class="keyword">typedef</span> int (*cb_OnIncomingCall)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
-00421 <span class="keyword">typedef</span> int (*cb_OnOutgoingCall)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
-00422 <span class="keyword">typedef</span> int (*cb_OnCallAnswered)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call);
-00423 <span class="keyword">typedef</span> int (*cb_OnAlerting)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call);
-00424 <span class="keyword">typedef</span> int (*cb_OnCallCleared)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
-00425 <span class="keyword">typedef</span> int (*cb_OnCallEstablished)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
-00426 <span class="keyword">typedef</span> int (*cb_OnStartLogicalChannel)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00071
+00072
+00073
+<a name="l00075"></a><a class="code" href="ootypes_8h.shtml#a25">00075</a> <span class="preprocessor">#define OO_CALL_STATE_MIN         50</span>
+00076 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CREATED           50</span>
+00077 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_WAITING_ADMISSION 51     </span>
+00078 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CONNECTING        52</span>
+00079 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CONNECTED         53</span>
+00080 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALL_CLEAR             54 </span><span class="comment">/* call marked for clearing */</span>
+00081 <span class="preprocessor">#define OO_CALL_CLEAR_CLOLCS      55 </span><span class="comment">/* Logical Channels closed*/</span>
+00082 <span class="preprocessor">#define OO_CALL_CLEAR_CLELCS      56 </span><span class="comment">/* Logical Channels cleared*/</span>
+00083 <span class="preprocessor">#define OO_CALL_CLEAR_ENDSESSION  57 </span><span class="comment">/* EndSession command sent*/</span>
+00084 <span class="preprocessor">#define OO_CALL_CLEAR_CLOSEH245   58 </span><span class="comment">/* H245 sockets closed*/</span>
+00085 <span class="preprocessor">#define OO_CALL_CLEAR_RELEASE     59 </span><span class="comment">/* Release Sent */</span>
+00086 <span class="preprocessor">#define OO_CALL_CLEARED           60 </span><span class="comment">/* Call Cleared */</span>
+00087 <span class="preprocessor">#define OO_CALL_STATE_MAX         60</span>
+00088 <span class="preprocessor"></span>
+00089
+00090
+<a name="l00092"></a><a class="code" href="ootypes_8h.shtml#a38">00092</a> <span class="preprocessor">#define OO_H245SESSION_INACTIVE 61</span>
+00093 <span class="preprocessor"></span><span class="preprocessor">#define OO_H245SESSION_ACTIVE 62</span>
+00094 <span class="preprocessor"></span>
+<a name="l00096"></a><a class="code" href="ootypes_8h.shtml#a40">00096</a> <span class="preprocessor">#define OO_LOGICALCHAN_IDLE        70</span>
+00097 <span class="preprocessor"></span><span class="preprocessor">#define OO_LOGICALCHAN_PROPOSED    71</span>
+00098 <span class="preprocessor"></span><span class="preprocessor">#define OO_LOGICALCHAN_ESTABLISHED 72</span>
+00099 <span class="preprocessor"></span>
+<a name="l00103"></a><a class="code" href="ootypes_8h.shtml#a43">00103</a> <span class="preprocessor">#define OOTERMTYPE 60</span>
+00104 <span class="preprocessor"></span>
+00105 <span class="preprocessor">#define MAXLOGMSGLEN 2048</span>
+00106 <span class="preprocessor"></span>
+<a name="l00109"></a><a class="code" href="ootypes_8h.shtml#a45">00109</a> <span class="preprocessor">#define OO_MSGTYPE_MIN                101</span>
+00110 <span class="preprocessor"></span><span class="preprocessor">#define OOQ931MSG                     101</span>
+00111 <span class="preprocessor"></span><span class="preprocessor">#define OOH245MSG                     102</span>
+00112 <span class="preprocessor"></span><span class="preprocessor">#define OOSetup                       103</span>
+00113 <span class="preprocessor"></span><span class="preprocessor">#define OOCallProceeding              104</span>
+00114 <span class="preprocessor"></span><span class="preprocessor">#define OOAlert                       105</span>
+00115 <span class="preprocessor"></span><span class="preprocessor">#define OOConnect                     106</span>
+00116 <span class="preprocessor"></span><span class="preprocessor">#define OOReleaseComplete             107</span>
+00117 <span class="preprocessor"></span><span class="preprocessor">#define OOFacility                    108</span>
+00118 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveDetermination    109</span>
+00119 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveAck              110</span>
+00120 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveReject           111</span>
+00121 <span class="preprocessor"></span><span class="preprocessor">#define OOMasterSlaveRelease          112</span>
+00122 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySet       113</span>
+00123 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySetAck    114</span>
+00124 <span class="preprocessor"></span><span class="preprocessor">#define OOTerminalCapabilitySetReject 115</span>
+00125 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannel          116</span>
+00126 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelAck       117</span>
+00127 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelReject    118</span>
+00128 <span class="preprocessor"></span><span class="preprocessor">#define OOOpenLogicalChannelRelease   119</span>
+00129 <span class="preprocessor"></span><span class="preprocessor">#define OOEndSessionCommand           120</span>
+00130 <span class="preprocessor"></span><span class="preprocessor">#define OOCloseLogicalChannel         121</span>
+00131 <span class="preprocessor"></span><span class="preprocessor">#define OOCloseLogicalChannelAck      122</span>
+00132 <span class="preprocessor"></span><span class="preprocessor">#define OORequestChannelClose         123</span>
+00133 <span class="preprocessor"></span><span class="preprocessor">#define OORequestChannelCloseAck      124</span>
+00134 <span class="preprocessor"></span><span class="preprocessor">#define OO_MSGTYPE_MAX                125</span>
+00135 <span class="preprocessor"></span>
+00136
+<a name="l00140"></a><a class="code" href="ootypes_8h.shtml#a71">00140</a> <span class="preprocessor">#define TCPPORTSSTART 12030</span>
+00141 <span class="preprocessor"></span><span class="preprocessor">#define TCPPORTSEND   12230</span>
+00142 <span class="preprocessor"></span><span class="preprocessor">#define UDPPORTSSTART 13030</span>
+00143 <span class="preprocessor"></span><span class="preprocessor">#define UDPPORTSEND   13230</span>
+00144 <span class="preprocessor"></span><span class="preprocessor">#define RTPPORTSSTART 14030</span>
+00145 <span class="preprocessor"></span><span class="preprocessor">#define RTPPORTSEND   14230</span>
+00146 <span class="preprocessor"></span>
+<a name="l00150"></a><a class="code" href="ootypes_8h.shtml#a77">00150</a> <span class="preprocessor">#define MAXMSGLEN 4096</span>
+00151 <span class="preprocessor"></span>
+00152 <span class="preprocessor">#define OO_CMD_MAKECALL    201</span>
+00153 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_ANSCALL     202</span>
+00154 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_REJECTCALL  203</span>
+00155 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_HANGCALL    204</span>
+00156 <span class="preprocessor"></span><span class="preprocessor">#define OO_CMD_STOPMONITOR 205</span>
+00157 <span class="preprocessor"></span>
+00158
+<a name="l00164"></a><a class="code" href="ootypes_8h.shtml#a83">00164</a> <span class="preprocessor">#define OO_CALLMODE_AUDIOCALL 301</span>
+00165 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_AUDIORX   302</span>
+00166 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_AUDIOTX   303</span>
+00167 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_VIDEOCALL 304</span>
+00168 <span class="preprocessor"></span><span class="preprocessor">#define OO_CALLMODE_FAX       305</span>
+00169 <span class="preprocessor"></span>
+<a name="l00173"></a><a class="code" href="ootypes_8h.shtml#a88">00173</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a88">ChannelCallback</a>)(<span class="keywordtype">void</span>*);
+00174
+<a name="l00179"></a><a class="code" href="ootypes_8h.shtml#a89">00179</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a89">CommandCallback</a>)(<span class="keywordtype">void</span>);
+00180
+<a name="l00182"></a><a class="code" href="ootypes_8h.shtml#a90">00182</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a90">gCallTokenBase</a>;
+<a name="l00184"></a><a class="code" href="ootypes_8h.shtml#a91">00184</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a91">gCallTokenMax</a>;
+<a name="l00186"></a><a class="code" href="ootypes_8h.shtml#a92">00186</a> <span class="keywordtype">int</span> <a class="code" href="ootypes_8h.shtml#a92">gCurCallToken</a>;
+00187
+00188 <span class="keywordtype">int</span> gMonitor;
+<a name="l00192"></a><a class="code" href="ootypes_8h.shtml#a94">00192</a> DList <a class="code" href="ootypes_8h.shtml#a94">gCmdList</a>;
+<a name="l00194"></a><a class="code" href="ootypes_8h.shtml#a95">00194</a> OOCTXT <a class="code" href="ootypes_8h.shtml#a95">gCtxt</a>;
+00195
+00198 <span class="preprocessor">#ifdef _WIN32</span>
+00199 <span class="preprocessor"></span>CRITICAL_SECTION <a class="code" href="ootypes_8h.shtml#a96">gCmdMutex</a>;
+00200 <span class="preprocessor">#else</span>
+<a name="l00201"></a><a class="code" href="ootypes_8h.shtml#a96">00201</a> <span class="preprocessor"></span>pthread_mutex_t <a class="code" href="ootypes_8h.shtml#a96">gCmdMutex</a>;
+00202 <span class="preprocessor">#endif</span>
+00203 <span class="preprocessor"></span>
+<a name="l00206"></a><a class="code" href="structooCommand.shtml">00206</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooCommand.shtml">ooCommand</a> {
+00207    <span class="keywordtype">int</span> type;
+00208    <span class="keywordtype">void</span> * param1;
+00209    <span class="keywordtype">void</span> * param2;
+00210    <span class="keywordtype">void</span> * param3;
+00211 } <a class="code" href="structooCommand.shtml">ooCommand</a>;
+<a name="l00216"></a><a class="code" href="structooH323Ports.shtml">00216</a> <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a>
+00217 {
+00218    <span class="keywordtype">int</span> start;
+00219    <span class="keywordtype">int</span> max;
+00220    <span class="keywordtype">int</span> current;
+00221 };
+00222
+<a name="l00228"></a><a class="code" href="structQ931Message.shtml">00228</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structQ931Message.shtml">Q931Message</a> {
+00229    OOCTXT* pctxt; <span class="comment">/* context is used to allocate memory for */</span>
+00230                      <span class="comment">/* different parts of the message */</span>
+00231    <span class="keywordtype">unsigned</span> protocolDiscriminator;
+00232    <span class="keywordtype">unsigned</span> callReference;
+00233    ASN1BOOL fromDestination;
+00234    <span class="keywordtype">unsigned</span> messageType; <span class="comment">/* Q931MsgTypes  */</span>
+00235
+00236    DList ies;
+00237    H225H323_UserInformation *userInfo;
+00238 } <a class="code" href="structQ931Message.shtml">Q931Message</a>;
+00239
+<a name="l00244"></a><a class="code" href="structH245Message.shtml">00244</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structH245Message.shtml">H245Message</a> {
+00245    OOCTXT* pctxt;
+00246    H245MultimediaSystemControlMessage h245Msg;
+00247    ASN1UINT msgType;
+00248 } <a class="code" href="structH245Message.shtml">H245Message</a>;
+00249
+00250 <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>;
+00251
+00252 <span class="comment">/* Store local and remote media endpoint info, for media type */</span>
+00253 <span class="keyword">typedef</span> <span class="keyword">struct </span>ooMediaInfo{
+00254    <span class="keywordtype">char</span>  dir[15]; <span class="comment">/* transmit/receive*/</span>
+00255    <span class="keywordtype">int</span>   cap;
+00256    <span class="keywordtype">int</span>   lMediaPort;
+00257    <span class="keywordtype">int</span>   lMediaCntrlPort;
+00258    <span class="keywordtype">char</span>  lMediaIP[20];
+00259    <span class="keyword">struct </span>ooMediaInfo *next;
+00260 } ooMediaInfo;
+00261
+<a name="l00266"></a><a class="code" href="structooLogicalChannel.shtml">00266</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>{
+00267    <span class="keywordtype">int</span> channelNo;
+00268    <span class="keywordtype">int</span> sessionID;
+00269    <span class="keywordtype">char</span> type[10]; <span class="comment">/* audio/video/data */</span>
+00270    <span class="keywordtype">char</span> dir[10]; <span class="comment">/* receive/transmit */</span>
+00271    <span class="keywordtype">char</span>                 remoteIP[20];
+00272    <span class="keywordtype">int</span>                  remoteRtpPort; <span class="comment">/* TODO: Should be renamed mediaPort */</span>
+00273    <span class="keywordtype">int</span>                  remoteRtcpPort; <span class="comment">/* TODO: Should be renamed mediaControlPort */</span>
+00274    <span class="keywordtype">int</span>                  localRtpPort;
+00275    <span class="keywordtype">int</span>                  localRtcpPort;
+00276    <span class="keywordtype">char</span>                 localIP[20];
+00277    <span class="keywordtype">int</span>                  state;        
+00278    <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *chanCap;
+00279    <span class="keyword">struct </span><a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *next;
+00280 }<a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>;
+00281
+00282 <span class="keyword">typedef</span> <span class="keyword">struct </span>ooAliases{
+00283    <span class="keywordtype">int</span> type;
+00284    <span class="keywordtype">char</span> *value;
+00285    <span class="keyword">struct </span>ooAliases *next;
+00286 }ooAliases;
+00287
+<a name="l00292"></a><a class="code" href="structooCallData.shtml">00292</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a> {
+00293    OOCTXT               *pctxt;
+00294    <span class="keywordtype">char</span>                 callToken[20]; <span class="comment">/* ex: ooh323c_call_1 */</span>
+00295    <span class="keywordtype">char</span>                 callType[10]; <span class="comment">/* incoming/outgoing */</span>
+00296    ASN1USINT            callReference;
+00297   
+00298    H225CallIdentifier   callIdentifier;<span class="comment">/* The call identifier for the active </span>
+00299 <span class="comment">                                          call. */</span>
+00300    H225ConferenceIdentifier confIdentifier;
+00301    <span class="keywordtype">int</span>                  callState;
+00302    <span class="keywordtype">int</span>                  callEndReason;
+00303    <span class="keywordtype">int</span>                  h245SessionState;
+00304    <span class="keywordtype">int</span>                  isTunnelingActive;
+00305    <span class="keywordtype">int</span>                  isFastStartActive; <span class="comment">/***TODO - Need to update this field */</span>
+00306    <span class="keywordtype">int</span>                  gkEngaged;  
+00307    ooMediaInfo          *mediaInfo;
+00308    <span class="keywordtype">char</span>                 localIP[20];<span class="comment">/* Local IP address */</span>
+00309    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h225Channel;<span class="comment">/* The h225 channel socket if the channel </span>
+00310 <span class="comment">                                        is established.*/</span>
+00311    <span class="keywordtype">int</span>                  *h225ChanPort;<span class="comment">/* The h225 channel port if the channel </span>
+00312 <span class="comment">                                         is established.*/</span>
+00313    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h245Channel;<span class="comment">/* H.245 channel socket, if the channel is</span>
+00314 <span class="comment">                                        established */</span>
+00315    <span class="keywordtype">int</span>                  *h245ChanPort;
+00316    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a>             *h245listener;
+00317    <span class="keywordtype">int</span>                  *h245listenport;
+00318    <span class="keywordtype">char</span>                 remoteIP[20];<span class="comment">/* Remote IP address */</span>
+00319    <span class="keywordtype">int</span>                  remotePort;
+00320    <span class="keywordtype">int</span>                  remoteH245Port;
+00321   
+00322    <span class="keywordtype">int</span>                  sendH225;<span class="comment">/* Number of outgoing H225/Q931 messages </span>
+00323 <span class="comment">                                    queued */</span>
+00324    <span class="keywordtype">int</span>                  sendH245; <span class="comment">/* Number of outgoing H245 messages queued */</span>
+00325    DList                outH225Queue;<span class="comment">/* Outgoing H225/Q931 message queue */</span>
+00326    DList                outH245Queue;<span class="comment">/* Outgoing H245 message queue */</span>
+00327    ASN1OCTET            *remoteDisplayName;
+00328    ooAliases            *remoteAliases;
+00329   <span class="comment">/*   ooAliases            *localAliases;*/</span>
+00330   
+00331    <span class="keywordtype">int</span>                  masterSlaveState;   <span class="comment">/* Master-Slave state */</span>
+00332    ASN1UINT             statusDeterminationNumber;
+00333    <span class="keywordtype">int</span>                  localTermCapState;
+00334    <span class="keywordtype">int</span>                  remoteTermCapState;
+00335    <a class="code" href="structH245Message.shtml">H245Message</a>          *remoteTermCapSet;
+00336    DList                remoteFastStartOLCs;
+00337    ASN1UINT8            remoteTermCapSeqNo;
+00338    ASN1UINT8            localTermCapSeqNo;
+00339   
+00340    <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a>*    logicalChans;
+00341    <span class="keywordtype">int</span>                  noOfLogicalChannels;
+00342    <span class="keywordtype">int</span>                  logicalChanNoBase;
+00343    <span class="keywordtype">int</span>                  logicalChanNoMax;
+00344    <span class="keywordtype">int</span>                  logicalChanNoCur;
+00345    <span class="keywordtype">int</span>                  isAudioActive;
+00346    <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a>*   next;
+00347    <span class="keyword">struct </span><a class="code" href="structooCallData.shtml">ooCallData</a>*   prev;
+00348 } <a class="code" href="structooCallData.shtml">ooCallData</a>;
+00349
+00350
+<a name="l00352"></a><a class="code" href="ootypes_8h.shtml#a104">00352</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
+<a name="l00354"></a><a class="code" href="ootypes_8h.shtml#a105">00354</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
+<a name="l00356"></a><a class="code" href="ootypes_8h.shtml#a106">00356</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
+<a name="l00358"></a><a class="code" href="ootypes_8h.shtml#a107">00358</a> <span class="keyword">typedef</span> int (*<a class="code" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a>)(<a class="code" href="structooCallData.shtml">ooCallData</a> *call, <a class="code" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel);
+00359
+<a name="l00364"></a><a class="code" href="structooH323EpCapability.shtml">00364</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>{
+00365    <span class="keywordtype">int</span> dir;
+00366    <span class="keywordtype">int</span> cap;
+00367    <span class="keywordtype">int</span> capType;
+00368    <a class="code" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel;
+00369    <a class="code" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel;
+00370    <a class="code" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel;
+00371    <a class="code" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel;
+00372    <span class="keyword">struct </span><a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *next;
+00373 }<a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a>;
+00374
+00375 <span class="keyword">typedef</span> int (*cb_OnAlerting)(<a class="code" href="structooCallData.shtml">ooCallData</a> * call);
+00376 <span class="keyword">typedef</span> int (*cb_OnIncomingCall)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00377 <span class="keyword">typedef</span> int (*cb_OnOutgoingCall)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00378 <span class="keyword">typedef</span> int (*cb_OnCallAnswered)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call);
+00379 <span class="keyword">typedef</span> int (*cb_OnCallCleared)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00380 <span class="keyword">typedef</span> int (*cb_OnCallEstablished)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00381 <span class="keyword">typedef</span> int (*cb_OnOutgoingCallAdmitted)(<a class="code" href="structooCallData.shtml">ooCallData</a>* call );
+00382
+<a name="l00385"></a><a class="code" href="structooEndPoint.shtml">00385</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooEndPoint.shtml">ooEndPoint</a>{
+00386    OOCTXT ctxt;
+00387    FILE *               fptraceFile;
+<a name="l00389"></a><a class="code" href="structooEndPoint.shtml#o2">00389</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> tcpPorts;
+<a name="l00391"></a><a class="code" href="structooEndPoint.shtml#o3">00391</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> udpPorts;
+<a name="l00393"></a><a class="code" href="structooEndPoint.shtml#o4">00393</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> rtpPorts;
+00394  
+00395    <span class="keywordtype">int</span> h245Tunneling;
+00396    <span class="keywordtype">int</span> fastStart;
+00397    <span class="keywordtype">int</span> termType; <span class="comment">/* 50 - Terminal entity with No MC, </span>
+00398 <span class="comment">                    60 - Gateway entity with no MC, </span>
+00399 <span class="comment">                    70 - Terminal Entity with MC, but no MP etc.*/</span>
+00400    <span class="keywordtype">int</span> t35CountryCode;
+00401    <span class="keywordtype">int</span> t35Extension;
+00402    <span class="keywordtype">int</span> manufacturerCode;
+00403    <span class="keywordtype">char</span> *productID;
+00404    <span class="keywordtype">char</span> *versionID;
+00405    <span class="keywordtype">char</span> *callerid;
+00406    <span class="keywordtype">char</span> *callername;
+00407    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> *stackSocket;
+00408    ooAliases *aliases;
+00409    <span class="keywordtype">int</span> callType;
+00410   <span class="comment">//   DList audioCaps;</span>
+00411   <span class="comment">//  DList dataApplicationCaps;</span>
+00412   <span class="comment">//  DList videoCaps;</span>
+00413    <a class="code" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *myCaps;
+00414    <span class="keywordtype">int</span> noOfCaps;
+00415    cb_OnAlerting onAlerting;
+00416    cb_OnIncomingCall onIncomingCall;
+00417    cb_OnOutgoingCall onOutgoingCall;
+00418    cb_OnCallEstablished onCallEstablished;
+00419    cb_OnCallCleared onCallCleared;
+00420    cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
+00421    <span class="keywordtype">char</span> signallingIP[20];
+00422    <span class="keywordtype">int</span> listenPort;
+00423    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> *listener;
+00424    <a class="code" href="structooCallData.shtml">ooCallData</a> *callList;
+00425    <span class="keywordtype">int</span> autoAnswer;   <span class="comment">/* 1 to enable, 0 to disable */</span>
+00426    <span class="keywordtype">int</span> callMode; <span class="comment">/* audio/audiorx/audiotx/video/fax */</span>
 00427
-<a name="l00430"></a><a class="code" href="structooEndPoint.shtml">00430</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooEndPoint.shtml">ooEndPoint</a>{
-00431    OOCTXT ctxt;
-00432    FILE *               fptraceFile;
-<a name="l00434"></a><a class="code" href="structooEndPoint.shtml#o2">00434</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> tcpPorts;
-<a name="l00436"></a><a class="code" href="structooEndPoint.shtml#o3">00436</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> udpPorts;
-<a name="l00438"></a><a class="code" href="structooEndPoint.shtml#o4">00438</a>    <span class="keyword">struct </span><a class="code" href="structooH323Ports.shtml">ooH323Ports</a> rtpPorts;
-00439  
-00440    <span class="keywordtype">int</span> h245Tunneling;
-00441    <span class="keywordtype">int</span> fastStart;
-00442    <span class="keywordtype">int</span> termType; <span class="comment">/* 50 - Terminal entity with No MC, </span>
-00443 <span class="comment">                    60 - Gateway entity with no MC, </span>
-00444 <span class="comment">                    70 - Terminal Entity with MC, but no MP etc.*/</span>
-00445    <span class="keywordtype">int</span> t35CountryCode;
-00446    <span class="keywordtype">int</span> t35Extension;
-00447    <span class="keywordtype">int</span> manufacturerCode;
-00448    <span class="keywordtype">char</span> *productID;
-00449    <span class="keywordtype">char</span> *versionID;
-00450    <span class="keywordtype">char</span> *callerid;
-00451    <span class="keywordtype">char</span> *callername;
-00452    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> *stackSocket;
-00453    ooAliases *aliases;
-00454    <span class="keywordtype">int</span> callType;
-00455    DList audioCaps;
-00456    DList dataApplicationCaps;
-00457    DList videoCaps;
-00458    cb_OnAlerting onAlerting;
-00459    cb_OnIncomingCall onIncomingCall;
-00460    cb_OnOutgoingCall onOutgoingCall;
-00461    cb_OnCallEstablished onCallEstablished;
-00462    cb_OnCallCleared onCallCleared;
-00463    cb_OnStartLogicalChannel onStartLogicalChannel;
-00464    <span class="keywordtype">char</span> signallingIP[20];
-00465    <span class="keywordtype">int</span> listenPort;
-00466    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> *listener;
-00467    <a class="code" href="structooCallData.shtml">ooCallData</a> *callList;
-00468    <span class="keywordtype">int</span> autoAnswer;   <span class="comment">/* 1 to enable, 0 to disable */</span>
-00469    <span class="keywordtype">int</span> callMode; <span class="comment">/* audio/audiorx/audiotx/video/fax */</span>
-00470
-00471 } <a class="code" href="structooEndPoint.shtml">ooEndPoint</a>;
-<a name="l00473"></a><a class="code" href="ootypes_8h.shtml#a117">00473</a> <a class="code" href="structooEndPoint.shtml">ooEndPoint</a> <a class="code" href="ootypes_8h.shtml#a117">gH323ep</a>;
-00474 <span class="preprocessor">#endif</span>
-00475 <span class="preprocessor"></span>
+00428 } <a class="code" href="structooEndPoint.shtml">ooEndPoint</a>;
+<a name="l00430"></a><a class="code" href="ootypes_8h.shtml#a117">00430</a> <a class="code" href="structooEndPoint.shtml">ooEndPoint</a> <a class="code" href="ootypes_8h.shtml#a117">gH323ep</a>;
+00431 <span class="preprocessor">#endif</span>
+00432 <span class="preprocessor"></span>
 </div></pre><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

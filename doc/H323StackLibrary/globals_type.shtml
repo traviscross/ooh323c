@@ -144,7 +144,8 @@
 : <a class="el" href="group__pluginInterface.shtml#ga5">oosndrtp.h</a></ul>
 <h3><a class="anchor" name="index_o">- o -</a></h3><ul>
 <li>ooCallData
-: <a class="el" href="ootypes_8h.shtml#a103">ootypes.h</a><li>ooCommand
+: <a class="el" href="ootypes_8h.shtml#a103">ootypes.h</a><li>OOCHAR
+: <a class="el" href="ooCommon_8h.shtml#a13">ooCommon.h</a><li>ooCommand
 : <a class="el" href="ootypes_8h.shtml#a97">ootypes.h</a><li>ooEndPoint
 : <a class="el" href="ootypes_8h.shtml#a116">ootypes.h</a><li>ooH323EpCapability
 : <a class="el" href="ootypes_8h.shtml#a108">ootypes.h</a><li>OOIPADDR
@@ -177,6 +178,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+                3 Mar 2005.<BR> H323FrameworkStack, Version 0.5.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>
