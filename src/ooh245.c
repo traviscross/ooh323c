@@ -990,6 +990,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                   "channel (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
+   pLogicalChannel->state = OO_LOGICALCHAN_ESTABLISHED;
    return ret;
 }
 
