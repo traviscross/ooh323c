@@ -24,6 +24,7 @@
 #include "printHandler.h"
 #include "ooras.h"
 #include "stdio.h"
+#include "ooTimer.h"
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;

@@ -193,6 +193,10 @@ SOURCE=.\ooStackCmds.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooTimer.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ootrace.c
 # End Source File
 # Begin Source File
@@ -302,6 +306,10 @@ SOURCE=.\ooSocket.h
 # Begin Source File
 
 SOURCE=.\ooStackCmds.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooTimer.h
 # End Source File
 # Begin Source File
 
