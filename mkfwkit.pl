@@ -79,7 +79,7 @@ print `cp -f ./tests/player/space.wav ./ooh323c-${version}/tests/player`;
 print `cp -f ./tests/player/states.wav ./ooh323c-${version}/tests/player`;
 
 mkdir ("ooh323c-${version}/tests/receiver", 0777);
-print `cp -f ./tests/receiver/*.c /ooh323c-${version}/tests/receiver`;
+print `cp -f ./tests/receiver/*.c ./ooh323c-${version}/tests/receiver`;
 print `cp -f ./tests/receiver/*.h ./ooh323c-${version}/tests/receiver`;
 print `cp -f ./tests/receiver/Makefile.am ./ooh323c-${version}/tests/receiver/Makefile.am`;
 print `cp -f ./tests/receiver/ooReceiver.dsp ./ooh323c-${version}/tests/receiver/ooReceiver.dsp`;
