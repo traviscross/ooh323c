@@ -762,6 +762,7 @@ int ooH2250Receive(ooCallData *call)
    ooQ931Decode (pmsg, len, message);
    OOTRACEDBGC3("Decoded Q931 message (%s, %s)\n", call->callType,
                                                              call->callToken);
+   finishPrint();
    rtRemoveEventHandler(pctxt, &printHandler);
    ooHandleH2250Message(call, pmsg);
    return OO_OK;
@@ -892,6 +893,7 @@ int ooH245Receive(ooCallData *call)
       ooFreeH245Message(pmsg);
       return OO_FAILED;
    }
+   finishPrint();
    rtRemoveEventHandler(pctxt, &printHandler);
    ooHandleH245Message(call, pmsg);
    return OO_OK;
@@ -907,7 +909,7 @@ int ooSendMsg(ooCallData *call, int type)
    ASN1OCTET msgbuf[MAXMSGLEN];
    int len=0, ret=0, msgType=0;
    int i =0;
-  
+
    memset(msgbuf, 0, sizeof(msgbuf));
    if(type == OOQ931MSG)
    {
@@ -965,6 +967,7 @@ int ooSendMsg(ooCallData *call, int type)
          }
          return OO_FAILED;
       }
+     
       call->sendH245--;
       /* Send message out */
       if(!call->h245Channel && !call->isTunnelingActive)

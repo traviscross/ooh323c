@@ -152,15 +152,18 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
                             ASN1OCTET *msgbuf, int *len, int *msgType)
 {
    H245Message *p_h245Msg=NULL;
-   H245MultimediaSystemControlMessage *multimediaMsg=NULL;
+   H245MultimediaSystemControlMessage *multimediaMsg=NULL, mmMsg;
    DListNode * p_msgNode=NULL;
-   int i =0;
+   int i =0, ret=0;
    ASN1BOOL aligned =TRUE, trace =FALSE;
    ASN1OCTET encodeBuf[1024];
    ASN1OCTET* encodeptr=NULL;
    int encodeLen=0;
-   OOCTXT* pctxt=NULL;
+   OOCTXT* pctxt=NULL, ctxt;
    memset(encodeBuf, 0, sizeof(encodeBuf));
+
+   initContext(&ctxt);
+   memset(&mmMsg, 0, sizeof(H245MultimediaSystemControlMessage));
 
    if(call->outH245Queue.count == 0)
    {
@@ -189,7 +192,24 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    }
   
    encodeptr = encodeGetMsgPtr(pctxt, &encodeLen);
-  
+
+
+   setPERBuffer(&ctxt, encodeptr, encodeLen, 1);
+   initializePrintHandler(&printHandler, "Sending H.245 Message");
+
+   /* Add event handler to list */
+   rtAddEventHandler (&ctxt, &printHandler);
+   ret = asn1PD_H245MultimediaSystemControlMessage(&ctxt, &mmMsg);
+   if(ret != ASN_OK)
+   {
+      OOTRACEERR3("Error decoding H245 message (%s, %s)\n",
+                  call->callType, call->callToken);
+   }
+   finishPrint();
+   rtRemoveEventHandler(&ctxt, &printHandler);
+   freeContext(&ctxt);  
+
+
    if(!call->isTunnelingActive)
    {
       /* Populate message buffer to be returned */
@@ -372,7 +392,7 @@ int ooSendTermCapMsg(ooCallData *call)
    dListAppend(pctxt, &(termCap->capabilityDescriptors), capDesc);
   
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built terminal capability set message (%s, %s)\n",
+   OOTRACEDBGA3("Built terminal capability set message (%s, %s)\n",
                  call->callType, call->callToken);
    call->localTermCapState = OO_LocalTermCapSetSent;
    return OO_OK;
@@ -537,10 +557,9 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
 #ifndef _COMPACT
    dListInit(&(pMasterSlave->extElem1));
 #endif /* !_COMPACT */  
-
-   OOTRACEINFO3("Built MasterSlave Determination (%s, %s)\n", call->callType,
-                 call->callToken);
    ooSendH245Msg(call, ph245msg);
+   OOTRACEDBGA3("Built MasterSlave Determination (%s, %s)\n", call->callType,
+                 call->callToken);
    call->masterSlaveState = OO_MasterSlave_DetermineSent;
    return OO_OK;
 }
@@ -582,7 +601,7 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    dListInit(&(response->u.masterSlaveDeterminationAck->extElem1));
 #endif /* !_COMPACT */
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built MasterSlave determination Ack (%s, %s)\n",
+   OOTRACEDBGA3("Built MasterSlave determination Ack (%s, %s)\n",
                 call->callType, call->callToken);
 
    return OO_OK;
@@ -774,7 +793,8 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-
+   ooConvertIpToNwAddr(call->localIP, iPAddress->network.data);
+#if 0
    sscanf(call->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2, &addr_part3,
                                   &addr_part4);
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2,
@@ -783,6 +803,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                                 &(iPAddress->network.data[1]),
                                 &(iPAddress->network.data[2]),
                                 &(iPAddress->network.data[3]));
+#endif
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtpPort;
 
@@ -803,18 +824,20 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
 #ifndef _COMPACT
    dListInit(&(iPAddress1->extElem1));
 #endif /* !_COMPACT */
-
+   ooConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
+#if 0
    sscanf(hexip, "%x %x %x %x", &(iPAddress1->network.data[0]),
                                 &(iPAddress1->network.data[1]),
                                 &(iPAddress1->network.data[2]),
                                 &(iPAddress1->network.data[3]));
+#endif
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
 
   
 
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built OpenLogicalChannelAck (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built OpenLogicalChannelAck (%s, %s)\n", call->callType,
                  call->callToken);
    if(epCap->startReceiveChannel)
    {
@@ -1068,7 +1091,7 @@ int ooSendEndSessionCommand(ooCallData *call)
    memset(command->u.endSessionCommand, 0, sizeof(H245EndSessionCommand));
    command->u.endSessionCommand->t = T_H245EndSessionCommand_disconnect;
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built EndSession Command (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built EndSession Command (%s, %s)\n", call->callType,
                 call->callToken);
    return OO_OK;
 }
@@ -1183,7 +1206,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    dListInit(&clc->extElem1);
 #endif
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO4("Built close logical channel for %d (%s, %s)\n",
+   OOTRACEDBGA4("Built close logical channel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
   
    /* Stop the media transmission */
@@ -1246,7 +1269,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    dListInit(&rclc->extElem1);
 #endif
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO4("Built RequestCloseChannel for %d (%s, %s)\n",
+   OOTRACEDBGA4("Built RequestCloseChannel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
    return OO_OK;
 }
@@ -1307,7 +1330,7 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
    dListInit(&rclcAck->extElem1);
 #endif
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built RequestCloseChannelAck message (%s, %s)\n",
+   OOTRACEDBGA3("Built RequestCloseChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
   
   
@@ -1373,7 +1396,7 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    dListInit(&(clcAck->extElem1));
 #endif
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built CloseLogicalChannelAck message (%s, %s)\n",
+   OOTRACEDBGA3("Built CloseLogicalChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
   
    return OO_OK;
@@ -1572,7 +1595,7 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
    dListInit(&(response->u.terminalCapabilitySetAck->extElem1));  
 #endif /* !_COMPACT */
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built TerminalCapabilitySet Ack (%s, %s)\n",
+   OOTRACEDBGA3("Built TerminalCapabilitySet Ack (%s, %s)\n",
                  call->callType, call->callToken);
    call->remoteTermCapState = OO_RemoteTermCapSetAckSent;
    return OO_OK;
@@ -1801,6 +1824,8 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    dListInit(&(iPAddress->extElem1));
 #endif /* !_COMPACT */
 
+   ooConvertIpToNwAddr(pLogicalChannel->localIP, iPAddress->network.data);
+#if 0
    sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                    &addr_part3, &addr_part4);
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
@@ -1809,11 +1834,13 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
                                 &(iPAddress->network.data[1]),
                                 &(iPAddress->network.data[2]),
                                 &(iPAddress->network.data[3]));
+#endif
+
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
    pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built OpenLogicalChannel (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built OpenLogicalChannel (%s, %s)\n", call->callType,
                 call->callToken);
  
     return OO_OK;
@@ -1846,7 +1873,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
   
    if(epCap->dir == T_H245Capability_receiveAudioCapability)
    {
-      OOTRACEINFO3("Building OpenLogicalChannel for Receive Audio Capability "
+      OOTRACEDBGA3("Building OpenLogicalChannel for Receive Audio Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
       pLogicalChannel = ooAddNewLogicalChannel(call,
                                  olc->forwardLogicalChannelNumber, 1, "audio",
@@ -1858,7 +1885,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    }
    else if(epCap->dir == T_H245Capability_transmitAudioCapability)
    {
-      OOTRACEINFO3("Building OpenLogicalChannel for transmit Audio Capability "
+      OOTRACEDBGA3("Building OpenLogicalChannel for transmit Audio Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
       pLogicalChannel = ooAddNewLogicalChannel(call,
                                   olc->forwardLogicalChannelNumber, 1, "audio",
@@ -1870,7 +1897,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    }
    else if(epCap->dir == T_H245Capability_receiveAndTransmitAudioCapability)
    {
-      OOTRACEINFO3("Building OpenLogicalChannel for ReceiveAndTransmit Audio "
+      OOTRACEDBGA3("Building OpenLogicalChannel for ReceiveAndTransmit Audio "
                    "Capability (%s, %s)\n", call->callType, call->callToken);
       reverse = 1;
       forward = 1;
@@ -1878,11 +1905,12 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                    call->callType, call->callToken);
       return OO_FAILED;
    }
- 
+#if 0 
    sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                    &addr_part3, &addr_part4);
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2,
                                  addr_part3, addr_part4);
+#endif
    if(forward)
    {
       flcp = &(olc->forwardLogicalChannelParameters);
@@ -1918,11 +1946,14 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 #ifndef _COMPACT
          dListInit(&(pUniIpAddrs->extElem1));
 #endif /* !_COMPACT */
-     
+         ooConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                pUniIpAddrs->network.data);
+#if 0
          sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
                                    &(pUniIpAddrs->network.data[1]),
                                    &(pUniIpAddrs->network.data[2]),
                                    &(pUniIpAddrs->network.data[3]));
+#endif
          pUniIpAddrs->network.numocts = 4;
          pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
       }
@@ -1942,11 +1973,13 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 #ifndef _COMPACT
       dListInit(&(pIpAddrs->extElem1));
 #endif /* !_COMPACT */
-     
+       ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+#if 0
       sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
                                 &(pIpAddrs->network.data[1]),
                                 &(pIpAddrs->network.data[2]),
                                 &(pIpAddrs->network.data[3]));
+#endif
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
       if(!outgoing)
@@ -2002,11 +2035,13 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 #ifndef _COMPACT
          dListInit(&(pIpAddrs->extElem1));
 #endif /* !_COMPACT */
-
+         ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+#if 0
          sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
                                    &(pIpAddrs->network.data[1]),
                                    &(pIpAddrs->network.data[2]),
                                    &(pIpAddrs->network.data[3]));
+#endif
          pIpAddrs->network.numocts = 4;
          pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
       }
@@ -2027,10 +2062,13 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 #ifndef _COMPACT
       dListInit(&(pUniIpAddrs->extElem1));
 #endif /* !_COMPACT */
+      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+#if 0
       sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
                                 &(pUniIpAddrs->network.data[1]),
                                 &(pUniIpAddrs->network.data[2]),
                                 &(pUniIpAddrs->network.data[3]));
+#endif
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
          

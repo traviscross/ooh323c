@@ -44,6 +44,7 @@ void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname
    pVarName = varname;
    OOTRACEINFO2("%s = {\n", pVarName);
    gIndentSpaces += 3;
+
 }
 
 void finishPrint()

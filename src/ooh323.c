@@ -206,6 +206,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
             will be processed at the time of sending CONNECT message. */
          dListAppend(call->pctxt, &call->remoteFastStartOLCs, olc);
       }
+      finishPrint();
       rtRemoveEventHandler(call->pctxt, &printHandler);
    }
 
@@ -383,6 +384,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          */
          ooOnLogicalChannelEstablished(call, pChannel);
       }
+      finishPrint();
       rtRemoveEventHandler(call->pctxt, &printHandler);
    }
 
@@ -737,6 +739,7 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
                ooFreeH245Message(pmsg);
                return OO_FAILED;
             }
+            finishPrint();
             rtRemoveEventHandler(pctxt, &printHandler);
             ooHandleH245Message(call, pmsg);
             pctxt = NULL;

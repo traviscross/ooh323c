@@ -667,6 +667,7 @@ int ooRasReceive()
    rtAddEventHandler (psContext, &printHandler);
    if ( ASN_OK== asn1PD_H225RasMessage( psContext, &psRasMsg->sMessage ) )
    {
+      finishPrint();
       rtRemoveEventHandler(psContext, &printHandler);
       iRet=ooRasManageMessage( psRasMsg );
       if(iRet != OO_OK)
@@ -862,12 +863,15 @@ static int ooRasSendGRQ()
       return OO_FAILED;
    }
    memset(psRasAddress, 0, sizeof(H225TransportAddress_ipAddress));
+   ooConvertIpToNwAddr(gH323ep.signallingIP, psRasAddress->ip.data);
+#if 0
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &iEk, &iDon, &iTeen, &iChaar);
    sprintf(hexip, "%x %x %x %x", iEk, iDon, iTeen, iChaar);
    sscanf(hexip, "%x %x %x %x", &(psRasAddress->ip.data[0]),
                                 &(psRasAddress->ip.data[1]),
                                 &(psRasAddress->ip.data[2]),
                                 &(psRasAddress->ip.data[3]));  
+#endif
    psRasAddress->ip.numocts = 4;
    psRasAddress->port = gLocalRASPort;
    psGkReq->rasAddress.u.ipAddress = psRasAddress;
@@ -1038,13 +1042,15 @@ static int ooRasSendRRQ(int keepAlive )
    memset(psIpAddress, 0, sizeof(H225TransportAddress_ipAddress));
    psTransportAddress->t = T_H225TransportAddress_ipAddress;
    psTransportAddress->u.ipAddress = psIpAddress;
-  
+   ooConvertIpToNwAddr(gH323ep.signallingIP, psIpAddress->ip.data);
+#if 0
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &iEk, &iDon, &iTeen, &iChaar);
    sprintf(hexip, "%x %x %x %x", iEk, iDon, iTeen, iChaar);
    sscanf(hexip, "%x %x %x %x", &(psIpAddress->ip.data[0]),
                                 &(psIpAddress->ip.data[1]),
                                 &(psIpAddress->ip.data[2]),
                                 &(psIpAddress->ip.data[3]));  
+#endif
    psIpAddress->ip.numocts = 4;
    psIpAddress->port = gH323ep.listenPort;
   
@@ -1071,12 +1077,15 @@ static int ooRasSendRRQ(int keepAlive )
    psTransportAddress->t = T_H225TransportAddress_ipAddress;
    psTransportAddress->u.ipAddress = psIpAddress;
   
+   ooConvertIpToNwAddr(gH323ep.signallingIP, psIpAddress->ip.data);
+#if 0
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &iEk, &iDon, &iTeen, &iChaar);
    sprintf(hexip, "%x %x %x %x", iEk, iDon, iTeen, iChaar);
    sscanf(hexip, "%x %x %x %x", &(psIpAddress->ip.data[0]),
                                 &(psIpAddress->ip.data[1]),
                                 &(psIpAddress->ip.data[2]),
                                 &(psIpAddress->ip.data[3]));  
+#endif
    psIpAddress->ip.numocts = 4;
    psIpAddress->port = gLocalRASPort;
   
@@ -1366,24 +1375,29 @@ int ooRasSendAdmissionRequest(ooCallData * call, enum RasCallModel eModel,
       ooFreeRasMessage(psRasMsg);
       return OO_FAILED;
    }
-  
+   ooConvertIpToNwAddr(gH323ep.signallingIP, psIpAddressLocal->ip.data);
+#if 0
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &iEk, &iDon, &iTeen, &iChaar);
    sprintf(hexip, "%x %x %x %x", iEk, iDon, iTeen, iChaar);
    sscanf(hexip, "%x %x %x %x", &(psIpAddressLocal->ip.data[0]),
                                 &(psIpAddressLocal->ip.data[1]),
                                 &(psIpAddressLocal->ip.data[2]),
                                 &(psIpAddressLocal->ip.data[3]));
+#endif
    psIpAddressLocal->ip.numocts = 4;
    psIpAddressLocal->port = gH323ep.listenPort;
 
    if(strlen(call->remoteIP))
    {
+      ooConvertIpToNwAddr(call->remoteIP, psIpAddressRemote->ip.data);
+#if 0
       sscanf(call->remoteIP, "%d.%d.%d.%d", &iEk, &iDon, &iTeen, &iChaar);
       sprintf(hexip, "%x %x %x %x", iEk, iDon, iTeen, iChaar);
       sscanf(hexip, "%x %x %x %x", &(psIpAddressRemote->ip.data[0]),
                                 &(psIpAddressRemote->ip.data[1]),
                                 &(psIpAddressRemote->ip.data[2]),
                                 &(psIpAddressRemote->ip.data[3]));
+#endif
       psIpAddressRemote->ip.numocts = 4;
       psIpAddressRemote->port = call->remotePort;
    }

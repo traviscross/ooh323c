@@ -319,6 +319,18 @@ EXTERN int ooSocketSelect(int nfds, fd_set *readfds, fd_set *writefds,
  */
 EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
 
+/**
+ * This function converts an internet dotted ip address to network address
+ *
+ * @param inetIp       The null-terminated string with the IP address in the
+ *                     following format: "NNN.NNN.NNN.NNN", where NNN is a
+ *                     number in the range (0..255).
+ * @param netIp        Buffer in which the converted address will be returned.
+
+ * @return             Completion status of operation: 0 (ASN_OK) = success,
+ *                     negative return value is error.
+ */
+int ooConvertIpToNwAddr(char *inetIp, char *netIp);
 
 /**
  * This function retrives the IP address of the local host.

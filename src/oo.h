@@ -140,6 +140,10 @@ EXTERN void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...);
  */
 void ooTraceLogMessage(const char * logMessage);
 
+/**
+ *
+ */
+void ooChangeIPToNWOrder(char * internetIP, char* networkIP);
 
 int ooLogAsn1Error(int stat, const char * fname, int lno);
 #ifdef __cplusplus

@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #include "ooSocket.h"
-
+#include "oo.h"
 #if defined(_WIN32_WCE)
 static int inited = 0;
 #define SEND_FLAGS     0
@@ -183,17 +183,26 @@ int ooSocketCreate (OOSOCKET* psocket)
                              SOCK_STREAM,
                              0);
  
-   if (sock == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
+   if (sock == OOSOCKET_INVALID){
+      OOTRACEERR1("Error:Failed to create TCP socket\n");
+      return ASN_E_INVSOCKET;
+   }
 
    on = 1;
    if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR,
                    (const char* ) &on, sizeof (on)) == -1)
+   {
+      OOTRACEERR1("Error:Failed to set socket option SO_REUSEADDR\n");
       return ASN_E_INVSOCKET;
+   }
    linger.l_onoff = 1;
    linger.l_linger = 0;
    if (setsockopt (sock, SOL_SOCKET, SO_LINGER,
                    (const char* ) &linger, sizeof (linger)) == -1)
+   {
+      OOTRACEERR1("Error:Failed to set socket option linger\n");
       return ASN_E_INVSOCKET;
+   }
    *psocket = sock;
    return ASN_OK;
 }
@@ -207,12 +216,18 @@ int ooSocketCreateUDP (OOSOCKET* psocket)
                              SOCK_DGRAM,
                              0);
 
-   if (sock == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
+   if (sock == OOSOCKET_INVALID){
+      OOTRACEERR1("Error:Failed to create UDP socket\n");
+      return ASN_E_INVSOCKET;
+   }
 
    on = 1;
    if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR,
                    (const char* ) &on, sizeof (on)) == -1)
+   {
+      OOTRACEERR1("Error:Failed to set socket option SO_REUSEADDR\n");
       return ASN_E_INVSOCKET;
+   }
    linger.l_onoff = 1;
    linger.l_linger = 0;
    /*if (setsockopt (sock, SOL_SOCKET, SO_LINGER,
@@ -235,7 +250,11 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
 {
    struct sockaddr_in m_addr;
 
-   if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
+   if (socket == OOSOCKET_INVALID)
+   {
+      OOTRACEERR1("Error:Invalid socket passed to bind\n");
+      return ASN_E_INVSOCKET;
+   }
 
    memset (&m_addr, 0, sizeof (m_addr));
    m_addr.sin_family = AF_INET;
@@ -244,7 +263,10 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
 
    if (bind (socket, (struct sockaddr *) (void*) &m_addr,
                      sizeof (m_addr)) == -1)
+   {
+     OOTRACEERR1("Error:Bind failed\n");
       return ASN_E_INVSOCKET;
+   }
 
    return ASN_OK;
 }
@@ -427,6 +449,30 @@ int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr)
       return ASN_E_INVPARAM;
    *pIPAddr = ((b1 & 0xFF) << 24) | ((b2 & 0xFF) << 16) |
               ((b3 & 0xFF) << 8) | (b4 & 0xFF);
+   return ASN_OK;
+}
+
+int ooConvertIpToNwAddr(char *inetIp, char *netIp)
+{
+  int ret=0;
+   struct sockaddr_in sin = {0};
+#ifdef _WIN32
+   sin.sin_addr.s_addr = inet_addr(inetIp);
+   if(sin.sin_addr.s_addr == INADDR_NONE)
+   {
+      OOTRACEERR1("Error:Failed to convert address\n");
+      return -1;
+   }
+#else
+   if(!inet_aton(inetIp, &sin.sin_addr))
+   {
+      OOTRACEERR1("Error:Failed to convert address\n");
+      return -1;
+   }
+ 
+#endif
+  
+   memcpy(netIp, (char*)&sin.sin_addr.s_addr, sizeof(unsigned long));
    return ASN_OK;
 }
 

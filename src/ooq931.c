@@ -339,7 +339,7 @@ ASN1USINT ooGenerateCallReference()
 #else
    pthread_mutex_unlock(&gCallRefMutex);
 #endif
-   OOTRACEINFO2("Generated callRef %d\n", newCallRef);
+   OOTRACEDBGC2("Generated callRef %d\n", newCallRef);
    return newCallRef;
 }
 
@@ -497,7 +497,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
    memset(q931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
 
    setPERBuffer (q931Msg->pctxt, ie->data, ie->length, aligned);
-   OOTRACEDBGC2("Decoding UUIE - ie length %d\n", ie->length);
+
    stat = asn1PD_H225H323_UserInformation (q931Msg->pctxt, q931Msg->userInfo);
    if(stat != ASN_OK)
    {
@@ -514,8 +514,11 @@ int ooGetOutgoingQ931Msgbuf(ooCallData *call, ASN1OCTET * msgbuf, int * len,
    int i=0, ieLen=0, k=0;
    ASN1UINT j=0;
    DListNode* curNode=NULL, *p_msgNode=NULL;
-   Q931Message * q931Msg=NULL;
-   OOCTXT * pctxt=NULL;
+   Q931Message * q931Msg=NULL, msg;
+   OOCTXT * pctxt=NULL, ctxt;
+   initContext(&ctxt);
+   memset(&msg, 0, sizeof(Q931Message));
+  
    if(call->outH225Queue.count == 0)
    {
       OOTRACEWARN1("Warning: No outgoing h225 message\n");
@@ -608,13 +611,23 @@ int ooGetOutgoingQ931Msgbuf(ooCallData *call, ASN1OCTET * msgbuf, int * len,
 
    /* Remove the message from rtdlist outH225Queue */
    dListRemove(&(call->outH225Queue), p_msgNode);
-
+  
    /* Free memory associated with the message */
    freeContext(pctxt);
    ASN1CRTFREE0(pctxt);
 
    if(p_msgNode)
       ASN1MEMFREEPTR(call->pctxt, p_msgNode);
+
+   initializePrintHandler(&printHandler, "Sending H.2250 Message");
+
+   /* Add event handler to list */
+   rtAddEventHandler (&ctxt, &printHandler);
+   msg.pctxt = &ctxt;
+   ooQ931Decode (&msg, *len, msgbuf+4);
+   finishPrint();
+   rtRemoveEventHandler(&ctxt, &printHandler);
+   freeContext(&ctxt);
    return OO_OK;
 }
 
@@ -698,7 +711,7 @@ int ooSendCallProceeding(ooCallData *call)
      
   
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built Call Proceeding(%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built Call Proceeding(%s, %s)\n", call->callType,
                  call->callToken);
    return OO_OK;
 }
@@ -778,8 +791,8 @@ int ooSendAlerting(ooCallData *call)
 
   
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built Alerting (%s, %s)\n", call->callType, call->callToken);
-   /*gH323ep.onAlerting(call);*/
+   OOTRACEDBGA3("Built Alerting (%s, %s)\n", call->callType, call->callToken);
+
    return OO_OK;
 }
 
@@ -832,7 +845,7 @@ int ooSendFacility(ooCallData *call)
           call->callIdentifier.guid.numocts);
    facility->reason.t = T_H225FacilityReason_transportedInformation;
    ooSendH225Msg(call, pQ931Msg);
-   OOTRACEINFO3("Built Facility message to send (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built Facility message to send (%s, %s)\n", call->callType,
                  call->callToken);
    return OO_OK;
 }
@@ -947,7 +960,7 @@ int ooSendReleaseComplete(ooCallData *call)
      
    /* Send H225 message */  
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built Release Complete message (%s, %s)\n",
+   OOTRACEDBGA3("Built Release Complete message (%s, %s)\n",
                 call->callType, call->callToken);
    return OO_OK;
 }
@@ -1027,7 +1040,8 @@ int ooAcceptCall(ooCallData *call)
                                        sizeof(H225TransportAddress_ipAddress));
       memset(h245IpAddr, 0, sizeof(H225TransportAddress_ipAddress));
 
-     
+      ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
+#if 0     
       sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                      &addr_part3, &addr_part4);
       sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
@@ -1035,7 +1049,7 @@ int ooAcceptCall(ooCallData *call)
       sscanf(hexip, "%x %x %x %x", &h245IpAddr->ip.data[0],
               &h245IpAddr->ip.data[1], &h245IpAddr->ip.data[2],
               &h245IpAddr->ip.data[3]);
-  
+#endif  
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
       connect->h245Address.u.ipAddress = h245IpAddr;
@@ -1221,13 +1235,13 @@ int ooAcceptCall(ooCallData *call)
          j++;
          epCap = NULL;
       }
-      OOTRACEINFO4("Added %d fast start elements to CONNECT message "
+      OOTRACEDBGA4("Added %d fast start elements to CONNECT message "
                    "(%s, %s)\n",  j, call->callType, call->callToken);
       connect->fastStart.n = j;
       connect->fastStart.elem = pFS;
    }
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built H.225 Connect message (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built H.225 Connect message (%s, %s)\n", call->callType,
                  call->callToken);
    if(call->isTunnelingActive)
    {
@@ -1492,18 +1506,20 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the destination Call Signal Address */
    setup->destCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-  
+   destCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
+                                  sizeof(H225TransportAddress_ipAddress));
+   ooConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
+#if 0
    sscanf(call->remoteIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                          &addr_part3, &addr_part4);
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
                                  addr_part4);
-   destCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
-                                  sizeof(H225TransportAddress_ipAddress));
+ 
    sscanf(hexip, "%x %x %x %x", &destCallSignalIpAddress->ip.data[0],
                                 &destCallSignalIpAddress->ip.data[1],
                                 &destCallSignalIpAddress->ip.data[2],
                                 &destCallSignalIpAddress->ip.data[3]);
-
+#endif
    destCallSignalIpAddress->ip.numocts=4;
    destCallSignalIpAddress->port = call->remotePort;
 
@@ -1513,19 +1529,22 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the source Call Signal Address */
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-
+#if 0
    sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                &addr_part3, &addr_part4);
 
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
                                  addr_part4);
+#endif
    srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
+    ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
+#if 0
    sscanf(hexip, "%x %x %x %x", &srcCallSignalIpAddress->ip.data[0],
                                 &srcCallSignalIpAddress->ip.data[1],
                                 &srcCallSignalIpAddress->ip.data[2],
                                 &srcCallSignalIpAddress->ip.data[3]);
-
+#endif
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= *(call->h225ChanPort);
    setup->sourceCallSignalAddress.u.ipAddress = srcCallSignalIpAddress;
@@ -1584,9 +1603,9 @@ int ooH323MakeCall_helper(ooCallData *call)
          olc = NULL;
          epCap = epCap->next;
          i++;
-         OOTRACEINFO2("Added fs element %d\n", i);
+         OOTRACEDBGC2("Added fs element %d\n", i);
       }
-      OOTRACEINFO4("Added %d fast start elements to SETUP message (%s, %s)\n",
+      OOTRACEDBGA4("Added %d fast start elements to SETUP message (%s, %s)\n",
                    i, call->callType, call->callToken);
       setup->fastStart.n = i;
       setup->fastStart.elem = pFS;
@@ -1626,7 +1645,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    if(gH323ep.fastStart)
       q931msg->userInfo->h323_uu_pdu.h245Tunneling = TRUE;
    ooSendH225Msg(call, q931msg);
-   OOTRACEINFO3("Built SETUP message (%s, %s)\n", call->callType,
+   OOTRACEDBGA3("Built SETUP message (%s, %s)\n", call->callType,
                  call->callToken);
    return OO_OK;
 }
