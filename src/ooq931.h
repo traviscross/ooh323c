@@ -428,6 +428,24 @@ int ooParseDestination(ooCallData *call, char *dest);
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 int ooGenerateCallToken(char *callToken, int size);
+
+
+/**
+ * This function sends an encoded H.245 message buffer as a tunneled
+ * H.245 Facility message.
+ * @param call             Pointer to the call for which H.245 message has to
+ *                         be tunneled.
+ * @param msgbuf           Pointer to the encoded H.245 message to be tunneled.
+ *
+ * @param len              Length of the encoded H.245 message buffer.
+ * @param msgType          Type of the H245 message
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
+                                   int len, int msgType);
+
+
 /**
  * @}
  */

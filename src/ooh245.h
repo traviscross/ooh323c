@@ -62,11 +62,12 @@ EXTERN int ooCreateH245Message(H245Message **msg, int type);
 /**
  * Frees up the memory used by the H245 message.
  *
+ * @param call      Handle to the call
  * @param pmsg      Pointer to an H245 message structure.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure        
  */
-EXTERN int ooFreeH245Message(H245Message *pmsg);
+EXTERN int ooFreeH245Message(ooCallData *call, H245Message *pmsg);
 
 /**
  * This function is used to retrieve an H.245 message enqueued in the outgoing
@@ -349,22 +350,6 @@ EXTERN int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                                           ooH323EpCapability *epCap,
                                           OOCTXT*pctxt);
 
-/**
- * This function sends an encoded H.245 message buffer as a tunneled
- * H.245 message. If there is an outgoing H.225 message, it is used to tunnel
- * the H.245 message and if there is no H.225 message, then a new Facility
- * message is created for tunneling purpose.
- * @param call             Pointer to the call for which H.245 message has to
- *                         be tunneled.
- * @param msgbuf           Pointer to the encoded H.245 message to be tunneled.
- *
- * @param len              Length of the encoded H.245 message buffer.
- * @param msgType          Type of the H245 message
- *
- * @return                 OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
-                                   int len, int msgType);
 /**
  * @}
  */

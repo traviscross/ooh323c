@@ -125,15 +125,32 @@ int ooCreateH245Connection(ooCallData *call)
 
 int ooSendH245Msg(ooCallData *call, H245Message *msg)
 {
+   int iRet=0;
+   ASN1OCTET * encodebuf;
    if(!call)
       return OO_FAILED;
 
-   if(msg)
+   encodebuf = (ASN1OCTET*)ASN1CRTMALLOC0(MAXMSGLEN);
+   if(!encodebuf)
    {
-      dListAppend(call->pctxt, &call->outH245Queue,
-                  msg);
-      call->sendH245++;
+      OOTRACEERR3("Error:Failed to allocate memory for encoding H245 "
+                  "message(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
    }
+   iRet = ooEncodeH245Message(call, msg, encodebuf, MAXMSGLEN);
+
+   if(iRet != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to encode H245 message. (%s, %s)\n",
+                                             call->callType, call->callToken);
+      ASN1CRTFREE0(encodebuf);
+      return OO_FAILED;
+   }
+
+   dListAppend(call->pctxt, &call->outH245Queue,
+                  encodebuf);
+   call->sendH245++;
+
    OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n", call->sendH245,
                call->callType, call->callToken);  
    return OO_OK;
@@ -142,15 +159,32 @@ int ooSendH245Msg(ooCallData *call, H245Message *msg)
 
 int ooSendH225Msg(ooCallData *call, Q931Message *msg)
 {
+   int iRet=0;
+   ASN1OCTET * encodebuf;
    if(!call)
       return OO_FAILED;
 
-   if(msg)
+   encodebuf = (ASN1OCTET*)ASN1CRTMALLOC0(MAXMSGLEN);
+   if(!encodebuf)
    {
-      dListAppend(call->pctxt, &call->outH225Queue,
-                  msg);
-      call->sendH225++;
+      OOTRACEERR3("Error:Failed to allocate memory for encoding H225 "
+                  "message(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
    }
+   iRet = ooEncodeH225Message(call, msg, encodebuf, MAXMSGLEN);
+   if(iRet != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to encode H225 message. (%s, %s)\n",
+                                             call->callType, call->callToken);
+      ASN1CRTFREE0(encodebuf);
+      return OO_FAILED;
+   }
+
+   dListAppend(call->pctxt, &call->outH225Queue,
+                  encodebuf);
+   call->sendH225++;
+   OOTRACEDBGC4("Queued H225 messages %d. (%s, %s)\n", call->sendH225,
+               call->callType, call->callToken); 
    return OO_OK;
 }
 
@@ -640,28 +674,19 @@ int ooH2250Receive(ooCallData *call)
    ASN1OCTET message[MAXMSGLEN], message1[MAXMSGLEN];
    int size =MAXMSGLEN, len;
    Q931Message *pmsg;
-   OOCTXT *pctxt;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
    struct timeval timeout;
    fd_set readfds;
-   pctxt = (OOCTXT*)newContext();
 
-   if(!pctxt)
-   {
-      OOTRACEERR3("ERROR: Failed to create OOCTXT for incoming H.2250 message"
-                  " (%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
   
    pmsg = (Q931Message*)ASN1MALLOC(pctxt, sizeof(Q931Message));
    if(!pmsg)
    {
       OOTRACEERR3("ERROR:Failed to allocate memory for incoming H.2250 message"
                   " (%s, %s)\n", call->callType, call->callToken);
-      freeContext(pctxt);
-      ASN1CRTFREE0(pctxt);
+      memReset(&gH323ep.msgctxt);
       return OO_FAILED;
    }
-   pmsg->pctxt = pctxt;
   
    /* First read just TPKT header which is four bytes */
    recvLen = ooSocketRecv (*(call->h225Channel), message, 4);
@@ -796,7 +821,7 @@ int ooH245Receive(ooCallData *call)
       OOTRACEINFO3("Closing H.245 channels as remote end point closed H.245"
                    " connection (%s, %s)\n", call->callType, call->callToken);
       ooCloseH245Connection(call);
-      ooFreeH245Message(pmsg);
+      ooFreeH245Message(call, pmsg);
       if(call->callState < OO_CALL_CLEAR_ENDSESSION)
       {
          call->callEndReason = OO_REMOTE_CLOSED_H245_CONNECTION;
@@ -809,7 +834,7 @@ int ooH245Receive(ooCallData *call)
    {
       OOTRACEERR3("Error: Reading TPKT header for H245 message (%s, %s)\n",
                   call->callType, call->callToken);
-      ooFreeH245Message(pmsg);
+      ooFreeH245Message(call, pmsg);
       if(call->callState < OO_CALL_CLEAR)
       {
          call->callEndReason = OO_HOST_CLEARED;
@@ -846,7 +871,7 @@ int ooH245Receive(ooCallData *call)
       {
          OOTRACEERR3("Error in select...H245 Receive-Clearing call (%s, %s)\n",
                      call->callType, call->callToken);
-         ooFreeH245Message(pmsg);
+         ooFreeH245Message(call, pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
             call->callEndReason = OO_HOST_CLEARED;
@@ -860,7 +885,7 @@ int ooH245Receive(ooCallData *call)
       {
          OOTRACEERR3("Error: Incomplete h245 message received (%s, %s)\n",
                      call->callType, call->callToken);
-         ooFreeH245Message(pmsg);
+         ooFreeH245Message(call, pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
             call->callEndReason = OO_HOST_CLEARED;
@@ -882,7 +907,7 @@ int ooH245Receive(ooCallData *call)
    {
       OOTRACEERR3("Error decoding H245 message (%s, %s)\n",
                   call->callType, call->callToken);
-      ooFreeH245Message(pmsg);
+      ooFreeH245Message(call, pmsg);
       return OO_FAILED;
    }
    finishPrint();
@@ -896,6 +921,7 @@ int ooH245Receive(ooCallData *call)
    it calls the corresponding function to retrieve the message buffer and
    then transmits on the associated channel
 */
+#if 0
 int ooSendMsg(ooCallData *call, int type)
 {
    ASN1OCTET msgbuf[MAXMSGLEN];
@@ -907,6 +933,7 @@ int ooSendMsg(ooCallData *call, int type)
    {
       OOTRACEDBGA3("Sending Q931 message (%s, %s)\n", call->callType,
                                                       call->callToken);
+
       if(ooGetOutgoingQ931Msgbuf(call, msgbuf, &len, &msgType)!=OO_OK)
       {
          OOTRACEERR3("ERROR:Could not retrieve message buffer for outgoing "
@@ -919,6 +946,7 @@ int ooSendMsg(ooCallData *call, int type)
          }
          return OO_FAILED;
       }
+
       /* Send message out via TCP */
      
       ret = ooSocketSend(*(call->h225Channel), msgbuf, len);
@@ -1017,7 +1045,143 @@ int ooSendMsg(ooCallData *call, int type)
                 call->callType, call->callToken);
    return OO_FAILED;
 }              
+#endif
 
+int ooSendMsg(ooCallData *call, int type)
+{
+
+   int len=0, ret=0, msgType=0;
+   int i =0;
+   DListNode * p_msgNode=NULL;
+   ASN1OCTET *msgptr;
+
+   if(type == OOQ931MSG)
+   {
+      if(call->outH225Queue.count == 0)
+      {
+         OOTRACEWARN3("WARN:No H.2250 message to send. (%s, %s)\n",
+                                 call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      OOTRACEDBGA3("Sending Q931 message (%s, %s)\n", call->callType,
+                                                      call->callToken);
+      p_msgNode = call->outH225Queue.head;
+      msgptr = (ASN1OCTET*) p_msgNode->data;
+      msgType = msgptr[0];
+      len = msgptr[1];
+      len = len<<8;
+      len = (len | msgptr[2]);
+      /* Remove the message from rtdlist outH225Queue */
+      dListRemove(&(call->outH225Queue), p_msgNode);
+      if(p_msgNode)
+         ASN1MEMFREEPTR(call->pctxt, p_msgNode);
+      call->sendH225--;
+      /* Send message out via TCP */
+     
+      ret = ooSocketSend(*(call->h225Channel), msgptr+3, len);
+      if(ret == ASN_OK)
+      {
+         ASN1CRTFREE0(msgptr);
+         OOTRACEDBGC3("H2250Q931 Message sent successfully (%s, %s)\n",
+                      call->callType, call->callToken);
+         ooOnSendMsg(call, msgType);
+         return OO_OK;
+      }
+      else{
+         OOTRACEERR3("H2250Q931 Message send failed (%s, %s)\n",
+                     call->callType, call->callToken);
+         ASN1CRTFREE0(msgptr);
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callEndReason = OO_HOST_CLEARED;
+            call->callState = OO_CALL_CLEAR;
+         }
+         return OO_FAILED;
+      }
+   }/* end of type==OOQ931MSG */
+   if(type == OOH245MSG)
+   {
+      if(call->outH245Queue.count == 0)
+      {
+         OOTRACEWARN3("WARN:No H.245 message to send. (%s, %s)\n",
+                                 call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      OOTRACEDBGA3("Sending H245 message (%s, %s)\n", call->callType,
+                                                      call->callToken);
+      p_msgNode = call->outH245Queue.head;
+      msgptr = (ASN1OCTET*) p_msgNode->data;
+      msgType = msgptr[0];
+      len = msgptr[1];
+      len = len<<8;
+      len = (len | msgptr[2]);
+      /* Remove the message from rtdlist outH225Queue */
+      dListRemove(&(call->outH245Queue), p_msgNode);
+      if(p_msgNode)
+         ASN1MEMFREEPTR(call->pctxt, p_msgNode);
+      call->sendH245--;
+
+      /* Send message out */
+      if(!call->h245Channel && !call->isTunnelingActive)
+      {
+         OOTRACEWARN3("Neither H.245 channel nor tunneling active "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1CRTFREE0(msgptr);
+         /*ooCloseH245Session(call);*/
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callEndReason = OO_HOST_CLEARED;
+            call->callState = OO_CALL_CLEAR;
+         }
+         return OO_OK;
+      }
+     
+      if(call->h245Channel)
+      {
+         ret = ooSocketSend(*(call->h245Channel), msgptr+3, len);
+         if(ret == ASN_OK)
+         {
+            ASN1CRTFREE0(msgptr);
+            OOTRACEDBGA3("H245 Message sent successfully (%s, %s)\n",
+                          call->callType, call->callToken);
+            ooOnSendMsg(call, msgType);
+            return OO_OK;
+         }
+         else{
+            ASN1CRTFREE0(msgptr);
+            OOTRACEERR3("ERROR:H245 Message send failed (%s, %s)\n",
+                        call->callType, call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_HOST_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+      }else if(call->isTunnelingActive){
+         /* Tunnel H.245 message */
+         ret = ooSendAsTunneledMessage(call, msgptr+3, len, msgType);
+         if(ret != OO_OK)
+         {
+            ASN1CRTFREE0(msgptr);
+            OOTRACEERR3("ERROR:Failed to tunnel H.245 message (%s, %s)\n",
+                         call->callType, call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_HOST_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+         ASN1CRTFREE0(msgptr);
+         return OO_OK;
+      }
+   }
+   /* Need to add support for other messages such as T38 etc */
+   OOTRACEWARN3("ERROR:Unknown message type - message not Sent (%s, %s)\n",
+                call->callType, call->callToken);
+   return OO_FAILED;
+}      
 
 int ooCloseH245Connection(ooCallData *call)
 {

@@ -250,8 +250,6 @@ struct ooH323Ports
  call reference, meesage type and list of user user IEs.
 */
 typedef struct Q931Message {
-   OOCTXT* pctxt; /* context is used to allocate memory for */
-                     /* different parts of the message */
    unsigned protocolDiscriminator;
    unsigned callReference;
    ASN1BOOL fromDestination;
@@ -329,7 +327,7 @@ typedef struct ooCallData {
    int                  callEndReason;
    int                  h245SessionState;
    int                  isTunnelingActive;
-   int                  isFastStartActive; /***TODO - Need to update this field */
+   int                  isFastStartActive;
    int                  gkEngaged;  
    int                  dtmfmode;
    ooMediaInfo          *mediaInfo;

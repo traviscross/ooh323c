@@ -486,6 +486,11 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          OOTRACEINFO3("Received SETUP message (%s, %s)\n", call->callType,
                        call->callToken);
          ooOnReceivedSetup(call, q931Msg);
+         /* Free up the mem used by the received message, as it's processing
+            is done.
+         */
+         ooFreeQ931Message(q931Msg);
+        
          ooSendCallProceeding(call);/* Send call proceeding message*/
 #ifdef __USING_RAS
          if(RasNoGatekeeper != ooRasGetGatekeeperMode())
@@ -506,10 +511,6 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
 #else
          ret = ooH323CallAdmitted (call);
 #endif
-         /* Free up the mem used by the received message, as it's processing
-            is done.
-         */
-         ooFreeQ931Message(q931Msg);
          break;
       case Q931CallProceedingMsg:/* Call proceeding message is received */
          OOTRACEINFO3("H.225 Call Proceeding message received (%s, %s)\n",
@@ -729,11 +730,11 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
             /* Add event handler to list */
             rtAddEventHandler (pctxt, &printHandler);
             ret = asn1PD_H245MultimediaSystemControlMessage(pctxt, &(pmsg->h245Msg));
-                        if(ret != ASN_OK)
+            if(ret != ASN_OK)
             {
                OOTRACEERR3("Error decoding H245 message (%s, %s)\n",
                             call->callType, call->callToken);
-               ooFreeH245Message(pmsg);
+               ooFreeH245Message(call,pmsg);
                return OO_FAILED;
             }
             finishPrint();

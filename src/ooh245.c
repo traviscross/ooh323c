@@ -112,10 +112,12 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
    }
 }
 
-int ooFreeH245Message(H245Message *pmsg)
+int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
 {
+  /* In case of tunneling, memory is freed when corresponding Q931 message is freed.*/
    if (0 != pmsg) {
-      memReset (&gH323ep.msgctxt);
+     if(!call->isTunnelingActive)
+         memReset (&gH323ep.msgctxt);
    }
    return OO_OK;
 }
@@ -148,6 +150,67 @@ static void ooPrintH245Message
 }
 #endif
 
+
+int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, int size)
+{
+   int len=0, encodeLen=0, i=0;
+   int stat=0;
+   ASN1OCTET* encodePtr=NULL;
+   H245MultimediaSystemControlMessage *multimediaMsg;
+   multimediaMsg = &(ph245Msg->h245Msg);
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   if(!msgbuf || size<200)
+   {
+      OOTRACEERR3("Error: Invalid message buffer/size for ooEncodeH245Message. (%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   msgbuf[i++] = ph245Msg->msgType;
+   /* This will contain the total length of the encoded message */
+   msgbuf[i++] = 0;
+   msgbuf[i++] = 0;
+  
+   if(!call->isTunnelingActive)
+   {
+      /* Populate message buffer to be returned */
+      len =  4;
+      msgbuf[i++] = 3; /* TPKT version */
+      msgbuf[i++] = 0; /* TPKT resevred */
+      /* 1st octet of length, will be populated once len is determined */
+      msgbuf[i++] = 0;
+      /* 2nd octet of length, will be populated once len is determined */
+      msgbuf[i++] = 0;
+   }
+  
+   setPERBuffer (pctxt, msgbuf+i, (size-i), TRUE);
+
+   stat = asn1PE_H245MultimediaSystemControlMessage (&gH323ep.msgctxt, multimediaMsg);
+
+   if (stat != ASN_OK) {
+      OOTRACEERR3 ("ERROR: H245 Message encoding failed (%s, %s)\n",
+                   call->callType, call->callToken);
+      OOTRACEERR1 (errGetText (&gH323ep.msgctxt));
+      return OO_FAILED;
+   }
+  
+   encodePtr = encodeGetMsgPtr(pctxt, &encodeLen);
+   len +=encodeLen;
+   msgbuf[1] = (len>>8);
+   msgbuf[2] = len;
+   if(!call->isTunnelingActive)
+   {
+      msgbuf[5] = len>>8;
+      msgbuf[6] = len;
+   }
+#ifndef _COMPACT
+   ooPrintH245Message (encodePtr, encodeLen);
+#endif
+   return OO_OK;
+}
+
+#if 0
 /*
  * TODO: sizeof msgbuf needs to be passed into this function to allow
  * check for buffer overflow.  Also, encoding should be done directly
@@ -165,7 +228,7 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    int encodeLen=0;
    OOCTXT* pctxt = &gH323ep.msgctxt;
    int stat;
-
+   int size = 1024;
    if(call->outH245Queue.count == 0)
    {
       OOTRACEERR3("ERROR:No outgoing h245 message (%s, %s)\n", call->callType,
@@ -177,9 +240,24 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    *msgType = p_h245Msg->msgType;
    multimediaMsg = &(p_h245Msg->h245Msg);
   
+
+    if(!call->isTunnelingActive)
+   {
+      /* Populate message buffer to be returned */
+      *len =  4;
+      msgbuf[i++] = 3; /* TPKT version */
+      msgbuf[i++] = 0; /* TPKT resevred */
+      /* 1st octet of length, will be populated once len is determined */
+      msgbuf[i++] = 0;
+      /* 2nd octet of length, will be populated once len is determined */
+      msgbuf[i++] = 0;
+   }
+   else
+      *len = 0;
+
    /* Encode the Multimedia Control Message */
 
-   setPERBuffer (pctxt, encodeBuf, sizeof(encodeBuf), TRUE);
+   setPERBuffer (pctxt, msgbuf+i, size-*len, TRUE);
 
    stat = asn1PE_H245MultimediaSystemControlMessage (pctxt, multimediaMsg);
 
@@ -193,11 +271,15 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    }
   
    encodeptr = encodeGetMsgPtr(pctxt, &encodeLen);
+   *len +=encodeLen;
+   msgbuf[2] = (*len>>8);
+   msgbuf[3] = *len;
 
 #ifndef _COMPACT
    ooPrintH245Message (encodePtr, encodeLen);
 #endif
 
+#if 0
    if(!call->isTunnelingActive)
    {
       /* Populate message buffer to be returned */
@@ -211,8 +293,11 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    }
    else
       *len = encodeLen;
-  
+
    memcpy((msgbuf + i), encodeptr, encodeLen);
+#endif
+  
+
 
    /* Remove the message from rtdlist outH245Queue */
    dListRemove(&(call->outH245Queue), p_msgNode);
@@ -226,7 +311,7 @@ int ooGetOutgoingH245Msgbuf(ooCallData *call,
    return OO_OK;
 }
 
-
+#endif
 int ooSendTermCapMsg(ooCallData *call)
 {
    int ret;
@@ -241,6 +326,7 @@ int ooSendTermCapMsg(ooCallData *call)
    DListNode * curNode=NULL;
    H245CapabilityDescriptor *capDesc;
    H245Message *ph245msg=NULL;
+
    int i=0, j=0;
 
    ret = ooCreateH245Message(&ph245msg, 
@@ -293,7 +379,7 @@ int ooSendTermCapMsg(ooCallData *call)
       {
          OOTRACEERR3("ERROR:Failed to create audio capability (%s, %s)",
                      call->callType, call->callToken);
-         ooFreeH245Message(ph245msg);
+         ooFreeH245Message(call, ph245msg);
       }
       /* Add  Capabilities to Capability Table */
       entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
@@ -331,7 +417,7 @@ int ooSendTermCapMsg(ooCallData *call)
             OOTRACEERR3("Error:Failed to allocate memory for new capability "
                         "table entry. (%s, %s)\n", call->callType,
                         call->callToken);
-            ooFreeH245Message(ph245msg);
+            ooFreeH245Message(call, ph245msg);
             return OO_FAILED;
          }
            
@@ -374,12 +460,20 @@ int ooSendTermCapMsg(ooCallData *call)
 
    dListInit(&(termCap->capabilityDescriptors));
    dListAppend(pctxt, &(termCap->capabilityDescriptors), capDesc);
-  
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA3("Built terminal capability set message (%s, %s)\n",
                  call->callType, call->callToken);
-   call->localTermCapState = OO_LocalTermCapSetSent;
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue TCS message to outbound queue. (%s, %s)\n",
+                   call->callType, call->callToken);
+   }else
+      call->localTermCapState = OO_LocalTermCapSetSent;
+  
+   ooFreeH245Message(call,ph245msg);
+
+   return ret;
 }
 
 
@@ -437,7 +531,7 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
          else
             statusDeterminationNumber = ooGenerateStatusDeterminationNumber();
         
-                 if(masterSlave->statusDeterminationNumber <
+         if(masterSlave->statusDeterminationNumber <
                        statusDeterminationNumber)
          {
             ooSendMasterSlaveDeterminationAck(call, "slave");
@@ -538,11 +632,21 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
    pMasterSlave->statusDeterminationNumber =
                        ooGenerateStatusDeterminationNumber();
    call->statusDeterminationNumber = pMasterSlave->statusDeterminationNumber;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA3("Built MasterSlave Determination (%s, %s)\n", call->callType,
                  call->callToken);
-   call->masterSlaveState = OO_MasterSlave_DetermineSent;
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDetermination message to outbound queue. (%s, %s)\n",
+                      call->callType, call->callToken);
+   }else
+      call->masterSlaveState = OO_MasterSlave_DetermineSent;
+  
+   ooFreeH245Message(call, ph245msg);
+
+   return ret;
 }
 
 int ooSendMasterSlaveDeterminationAck(ooCallData* call,
@@ -577,11 +681,17 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
       response->u.masterSlaveDeterminationAck->decision.t =
                          T_H245MasterSlaveDeterminationAck_decision_slave;
   
-   ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built MasterSlave determination Ack (%s, %s)\n",
                 call->callType, call->callToken);
-
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDeterminationAck message to outbound queue."
+                  " (%s, %s)\n", call->callType, call->callToken);
+   }
+  
+   ooFreeH245Message(call, ph245msg);
+   return ret;
 }
 
 int ooHandleOpenLogicalChannel(ooCallData* call,
@@ -792,11 +902,17 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
 
-  
-
-   ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built OpenLogicalChannelAck (%s, %s)\n", call->callType,
                  call->callToken);
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannelAck message to outbound queue. (%s, %s)\n",
+                  call->callType, call->callToken);
+   }
+   ooFreeH245Message(call, ph245msg);
+
+
    if(epCap->startReceiveChannel)
    {
       epCap->startReceiveChannel(call, pLogicalChannel);     
@@ -809,7 +925,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                   "channel (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   return OO_OK;
+   return ret;
 }
 
 int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
@@ -1042,10 +1158,16 @@ int ooSendEndSessionCommand(ooCallData *call)
                                   sizeof(H245EndSessionCommand));
    memset(command->u.endSessionCommand, 0, sizeof(H245EndSessionCommand));
    command->u.endSessionCommand->t = T_H245EndSessionCommand_disconnect;
-   ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built EndSession Command (%s, %s)\n", call->callType,
                 call->callToken);
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue EndSession message to outbound queue.(%s, %s)\n",
+                   call->callType, call->callToken);
+   }
+   ooFreeH245Message(call, ph245msg);
+   return ret;
 }
 
 
@@ -1118,7 +1240,7 @@ int ooCloseAllLogicalChannels(ooCallData *call)
 
 int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
 {
-   int ret = OO_OK;
+   int ret = OO_OK, error=0;
    H245Message *ph245msg = NULL;
    OOCTXT *pctxt;
    H245RequestMessage *request;
@@ -1143,7 +1265,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    {
       OOTRACEERR3("ERROR:Memory allocation for CloseLogicalChannel failed "
                   "(%s, %s)\n", call->callType, call->callToken);
-      memReset (pctxt);
+      ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
    }
    clc = request->u.closeLogicalChannel;
@@ -1153,9 +1275,17 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    clc->source.t = T_H245CloseLogicalChannel_source_lcse;
    clc->m.reasonPresent = 1;
    clc->reason.t = T_H245CloseLogicalChannel_reason_unknown;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA4("Built close logical channel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue CloseLogicalChannel to outbound queue.(%s, %s)\n", call->callType,
+                 call->callToken);
+     error++;
+   }
+   ooFreeH245Message(call, ph245msg);
   
    /* Stop the media transmission */
    OOTRACEINFO4("Closing logical channel %d (%s, %s)\n",
@@ -1168,8 +1298,8 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
          clc->forwardLogicalChannelNumber, call->callType, call->callToken);
       return OO_FAILED;
    }
-
-   return OO_OK;
+   if(error) return OO_FAILED;
+   return ret;
 }
 
 /*TODO: Need to pass reason as a parameter */
@@ -1202,7 +1332,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    {
       OOTRACEERR3("ERROR:Memory allocation for RequestCloseLogicalChannel "
                   " failed (%s, %s)\n", call->callType, call->callToken);
-      memReset (pctxt);
+      ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
    }
 
@@ -1212,16 +1342,24 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
   
    rclc->m.reasonPresent = 1;
    rclc->reason.t = T_H245RequestChannelClose_reason_unknown;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA4("Built RequestCloseChannel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue the RequestCloseChannel to outbound queue (%s, %s)\n", call->callType,
+                 call->callToken);
+   }
+   ooFreeH245Message(call, ph245msg);
+
+   return ret;
 }
 
 int ooOnReceivedRequestChannelClose(ooCallData *call,
                                     H245RequestChannelClose *rclc)
 {
-   int ret=0;
+   int ret=0, error=0;
    H245Message *ph245msg=NULL;
    H245ResponseMessage *response = NULL;
    OOCTXT *pctxt=NULL;
@@ -1270,10 +1408,18 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
    rclcAck = response->u.requestChannelCloseAck;
    memset(rclcAck, 0, sizeof(H245RequestChannelCloseAck));
    rclcAck->forwardLogicalChannelNumber = rclc->forwardLogicalChannelNumber;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA3("Built RequestCloseChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
-  
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue RequestCloseChannelAck to outbound queue. (%s, %s)\n", call->callType,
+                 call->callToken);
+      error++;
+   }
+
+   ooFreeH245Message(call, ph245msg);
   
    /* Send Close Logical Channel*/
    ret = ooSendCloseLogicalChannel(call, lChannel);
@@ -1284,7 +1430,9 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
       return OO_FAILED;
    }
 
-   return OO_OK;
+   if(error) return OO_FAILED;
+
+   return ret;
 }
 /****/
 int ooOnReceivedCloseLogicalChannel(ooCallData *call,
@@ -1333,11 +1481,18 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    }
    memset(clcAck, 0, sizeof(H245CloseLogicalChannelAck));
    clcAck->forwardLogicalChannelNumber = clc->forwardLogicalChannelNumber;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA3("Built CloseLogicalChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
-  
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue CloseLogicalChannelAck message to outbound queue.(%s, %s)\n",
+                 call->callType, call->callToken);
+   }
+
+   ooFreeH245Message(call, ph245msg);
+   return ret;
 }
 
 int ooOnReceivedCloseChannelAck(ooCallData* call,
@@ -1470,7 +1625,7 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
    if(call->remoteTermCapSet)
    {
       pctxt = &gH323ep.msgctxt;
-      memReset (pctxt);
+      ooFreeH245Message(call, call->remoteTermCapSet);
    }
   
    call->remoteTermCapSet = pmsg;
@@ -1526,11 +1681,17 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
    memset(response->u.terminalCapabilitySetAck, 0,
                                  sizeof(H245TerminalCapabilitySetAck));
    response->u.terminalCapabilitySetAck->sequenceNumber = call->remoteTermCapSet->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
-   ooSendH245Msg(call, ph245msg);
+
    OOTRACEDBGA3("Built TerminalCapabilitySet Ack (%s, %s)\n",
                  call->callType, call->callToken);
-   call->remoteTermCapState = OO_RemoteTermCapSetAckSent;
-   return OO_OK;
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue TCSAck to outbound queue. (%s, %s)\n", call->callType, call->callToken);
+   }else
+      call->remoteTermCapState = OO_RemoteTermCapSetAckSent;
+   ooFreeH245Message(call, ph245msg);
+   return ret;
 }
 
 int ooOpenLogicalChannels(ooCallData *call)
@@ -1691,7 +1852,7 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    {
       OOTRACEERR3("ERROR:Failed to add new logical channel entry (%s, %s)\n",
                   call->callType, call->callToken);
-      ooFreeH245Message(ph245msg);
+      ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
    }
    /* Populate H245OpenLogicalChannel_ForwardLogicalChannel Parameters*/
@@ -1710,7 +1871,7 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
       OOTRACEERR3("Error:Failed to create duplicate audio capability in "
                   "ooOpenG711ULaw64KChannel. (%s, %s)\n", call->callType,
                   call->callToken);
-      ooFreeH245Message(ph245msg);
+      ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
    }
   
@@ -1757,11 +1918,17 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
    pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
-   ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built OpenLogicalChannel (%s, %s)\n", call->callType,
                 call->callToken);
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+     OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannel to outbound queue. (%s, %s)\n", call->callType,
+                 call->callToken);
+   }
+   ooFreeH245Message(call, ph245msg);
  
-    return OO_OK;
+    return ret;
 }
 
 int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
@@ -2009,6 +2176,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    return OO_OK;
 }
 
+#if 0
+/* Build a Facility message and tunnel H.245 message through it */
 int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
                             int msgType)
 {
@@ -2128,4 +2297,5 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
    return OO_OK;
 }
 
+#endif
 
