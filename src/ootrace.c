@@ -82,22 +82,13 @@ static char *msgTypes[]={
 };
 
 static char *capTypes[]={
-   "OO_CAP_ULAW_64k_240 1",
-   "OO_CAP_ULAW_64k_180",
-   "OO_CAP_ULAW_64k_30",
-   "OO_CAP_ULAW_56k_240",
-   "OO_CAP_ULAW_56k_180",
-   "OO_CAP_ULAW_56k_30",
-   "OO_CAP_ALAW_64k_240",
-   "OO_CAP_ALAW_64k_180",
-   "OO_CAP_ALAW_64k_30",
-   "OO_CAP_ALAW_56k_240",
-   "OO_CAP_ALAW_56k_180",
-   "OO_CAP_ALAW_56k_30",
-   "OO_CAP_GSM",
-   "OO_CAP_G729A",
-   "OO_CAP_SPEEX",
-   "OO_CAP_G723_1"
+   "OO_G711ULAW64K",
+   "OO_G711ULAW56K",
+   "OO_G711ALAW64K",
+   "OO_G711ALAW56K",
+   "OO_GSMFULLRATE",
+   "OO_GSMHALFRATE",
+   "OO_GSMENHANCEDFULLRATE"
 };
 
 /*DTMF capabilities*/
@@ -107,7 +98,7 @@ static char* dtmfCaps []={
    "OO_CAP_DTMF_H245"
 };
 
-
+/*
 char *ooGetCapText(int code)
 {
    if(code >= OO_AUCAPS_MIN && code <= OO_AUCAPS_MAX)
@@ -115,7 +106,7 @@ char *ooGetCapText(int code)
    else
      return "Unknown";
 }
-/*
+
 char *ooDescribeDtmfCaps(int dtmfmode)
 {
   

@@ -22,39 +22,33 @@
 #include "ootypes.h"
 #include "ooasn1.h"
 
+
+#define OO_CAP_TYPE_AUDIO 1
+#define OO_CAP_TYPE_VIDEO 2
+#define OO_CAP_TYPE_DATA  3
+
+#define OORX      (1<<0)
+#define OOTX      (1<<1)
+#define OORXANDTX (1<<2)
+#define OORXTX    (1<<3) /* For symmetric capabilities */
 /* Various types of caps. Note that not all
    supported */
 
-#define OO_AUCAPS_MIN       1
-#define OO_CAP_ULAW_64k_240 1 /* g711 ulaw 64k 240 frs/pkt */
-#define OO_CAP_ULAW_64k_180 2
-#define OO_CAP_ULAW_64k_30  3
-#define OO_CAP_ULAW_64k_MAX 3
+#define OO_CAP_AUDIO_BASE      0
+#define OO_G711ALAW64K         2
+#define OO_G711ALAW56K         3
+#define OO_G711ULAW64K         4
+#define OO_G711ULAW56K         5
+#define OO_GSMFULLRATE         18
+#define OO_GSMHALFRATE         19
+#define OO_GSMENHANCEDFULLRATE 20
 
-#define OO_CAP_ULAW_56k_MIN 4
-#define OO_CAP_ULAW_56k_240 4
-#define OO_CAP_ULAW_56k_180 5
-#define OO_CAP_ULAW_56k_30  6
-#define OO_CAP_ULAW_56k_MAX 6
+#define OO_CAP_VIDEO_BASE 26
+#define OO_CAP_DATA_BASE -1 /* place holder */
 
-#define OO_CAP_ALAW_64k_MIN 7
-#define OO_CAP_ALAW_64k_240 7
-#define OO_CAP_ALAW_64k_180 8
-#define OO_CAP_ALAW_64k_30  9
-#define OO_CAP_ALAW_64k_MAX 9
-
-#define OO_CAP_ALAW_56k_MIN 10
-#define OO_CAP_ALAW_56k_240 10
-#define OO_CAP_ALAW_56k_180 11
-#define OO_CAP_ALAW_56k_30  12
-#define OO_CAP_ALAW_56k_MAX 12
-
-
-#define OO_CAP_GSM          13
-#define OO_CAP_G729A        14
-#define OO_CAP_SPEEX        15
-#define OO_CAP_G723_1       16
-#define OO_AUCAPS_MAX       16
+#define OOABSAUDIOCAP(cap) cap-OO_CAP_AUDIO_BASE
+#define OOABSVIDEOCAP(cap) cap-OO_CAP_VIDEO_BASE
+#define OOABSDATACAP(cap)  cap-OO_CAP_DATA_BASE
 
 /*DTMF capabilities*/
 #define OO_CAP_DTMF_RFC2833 (1<<0)
@@ -63,6 +57,13 @@
 
 
 
+
+
+
+typedef struct ooG711CapParams{
+   int txframes;
+   int rxframes;
+}ooG711CapParams;
 
 
 int caps_supported[10];
@@ -105,7 +106,42 @@ EXTERN int ooEnableDTMFRFC2833(int dynamicRTPPayloadType);
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooDisableDTMFRFC2833(void);
+EXTERN int ooAddG711Capability(int cap, int txframes, int rxframes, int dir,
+                               cb_StartReceiveChannel startReceiveChannel,
+                               cb_StartTransmitChannel startTransmitChannel,
+                               cb_StopReceiveChannel stopReceiveChannel,
+                               cb_StopTransmitChannel stopTransmitChannel);
 
+int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
+                                 int rxframes, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel);
+
+EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
+                             ASN1BOOL comfortNoise,ASN1BOOL scrambled,int dir,
+                             cb_StartReceiveChannel startReceiveChannel,
+                             cb_StartTransmitChannel startTransmitChannel,
+                             cb_StopReceiveChannel stopReceiveChannel,
+                             cb_StopTransmitChannel stopTransmitChannel);
+
+int ooAddGSMCapability_internal(ooCallData *call, int cap,
+                                ASN1USINT audioUnitSize, ASN1BOOL comfortNoise,
+                                ASN1BOOL scrambled, int dir,
+                                cb_StartReceiveChannel startReceiveChannel,
+                                cb_StartTransmitChannel startTransmitChannel,
+                                cb_StopReceiveChannel stopReceiveChannel,
+                                cb_StopTransmitChannel stopTransmitChannel);
+
+int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
+                               int dir);
+int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
+
+ASN1BOOL ooCheckCompatibility
+(ooCallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap);
+
+ASN1BOOL ooCheckCompatibility_1(ooCallData *call, ooH323EpCapability *epCap, H245AudioCapability * audioCap, int dir);
 /**
  * This function is used to add a new capability to the endpoint.
  * @param cap                  Type of capability to be added.
@@ -135,7 +171,8 @@ EXTERN int ooAddCapability(int cap, int dir,
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateAudioCapability (int cap, OOCTXT *pctxt);
+struct H245AudioCapability* ooCreateAudioCapability
+(ooH323EpCapability* epCap, OOCTXT *pctxt, int dir);
 
 /**
  *
@@ -152,7 +189,7 @@ void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
  *                    failure.
  */
 struct H245AudioCapability* ooCreateG711Capability
-                                  (int cap, OOCTXT* pctxt);
+(ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 
 /**
@@ -165,7 +202,7 @@ struct H245AudioCapability* ooCreateG711Capability
  * @return          Handle to the capability which supports audioCap, Null
  *                  if none found
  */
-ooH323EpCapability* ooIsAudioCapSupported
+ooH323EpCapability* ooIsAudioDataTypeSupported
                 (ooCallData *call, H245AudioCapability* audioCap, int dir);
 
 
@@ -211,6 +248,7 @@ int ooCompareAlawCaps(int cap, H245AudioCapability* audioCap, int dir);
  */
 ooH323EpCapability* ooIsDataTypeSupported
                            (ooCallData *call, H245DataType *data, int dir);
+int ooAppendCapToCapPrefs(ooCallData *call, int cap);
 /**
  * @}
  */

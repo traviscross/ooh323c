@@ -124,7 +124,7 @@ int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
 
 #ifndef _COMPACT
 static void ooPrintH245Message
-(OOCallData* call, ASN1OCTET msgbuf, ASN1UINT msglen)
+(ooCallData* call, ASN1OCTET* msgbuf, ASN1UINT msglen)
 {
    OOCTXT ctxt;
    H245MultimediaSystemControlMessage mmMsg;
@@ -157,12 +157,13 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
    int stat=0;
    ASN1OCTET* encodePtr=NULL;
    H245MultimediaSystemControlMessage *multimediaMsg;
-   multimediaMsg = &(ph245Msg->h245Msg);
    OOCTXT *pctxt = &gH323ep.msgctxt;
+   multimediaMsg = &(ph245Msg->h245Msg);
 
    if(!msgbuf || size<200)
    {
-      OOTRACEERR3("Error: Invalid message buffer/size for ooEncodeH245Message. (%s, %s)\n",
+      OOTRACEERR3("Error: Invalid message buffer/size for "
+                  "ooEncodeH245Message. (%s, %s)\n",
                    call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -186,7 +187,8 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
   
    setPERBuffer (pctxt, msgbuf+i, (size-i), TRUE);
 
-   stat = asn1PE_H245MultimediaSystemControlMessage (&gH323ep.msgctxt, multimediaMsg);
+   stat = asn1PE_H245MultimediaSystemControlMessage (&gH323ep.msgctxt,
+                                                            multimediaMsg);
 
    if (stat != ASN_OK) {
       OOTRACEERR3 ("ERROR: H245 Message encoding failed (%s, %s)\n",
@@ -205,113 +207,11 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
       msgbuf[6] = len;
    }
 #ifndef _COMPACT
-   ooPrintH245Message (encodePtr, encodeLen);
+   ooPrintH245Message (call, encodePtr, encodeLen);
 #endif
    return OO_OK;
 }
 
-#if 0
-/*
- * TODO: sizeof msgbuf needs to be passed into this function to allow
- * check for buffer overflow.  Also, encoding should be done directly
- * into msgbuf - encode in local buffer and copy is inefficient.
- */
-int ooGetOutgoingH245Msgbuf(ooCallData *call,
-                            ASN1OCTET *msgbuf, int *len, int *msgType)
-{
-   H245Message *p_h245Msg;
-   H245MultimediaSystemControlMessage *multimediaMsg;
-   DListNode * p_msgNode=NULL;
-   int i =0, ret=0;
-   ASN1OCTET encodeBuf[1024];
-   ASN1OCTET* encodeptr=NULL;
-   int encodeLen=0;
-   OOCTXT* pctxt = &gH323ep.msgctxt;
-   int stat;
-   int size = 1024;
-   if(call->outH245Queue.count == 0)
-   {
-      OOTRACEERR3("ERROR:No outgoing h245 message (%s, %s)\n", call->callType,
-                   call->callToken);
-      return OO_FAILED;
-   }
-   p_msgNode = call->outH245Queue.head;
-   p_h245Msg = (H245Message*) p_msgNode->data;
-   *msgType = p_h245Msg->msgType;
-   multimediaMsg = &(p_h245Msg->h245Msg);
-  
-
-    if(!call->isTunnelingActive)
-   {
-      /* Populate message buffer to be returned */
-      *len =  4;
-      msgbuf[i++] = 3; /* TPKT version */
-      msgbuf[i++] = 0; /* TPKT resevred */
-      /* 1st octet of length, will be populated once len is determined */
-      msgbuf[i++] = 0;
-      /* 2nd octet of length, will be populated once len is determined */
-      msgbuf[i++] = 0;
-   }
-   else
-      *len = 0;
-
-   /* Encode the Multimedia Control Message */
-
-   setPERBuffer (pctxt, msgbuf+i, size-*len, TRUE);
-
-   stat = asn1PE_H245MultimediaSystemControlMessage (pctxt, multimediaMsg);
-
-   if (stat != ASN_OK) {
-      OOTRACEERR3 ("ERROR: H245 Message encoding failed (%s, %s)\n",
-                   call->callType, call->callToken);
-      OOTRACEERR1 (errGetText (pctxt));
-      /* Free memory associated with the message */
-      memReset (pctxt);
-      return OO_FAILED;
-   }
-  
-   encodeptr = encodeGetMsgPtr(pctxt, &encodeLen);
-   *len +=encodeLen;
-   msgbuf[2] = (*len>>8);
-   msgbuf[3] = *len;
-
-#ifndef _COMPACT
-   ooPrintH245Message (encodePtr, encodeLen);
-#endif
-
-#if 0
-   if(!call->isTunnelingActive)
-   {
-      /* Populate message buffer to be returned */
-      *len = encodeLen + 4;
-      msgbuf[i++] = 3; /* TPKT version */
-      msgbuf[i++] = 0; /* TPKT resevred */
-      /* 1st octet of length, will be populated once len is determined */
-      msgbuf[i++] = (*len>>8);
-      /* 2nd octet of length, will be populated once len is determined */
-      msgbuf[i++] = *len;
-   }
-   else
-      *len = encodeLen;
-
-   memcpy((msgbuf + i), encodeptr, encodeLen);
-#endif
-  
-
-
-   /* Remove the message from rtdlist outH245Queue */
-   dListRemove(&(call->outH245Queue), p_msgNode);
-
-   /* Free memory associated with the message */
-   memReset (pctxt);
-  
-   if(p_msgNode)
-      ASN1MEMFREEPTR(call->pctxt, p_msgNode);     
-
-   return OO_OK;
-}
-
-#endif
 int ooSendTermCapMsg(ooCallData *call)
 {
    int ret;
@@ -327,7 +227,7 @@ int ooSendTermCapMsg(ooCallData *call)
    H245CapabilityDescriptor *capDesc;
    H245Message *ph245msg=NULL;
 
-   int i=0, j=0;
+   int i=0, j=0, k=0;
 
    ret = ooCreateH245Message(&ph245msg, 
                              T_H245MultimediaSystemControlMessage_request);
@@ -362,42 +262,71 @@ int ooSendTermCapMsg(ooCallData *call)
    termCap->sequenceNumber = ++(call->localTermCapSeqNo); 
    termCap->protocolIdentifier = gh245ProtocolID; /* protocol id */
 
-   /* TODO:Right now we add all the endpoint capabilities  to the message.
-           Need a way by which application can specify one set of capabilities
-           for one call and another set for another call. (First step is do we need
-           this??)*/
    /* Add audio Capabilities */
 
    dListInit(&(termCap->capabilityTable));
-   epCap = gH323ep.myCaps;
-   while(epCap)
+   for(k=0; k<(int)call->capPrefs.index; k++)
    {
-      /* Create audio capability
-      */
-      audioCap = ooCreateAudioCapability(epCap->cap, pctxt);
-      if(!audioCap)
+      epCap = gH323ep.myCaps;
+      while(epCap) {
+          if(epCap->cap == call->capPrefs.order[k])
+            break;
+         epCap = epCap->next;
+      }
+      if(!epCap)
       {
-         OOTRACEERR3("ERROR:Failed to create audio capability (%s, %s)",
-                     call->callType, call->callToken);
-         ooFreeH245Message(call, ph245msg);
+         OOTRACEWARN4("WARN:Preferred capability %d not supported.(%s, %s)\n",
+                     call->capPrefs.order[k],call->callType, call->callToken);
+         continue;
+      }
+
+      /* Create audio capability. If capability supports receive, we only add
+         it as receive capability in TCS. However, if it supports only
+         transmit, we add it as transmit capability in TCS.
+      */
+      if((epCap->dir & OORX))
+      {
+         OOTRACEDBGC4("Sending receive capability %d in TCS.(%s, %s)\n",
+                       epCap->cap, call->callType, call->callToken);
+         audioCap = ooCreateAudioCapability(epCap, pctxt, OORX);
+         if(!audioCap)
+         {
+            OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
+                        call->callType, call->callToken);
+            continue;
+         }
+      }else if(epCap->dir & OOTX)
+      {
+         OOTRACEDBGC4("Sending transmit capability %d in TCS.(%s, %s)\n",
+                       epCap->cap, call->callType, call->callToken);
+         audioCap = ooCreateAudioCapability(epCap, pctxt, OOTX);
+         if(!audioCap)
+         {
+            OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
+                        call->callType, call->callToken);
+            continue;
+         }    
+      }else{
+         OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
+                      "capabilities are not supported.(%s, %s)\n",
+                      call->callType, call->callToken);
+          continue;
       }
       /* Add  Capabilities to Capability Table */
       entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
                       sizeof(H245CapabilityTableEntry));
       memset(entry, 0, sizeof(H245CapabilityTableEntry));
       entry->m.capabilityPresent = 1;
-
-      entry->capability.t = epCap->dir;
-      if(epCap->dir == T_H245Capability_receiveAudioCapability)
+      if((epCap->dir & OORX))
+      {
+         entry->capability.t = T_H245Capability_receiveAudioCapability;
          entry->capability.u.receiveAudioCapability = audioCap;
-      else if(epCap->dir == T_H245Capability_transmitAudioCapability)
+      }else{
+         entry->capability.t = T_H245Capability_transmitAudioCapability;
          entry->capability.u.transmitAudioCapability = audioCap;
-      else if(epCap->dir == T_H245Capability_receiveAndTransmitAudioCapability)
-         entry->capability.u.receiveAndTransmitAudioCapability = audioCap;
-     
+      }
       entry->capabilityTableEntryNumber = i+1;
       dListAppend(pctxt , &(termCap->capabilityTable), entry);
-      epCap = epCap->next;
       i++;
    }
    /* Add dtmf capability, if any */
@@ -407,7 +336,7 @@ int ooSendTermCapMsg(ooCallData *call)
                                                    OO_CAP_DTMF_RFC2833, pctxt);
       if(!ateCap)
       {
-         OOTRACEERR3("Error:Failed to add RFC2833 cap to TCS(%s, %s)\n",
+         OOTRACEWARN3("WARN:Failed to add RFC2833 cap to TCS(%s, %s)\n",
                      call->callType, call->callToken);
       }else {
          entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
@@ -434,7 +363,14 @@ int ooSendTermCapMsg(ooCallData *call)
       }
    }     
    /*TODO:Add Video and Data capabilities, if required*/
-
+   if(i==0)
+   {
+      OOTRACEERR3("Error:No capabilities found to send in TCS message."
+                  " (%s, %s)\n", call->callType, call->callToken);
+      ooFreeH245Message(call,ph245msg);
+      return OO_FAILED;
+   }
+          
    /* Define capability descriptior */
    capDesc = (H245CapabilityDescriptor*)
              ASN1MALLOC(pctxt, sizeof(H245CapabilityDescriptor));
@@ -833,8 +769,6 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    OOCTXT *pctxt;
    H245UnicastAddress *unicastAddrs, *unicastAddrs1;
    H245UnicastAddress_iPAddress *iPAddress, *iPAddress1;
-   /*   char hexip[20];
-        int addr_part1, addr_part2, addr_part3, addr_part4;*/
    ooLogicalChannel *pLogicalChannel = NULL;
   
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
@@ -845,8 +779,8 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   if(!(epCap=ooIsAudioCapSupported(call, flcp->dataType.u.audioData,
-                                     T_H245Capability_receiveAudioCapability)))
+   if(!(epCap=ooIsAudioDataTypeSupported(call, flcp->dataType.u.audioData,
+                                     OORX)))
    {
       OOTRACEERR3("ERROR:OpenLogicalChannel - audio capability not supported "
                   "(%s, %s)\n", call->callType, call->callToken);
@@ -912,16 +846,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
       return OO_FAILED;
    }
    ooConvertIpToNwAddr(call->localIP, iPAddress->network.data);
-#if 0
-   sscanf(call->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2, &addr_part3,
-                                  &addr_part4);
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2,
-                                     addr_part3, addr_part4);
-   sscanf(hexip, "%x %x %x %x", &(iPAddress->network.data[0]),
-                                &(iPAddress->network.data[1]),
-                                &(iPAddress->network.data[2]),
-                                &(iPAddress->network.data[3]));
-#endif
+
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtpPort;
 
@@ -940,12 +865,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
    ooConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
-#if 0
-   sscanf(hexip, "%x %x %x %x", &(iPAddress1->network.data[0]),
-                                &(iPAddress1->network.data[1]),
-                                &(iPAddress1->network.data[2]),
-                                &(iPAddress1->network.data[3]));
-#endif
+
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
 
@@ -1395,7 +1315,8 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-     OOTRACEERR3("Error:Failed to enqueue the RequestCloseChannel to outbound queue (%s, %s)\n", call->callType,
+     OOTRACEERR3("Error:Failed to enqueue the RequestCloseChannel to outbound"
+                 " queue (%s, %s)\n", call->callType,
                  call->callToken);
    }
    ooFreeH245Message(call, ph245msg);
@@ -1658,31 +1579,55 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
 
 int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
 {
-   int ret = 0;
+  int ret = 0,k;
    OOCTXT *pctxt=NULL;
-   if(call->remoteTermCapSeqNo >=
-      pmsg->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber)
+   H245TerminalCapabilitySet *tcs=NULL;
+   DListNode *pNode=NULL;
+   H245CapabilityTableEntry *capEntry = NULL;
+
+   tcs =  pmsg->h245Msg.u.request->u.terminalCapabilitySet;
+   if(call->remoteTermCapSeqNo >= tcs->sequenceNumber)
    {
       OOTRACEINFO4("Rejecting TermCapSet message with SeqNo %d, as already "
                    "acknowledged message with this SeqNo (%s, %s)\n",
                    call->remoteTermCapSeqNo, call->callType, call->callToken);
       return OO_OK;
    }
-   call->remoteTermCapSeqNo = pmsg->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
-   if(call->remoteTermCapSet)
+ 
+   if(!tcs->m.capabilityTablePresent)
    {
-      pctxt = &gH323ep.msgctxt;
-      ooFreeH245Message(call, call->remoteTermCapSet);
+     OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",                   call->callType, call->callToken);
+     return OO_OK;
    }
-  
-   call->remoteTermCapSet = pmsg;
+   call->remoteTermCapSeqNo = tcs->sequenceNumber;
+
+   for(k=0; k<(int)tcs->capabilityTable.count; k++)
+   {
+      pNode = dListFindByIndex(&tcs->capabilityTable, k);
+      if(pNode)
+      {
+         capEntry = (H245CapabilityTableEntry*) pNode->data;
+         if(capEntry->m.capabilityPresent){
+            ret =  ooAddRemoteCapability(call, &capEntry->capability);
+            if(ret != OO_OK)
+            {
+               OOTRACEERR4("Error:Failed to process remote capability in "
+                           "capability table at index %d. (%s, %s)\n",
+                            k, call->callType, call->callToken);
+            }
+         }
+      }
+      pNode = NULL;
+      capEntry=NULL;
+   }
+
    /* Update remoteTermCapSetState */
    call->remoteTermCapState = OO_RemoteTermCapSetRecvd;
 
    ooH245AcknowledgeTerminalCapabilitySet(call);  
 
    if(call->remoteTermCapState != OO_RemoteTermCapSetAckSent ||
-      call->localTermCapState  != OO_LocalTermCapSetAckRecvd   )
+      call->localTermCapState  != OO_LocalTermCapSetAckRecvd)
       return OO_OK;
 
    /* Check whether MasterSlave Procedure has finished */
@@ -1727,16 +1672,18 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
 
    memset(response->u.terminalCapabilitySetAck, 0,
                                  sizeof(H245TerminalCapabilitySetAck));
-   response->u.terminalCapabilitySetAck->sequenceNumber = call->remoteTermCapSet->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
+   response->u.terminalCapabilitySetAck->sequenceNumber = call->remoteTermCapSeqNo;
 
    OOTRACEDBGA3("Built TerminalCapabilitySet Ack (%s, %s)\n",
                  call->callType, call->callToken);
    ret = ooSendH245Msg(call, ph245msg);
+
    if(ret != OO_OK)
    {
      OOTRACEERR3("Error:Failed to enqueue TCSAck to outbound queue. (%s, %s)\n", call->callType, call->callToken);
    }else
       call->remoteTermCapState = OO_RemoteTermCapSetAckSent;
+
    ooFreeH245Message(call, ph245msg);
    return ret;
 }
@@ -1763,32 +1710,14 @@ int ooOpenLogicalChannels(ooCallData *call)
 
 int ooOpenLogicalAudioChannel(ooCallData *call)
 {
-   H245CapabilityTableEntry *capTableEntry;
-   H245Capability *h245Cap;
-   ooH323EpCapability *epCap;
-   H245AudioCapability *rAudioCap;
-   DListNode *curNode1 = NULL, *curNode2=NULL;
-   H245Message  *h245TermCapMsg;
-   H245RequestMessage *request;
-   H245TerminalCapabilitySet *termCapSet;
-   int i=0, j=0, found=0;
+   ooH323EpCapability *epCap=NULL, *repCap=NULL;
+   int k=0;
 
    /* Check whether local endpoint has audio capability */
    if(gH323ep.myCaps == 0)
    {
       OOTRACEERR3("ERROR:Local endpoint does not have any audio capabilities"
                   " (%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-  
-   /* Check whether capability table is present in remote endpoints CapSet */
-   h245TermCapMsg = call->remoteTermCapSet;
-   request = h245TermCapMsg->h245Msg.u.request;
-   termCapSet = request->u.terminalCapabilitySet;
-   if(termCapSet->m.capabilityTablePresent == 0)
-   {
-      OOTRACEERR3("ERROR:No CapabilityTable Present in remote Terminal "
-                  "Capability Set (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
   
@@ -1800,50 +1729,50 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    OOTRACEINFO3("Looking for matching audio capabilities. (%s, %s)\n",
                  call->callType, call->callToken);
 
-   //   for(i=0; i<(int) gH323ep.audioCaps.count; i++)
-   epCap = gH323ep.myCaps;
-   while(epCap)
+   for(k=0; k<call->capPrefs.index; k++)
    {
-     
-      /* Serach for a match in remote capabilities */
-      for(j = 0; j<(int) termCapSet->capabilityTable.count; j++)
-      {
-         curNode2 = dListFindByIndex (&termCapSet->capabilityTable, j) ;
-         capTableEntry = (H245CapabilityTableEntry *) curNode2->data;
-        
-         if(!capTableEntry->m.capabilityPresent)
-            continue;
-         else
-            h245Cap = &(capTableEntry->capability);
-
-         /* Only audio Capabilities */
-         if(h245Cap->t == T_H245Capability_receiveAudioCapability)
-            rAudioCap = h245Cap->u.receiveAudioCapability;
-         else if(h245Cap->t == T_H245Capability_receiveAndTransmitAudioCapability)
-            rAudioCap = h245Cap->u.receiveAndTransmitAudioCapability;
-         else
-            continue;
-        
-          /* Check for a match */
-         found = ooCompareAudioCaps(epCap->cap, rAudioCap, epCap->dir);
-         if(found)
+      epCap = gH323ep.myCaps;
+      while(epCap){
+         if(epCap->cap == call->capPrefs.order[k] &&
+            ((epCap->dir & OOTX)))
             break;
-
+         epCap = epCap->next;
       }
-      if(found) break;
+      if(!epCap)
+      {
+         OOTRACEDBGA4("Prefereed capability %d is not a local transmit "
+                      "capability(%s, %s)\n", call->capPrefs.order[k],
+                      call->callType, call->callToken);
+         continue;
+      }
+      repCap = call->remoteCaps;
+      while(repCap)
+      {
+         if(ooCheckCompatibility(call, epCap, repCap))
+            break;
+         repCap = repCap->next;
+      }
+      if(repCap) break;
+
    }
   
-   if(!found)
+   if(!repCap)
    {
       OOTRACEERR3("ERROR:Incompatible audio capabilities - Can not open "
                   "audio channel (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   switch(epCap->capType)
+   switch(epCap->cap)
    {
-   case T_H245AudioCapability_g711Ulaw64k:
-      ooOpenG711ULaw64KChannel(call, epCap);
+   case OO_G711ALAW64K:
+   case OO_G711ALAW56K:
+   case OO_G711ULAW64K:
+   case OO_G711ULAW56K:
+      ooOpenG711Channel(call, epCap);
       break;
+   case OO_GSMFULLRATE:
+   case OO_GSMHALFRATE:
+   case OO_GSMENHANCEDFULLRATE:
    default:
       OOTRACEERR3("ERROR:Unknown Audio Capability type (%s, %s)\n",
                    call->callType, call->callToken);
@@ -1851,7 +1780,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    return OO_OK;
 }
 
-int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
+int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
 {
    int ret;
    H245Message *ph245msg = NULL;
@@ -1912,11 +1841,11 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    flcp->dataType.t = T_H245DataType_audioData;
 
    /* set audio capability for channel */
-   audioCap = ooCreateAudioCapability(epCap->cap,pctxt);
+   audioCap = ooCreateAudioCapability(epCap,pctxt, OOTX);
    if(!audioCap)
    {
       OOTRACEERR3("Error:Failed to create duplicate audio capability in "
-                  "ooOpenG711ULaw64KChannel. (%s, %s)\n", call->callType,
+                  "ooOpenG711Channel. (%s, %s)\n", call->callType,
                   call->callToken);
       ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
@@ -1951,16 +1880,6 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
 
    ooConvertIpToNwAddr(pLogicalChannel->localIP, iPAddress->network.data);
-#if 0
-   sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
-                                                   &addr_part3, &addr_part4);
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
-                                 addr_part4);
-   sscanf(hexip, "%x %x %x %x", &(iPAddress->network.data[0]),
-                                &(iPAddress->network.data[1]),
-                                &(iPAddress->network.data[2]),
-                                &(iPAddress->network.data[3]));
-#endif
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -1985,8 +1904,9 @@ int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
 /* Used to build Audio OLCs for fast connect. Keep in mind that forward and
    reverse
    are always with respect to the endpoint which proposes channels */
-int ooBuildOpenLogicalChannelAudio(ooCallData *call,
-          H245OpenLogicalChannel *olc, ooH323EpCapability *epCap, OOCTXT*pctxt)
+int ooBuildOpenLogicalChannelAudio
+   (ooCallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap,
+    OOCTXT*pctxt, int dir)
 {
    int reverse=0, forward=0;
    H245AudioCapability *audioCap=NULL;
@@ -1995,15 +1915,14 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
    H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
-   /*   int addr_part1, addr_part2, addr_part3, addr_part4;
-        char hexip[20];*/
+
    ooLogicalChannel *pLogicalChannel = NULL;
    int outgoing=0;
 
    if(!strcmp(call->callType, "outgoing"))  
       outgoing = 1;
   
-   if(epCap->dir == T_H245Capability_receiveAudioCapability)
+   if(dir & OORX)
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for Receive Audio Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
@@ -2015,7 +1934,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       else
          forward = 1;
    }
-   else if(epCap->dir == T_H245Capability_transmitAudioCapability)
+   else if(dir & OOTX)
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for transmit Audio Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
@@ -2027,7 +1946,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       else
          reverse = 1;
    }
-   else if(epCap->dir == T_H245Capability_receiveAndTransmitAudioCapability)
+   else if(dir & OORXTX)
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for ReceiveAndTransmit Audio "
                    "Capability (%s, %s)\n", call->callType, call->callToken);
@@ -2037,19 +1956,16 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-#if 0 
-   sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
-                                                   &addr_part3, &addr_part4);
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2,
-                                 addr_part3, addr_part4);
-#endif
+
    if(forward)
    {
+      OOTRACEDBGC3("Building forward olc. (%s, %s)\n", call->callType,
+                    call->callToken);
       flcp = &(olc->forwardLogicalChannelParameters);
       memset(flcp, 0,
              sizeof(H245OpenLogicalChannel_forwardLogicalChannelParameters));
       flcp->dataType.t = T_H245DataType_audioData;
-      flcp->dataType.u.audioData = ooCreateAudioCapability(epCap->cap, pctxt);
+      flcp->dataType.u.audioData = ooCreateAudioCapability(epCap, pctxt, dir);
      
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
       pH2250lcp1 = (H245H2250LogicalChannelParameters*)ASN1MALLOC(pctxt,
@@ -2077,12 +1993,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
     
          ooConvertIpToNwAddr(pLogicalChannel->localIP,
                                                 pUniIpAddrs->network.data);
-#if 0
-         sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
-                                   &(pUniIpAddrs->network.data[1]),
-                                   &(pUniIpAddrs->network.data[2]),
-                                   &(pUniIpAddrs->network.data[3]));
-#endif
+
          pUniIpAddrs->network.numocts = 4;
          pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
       }
@@ -2100,12 +2011,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       pUnicastAddrs->u.iPAddress = pIpAddrs;
     
        ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
-#if 0
-      sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
-                                &(pIpAddrs->network.data[1]),
-                                &(pIpAddrs->network.data[2]),
-                                &(pIpAddrs->network.data[3]));
-#endif
+
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
       if(!outgoing)
@@ -2126,7 +2032,10 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 
    if(reverse)
    {
-      olc->forwardLogicalChannelParameters.dataType.t = T_H245DataType_nullData;
+      OOTRACEDBGC3("Building reverse olc. (%s, %s)\n", call->callType,
+                    call->callToken);
+      olc->forwardLogicalChannelParameters.dataType.t =
+                                                      T_H245DataType_nullData;
       olc->forwardLogicalChannelParameters.multiplexParameters.t =
          T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_none;
       olc->m.reverseLogicalChannelParametersPresent = 1;
@@ -2134,7 +2043,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       memset(rlcp, 0, sizeof(H245OpenLogicalChannel_reverseLogicalChannelParameters));
       rlcp->dataType.t = T_H245DataType_audioData;
  
-      rlcp->dataType.u.audioData = ooCreateAudioCapability(epCap->cap, pctxt);
+      rlcp->dataType.u.audioData = ooCreateAudioCapability(epCap, pctxt, dir);
 
       rlcp->m.multiplexParametersPresent = 1;
       rlcp->multiplexParameters.t = T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
@@ -2159,12 +2068,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
          pUnicastAddrs->u.iPAddress = pIpAddrs;     
 
          ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
-#if 0
-         sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
-                                   &(pIpAddrs->network.data[1]),
-                                   &(pIpAddrs->network.data[2]),
-                                   &(pIpAddrs->network.data[3]));
-#endif
+
          pIpAddrs->network.numocts = 4;
          pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
       }
@@ -2183,12 +2087,6 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
       ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
-#if 0
-      sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
-                                &(pUniIpAddrs->network.data[1]),
-                                &(pUniIpAddrs->network.data[2]),
-                                &(pUniIpAddrs->network.data[3]));
-#endif
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
          
@@ -2213,8 +2111,9 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       }
    }
 
-   /* State of logical channel. for out going calls, as we are sending setup, state
-      of all channels are proposed, for incoming calls, state is established. */
+   /* State of logical channel. for out going calls, as we are sending setup,
+      state of all channels are proposed, for incoming calls, state is
+      established. */
    if(!outgoing)
       pLogicalChannel->state = OO_LOGICALCHAN_ESTABLISHED;
    else
@@ -2223,126 +2122,5 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    return OO_OK;
 }
 
-#if 0
-/* Build a Facility message and tunnel H.245 message through it */
-int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
-                            int msgType)
-{
-   DListNode *pNode = NULL;
-   Q931Message *pQ931Msg = NULL;
-   H225H323_UU_PDU *pH323UUPDU = NULL;
-   H225H323_UU_PDU_h245Control *pH245Control = NULL;
-   ASN1DynOctStr * elem;
-   int ret =0, i;
-   /* Tunnel the H.245 message through an H.225 message. If no H.225 message
-      exists, then create a new H.225 Facility message.
-   */
-   if(call->outH225Queue.count == 0)
-   {
-      ret = ooSendFacility(call);
-      if(ret != OO_OK)
-      {
-         OOTRACEERR3("ERROR: Failed to build a facility message (%s, %s)\n",
-                      call->callType, call->callToken);
-         return OO_FAILED;
-      }
-   }
 
-   pNode = dListFindByIndex (&call->outH225Queue, 0);
-   if(!pNode)
-   {
-      OOTRACEERR3("ERROR: H.225 queue count non-zero, but no outgoing "
-                 "message (%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   pQ931Msg = (Q931Message*)pNode->data;
-  
-   /* Print tunneling log message */  
-   OOTRACEINFO2("Adding %s H245 message to ", ooGetText(msgType));
-   if(pQ931Msg->messageType == Q931SetupMsg)
-   {
-      OOTRACEINFO3("outgoing Setup message. (%s, %s)\n", call->callType,
-                    call->callToken);
-   }
-   else if(pQ931Msg->messageType == Q931ConnectMsg)
-   {
-      OOTRACEINFO3("outgoing Connect message. (%s, %s)\n", call->callType,
-                    call->callToken);
-   }
-   else if(pQ931Msg->messageType == Q931CallProceedingMsg)
-   {
-      OOTRACEINFO3("outgoing CallProceeding message. (%s, %s)\n",
-                    call->callType, call->callToken);
-   }
-   else if(pQ931Msg->messageType == Q931AlertingMsg)
-   {
-      OOTRACEINFO3("outgoing Alerting message. (%s, %s)\n", call->callType,
-                    call->callToken);
-   }
-   else if(pQ931Msg->messageType == Q931ReleaseCompleteMsg)
-   {
-      OOTRACEINFO3("outgoing ReleaseComplete message. (%s, %s)\n",
-                    call->callType, call->callToken);
-   }
-   else if(pQ931Msg->messageType == Q931FacilityMsg)
-   {
-      OOTRACEINFO3("outgoing Facility message. (%s, %s)\n", call->callType,
-                    call->callToken);
-   }
-
-   pH323UUPDU = (H225H323_UU_PDU*) &pQ931Msg->userInfo->h323_uu_pdu;
-   pH323UUPDU->m.h245TunnelingPresent = TRUE;
-   pH323UUPDU->m.h245ControlPresent = TRUE;
-   pH323UUPDU->h245Tunneling = TRUE;
-   pH245Control = (H225H323_UU_PDU_h245Control*)
-                   &pH323UUPDU->h245Control;
-   if(pH245Control->n == 0)
-   {
-      elem = (ASN1DynOctStr*) ASN1MALLOC(pQ931Msg->pctxt,
-                                      sizeof(ASN1DynOctStr));
-      if(!elem)
-      {
-         OOTRACEERR3("ERROR:Failed to allocate memory for H245 control "
-                     "element (%s, %s)\n", call->callType, call->callToken);
-         return OO_FAILED;
-      }
-      elem->data = (ASN1OCTET*)ASN1MALLOC(pQ931Msg->pctxt,
-                                                 len*sizeof(ASN1OCTET));
-      if(!elem->data)
-      {
-         OOTRACEERR3("ERROR:Failed to allocate memory for encoded H.245 "
-                     "control data (%s, %s)\n", call->callType,
-                     call->callToken);
-         return OO_FAILED;
-      }
-      memcpy((void*)elem->data, (void*)msgbuf, len);
-      elem->numocts = len;
-      pH245Control->elem = elem;
-      pH245Control->n = 1;
-   }
-   else{
-      elem = (ASN1DynOctStr*) ASN1MALLOC(pQ931Msg->pctxt,
-                                (pH245Control->n+1)*sizeof(ASN1DynOctStr));
-      if(!elem)
-      {
-         OOTRACEERR3("ERROR: Failed to allocate H.245 control element for "
-                     "tunneling (%s, %s)\n", call->callType, call->callToken);
-         return OO_FAILED;
-      }
-      for(i=0; i<(int)pH245Control->n; i++)
-      {
-         elem[i].data = pH245Control->elem[i].data;
-         elem[i].numocts = pH245Control->elem[i].numocts;
-      }
-      elem[i].data = (ASN1OCTET*) ASN1MALLOC(pQ931Msg->pctxt, len*sizeof(ASN1OCTET));
-      memcpy((void*)elem[i].data, (void*)msgbuf, len);
-      elem[i].numocts = len;
-      ASN1MEMFREEPTR(pQ931Msg->pctxt, pH245Control->elem);
-      pH245Control->elem = elem;
-      pH245Control->n = i;
-   }
-   return OO_OK;
-}
-
-#endif
 

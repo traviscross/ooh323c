@@ -24,6 +24,8 @@
 #include "rtctype.h"
 #include "ootrace.h"
 
+static const char* pVarName;
+static int gIndentSpaces;
 void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname)
 {
    printHandler->startElement = &printStartElement;
@@ -42,32 +44,32 @@ void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname
    printHandler->enumValue = &printEnumValue;
    printHandler->openTypeValue = &printOpenTypeValue;
    pVarName = varname;
-   OOTRACEINFO2("%s = {\n", pVarName);
+   OOTRACEDBGB2("%s = {\n", pVarName);
    gIndentSpaces += 3;
 
 }
 
 void finishPrint()
 {
-   OOTRACEINFO1 ("}\n");
+   OOTRACEDBGB1 ("}\n");
    gIndentSpaces -= 3;
    if (gIndentSpaces != 0) {
-      OOTRACEINFO1 ("ERROR: unbalanced structure\n");
+      OOTRACEDBGB1 ("ERROR: unbalanced structure\n");
    }
 }
 
 void indent ()
 {
    int i=0;
-   for (i = 0; i < gIndentSpaces; i++) OOTRACEINFO1 (" ");
+   for (i = 0; i < gIndentSpaces; i++) OOTRACEDBGB1 (" ");
 }
 
 void printStartElement (const char* name, int index)
 {
    indent ();
-   OOTRACEINFO1 (name);
-   if (index >= 0) OOTRACEINFO2 ("[%d]", index);
-   OOTRACEINFO1 (" = {\n");
+   OOTRACEDBGB1 (name);
+   if (index >= 0) OOTRACEDBGB2 ("[%d]", index);
+   OOTRACEDBGB1 (" = {\n");
    gIndentSpaces += 3;
 }
 
@@ -75,33 +77,33 @@ void printEndElement (const char* name, int index)
 {
    gIndentSpaces -= 3;
    indent ();
-   OOTRACEINFO1 ("}\n");
+   OOTRACEDBGB1 ("}\n");
 }
 
 void printBoolValue (ASN1BOOL value)
 {
    const char* s = value ? "TRUE" : "FALSE";
    indent ();
-   OOTRACEINFO2 ("%s\n", s);
+   OOTRACEDBGB2 ("%s\n", s);
 }
 
 void printIntValue (ASN1INT value)
 {
    indent ();
-   OOTRACEINFO2 ("%d\n", value);
+   OOTRACEDBGB2 ("%d\n", value);
 }
 
 void printuIntValue (ASN1UINT value)
 {
    indent ();
-   OOTRACEINFO2 ("%u\n", value);
+   OOTRACEDBGB2 ("%u\n", value);
 }
 
 void printBitStrValue (ASN1UINT numbits, const ASN1OCTET* data)
 {
    char* s = (char*)malloc(numbits + 8);
    indent ();
-   OOTRACEINFO2 ("%s\n", rtBitStrToString (numbits, data, s, numbits+8));
+   OOTRACEDBGB2("%s\n", rtBitStrToString (numbits, data, s, numbits+8));
    free(s);
 }
 
@@ -110,14 +112,14 @@ void printOctStrValue (ASN1UINT numocts, const ASN1OCTET* data)
    int bufsiz = (numocts * 2) + 8;
    char* s = (char*)malloc(bufsiz);
    indent ();
-   OOTRACEINFO2 ("%s\n", rtOctStrToString (numocts, data, s, bufsiz));
+   OOTRACEDBGB2 ("%s\n", rtOctStrToString (numocts, data, s, bufsiz));
    free(s);
 }
 
 void printCharStrValue (const char* value)
 {
    indent ();
-   OOTRACEINFO2 ("\"%s\"\n", value);
+   OOTRACEDBGB2 ("\"%s\"\n", value);
 }
 
 void printCharStr16BitValue (ASN1UINT nchars, ASN116BITCHAR* data)
@@ -127,12 +129,12 @@ void printCharStr16BitValue (ASN1UINT nchars, ASN116BITCHAR* data)
 
    for (ui = 0; ui < nchars; ui++) {
       if (data[ui] >= 32 && data[ui] <= 127)
-         OOTRACEINFO2 ("%c", (char)data[ui]);
+         OOTRACEDBGB2 ("%c", (char)data[ui]);
       else
-         OOTRACEINFO1 ("?");
+         OOTRACEDBGB1 ("?");
    }
 
-   OOTRACEINFO1 ("\n");
+   OOTRACEDBGB1 ("\n");
 }
 
 void printCharStr32BitValue (ASN1UINT nchars, ASN132BITCHAR* data)
@@ -142,28 +144,28 @@ void printCharStr32BitValue (ASN1UINT nchars, ASN132BITCHAR* data)
 
    for ( ui = 0; ui < nchars; ui++) {
       if (data[ui] >= 32 && data[ui] <= 127)
-         OOTRACEINFO2 ("%c", (char)data[ui]);
+         OOTRACEDBGB2 ("%c", (char)data[ui]);
       else
-         OOTRACEINFO2 ("\\%d", data[ui]);
+         OOTRACEDBGB2 ("\\%d", data[ui]);
    }
 
-   OOTRACEINFO1 ("\n");
+   OOTRACEDBGB1 ("\n");
 }
 
 void printNullValue ()
 {
    indent ();
-   OOTRACEINFO1 ("NULL\n");
+   OOTRACEDBGB1 ("NULL\n");
 }
 
 void ooPrintOIDValue (ASN1OBJID* pOID)
 {
    ASN1UINT ui;
-   OOTRACEINFO1 ("{ \n");
+   OOTRACEDBGB1 ("{ \n");
    for (ui = 0; ui < pOID->numids; ui++) {
-      OOTRACEINFO2 ("%d ", pOID->subid[ui]);
+      OOTRACEDBGB2 ("%d ", pOID->subid[ui]);
    }
-   OOTRACEINFO1 ("}\n");
+   OOTRACEDBGB1 ("}\n");
 }
 
 void printOidValue (ASN1UINT numSubIds, ASN1UINT* pSubIds)
@@ -182,18 +184,18 @@ void printOidValue (ASN1UINT numSubIds, ASN1UINT* pSubIds)
 void printRealValue (double value)
 {
    indent ();
-   OOTRACEINFO2 ("%f\n", value);
+   OOTRACEDBGB2 ("%f\n", value);
 }
 
 void printEnumValue (ASN1UINT value)
 {
    indent ();
-   OOTRACEINFO2 ("%u\n", value);
+   OOTRACEDBGB2 ("%u\n", value);
 }
 
 void printOpenTypeValue (ASN1UINT numocts, const ASN1OCTET* data)
 {
    indent ();
-   OOTRACEINFO1 ("< encoded data >\n");
+   OOTRACEDBGB1 ("< encoded data >\n");
 }
 

@@ -722,10 +722,11 @@ int ooH2250Receive(ooCallData *call)
       }
       return OO_FAILED;
    }
+
   
    len = message[2];
    len = len<<8;
-   len = len + message[3];
+   len = len | message[3];
    /* Remaining message length is length - tpkt length */
    len = len - 4;
 
@@ -778,20 +779,26 @@ int ooH2250Receive(ooCallData *call)
          return OO_FAILED;
       }
    }
-  
+
    OOTRACEDBGC3("Received H.2250 message: (%s, %s)\n",
                 call->callType, call->callToken);
-   initializePrintHandler(&printHandler, "Received H.323 Message");
+   initializePrintHandler(&printHandler, "Received H.2250 Message");
 
    /* Add event handler to list */
    rtAddEventHandler (pctxt, &printHandler);
-   ooQ931Decode (pmsg, len, message);
+   ret = ooQ931Decode (pmsg, len, message);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to decode received H.2250 message. (%s, %s)\n",
+                   call->callType, call->callToken);
+   }
    OOTRACEDBGC3("Decoded Q931 message (%s, %s)\n", call->callType,
                                                              call->callToken);
    finishPrint();
    rtRemoveEventHandler(pctxt, &printHandler);
-   ooHandleH2250Message(call, pmsg);
-   return OO_OK;
+   if(ret == OO_OK)
+      ooHandleH2250Message(call, pmsg);
+   return ret;
 }
 
 
@@ -921,136 +928,10 @@ int ooH245Receive(ooCallData *call)
    it calls the corresponding function to retrieve the message buffer and
    then transmits on the associated channel
 */
-#if 0
-int ooSendMsg(ooCallData *call, int type)
-{
-   ASN1OCTET msgbuf[MAXMSGLEN];
-   int len=0, ret=0, msgType=0;
-   int i =0;
-
-   memset(msgbuf, 0, sizeof(msgbuf));
-   if(type == OOQ931MSG)
-   {
-      OOTRACEDBGA3("Sending Q931 message (%s, %s)\n", call->callType,
-                                                      call->callToken);
-
-      if(ooGetOutgoingQ931Msgbuf(call, msgbuf, &len, &msgType)!=OO_OK)
-      {
-         OOTRACEERR3("ERROR:Could not retrieve message buffer for outgoing "
-                     "q931 msg (%s, %s)\n", call->callType, call->callToken);
-         call->sendH225--;
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_HOST_CLEARED;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
-      }
-
-      /* Send message out via TCP */
-     
-      ret = ooSocketSend(*(call->h225Channel), msgbuf, len);
-      if(ret == ASN_OK)
-      {
-         OOTRACEDBGA3("H2250Q931 Message sent successfully (%s, %s)\n",
-                      call->callType, call->callToken);
-         call->sendH225--; /* decrement send count */
-         ooOnSendMsg(call, msgType);
-         return OO_OK;
-      }
-      else{
-         OOTRACEERR3("H2250Q931 Message send failed (%s, %s)\n",
-                     call->callType, call->callToken);
-         call->sendH225--;
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_HOST_CLEARED;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
-      }
-   }/* end of type==OOQ931MSG */
-   if(type == OOH245MSG)
-   {
-      OOTRACEDBGA3("Sending H.245 message (%s, %s)\n", call->callType,
-                                                      call->callToken);
-      if(ooGetOutgoingH245Msgbuf(call, msgbuf, &len, &msgType)!=OO_OK)
-      {
-         OOTRACEERR3("ERROR:Could not retrieve message buffer for outgoing "
-                     "h245 message (%s, %s)\n", call->callType,
-                     call->callToken);
-         call->sendH245--;
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_HOST_CLEARED;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
-      }
-     
-      call->sendH245--;
-      /* Send message out */
-      if(!call->h245Channel && !call->isTunnelingActive)
-      {
-         OOTRACEWARN3("Neither H.245 channel nor tunneling active "
-                     "(%s, %s)\n", call->callType, call->callToken);
-         /*ooCloseH245Session(call);*/
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_HOST_CLEARED;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_OK;
-      }
-     
-      if(call->h245Channel)
-      {
-         ret = ooSocketSend(*(call->h245Channel), msgbuf, len);
-         if(ret == ASN_OK)
-         {
-            OOTRACEDBGA3("H245 Message sent successfully (%s, %s)\n",
-                          call->callType, call->callToken);
-            ooOnSendMsg(call, msgType);
-            return OO_OK;
-         }
-         else{
-            OOTRACEERR3("ERROR:H245 Message send failed (%s, %s)\n",
-                        call->callType, call->callToken);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_HOST_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
-         }
-      }else if(call->isTunnelingActive){
-         /* Tunnel H.245 message */
-         ret = ooSendAsTunneledMessage(call, msgbuf, len, msgType);
-         if(ret != OO_OK)
-         {
-            OOTRACEERR3("ERROR:Failed to tunnel H.245 message (%s, %s)\n",
-                         call->callType, call->callToken);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_HOST_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
-         }
-         return OO_OK;
-      }
-   }
-   /* Need to add support for other messages such as T38 etc */
-   OOTRACEWARN3("ERROR:Unknown message type - message not Sent (%s, %s)\n",
-                call->callType, call->callToken);
-   return OO_FAILED;
-}              
-#endif
-
 int ooSendMsg(ooCallData *call, int type)
 {
 
-   int len=0, ret=0, msgType=0;
+  int len=0, ret=0, msgType=0;
    int i =0;
    DListNode * p_msgNode=NULL;
    ASN1OCTET *msgptr;
@@ -1068,17 +949,19 @@ int ooSendMsg(ooCallData *call, int type)
       p_msgNode = call->outH225Queue.head;
       msgptr = (ASN1OCTET*) p_msgNode->data;
       msgType = msgptr[0];
-      len = msgptr[1];
+      msgType = msgType<<8;
+      msgType = (msgType | msgptr[1]);
+      len = msgptr[2];
       len = len<<8;
-      len = (len | msgptr[2]);
+      len = (len | msgptr[3]);
+
       /* Remove the message from rtdlist outH225Queue */
       dListRemove(&(call->outH225Queue), p_msgNode);
       if(p_msgNode)
          ASN1MEMFREEPTR(call->pctxt, p_msgNode);
       call->sendH225--;
       /* Send message out via TCP */
-     
-      ret = ooSocketSend(*(call->h225Channel), msgptr+3, len);
+      ret = ooSocketSend(*(call->h225Channel), msgptr+4, len);
       if(ret == ASN_OK)
       {
          ASN1CRTFREE0(msgptr);

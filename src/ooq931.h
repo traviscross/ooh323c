@@ -446,6 +446,8 @@ EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
                                    int len, int msgType);
 
 
+int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
+                        char *msgbuf, int size);
 /**
  * @}
  */

@@ -504,26 +504,26 @@ int ooDecodeUUIE(Q931Message *q931Msg)
 
 #ifndef _COMPACT
 static void ooPrintQ931Message
-   (OOCallData* call, ASN1OCTET msgbuf, ASN1UINT msglen)
+   (ooCallData* call, ASN1OCTET *msgbuf, ASN1UINT msglen)
 {
 
    OOCTXT *pctxt = &gH323ep.msgctxt;
    Q931Message q931Msg;
    int ret;
 
-
-   setPERBuffer (pctxt, msgbuf, msglen, TRUE);
    initializePrintHandler(&printHandler, "H.2250 Message");
    /* Add event handler to list */
-   rtAddEventHandler (&ctxt, &printHandler);
+   rtAddEventHandler (pctxt, &printHandler);
+   setPERBuffer (pctxt, msgbuf, msglen, TRUE);
    ret = ooQ931Decode (&q931Msg, msglen, msgbuf);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
+      OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n", call->callType,
+                   call->callToken);
    }
    finishPrint();
    rtRemoveEventHandler(pctxt, &printHandler);
+
 }
 #endif
 
@@ -538,22 +538,35 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    DListNode* curNode=NULL;
    if(!msgbuf || size<200)
    {
-      OOTRACEERR3("Error: Invalid message buffer/size for ooEncodeH245Message. (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error: Invalid message buffer/size for ooEncodeH245Message."
+                  " (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
 
-   if(pq931Msg->messageType == Q931SetupMsg)
+   if(pq931Msg->messageType == Q931SetupMsg){
+      msgbuf[i++] = OOSetup>>8;
       msgbuf[i++] = OOSetup;
-   else if(pq931Msg->messageType == Q931ConnectMsg)
+   }
+   else if(pq931Msg->messageType == Q931ConnectMsg){
+      msgbuf[i++] = OOConnect>>8;
       msgbuf[i++] = OOConnect;
-   else if(pq931Msg->messageType == Q931CallProceedingMsg)
+   }
+   else if(pq931Msg->messageType == Q931CallProceedingMsg){
+      msgbuf[i++] = OOCallProceeding>>8;
       msgbuf[i++] = OOCallProceeding;
-   else if(pq931Msg->messageType == Q931AlertingMsg)
+   }
+   else if(pq931Msg->messageType == Q931AlertingMsg){
+      msgbuf[i++] = OOAlert>>8;
       msgbuf[i++] = OOAlert;
-   else if(pq931Msg->messageType == Q931ReleaseCompleteMsg)
+   }
+   else if(pq931Msg->messageType == Q931ReleaseCompleteMsg){
+      msgbuf[i++] = OOReleaseComplete>>8;
       msgbuf[i++] = OOReleaseComplete;
-   else if(pq931Msg->messageType == Q931FacilityMsg)
+   }
+   else if(pq931Msg->messageType == Q931FacilityMsg){
+      msgbuf[i++] = OOFacility>>8;
       msgbuf[i++] = OOFacility;
+   }
    else{
       OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
@@ -566,7 +579,8 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    stat = ooEncodeUUIE(pq931Msg);
    if(stat != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to encode uuie. (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to encode uuie. (%s, %s)\n", call->callType,
+                   call->callToken);
       return OO_FAILED;
    }
   
@@ -594,7 +608,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
       msgbuf[i++] = '\0';
    }
   
-   for(j = 0, curNode = pq931Msg->ies.head; j < pq931Msg->ies.count; j++)
+   for(j = 0, curNode = pq931Msg->ies.head; j < (int)pq931Msg->ies.count; j++)
    {
       Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
          
@@ -627,145 +641,20 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
          return OO_FAILED;
       }
    }
-   len = i+1-3; /* complete message length */
+   len = i+1-4; /* complete message length */
    /* length octets */
-   msgbuf[1] = (len>>8);
-   msgbuf[2] = len;
+   msgbuf[2] = (len>>8);
+   msgbuf[3] = len;
    /* Tpkt length octets populated with total length of the message */
-   msgbuf[5] = (len >> 8);
-   msgbuf[6] = len;        /* including tpkt header */
+   msgbuf[6] = (len >> 8);
+   msgbuf[7] = len;        /* including tpkt header */
  
 #ifndef _COMPACT
-   ooPrintQ931Message (call, msgbuf+3, len);
+  ooPrintQ931Message (call, msgbuf+8, len-4);
 #endif
    return OO_OK;
 }
 
-#if 0
-int ooGetOutgoingQ931Msgbuf(ooCallData *call, ASN1OCTET * msgbuf, int * len,
-                            int *msgType)
-{
-   int i=0, ieLen=0, k=0;
-   ASN1UINT j=0;
-   DListNode* curNode=NULL, *p_msgNode=NULL;
-   Q931Message * q931Msg=NULL, msg;
-   OOCTXT * pctxt=NULL, ctxt;
-
-   initContext(&ctxt);
-   memset(&msg, 0, sizeof(Q931Message));
-  
-   if(call->outH225Queue.count == 0)
-   {
-      OOTRACEWARN1("Warning: No outgoing h225 message\n");
-      return OO_FAILED;
-   }
-  
-   p_msgNode = call->outH225Queue.head;
-  
-   q931Msg = (Q931Message*) p_msgNode->data;
-   pctxt = q931Msg->pctxt;
-
-   ooEncodeUUIE(q931Msg);
-  
-   if(q931Msg->messageType == Q931SetupMsg)
-      *msgType = OOSetup;
-   else if(q931Msg->messageType == Q931ConnectMsg)
-      *msgType = OOConnect;
-   else if(q931Msg->messageType == Q931CallProceedingMsg)
-      *msgType = OOCallProceeding;
-   else if(q931Msg->messageType == Q931AlertingMsg)
-      *msgType = OOAlert;
-   else if(q931Msg->messageType == Q931ReleaseCompleteMsg)
-      *msgType = OOReleaseComplete;
-   else if(q931Msg->messageType == Q931FacilityMsg)
-      *msgType = OOFacility;
-
-  
-   msgbuf[i++] = 3; /* TPKT version */
-   msgbuf[i++] = 0; /* TPKT resevred */
-   /* 1st octet of length, will be populated once len is determined */
-   msgbuf[i++] = 0;
-   /* 2nd octet of length, will be populated once len is determined */
-   msgbuf[i++] = 0;
-   /* Q931 protocol discriminator */
-   msgbuf[i++] = q931Msg->protocolDiscriminator;
-   msgbuf[i++] = 2; /* length of call ref is two octets */
-   msgbuf[i++] = (q931Msg->callReference >> 8); /* populate 1st octet */
-   msgbuf[i++] = q931Msg->callReference; /* populate 2nd octet */
-   msgbuf[i++] = q931Msg->messageType; /* type of q931 message */
-  
-   /*Add display ie. We use callername as display name as well as alias */
-   if(strlen(gH323ep.callername)>0)
-   {
-      msgbuf[i++] = Q931DisplayIE;
-      ieLen = strlen(gH323ep.callername)+1;
-      msgbuf[i++] = ieLen;
-      memcpy(msgbuf+i, gH323ep.callername, ieLen-1);
-      i += ieLen-1;
-      msgbuf[i++] = '\0';
-   }
-  
-
-   for(j = 0, curNode = q931Msg->ies.head; j < q931Msg->ies.count; j++)
-   {
-      Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
-         
-      ieLen = ie->length;
-
-      /* Add the ie discriminator in message buffer */
-      msgbuf[i++] = ie->discriminator;
-         
-      /* For user-user IE, we have to add protocol discriminator */
-      if (ie->discriminator == Q931UserUserIE)
-      {
-         ieLen++; /* length includes protocol discriminator octet. */
-         msgbuf[i++] = (ieLen>>8); /* 1st octet for length */
-         msgbuf[i++] = ieLen;      /* 2nd octet for length */
-         ieLen--;
-         msgbuf[i++] = 5; /* protocol discriminator */
-         memcpy((msgbuf + i), ie->data, ieLen);
-         i += ieLen-1;
-        
-      }
-      else if(ie->discriminator == Q931CauseIE)
-      {
-         msgbuf[i++] = (ieLen>>8);
-         msgbuf[i++] = ieLen;
-         memcpy((msgbuf+i), ie->data, ieLen);
-         i += ieLen -1;
-      }else
-      {
-         OOTRACEWARN1("Warning: Only UUIE is supported currently\n");
-         return OO_FAILED;
-      }
-   }
-   *len = i+1; /* complete message length */
-   /* Tpkt length octets populated with total length of the message */
-   msgbuf[2] = (*len >> 8);
-   msgbuf[3] = *len;        /* including tpkt header */
-
-   /* Remove the message from rtdlist outH225Queue */
-   dListRemove(&(call->outH225Queue), p_msgNode);
-  
-   /* Free memory associated with the message */
-   freeContext(pctxt);
-   ASN1CRTFREE0(pctxt);
-
-   if(p_msgNode)
-      ASN1MEMFREEPTR(call->pctxt, p_msgNode);
-
-   initializePrintHandler(&printHandler, "Sending H.2250 Message");
-
-   /* Add event handler to list */
-   rtAddEventHandler (&ctxt, &printHandler);
-   msg.pctxt = &ctxt;
-   ooQ931Decode (&msg, *len, msgbuf+4);
-   finishPrint();
-   rtRemoveEventHandler(&ctxt, &printHandler);
-   freeContext(&ctxt);
-   return OO_OK;
-}
-#endif
 /*
 
 */
@@ -1128,7 +1017,7 @@ int ooSendConnect(ooCallData *call)
 
 int ooAcceptCall(ooCallData *call)
 {
-   int ret = 0, i=0, j=0, remoteRtpPort=0;
+  int ret = 0, i=0, j=0, remoteRtpPort=0, dir=0;
 
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
@@ -1194,15 +1083,6 @@ int ooAcceptCall(ooCallData *call)
       memset(h245IpAddr, 0, sizeof(H225TransportAddress_ipAddress));
 
       ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
-#if 0     
-      sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
-                                     &addr_part3, &addr_part4);
-      sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
-                                    addr_part4);
-      sscanf(hexip, "%x %x %x %x", &h245IpAddr->ip.data[0],
-              &h245IpAddr->ip.data[1], &h245IpAddr->ip.data[2],
-              &h245IpAddr->ip.data[3]);
-#endif  
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
       connect->h245Address.u.ipAddress = h245IpAddr;
@@ -1264,9 +1144,10 @@ int ooAcceptCall(ooCallData *call)
             OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
                           call->callToken);
+            dir = OORX;
             epCap = ooIsDataTypeSupported(call,
                                 &olc->forwardLogicalChannelParameters.dataType,
-                                T_H245Capability_receiveAudioCapability);
+                                OORX);
             if(!epCap)
                continue;
             OOTRACEINFO1("Receive Channel data type supported\n");
@@ -1287,9 +1168,10 @@ int ooAcceptCall(ooCallData *call)
             OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
                           call->callToken);
+            dir = OOTX;
             epCap = ooIsDataTypeSupported(call,
                                 &olc->reverseLogicalChannelParameters.dataType,
-                                T_H245Capability_transmitAudioCapability);
+                                OOTX);
             if(!epCap)
                continue;
             OOTRACEINFO1("Transmit Channel data type supported\n");
@@ -1344,7 +1226,7 @@ int ooAcceptCall(ooCallData *call)
 
          respOlc->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
         
-         ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, pctxt);
+         ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, pctxt, dir);
         
          pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
                                          respOlc->forwardLogicalChannelNumber);
@@ -1574,7 +1456,7 @@ int ooH323CallAdmitted(ooCallData *call)
 
 int ooH323MakeCall_helper(ooCallData *call)
 {
-   int ret=0,i=0;
+  int ret=0,i=0, k;
    Q931Message *q931msg = NULL;
    H225Setup_UUIE *setup;
 
@@ -1672,17 +1554,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    destCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
    ooConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
-#if 0
-   sscanf(call->remoteIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
-                                         &addr_part3, &addr_part4);
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
-                                 addr_part4);
- 
-   sscanf(hexip, "%x %x %x %x", &destCallSignalIpAddress->ip.data[0],
-                                &destCallSignalIpAddress->ip.data[1],
-                                &destCallSignalIpAddress->ip.data[2],
-                                &destCallSignalIpAddress->ip.data[3]);
-#endif
+
    destCallSignalIpAddress->ip.numocts=4;
    destCallSignalIpAddress->port = call->remotePort;
 
@@ -1692,22 +1564,10 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the source Call Signal Address */
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-#if 0
-   sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
-                                               &addr_part3, &addr_part4);
-
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
-                                 addr_part4);
-#endif
    srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
     ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
-#if 0
-   sscanf(hexip, "%x %x %x %x", &srcCallSignalIpAddress->ip.data[0],
-                                &srcCallSignalIpAddress->ip.data[1],
-                                &srcCallSignalIpAddress->ip.data[2],
-                                &srcCallSignalIpAddress->ip.data[3]);
-#endif
+
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= *(call->h225ChanPort);
    setup->sourceCallSignalAddress.u.ipAddress = srcCallSignalIpAddress;
@@ -1722,49 +1582,108 @@ int ooH323MakeCall_helper(ooCallData *call)
       pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt, gH323ep.noOfCaps*
                                        sizeof(ASN1DynOctStr));
 
-      epCap = gH323ep.myCaps;
+      /* Use preference order of codecs */
       i=0;
-      while(epCap)
+      for(k=0; k< call->capPrefs.index; k++)
       {
-         olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
-                                               sizeof(H245OpenLogicalChannel));
-         if(!olc)
-         {
-            OOTRACEERR3("ERROR:Allocating memory for OLC, in faststart SETUP "
-                        "message (%s, %s)\n", call->callType, call->callToken);
-            ooFreeQ931Message(q931msg);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_HOST_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
+         epCap = gH323ep.myCaps;
+         while(epCap){
+            if(epCap->cap == call->capPrefs.order[k]) break;
+            else epCap = epCap->next;
          }
-         memset(olc, 0, sizeof(H245OpenLogicalChannel));
-         olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
-         if(call->logicalChanNoCur > call->logicalChanNoMax)
-            call->logicalChanNoCur = call->logicalChanNoBase;
+         if(!epCap)
+         {
+            OOTRACEWARN3("Warn:Preferred capability is abscent in capability "
+                         "list. (%s, %s)\n",call->callType, call->callToken);
+            continue;
+         }
+
+         if(epCap->dir & OORX)
+         {
+            olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
+                                             sizeof(H245OpenLogicalChannel));
+            if(!olc)
+            {
+               OOTRACEERR3("ERROR:Allocating memory for OLC, in faststart "
+                           "SETUP message (%s, %s)\n", call->callType,
+                           call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
+            }
+            memset(olc, 0, sizeof(H245OpenLogicalChannel));
+            olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
+            if(call->logicalChanNoCur > call->logicalChanNoMax)
+               call->logicalChanNoCur = call->logicalChanNoBase;
        
-         ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt);
-         /* Do not specify msg buffer let automatic allocation work */
-         setPERBuffer(pctxt, NULL, 0, aligned);
-         if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
-         {
-            OOTRACEERR3("ERROR:Encoding of olc failed for faststart (%s, %s)"
-                        "\n", call->callType, call->callToken);
-            ooFreeQ931Message(q931msg);
-            if(call->callState < OO_CALL_CLEAR)
+            ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt, OORX);
+            /* Do not specify msg buffer let automatic allocation work */
+            setPERBuffer(pctxt, NULL, 0, aligned);
+            if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
             {
-               call->callEndReason = OO_HOST_CLEARED;
-               call->callState = OO_CALL_CLEAR;
+               OOTRACEERR3("ERROR:Encoding of olc failed for faststart(%s, %s)"
+                           "\n", call->callType, call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
             }
-            return OO_FAILED;
+            pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+            olc = NULL;
+            i++;
+            OOTRACEDBGC2("Added RX fs element %d\n", i);
          }
-         pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
-         olc = NULL;
-         epCap = epCap->next;
-         i++;
-         OOTRACEDBGC2("Added fs element %d\n", i);
+
+         if(epCap->dir & OOTX)
+         {
+            olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
+                                             sizeof(H245OpenLogicalChannel));
+            if(!olc)
+            {
+               OOTRACEERR3("ERROR:Allocating memory for OLC, in faststart "
+                           "SETUP message (%s, %s)\n", call->callType,
+                           call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
+            }
+            memset(olc, 0, sizeof(H245OpenLogicalChannel));
+            olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
+            if(call->logicalChanNoCur > call->logicalChanNoMax)
+               call->logicalChanNoCur = call->logicalChanNoBase;
+       
+            ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt, OOTX);
+            /* Do not specify msg buffer let automatic allocation work */
+            setPERBuffer(pctxt, NULL, 0, aligned);
+            if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
+            {
+               OOTRACEERR3("ERROR:Encoding of olc failed for faststart(%s, %s)"
+                           "\n", call->callType, call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
+            }
+            pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+            olc = NULL;
+            i++;
+            OOTRACEDBGC2("Added TX fs element %d\n", i);
+         }
+
       }
       OOTRACEDBGA4("Added %d fast start elements to SETUP message (%s, %s)\n",
                    i, call->callType, call->callToken);
@@ -1990,7 +1909,7 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
    H225H323_UU_PDU *pH323UUPDU = NULL;
    H225H323_UU_PDU_h245Control *pH245Control = NULL;
    ASN1DynOctStr * elem;
-   int ret =0, i;
+   int ret =0;
    H225Facility_UUIE *facility=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 

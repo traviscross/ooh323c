@@ -314,7 +314,7 @@ EXTERN int ooOpenLogicalAudioChannel(ooCallData *call);
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap);
+EXTERN int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap);
 
 /**
  * This function is used to request a remote end point to close a logical
@@ -355,8 +355,10 @@ EXTERN int ooOnReceivedRequestChannelClose(ooCallData *call,
 EXTERN int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                                           H245OpenLogicalChannel *olc,
                                           ooH323EpCapability *epCap,
-                                          OOCTXT*pctxt);
+                                          OOCTXT*pctxt, int dir);
 
+int ooEncodeH245Message
+      (ooCallData *call, H245Message *ph245Msg, char *msgbuf, int size);
 /**
  * @}
  */

@@ -356,7 +356,7 @@ typedef struct ooCallData {
    ASN1UINT             statusDeterminationNumber;
    int                  localTermCapState;
    int                  remoteTermCapState;
-   H245Message          *remoteTermCapSet;
+   struct ooH323EpCapability * remoteCaps;
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
@@ -389,6 +389,7 @@ typedef struct ooH323EpCapability{
    int dir;
    int cap;
    int capType;
+   void *params;
    cb_StartReceiveChannel startReceiveChannel;
    cb_StartTransmitChannel startTransmitChannel;
    cb_StopReceiveChannel stopReceiveChannel;

@@ -48,12 +48,13 @@ ooCallData* ooCreateCall(char * type, char*callToken)
    sprintf(call->callToken, "%s", callToken);
   
    sprintf(call->callType, "%s", type);
-  
+   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
    call->remoteAliases = NULL;
    call->gkEngaged = 0;
    call->dtmfmode = gH323ep.dtmfmode;
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
+   call->remoteCaps = NULL;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
    strcpy(call->localIP, gH323ep.signallingIP);
    call->noOfLogicalChannels = 0;
@@ -331,6 +332,7 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    pNewChannel->chanCap->stopTransmitChannel = epCap->stopTransmitChannel;
    pNewChannel->chanCap->cap = epCap->cap;
    pNewChannel->chanCap->capType = epCap->capType;
+   pNewChannel->chanCap->params = epCap->params;
    OOTRACEDBGC4("Adding new channel with cap %d (%s, %s)\n", epCap->cap,
                 call->callType, call->callToken);
    /* As per standards, media control port should be same for all
@@ -467,15 +469,13 @@ ooLogicalChannel * ooFindLogicalChannel(ooCallData *call, int sessionID,
             {
                if(!strcmp(dir, "receive"))
                {
-                  if(ooCompareAudioCaps(pChannel->chanCap->cap,
-                     dataType->u.audioData,
-                     T_H245Capability_receiveAudioCapability))
+                 if(ooCheckCompatibility_1(call, pChannel->chanCap,
+                     dataType->u.audioData, OORX))
                      return pChannel;
                }else if(!strcmp(dir, "transmit"))
                {
-                  if(ooCompareAudioCaps(pChannel->chanCap->cap,
-                     dataType->u.audioData,
-                     T_H245Capability_transmitAudioCapability))
+                 if(ooCheckCompatibility_1(call, pChannel->chanCap,
+                     dataType->u.audioData, OOTX))
                      return pChannel;
                }
             }

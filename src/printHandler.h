@@ -27,8 +27,7 @@
 
 Asn1NamedCEventHandler printHandler;
 
-const char* pVarName;
-int gIndentSpaces;
+
 void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname);
 void finishPrint();
 void indent ();

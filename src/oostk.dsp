@@ -109,10 +109,6 @@ SOURCE=.\errmgmt.c
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\H235-SECURITY-MESSAGES.c"
-# End Source File
-# Begin Source File
-
 SOURCE=".\h323\H235-SECURITY-MESSAGESDec.c"
 # End Source File
 # Begin Source File
@@ -146,10 +142,6 @@ SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROLDec.c"
 # Begin Source File
 
 SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROLEnc.c"
-# End Source File
-# Begin Source File
-
-SOURCE=.\oo.c
 # End Source File
 # Begin Source File
 
@@ -201,6 +193,10 @@ SOURCE=.\ooStackCmds.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ootrace.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\perutil.c
 # End Source File
 # Begin Source File
@@ -245,15 +241,15 @@ SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROL.h"
 # End Source File
 # Begin Source File
 
-SOURCE=.\oo.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ooasn1.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\ooCalls.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooCapability.h
 # End Source File
 # Begin Source File
 
@@ -306,6 +302,10 @@ SOURCE=.\ooSocket.h
 # Begin Source File
 
 SOURCE=.\ooStackCmds.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ootrace.h
 # End Source File
 # Begin Source File
 
