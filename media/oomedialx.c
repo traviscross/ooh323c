@@ -30,7 +30,7 @@
 int ooOpenAudioDevice()
 {
   
-   int sampleSize, numChannels, rate;
+   int sampleSize, numChannels, rate, on =1;;
    ghSoundDevice = open("/dev/dsp", O_RDWR);
    if(ghSoundDevice == -1)
    {
@@ -43,7 +43,7 @@ int ooOpenAudioDevice()
    /*   ioctl(context->ooSoundDevice, SOUND_PCM_WRITE_BITS, &sampleSize);*/
    ioctl(ghSoundDevice, SOUND_PCM_READ_CHANNELS, &numChannels);
    ioctl(ghSoundDevice, SOUND_PCM_READ_RATE, &rate);
-   int on =1;
+
    /*   ioctl(context->ooSoundDevice, FIONBIO, &on);*/
    OOLOG5(1, "Sampe size %d bits, channels %d, rate %d",
           sampleSize, numChannels, rate);
