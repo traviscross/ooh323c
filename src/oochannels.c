@@ -480,6 +480,8 @@ int ooMonitorChannels()
          OOTRACEERR1("Error in select ...exiting\n");
          exit(-1);
       }
+      /* Check expired timers and call callbacks */
+      ooTimerFireExpired(&gH323ep.ctxt);
 #ifdef _WIN32
       EnterCriticalSection(&gCmdMutex);
 #else
