@@ -73,7 +73,7 @@ extern "C" {
 
 
 /**
- * @defgroup RAS Message Handling
+ * @defgroup ras RAS Channel and Message handling
  * @{
  */
 
@@ -132,7 +132,8 @@ typedef struct {
 
 
 /**
- * RAS module startup stuff.
+ * This function is used to initialize the Ras module by setting gatekeeper
+ * mode and Creating Ras Channel
  */
 EXTERN int ooInitRas(int localRasPort, enum RasGatekeeperMode eGkMode,
                      char *szGkAddr, int iGkPort );
