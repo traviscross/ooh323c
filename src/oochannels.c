@@ -16,7 +16,7 @@
 
 #include "ooports.h"
 #include "oochannels.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooq931.h"
 #include "ooh245.h"
 #include "ooh323.h"

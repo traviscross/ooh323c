@@ -22,7 +22,7 @@
 #include "printHandler.h"
 #include "ootypes.h"
 #include "rtctype.h"
-#include "oo.h"
+#include "ootrace.h"
 
 void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname)
 {

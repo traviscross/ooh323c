@@ -23,7 +23,7 @@
 
 #include "ooasn1.h"
 #include "ootypes.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooq931.h"
 #include "MULTIMEDIA-SYSTEM-CONTROL.h"
 

@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #include "ooq931.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooasn1.h"
 #include "oochannels.h"
 #include "printHandler.h"

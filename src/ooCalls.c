@@ -14,7 +14,7 @@
  *
  *****************************************************************************/
 
-#include "oo.h"
+#include "ootrace.h"
 #include "ootypes.h"
 #include "ooCalls.h"
 #include "ooports.h"

@@ -24,7 +24,7 @@
 #include "ooasn1.h"
 #include "ooh323ep.h"
 
-#include "oo.h"
+#include "ootrace.h"
 #include "ooports.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"

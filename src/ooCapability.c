@@ -14,7 +14,7 @@
  *
  *****************************************************************************/
 #include "ooCapability.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooCalls.h"
 
 /** Global endpoint structure */

@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #include "ootypes.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "oochannels.h"
 #include "ooh323ep.h"
 #include "ooCalls.h"

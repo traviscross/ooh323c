@@ -16,7 +16,7 @@
 
 
 #include "ooports.h"
-#include "oo.h"
+#include "ootrace.h"
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;

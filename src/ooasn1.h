@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stddef.h>
-#include "oo.h"
+#include "ootrace.h"
 /**
  * @defgroup cruntime C Runtime Common Functions
  * @{

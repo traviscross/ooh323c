@@ -22,7 +22,7 @@
  */
 #include "ooras.h"
 #include "ootypes.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooports.h"
 #include "ooasn1.h"
 #include "oochannels.h"

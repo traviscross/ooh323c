@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #include "ooSocket.h"
-#include "oo.h"
+#include "ootrace.h"
 #if defined(_WIN32_WCE)
 static int inited = 0;
 #define SEND_FLAGS     0
