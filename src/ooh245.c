@@ -38,7 +38,6 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
                          "H245 message creation\n");
       return OO_FAILED;
    }
-  
 
    *pph245msg = (H245Message*)ASN1MALLOC(pctxt,sizeof(H245Message));
    if(!(*pph245msg))
@@ -308,7 +307,6 @@ int ooSendTermCapMsg(ooCallData *call)
    }
    /*TODO:Add Video and Data capabilities, if required*/
 
-
    /* Define capability descriptior */
    capDesc = (H245CapabilityDescriptor*)
              ASN1MALLOC(pctxt, sizeof(H245CapabilityDescriptor));
@@ -415,7 +413,7 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
                              call->callType, call->callToken);
             return OO_OK;
          }
-                 if(masterSlave->statusDeterminationNumber ==
+         if(masterSlave->statusDeterminationNumber ==
                          statusDeterminationNumber)
          {
          /* TODO: Should Send MasterSlaveDeterminationReject_cause IdenticalNumbers*/        
@@ -453,7 +451,6 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
          }
          else
             OOTRACEDBGC1("Not opening logical channels as Cap exchange remaining\n");
-
          break;
        default:
           OOTRACEWARN3("Warn:Unhandled Master Slave message received - %s - "
@@ -523,7 +520,8 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:H245 message creation failed for - MasterSlave "
-                  "Determination Ack (%s, %s)\n",call->callType, call->callToken);
+                  "Determination Ack (%s, %s)\n",call->callType,
+                  call->callToken);
       return OO_FAILED;
    }
    ph245msg->msgType = OOMasterSlaveAck;
@@ -606,17 +604,17 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
       break;
    case T_H245DataType_multiplexedStream:
       OOTRACEWARN3("Warn:Media channel data type "
-                   "'T_H245DataType_multiplexedStream' not supported (%s, %s)\n",
+                  "'T_H245DataType_multiplexedStream' not supported(%s, %s)\n",
                    call->callType, call->callToken);
       break;
    case T_H245DataType_redundancyEncoding:
       OOTRACEWARN3("Warn:Media channel data type "
-                   "'T_H245DataType_redundancyEncoding' not supported (%s, %s)\n",
-                   call->callType, call->callToken);
+                "'T_H245DataType_redundancyEncoding' not supported (%s, %s)\n",
+                  call->callType, call->callToken);
       break;
    case T_H245DataType_multiplePayloadStream:
       OOTRACEWARN3("Warn:Media channel data type "
-                   "'T_H245DataType_multiplePayloadStream' not supported (%s, %s)\n",
+             "'T_H245DataType_multiplePayloadStream' not supported (%s, %s)\n",
                    call->callType, call->callToken);
       break;
    case T_H245DataType_fec:
@@ -625,7 +623,7 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
       break;
    case T_H245DataType_extElem1:
       OOTRACEWARN3("Warn:Media channel data type 'T_H245DataType_extElem1' "
-                   "not supported (%s, %s)\n", call->callType, call->callToken);
+                  "not supported (%s, %s)\n", call->callType, call->callToken);
       break;
    default:
       OOTRACEERR3("ERROR:Unknown media channel data type (%s, %s)\n",
@@ -636,7 +634,8 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
 }      
 
 
-int ooHandleOpenLogicalAudioChannel(ooCallData *call, H245OpenLogicalChannel*olc)
+int ooHandleOpenLogicalAudioChannel(ooCallData *call,
+                                    H245OpenLogicalChannel*olc)
 {
    int ret=0;
    H245Message *ph245msg=NULL;
@@ -667,11 +666,13 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call, H245OpenLogicalChannel*olc
       return OO_FAILED;
    }
    /* Generate an Ack for the open channel request */
-   ret = ooCreateH245Message(&ph245msg,T_H245MultimediaSystemControlMessage_response);
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_response);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error: H245 message creation failed for - OpenLogicalChannel"
-                  "Ack (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error: H245 message creation failed for - "
+                  "OpenLogicalChannel Ack (%s, %s)\n", call->callType,
+                  call->callToken);
       return OO_FAILED;
    }
 
@@ -780,13 +781,13 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call, H245OpenLogicalChannel*olc
    if(epCap->startReceiveChannel)
    {
       epCap->startReceiveChannel(call, pLogicalChannel);     
-      OOTRACEINFO5("Receive channel of type audio started at %s:%d (%s, %s)\n",
-                    call->localIP, pLogicalChannel->localRtpPort, call->callType,
-                    call->callToken);
+      OOTRACEINFO5("Receive channel of type audio started at %s:%d(%s, %s)\n",
+                    call->localIP, pLogicalChannel->localRtpPort,
+                    call->callType, call->callToken);
    }
    else{
-          OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
-                   " (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("ERROR:No callback registered to start receive audio "
+                  "channel (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    return OO_OK;
@@ -808,7 +809,8 @@ int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
          T_H245OpenLogicalChannelAck_forwardMultiplexAckParameters_h2250LogicalChannelAckParameters)))
    {
       OOTRACEERR3("Error: Processing open logical channel ack - LogicalChannel"
-                  "Ack parameters absent (%s, %s)\n", call->callType, call->callToken);
+                  "Ack parameters absent (%s, %s)\n", call->callType,
+                  call->callToken);
       return OO_OK;  /* should send CloseLogicalChannel request */
    }
 
@@ -848,7 +850,7 @@ int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
    if(h2250lcap->m.mediaControlChannelPresent != 1)
    {
       OOTRACEERR3("Error: Processing OpenLogicalChannelAck - Missing media "
-                  "control channel (%s, %s)\n", call->callType, call->callToken);
+                "control channel (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    if(h2250lcap->mediaControlChannel.t !=
@@ -877,8 +879,8 @@ int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,olcAck->forwardLogicalChannelNumber);
    if(!pLogicalChannel)
    {
-      OOTRACEERR4("ERROR:Logical channel %d not found in the channel list for call"
-                  " (%s, %s)\n", olcAck->forwardLogicalChannelNumber,
+      OOTRACEERR4("ERROR:Logical channel %d not found in the channel list for "
+                  "call (%s, %s)\n", olcAck->forwardLogicalChannelNumber,
                   call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -948,7 +950,8 @@ int ooHandleH245Command(ooCallData *call,
          break;
       case T_H245CommandMessage_sendTerminalCapabilitySet:
          OOTRACEWARN3("Warning: Received command Send terminal capability set "
-                      "- Not handled (%s, %s)\n", call->callType, call->callToken);
+                      "- Not handled (%s, %s)\n", call->callType,
+                      call->callToken);
          break;
       case T_H245CommandMessage_flowControlCommand:
          OOTRACEWARN3("Warning: Flow control command received - Not handled "
@@ -1009,7 +1012,8 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    H245RequestMessage *request;
    H245CloseLogicalChannel* clc;
   
-   ret = ooCreateH245Message(&ph245msg, T_H245MultimediaSystemControlMessage_request);
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_request);
    if(ret != OO_OK)
    {
       OOTRACEERR3("ERROR:Failed to create H245 message for closeLogicalChannel"
@@ -1047,7 +1051,8 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
   
    /* Stop the media transmission */
    OOTRACEINFO4("Closing logical channel %d (%s, %s)\n",
-                clc->forwardLogicalChannelNumber, call->callType, call->callToken);
+                clc->forwardLogicalChannelNumber, call->callType,
+                call->callToken);
    ret = ooClearLogicalChannel(call, clc->forwardLogicalChannelNumber);
    if(ret != OO_OK)
    {
@@ -1060,7 +1065,8 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
 }
 
 /*TODO: Need to pass reason as a parameter */
-int ooSendRequestCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
+int ooSendRequestCloseLogicalChannel(ooCallData *call,
+                                     ooLogicalChannel *logicalChan)
 {
    int ret = OO_OK;
    H245Message *ph245msg = NULL;
@@ -1068,7 +1074,8 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logical
    H245RequestMessage *request;
    H245RequestChannelClose *rclc;
 
-   ret = ooCreateH245Message(&ph245msg, T_H245MultimediaSystemControlMessage_request);
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_request);
    if(ret != OO_OK)
    {
       OOTRACEERR3("ERROR:Failed to create H245 message for "
@@ -1107,7 +1114,8 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logical
    return OO_OK;
 }
 
-int ooOnReceivedRequestChannelClose(ooCallData *call, H245RequestChannelClose *rclc)
+int ooOnReceivedRequestChannelClose(ooCallData *call,
+                                    H245RequestChannelClose *rclc)
 {
    int ret=0;
    H245Message *ph245msg=NULL;
@@ -1135,7 +1143,8 @@ int ooOnReceivedRequestChannelClose(ooCallData *call, H245RequestChannelClose *r
          return OO_FAILED;
       }
    }
-   ret = ooCreateH245Message(&ph245msg, T_H245MultimediaSystemControlMessage_response);
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_response);
    if(ret != OO_OK)
    {
       OOTRACEERR3("ERROR:Memory allocation for RequestChannelCloseAck message "
@@ -1169,7 +1178,7 @@ int ooOnReceivedRequestChannelClose(ooCallData *call, H245RequestChannelClose *r
    ret = ooSendCloseLogicalChannel(call, lChannel);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("ERROR:Failed to build CloseLgicalChannel message (%s, %s)\n",
+      OOTRACEERR3("ERROR:Failed to build CloseLgicalChannel message(%s, %s)\n",
                    call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -1177,7 +1186,8 @@ int ooOnReceivedRequestChannelClose(ooCallData *call, H245RequestChannelClose *r
    return OO_OK;
 }
 /****/
-int ooOnReceivedCloseLogicalChannel(ooCallData *call, H245CloseLogicalChannel* clc)
+int ooOnReceivedCloseLogicalChannel(ooCallData *call,
+                                    H245CloseLogicalChannel* clc)
 {
    int ret=0;
    ooH323EpCapability *epCap=NULL;
@@ -1197,9 +1207,9 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call, H245CloseLogicalChannel* c
          clc->forwardLogicalChannelNumber, call->callType, call->callToken);
       return OO_FAILED;
    }
-  
-  
-   ret = ooCreateH245Message(&ph245msg, T_H245MultimediaSystemControlMessage_response);
+
+   ret = ooCreateH245Message(&ph245msg,
+                              T_H245MultimediaSystemControlMessage_response);
    if(ret != OO_OK)
    {
       OOTRACEERR3("ERROR:Failed to create H245 message for "
@@ -1232,10 +1242,10 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call, H245CloseLogicalChannel* c
    return OO_OK;
 }
 
-int ooOnReceivedCloseChannelAck(ooCallData* call, H245CloseLogicalChannelAck* clcAck)
+int ooOnReceivedCloseChannelAck(ooCallData* call,
+                                H245CloseLogicalChannelAck* clcAck)
 {
    int ret = OO_OK;
-
    return OO_OK;
 }
 /* TODO: TerminalCapabilityReject/TerminalCapabilityRelease
@@ -1278,7 +1288,8 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
             OOTRACEINFO4("Received close logical Channel - %d (%s, %s)\n",
                request->u.closeLogicalChannel->forwardLogicalChannelNumber,
                call->callType, call->callToken);
-            ooOnReceivedCloseLogicalChannel(call, request->u.closeLogicalChannel);
+            ooOnReceivedCloseLogicalChannel(call,
+                                            request->u.closeLogicalChannel);
             break;
         case T_H245RequestMessage_requestChannelClose:
             OOTRACEINFO4("Received RequestChannelClose - %d (%s, %s)\n",
@@ -1312,7 +1323,8 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
             OOTRACEINFO4("CloseLogicalChannelAck received for %d (%s, %s)\n",
                response->u.closeLogicalChannelAck->forwardLogicalChannelNumber,
                call->callType, call->callToken);
-            ooOnReceivedCloseChannelAck(call, response->u.closeLogicalChannelAck);
+            ooOnReceivedCloseChannelAck(call,
+                                        response->u.closeLogicalChannelAck);
             break;
          case T_H245ResponseMessage_requestChannelCloseAck:
              OOTRACEINFO4("RequestChannelCloseAck received - %d (%s, %s)\n",
@@ -1349,7 +1361,7 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
    {
       OOTRACEINFO4("Rejecting TermCapSet message with SeqNo %d, as already "
                    "acknowledged message with this SeqNo (%s, %s)\n",
-                                   call->remoteTermCapSeqNo, call->callType, call->callToken);
+                   call->remoteTermCapSeqNo, call->callType, call->callToken);
       return OO_OK;
    }
    call->remoteTermCapSeqNo = pmsg->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
@@ -1476,8 +1488,8 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
   
    /* Go through local endpoints capabilities sequentially, and find out the
       first one which has a match in the remote endpoints receive capabilities.
-      TODO: Capability matching should find first preffered capability of master
-            that slave supports.
+      TODO: Capability matching should find first preffered capability of
+      master that slave supports.
    */
    OOTRACEINFO3("Looking for matching audio capabilities. (%s, %s)\n",
                  call->callType, call->callToken);
@@ -1500,7 +1512,6 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
          else
             h245Cap = &(capTableEntry->capability);
 
-        
          /* Only audio Capabilities */
          if(h245Cap->t == T_H245Capability_receiveAudioCapability)
             rAudioCap = h245Cap->u.receiveAudioCapability;
@@ -1673,9 +1684,11 @@ int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
 {
    return OO_OK;
 }
-/* Used to build Audio OLCs for fast connect. Keep in mind that forward and reverse
+/* Used to build Audio OLCs for fast connect. Keep in mind that forward and
+   reverse
    are always with respect to the endpoint which proposes channels */
-int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap, OOCTXT*pctxt)
+int ooBuildOpenLogicalChannelAudio(ooCallData *call,
+          H245OpenLogicalChannel *olc, ooH323EpCapability *epCap, OOCTXT*pctxt)
 {
    int reverse=0, forward=0;
    H245AudioCapability *audioCap=NULL;
@@ -1687,7 +1700,7 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
    int addr_part1, addr_part2, addr_part3, addr_part4;
    char hexip[20];
    ooLogicalChannel *pLogicalChannel = NULL;
-   int outgoing;
+   int outgoing=0;
 
    if(!strcmp(call->callType, "outgoing"))  
       outgoing = 1;
@@ -1730,20 +1743,22 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
    audioCap = (H245AudioCapability*)epCap->cap;
    sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                    &addr_part3, &addr_part4);
-   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3, addr_part4);
+   sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2,
+                                 addr_part3, addr_part4);
    if(forward)
    {
       flcp = &(olc->forwardLogicalChannelParameters);
-      memset(flcp, 0, sizeof(H245OpenLogicalChannel_forwardLogicalChannelParameters));
+      memset(flcp, 0,
+             sizeof(H245OpenLogicalChannel_forwardLogicalChannelParameters));
       flcp->dataType.t = T_H245DataType_audioData;
-      /* Note we don't allocate memory and copy capability, we just set the pointer.
-         This is ok as end point capability will be valid till the end of the application,
-         and since we have single threaded app, we are safe. */
+      /* Note we don't allocate memory and copy capability, we just set
+         the pointer. This is ok as end point capability will be valid till the end of the application, and since we have single threaded app, we are safe. */
       /*flcp->dataType.u.audioData = audioCap;*/
       flcp->dataType.u.audioData = ooCreateDupAudioCap(call, audioCap, pctxt);
      
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
-      pH2250lcp1 = (H245H2250LogicalChannelParameters*)ASN1MALLOC(pctxt, sizeof(H245H2250LogicalChannelParameters));
+      pH2250lcp1 = (H245H2250LogicalChannelParameters*)ASN1MALLOC(pctxt,
+                                    sizeof(H245H2250LogicalChannelParameters));
       memset(pH2250lcp1, 0, sizeof(H245H2250LogicalChannelParameters));
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
      
@@ -1755,11 +1770,13 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
          pH2250lcp1->m.mediaChannelPresent = 1;
          pH2250lcp1->mediaChannel.t =
                                     T_H245TransportAddress_unicastAddress;
-         pUniAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
+         pUniAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt,
+                                                   sizeof(H245UnicastAddress));
          memset(pUniAddrs, 0, sizeof(H245UnicastAddress));
          pH2250lcp1->mediaChannel.u.unicastAddress =  pUniAddrs;
          pUniAddrs->t = T_H245UnicastAddress_iPAddress;
-         pUniIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+         pUniIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
          memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUniAddrs->u.iPAddress = pUniIpAddrs;
     
@@ -1777,11 +1794,13 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       pH2250lcp1->m.mediaControlChannelPresent = 1;
       pH2250lcp1->mediaControlChannel.t =
                                  T_H245TransportAddress_unicastAddress;
-      pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
+      pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt,
+                                                   sizeof(H245UnicastAddress));
       memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
       pH2250lcp1->mediaControlChannel.u.unicastAddress =  pUnicastAddrs;
       pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
-      pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+      pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
       memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUnicastAddrs->u.iPAddress = pIpAddrs;
     
@@ -1804,8 +1823,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
                           call->callType, call->callToken);
          }
          else{
-                OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
-                         " (%s, %s)\n", call->callType, call->callToken);
+            OOTRACEERR3("ERROR:No callback registered to start receive audio"
+                       " channel (%s, %s)\n", call->callType, call->callToken);
             return OO_FAILED;
          }
       }
@@ -1820,8 +1839,9 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       rlcp = &(olc->reverseLogicalChannelParameters);
       memset(rlcp, 0, sizeof(H245OpenLogicalChannel_reverseLogicalChannelParameters));
       rlcp->dataType.t = T_H245DataType_audioData;
-      /* Note we don't allocate memory and copy capability, we just set the pointer.
-         This is ok as end point capability will be valid till the end of the application,
+      /* Note we don't allocate memory and copy capability, we just set the
+         pointer. This is ok as end point capability will be valid till the
+         end of the application,
          and since we have single threaded app, we are safe. */
       /*rlcp->dataType.u.audioData = audioCap;*/
       rlcp->dataType.u.audioData = ooCreateDupAudioCap
@@ -1898,8 +1918,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
                           call->callType, call->callToken);
          }
          else{
-            OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
-                         " (%s, %s)\n", call->callType, call->callToken);
+            OOTRACEERR3("ERROR:No callback registered to start receive audio "
+                        "channel (%s, %s)\n", call->callType, call->callToken);
             return OO_FAILED;
          }  
       }
@@ -1915,7 +1935,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
    return OO_OK;
 }
 
-int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len, int msgType)
+int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len,
+                            int msgType)
 {
    DListNode *pNode = NULL;
    Q931Message *pQ931Msg = NULL;
