@@ -373,7 +373,7 @@ typedef struct ooCallData {
    DList                outH245Queue;/* Outgoing H245 message queue */
    ASN1OCTET            *remoteDisplayName;
    ooAliases            *remoteAliases;
-   ooAliases            *localAliases;
+  /*   ooAliases            *localAliases;*/
   
    int                  masterSlaveState;   /* Master-Slave state */
    ASN1UINT             statusDeterminationNumber;

@@ -48,7 +48,7 @@ ooCallData* ooCreateCall(char * type, char*callToken)
    sprintf(call->callType, "%s", type);
   
    call->remoteAliases = NULL;
-   call->localAliases = NULL;
+   /*   call->localAliases = NULL;*/
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;

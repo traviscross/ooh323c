@@ -104,13 +104,11 @@ EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
  * addresses.
  * @param call       Handle to the call.
  * @param pAddresses Pointer to the sequence of alias addresses.
- * @param remote     Indicates whether aliases are for remote host.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooRetrieveAliases(ooCallData *call,
-                             H225_SeqOfH225AliasAddress *pAddresses,
-                             int remote);
+                             H225_SeqOfH225AliasAddress *pAddresses);
 /**
  * @}
  */

@@ -68,7 +68,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       if(setup->sourceAddress.count>0)
       {
-         ooRetrieveAliases(call, &setup->sourceAddress, 1);
+         ooRetrieveAliases(call, &setup->sourceAddress);
       }
    }
         
@@ -672,7 +672,7 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
    return OO_OK;
 }
 
-int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, int remote)
+int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses)
 {
    int i=0,j=0,k=0;
    DListNode* pNode=NULL;
@@ -697,13 +697,14 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, 
             pAliasAddress = (H225AliasAddress*)pNode->data;
             if(pAliasAddress)
             {
-               newAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+               newAlias = (ooAliases*)ASN1MALLOC(call->pctxt,
+                                                           sizeof(ooAliases));
                if(!newAlias)
                {
                   OOTRACEERR3("ERROR:Failed to allocate memory for alias "
                               "(%s, %s)\n", call->callType, call->callToken);
                   return OO_FAILED;
-                           }
+               }
                memset(newAlias, 0, sizeof(ooAliases));
                switch(pAliasAddress->t)
                {
@@ -746,7 +747,7 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, 
                   if(pTransportAddrss->t != T_H225TransportAddress_ipAddress)
                   {
                      OOTRACEERR3("Error:Alias transportID not an IP address"
-                                 "(%s, %s)\n", call->callType, call->callToken);
+                                "(%s, %s)\n", call->callType, call->callToken);
                      ASN1MEMFREEPTR(call->pctxt, newAlias);
                      break;
                   }
@@ -776,16 +777,9 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, 
                                call->callType, call->callToken);
                   ASN1MEMFREEPTR(call->pctxt, newAlias);
                }
-               if(remote)
-               {
-                  newAlias->next = call->remoteAliases;
-                  call->remoteAliases = newAlias;
-                  newAlias = NULL;
-               }else{
-                  newAlias->next = call->localAliases;
-                  call->localAliases = newAlias;
-                  newAlias = NULL;
-               }
+               newAlias->next = call->remoteAliases;
+               call->remoteAliases = newAlias;
+               newAlias = NULL;
             }/* endof: if(pAliasAddress) */
             pAliasAddress = NULL;
          }/* endof: if(pNode) */
