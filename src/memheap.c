@@ -4,7 +4,7 @@
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
  * The text of the license may generally be found in the root
- * directory of this installation in the COPYING file.  It
+ * directory of this installation in the LICENSE.txt file.  It
  * can also be viewed online at the following URL:
  *
  *   http://www.obj-sys.com/open/license.html
@@ -29,17 +29,16 @@ OSFreeFunc    g_free_func = free;
 static OSMemLink* memHeapAddBlock (OSMemLink** ppMemLink,
                                    void* pMemBlk, int blockType);
 
-typedef struct MemElemDescr {
-   ASN1OCTET       flags;       /* isFree = 1, isLast = 2, isSaved = 4 */
-   ASN1OCTET       spare;
-   ASN1USINT       nunits;      /* size = nunits * 8 */
-   ASN1USINT       prevOff;     /* offset of the prev block (-prevOff * 8) */
-   union {
-      ASN1USINT    nextFreeOff; /* offset/8 of the next free block */
-      ASN1USINT    beginOff;    /* offset/8 of beginning of block in MemBlk */
-   } u;
+typedef void OSMemElemDescr;
 
-} OSMemElemDescr;
+
+#define pElem_flags(pElem)       (*((ASN1OCTET*)pElem))
+#define pElem_nunits(pElem)      (*((ASN1USINT*)(((ASN1OCTET*)pElem)+2)))
+#define pElem_prevOff(pElem)     (*((ASN1USINT*)(((ASN1OCTET*)pElem)+4)))
+#define pElem_nextFreeOff(pElem) (*((ASN1USINT*)(((ASN1OCTET*)pElem)+6)))
+#define pElem_beginOff(pElem)    (*((ASN1USINT*)(((ASN1OCTET*)pElem)+6)))
+#define sizeof_OSMemElemDescr    8
+#define pElem_data(pElem)        (((ASN1OCTET*)pElem)+sizeof_OSMemElemDescr)
 
 typedef struct MemBlk {
    OSMemLink*      plink;
@@ -63,36 +62,36 @@ typedef struct MemBlk {
 #define OFFSETOF(pElem, pPrevElem) \
 ((ASN1UINT)((char*)pElem - (char*)pPrevElem))
 
-#define ISFREE(pElem)      (pElem->flags & 1)
-#define SET_FREE(pElem)    (pElem->flags |= 1)
-#define CLEAR_FREE(pElem)  (pElem->flags &= (~1))
+#define ISFREE(pElem)      (pElem_flags(pElem) & 1)
+#define SET_FREE(pElem)    (pElem_flags(pElem) |= 1)
+#define CLEAR_FREE(pElem)  (pElem_flags(pElem) &= (~1))
 
-#define ISLAST(pElem)      (pElem->flags & 2)
-#define SET_LAST(pElem)    (pElem->flags |= 2)
-#define CLEAR_LAST(pElem)  (pElem->flags &= (~2))
+#define ISLAST(pElem)      (pElem_flags(pElem) & 2)
+#define SET_LAST(pElem)    (pElem_flags(pElem) |= 2)
+#define CLEAR_LAST(pElem)  (pElem_flags(pElem) &= (~2))
 
-#define ISSAVED(pElem)      (pElem->flags & 4)
+#define ISSAVED(pElem)      (pElem_flags(pElem) & 4)
 #define SET_SAVED(pMemBlk,pElem)    do { \
-(pElem->flags |= 4); pMemBlk->nsaved++; } while (0)
+(pElem_flags (pElem) |= 4); pMemBlk->nsaved++; } while (0)
 #define CLEAR_SAVED(pMemBlk,pElem)  do { \
-(pElem->flags &= (~4)); pMemBlk->nsaved--; } while (0)
+(pElem_flags (pElem) &= (~4)); pMemBlk->nsaved--; } while (0)
 
-#define ISFIRST(pElem)    (int)(pElem->prevOff == 0)
+#define ISFIRST(pElem)    (int)(pElem_prevOff (pElem) == 0)
 
 #define GETPREV(pElem) \
-((pElem->prevOff == 0) ? 0 : \
-((OSMemElemDescr*) (((char*)pElem) - (pElem->prevOff * 8u))))
+((pElem_prevOff (pElem) == 0) ? 0 : \
+((OSMemElemDescr*) (((char*)pElem) - (pElem_prevOff (pElem) * 8u))))
 
 #define GETNEXT(pElem) \
 ((ISLAST (pElem)) ? 0 : \
-((OSMemElemDescr*)(((char*)pElem) + ((pElem->nunits + 1) * 8u))))
+((OSMemElemDescr*)(((char*)pElem) + ((pElem_nunits (pElem) + 1) * 8u))))
 
 #define GET_NEXT_FREE(pElem) \
-((pElem->u.nextFreeOff == 0) ? 0 : \
-((OSMemElemDescr*) (((char*)pElem) + (pElem->u.nextFreeOff * 8u))))
+((pElem_nextFreeOff (pElem) == 0) ? 0 : \
+((OSMemElemDescr*) (((char*)pElem) + (pElem_nextFreeOff (pElem) * 8u))))
 
 #define GET_MEMBLK(pElem) \
-((OSMemBlk*) (((char*)pElem) - (pElem->u.beginOff * 8u) - \
+((OSMemBlk*) (((char*)pElem) - (pElem_beginOff (pElem) * 8u) - \
 sizeof (OSMemBlk) + sizeof ((OSMemBlk*)0)->data))
 
 #define GET_LAST_ELEM(pMemBlk) \
@@ -116,18 +115,19 @@ pMemBlk->freeElemOff = (ASN1USINT)(QOFFSETOF (pElem, pMemBlk->data) + 1); \
 #define SET_FREE_ELEM(pMemBlk, pElem) setLastElem (pMemBlk, pElem)
 
 /* Memory debugging macros */
-
-#define RTMEMDIAG1(msg)
-#define RTMEMDIAG2(msg,a)
+#define RTMEMDIAG1(msg)      
+#define RTMEMDIAG2(msg,a) 
 #define RTMEMDIAG3(msg,a,b)
 #define RTMEMDIAG4(msg,a,b,c)
 #define FILLFREEMEM(mem,size)
 #define FILLNEWMEM(mem,size)
-#define CHECKMEMELEM(memblk, elem)
+
+#define CHECKMEMELEM(memblk,elem)
 #define CHECKMEMBLOCK(memheap,memblk)
 #define CHECKMEMHEAP(memheap)
 #define TRACEMEMELEM(memblk, elem, name)
 #define TRACEFREE(memlink,name)
+
 
 static void setLastElem (OSMemBlk* pMemBlk, OSMemElemDescr* pElem)
 {
@@ -138,16 +138,16 @@ static void setLastElem (OSMemBlk* pMemBlk, OSMemElemDescr* pElem)
    else if (ISLAST (pElem))
       return;
    else if (pMemBlk->freeElemOff > QOFFSETOF (pElem, pMemBlk->data) + 1) {
-      pElem->u.nextFreeOff = QOFFSETOF (GET_FREE_ELEM (pMemBlk), pElem);
+      pElem_nextFreeOff (pElem) = QOFFSETOF (GET_FREE_ELEM (pMemBlk), pElem);
       FORCE_SET_FREE_ELEM (pMemBlk, pElem);
    }
    else if (pMemBlk->freeElemOff == 0) {
-      pElem->u.nextFreeOff = 0;         
+      pElem_nextFreeOff (pElem) = 0;         
       FORCE_SET_FREE_ELEM (pMemBlk, pElem);
    }
    else {
       SET_FREE (pElem);
-      pElem->u.nextFreeOff = 0;
+      pElem_nextFreeOff (pElem) = 0;
    }
 }
 
@@ -181,11 +181,15 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
 
       /* allocate raw block */
 
-      data = malloc (nbytes);
+      data = g_malloc_func (nbytes);
       if (data == NULL) {
          return NULL;
       }
       pMemLink = memHeapAddBlock (ppMemLink, data, RTMEMMALLOC | RTMEMRAW);
+      if (pMemLink == 0) {
+         g_free_func (data);
+         return NULL;
+      }
       /* save size of the RAW memory block behind the pMemLink */
       *(int*)(((char*)pMemLink) + sizeof (OSMemLink)) = nbytes;
       return data;  
@@ -214,22 +218,22 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
             pMemHeap->freeBlocks--;
          }
 
-         pElem->flags = 0;
+         pElem_flags (pElem) = 0;
          if (pMemBlk->lastElemOff != 0)
-            pElem->prevOff =
+            pElem_prevOff (pElem) =
                (ASN1USINT)(pMemBlk->free_x - pMemBlk->lastElemOff + 1);
          else
-            pElem->prevOff = 0;
+            pElem_prevOff (pElem) = 0;
         
          pPrevElem = GET_LAST_ELEM (pMemBlk);
          if (pPrevElem != 0)
             CLEAR_LAST (pPrevElem);
         
-         pElem->nunits = (ASN1USINT)nunits;
-         pElem->u.beginOff = QOFFSETOF (pElem, pMemBlk->data);
+         pElem_nunits (pElem) = (ASN1USINT)nunits;
+         pElem_beginOff (pElem) = QOFFSETOF (pElem, pMemBlk->data);
          pMemBlk->lastElemOff = (ASN1USINT)(pMemBlk->free_x + 1);
 
-         mem_p = (void*) (pElem + 1);
+         mem_p = (void*) (pElem_data (pElem));
         
          /* sizeof (OSMemElemDescr) == 1 unit */
          pMemBlk->free_x += nunits + 1;
@@ -256,16 +260,16 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
             OSMemElemDescr* pElem = GET_FREE_ELEM(pMemBlk), *pPrevFree = 0;
 
             RTMEMDIAG2
-               ("memHeapAlloc: try to reuse empty elems in "
-                "pMemBlk = 0x%x..\n", pMemBlk);
+           ("memHeapAlloc: try to reuse empty elems in pMemBlk = 0x%x...\n",
+                pMemBlk);
 
             while (pElem != 0) {
                if (ISFREE (pElem)) {
-                  if (nunits <= (ASN1UINT)pElem->nunits) {
+                  if (nunits <= (ASN1UINT)pElem_nunits (pElem)) {
                      RTMEMDIAG3
                         ("memHeapAlloc: "
                          "found an exisiting free element 0x%x, size %d\n",
-                        pElem, (pElem->nunits * 8u));
+                        pElem, (pElem_nunits (pElem) * 8u));
                     
                      if (pMemBlk->freeElemOff ==
                          QOFFSETOF (pElem, pMemBlk->data) + 1)
@@ -279,28 +283,29 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
                      else if (pPrevFree != 0) {
                         OSMemElemDescr* pNextFree = GET_NEXT_FREE (pElem);
                         if (pNextFree != 0)
-                           pPrevFree->u.nextFreeOff = QOFFSETOF (pNextFree,
+                           pElem_nextFreeOff (pPrevFree) = QOFFSETOF (pNextFree,
                               pPrevFree);
                         else
-                           pPrevFree->u.nextFreeOff = 0;
+                           pElem_nextFreeOff (pPrevFree) = 0;
                      }
 
                      CLEAR_FREE (pElem);
 
                      /* set beginOff value */
 
-                     pElem->u.beginOff = QOFFSETOF (pElem, pMemBlk->data);
+                     pElem_beginOff (pElem) = QOFFSETOF (pElem, pMemBlk->data);
                     
-                     pMemBlk->freeMem -= pElem->nunits;
+                     pMemBlk->freeMem -= pElem_nunits (pElem);
 
                      CHECKMEMELEM (pMemBlk, pElem);
                      CHECKMEMBLOCK (pMemHeap, pMemBlk);
                     
                      mem_p = memHeapRealloc
-                        (ppvMemHeap, pElem + 1, nunits * 8u);
-
-                     FILLNEWMEM (mem_p, nunits * 8u);
-                     TRACEMEMELEM(pMemBlk, pElem, "Allocated");
+                        (ppvMemHeap, pElem_data (pElem), nunits * 8u);
+                     if (mem_p != 0) {
+                        FILLNEWMEM (mem_p, nunits * 8u);
+                        TRACEMEMELEM(pMemBlk, pElem, "Allocated");
+                     }
                      break;
                   }
                }
@@ -322,7 +327,7 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
       RTMEMDIAG1 ("memHeapAlloc: alloc block..\n");
 
       allocSize = (ASN1UINT) ((((ASN1UINT)nunits) * 8u) +
-         sizeof (OSMemBlk) + sizeof (OSMemElemDescr));
+         sizeof (OSMemBlk) + sizeof_OSMemElemDescr);
       allocSize = (ASN1UINT) (allocSize < defBlkSize) ? defBlkSize :
          ((allocSize + defBlkSize - 1) / defBlkSize * defBlkSize);
       dataUnits = (ASN1UINT)((allocSize - sizeof (OSMemBlk)) >> 3u);
@@ -332,22 +337,18 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
             ((((ASN1UINT)dataUnits) * 8u) + sizeof (OSMemBlk));
       } 
 
-      pmem = (ASN1OCTET*) malloc (allocSize + sizeof (OSMemLink));
+      pmem = (ASN1OCTET*) g_malloc_func (allocSize + sizeof (OSMemLink));
       if (0 != pmem) {
          OSMemElemDescr* pElem;
 
          pMemBlk = (OSMemBlk*) (pmem + sizeof (OSMemLink));
          pElem = (OSMemElemDescr*)&pMemBlk->data[0];
 
-         /* set vars in heap */
-         pMemHeap->usedUnits += dataUnits;
-         pMemHeap->usedBlocks++;
-
-         mem_p = (void*) (pElem + 1);
-         pElem->nunits = (ASN1USINT)nunits;
-         pElem->flags = 0;
-         pElem->prevOff = 0;
-         pElem->u.beginOff = QOFFSETOF (pElem, pMemBlk->data);
+         mem_p = (void*) pElem_data (pElem);
+         pElem_nunits (pElem) = (ASN1USINT)nunits;
+         pElem_flags (pElem) = 0;
+         pElem_prevOff (pElem) = 0;
+         pElem_beginOff (pElem) = QOFFSETOF (pElem, pMemBlk->data);
 
          /* sizeof (OSMemElemDescr) == 1 unit */
          pMemBlk->free_x = (ASN1USINT)(nunits + 1);
@@ -358,18 +359,30 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
          pMemBlk->freeElemOff = 0;
          pMemBlk->nsaved = 0;
 
-         memHeapAddBlock (ppMemLink, pMemBlk, RTMEMSTD | RTMEMLINK);
+         if (memHeapAddBlock (ppMemLink, pMemBlk, RTMEMSTD | RTMEMLINK) == 0)
+         {
+            g_free_func (pmem);
+            return NULL;
+         }
+
+         /* set vars in heap */
+         pMemHeap->usedUnits += dataUnits;
+         pMemHeap->usedBlocks++;
 
          FILLNEWMEM (mem_p, nunits * 8u);
          TRACEMEMELEM(pMemBlk, pElem, "Allocated");
          CHECKMEMELEM (pMemBlk, pElem);
          CHECKMEMBLOCK (pMemHeap, pMemBlk);
       }
+      else
+         return NULL;
    }
    RTMEMDIAG2 ("memHeapAlloc: pMemBlk = 0x%x\n", pMemBlk);
    RTMEMDIAG2 ("memHeapAlloc: pMemBlk->free_x = %d\n", pMemBlk->free_x);
-   RTMEMDIAG2 ("memHeapAlloc: pMemBlk->size = %d\n", pMemBlk->nunits * 8u);
+   RTMEMDIAG2 ("memHeapAlloc: pMemBlk->size = %d\n",
+                    pMemBlk->nunits * 8u);
    RTMEMDIAG2 ("memHeapAlloc: mem_p = 0x%x\n", mem_p);
+   RTMEMDIAG2 ("memHeapAlloc: sizeof (short) = %d\n", sizeof(short));
 
    return (mem_p);
 }
@@ -421,19 +434,19 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
          if ((pMemLink->blockType & RTMEMLINK) &&
              (pMemLink->blockType & RTMEMMALLOC))
          {
-            free (pMemLink);
+            g_free_func (pMemLink);
          }
          else {
             if (pMemLink->blockType & RTMEMMALLOC)
-               free (pMemLink->pMemBlk);
-            free (pMemLink);
+               g_free_func (pMemLink->pMemBlk);
+            g_free_func (pMemLink);
          }
          return;
       }
       pPrevMemLink = pMemLink;
    }
 
-   pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof (OSMemElemDescr));
+   pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof_OSMemElemDescr);
    pMemBlk = GET_MEMBLK (pElem);
 
    CHECKMEMELEM (pMemBlk, pElem);
@@ -441,7 +454,7 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
 
    if (ISFREE (pElem)) { /* already freed! */
       RTMEMDIAG2 ("memHeapFreePtr: "
-                  "the element 0x%x is already freed!\n", pElem);
+                      "the element 0x%x is already freed!\n", pElem);
       return;  
    }
 
@@ -456,23 +469,24 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
    CHECKMEMBLOCK(pMemHeap, pMemBlk);
 
    RTMEMDIAG2 ("memHeapFreePtr: pMemBlk = 0x%x\n", pMemBlk);
-   RTMEMDIAG2 ("memHeapFreePtr: pMemBlk->size = %d\n", pMemBlk->nunits * 8u);
+   RTMEMDIAG2 ("memHeapFreePtr: pMemBlk->size = %d\n",
+                    pMemBlk->nunits * 8u);
 
    if (ISLAST (pElem)) { /* is it the last? */
       OSMemElemDescr* pPrevElem = GETPREV (pElem);
      
       CHECKMEMELEM (pMemBlk, pPrevElem);
 
-      pMemBlk->free_x -= (pElem->nunits + 1);
+      pMemBlk->free_x -= (pElem_nunits (pElem) + 1);
 
       FILLFREEMEM (&pMemBlk->data [pMemBlk->free_x * 8u],
-         (pElem->nunits + 1) * 8u);
+         (pElem_nunits (pElem) + 1) * 8u);
 
       if (pPrevElem != 0 && ISFREE (pPrevElem)) {
          OSMemElemDescr* pFreeElem;
 
-         pMemBlk->free_x -= (pPrevElem->nunits + 1);
-         pMemBlk->freeMem -= pPrevElem->nunits;
+         pMemBlk->free_x -= (pElem_nunits (pPrevElem) + 1);
+         pMemBlk->freeMem -= pElem_nunits (pPrevElem);
          SET_LAST_ELEM (pMemBlk, GETPREV (pPrevElem));
         
          /* wasn't it the last elem in block? */
@@ -491,7 +505,7 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
                   pNextFree = pFreeElem;
                   pFreeElem = GET_NEXT_FREE (pFreeElem);
                }
-               pNextFree->u.nextFreeOff = 0;
+               pElem_nextFreeOff (pNextFree) = 0;
             }
          }
       }
@@ -499,7 +513,8 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
          SET_LAST_ELEM (pMemBlk, pPrevElem);
       }
 
-      RTMEMDIAG2 ("memHeapFreePtr: pMemBlk->free_x = %d\n", pMemBlk->free_x);
+      RTMEMDIAG2 ("memHeapFreePtr: pMemBlk->free_x = %d\n",
+                       pMemBlk->free_x);
 
       /* The question is: do we really want to get rid of the   */
       /* block or should we keep it around for reuse?           */
@@ -533,13 +548,14 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
             FILLFREEMEM (pMemBlk->plink, sizeof (*pMemBlk->plink));
             FILLFREEMEM (pMemBlk->data, (pMemBlk->nunits * 8u));
         
-            free (pMemBlk->plink);
+            g_free_func (pMemBlk->plink);
            
             if (!(blockType & RTMEMLINK)) {
                FILLFREEMEM (pMemBlk, sizeof (*pMemBlk));
-               free (pMemBlk);
+               g_free_func (pMemBlk);
             }
-            RTMEMDIAG2 ("memHeapFreePtr: pMemBlk = 0x%x was freed\n", pMemBlk);
+            RTMEMDIAG2 ("memHeapFreePtr: pMemBlk = 0x%x was freed\n",
+                             pMemBlk);
          }
          else {
             /* reset pMemBlk for re-usage */
@@ -564,8 +580,9 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
 
       SET_FREE_ELEM(pMemBlk, pElem);
 
-      pMemBlk->freeMem += pElem->nunits;
-      RTMEMDIAG2 ("memHeapFreePtr: element 0x%x marked as free.\n", pElem);
+      pMemBlk->freeMem += pElem_nunits (pElem);
+      RTMEMDIAG2 ("memHeapFreePtr: element 0x%x marked as free.\n",
+                       pElem);
 
       /* try to unite free blocks, if possible */
       if (!ISFIRST (pElem)) {
@@ -573,10 +590,10 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
             OSMemElemDescr* prevelem_p = GETPREV (pElem);
         
             /* +1 because the OSMemElemDescr has size ONE unit (8 bytes) */
-            prevelem_p->nunits += pElem->nunits + 1;
+            pElem_nunits (prevelem_p) += pElem_nunits (pElem) + 1;
 
             pElem = prevelem_p;
-            pMemBlk->freeMem ++; /* sizeof (OSMemElemDescr) == 1 */
+            pMemBlk->freeMem ++; /* sizeof (OSMemElemDescr) == 1 unit */
          }
          else {
             /* look for nearest previous free block to correct nextFreeOff */
@@ -591,10 +608,10 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
             if (prevelem_p != 0) {
                OSMemElemDescr* pNextFree =  GET_NEXT_FREE (prevelem_p);
                if (pNextFree != 0)
-                  pElem->u.nextFreeOff = QOFFSETOF (pNextFree, pElem);
+                  pElem_nextFreeOff (pElem) = QOFFSETOF (pNextFree, pElem);
                else
-                  pElem->u.nextFreeOff = 0;
-               prevelem_p->u.nextFreeOff = QOFFSETOF (pElem, prevelem_p);
+                  pElem_nextFreeOff (pElem) = 0;
+               pElem_nextFreeOff (prevelem_p) = QOFFSETOF (pElem, prevelem_p);
         
                CHECKMEMELEM (pMemBlk, prevelem_p);
             }
@@ -604,12 +621,12 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
          OSMemElemDescr* nextelem_p = GETNEXT (pElem);
         
          /* +1 because the OSMemElemDescr has size ONE unit (8 bytes) */
-         pElem->nunits += nextelem_p->nunits + 1;
+         pElem_nunits (pElem) += pElem_nunits (nextelem_p) + 1;
 
-         if (nextelem_p->u.nextFreeOff == 0)
-            pElem->u.nextFreeOff = 0;
+         if (pElem_nextFreeOff (nextelem_p) == 0)
+            pElem_nextFreeOff (pElem) = 0;
          else
-            pElem->u.nextFreeOff =
+            pElem_nextFreeOff (pElem) =
                QOFFSETOF (GET_NEXT_FREE (nextelem_p), pElem);
          pMemBlk->freeMem ++;
       }
@@ -617,11 +634,11 @@ void memHeapFreePtr (void** ppvMemHeap, void* mem_p)
       /* correct the prevOff field of next element */
       if (!ISLAST (pElem)) { 
          OSMemElemDescr* nextelem_p = GETNEXT (pElem);
-         nextelem_p->prevOff = QOFFSETOF (nextelem_p, pElem);
+         pElem_prevOff (nextelem_p) = QOFFSETOF (nextelem_p, pElem);
       }
 
       CHECKMEMELEM (pMemBlk, pElem);
-      FILLFREEMEM (pElem + 1, (pElem->nunits * 8u));
+      FILLFREEMEM (pElem_data (pElem), (pElem_nunits (pElem) * 8u));
       CHECKMEMELEM (pMemBlk, pElem);
       CHECKMEMBLOCK (pMemHeap, pMemBlk);
    }
@@ -634,10 +651,10 @@ static void initNewFreeElement (OSMemBlk* pMemBlk,
 
    /* create new free element on the freed place */
 
-   pNewElem->flags = 0;
+   pElem_flags (pNewElem) = 0;
    SET_FREE (pNewElem);
 
-   pNewElem->prevOff = QOFFSETOF (pNewElem, pElem);
+   pElem_prevOff (pNewElem) = QOFFSETOF (pNewElem, pElem);
 
    if (pMemBlk->freeElemOff != 0 &&
       pMemBlk->freeElemOff < QOFFSETOF (pElem, pMemBlk->data) + 1)
@@ -655,7 +672,7 @@ static void initNewFreeElement (OSMemBlk* pMemBlk,
 
       /* correct nextFreeOff for prev free element */
      
-      pPrevElem->u.nextFreeOff = QOFFSETOF (pNewElem, pPrevElem);
+      pElem_nextFreeOff (pPrevElem) = QOFFSETOF (pNewElem, pPrevElem);
    }
    else {  /* if it is first free element in the block */
       FORCE_SET_FREE_ELEM (pMemBlk, pNewElem);
@@ -666,16 +683,16 @@ static void initNewFreeElement (OSMemBlk* pMemBlk,
      
       /* if the next elem is free, then unite them together */
 
-      pNewElem->nunits += pNextElem->nunits + 1;
-      if (pNextElem->u.nextFreeOff != 0)
-         pNewElem->u.nextFreeOff = QOFFSETOF (GET_NEXT_FREE (pNextElem),
+      pElem_nunits (pNewElem) += pElem_nunits (pNextElem) + 1;
+      if (pElem_nextFreeOff (pNextElem) != 0)
+         pElem_nextFreeOff (pNewElem) = QOFFSETOF (GET_NEXT_FREE (pNextElem),
             pNewElem);
       else
-         pNewElem->u.nextFreeOff = 0;
+         pElem_nextFreeOff (pNewElem) = 0;
       pMemBlk->freeMem++; /* +1 because space for MemElemDescr is freed now */
       pNextElem = GETNEXT (pNewElem);
    }
-   pNextElem->prevOff = QOFFSETOF (pNextElem, pNewElem);
+   pElem_prevOff (pNextElem) = QOFFSETOF (pNextElem, pNewElem);
 
    if (pMemBlk->freeElemOff != 0) {
 
@@ -688,12 +705,12 @@ static void initNewFreeElement (OSMemBlk* pMemBlk,
       /* set nextFreeOff for new element */
   
       if (pNextElem != 0)
-         pNewElem->u.nextFreeOff = QOFFSETOF (pNextElem, pNewElem);
+         pElem_nextFreeOff (pNewElem) = QOFFSETOF (pNextElem, pNewElem);
       else
-         pNewElem->u.nextFreeOff = 0;
+         pElem_nextFreeOff (pNewElem) = 0;
    }
    else
-      pNewElem->u.nextFreeOff = 0;
+      pElem_nextFreeOff (pNewElem) = 0;
 
 }
 
@@ -707,7 +724,7 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
    void *newMem_p;
    unsigned nbytes, nunits;
 
-   /* if mem_p == NULL - do memAlloc */
+   /* if mem_p == NULL - do rtMemAlloc */
 
    if (ppvMemHeap == 0 || *ppvMemHeap == 0) return 0;
 
@@ -725,15 +742,21 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
            pMemLink->pMemBlk == mem_p)
       {
          if (pMemLink->blockType & RTMEMMALLOC)
-            if (realloc != 0)
-               pMemLink->pMemBlk = realloc (pMemLink->pMemBlk, nbytes_);
+            if (g_realloc_func != 0) {
+               void *newMemBlk = g_realloc_func (pMemLink->pMemBlk, nbytes_);
+               if (newMemBlk == 0)
+                  return 0;
+               pMemLink->pMemBlk = newMemBlk;
+            }
             else {
                /* use malloc/memcpy/free sequence instead of realloc */
                ASN1OCTET* newBuf;
                int oldSize = *(int*)(((char*)pMemLink) + sizeof (OSMemLink));
 
                if (oldSize == -1) return 0;
-               newBuf = (ASN1OCTET*)malloc (nbytes_);
+               newBuf = (ASN1OCTET*)g_malloc_func (nbytes_);
+               if (newBuf == 0)
+                  return 0;
                memcpy (newBuf, pMemLink->pMemBlk, ASN1MIN (oldSize, nbytes_));
                free (pMemLink->pMemBlk);
                pMemLink->pMemBlk = newBuf;
@@ -751,13 +774,13 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
    nbytes = ((unsigned)(nbytes_ + 7)) & (~7);
    nunits = nbytes >> 3;
 
-   pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof (OSMemElemDescr));
+   pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof_OSMemElemDescr);
 
-   RTMEMDIAG4
-      ("memHeapRealloc: mem_p = 0x%x, old size = %d, new nbytes = %d\n",
-       mem_p, pElem->nunits * 8u, nbytes);
+   RTMEMDIAG3 ("memHeapRealloc: mem_p = 0x%x, old size = %d,",  mem_p,
+                    pElem_nunits (pElem) * 8u);
+   RTMEMDIAG2 (" new nbytes = %d\n", nbytes);
 
-   if ((unsigned)pElem->nunits == nunits)
+   if ((unsigned)pElem_nunits (pElem) == nunits)
       return mem_p;
 
    pMemBlk = GET_MEMBLK (pElem);
@@ -765,9 +788,9 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
    CHECKMEMELEM (pMemBlk, pElem);
    CHECKMEMBLOCK(pMemHeap, pMemBlk);
 
-   if ((unsigned)pElem->nunits < nunits) { /* expanding */
+   if ((unsigned)pElem_nunits (pElem) < nunits) { /* expanding */
   
-      if (nunits - pElem->nunits <= (unsigned)pMemBlk->nunits) {
+      if (nunits - pElem_nunits (pElem) <= (unsigned)pMemBlk->nunits) {
 
          /* Try to expand the existing element in the existing block */
 
@@ -775,17 +798,18 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
         
             /* if the free space in the block is enough */
         
-            if ((int)(nunits - pElem->nunits) <=
+            if ((int)(nunits - pElem_nunits (pElem)) <=
                 (int)(pMemBlk->nunits - pMemBlk->free_x))
             {
-               pMemBlk->free_x += nunits - pElem->nunits;
-               pElem->nunits = (ASN1USINT)nunits;
+               pMemBlk->free_x += nunits - pElem_nunits (pElem);
+               pElem_nunits (pElem) = (ASN1USINT)nunits;
 
-               RTMEMDIAG1 ("memHeapRealloc: memory element is expanded.\n");
+               RTMEMDIAG1 ("memHeapRealloc: "
+                               "memory element is expanded.\n");
               
                FILLNEWMEM (&pMemBlk->data [(pMemBlk->free_x -
-                  (nunits - pElem->nunits)) * 8u],
-                  (nunits - pElem->nunits) * 8u);
+                  (nunits - pElem_nunits (pElem))) * 8u],
+                  (nunits - pElem_nunits (pElem)) * 8u);
               
                TRACEMEMELEM (pMemBlk, pElem, "Reallocated");
                CHECKMEMELEM (pMemBlk, pElem);
@@ -796,7 +820,7 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
          }
          else {
             OSMemElemDescr* pNextElem, *pFreeElem;
-            unsigned sumSize = pElem->nunits, freeMem = 0;
+            unsigned sumSize = pElem_nunits (pElem), freeMem = 0;
         
             RTMEMDIAG1 ("memHeapRealloc: look for free element after "
                "current block.\n");
@@ -806,7 +830,7 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
             pNextElem = GETNEXT (pElem);
             if (ISFREE (pNextElem)) {
                /* +1 'cos sizeof (OSMemElemDescr) == 1 unit */
-               sumSize += pNextElem->nunits + 1;
+               sumSize += pElem_nunits (pNextElem) + 1;
                freeMem++;
             }
            
@@ -827,11 +851,11 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
                         OSMemElemDescr* pNextFreeElem =
                            GET_NEXT_FREE (pFreeElem);
                         if (pNextFreeElem == pNextElem) {
-                           if (pNextElem->u.nextFreeOff != 0)
-                              pFreeElem->u.nextFreeOff = QOFFSETOF
+                           if (pElem_nextFreeOff (pNextElem) != 0)
+                              pElem_nextFreeOff (pFreeElem) = QOFFSETOF
                                  (GET_NEXT_FREE (pNextElem), pFreeElem);
                            else
-                              pFreeElem->u.nextFreeOff = 0;
+                              pElem_nextFreeOff (pFreeElem) = 0;
                            CHECKMEMELEM (pMemBlk, pFreeElem);
                            break;
                         }
@@ -850,24 +874,24 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
                   /* if sumSize is too large, then create new empty element */
 
                   pNewElem = (OSMemElemDescr*)
-                     (((char*)(pElem + 1)) + nbytes);
-                  pNewElem->nunits = (ASN1USINT)(sumSize - nunits - 1);
+                     (pElem_data (pElem) + nbytes);
+                  pElem_nunits (pNewElem) = (ASN1USINT)(sumSize - nunits - 1);
 
                   initNewFreeElement (pMemBlk, pNewElem, pElem);
 
                   pMemBlk->freeMem--; /* sizeof (OSMemElemDescr) == 1 unit */
-                  pMemBlk->freeMem -= (nunits - pElem->nunits);
-                  pElem->nunits = (ASN1USINT)nunits;
+                  pMemBlk->freeMem -= (nunits - pElem_nunits (pElem));
+                  pElem_nunits (pElem) = (ASN1USINT)nunits;
                }
                else {
-                  pMemBlk->freeMem -= (sumSize - pElem->nunits);
-                  pElem->nunits = (ASN1USINT)sumSize;
+                  pMemBlk->freeMem -= (sumSize - pElem_nunits (pElem));
+                  pElem_nunits (pElem) = (ASN1USINT)sumSize;
 
                   /* modify the prevOff of the next elem */
 
                   pNextElem = GETNEXT (pElem);
                   if (pNextElem != 0)
-                     pNextElem->prevOff = QOFFSETOF (pNextElem, pElem);
+                     pElem_prevOff (pNextElem) = QOFFSETOF (pNextElem, pElem);
                }
               
                TRACEMEMELEM (pMemBlk, pElem, "Reallocated");
@@ -898,7 +922,7 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
 
       CHECKMEMHEAP (pMemHeap);
 
-      memcpy (newMem_p, mem_p, (((ASN1UINT)pElem->nunits) * 8u));
+      memcpy (newMem_p, mem_p, (((ASN1UINT)pElem_nunits (pElem)) * 8u));
 
       /* free old element */
 
@@ -924,32 +948,32 @@ void* memHeapRealloc (void** ppvMemHeap, void* mem_p, int nbytes_)
       /* do not shrink, if size diff is too small */
 
       /* sizeof (OSMemElemDescr) == 1 unit */
-      if (pElem->nunits - nunits > 1) {
+      if (pElem_nunits (pElem) - nunits > 1) {
         
          /* if it is the last element in the block, then just change the size
             and free_x. */
 
          if (ISLAST (pElem)) {
-            pMemBlk->free_x -= (pElem->nunits - nunits);
+            pMemBlk->free_x -= (pElem_nunits (pElem) - nunits);
 
             FILLFREEMEM (&pMemBlk->data [pMemBlk->free_x * 8u],
-               (pElem->nunits - nunits) * 8u);
+               (pElem_nunits (pElem) - nunits) * 8u);
          }
          else {
             OSMemElemDescr* pNewElem;
 
             /* create new free element on the freed place */
 
-            pNewElem = (OSMemElemDescr*) (((char*)(pElem + 1)) + nbytes);
+            pNewElem = (OSMemElemDescr*) (pElem_data (pElem) + nbytes);
 
             /* sizeof (OSMemElemDescr) == 1 unit */
-            pNewElem->nunits = (ASN1USINT)(pElem->nunits - nunits - 1);
+            pElem_nunits (pNewElem) = (ASN1USINT)(pElem_nunits (pElem) - nunits - 1);
            
             initNewFreeElement (pMemBlk, pNewElem, pElem);
            
-            pMemBlk->freeMem += (pElem->nunits - nunits) - 1;
+            pMemBlk->freeMem += (pElem_nunits (pElem) - nunits) - 1;
          }
-         pElem->nunits = (ASN1USINT)nunits;
+         pElem_nunits (pElem) = (ASN1USINT)nunits;
         
          TRACEMEMELEM (pMemBlk, pElem, "Reallocated");
          CHECKMEMELEM (pMemBlk, pElem);
@@ -1021,8 +1045,8 @@ void memHeapFreeAll (void** ppvMemHeap)
          if (((pMemLink2->blockType & RTMEMSTD) ||
               (pMemLink2->blockType & RTMEMMALLOC)) &&
               !(pMemLink2->blockType & RTMEMLINK))
-            free (pMemLink2->pMemBlk);
-         free (pMemLink2);
+            g_free_func (pMemLink2->pMemBlk);
+         g_free_func (pMemLink2);
       }
    }
 }
@@ -1099,11 +1123,11 @@ void* memHeapMarkSaved (void** ppvMemHeap, const void* mem_p,
 
       /* gain the MemLink from pointer */
 
-      pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof (OSMemElemDescr));
+      pElem = (OSMemElemDescr*) (((char*)mem_p) - sizeof_OSMemElemDescr);
 
       if (ISFREE (pElem)) { /* already freed! */
-         RTMEMDIAG2 ("memHeapMarkSaved: the element 0x%x is already free!\n",
-            pElem);
+         RTMEMDIAG2 ("memHeapMarkSaved: the element 0x%x is "
+                         "already free!\n", pElem);
          return 0;  
       }
 
@@ -1182,11 +1206,12 @@ static OSMemLink* memHeapAddBlock (OSMemLink** ppMemLink,
    if (blockType & RTMEMLINK)
       pMemLink = (OSMemLink*) (((ASN1OCTET*)pMemBlk) - sizeof (OSMemLink));
    else {
-      pMemLink = (OSMemLink*) malloc (
+      pMemLink = (OSMemLink*) g_malloc_func (
          sizeof(OSMemLink) + sizeof (int));
+      if (pMemLink == 0) return 0;
       /* An extra integer is necessary to save a size of a RAW memory block
-         to perform memRealloc through malloc/memcpy/free */
-      *(int*)(((char*)pMemLink) + sizeof (OSMemLink)) = -1;
+         to perform rtMemRealloc through malloc/memcpy/free */
+      *(int*)(((char*)pMemLink) + sizeof (OSMemLink)) = (int)-1;
    }
    if (pMemLink == NULL)
       return NULL;
@@ -1213,8 +1238,10 @@ static OSMemLink* memHeapAddBlock (OSMemLink** ppMemLink,
    ((OSMemBlk*)pMemBlk)->plink = pMemLink; /*!AB */
 
    RTMEMDIAG2 ("memHeapAddBlock: pMemLink = 0x%x\n", pMemLink);
-   RTMEMDIAG2 ("memHeapAddBlock: pMemLink->pnext = 0x%x\n", pMemLink->pnext);
-   RTMEMDIAG2 ("memHeapAddBlock: pMemLink->pprev = 0x%x\n", pMemLink->pprev);
+   RTMEMDIAG2 ("memHeapAddBlock: pMemLink->pnext = 0x%x\n",
+                    pMemLink->pnext);
+   RTMEMDIAG2 ("memHeapAddBlock: pMemLink->pprev = 0x%x\n",
+                    pMemLink->pprev);
 
    return pMemLink;
 }
@@ -1246,15 +1273,14 @@ int memHeapCheckPtr (void** ppvMemHeap, void* mem_p)
          /* Check, is the pointer inside this memory page */
 
          if (mem_p > pMemLink->pMemBlk &&
-             mem_p < (void*)(((ASN1OCTET*)pMemLink->pMemBlk) +
-                             pMemBlk->nunits * 8u))
+             mem_p < (void*)(((ASN1OCTET*)pMemLink->pMemBlk) + pMemBlk->nunits * 8u))
          {
             /* Check, is the pointer a correct element of the mem page */
 
             OSMemElemDescr* pElem = (OSMemElemDescr*) pMemBlk->data;
             for (; pElem != 0; pElem = GETNEXT (pElem)) {
              
-               void* curMem_p = (void*) (pElem + 1);
+               void* curMem_p = (void*) pElem_data (pElem);
                if (curMem_p == mem_p && !ISFREE (pElem))
                   return 1;
             }
@@ -1302,3 +1328,4 @@ int memHeapCreate (void** ppvMemHeap)
    *ppvMemHeap = (void*)pMemHeap;
    return ASN_OK;
 }
+
