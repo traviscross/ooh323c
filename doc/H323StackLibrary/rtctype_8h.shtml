@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>rtctype.h File Reference</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>rtctype.h File Reference</h1>
+<a href="#_details">More...</a>
+<p>
+<code>#include "<a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>"</code><br>
+
+<p>
+<a href="rtctype_8h-source.shtml">Go to the source code of this file.</a><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a0" doxytag="rtctype.h::OS_CTYPE_UPPER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_UPPER</b>&nbsp;&nbsp;&nbsp;0x1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a1" doxytag="rtctype.h::OS_CTYPE_LOWER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_LOWER</b>&nbsp;&nbsp;&nbsp;0x2</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a2" doxytag="rtctype.h::OS_CTYPE_NUMBER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_NUMBER</b>&nbsp;&nbsp;&nbsp;0x4</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a3" doxytag="rtctype.h::OS_CTYPE_SPACE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_SPACE</b>&nbsp;&nbsp;&nbsp;0x8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a4" doxytag="rtctype.h::OS_CTYPE_PUNCT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_PUNCT</b>&nbsp;&nbsp;&nbsp;0x10</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a5" doxytag="rtctype.h::OS_CTYPE_CTRL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_CTRL</b>&nbsp;&nbsp;&nbsp;0x20</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a6" doxytag="rtctype.h::OS_CTYPE_HEX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_HEX</b>&nbsp;&nbsp;&nbsp;0x40</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a7" doxytag="rtctype.h::OS_CTYPE_BLANK" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_CTYPE_BLANK</b>&nbsp;&nbsp;&nbsp;0x80</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a8" doxytag="rtctype.h::OS_ISALPHA" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISALPHA</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;(OS_CTYPE_UPPER|OS_CTYPE_LOWER))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a9" doxytag="rtctype.h::OS_ISUPPER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISUPPER</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_UPPER)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a10" doxytag="rtctype.h::OS_ISLOWER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISLOWER</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_LOWER)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a11" doxytag="rtctype.h::OS_ISDIGIT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISDIGIT</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_NUMBER)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a12" doxytag="rtctype.h::OS_ISXDIGIT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISXDIGIT</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;(OS_CTYPE_HEX|OS_CTYPE_NUMBER))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a13" doxytag="rtctype.h::OS_ISSPACE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISSPACE</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_SPACE)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a14" doxytag="rtctype.h::OS_ISPUNCT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISPUNCT</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_PUNCT)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a15" doxytag="rtctype.h::OS_ISALNUM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISALNUM</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;(OS_CTYPE_UPPER|OS_CTYPE_LOWER|OS_CTYPE_NUMBER))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISPRINT</b>(c)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISGRAPH</b>(c)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="rtctype.h::OS_ISCNTRL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_ISCNTRL</b>(c)&nbsp;&nbsp;&nbsp;(rtCtypeTable[(unsigned)(c)]&amp;OS_CTYPE_CTRL)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="rtctype.h::OS_TOLOWER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_TOLOWER</b>(c)&nbsp;&nbsp;&nbsp;(OS_ISUPPER(c) ? (c) - 'A' + 'a' : (c))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="rtctype.h::OS_TOUPPER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OS_TOUPPER</b>(c)&nbsp;&nbsp;&nbsp;(OS_ISLOWER(c) ? (c) - 'a' + 'A' : (c))</td></tr>
+
+<tr><td colspan=2><br><h2>Variables</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a21" doxytag="rtctype.h::rtCtypeTable" ></a>
+EXTERN const ASN1OCTET&nbsp;</td><td class="memItemRight" valign=bottom><b>rtCtypeTable</b> [256]</td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+
+<p>
+Definition in file <a class="el" href="rtctype_8h-source.shtml">rtctype.h</a>.<hr><h2>Define Documentation</h2>
+<a class="anchor" name="a17" doxytag="rtctype.h::OS_ISGRAPH" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> #define OS_ISGRAPH          </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">c&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+<b>Value:</b><pre class="fragment"><div>(rtCtypeTable[(<span class="keywordtype">unsigned</span>)(c)]&amp; \
+(OS_CTYPE_PUNCT|OS_CTYPE_UPPER|OS_CTYPE_LOWER|OS_CTYPE_NUMBER))
+</div></pre>
+<p>
+Definition at line <a class="el" href="rtctype_8h-source.shtml#l00057">57</a> of file <a class="el" href="rtctype_8h-source.shtml">rtctype.h</a>.    </td>
+  </tr>
+</table>
+<a class="anchor" name="a16" doxytag="rtctype.h::OS_ISPRINT" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> #define OS_ISPRINT          </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">c&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+<b>Value:</b><pre class="fragment"><div>(rtCtypeTable[(<span class="keywordtype">unsigned</span>)(c)]&amp; \
+(OS_CTYPE_PUNCT|OS_CTYPE_UPPER|OS_CTYPE_LOWER|OS_CTYPE_NUMBER|OS_CTYPE_BLANK))
+</div></pre>
+<p>
+Definition at line <a class="el" href="rtctype_8h-source.shtml#l00054">54</a> of file <a class="el" href="rtctype_8h-source.shtml">rtctype.h</a>.    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

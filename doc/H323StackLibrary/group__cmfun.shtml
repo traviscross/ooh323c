@@ -1,0 +1,324 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>Context Management Functions</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>Context Management Functions<br>
+<small>
+[<a class="el" href="group__cruntime.shtml">C Runtime Common Functions</a>]</small>
+</h1><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="cmfun::ZEROCONTEXT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ZEROCONTEXT</b>(pctxt)&nbsp;&nbsp;&nbsp;memset(pctxt,0,sizeof(OOCTXT))</td></tr>
+
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga0">initContextBuffer</a> (OOCTXT *pctxt, const ASN1OCTET *bufaddr, ASN1UINT bufsiz)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function assigns a buffer to a context block.  <a href="#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga1">initContext</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function initializes a context block.  <a href="#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga2">freeContext</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function frees all dynamic memory associated with a context.  <a href="#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN OOCTXT *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga3">newContext</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function allocates a new OOCTXT block and initializes it.  <a href="#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="cmfun::copyContext" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>copyContext</b> (OOCTXT *pdest, OOCTXT *psrc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="cmfun::initSubContext" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>initSubContext</b> (OOCTXT *pctxt, OOCTXT *psrc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga6" doxytag="cmfun::setCtxtFlag" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>setCtxtFlag</b> (OOCTXT *pctxt, ASN1USINT mask)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga7" doxytag="cmfun::clearCtxtFlag" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>clearCtxtFlag</b> (OOCTXT *pctxt, ASN1USINT mask)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga8" doxytag="cmfun::setPERBuffer" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>setPERBuffer</b> (OOCTXT *pctxt, ASN1OCTET *bufaddr, ASN1UINT bufsiz, ASN1BOOL aligned)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="cmfun::setPERBufferUsingCtxt" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>setPERBufferUsingCtxt</b> (OOCTXT *pTarget, OOCTXT *pSource)</td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Context initialization functions handle the allocation, initialization, and destruction of ASN.1 context variables (variables of type OOCTXT). These variables hold all of the working data used during the process of encoding or decoding a message. The context provides thread safe operation by isolating what would otherwise be global variables within this structure. The context variable is passed from function to function as a message is encoded or decoded and maintains state information on the encoding or decoding process. <hr><h2>Function Documentation</h2>
+<a class="anchor" name="ga2" doxytag="ooasn1.h::freeContext" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN void freeContext           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">OOCTXT *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>pctxt</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function frees all dynamic memory associated with a context.
+<p>
+This includes all memory inside the block (in particular, the list of memory blocks used by the mem functions).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>pctxt</em>&nbsp;</td><td>A pointer to a context structure. </td></tr>
+  </table>
+</dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga1" doxytag="ooasn1.h::initContext" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int initContext           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">OOCTXT *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>pctxt</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function initializes a context block.
+<p>
+It makes sure that if the block was not previosly initialized, that all key working parameters are set to thier correct initial state values (i.e. declared within a function as a normal working variable), it is required that they invoke this function before using it.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>pctxt</em>&nbsp;</td><td>The pointer to the context structure variable to be initialized. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status of operation:<ul>
+<li>0 (ASN_OK) = success,</li><li>negative return value is error. </li></ul>
+</dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga0" doxytag="ooasn1.h::initContextBuffer" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int initContextBuffer           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">OOCTXT *&nbsp;</td>
+          <td class="mdname" nowrap> <em>pctxt</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>const ASN1OCTET *&nbsp;</td>
+          <td class="mdname" nowrap> <em>bufaddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>ASN1UINT&nbsp;</td>
+          <td class="mdname" nowrap> <em>bufsiz</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function assigns a buffer to a context block.
+<p>
+The block should have been previously initialized by initContext.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>pctxt</em>&nbsp;</td><td>The pointer to the context structure variable to be initialized. </td></tr>
+    <tr><td valign=top><em>bufaddr</em>&nbsp;</td><td>For encoding, the address of a memory buffer to receive and encode a message. For decoding the address of a buffer that contains the message data to be decoded. This address will be stored within the context structure. For encoding it might be zero, the dynamic buffer will be used in this case. </td></tr>
+    <tr><td valign=top><em>bufsiz</em>&nbsp;</td><td>The size of the memory buffer. For encoding, it might be zero; the dynamic buffer will be used in this case. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status of operation:<ul>
+<li>0 (ASN_OK) = success,</li><li>negative return value is error. </li></ul>
+</dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga3" doxytag="ooasn1.h::newContext" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN OOCTXT* newContext           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function allocates a new OOCTXT block and initializes it.
+<p>
+Although the block is allocated from the standard heap, it should not be freed using free. The freeContext function should be used because this frees items allocated within the block before freeing the block itself.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to newly created context </dd></dl>
+    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

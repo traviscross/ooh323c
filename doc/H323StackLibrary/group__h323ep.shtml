@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>H323 Endpoint management functions</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>H323 Endpoint management functions</h1><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga0">ooInitializeH323Ep</a> (const char *tracefile, int h245Tunneling, int fastStart, int termType, int t35CountryCode, int t35Extension, int manufacturer, char *productID, char *versionID, int callType, int listenport, char *callerid, char *callername, int callMode)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the first function to be invoked before using stack.  <a href="#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga1">ooH323EpRegisterCallbacks</a> (cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga2">ooDestroyH323Ep</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the last function to be invoked after done using the stack.  <a href="#ga2"></a><br><br></td></tr>
+</table>
+<hr><h2>Function Documentation</h2>
+<a class="anchor" name="ga2" doxytag="ooh323ep.h::ooDestroyH323Ep" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooDestroyH323Ep           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is the last function to be invoked after done using the stack.
+<p>
+It closes the H323 Endpoint for an application, releasing all the associated memory.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>None</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK on success OO_FAILED on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga1" doxytag="ooh323ep.h::ooH323EpRegisterCallbacks" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooH323EpRegisterCallbacks           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">cb_OnIncomingCall&nbsp;</td>
+          <td class="mdname" nowrap> <em>onIncomingCall</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>cb_OnOutgoingCall&nbsp;</td>
+          <td class="mdname" nowrap> <em>onOutgoingCall</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>cb_OnCallEstablished&nbsp;</td>
+          <td class="mdname" nowrap> <em>onCallEstablished</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>cb_OnCallCleared&nbsp;</td>
+          <td class="mdname" nowrap> <em>onCallCleared</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>cb_OnStartLogicalChannel&nbsp;</td>
+          <td class="mdname" nowrap> <em>onStartLogicalChannel</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to register the H323 Endpoint callback functions.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>onIncomingCall</em>&nbsp;</td><td>Callback function to be called when a new incoming call is detected. </td></tr>
+    <tr><td valign=top><em>onOutgoingCall</em>&nbsp;</td><td>Callback function to be called when an outgoing call is placed on behalf of the application. </td></tr>
+    <tr><td valign=top><em>onCallEstablished</em>&nbsp;</td><td>Callback function to be called when a call is established with the remote end point. </td></tr>
+    <tr><td valign=top><em>onCallCleared</em>&nbsp;</td><td>Callback function to be called when a call is cleared. </td></tr>
+    <tr><td valign=top><em>onStartLogicalChannel</em>&nbsp;</td><td>Callback function to be called when a logical channel is started.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga0" doxytag="ooh323ep.h::ooInitializeH323Ep" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooInitializeH323Ep           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">const char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>tracefile</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>h245Tunneling</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>fastStart</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>termType</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>t35CountryCode</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>t35Extension</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>manufacturer</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>productID</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>versionID</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>callType</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>listenport</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>callerid</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>callername</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>callMode</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is the first function to be invoked before using stack.
+<p>
+It initializes the H323 Endpoint.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>tracefile</em>&nbsp;</td><td>Absolute path to the trace file to be used for storing traces </td></tr>
+    <tr><td valign=top><em>h245Tunneling</em>&nbsp;</td><td>Indicates whether h245Tunneling enabled(1)/disabled(0) </td></tr>
+    <tr><td valign=top><em>fastStart</em>&nbsp;</td><td>Indicates whether fast start is enabled(1)/disabled(0) </td></tr>
+    <tr><td valign=top><em>termType</em>&nbsp;</td><td>Terminal type of the endpoint. </td></tr>
+    <tr><td valign=top><em>t35CountryCode</em>&nbsp;</td><td>Country code to be used </td></tr>
+    <tr><td valign=top><em>t35Extension</em>&nbsp;</td><td>t35Extension value </td></tr>
+    <tr><td valign=top><em>manufacturer</em>&nbsp;</td><td>manufacturer code </td></tr>
+    <tr><td valign=top><em>productID</em>&nbsp;</td><td>Product ID to be used </td></tr>
+    <tr><td valign=top><em>versionID</em>&nbsp;</td><td>Version Id of the software </td></tr>
+    <tr><td valign=top><em>callType</em>&nbsp;</td><td>Type of the call ex. T_H225CallType_pointToPoint </td></tr>
+    <tr><td valign=top><em>listenport</em>&nbsp;</td><td>Port on which to listen for incoming calls </td></tr>
+    <tr><td valign=top><em>callerid</em>&nbsp;</td><td>ID to be used for outgoing calls. </td></tr>
+    <tr><td valign=top><em>callername</em>&nbsp;</td><td>Caller name to be used for outgoing calls </td></tr>
+    <tr><td valign=top><em>callMode</em>&nbsp;</td><td>Type of calls to be made(audio/video/fax). (OO_CALLMODE_AUDIO, OO_CALLMODE_VIDEO) </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

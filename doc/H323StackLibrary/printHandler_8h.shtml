@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>printHandler.h File Reference</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>printHandler.h File Reference</h1>This is an implementation of a simple print handler. 
+<a href="#_details">More...</a>
+<p>
+<code>#include "<a class="el" href="asn1CEvtHndlr_8h-source.shtml">asn1CEvtHndlr.h</a>"</code><br>
+
+<p>
+<a href="printHandler_8h-source.shtml">Go to the source code of this file.</a><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a3" doxytag="printHandler.h::initializePrintHandler" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>initializePrintHandler</b> (<a class="el" href="structAsn1NamedCEventHandler.shtml">Asn1NamedCEventHandler</a> *printHandler, char *varname)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a4" doxytag="printHandler.h::finishPrint" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>finishPrint</b> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a5" doxytag="printHandler.h::indent" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>indent</b> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a6" doxytag="printHandler.h::printStartElement" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printStartElement</b> (const char *name, int index)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a7" doxytag="printHandler.h::printEndElement" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printEndElement</b> (const char *name, int index)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a8" doxytag="printHandler.h::printBoolValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printBoolValue</b> (ASN1BOOL value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a9" doxytag="printHandler.h::printIntValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printIntValue</b> (ASN1INT value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a10" doxytag="printHandler.h::printuIntValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printuIntValue</b> (ASN1UINT value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a11" doxytag="printHandler.h::printBitStrValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printBitStrValue</b> (ASN1UINT numbits, const ASN1OCTET *data)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a12" doxytag="printHandler.h::printOctStrValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printOctStrValue</b> (ASN1UINT numocts, const ASN1OCTET *data)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a13" doxytag="printHandler.h::printCharStrValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printCharStrValue</b> (const char *value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a14" doxytag="printHandler.h::printCharStr16BitValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printCharStr16BitValue</b> (ASN1UINT nchars, ASN116BITCHAR *data)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a15" doxytag="printHandler.h::printCharStr32BitValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printCharStr32BitValue</b> (ASN1UINT nchars, ASN132BITCHAR *data)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a16" doxytag="printHandler.h::printNullValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printNullValue</b> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a17" doxytag="printHandler.h::printOidValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printOidValue</b> (ASN1UINT numSubIds, ASN1UINT *pSubIds)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a18" doxytag="printHandler.h::printRealValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printRealValue</b> (double value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a19" doxytag="printHandler.h::printEnumValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printEnumValue</b> (ASN1UINT value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a20" doxytag="printHandler.h::printOpenTypeValue" ></a>
+void&nbsp;</td><td class="memItemRight" valign=bottom><b>printOpenTypeValue</b> (ASN1UINT numocts, const ASN1OCTET *data)</td></tr>
+
+<tr><td colspan=2><br><h2>Variables</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a0" doxytag="printHandler.h::printHandler" ></a>
+<a class="el" href="structAsn1NamedCEventHandler.shtml">Asn1NamedCEventHandler</a>&nbsp;</td><td class="memItemRight" valign=bottom><b>printHandler</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a1" doxytag="printHandler.h::pVarName" ></a>
+const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>pVarName</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="a2" doxytag="printHandler.h::gIndentSpaces" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>gIndentSpaces</b></td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+This is an implementation of a simple print handler.
+<p>
+It outputs the fields of an encoded PER message to stdout in a structured output format..
+<p>
+Definition in file <a class="el" href="printHandler_8h-source.shtml">printHandler.h</a>.<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

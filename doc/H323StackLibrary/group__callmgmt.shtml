@@ -1,0 +1,853 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>Call Management</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>Call Management</h1><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga0">ooCreateCall</a> (char *type, char *callToken)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a new call entry.  <a href="#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga1">ooAddCallToList</a> (<a class="el" href="structooEndPoint.shtml">ooEndPoint</a> *h323ep, <a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to add a call to the list of existing calls.  <a href="#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga2">ooFindCallByToken</a> (char *callToken)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a call by using the unique token for the call.  <a href="#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga3">ooEndCall</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to clear a call.  <a href="#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga4">ooRemoveCallFromList</a> (<a class="el" href="structooEndPoint.shtml">ooEndPoint</a> *h323ep, <a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to remove a call from the list of existing calls.  <a href="#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga5">ooCleanCall</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to clean a call.  <a href="#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga6">ooAddNewLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int channelNo, int sessionID, char *type, char *dir, <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *epCap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to add a new logical channel entry into the list of currently active logical channels.  <a href="#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga7">ooFindLogicalChannelByLogicalChannelNo</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int channelNo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a logical channel by logical channel number.  <a href="#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga8">ooOnLogicalChannelEstablished</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *pChannel)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called when a new logical channel is established.  <a href="#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga9">ooIsSessionEstablished</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int sessionID, char *dir)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This fuction is used to check whether a specified session in specified direction is active for the call.  <a href="#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga10">ooGetLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int sessionID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to retrieve a logical channel with particular sessionID.  <a href="#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga11">ooRemoveLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int ChannelNo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to remove a logical channel from the list of logical channels.  <a href="#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga12">ooClearLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int channelNo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to cleanup a logical channel.  <a href="#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga13">ooClearAllLogicalChannels</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to cleanup all the logical channels associated with the call.  <a href="#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga14">ooAddMediaInfo</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, ooMediaInfo mediaInfo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function can be used by an application to specify media endpoint information for different types of media.  <a href="#ga14"></a><br><br></td></tr>
+</table>
+<hr><h2>Function Documentation</h2>
+<a class="anchor" name="ga1" doxytag="ooCalls.h::ooAddCallToList" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooAddCallToList           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooEndPoint.shtml">ooEndPoint</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>h323ep</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to add a call to the list of existing calls.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>h323ep</em>&nbsp;</td><td>Pointer to the H323 Endpoint structure. </td></tr>
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call to be added.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga14" doxytag="ooCalls.h::ooAddMediaInfo" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooAddMediaInfo           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>ooMediaInfo&nbsp;</td>
+          <td class="mdname" nowrap> <em>mediaInfo</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function can be used by an application to specify media endpoint information for different types of media.
+<p>
+The stack by default uses local IP and port for media. An application can provide mediainfo if it wants to override default. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call </td></tr>
+    <tr><td valign=top><em>mediaInfo</em>&nbsp;</td><td>mediainfo structure which defines the media endpoint to be used.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga6" doxytag="ooCalls.h::ooAddNewLogicalChannel" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* ooAddNewLogicalChannel           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>channelNo</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>sessionID</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap><a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>epCap</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to add a new logical channel entry into the list of currently active logical channels.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call for which new logical channel entry has to be created. </td></tr>
+    <tr><td valign=top><em>channelNo</em>&nbsp;</td><td>Channel number for the new channel entry. </td></tr>
+    <tr><td valign=top><em>sessionID</em>&nbsp;</td><td>Session identifier for the new channel. </td></tr>
+    <tr><td valign=top><em>type</em>&nbsp;</td><td>Type of the channel(audio/video/data) </td></tr>
+    <tr><td valign=top><em>dir</em>&nbsp;</td><td>Direction of the channel(transmit/receive) </td></tr>
+    <tr><td valign=top><em>epCap</em>&nbsp;</td><td>Capability to be used for the new channel.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to logical channel, on success. NULL, on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga5" doxytag="ooCalls.h::ooCleanCall" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooCleanCall           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>call</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to clean a call.
+<p>
+It closes all associated sockets, removes call from list and frees up associated memory. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call to be cleared.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga13" doxytag="ooCalls.h::ooClearAllLogicalChannels" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooClearAllLogicalChannels           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>call</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to cleanup all the logical channels associated with the call.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call which owns the channels.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga12" doxytag="ooCalls.h::ooClearLogicalChannel" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooClearLogicalChannel           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>channelNo</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to cleanup a logical channel.
+<p>
+It first stops media, if it is still active and then removes the channel from the list, freeing up all the associated memory. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call which owns the logical channel. </td></tr>
+    <tr><td valign=top><em>channelNo</em>&nbsp;</td><td>Channel number identifying the channel.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga0" doxytag="ooCalls.h::ooCreateCall" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooCallData.shtml">ooCallData</a>* ooCreateCall           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>callToken</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to create a new call entry.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>type</em>&nbsp;</td><td>Type of the call (incoming/outgoing) </td></tr>
+    <tr><td valign=top><em>callToken</em>&nbsp;</td><td>Call Token, an uniques identifier for the call</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to a newly created call </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga3" doxytag="ooCalls.h::ooEndCall" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooEndCall           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>call</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to clear a call.
+<p>
+Based on what stage of clearance the call is it takes appropriate action. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call which has to be cleared.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga2" doxytag="ooCalls.h::ooFindCallByToken" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooCallData.shtml">ooCallData</a>* ooFindCallByToken           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>callToken</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to find a call by using the unique token for the call.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>callToken</em>&nbsp;</td><td>The unique token for the call.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to the call if found, NULL otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga7" doxytag="ooCalls.h::ooFindLogicalChannelByLogicalChannelNo" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* ooFindLogicalChannelByLogicalChannelNo           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>channelNo</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to find a logical channel by logical channel number.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call for which logical channel is required. </td></tr>
+    <tr><td valign=top><em>channelNo</em>&nbsp;</td><td>Forward Logical Channel number for the logical channel</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to the logical channel if found, NULL otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga10" doxytag="ooCalls.h::ooGetLogicalChannel" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* ooGetLogicalChannel           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>sessionID</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to retrieve a logical channel with particular sessionID.
+<p>
+Note that there can be two entries of logical channel, one in each direction. This function will return the first channel which has the same session ID. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call which owns the channels to be searched. </td></tr>
+    <tr><td valign=top><em>sessionID</em>&nbsp;</td><td>Session id of the session which is to be searched for.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Returns a pointer to the logical channel if found, NULL otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga9" doxytag="ooCalls.h::ooIsSessionEstablished" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN ASN1BOOL ooIsSessionEstablished           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>sessionID</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>dir</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This fuction is used to check whether a specified session in specified direction is active for the call.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to call for which session has to be queried. </td></tr>
+    <tr><td valign=top><em>sessionID</em>&nbsp;</td><td>Session id to identify the type of session(1 for audio, 2 for voice and 3 for data) </td></tr>
+    <tr><td valign=top><em>dir</em>&nbsp;</td><td>Direction of the session(transmit/receive)</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>1, if session active. 0, otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga8" doxytag="ooCalls.h::ooOnLogicalChannelEstablished" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooOnLogicalChannelEstablished           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap><a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>pChannel</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is called when a new logical channel is established.
+<p>
+It is particularly useful in case of faststart. When the remote endpoint selects one of the proposed alternatives, other channels for the same session type need to be closed. This function is used for that. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call which owns the logical channel. </td></tr>
+    <tr><td valign=top><em>pChannel</em>&nbsp;</td><td>Handle to the newly established logical channel.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga4" doxytag="ooCalls.h::ooRemoveCallFromList" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRemoveCallFromList           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooEndPoint.shtml">ooEndPoint</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>h323ep</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to remove a call from the list of existing calls.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>h323ep</em>&nbsp;</td><td>Pointer to the H323 Endpoint. </td></tr>
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call to be removed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga11" doxytag="ooCalls.h::ooRemoveLogicalChannel" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRemoveLogicalChannel           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>ChannelNo</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to remove a logical channel from the list of logical channels.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Pointer to the call from which logical channel has to be removed. </td></tr>
+    <tr><td valign=top><em>ChannelNo</em>&nbsp;</td><td>Forward logical channel number of the channel to be removed. </td></tr>
+  </table>
+</dl>
+    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>
