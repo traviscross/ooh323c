@@ -148,7 +148,7 @@ int ooBindPort(ooEndPoint *ep, int type,
       if((ret=ooSocketBind(socket, ipAddrs,
                      bindPort))==ASN_OK)
       {
-         return bindPort;
+        return bindPort;
       }
       else
       {

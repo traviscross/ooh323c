@@ -62,6 +62,7 @@ int main(int argc, char ** argv)
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+
    /* Add audio capability */
    audioCap.t = T_H245AudioCapability_g711Ulaw64k;
    audioCap.u.g711Ulaw64k = 240;

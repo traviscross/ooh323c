@@ -1552,11 +1552,14 @@ int ooParseDestination(ooCallData *call, char *dest)
       (iChaar >= 0        && iChaar <= 255) &&
       (!strchr(dest, ':') || iPort != -1))
    {
+      memset(call->remoteIP, 0, sizeof(call->remoteIP));
       sprintf(call->remoteIP, "%d.%d.%d.%d", iEk, iDon, iTeen, iChaar);
       if(strchr(dest, ':'))
          call->remotePort = iPort;
       else
          call->remotePort = 1720; /*Default h.323 port */
+      OOTRACEINFO3("Destination for new call parsed as Ip %s and port %d\n",
+                   call->remoteIP, call->remotePort);
       return OO_OK;
    }
 
@@ -1581,6 +1584,8 @@ int ooParseDestination(ooCallData *call, char *dest)
       strcpy(psNewAlias->value, dest);
       psNewAlias->next = call->remoteAliases;
       call->remoteAliases = psNewAlias;
+      OOTRACEINFO2("Destination for new call parsed as url %s\n",
+                    psNewAlias->value);
       return OO_OK;
    }
 
@@ -1607,6 +1612,8 @@ int ooParseDestination(ooCallData *call, char *dest)
          strcpy(psNewAlias->value, dest);
          psNewAlias->next = call->remoteAliases;
          call->remoteAliases = psNewAlias;
+         OOTRACEINFO2("Destination for new call is parsed as email %s\n",
+                      psNewAlias->value);
          return OO_OK;
       }
    }
@@ -1637,6 +1644,8 @@ int ooParseDestination(ooCallData *call, char *dest)
       strcpy(psNewAlias->value, dest);
       psNewAlias->next = call->remoteAliases;
       call->remoteAliases = psNewAlias;
+      OOTRACEINFO2("Destination for new call is parsed as dialed digits %s\n",
+                   psNewAlias->value);
       return OO_OK;
    }
    /* Evrything else is an h323-id for now */
@@ -1658,6 +1667,8 @@ int ooParseDestination(ooCallData *call, char *dest)
    strcpy(psNewAlias->value, dest);
    psNewAlias->next = call->remoteAliases;
    call->remoteAliases = psNewAlias;
+   OOTRACEINFO2("Destination for new call is parsed as h323-id %s\n",
+                psNewAlias->value);
    return OO_OK;
 }
 

@@ -192,6 +192,7 @@ int ooCreateH225Connection(ooCallData *call)
       OOTRACEINFO5("Trying to connect to remote endpoint(%s:%d) to setup "
                    "H2250 channel (%s, %s)\n", call->remoteIP,
                    call->remotePort, call->callType, call->callToken);
+
       if((ret=ooSocketConnect(channelSocket, call->remoteIP,
                               call->remotePort))==ASN_OK)
       {

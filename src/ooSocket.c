@@ -295,7 +295,7 @@ int ooSocketAccept (OOSOCKET socket, OOSOCKET *pNewSocket,
 int ooSocketConnect (OOSOCKET socket, const char* host, int port)
 {
    struct sockaddr_in m_addr;
-  
+
    if (socket == OOSOCKET_INVALID)
    {
       return ASN_E_INVSOCKET;
@@ -308,9 +308,8 @@ int ooSocketConnect (OOSOCKET socket, const char* host, int port)
    m_addr.sin_addr.s_addr = inet_addr (host);
 
    if (connect (socket, (struct sockaddr *) (void*) &m_addr,
-                sizeof (m_addr)) == -1)
+                sizeof (struct sockaddr_in)) == -1)
    {
-
       return ASN_E_INVSOCKET;
    }
    return ASN_OK;
