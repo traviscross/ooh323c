@@ -1,5 +1,5 @@
 Callback functions logic changed.
-
+Consolidated Text/Error descriptions in oo.c
 
 Release 0.5:
 1. Added RAS channel support. This release supports

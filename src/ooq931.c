@@ -1621,6 +1621,9 @@ int ooParseDestination(ooCallData *call, char *dest)
       }
    }
 
+ 
+   /* e-164 */
+   /* strspn(dest, "1234567890*#") == strlen(dest)*/
    /* Dialed digits test*/
    for(i=0; i<(int)strlen(dest); i++)
    {
