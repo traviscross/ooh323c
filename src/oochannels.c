@@ -668,8 +668,9 @@ int ooMonitorChannels()
                      call->pH245Channel->outQueue.count>0 &&
                      call->isTunnelingActive)
                   {
-                     OOTRACEDBGC3("Tunneling H245 message (%s, %s)\n",
-                                  call->callType, call->callToken);
+                     OOTRACEDBGC3("H245 message needs to be tunneled. "
+                                  "(%s, %s)\n", call->callType,
+                                  call->callToken);
                      ooSendMsg(call, OOH245MSG);
                   }
                }                               
@@ -1360,11 +1361,11 @@ int ooOnSendMsg
       break;
    case OOOpenLogicalChannel:
       if(call->isTunnelingActive)
-         OOTRACEINFO3("Tunneled Message - OpenLogicalChannel (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Tunneled Message - OpenLogicalChannel(%d). (%s, %s)\n",
+                       associatedChan, call->callType, call->callToken);
       else
-         OOTRACEINFO3("Sent Message - OpenLogicalChannel (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Sent Message - OpenLogicalChannel(%d). (%s, %s)\n",
+                       associatedChan, call->callType, call->callToken);
       /* Start LogicalChannel timer */
       cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
                                                      sizeof(ooTimerCallback));
@@ -1390,19 +1391,20 @@ int ooOnSendMsg
       break;
    case OOOpenLogicalChannelAck:
       if(call->isTunnelingActive)
-         OOTRACEINFO3("Tunneled Message - OpenLogicalChannelAck (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Tunneled Message - OpenLogicalChannelAck(%d) (%s,%s)\n",
+                       associatedChan, call->callType, call->callToken);
       else
-         OOTRACEINFO3("Sent Message - OpenLogicalChannelAck (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Sent Message - OpenLogicalChannelAck(%d) (%s, %s)\n",
+                       associatedChan, call->callType, call->callToken);
       break;
    case OOOpenLogicalChannelReject:
       if(call->isTunnelingActive)
-         OOTRACEINFO3("Tunneled Message - OpenLogicalChannelReject (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Tunneled Message - OpenLogicalChannelReject(%d)"
+                      "(%s, %s)\n", associatedChan, call->callType,
+                      call->callToken);
       else
-         OOTRACEINFO3("Sent Message - OpenLogicalChannelReject (%s, %s)\n",
-                       call->callType, call->callToken);
+         OOTRACEINFO4("Sent Message - OpenLogicalChannelReject(%d) (%s, %s)\n",
+                       associatedChan, call->callType, call->callToken);
       break;
    case OOEndSessionCommand:
       if(call->isTunnelingActive)

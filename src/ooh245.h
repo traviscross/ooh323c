@@ -178,6 +178,17 @@ EXTERN int ooHandleOpenLogicalAudioChannel
                       (ooCallData *call, H245OpenLogicalChannel*olc);
 
 /**
+ * This function is used to build and send OpenLogicalChannelReject message.
+ * @param call        Pointer to call for which OLCReject has to be sent.
+ * @param channelNum  LogicalChannelNumber to be rejected.
+ * @param cause       Cause of rejection.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooSendOpenLogicalChannelReject
+   (ooCallData *call, ASN1UINT channelNum, ASN1UINT cause);
+
+/**
  * This function is used to handle a received OpenLogicalChannelAck message.
  * @param call         Pointer to call for which OLCAck is received
  * @param olcAck       Pointer to received olcAck message.

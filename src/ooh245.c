@@ -770,16 +770,22 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_nonStandard' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_nullData:
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_nullData' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_videoData:
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_videoData' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_audioData:
       ooHandleOpenLogicalAudioChannel(call, olc);
@@ -788,44 +794,62 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_data' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_encryptionData:
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_encryptionData' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_h235Control:
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_h235Control' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_h235Media:
       OOTRACEWARN3("Warn:Media channel data type "
                    "'T_H245DataType_h235Media' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_multiplexedStream:
       OOTRACEWARN3("Warn:Media channel data type "
                   "'T_H245DataType_multiplexedStream' not supported(%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_redundancyEncoding:
       OOTRACEWARN3("Warn:Media channel data type "
                 "'T_H245DataType_redundancyEncoding' not supported (%s, %s)\n",
                   call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_multiplePayloadStream:
       OOTRACEWARN3("Warn:Media channel data type "
              "'T_H245DataType_multiplePayloadStream' not supported (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_fec:
       OOTRACEWARN3("Warn:Media channel data type 'T_H245DataType_fec' not "
                    "supported (%s, %s)\n", call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    default:
       OOTRACEERR3("ERROR:Unknown media channel data type (%s, %s)\n",
                    call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
    }
   
    return OO_OK;
@@ -848,17 +872,14 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
   
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
     &(olc->forwardLogicalChannelParameters);
-   if(call->noOfLogicalChannels>=5)
-   {
-      OOTRACEERR3("ERROR:Can not open more than 5 logical channels per call "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
+
    if(!(epCap=ooIsAudioDataTypeSupported(call, flcp->dataType.u.audioData,
                                      OORX)))
    {
       OOTRACEERR3("ERROR:OpenLogicalChannel - audio capability not supported "
                   "(%s, %s)\n", call->callType, call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+          T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       return OO_FAILED;
    }
    /* Generate an Ack for the open channel request */
@@ -950,8 +971,9 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannelAck message to outbound queue. (%s, %s)\n",
-                  call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannelAck message to "
+                  "outbound queue. (%s, %s)\n", call->callType,
+                  call->callToken);
    }
    ooFreeH245Message(call, ph245msg);
 
@@ -970,6 +992,62 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    }
    return ret;
 }
+
+int ooSendOpenLogicalChannelReject
+   (ooCallData *call, ASN1UINT channelNum, ASN1UINT cause)
+{
+   int ret=0;
+   H245ResponseMessage* response=NULL;
+   H245Message *ph245msg=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
+
+   ret = ooCreateH245Message
+      (&ph245msg, T_H245MultimediaSystemControlMessage_response);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3("Error:H245 message creation failed for - OpenLogicalChannel"
+                  "Reject (%s, %s)\n",call->callType,
+                  call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OOOpenLogicalChannelReject;
+   response = ph245msg->h245Msg.u.response;
+
+   response->t = T_H245ResponseMessage_openLogicalChannelReject;
+
+   response->u.openLogicalChannelReject =
+      (H245OpenLogicalChannelReject*)
+      memAlloc (pctxt, sizeof(H245OpenLogicalChannelReject));
+
+   if(!response->u.openLogicalChannelReject)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for OpenLogicalChannel"
+                  "Reject message. (%s, %s)\n", call->callType,
+                  call->callToken);
+      ooFreeH245Message(call, ph245msg);
+      return OO_FAILED;
+   }
+   response->u.openLogicalChannelReject->forwardLogicalChannelNumber =
+                                                                 channelNum;
+   response->u.openLogicalChannelReject->cause.t = cause;
+
+   OOTRACEDBGA3 ("Built OpenLogicalChannelReject (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   ret = ooSendH245Msg (call, ph245msg);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3
+         ("Error:Failed to enqueue OpenLogicalChannelReject "
+          "message to outbound queue.(%s, %s)\n", call->callType,
+          call->callToken);
+   }
+  
+   ooFreeH245Message (call, ph245msg);
+
+   return ret;
+}
+
 
 int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
                                       H245OpenLogicalChannelAck *olcAck)
