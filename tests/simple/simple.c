@@ -77,14 +77,14 @@ int main(int argc, char ** argv)
       if(!strcmp(argv[x], "--use-ip"))
       {
          x++;
-         strncpy(ourip, argv[x], sizeof(ourip));
+         strncpy(ourip, argv[x], sizeof(ourip)-1);
       }else if(!strcmp(argv[x],"--use-port"))
       {
          x++;
          ourport = atoi(argv[x]);
       }else if(!dest_found)
       {
-         strncpy(dest, argv[x], sizeof(dest));
+         strncpy(dest, argv[x], sizeof(dest)-1);
          dest_found=1;
       }else {
          printf("USAGE:\n%s",USAGE);
