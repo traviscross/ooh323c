@@ -639,7 +639,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    /* Tpkt length octets populated with total length of the message */
    if(msgbuf[0] != OOFacility)
    {
-      len = i-1
+      len = i-1;
       msgbuf[3] = (len >> 8);
       msgbuf[4] = len;        /* including tpkt header */
    }else{
