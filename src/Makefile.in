@@ -585,10 +585,10 @@ uninstall-am: uninstall-info-am uninstall-libLIBRARIES
 
 
 opt:
-        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -O2 -D_COMPACT" all
+        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_REENTRANT -O2 -D_COMPACT" all
 
 debug:
-        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_OODEBUGC -D_REENTRANT"  all
+        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT"  all
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
