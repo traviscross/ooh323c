@@ -39,6 +39,10 @@ typedef struct _OOTimer {
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+void ooInitTimerList();
+
 /**
  * This function computes the relative expiration time from the current
  * time for the given timer object.

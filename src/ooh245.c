@@ -677,6 +677,30 @@ int ooSendMasterSlaveDeterminationReject (ooCallData* call)
    return ret;
 }
 
+
+int ooHandleMasterSlaveReject
+   (ooCallData *call, H245MasterSlaveDeterminationReject* reject)
+{
+   if(call->retries.msdRetries < DEFAULT_MAX_RETRIES)
+   {
+      call->retries.msdRetries++;
+      OOTRACEDBGA3("Retrying MasterSlaveDetermination. (%s, %s)\n",
+                    call->callType, call->callToken);
+      call->masterSlaveState = OO_MasterSlave_Idle;
+      ooSendMasterSlaveDetermination(call);
+      return OO_OK;
+   }
+   OOTRACEERR3("Error:Failed to complete MasterSlaveDetermination - "
+               "Ending call. (%s, %s)\n", call->callType, call->callToken);
+   if(call->callState < OO_CALL_CLEAR)
+   {
+      call->callEndReason = OO_HOST_CLEARED;
+      call->callState = OO_CALL_CLEAR;
+   }
+   return OO_OK;
+}
+
+
 int ooHandleOpenLogicalChannel(ooCallData* call,
                                  H245OpenLogicalChannel *olc)
 {
@@ -1539,6 +1563,9 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
             ooHandleMasterSlave(call,
                                 response->u.masterSlaveDeterminationAck,
                                   OOMasterSlaveAck);
+            break;
+         case T_H245ResponseMessage_masterSlaveDeterminationReject:
+            ooHandleMasterSlaveReject(call, response->u.masterSlaveDeterminationReject);
             break;
          case T_H245ResponseMessage_terminalCapabilitySetAck:
             ooOnReceivedTerminalCapabilitySetAck(call);

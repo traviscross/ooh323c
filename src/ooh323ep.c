@@ -166,6 +166,7 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    pthread_mutex_init(&gCallRefMutex, 0);
 #endif
    dListInit(&gCmdList);
+   ooInitTimerList();
    initContext(&gCtxt);
    gCallTokenBase = 1;
    gCallTokenMax = 1000;

@@ -168,6 +168,7 @@
 #define OO_CALLMODE_VIDEOCALL 304
 #define OO_CALLMODE_FAX       305
 
+#define DEFAULT_MAX_RETRIES 3
 /** Type of callback functions to be registered at the time of
  * channel creation.
  */
@@ -319,6 +320,13 @@ typedef struct OOH323Channel {
    DList        outQueue;
 } OOH323Channel;
 
+typedef struct OORetries {
+   ASN1USINT   msdRetries;
+   ASN1USINT   olcRetries;
+} OORetries;
+
+
+
 typedef struct ooCallData {
    OOCTXT               *pctxt;
    char                 callToken[20]; /* ex: ooh323c_call_1 */
@@ -362,6 +370,7 @@ typedef struct ooCallData {
    int                  logicalChanNoCur;
    int                  isAudioActive;
    DList                timerList;
+   OORetries            retries;
    struct ooCallData*   next;
    struct ooCallData*   prev;
 } ooCallData;

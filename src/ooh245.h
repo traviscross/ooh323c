@@ -141,6 +141,20 @@ EXTERN int ooSendMasterSlaveDeterminationAck(ooCallData* call, char * status);
  */
 EXTERN int ooSendMasterSlaveDeterminationReject (ooCallData* call);
 
+
+/**
+ * This function is used to handle MasterSlaveReject message. If number of
+ * retries is less than max allowed, then it restarts the
+ * MasterSlaveDetermination procedure.
+ * @param call        Handle to the call for which MasterSlaveReject is
+ *                    received.
+ * @param reject      Poinetr to the received reject message.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooHandleMasterSlaveReject
+   (ooCallData *call, H245MasterSlaveDeterminationReject* reject);
+
 /**
  * This function is used to handle received OpenLogicalChannel message.
  * @param call        Pointer to call for which OpenLogicalChannel message is

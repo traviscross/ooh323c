@@ -16,6 +16,7 @@
 
 #include "ooDateTime.h"
 #include "ooTimer.h"
+#include "ootrace.h"
 
 #define USECS_IN_SECS 1000000
 #define NSECS_IN_USECS 1000
@@ -28,6 +29,11 @@
  * Global timer list (list of OOTimer*)
  */
 static DList gs_TimerList;
+
+void ooInitTimerList()
+{
+   dListInit(&gs_TimerList);
+}
 
 OOTimer* ooTimerCreate
 (OOCTXT* pctxt, OOTimerCbFunc cb, OOUINT32 deltaSecs, void *data,
@@ -100,6 +106,7 @@ void ooTimerFireExpired (OOCTXT* pctxt)
       pTimer = (OOTimer*) gs_TimerList.head->data;
 
       if (ooTimerExpired (pTimer)) {
+        OOTRACEDBGC1("TEST -Found expired timer\n");
          /*
           * Re-register before calling callback function in case it is
           * a long duration callback.                                  
