@@ -64,9 +64,6 @@ int ooH323EpInitialize(const char *callerid, int callMode)
   
    gH323ep.aliases = NULL;
   
-
-
-     
    gH323ep.termType = DEFAULT_TERMTYPE;
 
    gH323ep.t35CountryCode = DEFAULT_T35COUNTRYCODE;
@@ -100,9 +97,6 @@ int ooH323EpInitialize(const char *callerid, int callMode)
       strcpy(gH323ep.callerid, "objsyscall");
    }
 
-
-
-
    gH323ep.myCaps = NULL;
    gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
@@ -118,11 +112,8 @@ int ooH323EpInitialize(const char *callerid, int callMode)
    pthread_mutex_init(&gCallTokenMutex, 0);
    pthread_mutex_init(&gCallRefMutex, 0);
 #endif
-   dListInit(&gCmdList);
-
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
 
-   initContext(&gCtxt);
    gCallTokenBase = 1;
    gCallTokenMax = 1000;
    gCurCallToken = 1;
@@ -341,8 +332,6 @@ int ooH323EpDestroy(void)
    DeleteCriticalSection(&gCallTokenMutex);
    DeleteCriticalSection(&gCallRefMutex);
 #endif
-   dListFreeAll(&gCtxt, &gCmdList);
-   freeContext(&gCtxt);
    return OO_OK;
 }
 

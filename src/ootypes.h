@@ -238,8 +238,6 @@ int gMonitor;
  *  be processed.
  */
 DList gCmdList;
-/** Context for stack commands list */
-OOCTXT gCtxt;
 
 /**
  * Mutex to protect access to stack commands list */
@@ -503,6 +501,7 @@ typedef struct ooEndPoint{
    ASN1UINT tcsTimeout;
    ASN1UINT logicalChannelTimeout;
    ASN1UINT sessionTimeout;
+   DList stkCmdList;    /* stack command list */
 } ooEndPoint;
 
 #endif

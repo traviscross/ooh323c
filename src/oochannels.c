@@ -527,11 +527,11 @@ int ooMonitorChannels()
       /* If gatekeeper is present, then we should not be processing
          any call related command till we are registered with the gk.
       */
-      if(gCmdList.count >0)
+      if (gH323ep.stkCmdList.count > 0)
       {
-         for(i=0; i< (int)gCmdList.count; i++)
+         for(i=0; i< (int)gH323ep.stkCmdList.count; i++)
          {
-            curNode = dListFindByIndex (&gCmdList, i) ;
+            curNode = dListFindByIndex (&gH323ep.stkCmdList, i) ;
             cmd = (ooCommand*) curNode->data;
             switch(cmd->type)
             {
@@ -593,12 +593,12 @@ int ooMonitorChannels()
                break;
             default: printf("Unhandled command\n");
             }
-           dListRemove (&gCmdList, curNode);
-           memFreePtr(&gCtxt, curNode);
-           if(cmd->param1) memFreePtr(&gCtxt, cmd->param1);
-           if(cmd->param2) memFreePtr(&gCtxt, cmd->param2);
-           if(cmd->param3) memFreePtr(&gCtxt, cmd->param3);
-           memFreePtr(&gCtxt, cmd);
+           dListRemove (&gH323ep.stkCmdList, curNode);
+           memFreePtr (&gH323ep.ctxt, curNode);
+           if(cmd->param1) memFreePtr(&gH323ep.ctxt, cmd->param1);
+           if(cmd->param2) memFreePtr(&gH323ep.ctxt, cmd->param2);
+           if(cmd->param3) memFreePtr(&gH323ep.ctxt, cmd->param3);
+           memFreePtr (&gH323ep.ctxt, cmd);
          }
       }
 #ifdef _WIN32

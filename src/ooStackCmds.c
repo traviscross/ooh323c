@@ -14,12 +14,14 @@
  *
  *****************************************************************************/
 
-
 #include "ooStackCmds.h"
 #include "ootrace.h"
 #include "ooq931.h"
 
-int ooMakeCall(char * dest, char*callToken)
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
+int ooMakeCall(char* dest, char* callToken)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -27,7 +29,7 @@ int ooMakeCall(char * dest, char*callToken)
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - "
@@ -36,7 +38,7 @@ int ooMakeCall(char * dest, char*callToken)
    }
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_MAKECALL;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(dest)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(dest)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
@@ -56,7 +58,7 @@ int ooMakeCall(char * dest, char*callToken)
    if(gCurCallToken > gCallTokenMax)
       gCurCallToken = gCallTokenBase;
 
-   cmd->param2 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   cmd->param2 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param2)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
@@ -64,7 +66,8 @@ int ooMakeCall(char * dest, char*callToken)
    }
   
    strcpy((char*)cmd->param2, callToken);
-   dListAppend(&gCtxt, &gCmdList, cmd);
+
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
 
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
@@ -83,7 +86,7 @@ int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef)
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - "
@@ -91,7 +94,7 @@ int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef)
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL_3;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(dest)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(dest)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
@@ -111,7 +114,7 @@ int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef)
    if(gCurCallToken > gCallTokenMax)
       gCurCallToken = gCallTokenBase;
 
-   cmd->param2 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   cmd->param2 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param2)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
@@ -121,14 +124,14 @@ int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef)
    strcpy((char*)cmd->param2, callToken);
 
    *callRef = ooGenerateCallReference();
-   cmd->param3 = (void*) ASN1MALLOC(&gCtxt, sizeof(ASN1USINT));
+   cmd->param3 = (void*) ASN1MALLOC(&gH323ep.ctxt, sizeof(ASN1USINT));
    if(!cmd->param3)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
       return OO_FAILED;
    }
    *((ASN1USINT*)cmd->param3) = *callRef;
-   dListAppend(&gCtxt, &gCmdList, cmd);
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
 
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
@@ -147,7 +150,7 @@ int ooAnswerCall(char *callToken)
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - AnswerCall\n");
@@ -156,7 +159,7 @@ int ooAnswerCall(char *callToken)
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_ANSCALL;
 
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - AnsCall\n");
@@ -164,7 +167,7 @@ int ooAnswerCall(char *callToken)
    }
    strcpy((char*)cmd->param1, callToken);
   
-   dListAppend(&gCtxt, &gCmdList, cmd);
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
 
 #ifdef _WIN32
@@ -184,7 +187,7 @@ int ooRejectCall(char* callToken, int cause)
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - RejectCall\n");
@@ -193,7 +196,7 @@ int ooRejectCall(char* callToken, int cause)
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_REJECTCALL;
 
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - RejectCall\n");
@@ -201,7 +204,7 @@ int ooRejectCall(char* callToken, int cause)
    }
    strcpy((char*)cmd->param1, callToken);
   
-   dListAppend(&gCtxt, &gCmdList, cmd);
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
 
 #ifdef _WIN32
@@ -222,7 +225,7 @@ int ooHangCall(char * callToken)
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - HangCall\n");
@@ -231,7 +234,7 @@ int ooHangCall(char * callToken)
 
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_HANGCALL;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - HangCall\n");
@@ -239,7 +242,7 @@ int ooHangCall(char * callToken)
    }
    strcpy((char*)cmd->param1, callToken);
   
-   dListAppend(&gCtxt, &gCmdList, cmd);
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
 
 #ifdef _WIN32
@@ -259,7 +262,7 @@ int ooStopMonitor()
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
-   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   cmd = (ooCommand*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - StopMonitor\n");
@@ -268,7 +271,7 @@ int ooStopMonitor()
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_STOPMONITOR;
   
-   dListAppend(&gCtxt, &gCmdList, cmd);
+   dListAppend (&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
