@@ -739,7 +739,7 @@ int ooSendAlerting(ooCallData *call)
   
    ooSendH225Msg(call, q931msg);
    OOTRACEINFO3("Built Alerting (%s, %s)\n", call->callType, call->callToken);
-   gH323ep.onAlerting(call);
+   /*gH323ep.onAlerting(call);*/
    return OO_OK;
 }
 
@@ -1182,8 +1182,8 @@ int ooAcceptCall(ooCallData *call)
    OOTRACEINFO3("Built H.225 Connect message (%s, %s)\n", call->callType,
                  call->callToken);
 
-   if(gH323ep.onIncomingCall)
-      gH323ep.onIncomingCall(call);
+   /*   if(gH323ep.onIncomingCall)
+        gH323ep.onIncomingCall(call);*/
    return OO_OK;
 }
 
@@ -1249,6 +1249,7 @@ int ooH323CallAdmitted(ooCallData *call)
       OOTRACEERR1("ERROR: Invalid call parameter to ooH323CallAdmitted");
       return OO_FAILED;
    }
+
    if(!strcmp(call->callType, "outgoing"))
    {
       ret = ooCreateH225Connection(call);
@@ -1261,6 +1262,8 @@ int ooH323CallAdmitted(ooCallData *call)
       }
       ret = ooH323MakeCall_helper(call);
    } else { /* An incoming call */
+      if(gH323ep.onIncomingCall)
+         gH323ep.onIncomingCall(call);
       ooSendAlerting(call); /* Send alerting message */
       if(gH323ep.autoAnswer)
          ooSendConnect(call); /* Send connect message - call accepted */

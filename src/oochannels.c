@@ -1025,7 +1025,8 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOSetup:
       OOTRACEINFO3("Sent Message - Setup (%s, %s)\n", call->callType,
                     call->callToken);
-      gH323ep.onOutgoingCall(call);
+      if(gH323ep.onOutgoingCall)
+         gH323ep.onOutgoingCall(call);
       break;
    case OOCallProceeding:
       OOTRACEINFO3("Sent Message - CallProceeding (%s, %s)\n", call->callType,
@@ -1034,15 +1035,20 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOAlert:
       OOTRACEINFO3("Sent Message - Alerting (%s, %s)\n", call->callType,
                     call->callToken);
-     
+      if(gH323ep.onAlerting)
+         gH323ep.onAlerting(call);
       break;
    case OOConnect:
       OOTRACEINFO3("Sent Message - Connect (%s, %s)\n", call->callType,
                     call->callToken);
+      if(gH323ep.onCallEstablished)
+         gH323ep.onCallEstablished(call);
       break;
    case OOReleaseComplete:
       OOTRACEINFO3("Sent Message - ReleaseComplete (%s, %s)\n", call->callType,
                     call->callToken);
+      if(gH323ep.onCallCleared)
+         gH323ep.onCallCleared(call);
 #ifdef __USING_RAS
          ooRasSendDisengageRequest(call);
 #endif

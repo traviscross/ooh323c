@@ -1,3 +1,6 @@
+Callback functions logic changed.
+
+
 Release 0.5:
 1. Added RAS channel support. This release supports
    GatekeeperRequest, RegistrationRequest, AdmissionRequest,

@@ -436,7 +436,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
 
 int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
 {
-   int ret=0;
+   int ret=OO_OK;
    int type = q931Msg->messageType;
    switch(type)
    {
@@ -477,12 +477,21 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931AlertingMsg:/* Alerting message received */
          OOTRACEINFO3("H.225 Alerting message received (%s, %s)\n",
                       call->callType, call->callToken);
+         if(gH323ep.onAlerting)
+            gH323ep.onAlerting(call);
          ooFreeQ931Message(q931Msg);
          break;
       case Q931ConnectMsg:/* Connect message received */
          OOTRACEINFO3("H.225 Connect message received (%s, %s)\n",
                       call->callType, call->callToken);        
-         ooOnReceivedSignalConnect(call, q931Msg);
+         ret = ooOnReceivedSignalConnect(call, q931Msg);
+         if(ret != OO_OK)
+            OOTRACEERR3("Error:Invalid Connect message received. (%s, %s)\n",
+                        call->callType, call->callToken);
+         else{
+            if(gH323ep.onCallEstablished)
+                gH323ep.onCallEstablished(call);
+         }
          ooFreeQ931Message(q931Msg);
          break;
       case Q931InformationMsg:
@@ -500,6 +509,8 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
                call->callEndReason = OO_REMOTE_CLEARED;
             call->callState = OO_CALL_CLEARED;
          }
+         if(gH323ep.onCallCleared)
+            gH323ep.onCallCleared(call);        
 #ifdef __USING_RAS
          ooRasSendDisengageRequest(call);
 #endif
@@ -541,7 +552,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
                       call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
    }
-   return OO_OK;
+   return ret;
 }
 
 int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
