@@ -199,9 +199,11 @@ static char *msgTypes[]={
 */
 #define MAXMSGLEN 4096
 
-#define OO_CMD_MAKECALL 201
-#define OO_CMD_HANGCALL 202
-#define OO_CMD_STOPMONITOR 203
+#define OO_CMD_MAKECALL    201
+#define OO_CMD_ANSCALL     202
+#define OO_CMD_REJECTCALL  203
+#define OO_CMD_HANGCALL    204
+#define OO_CMD_STOPMONITOR 205
 
 
 /**
@@ -465,7 +467,7 @@ typedef struct ooEndPoint{
    int listenPort;
    OOSOCKET *listener;
    ooCallData *callList;
-  
+   int autoAnswer;   /* 1 to enable, 0 to disable */
    int callMode; /* audio/audiorx/audiotx/video/fax */
 
 } ooEndPoint;

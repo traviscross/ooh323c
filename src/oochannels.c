@@ -453,6 +453,15 @@ int ooMonitorChannels()
                ooH323MakeCall((char*)cmd->param1, *(int*)cmd->param2,
                              (char*)cmd->param3);
                break;
+            case OO_CMD_ANSCALL:
+               OOTRACEINFO2("Processing Answer Call command for %s\n",
+                            (char*)cmd->param1);
+               ooSendConnect(ooFindCallByToken((char*)cmd->param1));
+               break;
+            case OO_CMD_REJECTCALL:
+               OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
+               ooEndCall(ooFindCallByToken((char*)cmd->param1));
+               break;
             case OO_CMD_HANGCALL:
                OOTRACEINFO2("Processing Hang call command %s\n",
                              (char*)cmd->param1);

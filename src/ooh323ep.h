@@ -100,7 +100,24 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
  * @return          OO_OK on success
  *                  OO_FAILED on failure
  */
-EXTERN int ooDestroyH323Ep();
+EXTERN int ooDestroyH323Ep(void);
+
+
+/**
+ * This function is used to enable the auto answer feature for
+ * incoming calls
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooEnableAutoAnswer(void);
+
+/**
+ * This function is used to disable the auto answer feature for
+ * incoming calls.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooDisableAutoAnswer(void);
 
 /**
  * This function is used to enable/disable faststart.

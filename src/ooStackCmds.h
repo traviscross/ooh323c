@@ -50,6 +50,24 @@ extern "C" {
  */
 EXTERN int ooMakeCall(char * destip, int port, char *callToken);
 
+
+/**
+ * This function is used to answer a call
+ * @param callToken   Unique token for the call
+ *
+ * @return            OO_OK, on success. OO_FAILED, otherwise.
+ */
+EXTERN int ooAnswerCall(char *callToken);
+
+/**
+ * This function is used to reject an incoming call.
+ * @param callToken   Unique token for the call.
+ * @param cause       Cause for rejecting the call.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooRejectCall(char* callToken, int cause);
+
 /**
  * This function is used by an user application to hang a call.
  * @param callToken   The uinque token for the call.

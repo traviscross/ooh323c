@@ -152,6 +152,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gCallTokenBase = 1;
    gCallTokenMax = 1000;
    gCurCallToken = 1;
+   gH323ep.autoAnswer = 1;
+   OOTRACEINFO1("\tAutoAnswer - enabled\n");
    OOTRACEINFO1("H323 endpoint initialize - successful\n");
    return OO_OK;
 }
@@ -170,7 +172,7 @@ int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
    return OO_OK;
 }
 
-int ooDestroyH323Ep()
+int ooDestroyH323Ep(void)
 {
    /* free any internal memory allocated
       close trace file free context structure
@@ -204,6 +206,19 @@ int ooDestroyH323Ep()
    return OO_OK;
 }
 
+int ooEnableAutoAnswer(void)
+{
+   OOTRACEINFO1("AutoAnswer is enabled\n");
+   gH323ep.autoAnswer = 1;
+   return OO_OK;
+}
+
+int ooDisableAutoAnswer(void)
+{
+   OOTRACEINFO1("AutoAnswer is disabled\n");
+   gH323ep.autoAnswer = 0;
+   return OO_OK;
+}
 
 int ooSetFastStart(int value)
 {

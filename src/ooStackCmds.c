@@ -75,6 +75,79 @@ int ooMakeCall(char * destip, int port, char*callToken)
    return OO_OK;
 }
 
+EXTERN int ooAnswerCall(char *callToken)
+{
+   ooCommand *cmd;
+#ifdef _WIN32
+   EnterCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_lock(&gCmdMutex);
+#endif
+   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   if(!cmd)
+   {
+      OOTRACEERR1("Error:Allocating memory for command structure - AnswerCall\n");
+      return OO_FAILED;
+   }
+   cmd->type = OO_CMD_ANSCALL;
+
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   if(!cmd->param1)
+   {
+      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - AnsCall\n");
+      return OO_FAILED;
+   }
+   memcpy(cmd->param1, (void*)callToken, strlen(callToken));
+  
+   dListAppend(&gCtxt, &gCmdList, cmd);
+  
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
+   return OO_OK;
+}
+
+EXTERN int ooRejectCall(char* callToken, int cause)
+{
+   ooCommand *cmd;
+#ifdef _WIN32
+   EnterCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_lock(&gCmdMutex);
+#endif
+   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   if(!cmd)
+   {
+      OOTRACEERR1("Error:Allocating memory for command structure - RejectCall\n");
+      return OO_FAILED;
+   }
+   cmd->type = OO_CMD_REJECTCALL;
+
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken));
+   if(!cmd->param1)
+   {
+      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - RejectCall\n");
+      return OO_FAILED;
+   }
+   memcpy(cmd->param1, (void*)callToken, strlen(callToken));
+  
+   dListAppend(&gCtxt, &gCmdList, cmd);
+  
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
+   return OO_OK;
+}
+
+
 EXTERN int ooHangCall(char * callToken)
 {
    ooCommand *cmd;

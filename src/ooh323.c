@@ -437,7 +437,8 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          ooOnReceivedSetup(call, q931Msg);
          ooSendCallProceeding(call);/* Send call proceeding message*/
          ooSendAlerting(call); /* Send alerting message */
-         ooSendConnect(call); /* Send connect message - call accepted */
+         if(gH323ep.autoAnswer)
+            ooSendConnect(call); /* Send connect message - call accepted */
 
          /* Free up the mem used by the received message, as it's processing
             is done.
