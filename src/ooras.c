@@ -487,7 +487,6 @@ static void ooRasFillVendor( H225VendorIdentifier *psVendor )
    psVendor->vendor.t35Extension = gH323ep.t35Extension;
    psVendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
    psVendor->enterpriseNumber.numids=0;
-   dListInit( &psVendor->extElem1 );
    if(gH323ep.productID)
    {
       psVendor->m.productIdPresent = 1;
@@ -759,7 +758,6 @@ static int ooRasManageMessage( ooRasMessage *psRasMsg )
    case T_H225RasMessage_serviceControlIndication:
    case T_H225RasMessage_serviceControlResponse:
    case T_H225RasMessage_admissionConfirmSequence:
-   case T_H225RasMessage_extElem1:
    default:
       /* Unhandled RAS message */
       iRet= OO_FAILED;
@@ -890,7 +888,6 @@ static int ooRasSendGRQ()
       ooFreeRasMessage( psRasMsg );
       return OO_FAILED;
    }
-   dListInit( &psGkReq->extElem1 );
    iRet = ooRasSend(psRasMsg);
    if(iRet != OO_OK)
    {
@@ -932,9 +929,6 @@ static int ooRasManageGatekeeperReject(H225GatekeeperReject *psGatekeeperReject)
          break;
       case T_H225GatekeeperRejectReason_securityError:
          OOTRACEERR1("Gatekeeper Reject - Security Error\n");
-         break;
-      case T_H225GatekeeperRejectReason_extElem1:
-         OOTRACEERR1("Gatekeeper Reject - Ext Elem\n");
          break;
       default:
          OOTRACEERR1("Gatekeeper Reject - Invalid reason\n");
@@ -1295,9 +1289,6 @@ static int ooRasManageRegistrationReject
       break;
    case T_H225RegistrationRejectReason_securityError:
       OOTRACEERR1("RRQ Rejected - Security Error\n");
-      break;
-   case T_H225RegistrationRejectReason_extElem1:
-      OOTRACEERR1("RRQ Rejected - Extension Elements\n");
       break;
    default:
       OOTRACEINFO1("RRQ Rejected - Invalid Reason\n");

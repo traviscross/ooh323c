@@ -935,11 +935,6 @@ int ooSendReleaseComplete(ooCallData *call)
    }
 
    /* Add user-user ie */
-#ifndef _COMPACT
-   dListInit(&q931msg->userInfo->extElem1);
-   dListInit(&q931msg->userInfo->user_data.extElem1);
-   dListInit(&q931msg->userInfo->h323_uu_pdu.extElem1);
-#endif
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
    q931msg->userInfo->h323_uu_pdu.h245Tunneling = FALSE;
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
@@ -947,9 +942,6 @@ int ooSendReleaseComplete(ooCallData *call)
   
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.releaseComplete =
                                                              releaseComplete;
-#ifndef _COMPACT
-   dListInit(&releaseComplete->extElem1);
-#endif
    releaseComplete->m.callIdentifierPresent = 1;
    releaseComplete->protocolIdentifier = gProtocolID;
    releaseComplete->callIdentifier.guid.numocts =
@@ -957,9 +949,6 @@ int ooSendReleaseComplete(ooCallData *call)
    memcpy(releaseComplete->callIdentifier.guid.data,
                                   call->callIdentifier.guid.data,
                                   call->callIdentifier.guid.numocts);
-#ifndef _COMPACT
-   dListInit(&releaseComplete->callIdentifier.extElem1);
-#endif
      
    /* Send H225 message */  
    ooSendH225Msg(call, q931msg);

@@ -258,7 +258,6 @@ ooH323EpCapability* ooIsAudioCapSupported
       case T_H245AudioCapability_vbd:
       case T_H245AudioCapability_audioTelephonyEvent:
       case T_H245AudioCapability_audioTone:
-      case T_H245AudioCapability_extElem1:
       default:;
       }
       if(found) break;

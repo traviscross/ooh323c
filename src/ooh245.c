@@ -106,7 +106,6 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
 
          default:
             OOTRACEERR1("ERROR: H245 message type not supported\n");
-            (*pph245msg)->h245Msg.u.extElem1 = 0;
       }
 
       return OO_OK;
@@ -276,9 +275,7 @@ int ooSendTermCapMsg(ooCallData *call)
    termCap->m.capabilityDescriptorsPresent = 1;
    termCap->sequenceNumber = ++(call->localTermCapSeqNo); 
    termCap->protocolIdentifier = gh245ProtocolID; /* protocol id */
-#ifndef _COMPACT
-   dListInit(&(termCap->extElem1));
-#endif /* !_COMPACT */
+
    /* TODO:Right now we add all the endpoint capabilities  to the message.
            Need a way by which application can specify one set of capabilities
            for one call and another set for another call. (First step is do we need
@@ -541,9 +538,6 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
    pMasterSlave->statusDeterminationNumber =
                        ooGenerateStatusDeterminationNumber();
    call->statusDeterminationNumber = pMasterSlave->statusDeterminationNumber;
-#ifndef _COMPACT
-   dListInit(&(pMasterSlave->extElem1));
-#endif /* !_COMPACT */  
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built MasterSlave Determination (%s, %s)\n", call->callType,
                  call->callToken);
@@ -583,9 +577,6 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
       response->u.masterSlaveDeterminationAck->decision.t =
                          T_H245MasterSlaveDeterminationAck_decision_slave;
   
-#ifndef _COMPACT
-   dListInit(&(response->u.masterSlaveDeterminationAck->extElem1));
-#endif /* !_COMPACT */
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built MasterSlave determination Ack (%s, %s)\n",
                 call->callType, call->callToken);
@@ -664,10 +655,6 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
       OOTRACEWARN3("Warn:Media channel data type 'T_H245DataType_fec' not "
                    "supported (%s, %s)\n", call->callType, call->callToken);
       break;
-   case T_H245DataType_extElem1:
-      OOTRACEWARN3("Warn:Media channel data type 'T_H245DataType_extElem1' "
-                  "not supported (%s, %s)\n", call->callType, call->callToken);
-      break;
    default:
       OOTRACEERR3("ERROR:Unknown media channel data type (%s, %s)\n",
                    call->callType, call->callToken);
@@ -730,10 +717,6 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    memset(olcAck, 0, sizeof(H245OpenLogicalChannelAck));
    olcAck->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
 
-#ifndef _COMPACT
-   dListInit(&(olcAck->extElem1));
-#endif /* !_COMPACT */
-
    olcAck->m.forwardMultiplexAckParametersPresent = 1;
    olcAck->forwardMultiplexAckParameters.t =
      T_H245OpenLogicalChannelAck_forwardMultiplexAckParameters_h2250LogicalChannelAckParameters;
@@ -743,10 +726,6 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    h2250lcap =
       olcAck->forwardMultiplexAckParameters.u.h2250LogicalChannelAckParameters;
    memset(h2250lcap, 0, sizeof(H245H2250LogicalChannelAckParameters));
-
-#ifndef _COMPACT
-   dListInit(&(h2250lcap->extElem1));
-#endif /* !_COMPACT */
 
    h2250lcap->m.mediaChannelPresent = 1;
    h2250lcap->m.mediaControlChannelPresent = 1;
@@ -765,10 +744,6 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
    iPAddress = unicastAddrs->u.iPAddress;
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
-
-#ifndef _COMPACT
-   dListInit(&(iPAddress->extElem1));
-#endif /* !_COMPACT */
 
    pLogicalChannel = ooAddNewLogicalChannel(call,
                         olc->forwardLogicalChannelNumber, h2250lcap->sessionID,
@@ -807,9 +782,6 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    iPAddress1 = unicastAddrs1->u.iPAddress;
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
-#ifndef _COMPACT
-   dListInit(&(iPAddress1->extElem1));
-#endif /* !_COMPACT */
    ooConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
 #if 0
    sscanf(hexip, "%x %x %x %x", &(iPAddress1->network.data[0]),
@@ -1034,12 +1006,6 @@ int ooOnReceivedOpenLogicalChannelRejected(ooCallData *call,
                     olcReject->forwardLogicalChannelNumber,
                     call->callType, call->callToken);
       break;
-   case T_H245OpenLogicalChannelReject_cause_extElem1:
-      OOTRACEINFO4("Open logical channel %d rejected - "
-                    "extElem1 (%s, %s)\n",
-                    olcReject->forwardLogicalChannelNumber,
-                    call->callType, call->callToken);
-      break;
    default:
       OOTRACEERR4("Error: OpenLogicalChannel %d rejected - "
                   "invalid cause(%s, %s)\n",
@@ -1187,9 +1153,6 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
    clc->source.t = T_H245CloseLogicalChannel_source_lcse;
    clc->m.reasonPresent = 1;
    clc->reason.t = T_H245CloseLogicalChannel_reason_unknown;
-#ifndef _COMPACT
-   dListInit(&clc->extElem1);
-#endif
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA4("Built close logical channel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
@@ -1249,9 +1212,6 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
   
    rclc->m.reasonPresent = 1;
    rclc->reason.t = T_H245RequestChannelClose_reason_unknown;
-#ifndef _COMPACT
-   dListInit(&rclc->extElem1);
-#endif
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA4("Built RequestCloseChannel for %d (%s, %s)\n",
                  logicalChan->channelNo, call->callType, call->callToken);
@@ -1310,9 +1270,6 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
    rclcAck = response->u.requestChannelCloseAck;
    memset(rclcAck, 0, sizeof(H245RequestChannelCloseAck));
    rclcAck->forwardLogicalChannelNumber = rclc->forwardLogicalChannelNumber;
-#ifndef _COMPACT
-   dListInit(&rclcAck->extElem1);
-#endif
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built RequestCloseChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
@@ -1376,9 +1333,6 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    }
    memset(clcAck, 0, sizeof(H245CloseLogicalChannelAck));
    clcAck->forwardLogicalChannelNumber = clc->forwardLogicalChannelNumber;
-#ifndef _COMPACT
-   dListInit(&(clcAck->extElem1));
-#endif
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built CloseLogicalChannelAck message (%s, %s)\n",
                  call->callType, call->callToken);
@@ -1491,10 +1445,8 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
          ooHandleH245Command(call, command);
          break;
       /* H.245 Indication message received */
-      /*case (T_H245MultimediaSystemControlMessage_indication):
+      case (T_H245MultimediaSystemControlMessage_indication):
          break;
-      case (T_H245MultimediaSystemControlMessage_extElem1):
-         break;*/
       default:
         ;
    }
@@ -1574,9 +1526,6 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
    memset(response->u.terminalCapabilitySetAck, 0,
                                  sizeof(H245TerminalCapabilitySetAck));
    response->u.terminalCapabilitySetAck->sequenceNumber = call->remoteTermCapSet->h245Msg.u.request->u.terminalCapabilitySet->sequenceNumber;
-#ifndef _COMPACT
-   dListInit(&(response->u.terminalCapabilitySetAck->extElem1));  
-#endif /* !_COMPACT */
    ooSendH245Msg(call, ph245msg);
    OOTRACEDBGA3("Built TerminalCapabilitySet Ack (%s, %s)\n",
                  call->callType, call->callToken);
@@ -1745,18 +1694,12 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
       ooFreeH245Message(ph245msg);
       return OO_FAILED;
    }
-#ifndef _COMPACT
-   dListInit(&(request->u.openLogicalChannel->extElem1));
-#endif /* !_COMPACT */
    /* Populate H245OpenLogicalChannel_ForwardLogicalChannel Parameters*/
    flcp = &(request->u.openLogicalChannel->forwardLogicalChannelParameters);
    flcp->m.portNumberPresent = 0;
    flcp->m.forwardLogicalChannelDependencyPresent = 0;
    flcp->m.replacementForPresent = 0;
 
-#ifndef _COMPACT
-   dListInit(&(flcp->extElem1));
-#endif /* !_COMPACT */
    /* data type of channel is audio */
    flcp->dataType.t = T_H245DataType_audioData;
 
@@ -1781,10 +1724,6 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    h2250lcp = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
    memset(h2250lcp, 0, sizeof(H245H2250LogicalChannelParameters));
 
-#ifndef _COMPACT
-   dListInit(&(h2250lcp->extElem1));
-#endif /* !_COMPACT */
-
    h2250lcp->sessionID = 1;
    h2250lcp->mediaGuaranteedDelivery = 0;
    h2250lcp->silenceSuppression = 0;
@@ -1802,10 +1741,6 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
                ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
    iPAddress = unicastAddrs->u.iPAddress;
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
-
-#ifndef _COMPACT
-   dListInit(&(iPAddress->extElem1));
-#endif /* !_COMPACT */
 
    ooConvertIpToNwAddr(pLogicalChannel->localIP, iPAddress->network.data);
 #if 0
@@ -1926,9 +1861,6 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
          memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUniAddrs->u.iPAddress = pUniIpAddrs;
     
-#ifndef _COMPACT
-         dListInit(&(pUniIpAddrs->extElem1));
-#endif /* !_COMPACT */
          ooConvertIpToNwAddr(pLogicalChannel->localIP,
                                                 pUniIpAddrs->network.data);
 #if 0
@@ -1953,9 +1885,6 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUnicastAddrs->u.iPAddress = pIpAddrs;
     
-#ifndef _COMPACT
-      dListInit(&(pIpAddrs->extElem1));
-#endif /* !_COMPACT */
        ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
 #if 0
       sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
@@ -2015,9 +1944,6 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
          memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUnicastAddrs->u.iPAddress = pIpAddrs;     
 
-#ifndef _COMPACT
-         dListInit(&(pIpAddrs->extElem1));
-#endif /* !_COMPACT */
          ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
 #if 0
          sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
@@ -2042,9 +1968,6 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
       memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
-#ifndef _COMPACT
-      dListInit(&(pUniIpAddrs->extElem1));
-#endif /* !_COMPACT */
       ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
 #if 0
       sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
