@@ -29,7 +29,7 @@ print `cp -f ./ooh323c.dsw ./ooh323c-${version}/ooh323c.dsw`;
 
 mkdir ("ooh323c-${version}/config", 0777);
 print `cp -f -r ./config/* ./ooh323c-${version}/config`;
-print `rm -f ./ooh323c-${version}/config/CVS`;
+print `rm -rf ./ooh323c-${version}/config/CVS`;
 
 
 mkdir ("ooh323c-${version}/doc", 0777);
