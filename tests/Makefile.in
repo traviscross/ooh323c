@@ -88,7 +88,7 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 AUTOMKAE_OPTIONS = gnu
 
-SUBDIRS = . simple player receiver
+SUBDIRS = . chansetup simple player receiver
 subdir = tests
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

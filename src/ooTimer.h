@@ -23,6 +23,8 @@
 #include "ooasn1.h"
 #include "ooSocket.h"   /* needed for timeval */
 
+struct _OOTimer;
+
 typedef int (*OOTimerCbFunc)(struct _OOTimer *pTimer, void *data);
 
 typedef struct _OOTimer {

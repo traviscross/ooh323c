@@ -552,11 +552,13 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
          if(masterSlave->statusDeterminationNumber ==
                          statusDeterminationNumber)
          {
-         /* TODO: Should Send MasterSlaveDeterminationReject_cause IdenticalNumbers*/        
+            ooSendMasterSlaveDeterminationReject (call);
+
             OOTRACEERR3("ERROR:MasterSlaveDetermination failed- identical "
                         "numbers (%s, %s)\n", call->callType, call->callToken);
          }
          break;
+
       case OOMasterSlaveAck:
          masterSlaveAck = (H245MasterSlaveDeterminationAck*)pmsg;
          if(call->masterSlaveState == OO_MasterSlave_DetermineSent)
@@ -691,6 +693,51 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    }
   
    ooFreeH245Message(call, ph245msg);
+   return ret;
+}
+
+int ooSendMasterSlaveDeterminationReject (ooCallData* call)
+{
+   int ret=0;
+   H245ResponseMessage* response=NULL;
+   H245Message *ph245msg=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
+
+   ret = ooCreateH245Message
+      (&ph245msg, T_H245MultimediaSystemControlMessage_response);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3("Error:H245 message creation failed for - MasterSlave "
+                  "Determination Reject (%s, %s)\n",call->callType,
+                  call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OOMasterSlaveReject;
+   response = ph245msg->h245Msg.u.response;
+
+   response->t = T_H245ResponseMessage_masterSlaveDeterminationReject;
+
+   response->u.masterSlaveDeterminationReject =
+      (H245MasterSlaveDeterminationReject*)
+      memAlloc (pctxt, sizeof(H245MasterSlaveDeterminationReject));
+
+   response->u.masterSlaveDeterminationReject->cause.t =
+      T_H245MasterSlaveDeterminationReject_cause_identicalNumbers;
+
+   OOTRACEDBGA3 ("Built MasterSlave determination reject (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   ret = ooSendH245Msg (call, ph245msg);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3
+         ("Error:Failed to enqueue MasterSlaveDeterminationReject "
+          "message to outbound queue.(%s, %s)\n", call->callType,
+          call->callToken);
+   }
+  
+   ooFreeH245Message (call, ph245msg);
+
    return ret;
 }
 

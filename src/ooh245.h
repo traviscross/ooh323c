@@ -135,6 +135,13 @@ EXTERN int ooSendMasterSlaveDetermination(ooCallData *call);
 EXTERN int ooSendMasterSlaveDeterminationAck(ooCallData* call, char * status);
 
 /**
+ * This function is used to send a MasterSlaveDeterminationReject message.
+ * @param call        Pointer to call for which message is to be sent.
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendMasterSlaveDeterminationReject (ooCallData* call);
+
+/**
  * This function is used to handle received OpenLogicalChannel message.
  * @param call        Pointer to call for which OpenLogicalChannel message is
  *                    received.
