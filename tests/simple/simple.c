@@ -164,11 +164,11 @@ int main(int argc, char ** argv)
       OOTRACEERR1("Failed to Create H.323 Listener");
       return -1;
    }
-   if(argc == 2)
+   if(dest_found)
    {
-      printf("Calling %s\n", argv[1]);
+      printf("Calling %s\n", dest);
       memset(callToken, 0, 20);
-      ooMakeCall(argv[1], callToken); /* Make call */
+      ooMakeCall(dest, callToken); /* Make call */
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
