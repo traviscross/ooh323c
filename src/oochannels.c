@@ -445,8 +445,8 @@ int ooMonitorChannels()
             {
                FD_SET (call->pH225Channel->sock, &readfds);
                if (call->pH225Channel->outQueue.count > 0 ||
-                  (call->isTunnelingActive && call->pH245Channel &&
-                   call->pH245Channel->outQueue.count > 0))
+                  (OO_TESTFLAG (call->flags, OO_M_TUNNELING) &&
+                   0 != call->pH245Channel))
                   FD_SET (call->pH225Channel->sock, &writefds);
                if(nfds < (int)call->pH225Channel->sock)
                   nfds = call->pH225Channel->sock;
@@ -666,7 +666,7 @@ int ooMonitorChannels()
                   }
                   if(call->pH245Channel &&
                      call->pH245Channel->outQueue.count>0 &&
-                     call->isTunnelingActive)
+                     OO_TESTFLAG (call->flags, OO_M_TUNNELING))
                   {
                      OOTRACEDBGC3("H245 message needs to be tunneled. "
                                   "(%s, %s)\n", call->callType,
@@ -1095,7 +1095,7 @@ int ooSendMsg(ooCallData *call, int type)
          memFreePtr(call->pctxt, p_msgNode);
 
       /* Send message out */
-      if (0 == call->pH245Channel && !call->isTunnelingActive)
+      if (0 == call->pH245Channel && !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
       {
          OOTRACEWARN3("Neither H.245 channel nor tunneling active "
                      "(%s, %s)\n", call->callType, call->callToken);
@@ -1135,7 +1135,7 @@ int ooSendMsg(ooCallData *call, int type)
             }
             return OO_FAILED;
          }
-      }else if(call->isTunnelingActive){
+      }else if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
          OOTRACEDBGC4("Sending %s H245 message as a tunneled message."
                       "(%s, %s)\n", ooGetText(msgType), call->callType,
                       call->callToken);
@@ -1264,7 +1264,7 @@ int ooOnSendMsg
      
       break;
    case OOMasterSlaveDetermination:
-     if(call->isTunnelingActive)
+     if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
         OOTRACEINFO3("Tinneled Message - MasterSlaveDetermination (%s, %s)\n",
                       call->callType, call->callToken);
       else
@@ -1292,7 +1292,7 @@ int ooOnSendMsg
 
       break;
    case OOMasterSlaveAck:
-     if(call->isTunnelingActive)
+     if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationAck (%s, %s)"
                       "\n",  call->callType, call->callToken);
      else
@@ -1300,7 +1300,7 @@ int ooOnSendMsg
                     call->callType, call->callToken);
       break;
    case OOMasterSlaveReject:
-     if(call->isTunnelingActive)
+     if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
         OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationReject "
                      "(%s, %s)\n", call->callType, call->callToken);
      else
@@ -1308,7 +1308,7 @@ int ooOnSendMsg
                     call->callType, call->callToken);
       break;
    case OOMasterSlaveRelease:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationRelease "
                       "(%s, %s)\n", call->callType, call->callToken);
       else
@@ -1316,7 +1316,7 @@ int ooOnSendMsg
                       "(%s, %s)\n", call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySet:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
       else
@@ -1344,7 +1344,7 @@ int ooOnSendMsg
 
       break;
    case OOTerminalCapabilitySetAck:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - TerminalCapabilitySetAck (%s, %s)\n",
                        call->callType, call->callToken);
       else
@@ -1352,7 +1352,7 @@ int ooOnSendMsg
                        call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySetReject:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - TerminalCapabilitySetReject "
                       "(%s, %s)\n",  call->callType, call->callToken);
       else
@@ -1360,7 +1360,7 @@ int ooOnSendMsg
                        call->callType, call->callToken);
       break;
    case OOOpenLogicalChannel:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO4("Tunneled Message - OpenLogicalChannel(%d). (%s, %s)\n",
                        associatedChan, call->callType, call->callToken);
       else
@@ -1390,7 +1390,7 @@ int ooOnSendMsg
      
       break;
    case OOOpenLogicalChannelAck:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO4("Tunneled Message - OpenLogicalChannelAck(%d) (%s,%s)\n",
                        associatedChan, call->callType, call->callToken);
       else
@@ -1398,7 +1398,7 @@ int ooOnSendMsg
                        associatedChan, call->callType, call->callToken);
       break;
    case OOOpenLogicalChannelReject:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO4("Tunneled Message - OpenLogicalChannelReject(%d)"
                       "(%s, %s)\n", associatedChan, call->callType,
                       call->callToken);
@@ -1407,7 +1407,7 @@ int ooOnSendMsg
                        associatedChan, call->callType, call->callToken);
       break;
    case OOEndSessionCommand:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO1("Tunneled Message - EndSessionCommand\n");
       else
          OOTRACEINFO1("Sent Message - EndSessionCommand\n");
@@ -1439,7 +1439,7 @@ int ooOnSendMsg
       }
       break;
    case OOCloseLogicalChannel:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - CloseLogicalChannel (%s, %s)\n",
                        call->callType, call->callToken);
       else
@@ -1469,7 +1469,7 @@ int ooOnSendMsg
      
       break;
    case OOCloseLogicalChannelAck:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - CloseLogicalChannelAck (%s, %s)\n",
                        call->callType, call->callToken);
       else
@@ -1477,7 +1477,7 @@ int ooOnSendMsg
                        call->callType, call->callToken);
       break;
    case OORequestChannelClose:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - RequestChannelClose (%s, %s)\n",
                        call->callType, call->callToken);
       else
@@ -1506,7 +1506,7 @@ int ooOnSendMsg
       }
       break;
    case OORequestChannelCloseAck:
-      if(call->isTunnelingActive)
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          OOTRACEINFO3("Tunneled Message - RequestChannelCloseAck (%s, %s)\n",
                        call->callType, call->callToken);
       else

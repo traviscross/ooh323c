@@ -50,7 +50,6 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    sprintf(call->callType, "%s", type);
    memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
    call->remoteAliases = NULL;
-   call->gkEngaged = 0;
    call->dtmfmode = gH323ep.dtmfmode;
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
@@ -61,9 +60,15 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->logicalChanNoBase = 1001;
    call->logicalChanNoMax = 1100;
    call->logicalChanNoCur = 1001;
-   call->isTunnelingActive = gH323ep.h245Tunneling;
+
+   if (0 != gH323ep.h245Tunneling)
+      OO_SETFLAG (call->flags, OO_M_TUNNELING);
+
    call->mediaInfo = NULL;
-   call->isFastStartActive = gH323ep.fastStart;
+
+   if (0 != gH323ep.fastStart)
+      OO_SETFLAG (call->flags, OO_M_FASTSTART);
+
    dListInit(&call->remoteFastStartOLCs);
    dListInit(&call->timerList);
    call->callState = OO_CALL_CREATED;
@@ -99,17 +104,18 @@ int ooEndCall(ooCallData *call)
                  ooGetText(call->callState), call->callType,
                  call->callToken);
 
-   if(call->isFastStartActive)
+   if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
    {
       if(call->callState < OO_CALL_CLEAR_CLOSEH245)
          call->callState = OO_CALL_CLEAR_CLOSEH245;
-   }else{
-
+   }
+   else {
       if(call->callState == OO_CALL_CLEAR)  
       {
          if(call->logicalChans)
          {
-            if(call->isTunnelingActive || call->pH245Channel->sock != 0)
+            if (OO_TESTFLAG (call->flags, OO_M_TUNNELING) ||
+                call->pH245Channel->sock != 0)
             {
                OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
                        call->callType, call->callToken);
@@ -206,8 +212,9 @@ int ooEndCall(ooCallData *call)
       if(call->callState == OO_CALL_CLEAR)
       {
 
-         if((call->isTunnelingActive || call->pH245Channel->sock != 0) &&
-            !call->isFastStartActive)
+         if((OO_TESTFLAG (call->flags, OO_M_TUNNELING) ||
+             call->pH245Channel->sock != 0) &&
+            !OO_TESTFLAG (call->flags, OO_M_FASTSTART))
          {
             OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
                        call->callType, call->callToken);

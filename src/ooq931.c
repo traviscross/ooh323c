@@ -853,8 +853,9 @@ int ooSendFacility(ooCallData *call)
    ret = ooCreateQ931Message(&pQ931Msg, Q931FacilityMsg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("ERROR: In allocating memory for facility message (%s, %s)\n",
-                   call->callType, call->callToken);
+      OOTRACEERR3
+         ("ERROR: In allocating memory for facility message (%s, %s)\n",
+          call->callType, call->callToken);
       return OO_FAILED;
    }
    pQ931Msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
@@ -867,20 +868,25 @@ int ooSendFacility(ooCallData *call)
    }
    memset (pQ931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
    pQ931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
+
+   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
-         T_H225H323_UU_PDU_h323_message_body_facility;
+      T_H225H323_UU_PDU_h323_message_body_facility;
   
-   facility = (H225Facility_UUIE*)ASN1MALLOC(pctxt,
-                                             sizeof(H225Facility_UUIE));
+   facility = (H225Facility_UUIE*)
+      memAllocZ (pctxt, sizeof(H225Facility_UUIE));
+
    if(!facility)
    {
       OOTRACEERR3("ERROR:Memory allocation for facility UUIE failed (%s, %s)"
                   "\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   memset(facility, 0, sizeof(H225Facility_UUIE));
+
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
+
    /* Populate Facility UUIE */
    facility->protocolIdentifier = gProtocolID; 
    facility->m.callIdentifierPresent = 1;
@@ -896,9 +902,11 @@ int ooSendFacility(ooCallData *call)
    ret = ooSendH225Msg(call, pQ931Msg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue Facility message toi outbound queue.(%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3
+         ("Error:Failed to enqueue Facility message to outbound "
+          "queue.(%s, %s)\n", call->callType, call->callToken);
    }
-   memReset(&gH323ep.msgctxt);
+   memReset (&gH323ep.msgctxt);
    return ret;
 }
 
@@ -1044,28 +1052,33 @@ int ooAcceptCall(ooCallData *call)
       return OO_FAILED;
    }
 
-   q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
-                             sizeof(H225H323_UserInformation));
+   q931msg->userInfo = (H225H323_UserInformation*)
+      memAllocZ (pctxt,sizeof(H225H323_UserInformation));
+
    if(!q931msg->userInfo)
    {
       OOTRACEERR1("ERROR:Memory allocation for User-User ie for Connect"
                   " message failed\n");
       return OO_FAILED;
    }  
-   memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
+
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
+
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
-                     T_H225H323_UU_PDU_h323_message_body_connect;
+      T_H225H323_UU_PDU_h323_message_body_connect;
   
-   connect = (H225Connect_UUIE*)ASN1MALLOC(pctxt,
-                                           sizeof(H225Connect_UUIE));
+   connect = (H225Connect_UUIE*)
+      memAllocZ (pctxt, sizeof(H225Connect_UUIE));
+
    if(!connect)
    {
       OOTRACEERR1("ERROR:Memory allocation for Connect message failed\n");
       return OO_FAILED;
    }
-   memset(connect, 0, sizeof(H225Connect_UUIE));
+
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.connect = connect;
    connect->m.fastStartPresent = 0;
    connect->m.multipleCallsPresent = 1;
@@ -1075,16 +1088,15 @@ int ooAcceptCall(ooCallData *call)
   
     /* Add h245 listener address. Do not add H245 listener address in case
        of fast-start. */
-   if((!gH323ep.fastStart || call->remoteFastStartOLCs.count == 0)&&
-      !call->isTunnelingActive)
+   if ((!gH323ep.fastStart || call->remoteFastStartOLCs.count == 0) &&
+       !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       ooCreateH245Listener(call); /* First create an H.245 listener */
       connect->m.h245AddressPresent = 1;
       connect->h245Address.t = T_H225TransportAddress_ipAddress;
   
-      h245IpAddr = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
-                                       sizeof(H225TransportAddress_ipAddress));
-      memset(h245IpAddr, 0, sizeof(H225TransportAddress_ipAddress));
+      h245IpAddr = (H225TransportAddress_ipAddress*)
+         memAllocZ (pctxt, sizeof(H225TransportAddress_ipAddress));
 
       ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
       h245IpAddr->ip.numocts=4;
@@ -1244,7 +1256,7 @@ int ooAcceptCall(ooCallData *call)
                epCap->startTransmitChannel(call, pChannel);     
                OOTRACEINFO3("Transmit channel of type audio started "
                             "(%s, %s)\n", call->callType, call->callToken);
-               call->isAudioActive = 1;
+               OO_SETFLAG (call->flags, OO_M_AUDIO);
             }
             else{
                OOTRACEERR3("ERROR:No callback registered to start transmit"
@@ -1290,13 +1302,8 @@ int ooAcceptCall(ooCallData *call)
    }
    memReset(&gH323ep.msgctxt);
 
-   if(call->isTunnelingActive)
+   if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
-
-      /* It is good to send TCS even in case of faststart */
-     /*     if(!call->isFastStartActive)
-            /* {
-
       /* Start terminal capability exchange and master slave determination */
       ret = ooSendTermCapMsg(call);
       if(ret != OO_OK)
@@ -1722,7 +1729,9 @@ int ooH323MakeCall_helper(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.setup = setup;
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
   
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
    /* For H.323 version 4 and higher, if fast connect, tunneling should be
       supported.
    */
@@ -1938,12 +1947,16 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    }
    memset (pQ931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
    pQ931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
+
+   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_facility;
   
-   facility = (H225Facility_UUIE*)ASN1MALLOC(pctxt,
-                                             sizeof(H225Facility_UUIE));
+   facility = (H225Facility_UUIE*)
+      memAllocZ (pctxt, sizeof(H225Facility_UUIE));
+
    if(!facility)
    {
       OOTRACEERR3("ERROR:Memory allocation for facility UUIE failed (%s, %s)"
@@ -1951,16 +1964,18 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
       memReset(&gH323ep.msgctxt);
       return OO_FAILED;
    }
-   memset(facility, 0, sizeof(H225Facility_UUIE));
+
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
    /* Populate Facility UUIE */
    facility->protocolIdentifier = gProtocolID; 
    facility->m.callIdentifierPresent = 1;
    facility->callIdentifier.guid.numocts =
-                                   call->callIdentifier.guid.numocts;
+      call->callIdentifier.guid.numocts;
+
    memcpy(facility->callIdentifier.guid.data,
           call->callIdentifier.guid.data,
           call->callIdentifier.guid.numocts);
+
    facility->reason.t = T_H225FacilityReason_transportedInformation;
 
    pH323UUPDU = (H225H323_UU_PDU*) &pQ931Msg->userInfo->h323_uu_pdu;

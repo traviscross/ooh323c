@@ -117,7 +117,7 @@ int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
 {
   /* In case of tunneling, memory is freed when corresponding Q931 message is freed.*/
    if (0 != pmsg) {
-     if(!call->isTunnelingActive)
+     if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          memReset (&gH323ep.msgctxt);
    }
    return OO_OK;
@@ -176,7 +176,7 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
    msgbuf[i++] = 0;
    msgbuf[i++] = 0;
   
-   if(!call->isTunnelingActive)
+   if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       /* Populate message buffer to be returned */
       len =  4;
@@ -204,7 +204,7 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
    len +=encodeLen;
    msgbuf[3] = (len>>8);
    msgbuf[4] = len;
-   if(!call->isTunnelingActive)
+   if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       msgbuf[7] = len>>8;
       msgbuf[8] = len;
@@ -2275,10 +2275,10 @@ int ooOpenLogicalChannels(ooCallData *call)
    if(gH323ep.callMode == OO_CALLMODE_AUDIOCALL ||
       gH323ep.callMode == OO_CALLMODE_AUDIOTX)
    {
-      if(!call->isAudioActive)
+      if (!OO_TESTFLAG (call->flags, OO_M_AUDIO))
       {
          ret = ooOpenLogicalAudioChannel(call);
-         call->isAudioActive = 1;
+         OO_SETFLAG (call->flags, OO_M_AUDIO);
       }
    }
   

@@ -85,7 +85,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent)
    {
       /* Tunneling enabled only when tunneling is set to true and h245
-         address is abscent. In the presence of H.245 address in received
+         address is absent. In the presence of H.245 address in received
          SETUP message, tunneling is disabled, irrespective of tunneling
          flag in the setup message*/
       if(q931Msg->userInfo->h323_uu_pdu.h245Tunneling &&
@@ -93,7 +93,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       {
          if(gH323ep.h245Tunneling)
          {
-            call->isTunnelingActive = 1;
+            OO_SETFLAG (call->flags, OO_M_TUNNELING);
             OOTRACEINFO3("Call has tunneling active (%s,%s)\n", call->callType,
                           call->callToken);
          }
@@ -107,15 +107,16 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
             OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
                          call->callType, call->callToken);
          }
-         call->isTunnelingActive = FALSE;
+         OO_CLRFLAG (call->flags, OO_M_TUNNELING);
       }
-   }else {
+   }
+   else {
       if(gH323ep.h245Tunneling)
       {
          OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
                        call->callType, call->callToken);
       }
-      call->isTunnelingActive = FALSE;
+      OO_CLRFLAG (call->flags, OO_M_TUNNELING);
    }
   
    /* Extract Remote IP address */
@@ -145,22 +146,22 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       {
          OOTRACEINFO3("Local endpoint does not support fastStart. Ignoring "
                       "fastStart. (%s, %s)\n", call->callType, call->callToken);
-         call->isFastStartActive = FALSE;
+         OO_CLRFLAG (call->flags, OO_M_FASTSTART);
       }
       else if(setup->fastStart.n == 0)
       {
          OOTRACEINFO3("Empty faststart element received. Ignoring fast start. "
                       "(%s, %s)\n", call->callType, call->callToken);
-         call->isFastStartActive = FALSE;
+         OO_CLRFLAG (call->flags, OO_M_FASTSTART);
       }
       else{
-         call->isFastStartActive = TRUE;
+         OO_SETFLAG (call->flags, OO_M_FASTSTART);
          OOTRACEINFO3("FastStart enabled for call(%s, %s)\n", call->callType,
                        call->callToken);
       }
    }
 
-   if(call->isFastStartActive)
+   if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
    {
       /* For printing the decoded message to log, initialize handler. */
       initializePrintHandler(&printHandler, "FastStart Elements");
@@ -256,7 +257,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    }
 
    /*Handle fast-start */
-   if(call->isFastStartActive)
+   if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
    {
       if(!connect->m.fastStartPresent)
       {
@@ -264,11 +265,11 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
                       call->callType, call->callToken);
          /* Clear all channels we might have created */
          ooClearAllLogicalChannels(call);
-         call->isFastStartActive = FALSE;
+         OO_CLRFLAG (call->flags, OO_M_FASTSTART);
       }
    }
-   /*call->isFastStartActive = connect->m.fastStartPresent;*/
-   if(connect->m.fastStartPresent)
+
+   if (connect->m.fastStartPresent)
    {
       /* For printing the decoded message to log, initialize handler. */
       initializePrintHandler(&printHandler, "FastStart Elements");
@@ -395,9 +396,9 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    /* Retrieve the H.245 control channel address from the connect msg */
    if(connect->m.h245AddressPresent)
    {
-      if(call->isTunnelingActive)
+      if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
       {
-         call->isTunnelingActive = FALSE;
+         OO_CLRFLAG (call->flags, OO_M_TUNNELING);
          OOTRACEINFO3("Tunneling is disabled for call as H245 address is "
                       "provided in connect message (%s, %s)\n",
                       call->callType, call->callToken);
@@ -439,23 +440,20 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
 
    if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent)
    {
-      if(!q931Msg->userInfo->h323_uu_pdu.h245Tunneling)
+      if (!q931Msg->userInfo->h323_uu_pdu.h245Tunneling)
       {
-         if(call->isTunnelingActive)
+         if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          {
-            call->isTunnelingActive = FALSE;
+            OO_CLRFLAG (call->flags, OO_M_TUNNELING);
             OOTRACEINFO3("Tunneling is disabled by remote endpoint.(%s, %s)\n",
                           call->callType, call->callToken);
          }
       }
    }
-   if(call->isTunnelingActive)
+   if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
-      ret = ooHandleTunneledH245Messages(call,
-                                             &q931Msg->userInfo->h323_uu_pdu);
-      /* It is good to send TCS even in case of faststart */
-     /*     if(!call->isFastStartActive)
-            /* {
+      ret = ooHandleTunneledH245Messages
+         (call, &q931Msg->userInfo->h323_uu_pdu);
 
       /* Start terminal capability exchange and master slave determination */
       ret = ooSendTermCapMsg(call);
@@ -643,7 +641,7 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
       /* Depending on the reason of facility message handle the message */
       if(facility->reason.t == T_H225FacilityReason_transportedInformation)
       {
-         if(call->isTunnelingActive)
+         if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
             ooHandleTunneledH245Messages(call, pH323UUPdu);
          else
          {
@@ -709,8 +707,10 @@ int ooHandleStartH245FacilityMessage(ooCallData *call, H225Facility_UUIE *facili
                                           ipAddress->ip.data[2],
                                           ipAddress->ip.data[3]);
    call->remoteH245Port = ipAddress->port;
+
    /* disable tunneling for this call */
-   call->isTunnelingActive = 0;
+   OO_CLRFLAG (call->flags, OO_M_TUNNELING);
+
    /*Establish an H.245 connection */
    ret = ooCreateH245Connection(call);
    if(ret != OO_OK)

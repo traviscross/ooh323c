@@ -1560,7 +1560,7 @@ static int ooRasManageAdmissionConfirm( H225AdmissionConfirm *psAdmissionConfirm
                                                 ipAddress->ip.data[2],
                                                 ipAddress->ip.data[3]);
          psCallAdmInfo->call->remotePort = ipAddress->port;
-         psCallAdmInfo->call->gkEngaged = 1;        
+         OO_SETFLAG (psCallAdmInfo->call->flags, OO_M_GKENGAGED);        
          ooH323CallAdmitted( psCallAdmInfo->call);
          dListRemove( &gsCallsPendingList, psNode );
          dListAppend(&gsRASCTXT, &gsCallsAdmittedList, psNode->data);
@@ -1597,7 +1597,7 @@ int ooRasSendDisengageRequest(ooCallData *call)
    DListNode *psNode = NULL;
    H225DisengageRequest * psDRQ = NULL;
    RasCallAdmissionInfo* psCallAdmInfo=NULL;
-   if(!call->gkEngaged)
+   if (!OO_TESTFLAG (call->flags, OO_M_GKENGAGED))
    {
       OOTRACEDBGC3("No need to send Disengage request as gatekeeper is not "
                    "engaged. (%s, %s)\n", call->callType, call->callToken);
@@ -1701,7 +1701,8 @@ int ooRasSendDisengageRequest(ooCallData *call)
       OOTRACEERR1("Error: Failed to send DRQ message\n");
    }
   
-   call->gkEngaged = 0; 
+   OO_CLRFLAG (call->flags, OO_M_GKENGAGED);
+
    /* Search call in admitted calls list */
    psNode=(DListNode*)gsCallsAdmittedList.head;
    for( uiAux=0 ; uiAux<gsCallsPendingList.count ; uiAux++ )

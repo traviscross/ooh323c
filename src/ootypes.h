@@ -32,7 +32,6 @@
 #define OO_FAILED -1
 #define OO_OK 1
 
-
 /**
   Various states of master slave determination prcedure
 */
@@ -180,6 +179,13 @@
 #define OO_CALLMODE_AUDIOTX   303
 #define OO_CALLMODE_VIDEOCALL 304
 #define OO_CALLMODE_FAX       305
+
+/*
+ * Flag macros - these operate on bit mask flags using mask values
+ */
+#define OO_SETFLAG(flags,mask) (flags |= mask)
+#define OO_CLRFLAG(flags,mask) (flags &= ~mask)
+#define OO_TESTFLAG(flags,mask) ((flags & mask) != 0)
 
 #define DEFAULT_MAX_RETRIES 3
 /** Type of callback functions to be registered at the time of
@@ -347,6 +353,12 @@ typedef struct ooTimerCallback{
    ASN1UINT    channelNumber;
 } ooTimerCallback;
 
+/* Flag mask values */
+#define OO_M_TUNNELING          0x80000000
+#define OO_M_FASTSTART          0x40000000
+#define OO_M_GKENGAGED          0x20000000
+#define OO_M_AUDIO              0x10000000
+
 typedef struct ooCallData {
    OOCTXT               *pctxt;
    char                 callToken[20]; /* ex: ooh323c_call_1 */
@@ -356,12 +368,10 @@ typedef struct ooCallData {
    H225CallIdentifier   callIdentifier;/* The call identifier for the active
                                           call. */
    H225ConferenceIdentifier confIdentifier;
+   ASN1UINT             flags;
    int                  callState;
    int                  callEndReason;
    int                  h245SessionState;
-   int                  isTunnelingActive;
-   int                  isFastStartActive;
-   int                  gkEngaged;  
    int                  dtmfmode;
    ooMediaInfo          *mediaInfo;
    char                 localIP[20];/* Local IP address */
@@ -388,7 +398,6 @@ typedef struct ooCallData {
    int                  logicalChanNoBase;
    int                  logicalChanNoMax;
    int                  logicalChanNoCur;
-   int                  isAudioActive;
    DList                timerList;
    ASN1UINT             msdRetries;
    struct ooCallData*   next;
