@@ -402,7 +402,7 @@ int ooAcceptH245Connection(ooCallData *call)
 int ooMonitorChannels()
 {
    int ret=0, nfds=0;
-   struct timeval timeout;
+   struct timeval toMin, toNext;
    fd_set readfds, writefds;
    ooCallData *call, *prev=NULL;
    DListNode *curNode;
@@ -411,6 +411,9 @@ int ooMonitorChannels()
    int i=0;  
 
    gMonitor = 1;
+
+   toMin.tv_sec = 3;
+   toMin.tv_usec = 0;
 
    while(1)
    {
@@ -469,9 +472,8 @@ int ooMonitorChannels()
            
          }/* while(call) */
       }/*if(gH323ep.callList) */
-               
-      timeout.tv_sec = 3;
-      timeout.tv_usec = 0;
+
+
       if(!gMonitor)
       {
          OOTRACEINFO1("Ending Monitor thread\n");
@@ -485,14 +487,14 @@ int ooMonitorChannels()
          Sleep(10);
 #else
       {
-         timeout.tv_sec = 0;
-         timeout.tv_usec = 10000;
-         ooSocketSelect(1, 0, 0, 0, &timeout);
+         toMin.tv_sec = 0;
+         toMin.tv_usec = 10000;
+         ooSocketSelect(1, 0, 0, 0, &toMin);
       }
 #endif
       else
          ret = ooSocketSelect(nfds, &readfds, &writefds,
-                           NULL, &timeout);
+                           NULL, &toMin);
      
       if(ret == -1)
       {
@@ -501,10 +503,21 @@ int ooMonitorChannels()
          exit(-1);
       }
 
+      toMin.tv_sec = 3;
+      toMin.tv_usec = 0;
       /*This is for test application. Not part of actual stack */
-
+ 
       ooTimerFireExpired(&gH323ep.ctxt, &g_TimerList);
-
+      if(ooTimerNextTimeout(&g_TimerList, &toNext))
+      {
+         if(ooCompareTimeouts(&toMin, &toNext)>0)
+         {
+            toMin.tv_sec = toNext.tv_sec;
+            toMin.tv_usec = toNext.tv_usec;
+         }
+      }
+  
+     
 
 #ifdef _WIN32
       EnterCriticalSection(&gCmdMutex);
@@ -622,6 +635,7 @@ int ooMonitorChannels()
          call = gH323ep.callList;
          while(call)
          {
+            ooTimerFireExpired(call->pctxt, &call->timerList);
             if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
             {
                if(FD_ISSET(call->pH225Channel->sock, &readfds))
@@ -685,6 +699,14 @@ int ooMonitorChannels()
                                call->callType, call->callToken);
                   ooAcceptH245Connection(call);
                }                          
+            }
+            if(ooTimerNextTimeout(&call->timerList, &toNext))
+            {
+               if(ooCompareTimeouts(&toMin, &toNext) > 0)
+               {
+                  toMin.tv_sec = toNext.tv_sec;
+                  toMin.tv_usec = toNext.tv_usec;
+               }
             }
             prev = call;
             call = call->next;
@@ -1127,11 +1149,32 @@ int ooCloseH245Connection(ooCallData *call)
 
 int ooOnSendMsg(ooCallData *call, int msgType)
 {
+   ooTimerCallback *cbData=NULL;
    switch(msgType)
    {
    case OOSetup:
       OOTRACEINFO3("Sent Message - Setup (%s, %s)\n", call->callType,
                     call->callToken);
+      /* Start call establishment timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_CALLESTB_TIMER;
+      if(!ooTimerCreate(call->pctxt, &call->timerList, &ooCallEstbTimerExpired,
+                        gH323ep.callEstablishmentTimeout, cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create call establishment timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
+
       if(gH323ep.onOutgoingCall)
          gH323ep.onOutgoingCall(call);
       break;
@@ -1168,6 +1211,26 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOMasterSlaveDetermination:
       OOTRACEINFO3("Sent Message - MasterSlaveDetermination (%s, %s)\n",
                     call->callType, call->callToken);
+       /* Start MSD timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback data."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_MSD_TIMER;
+      if(!ooTimerCreate(call->pctxt, &call->timerList, &ooMSDTimerExpired,
+                        gH323ep.msdTimeout, cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create MSD timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
+
       break;
    case OOMasterSlaveAck:
       OOTRACEINFO3("Sent Message - MasterSlaveDeterminationAck (%s, %s)\n",
@@ -1184,6 +1247,26 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOTerminalCapabilitySet:
       OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
                     call->callType, call->callToken);
+      /* Start TCS timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback data."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_MSD_TIMER;
+      if(!ooTimerCreate(call->pctxt, &call->timerList, &ooTCSTimerExpired,
+                        gH323ep.tcsTimeout, cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create TCS timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
+
       break;
    case OOTerminalCapabilitySetAck:
       OOTRACEINFO3("Sent Message - TerminalCapabilitySetAck (%s, %s)\n",
@@ -1196,6 +1279,27 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOOpenLogicalChannel:
       OOTRACEINFO3("Sent Message - OpenLogicalChannel (%s, %s)\n",
                     call->callType, call->callToken);
+      /* Start LogicalChannel timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback data."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_OLC_TIMER;
+      if(!ooTimerCreate(call->pctxt, &call->timerList,
+          &ooOpenLogicalChannelTimerExpired, gH323ep.logicalChannelTimeout,
+          cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create OpenLogicalChannel timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
+     
       break;
    case OOOpenLogicalChannelAck:
       OOTRACEINFO3("Sent Message - OpenLogicalChannelAck (%s, %s)\n",
@@ -1215,6 +1319,27 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOCloseLogicalChannel:
       OOTRACEINFO3("Sent Message - CloseLogicalChannel (%s, %s)\n",
                     call->callType, call->callToken);
+      /* Start LogicalChannel timer */
+      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+      if(!cbData)
+      {
+         OOTRACEERR3("Error:Unable to allocate memory for timer callback data."
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      cbData->call = call;
+      cbData->timerType = OO_CLC_TIMER;
+      if(!ooTimerCreate(call->pctxt, &call->timerList,
+          &ooCloseLogicalChannelTimerExpired, gH323ep.logicalChannelTimeout,
+          cbData, FALSE))
+      {
+         OOTRACEERR3("Error:Unable to create CloseLogicalChannel timer. "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         ASN1MEMFREEPTR(call->pctxt, cbData);
+         return OO_FAILED;
+      }
+     
       break;
    case OOCloseLogicalChannelAck:
       OOTRACEINFO3("Sent Message - CloseLogicalChannelAck (%s, %s)\n",

@@ -106,33 +106,40 @@
 /**
    Various message types for H225 and H245 messages
 */
-#define OO_MSGTYPE_MIN                101
-#define OOQ931MSG                     101
-#define OOH245MSG                     102
-#define OOSetup                       103
-#define OOCallProceeding              104
-#define OOAlert                       105
-#define OOConnect                     106
-#define OOReleaseComplete             107
-#define OOFacility                    108
-#define OOMasterSlaveDetermination    109
-#define OOMasterSlaveAck              110
-#define OOMasterSlaveReject           111
-#define OOMasterSlaveRelease          112
-#define OOTerminalCapabilitySet       113
-#define OOTerminalCapabilitySetAck    114
-#define OOTerminalCapabilitySetReject 115
-#define OOOpenLogicalChannel          116
-#define OOOpenLogicalChannelAck       117
-#define OOOpenLogicalChannelReject    118
-#define OOOpenLogicalChannelRelease   119
-#define OOEndSessionCommand           120
-#define OOCloseLogicalChannel         121
-#define OOCloseLogicalChannelAck      122
-#define OORequestChannelClose         123
-#define OORequestChannelCloseAck      124
-#define OO_MSGTYPE_MAX                125
+#define OO_MSGTYPE_MIN                 101
+#define OOQ931MSG                      101
+#define OOH245MSG                      102
+#define OOSetup                        103
+#define OOCallProceeding               104
+#define OOAlert                        105
+#define OOConnect                      106
+#define OOReleaseComplete              107
+#define OOFacility                     108
+#define OOMasterSlaveDetermination     109
+#define OOMasterSlaveAck               110
+#define OOMasterSlaveReject            111
+#define OOMasterSlaveRelease           112
+#define OOTerminalCapabilitySet        113
+#define OOTerminalCapabilitySetAck     114
+#define OOTerminalCapabilitySetReject  115
+#define OOTerminalCapabilitySetRelease 116
+#define OOOpenLogicalChannel           117
+#define OOOpenLogicalChannelAck        118
+#define OOOpenLogicalChannelReject     119
+#define OOOpenLogicalChannelRelease    120
+#define OOEndSessionCommand            121
+#define OOCloseLogicalChannel          122
+#define OOCloseLogicalChannelAck       123
+#define OORequestChannelClose          124
+#define OORequestChannelCloseAck       125
+#define OO_MSGTYPE_MAX                 125
 
+/* Timer types */
+#define OO_CALLESTB_TIMER  (1<<0)
+#define OO_MSD_TIMER       (1<<1)
+#define OO_TCS_TIMER       (1<<2)
+#define OO_OLC_TIMER       (1<<3)
+#define OO_CLC_TIMER       (1<<4)
 
 /**
   Default port ranges used
@@ -225,6 +232,7 @@ CRITICAL_SECTION gCmdMutex;
 #else
 pthread_mutex_t gCmdMutex;
 #endif
+
 
 /**
  * Structure for stack commands */
@@ -325,7 +333,13 @@ typedef struct OORetries {
    ASN1USINT   olcRetries;
 } OORetries;
 
+struct ooCallData;
 
+typedef struct ooTimerCallback{
+   struct ooCallData* call;
+   ASN1UINT    timerType;
+   ASN1UINT    sequenceNumber;
+} ooTimerCallback;
 
 typedef struct ooCallData {
    OOCTXT               *pctxt;
@@ -464,7 +478,10 @@ typedef struct ooEndPoint{
    int autoAnswer;   /* 1 to enable, 0 to disable */
    int callMode; /* audio/audiorx/audiotx/video/fax */
    int dtmfmode;
-
+   ASN1UINT callEstablishmentTimeout;
+   ASN1UINT msdTimeout;
+   ASN1UINT tcsTimeout;
+   ASN1UINT logicalChannelTimeout;
 } ooEndPoint;
 
 #endif

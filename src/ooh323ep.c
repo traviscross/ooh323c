@@ -178,7 +178,18 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gCurCallToken = 1;
    gH323ep.autoAnswer = 1;
    OOTRACEINFO1("\tAutoAnswer - enabled\n");
-  
+   gH323ep.callEstablishmentTimeout = 60;
+   OOTRACEINFO2("\tCall Establishment Timeout - %d seconds\n",
+                                          gH323ep.callEstablishmentTimeout);  
+   gH323ep.msdTimeout = 30;
+   OOTRACEINFO2("\tMasterSlaveDetermination Timeout - %d seconds\n",
+                   gH323ep.msdTimeout);
+   gH323ep.tcsTimeout = 30;
+   OOTRACEINFO2("\tTerminalCapabilityExchange Timeout - %d seconds\n",
+                   gH323ep.tcsTimeout);
+   gH323ep.logicalChannelTimeout = 30;
+   OOTRACEINFO2("\tLogicalChannel  Timeout - %d seconds\n",
+                   gH323ep.logicalChannelTimeout);
    OOTRACEINFO1("H323 endpoint initialize - successful\n");
    return OO_OK;
 }

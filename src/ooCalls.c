@@ -65,6 +65,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->mediaInfo = NULL;
    call->isFastStartActive = gH323ep.fastStart;
    dListInit(&call->remoteFastStartOLCs);
+   dListInit(&call->timerList);
    call->callState = OO_CALL_CREATED;
    call->h245SessionState = OO_H245SESSION_INACTIVE;
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,

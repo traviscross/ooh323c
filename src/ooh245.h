@@ -373,6 +373,78 @@ EXTERN int ooBuildOpenLogicalChannelAudio(ooCallData *call,
 
 int ooEncodeH245Message
       (ooCallData *call, H245Message *ph245Msg, char *msgbuf, int size);
+
+/**
+ * This function is used to send a master-slave determination release message.
+ * @param call             Handle to call, for which MSDRelease message has
+ *                         to be sent.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooSendMasterSlaveDeterminationRelease(ooCallData * call);
+
+/**
+ * This function is used to send a terminal capability set reject message
+ * to the remote endpoint.
+ * @param call             Handle to the call for which reject message has to
+ *                         be sent.
+ * @param seqNo            Sequence number of the TCS message to be rejected.
+ * @param cause            Cause for rejecting a TCS message.
+ *
+ * @return                 OO_OK, on success; OO_FAILED, otherwise.
+ */
+int ooSendTerminalCapabilitySetReject
+    (ooCallData *call, int seqNo, ASN1UINT cause);
+
+/**
+ * This function is used to send a TerminalCapabilitySetRelease message after
+ * capability exchange timer has expired.
+ * @param call            Handle to call for which release message has to be
+ *                        sent.
+ *
+ * @return                OO_OK, on success; OO_FAILED, on failure.
+ */
+int ooSendTerminalCapabilitySetRelease(ooCallData * call);
+
+/**
+ * This is a callback function for handling an expired master-slave
+ * determination timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooMSDTimerExpired(void *data);
+
+/**
+ * This is a callback function for handling an expired capability exchange
+ * timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooTCSTimerExpired(void *data);
+
+/**
+ * This is a callback function for handling an expired OpenLogicalChannel
+ * timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooOpenLogicalChannelTimerExpired(void *pdata);
+
+/**
+ * This is a callback function for handling an expired CloseLogicalChannel
+ * timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooCloseLogicalChannelTimerExpired(void *pdata);
 /**
  * @}
  */

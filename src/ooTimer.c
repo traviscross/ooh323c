@@ -111,7 +111,7 @@ void ooTimerFireExpired (OOCTXT* pctxt, DList *pList)
           */
          if (pTimer->reRegister) ooTimerReset (pctxt, pList, pTimer);
 
-         stat = (*pTimer->timeoutCB)(pTimer, pTimer->cbData);
+         stat = (*pTimer->timeoutCB)(pTimer->cbData);
 
          if (0 != stat || !pTimer->reRegister) {
             ooTimerDelete (pctxt, pList, pTimer);
@@ -179,4 +179,16 @@ void ooTimerReset (OOCTXT* pctxt, DList *pList, OOTimer* pTimer)
    }
    else
       ooTimerDelete (pctxt, pList, pTimer);
+}
+
+int ooCompareTimeouts(struct timeval *to1, struct timeval *to2)
+{
+
+   if(to1->tv_sec > to2->tv_sec)   return 1;
+   if(to1->tv_sec < to2->tv_sec)   return -1;
+
+   if(to1->tv_usec > to2->tv_usec)   return 1;
+   if(to1->tv_usec < to2->tv_usec)   return -1;
+
+   return 0;
 }

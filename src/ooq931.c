@@ -1986,4 +1986,19 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    return ret;
 }
 
+int ooCallEstbTimerExpired(void *data)
+{
+
+   ooTimerCallback *cbData = (ooTimerCallback*) data;
+   ooCallData *call = cbData->call;
+   OOTRACEINFO3("Call Establishment timer expired. (%s, %s)\n",
+                                            call->callType, call->callToken);
+   ASN1MEMFREEPTR(call->pctxt, cbData);
+   if(call->callState < OO_CALL_CLEAR){
+      call->callState = OO_CALL_CLEAR;
+      call->callEndReason = OO_HOST_CLEARED;     
+   }
+
+   return OO_OK;
+}
 

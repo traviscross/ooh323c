@@ -36,8 +36,8 @@ static int onOutgoingCallAdmitted (ooCallData* call);
 static int onCallCleared (ooCallData* call);
 static int onAlerting (ooCallData* call);
 static void* runtest (void*);
-static int callDurationTimerExpired (OOTimer* ptimer, void *pdata);
-static int callIntervalTimerExpired(OOTimer* ptimer, void *pdata);
+static int callDurationTimerExpired (void *pdata);
+static int callIntervalTimerExpired(void *pdata);
 
 static char USAGE[]={
    "h323peer [--use-ip ip] [--use-port port] [-n noofcalls] [-duration call_duration] [-interval call_interval] [remote]\n"
@@ -311,7 +311,7 @@ static int onCallCleared (ooCallData* call)
 }
 
 
-static int callDurationTimerExpired (OOTimer* ptimer, void *pdata)
+static int callDurationTimerExpired (void *pdata)
 {
    printf("callDurationTimerExpired - %s\n", (char*)pdata);
    ooHangCall((char*)pdata);
@@ -319,7 +319,7 @@ static int callDurationTimerExpired (OOTimer* ptimer, void *pdata)
    return OO_OK;
 }
 
-static int callIntervalTimerExpired(OOTimer* ptimer, void *pdata)
+static int callIntervalTimerExpired(void *pdata)
 {
    char callToken[20];
    char *token=NULL;

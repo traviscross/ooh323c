@@ -448,6 +448,17 @@ EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
 
 int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
                         char *msgbuf, int size);
+
+/**
+ * This is a callback function which is called when there is no CONNECT
+ * response from the remote endpoint after the SETUP has been sent and timeout
+ * period has passed.
+ * @param data            The callback data registered at the time of timer
+ *                        creation.
+ *
+ * @return                OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooCallEstbTimerExpired(void *data);
 /**
  * @}
  */

@@ -25,7 +25,7 @@
 
 struct _OOTimer;
 
-typedef int (*OOTimerCbFunc)(struct _OOTimer *pTimer, void *data);
+typedef int (*OOTimerCbFunc)(void *data);
 
 typedef struct _OOTimer {
    struct timeval expireTime, timeout;
@@ -109,6 +109,15 @@ EXTERN struct timeval* ooTimerNextTimeout (DList* pList, struct timeval* ptimeou
  */
 EXTERN void ooTimerReset (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 
+
+/**
+ * This function is used to compare two timeout values.
+ * @param to1          First timeout value.
+ * @param to2          Second timeout value.
+ *
+ * @return             1, if to1 > to2; 0, if to1 == to2; -1, if to1 < to2
+ */
+int ooCompareTimeouts(struct timeval *to1, struct timeval *to2);
 #ifdef __cplusplus
 }
 #endif

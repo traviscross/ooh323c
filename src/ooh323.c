@@ -23,6 +23,7 @@
 #include "printHandler.h"
 #include "ooh323.h"
 #include "ooras.h"
+#include "ooTimer.h"
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
@@ -478,7 +479,9 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
 
 int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
 {
-   int ret=OO_OK;
+   int ret=OO_OK, i;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer=NULL;
    int type = q931Msg->messageType;
    switch(type)
    {
@@ -527,6 +530,21 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931ConnectMsg:/* Connect message received */
          OOTRACEINFO3("H.225 Connect message received (%s, %s)\n",
                       call->callType, call->callToken);        
+         /* Disable call establishment timer */
+         for(i = 0; i<call->timerList.count; i++)
+         {
+            pNode = dListFindByIndex(&call->timerList, i);
+            pTimer = (OOTimer*)pNode->data;
+            if(((ooTimerCallback*)pTimer->cbData)->timerType &
+                                                         OO_CALLESTB_TIMER)
+            {
+               ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+               ooTimerDelete(call->pctxt, &call->timerList, pTimer);
+               OOTRACEDBGC3("Deleted CallESTB timer. (%s, %s)\n",
+                                              call->callType, call->callToken);
+               break;
+            }
+         }
          ret = ooOnReceivedSignalConnect(call, q931Msg);
          if(ret != OO_OK)
             OOTRACEERR3("Error:Invalid Connect message received. (%s, %s)\n",
