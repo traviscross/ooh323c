@@ -159,7 +159,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    if(call->isFastStartActive)
    {
       /* For printing the decoded message to log, initialize handler. */
-      initializePrintHandler(&printHandler, "FastStart Element");
+      initializePrintHandler(&printHandler, "FastStart Elements");
 
       /* Add print handler to list */
       rtAddEventHandler (call->pctxt, &printHandler);
@@ -267,7 +267,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    if(connect->m.fastStartPresent)
    {
       /* For printing the decoded message to log, initialize handler. */
-      initializePrintHandler(&printHandler, "FastStart Element");
+      initializePrintHandler(&printHandler, "FastStart Elements");
 
       /* Add print handler to list */
       rtAddEventHandler (call->pctxt, &printHandler);
