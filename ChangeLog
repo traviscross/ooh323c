@@ -1,7 +1,12 @@
-Patched memheap.c
-Fixed bugs
-Callback functions logic changed.
-Consolidated Text/Error descriptions in oo.c
+Release 0.5.1
+1. Callback functions updated.
+2. Consolidated Text/Error descriptions in oo.c
+3. Improved the capability handling code. Now applications can simply use
+   predefined caps such as OO_CAP_ULAW_64k_240 etc, instead of having to
+   populate the whole capability structure.
+4. Fixed bugs - Specifically memory bug which causes uncertain behaviour on
+   certain embedded systems.
+
 
 Release 0.5:
 1. Added RAS channel support. This release supports
