@@ -289,7 +289,8 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
 {
    ooLogicalChannel *pNewChannel=NULL, *pChannel=NULL;
    ooMediaInfo *pMediaInfo = NULL;
-
+   OOTRACEDBGC5("Adding new media channel for cap %d dir %s (%s, %s)\n",
+                epCap->cap, dir, call->callType, call->callToken);
    /* Create a new logical channel entry */
    pNewChannel = (ooLogicalChannel*)ASN1MALLOC(call->pctxt,
                                                      sizeof(ooLogicalChannel));
@@ -327,7 +328,8 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    pNewChannel->chanCap->stopTransmitChannel = epCap->stopTransmitChannel;
    pNewChannel->chanCap->cap = epCap->cap;
    pNewChannel->chanCap->capType = epCap->capType;
-
+   OOTRACEDBGC4("Adding new channel with cap %d (%s, %s)\n", epCap->cap,
+                call->callType, call->callToken);
    /* As per standards, media control port should be same for all
       proposed channels with same session ID. However, most applications
       use same media port for transmit and receive of audio streams. Infact,
@@ -351,10 +353,14 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    
    if(pMediaInfo)
    {
+      OOTRACEDBGC3("Using configured media info (%s, %s)\n", call->callType,
+                  call->callToken);
       pNewChannel->localRtpPort = pMediaInfo->lMediaPort;
       pNewChannel->localRtcpPort = pMediaInfo->lMediaCntrlPort;
       strcpy(pNewChannel->localIP, pMediaInfo->lMediaIP);
    }else{
+      OOTRACEDBGC3("Using default media info (%s, %s)\n", call->callType,
+                  call->callToken);
       pNewChannel->localRtpPort = ooGetNextPort(&gH323ep, OORTP);
       /* Ensures that RTP port is an even one */
       if((pNewChannel->localRtpPort & 1) == 1)
@@ -666,7 +672,8 @@ int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
    newMediaInfo->lMediaPort = mediaInfo.lMediaPort;
    newMediaInfo->cap = mediaInfo.cap;
    newMediaInfo->next = NULL;
-
+   OOTRACEDBGC4("Configured mediainfo for cap %d (%s, %s)\n", mediaInfo.cap,
+                call->callType, call->callToken);
    if(!call->mediaInfo)
       call->mediaInfo = newMediaInfo;
    else{

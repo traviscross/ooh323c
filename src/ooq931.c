@@ -1048,11 +1048,15 @@ int ooAcceptCall(ooCallData *call)
       connect->m.fastStartPresent = TRUE;
       for(i=0, j=0; i<(int)call->remoteFastStartOLCs.count; i++)
       {
+
          pNode = dListFindByIndex(&call->remoteFastStartOLCs, i);
          olc = (H245OpenLogicalChannel*)pNode->data;
          /* Forward Channel */
          if(olc->forwardLogicalChannelParameters.dataType.t != T_H245DataType_nullData)
          {
+            OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
+                          olc->forwardLogicalChannelNumber, call->callType,
+                          call->callToken);
             epCap = ooIsDataTypeSupported(call,
                                 &olc->forwardLogicalChannelParameters.dataType,
                                 T_H245Capability_receiveAudioCapability);
@@ -1073,6 +1077,9 @@ int ooAcceptCall(ooCallData *call)
          }
          else if(olc->m.reverseLogicalChannelParametersPresent)
          {
+            OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
+                          olc->forwardLogicalChannelNumber, call->callType,
+                          call->callToken);
             epCap = ooIsDataTypeSupported(call,
                                 &olc->reverseLogicalChannelParameters.dataType,
                                 T_H245Capability_transmitAudioCapability);
@@ -1171,7 +1178,8 @@ int ooAcceptCall(ooCallData *call)
          pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
          respOlc = NULL;
          olc = NULL;
-                 j++;
+         j++;
+         epCap = NULL;
       }
       OOTRACEINFO4("Added %d fast start elements to CONNECT message "
                    "(%s, %s)\n",  j, call->callType, call->callToken);

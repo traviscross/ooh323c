@@ -165,6 +165,12 @@ int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 
 int osEpOnAlerting(ooCallData* call)
 {
+ 
+   return OO_OK;
+}
+/* on incoming call callback */
+int osEpOnIncomingCall(ooCallData* call )
+{
    ooMediaInfo mediaInfo1, mediaInfo2;
    char localip[20];
    memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
@@ -189,12 +195,8 @@ int osEpOnAlerting(ooCallData* call)
    ooAddMediaInfo(call, mediaInfo2);
     
    strcpy(callToken, call->callToken);
-   return OO_OK;
-}
-/* on incoming call callback */
-int osEpOnIncomingCall(ooCallData* call )
-{
    isActive = 1;
+  
    return OO_OK;
 }
 

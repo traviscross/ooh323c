@@ -79,6 +79,7 @@
 #define OOTRACEDBGC2(a,b)     ooTrace(OOTRCLVLDBGC,a,b)
 #define OOTRACEDBGC3(a,b,c)   ooTrace(OOTRCLVLDBGC,a,b,c)
 #define OOTRACEDBGC4(a,b,c,d) ooTrace(OOTRCLVLDBGC,a,b,c,d)
+#define OOTRACEDBGC5(a,b,c,d,e) ooTrace(OOTRCLVLDBGC,a,b,c,d,e)
 
 #ifdef __cplusplus
 extern "C" {
