@@ -1,4 +1,4 @@
-Copyright (C) 2004 by Objective Systems, Inc.
+Copyright (C) 2004-2005 by Objective Systems, Inc.
 
 Objective Open H.323 README
 
@@ -12,14 +12,15 @@ Then additional code was developed which makes use of the compiler
 generated code for presenting a comparatively high level stack API.
 
 The media part, which includes RTP and audio support, is implemented
-as a plugin. The media plugin uses G.711 code made available by Sun
-Microsystems to the open source community. Please refer to their
+as a sample library. The media library uses G.711 code made available
+by Sun Microsystems to the open source community. Please refer to their
 license for more details.
 
 Features supported in this package include the following:
 
 1. At the H.225 level, the framework allows the exchange of basic
-   Q.931 signalling messages for call setup.
+   Q.931 signalling messages for call setup. Also, fastStart and
+   H.245 tunneling is supported.
 
 2. At the H.245 level, the following messages are supported
  -   MasterSlaveDetermination
@@ -37,13 +38,13 @@ Features supported in this package include the following:
    implementation. However, other message types such as RAS can be
    easily supported by following the same implementation pattern.
 
-3. Plugin architecture for RTP and media support. Objective systems
-   has provided a sample plugin which can send/receive RTP data. It
-   can also play the received audio onto speakers and can collect
-   audio from Mic for transmitting as rtp stream. Apart from this,
-   it also supports transmitting audio files over RTP channel. The
-   windows version supports 16 bit, 8000 samples per second wave
-   file where as linux version supports raw 16 bit audio data file.
+3. Objective systems has provided a sample media library which can
+   send/receive RTP data. It can also play the received audio onto
+   speakers and can collect audio from Mic for transmitting as rtp
+   stream. Apart from this, it also supports transmitting audio files
+   over RTP channel. The windows version supports 16 bit, 8000 samples
+   per second wave file where as linux version supports raw 16 bit audio
+   data file.
 
 4. Sample H.323 based audio file player and receiver programs are
    provided with this package.
@@ -130,9 +131,10 @@ Getting Started
       You will find simple.log and media.log in the current directory.
      
 
-   7. For testing against ohphone, make sure -T -F -n options for ohphone
-      are enabled. This ensures that ohphone does not use tunneling and
-      faststart, which we do not support in this release.
+   7. For testing against ohphone, make sure -n option for ohphone
+      is enabled. This ensures that ohphone does not use gatekeeper,
+      which we do not support in this release. We plan to support it in next
+      release.
 
 
    Building on Windows
@@ -200,9 +202,10 @@ Getting Started
 
       You will find simple.log and media.log in the current directory.
 
-   8. For testing against ohphone, make sure -T -F -n options for ohphone
-      are enabled. This ensures that ohphone does not use tunneling and
-      faststart, which we do not support in this release.
+   8. For testing against ohphone, make sure -n option for ohphone
+      is enabled. This ensures that ohphone does not use gatekeeper,
+      which we do not support in this release and plan to support in
+          next release.
 
 
 Reporting Problems:

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -28,7 +28,8 @@
 #include "ooports.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"
-
+#include "ooCalls.h"
+#include "ooCapability.h"
 #ifndef _OOCHANNELS_H_
 #include "oochannels.h"
 #endif
@@ -54,22 +55,23 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-
+   /* Initialize the H323 endpoint */
    ret = ooInitializeH323Ep("receiver.log", 0, 0, 28, 9, 0, 61, "obj-sys",
                       "Version 0.3", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "receiver", 0);
+                      "objsyscall", "receiver", OO_CALLMODE_AUDIORX);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+   /* Add audio capability */
    audioCap.t = T_H245AudioCapability_g711Ulaw64k;
    audioCap.u.g711Ulaw64k = 240;
-   ooAddAudioCapability(audioCap, OO_RXTX_CAP,
+   ooAddAudioCapability(audioCap, T_H245Capability_receiveAudioCapability,
                              &osEpStartReceiveChannel, NULL,
                              &osEpStopReceiveChannel, NULL);
    ooH323EpRegisterCallbacks(&osEpOnIncomingCall, NULL, NULL, &osEpOnCallCleared, NULL);
-   /* Load plug-in*/
+   /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
    if(ret != OO_OK)
@@ -109,16 +111,18 @@ int main(int argc, char ** argv)
    return ASN_OK;
 }
 
-int osEpStartReceiveChannel(ooCallData *call)
+/* Callback for starting media receive channel */
+int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting receive channel %s:%d\n", call->localIP, call->localRtpPort);
+   printf("Starting receive channel %s:%d\n", call->localIP, pChannel->localRtpPort);
    ooCreateReceiveRTPChannel(call->localIP,
-                              call->localRtpPort);
+                              pChannel->localRtpPort);
    ooStartReceiveAudioAndPlayback();
    return OO_OK;
 }
 
-int osEpStopReceiveChannel(ooCallData *call)
+/* Callback for stopping media receive channel */
+int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Receive Channel\n");
    ooStopReceiveAudioAndPlayback();
@@ -153,13 +157,29 @@ void* osEpHandleCommand(void* dummy)
    return dummy;
 }
 
+/* Callback to handle incoming call */
 int osEpOnIncomingCall(ooCallData* call )
 {
+   ooMediaInfo mediaInfo;
+   char localip[20];
    strcpy(callToken, call->callToken);
    isCallActive = 1;
+  
+   memset(&mediaInfo, 0, sizeof(ooMediaInfo));
+   memset(localip, 0, 20);
+   /* Configure mediainfo for receive media channel of type G711 */
+   ooGetLocalIPAddress(localip);
+   mediaInfo.lMediaCntrlPort = 5001;
+   mediaInfo.lMediaPort = 5000;
+   mediaInfo.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo.lMediaIP, localip);
+   strcpy(mediaInfo.dir, "receive");
+   ooAddMediaInfo(call, mediaInfo);
+  
    return OO_OK;
 }
 
+/* Call cleared callback */
 int osEpOnCallCleared(ooCallData* call )
 {
    printf("Call Ended\n");

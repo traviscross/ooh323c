@@ -25,7 +25,8 @@
 #include "ooports.h"
 #include "ooh323ep.h"
 #include "oosndrtp.h"
-
+#include "ooCalls.h"
+#include "ooCapability.h"
 #ifndef _OOCHANNELS_H_
 #include "oochannels.h"
 #endif
@@ -34,10 +35,11 @@
 #endif
 
 int osEpOnCallCleared(ooCallData* call );
-
+int osEpOnOutgoingCall(ooCallData* call );
 int isCallActive;
 char ooPlayFile[100];
 char callToken[20];
+
 int main(int argc, char ** argv)
 {
    int ret=0;
@@ -53,26 +55,28 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-
+   /* Initialize H323 endpoint */
    ret = ooInitializeH323Ep("player.log", 0, 0, 30, 9, 0, 61, "obj-sys",
-                      "Version 0.3", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "player", 1);
+                      "Version 0.4", T_H225CallType_pointToPoint, 1720,
+                      "objsyscall", "player", OO_CALLMODE_AUDIOTX);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
-   ooH323EpRegisterCallbacks(NULL, NULL, NULL, &osEpOnCallCleared, NULL);
-   ooSetTCPPorts(5050, 6000);
-   ooSetUDPPorts(6001, 6050);
-   ooSetRTPPorts(6051, 7000);
+   /* Register callbacks */
+   ooH323EpRegisterCallbacks(NULL, &osEpOnOutgoingCall, NULL, &osEpOnCallCleared, NULL);
+   ooSetTCPPorts(16050, 16250);
+   ooSetUDPPorts(17050, 17250);
+   ooSetRTPPorts(18050, 18250);
+   /* Add transmit audio capability of type G711 ULaw */
    audioCap.t = T_H245AudioCapability_g711Ulaw64k;
    audioCap.u.g711Ulaw64k = 240;
-   ooAddAudioCapability(audioCap, OO_RXTX_CAP,
+   ooAddAudioCapability(audioCap, T_H245Capability_transmitAudioCapability,
                              NULL,
                              &osEpStartTransmitChannel, NULL,
                              &osEpStopTransmitChannel);
-   /* Load plug-in*/
+   /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
    if(ret != OO_OK)
@@ -95,8 +99,7 @@ int main(int argc, char ** argv)
       strcpy(ooPlayFile, argv[1]);
       memset(localip, 0, sizeof(localip));
       ooGetLocalIPAddress(localip);
-      printf("localip is %s:%d\n", localip, strlen(localip));
-      ooMakeCall(localip, 1720, callToken);     
+      ooMakeCall(localip, 1720, callToken); /* make call */  
       isCallActive = 1;
    }
    else
@@ -121,17 +124,19 @@ int main(int argc, char ** argv)
 }
 
 
-int osEpStartTransmitChannel(ooCallData *call)
+/* Callback to start transmit media channel */
+int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting transmit channel %s:%d\n", call->remoteIP,
-                                          call->remoteRtpPort);
+                                          pChannel->remoteRtpPort);
    ooCreateTransmitRTPChannel(call->remoteIP,
-                              call->remoteRtpPort);
+                              pChannel->remoteRtpPort);
    ooStartTransmitWaveFile(ooPlayFile);
    return OO_OK;
 }
 
-int osEpStopTransmitChannel(ooCallData *call)
+/* Callback to stop transmit media channel*/
+int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Transmit Channel\n");
    ooStopTransmitWaveFile();
@@ -165,9 +170,32 @@ void* osEpHandleCommand(void *dummy)
    return dummy;
 }
 
+/* Call cleared callback */
 int osEpOnCallCleared(ooCallData* call )
 {
    printf("Call Ended\n");
    isCallActive = 0;
+   return OO_OK;
+}
+
+/* out going call callback */
+int osEpOnOutgoingCall(ooCallData* call )
+{
+   ooMediaInfo mediaInfo;
+   char localip[20];
+   memset(&mediaInfo, 0, sizeof(ooMediaInfo));
+   memset(localip, 0, 20);
+   /* Configure mediainfo for transmit media of type G711*/
+   ooGetLocalIPAddress(localip);
+   mediaInfo.lMediaCntrlPort = 5001;
+   mediaInfo.lMediaPort = 5000;
+   strcpy(mediaInfo.lMediaIP, localip);
+   strcpy(mediaInfo.dir, "transmit");
+   mediaInfo.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo.mediaType, "audio");
+   ooAddMediaInfo(call, mediaInfo);
+    
+   strcpy(callToken, call->callToken);
+  
    return OO_OK;
 }
