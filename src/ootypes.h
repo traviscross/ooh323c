@@ -28,9 +28,6 @@
 #include "ooasn1.h"
 
 
-
-
-
 /*  types */
 #define OO_FAILED -1
 #define OO_OK 1
@@ -85,16 +82,17 @@ static char * messages[] = {
 
 
 /** call states */
-#define OO_CALL_CREATED          50
-#define OO_CALL_CONNECTING       51
-#define OO_CALL_CONNECTED        52
-#define OO_CALL_CLEAR            53 /* call marked for clearing */
-#define OO_CALL_CLEAR_CLOLCS     54 /* Logical Channels closed*/
-#define OO_CALL_CLEAR_CLELCS     55 /* Logical Channels cleared*/
-#define OO_CALL_CLEAR_ENDSESSION 56 /* EndSession command sent*/
-#define OO_CALL_CLEAR_CLOSEH245  57 /* H245 sockets closed*/
-#define OO_CALL_CLEAR_RELEASE    58 /* Release Sent */
-#define OO_CALL_CLEARED          59 /* Call Cleared */
+#define OO_CALL_CREATED           50
+#define OO_CALL_WAITING_ADMISSION 51    
+#define OO_CALL_CONNECTING        52
+#define OO_CALL_CONNECTED         53
+#define OO_CALL_CLEAR             54 /* call marked for clearing */
+#define OO_CALL_CLEAR_CLOLCS      55 /* Logical Channels closed*/
+#define OO_CALL_CLEAR_CLELCS      56 /* Logical Channels cleared*/
+#define OO_CALL_CLEAR_ENDSESSION  57 /* EndSession command sent*/
+#define OO_CALL_CLEAR_CLOSEH245   58 /* H245 sockets closed*/
+#define OO_CALL_CLEAR_RELEASE     59 /* Release Sent */
+#define OO_CALL_CLEARED           60 /* Call Cleared */
 
 #define CALL_STATE_BASE 50
 static char* callStates[] = {
@@ -345,6 +343,7 @@ typedef struct ooCallData {
   
    H225CallIdentifier   callIdentifier;/* The call identifier for the active
                                           call. */
+   H225ConferenceIdentifier confIdentifier;
    int                  callState;
    int                  callEndReason;
    int                  h245SessionState;
@@ -417,7 +416,7 @@ typedef struct ooH323EpCapability{
    cb_StopTransmitChannel stopTransmitChannel;
 }ooH323EpCapability;
 
-
+typedef int (*cb_OnAlerting)(ooCallData * call);
 typedef int (*cb_OnIncomingCall)(ooCallData* call );
 typedef int (*cb_OnOutgoingCall)(ooCallData* call );
 typedef int (*cb_OnCallAnswered)(ooCallData* call);
@@ -456,6 +455,7 @@ typedef struct ooEndPoint{
    DList audioCaps;
    DList dataApplicationCaps;
    DList videoCaps;
+   cb_OnAlerting onAlerting;
    cb_OnIncomingCall onIncomingCall;
    cb_OnOutgoingCall onOutgoingCall;
    cb_OnCallEstablished onCallEstablished;

@@ -313,12 +313,14 @@ int ooSetAliasTransportID(char * ipaddress)
    return OO_OK;
 }
    
-int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
+int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
+                              cb_OnIncomingCall onIncomingCall,
                               cb_OnOutgoingCall onOutgoingCall,
                               cb_OnCallEstablished onCallEstablished,
                               cb_OnCallCleared onCallCleared,
                               cb_OnStartLogicalChannel onStartLogicalChannel)
 {
+   gH323ep.onAlerting = onAlerting;
    gH323ep.onIncomingCall = onIncomingCall;
    gH323ep.onOutgoingCall = onOutgoingCall;
    gH323ep.onCallEstablished = onCallEstablished;

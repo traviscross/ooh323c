@@ -22,7 +22,7 @@
 #include "ooh323.h"
 #include "ooCalls.h"
 #include "printHandler.h"
-
+#include "ooras.h"
 #include "stdio.h"
 
 
@@ -107,11 +107,10 @@ int ooCreateH245Connection(ooCallData *call)
          ret = ooSendMasterSlaveDetermination(call);
          if(ret != OO_OK)
          {
-            OOTRACEERR3("ERROR:Sending Master-slave determination message (%s, %s)\n",
-                         call->callType, call->callToken);
+            OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                        "(%s, %s)\n", call->callType, call->callToken);
             return ret;
          }
-        
       }
       else
       {
@@ -120,7 +119,6 @@ int ooCreateH245Connection(ooCallData *call)
          return OO_FAILED;
       }
    }
-  
    return OO_OK;
 }
 
@@ -191,23 +189,23 @@ int ooCreateH225Connection(ooCallData *call)
 
       *(call->h225ChanPort) = ret;
 
-      OOTRACEINFO5("Trying to connect to remote endpoint(%s:%d) to setup H2250"                                    "channel (%s, %s)\n", call->remoteIP, call->remotePort,
-                    call->callType, call->callToken);
+      OOTRACEINFO5("Trying to connect to remote endpoint(%s:%d) to setup "
+                   "H2250 channel (%s, %s)\n", call->remoteIP,
+                   call->remotePort, call->callType, call->callToken);
       if((ret=ooSocketConnect(channelSocket, call->remoteIP,
                               call->remotePort))==ASN_OK)
       {
          call->h225Channel = (OOSOCKET*) ASN1MALLOC(call->pctxt,
-                                                            sizeof(OOSOCKET));
+                                                     sizeof(OOSOCKET));
          *(call->h225Channel) = channelSocket;
-        
          OOTRACEINFO3("H2250 transmiter channel creation - succesful "
                       "(%s, %s)\n", call->callType, call->callToken);
          return OO_OK;
       }
       else
       {
-         OOTRACEERR3("ERROR:Failed to connect to remote destination for transmit "
-                     "H2250 channel\n", call->callType, call->callToken);
+         OOTRACEERR3("ERROR:Failed to connect to remote destination for "
+                    "transmit H2250 channel\n",call->callType,call->callToken);
          return OO_FAILED;
       }
       return OO_FAILED;
@@ -250,7 +248,6 @@ int ooCreateH323Listener()
       OOTRACEERR1("Failed to create socket for H323 Listener\n");
       return OO_FAILED;
    }
-   /*ret= ooSocketStrToAddr (localip, &ipaddrs);*/
    ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipaddrs);
    if((ret=ooSocketBind (channelSocket, ipaddrs,
                          gH323ep.listenPort))==ASN_OK)
@@ -338,8 +335,8 @@ int ooAcceptH245Connection(ooCallData *call)
    ret = ooSendMasterSlaveDetermination(call);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("ERROR:Sending Master-slave determination message (%s, %s)\n",
-                   call->callType, call->callToken);
+      OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                  "(%s, %s)\n", call->callType, call->callToken);
       return ret;
    }  
    return OO_OK;
@@ -353,14 +350,25 @@ int ooMonitorChannels()
    ooCallData *call, *prev=NULL;
    DListNode *curNode;
    ooCommand *cmd;
+   OOSOCKET tRasSocket=0;
    int i=0;  
+
    gMonitor = 1;
+
    while(1)
    {
       FD_ZERO(&readfds);
       FD_ZERO(&writefds);
       nfds = 0;
+      ooRasExplorer();
+      tRasSocket = ooRasGetSocket();
      
+      if(tRasSocket)
+      {
+         FD_SET( tRasSocket, &readfds );
+         if ( nfds < (int)tRasSocket )
+            nfds = (int)tRasSocket;
+      }
       if(gH323ep.listener)
       {
          FD_SET(*(gH323ep.listener), &readfds);
@@ -439,7 +447,9 @@ int ooMonitorChannels()
 #else
       pthread_mutex_lock(&gCmdMutex);
 #endif
-         
+      /* If gatekeeper is present, then we should not be processing
+         any call related command till we are registered with the gk.
+      */
       if(gCmdList.count >0)
       {
          for(i=0; i< (int)gCmdList.count; i++)
@@ -449,18 +459,35 @@ int ooMonitorChannels()
             switch(cmd->type)
             {
             case OO_CMD_MAKECALL:
+#ifdef __USING_RAS
+               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
+                  !ooRasIsRegistered())
+               {
+                  OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
+                               "gatekeeper registration.\n");
+                  continue;
+               }
+#endif
                OOTRACEINFO2("Processing MakeCall command %s\n",
-                             (char*)cmd->param3);
-               ooH323MakeCall((char*)cmd->param1, *(int*)cmd->param2,
-                             (char*)cmd->param3);
+                             (char*)cmd->param2);
+               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2);
                break;
             case OO_CMD_ANSCALL:
+#ifdef __USING_RAS
+               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
+                  !ooRasIsRegistered())
+               {
+                  OOTRACEWARN1("New answer call cmd is waiting for "
+                               "gatekeeper registration.\n");
+                  continue;
+               }
+#endif
                OOTRACEINFO2("Processing Answer Call command for %s\n",
                             (char*)cmd->param1);
                ooSendConnect(ooFindCallByToken((char*)cmd->param1));
                break;
             case OO_CMD_REJECTCALL:
-               OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
+                   OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
                ooEndCall(ooFindCallByToken((char*)cmd->param1));
                break;
             case OO_CMD_HANGCALL:
@@ -484,6 +511,20 @@ int ooMonitorChannels()
 #else
    pthread_mutex_unlock(&gCmdMutex);
 #endif
+      /* Manage ready descriptors after select */
+
+      if(tRasSocket)
+      {
+         /* TODO: This is always true on win32. It is ok for now
+            as recvFrom returns <=0 bytes and hence the function
+            ooRasReceive just returns without doing anything.
+            Need to investigate*/
+         if(FD_ISSET( tRasSocket, &readfds) )
+         {
+            ooRasReceive();
+         }
+      }
+
       if(gH323ep.listener)
       {
          if(FD_ISSET(*(gH323ep.listener), &readfds))
@@ -838,6 +879,7 @@ int ooSendMsg(ooCallData *call, int type)
    ASN1OCTET msgbuf[MAXMSGLEN];
    int len=0, ret=0, msgType=0;
    int i =0;
+  
    memset(msgbuf, 0, sizeof(msgbuf));
    if(type == OOQ931MSG)
    {
@@ -941,7 +983,7 @@ int ooSendMsg(ooCallData *call, int type)
             }
             return OO_FAILED;
          }
-                 return OO_OK;
+         return OO_OK;
       }
    }
    /* Need to add support for other messages such as T38 etc */
@@ -991,6 +1033,7 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOAlert:
       OOTRACEINFO3("Sent Message - Alerting (%s, %s)\n", call->callType,
                     call->callToken);
+     
       break;
    case OOConnect:
       OOTRACEINFO3("Sent Message - Connect (%s, %s)\n", call->callType,
@@ -999,6 +1042,9 @@ int ooOnSendMsg(ooCallData *call, int msgType)
    case OOReleaseComplete:
       OOTRACEINFO3("Sent Message - ReleaseComplete (%s, %s)\n", call->callType,
                     call->callToken);
+#ifdef __USING_RAS
+         ooRasSendDisengageRequest(call);
+#endif
       break;
    case OOFacility:
       OOTRACEINFO3("Sent Message - Facility (%s, %s)\n", call->callType,

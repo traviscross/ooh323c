@@ -41,14 +41,12 @@ extern "C" {
  */
 /**
  * This function is used by an application to place a call.
- * @param destip      Dotted IP address of the remote endpoint
- * @param port        Port number at which remote endpoint is listening for
- *                    calls.
+ * @param dest        Call Destination - IP:port / alias
  * @param callToken   Pointer to a buffer in which callToken will be returned
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooMakeCall(char * destip, int port, char *callToken);
+EXTERN int ooMakeCall(char * dest, char *callToken);
 
 
 /**

@@ -65,7 +65,7 @@ int main(int argc, char ** argv)
       return -1;
    }
    /* Register callbacks */
-   ooH323EpRegisterCallbacks(NULL, &osEpOnOutgoingCall, NULL, &osEpOnCallCleared, NULL);
+   ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCall, NULL, &osEpOnCallCleared, NULL);
    ooSetTCPPorts(16050, 16250);
    ooSetUDPPorts(17050, 17250);
    ooSetRTPPorts(18050, 18250);
@@ -99,7 +99,7 @@ int main(int argc, char ** argv)
       strcpy(ooPlayFile, argv[1]);
       memset(localip, 0, sizeof(localip));
       ooGetLocalIPAddress(localip);
-      ooMakeCall(localip, 1720, callToken); /* make call */  
+      ooMakeCall(localip, callToken); /* make call */  
       isCallActive = 1;
    }
    else

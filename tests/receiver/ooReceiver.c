@@ -70,7 +70,8 @@ int main(int argc, char ** argv)
    ooAddAudioCapability(audioCap, T_H245Capability_receiveAudioCapability,
                              &osEpStartReceiveChannel, NULL,
                              &osEpStopReceiveChannel, NULL);
-   ooH323EpRegisterCallbacks(&osEpOnIncomingCall, NULL, NULL, &osEpOnCallCleared, NULL);
+   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
+                             NULL, &osEpOnCallCleared, NULL);
    /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
@@ -157,8 +158,7 @@ void* osEpHandleCommand(void* dummy)
    return dummy;
 }
 
-/* Callback to handle incoming call */
-int osEpOnIncomingCall(ooCallData* call )
+int osEpOnAlerting(ooCallData* call )
 {
    ooMediaInfo mediaInfo;
    char localip[20];
@@ -175,6 +175,13 @@ int osEpOnIncomingCall(ooCallData* call )
    strcpy(mediaInfo.lMediaIP, localip);
    strcpy(mediaInfo.dir, "receive");
    ooAddMediaInfo(call, mediaInfo);
+  
+   return OO_OK;
+}
+
+/* Callback to handle incoming call */
+int osEpOnIncomingCall(ooCallData* call )
+{
   
    return OO_OK;
 }

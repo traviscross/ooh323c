@@ -355,13 +355,21 @@ EXTERN int ooSendConnect(ooCallData *call);
  * This function is used to send a SETUP message for outgoing call. It first
  * creates an H.225 TCP connection with the remote end point and then sends
  * SETUP message over this connection.
- * @param destip    Dotted IP address of the remote end point.
- * @param port      Port at which remote endpoint is listening for calls.
+ * @param dest      Destination - IP:Port/alias.
  * @param callToken Unique token for the new call.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooH323MakeCall(char *destip, int port, char *callToken);
+EXTERN int ooH323MakeCall(char *dest, char *callToken);
+
+/**
+ * Helper function used to make a call once it is approved by the Gk.
+ * In case of no gk, this function is directly called to make a call.
+ * @param call        Handle to the new call.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure
+ */
+int ooH323CallAdmitted( ooCallData *call);
 
 /**
  * This function is used to handup a currently active call. It sets the call
@@ -390,7 +398,14 @@ EXTERN int ooAcceptCall(ooCallData *call);
  */
 EXTERN int ooH323MakeCall_helper(ooCallData *call);
 
-
+/**
+ * This function is used to parse the destination
+ * @param call      Handle to the call
+ * @param dest      Destination string to be parsed.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooParseDestination(ooCallData *call, char *dest);
 /**
  * @}
  */

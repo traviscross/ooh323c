@@ -22,6 +22,7 @@
 #include "ooCapability.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"
+#include "ooras.h"
 #ifndef _WIN32
 #include <pthread.h>
 #endif
@@ -33,6 +34,7 @@ int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
 int osEpOnOutgoingCall(ooCallData* call );
 int osEpOnCallCleared(ooCallData* call );
+int osEpOnAlerting(ooCallData* call);
 void * osEpHandleCommand(void*);
 
 int isActive;
@@ -70,8 +72,15 @@ int main(int argc, char ** argv)
                          &osEpStartReceiveChannel, NULL,
                          &osEpStopReceiveChannel, NULL);
    /* Register callbacks */
-   ooH323EpRegisterCallbacks(&osEpOnIncomingCall, &osEpOnOutgoingCall, NULL, osEpOnCallCleared, NULL);  
- 
+   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
+                             &osEpOnOutgoingCall, NULL,
+                             osEpOnCallCleared, NULL);  
+   ooSetAliasH323ID("vish");
+   ooSetAliasDialedDigits("6109528747");
+   ooSetAliasURLID("http://www.obj-sys.com");
+  
+   /* Init RAS module */
+   ooInitRas(0, RasNoGatekeeper, 0, 0);
    /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
@@ -99,7 +108,7 @@ int main(int argc, char ** argv)
    {
       printf("Calling %s\n", argv[1]);
       memset(callToken, 0, 20);
-      ooMakeCall(argv[1], 1720, callToken); /* Make call */
+      ooMakeCall(argv[1], callToken); /* Make call */
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
@@ -115,7 +124,7 @@ int main(int argc, char ** argv)
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting Receive channel at %s:%d\n", call->localIP,
-                                                 pChannel->localRtpPort);
+                                              pChannel->localRtpPort);
    isActive = 1;
    ooCreateReceiveRTPChannel(call->localIP,
                              pChannel->localRtpPort);
@@ -127,7 +136,7 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting transmit channel to %s:%d\n", call->remoteIP,
-                                                  pChannel->remoteRtpPort);
+                                               pChannel->remoteRtpPort);
    isActive = 1;
    ooCreateTransmitRTPChannel(call->remoteIP,
                               pChannel->remoteRtpPort);
@@ -151,13 +160,13 @@ int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
    return OO_OK;
 }
 
-/* on incoming call callback */
-int osEpOnIncomingCall(ooCallData* call )
+int osEpOnAlerting(ooCallData* call)
 {
    ooMediaInfo mediaInfo1, mediaInfo2;
    char localip[20];
    memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
    memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
+
    /* Configure mediainfo for transmit media channel of type G711 */
    memset(localip, 0, 20);
    ooGetLocalIPAddress(localip);
@@ -166,6 +175,7 @@ int osEpOnIncomingCall(ooCallData* call )
    mediaInfo1.capType = T_H245AudioCapability_g711Ulaw64k;
    strcpy(mediaInfo1.lMediaIP, localip);
    strcpy(mediaInfo1.dir, "transmit");
+   strcpy(mediaInfo1.mediaType, "audio");
    ooAddMediaInfo(call, mediaInfo1);
   
    /* Configure mediainfo for receive media channel of type G711 */
@@ -174,11 +184,16 @@ int osEpOnIncomingCall(ooCallData* call )
    mediaInfo2.capType = T_H245AudioCapability_g711Ulaw64k;
    strcpy(mediaInfo2.lMediaIP, localip);
    strcpy(mediaInfo2.dir, "receive");
+   strcpy(mediaInfo2.mediaType, "audio");
    ooAddMediaInfo(call, mediaInfo2);
     
    strcpy(callToken, call->callToken);
+   return OO_OK;
+}
+/* on incoming call callback */
+int osEpOnIncomingCall(ooCallData* call )
+{
    isActive = 1;
-  
    return OO_OK;
 }
 

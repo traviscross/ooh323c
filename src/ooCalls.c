@@ -21,6 +21,7 @@
 #include "ooports.h"
 #include "oochannels.h"
 #include "ooh245.h"
+#include "ooCapability.h"
 
 ooCallData* ooCreateCall(char * type, char*callToken)
 {
@@ -52,8 +53,6 @@ ooCallData* ooCreateCall(char * type, char*callToken)
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
-/*   ooGetLocalIPAddress(localip);
-   strcpy(call->localIP, localip);*/
    strcpy(call->localIP, gH323ep.signallingIP);
    call->noOfLogicalChannels = 0;
    call->logicalChanNoBase = 1001;
@@ -387,9 +386,9 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int se
                break;
          }
          pMediaInfo = pMediaInfo->next;
-       
       }
    }
+   
    if(pMediaInfo)
    {
       pNewChannel->localRtpPort = pMediaInfo->lMediaPort;
@@ -403,7 +402,6 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int se
       pNewChannel->localRtcpPort = ooGetNextPort(&gH323ep, OORTP);
       strcpy(pNewChannel->localIP, call->localIP);
    }
-  
   
    /* Add new channel to the list */
    pNewChannel->next = NULL;
@@ -444,6 +442,57 @@ ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(ooCallData *call,int Ch
    return pLogicalChannel;
 }
 
+ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
+                               H245OpenLogicalChannel *olc)
+{
+   H245DataType * psDataType=NULL;
+   H245H2250LogicalChannelParameters * pslcp=NULL;
+
+   if(olc->m.reverseLogicalChannelParametersPresent)
+   {
+      psDataType = &olc->reverseLogicalChannelParameters.dataType;
+      /* Only H2250LogicalChannelParameters are supported */
+      if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
+         T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+         return NULL;
+      pslcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+      return ooFindLogicalChannel(call, pslcp->sessionID, "receive", psDataType);
+   }
+   else{
+      psDataType = &olc->forwardLogicalChannelParameters.dataType;
+      /* Only H2250LogicalChannelParameters are supported */
+      if(olc->forwardLogicalChannelParameters.multiplexParameters.t !=
+         T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+         return NULL;
+      pslcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+      return ooFindLogicalChannel(call, pslcp->sessionID, "transmit", psDataType);
+   }
+}
+
+ooLogicalChannel * ooFindLogicalChannel(ooCallData *call, int sessionID,
+                                        char *dir, H245DataType * dataType)
+{
+   ooLogicalChannel * pChannel = NULL;
+   pChannel = call->logicalChans;
+   while(pChannel)
+   {
+      if(pChannel->sessionID == sessionID)
+      {
+         if(!strcmp(pChannel->dir, dir))
+         {
+            if(dataType->t == T_H245DataType_audioData)
+            {
+               if(ooCompareAudioCaps(call, (H245AudioCapability*)pChannel->chanCap->cap,
+                                   dataType->u.audioData))
+                  return pChannel;
+            }
+         }
+      }
+      pChannel = pChannel->next;
+   }
+   return NULL;
+}
+
 /* This function is used to get a logical channel with a particular session ID */
 ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID)
 {
@@ -464,7 +513,6 @@ ASN1BOOL ooIsSessionEstablished(ooCallData *call, int sessionID, char* dir)
 {
    ooLogicalChannel * temp = NULL;
    temp = call->logicalChans;
-
    while(temp)
    {
       if(temp->sessionID == sessionID              &&
@@ -612,7 +660,7 @@ int ooOnLogicalChannelEstablished(ooCallData *call, ooLogicalChannel * pChannel)
 
 int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
 {
-   ooMediaInfo *newMediaInfo=NULL, *cur=NULL;
+   ooMediaInfo *newMediaInfo=NULL;
 
    if(!call)
    {
@@ -633,14 +681,14 @@ int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
    newMediaInfo->lMediaCntrlPort = mediaInfo.lMediaCntrlPort;
    strcpy(newMediaInfo->lMediaIP,mediaInfo.lMediaIP);
    newMediaInfo->lMediaPort = mediaInfo.lMediaPort;
+   newMediaInfo->capType = mediaInfo.capType;
    newMediaInfo->next = NULL;
 
    if(!call->mediaInfo)
       call->mediaInfo = newMediaInfo;
    else{
-      cur = call->mediaInfo;
-      while(cur->next != NULL) cur = cur->next;
-      cur->next = newMediaInfo;
+      newMediaInfo->next = call->mediaInfo;
+      call->mediaInfo = newMediaInfo;
    }
    return OO_OK;
 }

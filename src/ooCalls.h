@@ -195,6 +195,31 @@ EXTERN int ooClearAllLogicalChannels(ooCallData *call);
  */
 EXTERN int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo);
 /**
+ * This function is used to find a logical channel from a received
+ * olc.
+ * @param call     Handle to the related call.
+ * @param olc      Handle to the received OLC.
+ *
+ * @return         Returns the corresponding logical channel if found,
+ *                 else returns NULL.
+ */
+EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
+                               H245OpenLogicalChannel *olc);
+
+/**
+ * This function is used to find a logical channel based on session Id,
+ * direction of channel and datatype.
+ * @param call       Handle to the call
+ * @param sessionID  Session ID for the channel to be searched.
+ * @param dir        Direction of the channel wrt local endpoint.
+ *                   (transmit/receive)
+ * @param dataType   Handle to the data type for the channel.
+ *
+ * @return           Logical channel, if found, NULL otherwise.
+ */
+EXTERN ooLogicalChannel * ooFindLogicalChannel
+   (ooCallData *call, int sessionID, char *dir, H245DataType * dataType);
+/**
  * @}
  */
 

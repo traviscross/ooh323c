@@ -18,7 +18,7 @@
 #include "ooStackCmds.h"
 #include "oo.h"
 
-int ooMakeCall(char * destip, int port, char*callToken)
+int ooMakeCall(char * dest, char*callToken)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -34,22 +34,14 @@ int ooMakeCall(char * destip, int port, char*callToken)
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL;
-   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(destip)+1);
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(dest)+1);
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
       return OO_FAILED;
    }
-   memset(cmd->param1, 0, strlen(destip)+1);
-   strcpy((char*)cmd->param1, destip);
-
-   cmd->param2 = (void*) ASN1MALLOC(&gCtxt, sizeof(int));
-   if(!cmd->param2)
-   {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
-      return OO_FAILED;
-   }
-   *((int*)cmd->param2) = port;
+   memset(cmd->param1, 0, strlen(dest)+1);
+   strcpy((char*)cmd->param1, dest);
    /* Generate call token*/
    if(!callToken)
    {
@@ -62,14 +54,14 @@ int ooMakeCall(char * destip, int port, char*callToken)
    if(gCurCallToken > gCallTokenMax)
       gCurCallToken = gCallTokenBase;
 
-   cmd->param3 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
-   if(!cmd->param3)
+   cmd->param2 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   if(!cmd->param2)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
+      OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
       return OO_FAILED;
    }
   
-   strcpy((char*)cmd->param3, callToken);
+   strcpy((char*)cmd->param2, callToken);
    dListAppend(&gCtxt, &gCmdList, cmd);
 
 #ifdef _WIN32

@@ -546,8 +546,8 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    dListInit(&(response->u.masterSlaveDeterminationAck->extElem1));
 #endif /* !_COMPACT */
    ooSendH245Msg(call, ph245msg);
-   OOTRACEINFO3("Built MasterSlave determination Ack (%s, %s)\n", call->callType,
-                 call->callToken);
+   OOTRACEINFO3("Built MasterSlave determination Ack (%s, %s)\n",
+                call->callType, call->callToken);
 
    return OO_OK;
 }
@@ -1495,7 +1495,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
          curNode2 = dListFindByIndex (&termCapSet->capabilityTable, j) ;
          capTableEntry = (H245CapabilityTableEntry *) curNode2->data;
         
-                 if(!capTableEntry->m.capabilityPresent)
+         if(!capTableEntry->m.capabilityPresent)
             continue;
          else
             h245Cap = &(capTableEntry->capability);
@@ -1509,7 +1509,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
          else
             continue;
         
-                 /* Check for a match */
+          /* Check for a match */
          found = ooCompareAudioCaps(call, lAudioCap, rAudioCap);
          if(found)
             break;
@@ -1673,19 +1673,24 @@ int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
 {
    return OO_OK;
 }
-/* Used to build Audio OLCs for fast connect */
+/* Used to build Audio OLCs for fast connect. Keep in mind that forward and reverse
+   are always with respect to the endpoint which proposes channels */
 int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap, OOCTXT*pctxt)
 {
    int reverse=0, forward=0;
-   H245AudioCapability *audioCap;
-   H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp;
-   H245OpenLogicalChannel_reverseLogicalChannelParameters *rlcp;
-   H245H2250LogicalChannelParameters *pH2250lcp1, *pH2250lcp2;
-   H245UnicastAddress *pUnicastAddrs;
-   H245UnicastAddress_iPAddress *pIpAddrs;
+   H245AudioCapability *audioCap=NULL;
+   H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp=NULL;
+   H245OpenLogicalChannel_reverseLogicalChannelParameters *rlcp=NULL;
+   H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
+   H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
+   H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
    int addr_part1, addr_part2, addr_part3, addr_part4;
    char hexip[20];
    ooLogicalChannel *pLogicalChannel = NULL;
+   int outgoing;
+
+   if(!strcmp(call->callType, "outgoing"))  
+      outgoing = 1;
   
    if(epCap->t == T_H245Capability_receiveAudioCapability)
    {
@@ -1694,7 +1699,10 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       pLogicalChannel = ooAddNewLogicalChannel(call,
                                  olc->forwardLogicalChannelNumber, 1, "audio",
                                  "receive", epCap);
-      reverse = 1;
+      if(outgoing)
+         reverse = 1;
+      else
+         forward = 1;
    }
    else if(epCap->t == T_H245Capability_transmitAudioCapability)
    {
@@ -1703,7 +1711,10 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       pLogicalChannel = ooAddNewLogicalChannel(call,
                                   olc->forwardLogicalChannelNumber, 1, "audio",
                                   "transmit", epCap);
-      forward = 1;
+      if(outgoing)
+         forward = 1;
+      else
+         reverse = 1;
    }
    else if(epCap->t == T_H245Capability_receiveAndTransmitAudioCapability)
    {
@@ -1715,11 +1726,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-  
-
+ 
    audioCap = (H245AudioCapability*)epCap->cap;
-  
-
    sscanf(pLogicalChannel->localIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                                    &addr_part3, &addr_part4);
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3, addr_part4);
@@ -1731,9 +1739,10 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       /* Note we don't allocate memory and copy capability, we just set the pointer.
          This is ok as end point capability will be valid till the end of the application,
          and since we have single threaded app, we are safe. */
-      flcp->dataType.u.audioData = audioCap;
+      /*flcp->dataType.u.audioData = audioCap;*/
+      flcp->dataType.u.audioData = ooCreateDupAudioCap(call, audioCap, pctxt);
      
-          flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
+      flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
       pH2250lcp1 = (H245H2250LogicalChannelParameters*)ASN1MALLOC(pctxt, sizeof(H245H2250LogicalChannelParameters));
       memset(pH2250lcp1, 0, sizeof(H245H2250LogicalChannelParameters));
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
@@ -1741,8 +1750,31 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       flcp->multiplexParameters.u.h2250LogicalChannelParameters = pH2250lcp1;
          
       pH2250lcp1->sessionID = 1;
+      if(!outgoing)
+      {
+         pH2250lcp1->m.mediaChannelPresent = 1;
+         pH2250lcp1->mediaChannel.t =
+                                    T_H245TransportAddress_unicastAddress;
+         pUniAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
+         memset(pUniAddrs, 0, sizeof(H245UnicastAddress));
+         pH2250lcp1->mediaChannel.u.unicastAddress =  pUniAddrs;
+         pUniAddrs->t = T_H245UnicastAddress_iPAddress;
+         pUniIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+         memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
+         pUniAddrs->u.iPAddress = pUniIpAddrs;
+    
+#ifndef _COMPACT
+         dListInit(&(pUniIpAddrs->extElem1));
+#endif /* !_COMPACT */
+     
+         sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
+                                   &(pUniIpAddrs->network.data[1]),
+                                   &(pUniIpAddrs->network.data[2]),
+                                   &(pUniIpAddrs->network.data[3]));
+         pUniIpAddrs->network.numocts = 4;
+         pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
+      }
       pH2250lcp1->m.mediaControlChannelPresent = 1;
-
       pH2250lcp1->mediaControlChannel.t =
                                  T_H245TransportAddress_unicastAddress;
       pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
@@ -1751,10 +1783,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
       pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
       memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
-
       pUnicastAddrs->u.iPAddress = pIpAddrs;
-     
-
+    
 #ifndef _COMPACT
       dListInit(&(pIpAddrs->extElem1));
 #endif /* !_COMPACT */
@@ -1765,6 +1795,20 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
                                 &(pIpAddrs->network.data[3]));
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
+      if(!outgoing)
+      {
+         if(epCap->startReceiveChannel)
+         {  
+            epCap->startReceiveChannel(call, pLogicalChannel);     
+            OOTRACEINFO3("Receive channel of type audio started (%s, %s)\n",
+                          call->callType, call->callToken);
+         }
+         else{
+                OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
+                         " (%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+      }
    }
 
    if(reverse)
@@ -1779,61 +1823,91 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call, H245OpenLogicalChannel *olc
       /* Note we don't allocate memory and copy capability, we just set the pointer.
          This is ok as end point capability will be valid till the end of the application,
          and since we have single threaded app, we are safe. */
-      rlcp->dataType.u.audioData = audioCap;
+      /*rlcp->dataType.u.audioData = audioCap;*/
+      rlcp->dataType.u.audioData = ooCreateDupAudioCap
+                  (call, audioCap, pctxt);
+
       rlcp->m.multiplexParametersPresent = 1;
-          rlcp->multiplexParameters.t = T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
+      rlcp->multiplexParameters.t = T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
       pH2250lcp2 = (H245H2250LogicalChannelParameters*) ASN1MALLOC(pctxt, sizeof(H245H2250LogicalChannelParameters));
       rlcp->multiplexParameters.u.h2250LogicalChannelParameters = pH2250lcp2;
       memset(pH2250lcp2, 0, sizeof(H245H2250LogicalChannelParameters));
       pH2250lcp2->sessionID = 1;
-      pH2250lcp2->m.mediaChannelPresent = 1;
+      if(outgoing)
+      {
+         pH2250lcp2->m.mediaChannelPresent = 1;
 
-      pH2250lcp2->mediaChannel.t =
-                                 T_H245TransportAddress_unicastAddress;
-      pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
+         pH2250lcp2->mediaChannel.t =
+                                    T_H245TransportAddress_unicastAddress;
+         pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
+        
+         memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
+         pH2250lcp2->mediaChannel.u.unicastAddress =  pUnicastAddrs;
      
-      memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
-      pH2250lcp2->mediaChannel.u.unicastAddress =  pUnicastAddrs;
-
-     
-      pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
-      pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
-      memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
-      pUnicastAddrs->u.iPAddress = pIpAddrs;     
+         pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
+         pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+         memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
+         pUnicastAddrs->u.iPAddress = pIpAddrs;     
 
 #ifndef _COMPACT
-      dListInit(&(pIpAddrs->extElem1));
+         dListInit(&(pIpAddrs->extElem1));
 #endif /* !_COMPACT */
 
+         sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
+                                   &(pIpAddrs->network.data[1]),
+                                   &(pIpAddrs->network.data[2]),
+                                   &(pIpAddrs->network.data[3]));
+         pIpAddrs->network.numocts = 4;
+         pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
+      }
+      pH2250lcp2->m.mediaControlChannelPresent = 1;
+      pH2250lcp2->mediaControlChannel.t =
+                                 T_H245TransportAddress_unicastAddress;
+      pUniAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
      
-      sscanf(hexip, "%x %x %x %x", &(pIpAddrs->network.data[0]),
-                                &(pIpAddrs->network.data[1]),
-                                &(pIpAddrs->network.data[2]),
-                                &(pIpAddrs->network.data[3]));
-      pIpAddrs->network.numocts = 4;
-      pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
+      memset(pUniAddrs, 0, sizeof(H245UnicastAddress));
+      pH2250lcp2->mediaControlChannel.u.unicastAddress =  pUniAddrs;
+
+     
+      pUniAddrs->t = T_H245UnicastAddress_iPAddress;
+      pUniIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+      memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
+      pUniAddrs->u.iPAddress = pUniIpAddrs;
+
+#ifndef _COMPACT
+      dListInit(&(pUniIpAddrs->extElem1));
+#endif /* !_COMPACT */
+      sscanf(hexip, "%x %x %x %x", &(pUniIpAddrs->network.data[0]),
+                                &(pUniIpAddrs->network.data[1]),
+                                &(pUniIpAddrs->network.data[2]),
+                                &(pUniIpAddrs->network.data[3]));
+      pUniIpAddrs->network.numocts = 4;
+      pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
+         
       /*
          In case of fast start, the local endpoint need to be ready to
          receive all the media types proposed in the fast connect, before
          the actual call is established.
       */
-      if(epCap->startReceiveChannel)
-      {  
-         epCap->startReceiveChannel(call, pLogicalChannel);     
-         OOTRACEINFO3("Receive channel of type audio started (%s, %s)\n",
-                       call->callType, call->callToken);
+      if(outgoing)
+      {
+         if(epCap->startReceiveChannel)
+         {  
+            epCap->startReceiveChannel(call, pLogicalChannel);     
+            OOTRACEINFO3("Receive channel of type audio started (%s, %s)\n",
+                          call->callType, call->callToken);
+         }
+         else{
+            OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
+                         " (%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }  
       }
-      else{
-             OOTRACEERR3("ERROR:No callback registered to start receive audio channel"
-                      " (%s, %s)\n", call->callType, call->callToken);
-         return OO_FAILED;
-      }  
-     
    }
 
    /* State of logical channel. for out going calls, as we are sending setup, state
       of all channels are proposed, for incoming calls, state is established. */
-   if(!strcmp(call->callType, "incoming"))
+   if(!outgoing)
       pLogicalChannel->state = OO_LOGICALCHAN_ESTABLISHED;
    else
       pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;

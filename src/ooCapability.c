@@ -277,13 +277,14 @@ int ooCompareAudioCaps
 
 int ooCompareG711Caps(H245AudioCapability * cap1, H245AudioCapability *cap2)
 {
-   OOTRACEINFO1("Comparing G711 Capabilities.\n");
+  
    if(cap1->t != cap2->t)
       return 0;
 
    /* Note we use '>=', because an endpoint should support any number of
-      frames per packet as long as the number is less than the max allowed in the
-      capability.
+      frames per packet as long as the number is less than the max allowed in
+      the capability.NOTE: This means that cap1 should always be the local cap
+     when comparing.
    */
    switch(cap1->t)
    {

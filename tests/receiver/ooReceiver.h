@@ -31,5 +31,6 @@ void* osEpHandleCommand(void*);
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
+int osEpOnAlerting(ooCallData* call );
 #endif
 
