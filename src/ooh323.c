@@ -101,7 +101,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
          if(gH323ep.h245Tunneling)
          {
             OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
-                         call->callType, call->calltoken);
+                         call->callType, call->callToken);
          }
          call->isTunnelingActive = FALSE;
       }
@@ -109,7 +109,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       if(gH323ep.h245Tunneling)
       {
          OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
-                       call->callType, call->calltoken);
+                       call->callType, call->callToken);
       }
       call->isTunnelingActive = FALSE;
    }
