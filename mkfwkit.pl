@@ -40,6 +40,7 @@ print `cp -f ./Makefile.in ./ooh323c-${version}/Makefile.in`;
 print `cp -f ./NEWS ./ooh323c-${version}/NEWS`;
 print `cp -f ./README ./ooh323c-${version}/README`;
 
+print `cp -f ./aclocal.m4 ./ooh323c-${version}/aclocal.m4`;
 print `cp -f ./configure ./ooh323c-${version}/configure`;
 print `cp -f ./configure.in ./ooh323c-${version}/configure.in`;
 print `cp -f ./config.h.in ./ooh323c-${version}/config.h.in`;

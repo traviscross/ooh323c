@@ -88,8 +88,8 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 CFLAGS = @OOH323CFLAGS@
 noinst_PROGRAMS = ooReceiver
-ooReceiver_SOURCES = ooReceiver.c ooReceiver.h
-INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323 -I$(top_builddir)/src/h450
+ooReceiver_SOURCES = ooReceiver.c ooReceiver.h oosndrtp.h oosndrtp.c
+INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
 ooReceiver_LDADD = -loostk -ldl -lpthread
 ooReceiver_LDFLAGS = -L$(top_builddir)/src
 
@@ -101,7 +101,7 @@ CONFIG_CLEAN_FILES =
 noinst_PROGRAMS = ooReceiver$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_ooReceiver_OBJECTS = ooReceiver.$(OBJEXT)
+am_ooReceiver_OBJECTS = ooReceiver.$(OBJEXT) oosndrtp.$(OBJEXT)
 ooReceiver_OBJECTS = $(am_ooReceiver_OBJECTS)
 ooReceiver_DEPENDENCIES =
 
@@ -112,7 +112,8 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ooReceiver.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ooReceiver.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/oosndrtp.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -151,6 +152,7 @@ distclean-compile:
         -rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooReceiver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oosndrtp.Po@am__quote@
 
 distclean-depend:
         -rm -rf ./$(DEPDIR)

@@ -89,8 +89,8 @@ install_sh = @install_sh@
 CFLAGS = @OOH323CFLAGS@
 
 noinst_PROGRAMS = ooPlayer
-ooPlayer_SOURCES = ooPlayer.c ooPlayer.h
-INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323 -I$(top_builddir)/src/h450
+ooPlayer_SOURCES = ooPlayer.c ooPlayer.h oosndrtp.c oosndrtp.h
+INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
 ooPlayer_LDADD = -loostk -ldl -lpthread
 ooPlayer_LDFLAGS = -L$(top_builddir)/src
 
@@ -102,7 +102,7 @@ CONFIG_CLEAN_FILES =
 noinst_PROGRAMS = ooPlayer$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_ooPlayer_OBJECTS = ooPlayer.$(OBJEXT)
+am_ooPlayer_OBJECTS = ooPlayer.$(OBJEXT) oosndrtp.$(OBJEXT)
 ooPlayer_OBJECTS = $(am_ooPlayer_OBJECTS)
 ooPlayer_DEPENDENCIES =
 
@@ -113,7 +113,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ooPlayer.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ooPlayer.Po ./$(DEPDIR)/oosndrtp.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -152,6 +152,7 @@ distclean-compile:
         -rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooPlayer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oosndrtp.Po@am__quote@
 
 distclean-depend:
         -rm -rf ./$(DEPDIR)

@@ -88,8 +88,8 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 CFLAGS = @OOH323CFLAGS@
 noinst_PROGRAMS = simple
-simple_SOURCES = simple.c
-INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323 -I$(top_builddir)/src/h450
+simple_SOURCES = simple.c oosndrtp.c oosndrtp.h
+INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
 simple_LDADD = -loostk -ldl -lpthread
 simple_LDFLAGS = -L$(top_builddir)/src
 
@@ -101,7 +101,7 @@ CONFIG_CLEAN_FILES =
 noinst_PROGRAMS = simple$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_simple_OBJECTS = simple.$(OBJEXT)
+am_simple_OBJECTS = simple.$(OBJEXT) oosndrtp.$(OBJEXT)
 simple_OBJECTS = $(am_simple_OBJECTS)
 simple_DEPENDENCIES =
 
@@ -112,7 +112,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/simple.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/oosndrtp.Po ./$(DEPDIR)/simple.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -150,6 +150,7 @@ mostlyclean-compile:
 distclean-compile:
         -rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oosndrtp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple.Po@am__quote@
 
 distclean-depend:
