@@ -68,7 +68,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
       OOTRACEINFO1("\tFastStart - enabled\n");
    }
    gH323ep.fastStart = fastStart;
-
+   gH323ep.aliases = NULL;
+  
    /* H245 Tunneling */
    gH323ep.h245Tunneling = h245Tunneling;
    if(!h245Tunneling)
@@ -169,6 +170,7 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
 }
 
 
+
 int ooSetLocalCallSignallingAddress(char * localip, int listenport)
 {
    if(localip)
@@ -186,6 +188,131 @@ int ooSetLocalCallSignallingAddress(char * localip, int listenport)
    return OO_OK;
 }
 
+int ooSetAliasH323ID(char *h323id)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new H323-ID alias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_h323_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(h323id)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for the new H323-ID alias value\n");
+      ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   memset(psNewAlias->value, 0, strlen(h323id)+1);
+   strcpy(psNewAlias->value, h323id);
+   psNewAlias->next = gH323ep.aliases;
+   gH323ep.aliases = psNewAlias;
+   OOTRACEDBGA2("Added alias: H323ID - %s\n", h323id);
+   return OO_OK;
+}
+
+int ooSetAliasDialedDigits(char * dialedDigits)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new DialedDigits alias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_dialedDigits;
+   psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(dialedDigits)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for the new DialedDigits alias value\n");
+      ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   memset(psNewAlias->value, 0, strlen(dialedDigits)+1);
+   strcpy(psNewAlias->value, dialedDigits);
+   psNewAlias->next = gH323ep.aliases;
+   gH323ep.aliases = psNewAlias;
+   OOTRACEDBGA2("Added alias: DialedDigits - %s\n", dialedDigits);
+   return OO_OK;
+}
+
+int ooSetAliasURLID(char * url)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new URL-ID alias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_url_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(url)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for the new URL-ID alias value\n");
+      ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   memset(psNewAlias->value, 0, strlen(url)+1);
+   strcpy(psNewAlias->value, url);
+   psNewAlias->next = gH323ep.aliases;
+   gH323ep.aliases = psNewAlias;
+   OOTRACEDBGA2("Added alias: URL-ID - %s\n", url);
+   return OO_OK;
+}
+
+int ooSetAliasEmailID(char * email)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new Email-ID alias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_email_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(email)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for the new Email-ID alias value\n");
+      ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   memset(psNewAlias->value, 0, strlen(email)+1);
+   strcpy(psNewAlias->value, email);
+   psNewAlias->next = gH323ep.aliases;
+   gH323ep.aliases = psNewAlias;
+   OOTRACEDBGA2("Added alias: Email-ID - %s\n", email);
+   return OO_OK;
+}
+
+int ooSetAliasTransportID(char * ipaddress)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new Transport-ID alias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_transportID;
+   psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(ipaddress)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for the new Transport-ID alias value\n");
+      ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   memset(psNewAlias->value, 0, strlen(ipaddress)+1);
+   strcpy(psNewAlias->value, ipaddress);
+   psNewAlias->next = gH323ep.aliases;
+   gH323ep.aliases = psNewAlias;
+   OOTRACEDBGA2("Added alias: Transport-ID - %s\n", ipaddress);
+   return OO_OK;
+}
+   
 int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
                               cb_OnOutgoingCall onOutgoingCall,
                               cb_OnCallEstablished onCallEstablished,

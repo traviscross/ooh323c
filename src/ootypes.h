@@ -451,7 +451,7 @@ typedef struct ooEndPoint{
    char *callerid;
    char *callername;
    OOSOCKET *stackSocket;
-  
+   ooAliases *aliases;
    int callType;
    DList audioCaps;
    DList dataApplicationCaps;

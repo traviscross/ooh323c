@@ -104,3 +104,4 @@ int ooLogAsn1Error(int stat, const char * fname, int lno)
    OOTRACEERR4("Asn1Error: %d at %s:%d\n", stat, fname, lno);
    return stat;
 }
+
