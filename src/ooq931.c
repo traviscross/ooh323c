@@ -920,7 +920,8 @@ int ooSendConnect(ooCallData *call)
 int ooAcceptCall(ooCallData *call)
 {
    int ret = 0, i=0, j=0, remoteRtpPort=0;
-   char localip[20], hexip[20];
+   /*char localip[20], hexip[20];*/
+   char hexip[20];
    int addr_part1, addr_part2, addr_part3, addr_part4;
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
@@ -984,8 +985,10 @@ int ooAcceptCall(ooCallData *call)
                                           sizeof(H225TransportAddress_ipAddress));
       memset(h245IpAddr, 0, sizeof(H225TransportAddress_ipAddress));
 
-      ooGetLocalIPAddress(localip);
+      /*ooGetLocalIPAddress(localip);
       sscanf(localip, "%d.%d.%d.%d", &addr_part1, &addr_part2,
+                                     &addr_part3, &addr_part4);*/
+      sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
                                      &addr_part3, &addr_part4);
       sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
                                     addr_part4);
@@ -1218,7 +1221,8 @@ int ooH323MakeCall_helper(ooCallData *call)
    ASN1DynOctStr *pFS=NULL;
    H225TransportAddress_ipAddress *destCallSignalIpAddress;
    int addr_part1, addr_part2, addr_part3, addr_part4;
-   char localip[20], hexip[20];
+   /*char localip[20], hexip[20];*/
+   char hexip[20];
    H225TransportAddress_ipAddress *srcCallSignalIpAddress;
    ooH323EpCapability *epCap=NULL;
    DListNode *curNode = NULL;
@@ -1329,9 +1333,12 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the source Call Signal Address */
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-   ooGetLocalIPAddress(localip);
+ /*  ooGetLocalIPAddress(localip);
    sscanf(localip, "%d.%d.%d.%d", &addr_part1, &addr_part2, &addr_part3,
-                                  &addr_part4);
+                                  &addr_part4);*/
+   sscanf(gH323ep.signallingIP, "%d.%d.%d.%d", &addr_part1, &addr_part2,
+                                               &addr_part3, &addr_part4);
+
    sprintf(hexip, "%x %x %x %x", addr_part1, addr_part2, addr_part3,
                                  addr_part4);
    srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,

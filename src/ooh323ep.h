@@ -68,6 +68,17 @@ EXTERN int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
          int manufacturer, char *productID, char *versionID, int callType,
          int listenport, char *callerid, char *callername, int callMode);
 
+
+/**
+ * This function is used to assign a local ip address to be used for call
+ * signalling.
+ * @param localip        Dotted IP address to be used for call signalling.
+ * @param listenport     Port to be used for listening for incoming calls.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSetLocalCallSignallingAddress(char * localip, int listenport);
+
 /**
  * This function is used to register the H323 Endpoint callback functions.
  * @param onIncomingCall        Callback function to be called when a new
@@ -88,6 +99,7 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
                               cb_OnCallEstablished onCallEstablished,
                               cb_OnCallCleared onCallCleared,
                               cb_OnStartLogicalChannel onStartLogicalChannel);
+
 
 
 /**

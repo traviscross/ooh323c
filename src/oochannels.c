@@ -235,14 +235,14 @@ int ooCreateH323Listener()
    int ret=0;
    OOSOCKET channelSocket=0;
    OOIPADDR ipaddrs;
-   char localip[20];
+   /*char localip[20];
    ret = ooGetLocalIPAddress(localip);
    if(ret != ASN_OK)
    {
       OOTRACEERR1("ERROR:Failed to retrieve local ip address for creating "
                   "listener\n");
       return OO_FAILED;
-   }
+   }*/
 
     /* Create socket */
    if((ret=ooSocketCreate (&channelSocket))!=ASN_OK)
@@ -250,7 +250,8 @@ int ooCreateH323Listener()
       OOTRACEERR1("Failed to create socket for H323 Listener\n");
       return OO_FAILED;
    }
-   ret= ooSocketStrToAddr (localip, &ipaddrs);
+   /*ret= ooSocketStrToAddr (localip, &ipaddrs);*/
+   ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipaddrs);
    if((ret=ooSocketBind (channelSocket, ipaddrs,
                          gH323ep.listenPort))==ASN_OK)
    {

@@ -111,6 +111,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    OOTRACEINFO2("\tVersionID - %s\n", gH323ep.versionID);
 
    gH323ep.callType = callType;
+   ooGetLocalIPAddress(gH323ep.signallingIP);
+   OOTRACEINFO2("\tLocal signalling IP address - %s\n", gH323ep.signallingIP);
    gH323ep.listenPort = listenport;
    OOTRACEINFO2("\tH225 ListenPort - %d\n", listenport);
 
@@ -154,7 +156,26 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gCurCallToken = 1;
    gH323ep.autoAnswer = 1;
    OOTRACEINFO1("\tAutoAnswer - enabled\n");
+  
    OOTRACEINFO1("H323 endpoint initialize - successful\n");
+   return OO_OK;
+}
+
+
+int ooSetLocalCallSignallingAddress(char * localip, int listenport)
+{
+   if(localip)
+   {
+      memset(gH323ep.signallingIP, 0, sizeof(gH323ep.signallingIP));
+      memcpy(gH323ep.signallingIP, localip, strlen(localip));
+      OOTRACEINFO2("Signalling IP address is set to %s\n", localip);
+   }
+  
+   if(listenport)
+   {
+      gH323ep.listenPort = listenport;
+      OOTRACEINFO2("Listen port number is set to %d\n", listenport);
+   }
    return OO_OK;
 }
 

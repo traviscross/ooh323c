@@ -464,6 +464,7 @@ typedef struct ooEndPoint{
    cb_OnCallEstablished onCallEstablished;
    cb_OnCallCleared onCallCleared;
    cb_OnStartLogicalChannel onStartLogicalChannel;
+   char signallingIP[20];
    int listenPort;
    OOSOCKET *listener;
    ooCallData *callList;

@@ -137,11 +137,12 @@ int ooBindPort(ooEndPoint *ep, int type,
 {
    int initialPort, bindPort, ret;
    OOIPADDR ipAddrs;
-   char localip[40];
-   ooGetLocalIPAddress(localip);
+   /*char localip[40];
+   ooGetLocalIPAddress(localip);*/
    initialPort = ooGetNextPort(ep, type);
    bindPort = initialPort;
-   ret= ooSocketStrToAddr (localip, &ipAddrs);
+   /*ret= ooSocketStrToAddr (localip, &ipAddrs);*/
+   ret= ooSocketStrToAddr (ep->signallingIP, &ipAddrs);
    while(1)
    {
       if((ret=ooSocketBind(socket, ipAddrs,
@@ -163,12 +164,13 @@ int ooBindPort(ooEndPoint *ep, int type,
 int ooBindOSAllocatedPort(OOSOCKET socket)
 {
    OOIPADDR ipAddrs;
-   char localip[40];
+/*   char localip[40];*/
    int size, ret;
    struct sockaddr_in name;
    size = sizeof(struct sockaddr_in);
-   ooGetLocalIPAddress(localip);
-   ret= ooSocketStrToAddr (localip, &ipAddrs);
+   /*ooGetLocalIPAddress(localip);
+   ret= ooSocketStrToAddr (localip, &ipAddrs);*/
+   ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipAddrs);
    if((ret=ooSocketBind(socket, ipAddrs,
                      0))==ASN_OK)
    {

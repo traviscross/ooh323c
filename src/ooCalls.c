@@ -26,7 +26,7 @@ ooCallData* ooCreateCall(char * type, char*callToken)
 {
    ooCallData *call=NULL;
    OOCTXT *pctxt=NULL;
-   char localip[20];
+/*   char localip[20];*/
 
    pctxt = newContext();
    if(!pctxt)
@@ -52,8 +52,9 @@ ooCallData* ooCreateCall(char * type, char*callToken)
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
-   ooGetLocalIPAddress(localip);
-   strcpy(call->localIP, localip);
+/*   ooGetLocalIPAddress(localip);
+   strcpy(call->localIP, localip);*/
+   strcpy(call->localIP, gH323ep.signallingIP);
    call->noOfLogicalChannels = 0;
    call->logicalChanNoBase = 1001;
    call->logicalChanNoMax = 1100;
