@@ -91,7 +91,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       if(q931Msg->userInfo->h323_uu_pdu.h245Tunneling &&
          !setup->m.h245AddressPresent)
       {
-         if(gH323ep.h245Tunneling)
+         if(OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
          {
             OO_SETFLAG (call->flags, OO_M_TUNNELING);
             OOTRACEINFO3("Call has tunneling active (%s,%s)\n", call->callType,
@@ -102,7 +102,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
                         "local endpoint has it disabled (%s,%s)\n",
                         call->callType, call->callToken);
       }else {
-         if(gH323ep.h245Tunneling)
+         if(OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
          {
             OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
                          call->callType, call->callToken);
@@ -111,7 +111,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       }
    }
    else {
-      if(gH323ep.h245Tunneling)
+      if(OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
       {
          OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
                        call->callType, call->callToken);
@@ -142,7 +142,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
   
    if(setup->m.fastStartPresent)
    {
-      if(!gH323ep.fastStart)
+      if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       {
          OOTRACEINFO3("Local endpoint does not support fastStart. Ignoring "
                       "fastStart. (%s, %s)\n", call->callType, call->callToken);

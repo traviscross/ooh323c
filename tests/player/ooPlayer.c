@@ -56,21 +56,20 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize H323 endpoint */
-   ret = ooInitializeH323Ep("player.log", 0, 0, 30, 9, 0, 71, "obj-sys",
-                      "Version 0.4", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "player", OO_CALLMODE_AUDIOTX);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOTX);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+   ooH323EpSetTraceInfo("player.log", OOTRCLVLINFO);
    /* Register callbacks */
    ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCallAdmitted, NULL,
                              NULL, &osEpOnCallCleared);
    ooSetTCPPorts(16050, 16250);
    ooSetUDPPorts(17050, 17250);
    ooSetRTPPorts(18050, 18250);
-   ooSetTraceThreshold(OOTRCLVLINFO);
+
    /* Add transmit audio capability of type G711 ULaw */
 
    ooAddG711Capability(OO_G711ULAW64K, 240, 0, OOTX, NULL,
@@ -119,7 +118,7 @@ int main(int argc, char ** argv)
    /*Monitor channels for incoming messages*/
 
    ooMonitorChannels();
-   ooDestroyH323Ep();
+   ooH323EpDestroy();
    return ASN_OK;
 }
 

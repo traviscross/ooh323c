@@ -28,6 +28,9 @@
 #include "ooasn1.h"
 
 
+#define OO_VERSION "v0.6"
+
+
 /*  types */
 #define OO_FAILED -1
 #define OO_OK 1
@@ -160,6 +163,7 @@
  Maximum length for received messages
 */
 #define MAXMSGLEN 4096
+#define MAXFILENAME 256
 
 #define OO_CMD_MAKECALL    201
 #define OO_CMD_MAKECALL_3  202
@@ -354,6 +358,7 @@ typedef struct ooTimerCallback{
 } ooTimerCallback;
 
 /* Flag mask values */
+#define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
 #define OO_M_FASTSTART          0x40000000
 #define OO_M_GKENGAGED          0x20000000
@@ -452,7 +457,7 @@ typedef struct ooEndPoint{
     * message structures.
     */
    OOCTXT msgctxt;
-
+   char   traceFile[MAXFILENAME];
    FILE *               fptraceFile;
    /** Range of port numbers to be used for TCP connections */
    struct ooH323Ports tcpPorts;
@@ -461,8 +466,8 @@ typedef struct ooEndPoint{
    /** Range of port numbers to be used for RTP connections */
    struct ooH323Ports rtpPorts;
  
-   int h245Tunneling;
-   int fastStart;
+   ASN1UINT  flags;
+
    int termType; /* 50 - Terminal entity with No MC,
                     60 - Gateway entity with no MC,
                     70 - Terminal Entity with MC, but no MP etc.*/
@@ -490,7 +495,7 @@ typedef struct ooEndPoint{
    int listenPort;
    OOSOCKET *listener;
    ooCallData *callList;
-   int autoAnswer;   /* 1 to enable, 0 to disable */
+
    int callMode; /* audio/audiorx/audiotx/video/fax */
    int dtmfmode;
    ASN1UINT callEstablishmentTimeout;

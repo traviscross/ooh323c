@@ -55,21 +55,21 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize the H323 endpoint */
-   ret = ooInitializeH323Ep("receiver.log", 0, 0, 28, 9, 0, 61, "obj-sys",
-                      "Version 0.3", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "receiver", OO_CALLMODE_AUDIORX);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIORX);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
-   ooSetTraceThreshold(OOTRCLVLINFO);
+   ooH323EpSetTraceInfo("receiver.log", OOTRCLVLINFO);
+   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
+                             NULL, NULL, &osEpOnCallCleared);
+
    /* Add audio capability */
    ooAddG711Capability(OO_G711ULAW64K,0, 240, OORX, &osEpStartReceiveChannel,
                        NULL, &osEpStopReceiveChannel, NULL);
 
-   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
-                             NULL, NULL, &osEpOnCallCleared);
+
    /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
@@ -106,7 +106,7 @@ int main(int argc, char ** argv)
 #endif
    /*Monitor channels for incoming messages*/
    ooMonitorChannels();
-   ooDestroyH323Ep();
+   ooH323EpDestroy();
    return ASN_OK;
 }
 

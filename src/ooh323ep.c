@@ -25,6 +25,123 @@ ooEndPoint gH323ep;
 extern DList g_TimerList;
 
 
+int ooH323EpInitialize(const char *callerid, int callMode)
+{
+  
+   memset(&gH323ep, 0, sizeof(ooEndPoint));
+
+   initContext(&(gH323ep.ctxt));
+   initContext(&(gH323ep.msgctxt));
+  
+   strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);
+   gH323ep.fptraceFile = fopen(DEFAULT_TRACEFILE, "w");
+   if(gH323ep.fptraceFile == NULL)
+   {
+      printf("Error:Failed to open trace file %s for write.\n",
+                  gH323ep.traceFile);
+      return OO_FAILED;
+   }
+
+   /* Initialize default port ranges that will be used by stack.
+      Apps can override these by explicitely setting port ranges
+   */
+
+   gH323ep.tcpPorts.start = TCPPORTSSTART;
+   gH323ep.tcpPorts.max = TCPPORTSEND;
+   gH323ep.tcpPorts.current=TCPPORTSSTART;
+
+   gH323ep.udpPorts.start = UDPPORTSSTART;
+   gH323ep.udpPorts.max = UDPPORTSEND;
+   gH323ep.udpPorts.current = UDPPORTSSTART;
+
+   gH323ep.rtpPorts.start = RTPPORTSSTART;
+   gH323ep.rtpPorts.max = RTPPORTSEND;
+   gH323ep.rtpPorts.current = RTPPORTSSTART;
+  
+   OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);
+   OO_SETFLAG(gH323ep.flags, OO_M_TUNNELING);
+   OO_SETFLAG(gH323ep.flags, OO_M_AUTOANSWER);
+  
+   gH323ep.aliases = NULL;
+  
+
+
+     
+   gH323ep.termType = DEFAULT_TERMTYPE;
+
+   gH323ep.t35CountryCode = DEFAULT_T35COUNTRYCODE;
+
+   gH323ep.t35Extension = DEFAULT_T35EXTENSION;
+
+   gH323ep.manufacturerCode = DEFAULT_MANUFACTURERCODE;
+
+   gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt,
+                                                strlen(DEFAULT_PRODUCTID)+1);
+   strcpy(gH323ep.productID, DEFAULT_PRODUCTID);
+
+   gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(OO_VERSION)+1);
+   strcpy(gH323ep.versionID, OO_VERSION);
+
+   gH323ep.callType = T_H225CallType_pointToPoint;
+   ooGetLocalIPAddress(gH323ep.signallingIP);
+   gH323ep.listenPort = DEFAULT_H323PORT;
+
+   gH323ep.listener = NULL;
+
+   if(callerid)
+   {
+      gH323ep.callerid = (char *) ASN1MALLOC(&gH323ep.ctxt, strlen(callerid)+1);
+      memset(gH323ep.callerid, 0, strlen(callerid)+1);
+      strcpy(gH323ep.callerid, callerid);
+   }else{
+      gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsyscall")+1);
+      memset(gH323ep.callerid, 0, strlen("objsyscall")+1);
+      strcpy(gH323ep.callerid, "objsyscall");
+   }
+
+
+
+
+   gH323ep.myCaps = NULL;
+   gH323ep.noOfCaps = 0;
+   gH323ep.callList = NULL;
+   gH323ep.dtmfmode = 0;
+    
+   gH323ep.callMode = callMode;
+#ifdef _WIN32
+   InitializeCriticalSection(&gCmdMutex);
+   InitializeCriticalSection(&gCallTokenMutex);
+   InitializeCriticalSection(&gCallRefMutex);
+#else
+   pthread_mutex_init(&gCmdMutex, 0);
+   pthread_mutex_init(&gCallTokenMutex, 0);
+   pthread_mutex_init(&gCallRefMutex, 0);
+#endif
+   dListInit(&gCmdList);
+
+   dListInit(&g_TimerList);/* This is for test application chansetup only*/
+
+   initContext(&gCtxt);
+   gCallTokenBase = 1;
+   gCallTokenMax = 1000;
+   gCurCallToken = 1;
+
+
+   gH323ep.callEstablishmentTimeout = DEFAULT_CALLESTB_TIMEOUT;
+
+   gH323ep.msdTimeout = DEFAULT_MSD_TIMEOUT;
+
+   gH323ep.tcsTimeout = DEFAULT_TCS_TIMEOUT;
+
+   gH323ep.logicalChannelTimeout = DEFAULT_LOGICALCHAN_TIMEOUT;
+
+   gH323ep.sessionTimeout = DEFAULT_ENDSESSION_TIMEOUT;
+
+
+   return OO_OK;
+}
+
+#if 0
 /* Initialize the application context within stack */
 int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
                         int fastStart, int termType, int t35CountryCode,
@@ -195,10 +312,10 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    OOTRACEINFO1("H323 endpoint initialize - successful\n");
    return OO_OK;
 }
+#endif
 
 
-
-int ooSetLocalCallSignallingAddress(char * localip, int listenport)
+int ooH323EpSetLocalAddress(char * localip, int listenport)
 {
    if(localip)
    {
@@ -215,7 +332,7 @@ int ooSetLocalCallSignallingAddress(char * localip, int listenport)
    return OO_OK;
 }
 
-int ooSetAliasH323ID(char *h323id)
+int ooH323EpSetAliasH323ID(char *h323id)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
@@ -228,7 +345,8 @@ int ooSetAliasH323ID(char *h323id)
    psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(h323id)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for the new H323-ID alias value\n");
+      OOTRACEERR1("Error: Failed to allocate memory for the new H323-ID alias "
+                  "value\n");
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
@@ -240,7 +358,7 @@ int ooSetAliasH323ID(char *h323id)
    return OO_OK;
 }
 
-int ooSetAliasDialedDigits(char * dialedDigits)
+int ooH323EpSetAliasDialedDigits(char * dialedDigits)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
@@ -265,7 +383,7 @@ int ooSetAliasDialedDigits(char * dialedDigits)
    return OO_OK;
 }
 
-int ooSetAliasURLID(char * url)
+int ooH323EpSetAliasURLID(char * url)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
@@ -290,7 +408,7 @@ int ooSetAliasURLID(char * url)
    return OO_OK;
 }
 
-int ooSetAliasEmailID(char * email)
+int ooH323EpSetAliasEmailID(char * email)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
@@ -303,7 +421,8 @@ int ooSetAliasEmailID(char * email)
    psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(email)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for the new Email-ID alias value\n");
+      OOTRACEERR1("Error: Failed to allocate memory for the new Email-ID alias"
+                  " value\n");
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
@@ -315,7 +434,7 @@ int ooSetAliasEmailID(char * email)
    return OO_OK;
 }
 
-int ooSetAliasTransportID(char * ipaddress)
+int ooH323EpSetAliasTransportID(char * ipaddress)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(&gH323ep.ctxt, sizeof(ooAliases));
@@ -328,7 +447,8 @@ int ooSetAliasTransportID(char * ipaddress)
    psNewAlias->value = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(ipaddress)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for the new Transport-ID alias value\n");
+      OOTRACEERR1("Error: Failed to allocate memory for the new Transport-ID "
+                  "alias value\n");
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
@@ -358,7 +478,7 @@ int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
    return OO_OK;
 }
 
-int ooDestroyH323Ep(void)
+int ooH323EpDestroy(void)
 {
    /* free any internal memory allocated
       close trace file free context structure
@@ -384,6 +504,11 @@ int ooDestroyH323Ep(void)
   
    freeContext(&(gH323ep.ctxt));
    ooDestroyRas();  
+   if(gH323ep.fptraceFile)
+   {
+      fclose(gH323ep.fptraceFile);
+      gH323ep.fptraceFile = NULL;
+   }
 #ifdef _WIN32
    DeleteCriticalSection(&gCmdMutex);
    DeleteCriticalSection(&gCallTokenMutex);
@@ -394,39 +519,49 @@ int ooDestroyH323Ep(void)
    return OO_OK;
 }
 
-int ooEnableAutoAnswer(void)
+int ooH323EpEnableAutoAnswer(void)
 {
-   OOTRACEINFO1("AutoAnswer is enabled\n");
-   gH323ep.autoAnswer = 1;
+   OO_SETFLAG(gH323ep.flags, OO_M_AUTOANSWER);
    return OO_OK;
 }
 
-int ooDisableAutoAnswer(void)
+int ooH323EpDisableAutoAnswer(void)
 {
-   OOTRACEINFO1("AutoAnswer is disabled\n");
-   gH323ep.autoAnswer = 0;
+   OO_CLRFLAG(gH323ep.flags, OO_M_AUTOANSWER);
    return OO_OK;
 }
 
-int ooSetFastStart(int value)
+int ooH323EpEnableFastStart(void)
 {
-   gH323ep.fastStart = value;
+   OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);
    return OO_OK;
 }
 
-int ooSetH245Tunneling(int value)
+int ooH323EpDisableFastStart(void)
 {
-   gH323ep.h245Tunneling = value;
+   OO_CLRFLAG(gH323ep.flags, OO_M_FASTSTART);
    return OO_OK;
 }
 
-int ooSetTermType(int value)
+int ooH323EpEnableH245Tunneling(void)
+{
+   OO_SETFLAG(gH323ep.flags, OO_M_TUNNELING);
+   return OO_OK;
+}
+
+int ooH323EpDisableH245Tunneling(void)
+{
+   OO_CLRFLAG(gH323ep.flags, OO_M_TUNNELING);
+   return OO_OK;
+}
+
+int ooH323EpSetTermType(int value)
 {
    gH323ep.termType = value;
    return OO_OK;
 }
 
-int ooSetProductID(char * productID)
+int ooH323EpSetProductID(char * productID)
 {
    gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(productID)+1);
    memset(gH323ep.productID, 0, strlen(productID)+1);
@@ -434,7 +569,7 @@ int ooSetProductID(char * productID)
    return OO_OK;
 }
 
-int ooSetVersionID(char * versionID)
+int ooH323EpSetVersionID(char * versionID)
 {
    gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID)+1);
    memset(gH323ep.versionID, 0, strlen(versionID)+1);
@@ -442,7 +577,7 @@ int ooSetVersionID(char * versionID)
    return OO_OK;
 }
 
-int ooSetCallerID(char * callerID)
+int ooH323EpSetCallerID(char * callerID)
 {
    gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerID)+1);
    memset(gH323ep.callerid, 0, strlen(callerID)+1);
@@ -450,7 +585,7 @@ int ooSetCallerID(char * callerID)
    return OO_OK;
 }
 
-int ooSetCallerName(char * callerName)
+int ooH323EpSetCallerName(char * callerName)
 {
    gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerName)+1);
    memset(gH323ep.callername, 0, strlen(callerName)+1);
@@ -458,6 +593,95 @@ int ooSetCallerName(char * callerName)
    return OO_OK;
 }
 
+int ooH323EpSetTraceInfo(const char * tracefile, int traceLevel)
+{
+   if(strlen(tracefile)>= MAXFILENAME)
+   {
+      printf("Error:File name longer than allowed maximum %d\n",
+              MAXFILENAME-1);
+      return OO_FAILED;
+   }
+   if(gH323ep.fptraceFile)
+   {
+      fclose(gH323ep.fptraceFile);
+      gH323ep.fptraceFile = NULL;
+   }
+
+   strcpy(gH323ep.traceFile, tracefile);
+   gH323ep.fptraceFile = fopen(tracefile, "w");
+   if(gH323ep.fptraceFile == NULL)
+   {
+      printf("Error:Failed to open trace file %s for write.\n",
+                  gH323ep.traceFile);
+      return OO_FAILED;
+   }  
+
+   ooSetTraceThreshold(traceLevel);
+   return OO_OK;
+}
+
+void ooH323EpPrintConfig(void)
+{
+   OOTRACEINFO1("H.323 Endpoint Configuration is as follows:\n");
+  
+   OOTRACEINFO2("\tTrace File: %s\n", gH323ep.traceFile);
+
+   if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
+   {
+      OOTRACEINFO1("\tFastStart - disabled\n");
+   }
+   else{
+      OOTRACEINFO1("\tFastStart - enabled\n");
+   }
+
+   if(!OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
+   {
+      OOTRACEINFO1("\tH245 Tunneling - disabled\n");
+   }
+   else{
+      OOTRACEINFO1("\tH245 Tunneling - enabled\n");
+   }
+
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
+      OOTRACEINFO1("\tAutoAnswer - enabled\n");
+   else
+      OOTRACEINFO1("\tAutoAnswer - disabled\n");
+    
+   OOTRACEINFO2("\tTerminal Type - %d\n", gH323ep.termType);
+
+   OOTRACEINFO2("\tT35 CountryCode - %d\n", gH323ep.t35CountryCode);
+
+   OOTRACEINFO2("\tT35 Extension - %d\n", gH323ep.t35Extension);
+
+   OOTRACEINFO2("\tManufacturer Code - %d\n", gH323ep.manufacturerCode);
+
+   OOTRACEINFO2("\tProductID - %s\n", gH323ep.productID);
+  
+   OOTRACEINFO2("\tVersionID - %s\n", gH323ep.versionID);
+
+   OOTRACEINFO2("\tLocal signalling IP address - %s\n", gH323ep.signallingIP);
+
+   OOTRACEINFO2("\tH225 ListenPort - %d\n", gH323ep.listenPort);
+
+   OOTRACEINFO2("\tCallerID - %s\n", gH323ep.callerid);
+
+
+   OOTRACEINFO2("\tCall Establishment Timeout - %d seconds\n",
+                                          gH323ep.callEstablishmentTimeout);  
+
+   OOTRACEINFO2("\tMasterSlaveDetermination Timeout - %d seconds\n",
+                   gH323ep.msdTimeout);
+
+   OOTRACEINFO2("\tTerminalCapabilityExchange Timeout - %d seconds\n",
+                   gH323ep.tcsTimeout);
+
+   OOTRACEINFO2("\tLogicalChannel  Timeout - %d seconds\n",
+                   gH323ep.logicalChannelTimeout);
+
+   OOTRACEINFO2("\tSession Timeout - %d seconds\n", gH323ep.sessionTimeout);
+
+   return;  
+}
 
 
 

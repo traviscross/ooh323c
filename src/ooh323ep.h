@@ -23,6 +23,18 @@
 #include "ooasn1.h"
 
 
+#define DEFAULT_TRACEFILE "trace.log"
+#define DEFAULT_TERMTYPE 50
+#define DEFAULT_PRODUCTID  "objsys"
+#define DEFAULT_T35COUNTRYCODE 1
+#define DEFAULT_T35EXTENSION 0
+#define DEFAULT_MANUFACTURERCODE 71
+#define DEFAULT_CALLESTB_TIMEOUT 60
+#define DEFAULT_MSD_TIMEOUT 30
+#define DEFAULT_TCS_TIMEOUT 30
+#define DEFAULT_LOGICALCHAN_TIMEOUT 30
+#define DEFAULT_ENDSESSION_TIMEOUT 15
+#define DEFAULT_H323PORT 1720
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,29 +56,12 @@ extern "C" {
 /**
  * This function is the first function to be invoked before using stack. It
  * initializes the H323 Endpoint.
- *
- * @param tracefile      Absolute path to the trace file to be used for
- *                       storing traces
- * @param h245Tunneling  Indicates whether h245Tunneling enabled(1)/disabled(0)
- * @param fastStart      Indicates whether fast start is enabled(1)/disabled(0)
- * @param termType       Terminal type of the endpoint.
- * @param t35CountryCode Country code to be used
- * @param t35Extension   t35Extension value
- * @param manufacturer   manufacturer code
- * @param productID      Product ID to be used
- * @param versionID      Version Id of the software
- * @param callType       Type of the call ex. T_H225CallType_pointToPoint
- * @param listenport     Port on which to listen for incoming calls
  * @param callerid       ID to be used for outgoing calls.
- * @param callername     Caller name to be used for outgoing calls
  * @param callMode       Type of calls to be made(audio/video/fax).
  *                       (OO_CALLMODE_AUDIO, OO_CALLMODE_VIDEO)
  * @return               OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
-         int fastStart, int termType, int t35CountryCode, int t35Extension,
-         int manufacturer, char *productID, char *versionID, int callType,
-         int listenport, char *callerid, char *callername, int callMode);
+EXTERN int ooH323EpInitialize(const char *callerid, int callMode);
 
 
 /**
@@ -77,7 +72,16 @@ EXTERN int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetLocalCallSignallingAddress(char * localip, int listenport);
+EXTERN int ooH323EpSetLocalAddress(char * localip, int listenport);
+
+/**
+ * This function is used to set the trace information for the H.323 endpoint.
+ * @param tracefile      Name of the tracefile.
+ * @param traceLevel     Level of tracing.
+ *
+ * @return               OO_OK, on success. OO_FAILED, otherwise.
+ */
+EXTERN int ooH323EpSetTraceInfo(const char * tracefile, int traceLevel);
 
 /**
  * This function is used to set the h323id alias for the endpoint.
@@ -85,7 +89,7 @@ EXTERN int ooSetLocalCallSignallingAddress(char * localip, int listenport);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetAliasH323ID(char * h323id);
+EXTERN int ooH323EpSetAliasH323ID(char * h323id);
 
 /**
  * This function is used to set the dialed digits alias for the
@@ -94,7 +98,7 @@ EXTERN int ooSetAliasH323ID(char * h323id);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetAliasDialedDigits(char * dialedDigits);
+EXTERN int ooH323EpSetAliasDialedDigits(char * dialedDigits);
 
 /**
  * This function is used to set the url alias for the endpoint.
@@ -102,7 +106,7 @@ EXTERN int ooSetAliasDialedDigits(char * dialedDigits);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetAliasURLID(char * url);
+EXTERN int ooH323EpSetAliasURLID(char * url);
 
 /**
  * This function is used to set an email id as an alias for the endpoint.
@@ -110,7 +114,7 @@ EXTERN int ooSetAliasURLID(char * url);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetAliasEmailID(char * email);
+EXTERN int ooH323EpSetAliasEmailID(char * email);
 
 /**
  * This function is used to set an ip address as an alias.
@@ -118,7 +122,7 @@ EXTERN int ooSetAliasEmailID(char * email);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetAliasTransportID(char * ipaddress);
+EXTERN int ooH323EpSetAliasTransportID(char * ipaddress);
 
 /**
  * This function is used to register the H323 Endpoint callback functions.
@@ -156,7 +160,7 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
  * @return          OO_OK on success
  *                  OO_FAILED on failure
  */
-EXTERN int ooDestroyH323Ep(void);
+EXTERN int ooH323EpDestroy(void);
 
 
 /**
@@ -165,7 +169,7 @@ EXTERN int ooDestroyH323Ep(void);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooEnableAutoAnswer(void);
+EXTERN int ooH323EpEnableAutoAnswer(void);
 
 /**
  * This function is used to disable the auto answer feature for
@@ -173,7 +177,7 @@ EXTERN int ooEnableAutoAnswer(void);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooDisableAutoAnswer(void);
+EXTERN int ooH323EpDisableAutoAnswer(void);
 
 /**
  * This function is used to enable/disable faststart.
@@ -181,7 +185,8 @@ EXTERN int ooDisableAutoAnswer(void);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetFastStart(int fastStart);
+EXTERN int ooH323EpEnableFastStart(void);
+EXTERN int ooH323EpDisableFastStart(void);
 
 /**
  * This function is used to enable/disable tunneling.
@@ -189,7 +194,8 @@ EXTERN int ooSetFastStart(int fastStart);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetH245Tunneling(int tunneling);
+EXTERN int ooH323EpEnableH245Tunneling(void);
+EXTERN int ooH323EpDisableH245Tunneling(void);
 
 /**
  * This function is used to set the product ID.
@@ -197,7 +203,7 @@ EXTERN int ooSetH245Tunneling(int tunneling);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetProductID(char * productID);
+EXTERN int ooH323EpSetProductID(char * productID);
 
 /**
  * This function is used to set version id.
@@ -205,7 +211,7 @@ EXTERN int ooSetProductID(char * productID);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetVersionID(char * versionID);
+EXTERN int ooH323EpSetVersionID(char * versionID);
 
 /**
  * This function is used to set callerid to be used for outbound
@@ -214,7 +220,7 @@ EXTERN int ooSetVersionID(char * versionID);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetCallerID(char * callerID);
+EXTERN int ooH323EpSetCallerID(char * callerID);
 
 /**
  * This function is used to set the caller name, which is used
@@ -223,7 +229,13 @@ EXTERN int ooSetCallerID(char * callerID);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSetCallerName(char * callerName);
+EXTERN int ooH323EpSetCallerName(char * callerName);
+
+/**
+ * This function is used to print the current configuration information of
+ * the H323 endpoint to log file.
+ */
+void ooH323EpPrintConfig(void);
 
 /**
  * @}

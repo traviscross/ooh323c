@@ -414,7 +414,7 @@ int ooMonitorChannels()
 
    toMin.tv_sec = 3;
    toMin.tv_usec = 0;
-
+   ooH323EpPrintConfig();
    while(1)
    {
       FD_ZERO(&readfds);

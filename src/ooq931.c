@@ -691,7 +691,8 @@ int ooSendCallProceeding(ooCallData *call)
    }
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = gH323ep.h245Tunneling;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
+                                   OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_callProceeding;
   
@@ -778,7 +779,8 @@ int ooSendAlerting(ooCallData *call)
    }
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = gH323ep.h245Tunneling;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
+                                                              OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_alerting;
   
@@ -946,7 +948,8 @@ int ooSendReleaseComplete(ooCallData *call)
                                              sizeof(H225ReleaseComplete_UUIE));
    memset(releaseComplete, 0, sizeof(H225ReleaseComplete_UUIE));
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = gH323ep.h245Tunneling;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
+                                                              OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_releaseComplete;
   
@@ -1088,7 +1091,8 @@ int ooAcceptCall(ooCallData *call)
   
     /* Add h245 listener address. Do not add H245 listener address in case
        of fast-start. */
-   if ((!gH323ep.fastStart || call->remoteFastStartOLCs.count == 0) &&
+   if ((!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) ||
+        call->remoteFastStartOLCs.count == 0) &&
        !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       ooCreateH245Listener(call); /* First create an H.245 listener */
@@ -1142,7 +1146,7 @@ int ooAcceptCall(ooCallData *call)
                                                    vendor->versionId.numocts);
    }
    /* If fast start supported and remote endpoint has sent faststart element */
-   if(gH323ep.fastStart && call->remoteFastStartOLCs.count>0)
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) && call->remoteFastStartOLCs.count>0)
    {
       pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt,
                         call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
@@ -1458,7 +1462,7 @@ int ooH323CallAdmitted(ooCallData *call)
       if(gH323ep.onIncomingCall)
          gH323ep.onIncomingCall(call);
       ooSendAlerting(call); /* Send alerting message */
-      if(gH323ep.autoAnswer)
+      if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
          ooSendConnect(call); /* Send connect message - call accepted */
    }
   
@@ -1584,7 +1588,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    setup->sourceCallSignalAddress.u.ipAddress = srcCallSignalIpAddress;
    setup->m.sourceCallSignalAddressPresent=TRUE;
    /* No fast start */
-   if(!gH323ep.fastStart)
+   if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
    {
       setup->m.fastStartPresent = FALSE;
    }
@@ -1735,7 +1739,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    /* For H.323 version 4 and higher, if fast connect, tunneling should be
       supported.
    */
-   if(gH323ep.fastStart)
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       q931msg->userInfo->h323_uu_pdu.h245Tunneling = TRUE;
 
    OOTRACEDBGA3("Built SETUP message (%s, %s)\n", call->callType,

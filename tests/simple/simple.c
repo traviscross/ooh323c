@@ -111,30 +111,31 @@ int main(int argc, char ** argv)
       
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
-   ret = ooInitializeH323Ep("simple.log", 1, 1, 50, 9, 0, 71, "obj-sys",
-                      "Version 0.4", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "simple", OO_CALLMODE_AUDIOCALL);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+   ooH323EpSetTraceInfo("simple.log", OOTRCLVLINFO);
+   ooH323EpSetLocalAddress(ourip, ourport);
+   ooH323EpSetAliasH323ID("objsys");
+   ooH323EpSetAliasDialedDigits("5087556929");
+   ooH323EpSetAliasURLID("http://www.obj-sys.com");
 
-   ooSetLocalCallSignallingAddress(ourip, ourport);
-
+   /* Register callbacks */
+   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
+                             &osEpOnOutgoingCallAdmitted, NULL,NULL,
+                             osEpOnCallCleared);  
    /* Add audio capability */
    ooAddG711Capability(OO_G711ULAW64K, 30, 240, OORXANDTX,
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-   ooSetTraceThreshold(OOTRCLVLINFO);
-   /* Register callbacks */
-   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
-                             &osEpOnOutgoingCallAdmitted, NULL,NULL,
-                             osEpOnCallCleared);  
-   ooSetAliasH323ID("objsys");
-   ooSetAliasDialedDigits("5087556929");
-   ooSetAliasURLID("http://www.obj-sys.com");
+
+
+
+
   
    /* Init RAS module */
    ooInitRas(0, RasNoGatekeeper, 0, 0);
@@ -175,7 +176,7 @@ int main(int argc, char ** argv)
 #endif
    ooMonitorChannels();
    ooDestroyRas();
-   ooDestroyH323Ep();
+   ooH323EpDestroy();
    return 0;
 }
 

@@ -61,12 +61,12 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->logicalChanNoMax = 1100;
    call->logicalChanNoCur = 1001;
 
-   if (0 != gH323ep.h245Tunneling)
+   if (OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
       OO_SETFLAG (call->flags, OO_M_TUNNELING);
 
    call->mediaInfo = NULL;
 
-   if (0 != gH323ep.fastStart)
+   if (OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       OO_SETFLAG (call->flags, OO_M_FASTSTART);
 
    dListInit(&call->remoteFastStartOLCs);

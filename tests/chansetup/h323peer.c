@@ -129,17 +129,22 @@ int main (int argc, char** argv)
 
    printf("Using:\n""\tCalls to make: %d\n""\tCall Duration: %d\n""\tInterval: %d\n""\tlocal Address: %s:%d\n""\tRemote Address: %s\n"
            "\tLogFile: %s\n", gCalls, gDuration, gInterval, localIPAddr, localPort, gDest, logFileName);
-   ret = ooInitializeH323Ep
-      (logFileName, 1, 1, 30, 9, 0, 71, "ooh323c", "version 0.5.1",
-       T_H225CallType_pointToPoint, 1720, "objsyscall", "h323peer",
-       OO_CALLMODE_AUDIOCALL);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL);
 
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");
       return -1;
    }
+   ooH323EpSetTraceInfo(logFileName, OOTRCLVLDBGA);
+   ooH323EpSetLocalAddress(localIPAddr, localPort);
+   ooH323EpSetAliasH323ID ("objsys");
+   ooH323EpSetAliasDialedDigits ("5087556929");
+   ooH323EpSetAliasURLID ("http://www.obj-sys.com");
 
-   ooSetLocalCallSignallingAddress (localIPAddr, localPort);
+   /* Register callbacks */
+   ooH323EpRegisterCallbacks
+      (&onAlerting, &onIncomingCall, &onOutgoingCallAdmitted,
+       NULL, NULL, &onCallCleared);
 
    /* Add audio capability */
 
@@ -147,18 +152,8 @@ int main (int argc, char** argv)
       (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
-   ooSetTraceThreshold (OOTRCLVLDBGA);
 
-   /* Register callbacks */
 
-   ooH323EpRegisterCallbacks
-      (&onAlerting, &onIncomingCall, &onOutgoingCallAdmitted,
-       NULL, NULL, &onCallCleared);
-
-   ooSetAliasH323ID ("objsys");
-   ooSetAliasDialedDigits ("5087556929");
-   ooSetAliasURLID ("http://www.obj-sys.com");
-  
    /* Init RAS module */
 
    ooInitRas (0, RasNoGatekeeper, 0, 0);
@@ -193,7 +188,7 @@ int main (int argc, char** argv)
    /* Application terminated - clean-up */
 
    ooDestroyRas();
-   ooDestroyH323Ep();
+   ooH323EpDestroy();
 
    return 0;
 }
