@@ -55,7 +55,11 @@
 #define OO_CAP_SPEEX        15
 #define OO_CAP_G723_1       16
 #define OO_AUCAPS_MAX       16
-#define OO_CAP_DTMF_RFC2833 17
+
+/*DTMF capabilities*/
+#define OO_CAP_DTMF_RFC2833 (1<<0)
+#define OO_CAP_DTMF_Q931    (1<<1)
+#define OO_CAP_DTMF_H245    (1<<2)
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,6 +77,18 @@ extern "C" {
  * @defgroup capmgmt  Capability Management
  * @{
  */
+
+/**
+ * This function is used to add rfc2833 based dtmf detection capability
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooEnableDTMFRFC2833(void);
+
+/**
+ * This function is used to remove rfc2833 dtmf detection capability.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooEnableDTMFRFC2833(void);
 
 /**
  * This function is used to add a new capability to the endpoint.
@@ -105,6 +121,11 @@ EXTERN int ooAddCapability(int cap, int dir,
  */
 struct H245AudioCapability* ooCreateAudioCapability
                                   (int cap, OOCTXT *pctxt);
+
+/**
+ *
+ */
+struct H245Capability* ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
 
 /**
  * This function is used to create a g711 audio capability structure.

@@ -149,7 +149,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gH323ep.myCaps = NULL;
    gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
-  
+   gH323ep.dtmfmode = 0;
+    
    gH323ep.callMode = callMode;
 #ifdef _WIN32
    InitializeCriticalSection(&gCmdMutex);

@@ -328,6 +328,7 @@ typedef struct ooCallData {
    int                  isTunnelingActive;
    int                  isFastStartActive; /***TODO - Need to update this field */
    int                  gkEngaged;  
+   int                  dtmfmode;
    ooMediaInfo          *mediaInfo;
    char                 localIP[20];/* Local IP address */
    OOSOCKET             *h225Channel;/* The h225 channel socket if the channel
@@ -444,6 +445,7 @@ typedef struct ooEndPoint{
    ooCallData *callList;
    int autoAnswer;   /* 1 to enable, 0 to disable */
    int callMode; /* audio/audiorx/audiotx/video/fax */
+   int dtmfmode;
 
 } ooEndPoint;
 /** Global endpoint structure */

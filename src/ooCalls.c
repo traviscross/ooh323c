@@ -49,6 +49,7 @@ ooCallData* ooCreateCall(char * type, char*callToken)
   
    call->remoteAliases = NULL;
    call->gkEngaged = 0;
+   call->dtmfmode = gH323ep.dtmfmode;
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;

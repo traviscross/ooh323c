@@ -18,6 +18,21 @@
 #include "ooCalls.h"
 
 
+int ooEnableDTMFRFC2833()
+{
+   gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
+   OOTRACEINFO1("Enabled RFC2833 DTMF capability \n");
+   return OO_OK;
+}
+
+int ooDisableDTMFRFC2833()
+{
+   gH323ep.dtmfmode ^= OO_CAP_DTMF_RFC2833;
+   OOTRACEINFO1("Disabled RFC2833 DTMF capability\n");
+   return OO_OK;
+}
+  
+
 int ooAddCapability(int cap, int dir,
                     cb_StartReceiveChannel startReceiveChannel,
                     cb_StartTransmitChannel startTransmitChannel,
@@ -26,6 +41,7 @@ int ooAddCapability(int cap, int dir,
 {
    int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL;
+     
    epCap = (ooH323EpCapability*)ASN1MALLOC(&gH323ep.ctxt,
                                             sizeof(ooH323EpCapability));
    if(!epCap)
@@ -106,6 +122,18 @@ struct H245AudioCapability* ooCreateAudioCapability(int cap, OOCTXT *pctxt)
                   cap);
    }
    return NULL;
+}
+
+
+struct H245Capability* ooCreateDTMFCapability(int cap, OOCTXT *pctxt)
+{
+  
+   switch(cap)
+   {
+   case OO_CAP_DTMF_RFC2833:
+     
+
+
 }
 
 struct H245AudioCapability* ooCreateG711Capability(int cap, OOCTXT* pctxt)
