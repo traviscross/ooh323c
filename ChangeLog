@@ -13,7 +13,7 @@ Release 0.5:
    host name setup. This logic is still used as backup, in case
    user does not configure IP.
 4. Added auto answer feature.This was done to allow user make a
-   dicision to answer/reject call.
+   decision to answer/reject call.
 5. Fixed bugs reported in 0.4 release.
 
 Release 0.4:
