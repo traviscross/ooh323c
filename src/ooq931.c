@@ -1569,7 +1569,7 @@ int ooH323MakeCall_helper(ooCallData *call)
     ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
 
    srcCallSignalIpAddress->ip.numocts=4;
-   srcCallSignalIpAddress->port= *(call->h225ChanPort);
+   srcCallSignalIpAddress->port= call->pH225Channel->port;
    setup->sourceCallSignalAddress.u.ipAddress = srcCallSignalIpAddress;
    setup->m.sourceCallSignalAddressPresent=TRUE;
    /* No fast start */

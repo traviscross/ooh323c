@@ -314,6 +314,12 @@ typedef struct ooAliases{
  * Structure to store all the information related to a particular
  * call.
  */
+typedef struct OOH323Channel {
+   OOSOCKET     sock;
+   int          port;
+   DList        outQueue;
+} OOH323Channel;
+
 typedef struct ooCallData {
    OOCTXT               *pctxt;
    char                 callToken[20]; /* ex: ooh323c_call_1 */
@@ -332,24 +338,13 @@ typedef struct ooCallData {
    int                  dtmfmode;
    ooMediaInfo          *mediaInfo;
    char                 localIP[20];/* Local IP address */
-   OOSOCKET             *h225Channel;/* The h225 channel socket if the channel
-                                        is established.*/
-   int                  *h225ChanPort;/* The h225 channel port if the channel
-                                         is established.*/
-   OOSOCKET             *h245Channel;/* H.245 channel socket, if the channel is
-                                        established */
-   int                  *h245ChanPort;
+   OOH323Channel*       pH225Channel;
+   OOH323Channel*       pH245Channel;
    OOSOCKET             *h245listener;
    int                  *h245listenport;
    char                 remoteIP[20];/* Remote IP address */
    int                  remotePort;
    int                  remoteH245Port;
-  
-   int                  sendH225;/* Number of outgoing H225/Q931 messages
-                                    queued */
-   int                  sendH245; /* Number of outgoing H245 messages queued */
-   DList                outH225Queue;/* Outgoing H225/Q931 message queue */
-   DList                outH245Queue;/* Outgoing H245 message queue */
    ASN1OCTET            *remoteDisplayName;
    ooAliases            *remoteAliases;
    int                  masterSlaveState;   /* Master-Slave state */
@@ -367,6 +362,7 @@ typedef struct ooCallData {
    int                  logicalChanNoMax;
    int                  logicalChanNoCur;
    int                  isAudioActive;
+   DList                timerList;
    struct ooCallData*   next;
    struct ooCallData*   prev;
 } ooCallData;
