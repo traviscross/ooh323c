@@ -818,12 +818,14 @@ static int ooRasSend( ooRasMessage *psRasMsg )
 
 static int ooRasSendGRQ()
 {
-   int iRet, iEk, iDon, iTeen, iChaar;
+   int iRet;
+   
+    /*   int iRet, iEk, iDon, iTeen, iChaar;*/
    ooRasMessage *psRasMsg=NULL;
    H225GatekeeperRequest *psGkReq=NULL;
    OOCTXT *psCtxt;
    H225TransportAddress_ipAddress *psRasAddress;
-   char hexip[20];
+   /*   char hexip[20];*/
    giDiscoveryComplete = 0;
   
    memset(&gGkInfo, 0, sizeof(RasGatekeeperInfo));
@@ -997,13 +999,14 @@ static int ooRasManageGatekeeperConfirm
 
 static int ooRasSendRRQ(int keepAlive )
 {
-   int iRet, iEk, iDon, iTeen, iChaar;
+    int iRet;
+    /*   int iEk, iDon, iTeen, iChaar;*/
    ooRasMessage *psRasMsg=NULL;
    H225RegistrationRequest *psRegReq=NULL;
    OOCTXT *psCtxt=NULL;
    H225TransportAddress *psTransportAddress=NULL;
    H225TransportAddress_ipAddress *psIpAddress=NULL;
-   char hexip[20];
+   /*   char hexip[20];*/
 
    iRet = ooCreateRasMessage(&psRasMsg);
    if(!psRasMsg)
@@ -1337,8 +1340,8 @@ int ooRasSendAdmissionRequest(ooCallData * call, enum RasCallModel eModel,
    H225AdmissionRequest *psAdmReq=NULL;
    H225TransportAddress_ipAddress *psIpAddressLocal =NULL, *psIpAddressRemote=NULL;
    RasCallAdmissionInfo *psCallAdmInfo=NULL;
-   char hexip[20];
-   int iEk, iDon, iTeen, iChaar;
+   /*   char hexip[20];
+        int iEk, iDon, iTeen, iChaar;*/
 
    OOTRACEINFO1("Sending Admission Request for new call\n");
 

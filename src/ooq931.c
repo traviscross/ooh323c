@@ -291,7 +291,7 @@ int ooGenerateCallToken(char *callToken, int size)
    sprintf(aCallToken, "ooh323c_%d", gCurCallToken++);
    if(gCurCallToken >= gCallTokenMax)
      gCurCallToken = gCallTokenBase;
-   if(strlen(aCallToken)<size)
+   if((int)strlen(aCallToken)<size)
       strcpy(callToken, aCallToken);
    else{
       OOTRACEERR1("Error: Insufficient buffer size to generate call token");
@@ -975,8 +975,8 @@ int ooSendConnect(ooCallData *call)
 int ooAcceptCall(ooCallData *call)
 {
    int ret = 0, i=0, j=0, remoteRtpPort=0;
-   char hexip[20];
-   int addr_part1, addr_part2, addr_part3, addr_part4;
+   /*   char hexip[20];
+        int addr_part1, addr_part2, addr_part3, addr_part4;*/
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
    H225VendorIdentifier *vendor;
@@ -1418,8 +1418,8 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    ASN1DynOctStr *pFS=NULL;
    H225TransportAddress_ipAddress *destCallSignalIpAddress;
-   int addr_part1, addr_part2, addr_part3, addr_part4;
-   char hexip[20];
+   /*   int addr_part1, addr_part2, addr_part3, addr_part4;
+        char hexip[20];*/
    H225TransportAddress_ipAddress *srcCallSignalIpAddress;
    ooH323EpCapability *epCap=NULL;
    DListNode *curNode = NULL;

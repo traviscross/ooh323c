@@ -37,18 +37,74 @@ int osEpOnCallCleared(ooCallData* call );
 int osEpOnAlerting(ooCallData* call);
 void * osEpHandleCommand(void*);
 
-int isActive;
-char callToken[20];
+static int isActive;
+static char callToken[20];
+static char ourip[20];
+static int ourport;
+static char dest[256];
+
+static char USAGE[]={
+   "simple [--use-ip ip] [--use-port port] [remote]\n"
+   "--use-ip   -  local ip to use\n"
+   "--use-port -  local port to use\n"
+   "remote     -  Remote endpoint to call(optional)\n"
+   "              Can be ip:[port] or aliases\n"
+};
 
 int main(int argc, char ** argv)
 {
-   int ret=0;
+    int ret=0, x, dest_found=0;
+  
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
    pthread_t threadHdl;
 #endif
 
+   if(argc>6)
+   {
+      printf("USAGE:\n%s", USAGE);
+      return -1;
+   }
+  
+   memset(ourip, 0, sizeof(ourip));
+   ourport=0;
+   memset(dest,0, sizeof(dest));
+  
+   /* parse args */
+   for(x=1; x<argc; x++)
+   {
+      if(!strcmp(argv[x], "--use-ip"))
+      {
+         x++;
+         strncpy(ourip, argv[x], sizeof(ourip));
+      }else if(!strcmp(argv[x],"--use-port"))
+      {
+         x++;
+         ourport = atoi(argv[x]);
+      }else if(!dest_found)
+      {
+         strncpy(dest, argv[x], sizeof(dest));
+         dest_found=1;
+      }else {
+         printf("USAGE:\n%s",USAGE);
+         return -1;
+      }
+   }
+  
+   /* Determine ourip if not specified by user */
+   if(!strlen(ourip))
+   {
+      ooGetLocalIPAddress(ourip);
+      if(!strcmp(ourip, "127.0.0.1"))
+      {
+         printf("Failed to determine local ip, please specify as command line"
+                "option\n");
+         printf("USAGE:\n%s", USAGE);
+      }
+   }
+      
+          
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
@@ -62,6 +118,7 @@ int main(int argc, char ** argv)
       return -1;
    }
 
+   ooSetLocalCallSignallingAddress(ourip, ourport);
 
    /* Add audio capability */
    ooAddCapability(OO_CAP_ULAW_64k_30,T_H245Capability_transmitAudioCapability,

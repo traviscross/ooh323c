@@ -17,6 +17,7 @@
 
 #include "ooStackCmds.h"
 #include "oo.h"
+#include "ooq931.h"
 
 int ooMakeCall(char * dest, char*callToken)
 {

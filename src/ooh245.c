@@ -703,8 +703,8 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    OOCTXT *pctxt;
    H245UnicastAddress *unicastAddrs, *unicastAddrs1;
    H245UnicastAddress_iPAddress *iPAddress, *iPAddress1;
-   char hexip[20];
-   int addr_part1, addr_part2, addr_part3, addr_part4;
+   /*   char hexip[20];
+        int addr_part1, addr_part2, addr_part3, addr_part4;*/
    ooLogicalChannel *pLogicalChannel = NULL;
   
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
@@ -1723,8 +1723,8 @@ int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap)
    H245H2250LogicalChannelParameters *h2250lcp;
    H245UnicastAddress *unicastAddrs;
    H245UnicastAddress_iPAddress *iPAddress;
-   char hexip[20];
-   int addr_part1, addr_part2, addr_part3, addr_part4;
+   /*   char hexip[20];
+        int addr_part1, addr_part2, addr_part3, addr_part4;*/
    ooLogicalChannel *pLogicalChannel = NULL;
   
   
@@ -1863,8 +1863,8 @@ int ooBuildOpenLogicalChannelAudio(ooCallData *call,
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
    H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
-   int addr_part1, addr_part2, addr_part3, addr_part4;
-   char hexip[20];
+   /*   int addr_part1, addr_part2, addr_part3, addr_part4;
+        char hexip[20];*/
    ooLogicalChannel *pLogicalChannel = NULL;
    int outgoing=0;
 
