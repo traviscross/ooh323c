@@ -1784,7 +1784,7 @@ int ooOnReceivedCloseChannelAck(ooCallData* call,
 
 int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
 {
-   int i;
+   ASN1UINT i;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
    H245Message *pH245 = (H245Message*)pmsg;
