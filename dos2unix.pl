@@ -132,6 +132,8 @@ sub translate_files {
                $filename =~ /mkinstalldirs/ ||
                $filename =~ /\.PDF$/ ||
                $filename =~ /\.wav$/ ||
+               $filename =~ /\.dsw$/ ||
+               $filename =~ /\.dsp$/ ||
                $filename =~ /\.raw$/ ||
                $filename =~ /\.a$/      
                ) {
