@@ -94,11 +94,26 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
                           call->callToken);
          }
         else
-            OOTRACEERR3("ERROR:Remote endpoint wants to use h245Tunneling, "
+           OOTRACEINFO3("ERROR:Remote endpoint wants to use h245Tunneling, "
                         "local endpoint has it disabled (%s,%s)\n",
                         call->callType, call->callToken);
+      }else {
+         if(gH323ep.h245Tunneling)
+         {
+            OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
+                         call->callType, call->calltoken);
+         }
+         call->isTunnelingActive = FALSE;
       }
+   }else {
+      if(gH323ep.h245Tunneling)
+      {
+         OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
+                       call->callType, call->calltoken);
+      }
+      call->isTunnelingActive = FALSE;
    }
+  
    /* Extract Remote IP address */
    if(!setup->m.sourceCallSignalAddressPresent)
    {
