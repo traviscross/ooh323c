@@ -445,26 +445,28 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    }
    if(call->isTunnelingActive)
    {
-     ret = ooHandleTunneledH245Messages(call, &q931Msg->userInfo->h323_uu_pdu);
-     if(!call->isFastStartActive)
-     {
-        /* Start terminal capability exchange and master slave determination */
-        ret = ooSendTermCapMsg(call);
-        if(ret != OO_OK)
-        {
-           OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
-                        call->callType, call->callToken);
-           return ret;
-        }
-        ret = ooSendMasterSlaveDetermination(call);
-        if(ret != OO_OK)
-        {
-           OOTRACEERR3("ERROR:Sending Master-slave determination message "
-                    "(%s, %s)\n", call->callType, call->callToken);
-           return ret;
-        }  
-     }
-    
+      ret = ooHandleTunneledH245Messages(call,
+                                             &q931Msg->userInfo->h323_uu_pdu);
+      /* It is good to send TCS even in case of faststart */
+     /*     if(!call->isFastStartActive)
+            /* {
+
+      /* Start terminal capability exchange and master slave determination */
+      ret = ooSendTermCapMsg(call);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
+                      call->callType, call->callToken);
+         return ret;
+      }
+      ret = ooSendMasterSlaveDetermination(call);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                  "(%s, %s)\n", call->callType, call->callToken);
+         return ret;
+      }  
+        /*     }*/
    }
    return OO_OK; 
 }

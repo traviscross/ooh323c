@@ -80,15 +80,16 @@ extern "C" {
 
 /**
  * This function is used to add rfc2833 based dtmf detection capability
- * @return                 OO_OK, on success. OO_FAILED, on failure.
+ * @param dynamicRTPPayloadType  dynamicRTPPayloadType to be used.
+ * @return                       OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooEnableDTMFRFC2833(void);
+EXTERN int ooEnableDTMFRFC2833(int dynamicRTPPayloadType);
 
 /**
  * This function is used to remove rfc2833 dtmf detection capability.
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooEnableDTMFRFC2833(void);
+EXTERN int ooDisableDTMFRFC2833(void);
 
 /**
  * This function is used to add a new capability to the endpoint.
@@ -119,13 +120,12 @@ EXTERN int ooAddCapability(int cap, int dir,
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateAudioCapability
-                                  (int cap, OOCTXT *pctxt);
+struct H245AudioCapability* ooCreateAudioCapability (int cap, OOCTXT *pctxt);
 
 /**
  *
  */
-struct H245Capability* ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
+void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
 
 /**
  * This function is used to create a g711 audio capability structure.

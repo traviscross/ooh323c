@@ -229,6 +229,7 @@ int ooSendTermCapMsg(ooCallData *call)
    ooH323EpCapability *epCap;
    H245TerminalCapabilitySet *termCap;
    H245AudioCapability *audioCap;
+   H245AudioTelephonyEventCapability *ateCap=NULL;
    H245CapabilityTableEntry *entry;
    H245AlternativeCapabilitySet *altSet;
    DListNode * curNode=NULL;
@@ -309,6 +310,39 @@ int ooSendTermCapMsg(ooCallData *call)
       epCap = epCap->next;
       i++;
    }
+   /* Add dtmf capability, if any */
+   if(call->dtmfmode & OO_CAP_DTMF_RFC2833)
+   {
+      ateCap = (H245AudioTelephonyEventCapability*)ooCreateDTMFCapability(
+                                                   OO_CAP_DTMF_RFC2833, pctxt);
+      if(!ateCap)
+      {
+         OOTRACEERR3("Error:Failed to add RFC2833 cap to TCS(%s, %s)\n",
+                     call->callType, call->callToken);
+      }else {
+         entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
+                      sizeof(H245CapabilityTableEntry));
+         if(!entry)
+         {
+            OOTRACEERR3("Error:Failed to allocate memory for new capability "
+                        "table entry. (%s, %s)\n", call->callType,
+                        call->callToken);
+            ooFreeH245Message(ph245msg);
+            return OO_FAILED;
+         }
+           
+         memset(entry, 0, sizeof(H245CapabilityTableEntry));
+         entry->m.capabilityPresent = 1;
+
+         entry->capability.t = T_H245Capability_receiveRTPAudioTelephonyEventCapability;
+         entry->capability.u.receiveRTPAudioTelephonyEventCapability = ateCap;
+     
+         entry->capabilityTableEntryNumber = i+1;
+         dListAppend(pctxt , &(termCap->capabilityTable), entry);
+
+         i++;
+      }
+   }     
    /*TODO:Add Video and Data capabilities, if required*/
 
    /* Define capability descriptior */

@@ -93,6 +93,14 @@ extern "C" {
 #endif /* _WIN32 */
 #endif /* EXTERN */
 
+/**
+ * This function is used to retireve the description text for a capability
+ * code.
+ * @param code     Capability code for which description is required.
+ *
+ * @return         The text description string.
+ */
+char *ooGetCapText(int code);
 
 /**
  * This function is used to retireve the description text for a code.

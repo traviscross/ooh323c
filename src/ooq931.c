@@ -1229,9 +1229,31 @@ int ooAcceptCall(ooCallData *call)
    ooSendH225Msg(call, q931msg);
    OOTRACEINFO3("Built H.225 Connect message (%s, %s)\n", call->callType,
                  call->callToken);
+   if(call->isTunnelingActive)
+   {
 
-   /*   if(gH323ep.onIncomingCall)
-        gH323ep.onIncomingCall(call);*/
+      /* It is good to send TCS even in case of faststart */
+     /*     if(!call->isFastStartActive)
+            /* {
+
+      /* Start terminal capability exchange and master slave determination */
+      ret = ooSendTermCapMsg(call);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
+                      call->callType, call->callToken);
+         return ret;
+      }
+      ret = ooSendMasterSlaveDetermination(call);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                  "(%s, %s)\n", call->callType, call->callToken);
+         return ret;
+      }  
+        /*     }*/
+   }
+
    return OO_OK;
 }
 

@@ -17,10 +17,14 @@
 #include "oo.h"
 #include "ooCalls.h"
 
+static int giDynamicRTPPayloadType = 101;
 
-int ooEnableDTMFRFC2833()
+int ooEnableDTMFRFC2833(int dynamicRTPPayloadType)
 {
    gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
+   /*Dynamic RTP payload type range is from 96 - 127 */
+   if(dynamicRTPPayloadType >= 96 && dynamicRTPPayloadType <= 127)
+      giDynamicRTPPayloadType = dynamicRTPPayloadType;
    OOTRACEINFO1("Enabled RFC2833 DTMF capability \n");
    return OO_OK;
 }
@@ -125,15 +129,37 @@ struct H245AudioCapability* ooCreateAudioCapability(int cap, OOCTXT *pctxt)
 }
 
 
-struct H245Capability* ooCreateDTMFCapability(int cap, OOCTXT *pctxt)
+void* ooCreateDTMFCapability(int cap, OOCTXT *pctxt)
 {
-  
+   H245AudioTelephonyEventCapability *pATECap=NULL;
+   char *events=NULL;
    switch(cap)
    {
    case OO_CAP_DTMF_RFC2833:
-     
-
-
+      pATECap = (H245AudioTelephonyEventCapability*)ASN1MALLOC(pctxt,
+                                   sizeof(H245AudioTelephonyEventCapability));
+      if(!pATECap)
+      {
+         OOTRACEERR1("Error:Failed to allocate memory to Audio Telephony Event"
+                    "capability\n");
+         return NULL;
+      }
+      memset(pATECap, 0, sizeof(H245AudioTelephonyEventCapability));
+      pATECap->dynamicRTPPayloadType = giDynamicRTPPayloadType;
+      events = (char*)ASN1MALLOC(pctxt, strlen("0-16")+1);
+      if(!events)
+      {
+         OOTRACEERR1("Error: Failed to allocate memory for dtmf events\n");
+         ASN1MEMFREEPTR(pctxt, pATECap);
+         return NULL;
+      }
+      strncpy(events, "0-16", strlen("0-16"));
+      pATECap->audioTelephoneEvent = events;
+      return pATECap;
+   default:
+     OOTRACEERR1("Error:unknown dtmf capability type\n");
+   }
+   return NULL;
 }
 
 struct H245AudioCapability* ooCreateG711Capability(int cap, OOCTXT* pctxt)
