@@ -166,8 +166,8 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       /* For printing the decoded message to log, initialize handler. */
       initializePrintHandler(&printHandler, "FastStart Elements");
 
-      /* Add print handler to list */
-      rtAddEventHandler (call->pctxt, &printHandler);
+      /* Set print handler */
+      setEventHandler (call->pctxt, &printHandler);
 
       for(i=0; i<(int)setup->fastStart.n; i++)
       {
@@ -212,7 +212,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
          dListAppend(call->pctxt, &call->remoteFastStartOLCs, olc);
       }
       finishPrint();
-      rtRemoveEventHandler(call->pctxt, &printHandler);
+      removeEventHandler(call->pctxt);
    }
 
    return OO_OK;
@@ -274,8 +274,8 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       /* For printing the decoded message to log, initialize handler. */
       initializePrintHandler(&printHandler, "FastStart Elements");
 
-      /* Add print handler to list */
-      rtAddEventHandler (call->pctxt, &printHandler);
+      /* Set print handler */
+      setEventHandler (call->pctxt, &printHandler);
 
       for(i=0; i<(int)connect->fastStart.n; i++)
       {
@@ -390,7 +390,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          ooOnLogicalChannelEstablished(call, pChannel);
       }
       finishPrint();
-      rtRemoveEventHandler(call->pctxt, &printHandler);
+      removeEventHandler(call->pctxt);
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
@@ -748,8 +748,9 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
 
             initializePrintHandler(&printHandler, "Tunneled H.245 Message");
 
-            /* Add event handler to list */
-            rtAddEventHandler (pctxt, &printHandler);
+            /* Set event handler */
+            setEventHandler (pctxt, &printHandler);
+
             ret = asn1PD_H245MultimediaSystemControlMessage(pctxt,
                                                             &(pmsg->h245Msg));
             if(ret != ASN_OK)
@@ -760,7 +761,7 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
                return OO_FAILED;
             }
             finishPrint();
-            rtRemoveEventHandler(pctxt, &printHandler);
+            removeEventHandler (pctxt);
             ooHandleH245Message(call, pmsg);
             ASN1MEMFREEPTR(pctxt, pmsg);
             pmsg = NULL;

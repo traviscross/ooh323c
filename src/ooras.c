@@ -665,12 +665,14 @@ int ooRasReceive()
    }
    psRasMsg->psContext = psContext;
    initializePrintHandler(&printHandler, "Received RAS Message");
-   /* Add event handler to list */
-   rtAddEventHandler (psContext, &printHandler);
+
+   /* Set event handler */
+   setEventHandler (psContext, &printHandler);
+
    if ( ASN_OK== asn1PD_H225RasMessage( psContext, &psRasMsg->sMessage ) )
    {
       finishPrint();
-      rtRemoveEventHandler(psContext, &printHandler);
+      removeEventHandler (psContext);
       iRet=ooRasManageMessage( psRasMsg );
       if(iRet != OO_OK)
       {
@@ -679,7 +681,6 @@ int ooRasReceive()
    }
    else{
       OOTRACEERR1("ERROR:Failed to decode receive RAS message\n");
-      rtRemoveEventHandler(psContext, &printHandler);
       freeContext(psContext);
       ASN1CRTFREE0(psContext);
       return OO_FAILED;

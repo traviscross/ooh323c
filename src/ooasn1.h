@@ -367,20 +367,6 @@ typedef struct {
    unsigned     alignedBits;
 } Asn116BitCharSet;
 
-typedef struct _SListNode {
-   void* data;
-   struct _SListNode* next;
-} SListNode;
-
-struct OOCTXT;
-
-typedef struct _SList {
-   ASN1UINT count;
-   SListNode* head;
-   SListNode* tail;
-   struct OOCTXT* pctxt;
-} SList;
-
 /* Doubly-linked list */
 
 typedef struct _DListNode {
@@ -453,14 +439,16 @@ typedef struct {
 
 /* ASN.1 encode/decode context block structure */
 
+struct EventHandler;
+
 typedef struct OOCTXT {         /* context block                        */
    void*        pMsgMemHeap;    /* internal message memory heap         */
    void*        pTypeMemHeap;   /* memory heap                          */
    ASN1BUFFER   buffer;         /* data buffer                          */
    ASN1ErrInfo  errInfo;        /* run-time error info                  */
    Asn1SizeCnst* pSizeConstraint;  /* Size constraint list              */
-   const char* pCharSet;   /* String of permitted characters       */
-   SList  evtHndlrList;   /* Event handler object list            */
+   const char* pCharSet;        /* String of permitted characters       */
+   struct EventHandler* pEventHandler; /* event handler object          */
    ASN1USINT    flags;          /* flag bits                            */
    ASN1OCTET    spare[2];
 } OOCTXT;
@@ -827,80 +815,6 @@ EXTERN DListNode* dListInsertAfter
  */
 EXTERN void  dListRemove (DList* pList, DListNode* node);
 void dListFindAndRemove(DList* pList, void* data);
-
-/**
- * This function is used to initialize a singly-linked list
- * @param pList      Pointer to the SList structure.
- *
- * @return None
- */
-EXTERN void sListInit (SList* pList);
-/**
- * This function is used to initialize a singly-linked list and
- * assigns a context to be used for the list.
- * @param pctxt      Pointer to the context which will be used for
- *                   memory allocations related to the list.
- * @param pList      Pointer to the SList structure to be initialized.
- *
- * @return None
- */
-EXTERN void sListInitEx (OOCTXT* pctxt, SList* pList);
-/**
- * This function is used to free-up all the nodes in the singly-linked
- * list.
- * @param pList      Pointer to the list to be freed.
- *
- * @return None
- */
-EXTERN void sListFree (SList* pList);
-
-/**
- * This function is used to create a new singly-linked list.
- * @param None
- *
- * @return         Pointer to the newly created list.
- */
-EXTERN SList* sListCreate (void);
-
-/**
- * This function is used to create a singly-linked list. The memory
- * for the list is allocated using the context pointer passed to this
- * function and also the same context will be used for any further memory
- * required by the list.
- * @param pctxt     Pointer to the OOCTXT context which will be used for
- *                  list creation
- *
- * @return          Pointer to the newly created list structure.
- */
-EXTERN SList* sListCreateEx (OOCTXT* pctxt);
-
-/**
- * This function is used to append a new data member to the list.
- * @param pList     Pointer to the list to which data has to be appended.
- * @param pData     Pointer to the data to be appended.
- *
- * @return          Returns pointer to the newly appended list node.
- */
-EXTERN SListNode* sListAppend (SList* pList, void* pData);
-
-/**
- * This function is used to search for a particular data in the list.
- * @param pList       Pointer to the list in which data has to be searched.
- * @param pData       Pointer to the data to be searched.
- *
- * @return            1 if found, 0 otherwise.
- */
-EXTERN ASN1BOOL sListFind (SList* pList, void* pData);
-
-/**
- * This function is used to remove a particular data member from the list.
- * @param pList        Pointer to the list from which the data has to be
- *                     removed.
- * @param pData        Pointer to the data to be removed.
- *
- * @return None
- */
-EXTERN void sListRemove (SList* pList, void* pData);
 
 /**
  * @defgroup errfp Error Formatting and Print Functions
@@ -2064,14 +1978,9 @@ EXTERN void init16BitCharSet
 
 EXTERN ASN1BOOL isExtendableSize (Asn1SizeCnst* pSizeList);
 
-
 EXTERN void set16BitCharSet
 (OOCTXT* pctxt, Asn116BitCharSet* pCharSet, Asn116BitCharSet* pAlphabet);
 
-EXTERN const char* rtBitStrToString (ASN1UINT numbits, const ASN1OCTET* data,
-                                   char* buffer, size_t bufsiz);
-EXTERN const char* rtOctStrToString (ASN1UINT numocts, const ASN1OCTET* data,
-                                   char* buffer, size_t bufsiz);
 #ifdef __cplusplus
 }
 #endif

@@ -26,7 +26,14 @@
 
 static const char* pVarName;
 static int gIndentSpaces;
-void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname)
+
+static const char* bitStrToString
+(ASN1UINT numbits, const ASN1OCTET* data, char* buffer, size_t bufsiz);
+
+static const char* octStrToString
+(ASN1UINT numocts, const ASN1OCTET* data, char* buffer, size_t bufsiz);
+
+void initializePrintHandler(EventHandler *printHandler, char * varname)
 {
    printHandler->startElement = &printStartElement;
    printHandler->endElement = &printEndElement;
@@ -36,11 +43,9 @@ void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname
    printHandler->bitStrValue = &printBitStrValue;
    printHandler->octStrValue = &printOctStrValue;
    printHandler->charStrValue = &printCharStrValue;
-   printHandler->charStrValue16Bit = &printCharStr16BitValue ;
-   printHandler->charStrValue32Bit = &printCharStr32BitValue;
+   printHandler->charStr16BitValue = &printCharStr16BitValue ;
    printHandler->nullValue = &printNullValue;
    printHandler->oidValue = &printOidValue;
-   printHandler->realValue = &printRealValue;
    printHandler->enumValue = &printEnumValue;
    printHandler->openTypeValue = &printOpenTypeValue;
    pVarName = varname;
@@ -103,7 +108,7 @@ void printBitStrValue (ASN1UINT numbits, const ASN1OCTET* data)
 {
    char* s = (char*)malloc(numbits + 8);
    indent ();
-   OOTRACEDBGB2("%s\n", rtBitStrToString (numbits, data, s, numbits+8));
+   OOTRACEDBGB2("%s\n", bitStrToString (numbits, data, s, numbits+8));
    free(s);
 }
 
@@ -112,7 +117,7 @@ void printOctStrValue (ASN1UINT numocts, const ASN1OCTET* data)
    int bufsiz = (numocts * 2) + 8;
    char* s = (char*)malloc(bufsiz);
    indent ();
-   OOTRACEDBGB2 ("%s\n", rtOctStrToString (numocts, data, s, bufsiz));
+   OOTRACEDBGB2 ("%s\n", octStrToString (numocts, data, s, bufsiz));
    free(s);
 }
 
@@ -199,3 +204,54 @@ void printOpenTypeValue (ASN1UINT numocts, const ASN1OCTET* data)
    OOTRACEDBGB1 ("< encoded data >\n");
 }
 
+static const char* bitStrToString
+(ASN1UINT numbits, const ASN1OCTET* data, char* buffer, size_t bufsiz)
+{
+   size_t i;
+   unsigned char mask = 0x80;
+
+   if (bufsiz > 0) {
+      buffer[0] = '\'';
+      for (i = 0; i < numbits; i++) {
+         if (i < bufsiz - 1) {
+            buffer[i+1] = (char) (((data[i/8] & mask) != 0) ? '1' : '0');
+            mask >>= 1;
+            if (0 == mask) mask = 0x80;
+         }
+         else break;
+      }
+     i++;
+      if (i < bufsiz - 1) buffer[i++] = '\'';
+      if (i < bufsiz - 1) buffer[i++] = 'B';
+      if (i < bufsiz - 1) buffer[i] = '\0';
+      else buffer[bufsiz - 1] = '\0';
+   }
+
+   return buffer;
+}
+
+static const char* octStrToString
+(ASN1UINT numocts, const ASN1OCTET* data, char* buffer, size_t bufsiz)
+{
+   size_t i;
+   char lbuf[4];
+
+   if (bufsiz > 0) {
+      buffer[0] = '\'';
+      if (bufsiz > 1) buffer[1] = '\0';
+      for (i = 0; i < numocts; i++) {
+         if (i < bufsiz - 1) {
+            sprintf (lbuf, "%02x", data[i]);
+            strcat (&buffer[(i*2)+1], lbuf);
+         }
+         else break;
+      }
+     i = i*2 + 1;
+      if (i < bufsiz - 1) buffer[i++] = '\'';
+      if (i < bufsiz - 1) buffer[i++] = 'H';
+      if (i < bufsiz - 1) buffer[i] = '\0';
+      else buffer[bufsiz - 1] = '\0';
+   }
+
+   return buffer;
+}

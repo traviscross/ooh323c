@@ -99,12 +99,12 @@ CFLAGS = @OOH323CFLAGS@
 
 lib_LIBRARIES = liboostk.a
 #liboostk_la_LDFLAGS = -version-info 1:1:0
-liboostk_a_SOURCES = ooras.c ooras.h context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c SList.c SList.h asn1CEvtHndlr.c asn1CEvtHndlr.h ooCalls.c ooCalls.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtconv.c rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
+liboostk_a_SOURCES = ooras.c ooras.h context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c eventHandler.c eventHandler.h ooCalls.c ooCalls.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
 
 INCLUDES = -Ih323
 
 
-#include_HEADERS = memheap.h ooasn1.h oochannels.h oo.h ooh245.h oohdr.h ooper.h ooports.h ooq931.h oosndrtp.h ooSocket.h ooTimer.h ootypes.h SList.h asn1CEvtHndlr.h ooCalls.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h h450/Addressing-Data-Elements.h h450/Call-Completion-Operations.h h450/Call-Diversion-Operations.h h450/Call-Hold-Operations.h h450/Call-Intrusion-Operations.h h450/Call-Offer-Operations.h h450/Call-Park-Pickup-Operations.h h450/Call-Transfer-Operations.h h450/Call-Waiting-Operations.h h450/H225-generic-parameters-definition.h h450/H4501-General-Error-List.h h450/H4501-Supplementary-ServiceAPDU-Structure.h h450/Manufacturer-specific-service-extension-definition.h h450/Message-Waiting-Indication-Operations.h h450/Name-Operations.h h450/Remote-Operations-Apdus.h h450/Remote-Operations-Generic-ROS-PDUs.h h450/Remote-Operations-Information-Objects.h h450/Remote-Operations-Useful-Definitions.h
+#include_HEADERS = memheap.h ooasn1.h oochannels.h oo.h ooh245.h oohdr.h ooper.h ooports.h ooq931.h oosndrtp.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCalls.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h h450/Addressing-Data-Elements.h h450/Call-Completion-Operations.h h450/Call-Diversion-Operations.h h450/Call-Hold-Operations.h h450/Call-Intrusion-Operations.h h450/Call-Offer-Operations.h h450/Call-Park-Pickup-Operations.h h450/Call-Transfer-Operations.h h450/Call-Waiting-Operations.h h450/H225-generic-parameters-definition.h h450/H4501-General-Error-List.h h450/H4501-Supplementary-ServiceAPDU-Structure.h h450/Manufacturer-specific-service-extension-definition.h h450/Message-Waiting-Indication-Operations.h h450/Name-Operations.h h450/Remote-Operations-Apdus.h h450/Remote-Operations-Generic-ROS-PDUs.h h450/Remote-Operations-Information-Objects.h h450/Remote-Operations-Useful-Definitions.h
 EXTRA_DIST = oostk.dsp
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -119,11 +119,10 @@ am_liboostk_a_OBJECTS = ooras.$(OBJEXT) context.$(OBJEXT) \
         encode.$(OBJEXT) errmgmt.$(OBJEXT) memheap.$(OBJEXT) \
         ootrace.$(OBJEXT) oochannels.$(OBJEXT) ooh245.$(OBJEXT) \
         ooports.$(OBJEXT) ooq931.$(OBJEXT) ooCapability.$(OBJEXT) \
-        ooSocket.$(OBJEXT) perutil.$(OBJEXT) SList.$(OBJEXT) \
-        asn1CEvtHndlr.$(OBJEXT) ooCalls.$(OBJEXT) ooStackCmds.$(OBJEXT) \
-        ooh323.$(OBJEXT) ooh323ep.$(OBJEXT) printHandler.$(OBJEXT) \
-        rtconv.$(OBJEXT) rtctype.$(OBJEXT) ooTimer.$(OBJEXT) \
-        H235-SECURITY-MESSAGESDec.$(OBJEXT) \
+        ooSocket.$(OBJEXT) perutil.$(OBJEXT) eventHandler.$(OBJEXT) \
+        ooCalls.$(OBJEXT) ooStackCmds.$(OBJEXT) ooh323.$(OBJEXT) \
+        ooh323ep.$(OBJEXT) printHandler.$(OBJEXT) rtctype.$(OBJEXT) \
+        ooTimer.$(OBJEXT) H235-SECURITY-MESSAGESDec.$(OBJEXT) \
         H235-SECURITY-MESSAGESEnc.$(OBJEXT) H323-MESSAGES.$(OBJEXT) \
         H323-MESSAGESDec.$(OBJEXT) H323-MESSAGESEnc.$(OBJEXT) \
         MULTIMEDIA-SYSTEM-CONTROL.$(OBJEXT) \
@@ -146,11 +145,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@    ./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROL.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROLDec.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROLEnc.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/SList.Po ./$(DEPDIR)/asn1CEvtHndlr.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/context.Po ./$(DEPDIR)/decode.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/dlist.Po ./$(DEPDIR)/encode.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/errmgmt.Po ./$(DEPDIR)/memheap.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooCalls.Po ./$(DEPDIR)/ooCapability.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/errmgmt.Po ./$(DEPDIR)/eventHandler.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/memheap.Po ./$(DEPDIR)/ooCalls.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ooCapability.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/ooDateTime.Po ./$(DEPDIR)/ooSocket.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/ooStackCmds.Po ./$(DEPDIR)/ooTimer.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/oochannels.Po ./$(DEPDIR)/ooh245.Po \
@@ -158,7 +157,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@    ./$(DEPDIR)/ooports.Po ./$(DEPDIR)/ooq931.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/ooras.Po ./$(DEPDIR)/ootrace.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/perutil.Po ./$(DEPDIR)/printHandler.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/rtconv.Po ./$(DEPDIR)/rtctype.Po
+@AMDEP_TRUE@    ./$(DEPDIR)/rtctype.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -238,13 +237,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROL.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROLDec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MULTIMEDIA-SYSTEM-CONTROLEnc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SList.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asn1CEvtHndlr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/context.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/encode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/errmgmt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memheap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooCalls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooCapability.Po@am__quote@
@@ -262,7 +260,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ootrace.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/perutil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printHandler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtconv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rtctype.Po@am__quote@
 
 distclean-depend:

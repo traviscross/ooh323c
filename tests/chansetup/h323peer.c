@@ -19,9 +19,11 @@
 #include "ooStackCmds.h"
 #include "ooTimer.h"
 #include "ooras.h"
+
 #ifndef _WIN32
 #include <pthread.h>
-/*#define getpid _getpid*/
+#else
+#define getpid _getpid
 #endif
 
 /** Global endpoint structure */
@@ -40,7 +42,8 @@ static int callDurationTimerExpired (void *pdata);
 static int callIntervalTimerExpired(void *pdata);
 
 static char USAGE[]={
-   "h323peer [--use-ip ip] [--use-port port] [-n noofcalls] [-duration call_duration] [-interval call_interval] [remote]\n"
+   "h323peer [--use-ip ip] [--use-port port] [-n noofcalls]\n"
+   "[-duration call_duration] [-interval call_interval] [remote]\n"
    "--use-ip   -  local ip to use\n"
    "--use-port -  local port to use\n"
    "-n         -  Number of outgoing calls\n"
@@ -127,8 +130,16 @@ int main (int argc, char** argv)
 
    sprintf (logFileName, "h323peer%d.log", getpid());
 
-   printf("Using:\n""\tCalls to make: %d\n""\tCall Duration: %d\n""\tInterval: %d\n""\tlocal Address: %s:%d\n""\tRemote Address: %s\n"
-           "\tLogFile: %s\n", gCalls, gDuration, gInterval, localIPAddr, localPort, gDest, logFileName);
+   printf ("Using:\n"
+           "\tCalls to make: %d\n"
+           "\tCall Duration: %d\n"
+           "\tInterval: %d\n"
+           "\tlocal Address: %s:%d\n"
+           "\tRemote Address: %s\n"
+           "\tLogFile: %s\n",
+           gCalls, gDuration, gInterval, localIPAddr, localPort,
+           gDest, logFileName);
+
    ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL);
 
    if (ret != OO_OK) {
@@ -152,8 +163,6 @@ int main (int argc, char** argv)
       (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
-
-
    /* Init RAS module */
 
    ooInitRas (0, RasNoGatekeeper, 0, 0);
@@ -176,8 +185,9 @@ int main (int argc, char** argv)
       {
          token = (char*)malloc(strlen(callToken)+1);
          strcpy(token, callToken);
-         pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,
-                                  gInterval, token, FALSE);
+         pTimer = ooTimerCreate
+            (&gH323ep.ctxt, NULL, callIntervalTimerExpired,
+             gInterval, token, FALSE);
 
       }
    }
@@ -218,8 +228,9 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    {
       token = (char*)malloc(strlen(call->callToken)+1);
       strcpy(token, call->callToken);
-      timer =  ooTimerCreate(&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
-                          token, FALSE);
+      timer =  ooTimerCreate
+         (&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
+          token, FALSE);
 
    }
    /* TODO: user would add application specific logic here to start     */

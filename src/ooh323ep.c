@@ -88,14 +88,15 @@ int ooH323EpInitialize(const char *callerid, int callMode)
 
    gH323ep.listener = NULL;
 
-   if(callerid)
+   if (0 != callerid)
    {
-      gH323ep.callerid = (char *) ASN1MALLOC(&gH323ep.ctxt, strlen(callerid)+1);
-      memset(gH323ep.callerid, 0, strlen(callerid)+1);
+      gH323ep.callerid = (char*) memAlloc (&gH323ep.ctxt, strlen(callerid)+1);
       strcpy(gH323ep.callerid, callerid);
-   }else{
-      gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsyscall")+1);
-      memset(gH323ep.callerid, 0, strlen("objsyscall")+1);
+   }
+   else {
+      gH323ep.callerid = (char*)
+         memAlloc (&gH323ep.ctxt, strlen("objsyscall")+1);
+
       strcpy(gH323ep.callerid, "objsyscall");
    }
 
@@ -140,180 +141,6 @@ int ooH323EpInitialize(const char *callerid, int callMode)
 
    return OO_OK;
 }
-
-#if 0
-/* Initialize the application context within stack */
-int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
-                        int fastStart, int termType, int t35CountryCode,
-                        int t35extension, int manufacturerCode,
-                        char *productID, char *versionID, int callType,
-                        int listenport, char *callerid, char *callername,
-                        int callMode)
-{
-  
-   initContext(&(gH323ep.ctxt));
-   initContext(&(gH323ep.msgctxt));
-  
-   if(tracefile != NULL)
-   {
-      gH323ep.fptraceFile = fopen(tracefile, "w");
-      if(gH323ep.fptraceFile == NULL)
-      {
-         return OO_FAILED;
-      }
-   }
-   else
-   {
-      gH323ep.fptraceFile = stdout;
-   }
-  
-   /* Initialize default port ranges that will be used by stack.
-      Apps can override these by explicitely setting port ranges
-   */
-   OOTRACEINFO1("Initializing H.323 endpoint\n");
-   gH323ep.tcpPorts.start = TCPPORTSSTART;
-   gH323ep.tcpPorts.max = TCPPORTSEND;
-   gH323ep.tcpPorts.current=TCPPORTSSTART;
-
-   gH323ep.udpPorts.start = UDPPORTSSTART;
-   gH323ep.udpPorts.max = UDPPORTSEND;
-   gH323ep.udpPorts.current = UDPPORTSSTART;
-
-   gH323ep.rtpPorts.start = RTPPORTSSTART;
-   gH323ep.rtpPorts.max = RTPPORTSEND;
-   gH323ep.rtpPorts.current = RTPPORTSSTART;
-  
-   /* FastStart */
-   if(!fastStart)
-   {
-      OOTRACEINFO1("\tFastStart - disabled\n");
-   }
-   else{
-      OOTRACEINFO1("\tFastStart - enabled\n");
-   }
-   gH323ep.fastStart = fastStart;
-   gH323ep.aliases = NULL;
-  
-   /* H245 Tunneling */
-   gH323ep.h245Tunneling = h245Tunneling;
-   if(!h245Tunneling)
-   {
-      OOTRACEINFO1("\tH245 Tunneling - disabled\n");
-   }
-   else{
-      OOTRACEINFO1("\tH245 Tunneling - enabled\n");
-   }
-     
-   gH323ep.termType = termType;
-   OOTRACEINFO2("\tTerminal Type - %d\n", termType);
-   gH323ep.t35CountryCode = t35CountryCode;
-   OOTRACEINFO2("\tT35 CountryCode - %d\n", t35CountryCode);
-   gH323ep.t35Extension = t35extension;
-   OOTRACEINFO2("\tT35 Extension - %d\n", t35extension);
-   gH323ep.manufacturerCode = manufacturerCode;
-   OOTRACEINFO2("\tManufacturer Code - %d\n", manufacturerCode);
-   if(productID)
-   {
-      gH323ep.productID = (char*)ASN1MALLOC(&gH323ep.ctxt, strlen(productID)+1);
-      memset(gH323ep.productID, 0, strlen(productID)+1);
-      strcpy(gH323ep.productID, productID);
-   }
-   else{
-      gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys")+1);
-      memset(gH323ep.productID, 0, strlen("objsys")+1);
-      strcpy(gH323ep.productID, "objsys");
-   }
-   OOTRACEINFO2("\tProductID - %s\n", gH323ep.productID);
-  
-   if(versionID)
-   {
-      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID)+1);
-      memset(gH323ep.versionID, 0, strlen(versionID)+1);
-      strcpy(gH323ep.versionID, versionID);
-   }
-   else{
-      gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("0.4")+1);
-      memset(gH323ep.versionID, 0, strlen("0.4")+1);
-      strcpy(gH323ep.versionID, "0.4");
-   }
-   OOTRACEINFO2("\tVersionID - %s\n", gH323ep.versionID);
-
-   gH323ep.callType = callType;
-   ooGetLocalIPAddress(gH323ep.signallingIP);
-   OOTRACEINFO2("\tLocal signalling IP address - %s\n", gH323ep.signallingIP);
-   gH323ep.listenPort = listenport;
-   OOTRACEINFO2("\tH225 ListenPort - %d\n", listenport);
-
-   gH323ep.listener = NULL;
-  
-   if(callerid)
-   {
-      gH323ep.callerid = (char *) ASN1MALLOC(&gH323ep.ctxt, strlen(callerid)+1);
-      memset(gH323ep.callerid, 0, strlen(callerid)+1);
-      strcpy(gH323ep.callerid, callerid);
-   }else{
-      gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsyscall")+1);
-      memset(gH323ep.callerid, 0, strlen("objsyscall")+1);
-      strcpy(gH323ep.callerid, "objsyscall");
-   }
-   OOTRACEINFO2("\tCallerID - %s\n", gH323ep.callerid);
-
-   if(callername)
-   {
-      gH323ep.callername =(char*)ASN1MALLOC(&gH323ep.ctxt, strlen(callername)+1);
-      memset(gH323ep.callername, 0, strlen(callername)+1);
-      strcpy(gH323ep.callername, callername);
-   }else {
-      gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen("objsys")+1);
-      memset(gH323ep.callername, 0, strlen("objsys")+1);
-      strcpy(gH323ep.callername, "objsys");
-   }
-   OOTRACEINFO2("\tCallerName - %s\n", gH323ep.callername);
-
-   gH323ep.myCaps = NULL;
-   gH323ep.noOfCaps = 0;
-   gH323ep.callList = NULL;
-   gH323ep.dtmfmode = 0;
-    
-   gH323ep.callMode = callMode;
-#ifdef _WIN32
-   InitializeCriticalSection(&gCmdMutex);
-   InitializeCriticalSection(&gCallTokenMutex);
-   InitializeCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_init(&gCmdMutex, 0);
-   pthread_mutex_init(&gCallTokenMutex, 0);
-   pthread_mutex_init(&gCallRefMutex, 0);
-#endif
-   dListInit(&gCmdList);
-
-   dListInit(&g_TimerList);/* This is for test application chansetup only*/
-
-   initContext(&gCtxt);
-   gCallTokenBase = 1;
-   gCallTokenMax = 1000;
-   gCurCallToken = 1;
-   gH323ep.autoAnswer = 1;
-   OOTRACEINFO1("\tAutoAnswer - enabled\n");
-   gH323ep.callEstablishmentTimeout = 60;
-   OOTRACEINFO2("\tCall Establishment Timeout - %d seconds\n",
-                                          gH323ep.callEstablishmentTimeout);  
-   gH323ep.msdTimeout = 30;
-   OOTRACEINFO2("\tMasterSlaveDetermination Timeout - %d seconds\n",
-                   gH323ep.msdTimeout);
-   gH323ep.tcsTimeout = 30;
-   OOTRACEINFO2("\tTerminalCapabilityExchange Timeout - %d seconds\n",
-                   gH323ep.tcsTimeout);
-   gH323ep.logicalChannelTimeout = 30;
-   OOTRACEINFO2("\tLogicalChannel  Timeout - %d seconds\n",
-                   gH323ep.logicalChannelTimeout);
-   gH323ep.sessionTimeout = 15;
-   OOTRACEINFO2("\tSession Timeout - %d seconds\n", gH323ep.sessionTimeout);
-   OOTRACEINFO1("H323 endpoint initialize - successful\n");
-   return OO_OK;
-}
-#endif
-
 
 int ooH323EpSetLocalAddress(char * localip, int listenport)
 {

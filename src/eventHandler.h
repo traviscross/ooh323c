@@ -14,20 +14,17 @@
  *
  *****************************************************************************/
 /**
- * @file asn1CEvtHndlr.h
- * C event handler structure.  The ASN1CEventHandler is a structure type 
- * which can be used to define event handlers by the user.
+ * @file eventHandler.h
+ * C event handler structure.  This structure holds event handler function
+ * callbacks for use by the generated code.
  */
 /**
- * @defgroup Asn1CEventHandler Asn1CEventHandler
- * Asn1CEventHandler is a structure type used for user-defined event handlers.
- * @ingroup cruntime
+ * @defgroup EventHandler
+ * Event handler structures and callback function definitions.
  * @{
  */
-
-
-#ifndef _ASN1CEVTHNDLR_H_
-#define _ASN1CEVTHNDLR_H_
+#ifndef _EVENTHANDLER_H_
+#define _EVENTHANDLER_H_
 
 #include <stdio.h>
 #include "ooasn1.h"
@@ -62,7 +59,7 @@ extern "C" {
  *                       array associated with the construct.
  * @return             - none
  */
-typedef void (*rtStartElement) (const char* name, int index) ;
+typedef void (*StartElement) (const char* name, int index) ;
 
 
 /**
@@ -81,7 +78,7 @@ typedef void (*rtStartElement) (const char* name, int index) ;
  *                       array associated with the construct.
  * @return             - none
  */
-typedef void (*rtEndElement) (const char* name, int index) ;
+typedef void (*EndElement) (const char* name, int index) ;
 
 
 /**
@@ -91,7 +88,7 @@ typedef void (*rtEndElement) (const char* name, int index) ;
  * @param value        Parsed value.
  * @return             - none
  */
-typedef void (*rtBoolValue) (ASN1BOOL value);
+typedef void (*BoolValue) (ASN1BOOL value);
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -100,7 +97,7 @@ typedef void (*rtBoolValue) (ASN1BOOL value);
  * @param value        Parsed value.
  * @return             - none
  */
-typedef void (*rtIntValue) (ASN1INT value);
+typedef void (*IntValue) (ASN1INT value);
 
 /**
  * This is a function pointer for a callback function which is invoked
@@ -111,7 +108,7 @@ typedef void (*rtIntValue) (ASN1INT value);
  * @param value        Parsed value.
  * @return             - none
  */
-typedef void (*rtUIntValue) (ASN1UINT value);
+typedef void (*UIntValue) (ASN1UINT value);
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -123,7 +120,7 @@ typedef void (*rtUIntValue) (ASN1UINT value);
  *                         string data.
  * @return             - none
  */
-typedef void (*rtBitStrValue) (ASN1UINT numbits, const ASN1OCTET* data);
+typedef void (*BitStrValue) (ASN1UINT numbits, const ASN1OCTET* data);
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -135,7 +132,7 @@ typedef void (*rtBitStrValue) (ASN1UINT numbits, const ASN1OCTET* data);
  *                       data.
  * @return             - none
  */
-typedef void (*rtOctStrValue) (ASN1UINT numocts, const ASN1OCTET* data) ;
+typedef void (*OctStrValue) (ASN1UINT numocts, const ASN1OCTET* data) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -145,7 +142,7 @@ typedef void (*rtOctStrValue) (ASN1UINT numocts, const ASN1OCTET* data) ;
  * @param value        Null terminated character string value.
  * @return             - none
  */
-typedef void (*rtCharStrValue) (const char* value) ;
+typedef void (*CharStrValue) (const char* value) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -160,21 +157,7 @@ typedef void (*rtCharStrValue) (const char* value) ;
  *                       values.
  * @return             - none
  */
-typedef void (*rtCharStrValue16Bit) (ASN1UINT nchars, ASN116BITCHAR* data) ;
-
-/**
- * This is a function pointer for a callback function which is invoked from
- * within a decode function when a value of one of the 32-bit ASN.1 characer
- * string types is parsed.
- *
- * This is used for the ASN.1 UniversalString type.
- *
- * @param nchars       Number of characters in the parsed value.
- * @param data         Pointer to an array containing 32-bit values.
- *                       Each 32-bit integer value is a universal character.
- * @return             - none
- */
-typedef void (*rtCharStrValue32Bit) (ASN1UINT nchars, ASN132BITCHAR* data) ;
+typedef void (*CharStrValue16Bit) (ASN1UINT nchars, ASN116BITCHAR* data) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -183,7 +166,7 @@ typedef void (*rtCharStrValue32Bit) (ASN1UINT nchars, ASN132BITCHAR* data) ;
  * @param             - none
  * @return             - none
  */
-typedef void (*rtNullValue) () ;
+typedef void (*NullValue) () ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -194,16 +177,7 @@ typedef void (*rtNullValue) () ;
  * @param pSubIds      Pointer to array containing the subidentifier values.
  * @return             -none
  */
-typedef void (*rtOidValue) (ASN1UINT numSubIds, ASN1UINT* pSubIds) ;
-
- /**
-  * This is a function pointer for a callback function which is invoked from
-  * within a decode function when a value the REAL ASN.1 type is parsed.
-  *
-  * @param value        Parsed value.
-  * @return             - none
-  */
-typedef void (*rtRealValue) (double value) ;
+typedef void (*OidValue) (ASN1UINT numSubIds, ASN1UINT* pSubIds) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -213,7 +187,7 @@ typedef void (*rtRealValue) (double value) ;
  * @param value        - Parsed enumerated value
  * @return             - none
  */
-typedef void (*rtEnumValue) (ASN1UINT value) ;
+typedef void (*EnumValue) (ASN1UINT value) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -224,80 +198,80 @@ typedef void (*rtEnumValue) (ASN1UINT value) ;
  *                       value.
  * @return             - none
  */
-typedef void (*rtOpenTypeValue) (ASN1UINT numocts, const ASN1OCTET* data) ;
+typedef void (*OpenTypeValue) (ASN1UINT numocts, const ASN1OCTET* data) ;
 
 
 /**
  * This is a basic C based event handler structure, which can be used
  * to define user-defined event handlers.
  */
-typedef struct Asn1NamedCEventHandler {
-   rtStartElement      startElement;
-   rtEndElement        endElement;
-   rtBoolValue         boolValue;
-   rtIntValue          intValue;
-   rtUIntValue         uIntValue;
-   rtBitStrValue       bitStrValue;
-   rtOctStrValue       octStrValue;
-   rtCharStrValue      charStrValue;
-   rtCharStrValue16Bit charStrValue16Bit;
-   rtCharStrValue32Bit charStrValue32Bit;
-   rtNullValue         nullValue;
-   rtOidValue          oidValue;
-   rtRealValue         realValue;
-   rtEnumValue         enumValue;
-   rtOpenTypeValue     openTypeValue;
-}Asn1NamedCEventHandler;
+typedef struct EventHandler {
+   StartElement      startElement;
+   EndElement        endElement;
+   BoolValue         boolValue;
+   IntValue          intValue;
+   UIntValue         uIntValue;
+   BitStrValue       bitStrValue;
+   OctStrValue       octStrValue;
+   CharStrValue      charStrValue;
+   CharStrValue16Bit charStr16BitValue;
+   NullValue         nullValue;
+   OidValue          oidValue;
+   EnumValue         enumValue;
+   OpenTypeValue     openTypeValue;
+} EventHandler;
 
 
 /**
- * This function is called to add a new event handler to the context event
- * handler list.
+ * This function sets the event handler object within the context.  It
+ * will overwrite the definition of any handler that was set previously.
  *
- * @param pCtxt       Context to which event handler has to be added.
+ * @param pctxt       Context to which event handler has to be added.
  * @param pHandler    Pointer to the event handler structure.
  * @return            none
  */
-
-EXTERN void rtAddEventHandler (OOCTXT* pCtxt,
-                                Asn1NamedCEventHandler* pHandler);
+EXTERN void setEventHandler (OOCTXT* pctxt, EventHandler* pHandler);
 
 /**
- * This function is called to remove an event handler from the context event
- * handler list.  Note that it does not delete the event handler object.
+ * This function is called to remove the event handler current defined
+ * in the context.  This is done by setting the event handler object
+ * pointer to NULL.
  *
- * @param pCtxt       Context from which event handler has to be removed.
- * @param pHandler    Pointer to event handler structure.
+ * @param pctxt       Context from which event handler has to be removed.
  * @return            none
  */
-EXTERN void rtRemoveEventHandler (OOCTXT* pCtxt,
-                                   Asn1NamedCEventHandler* pHandler);
+EXTERN void removeEventHandler (OOCTXT* pctxt);
 
 /**
  * The following functions are invoked from within the generated
  * code to call the various user-defined event handler methods ..
  */
-EXTERN void rtInvokeStartElement (OOCTXT* pCtxt, const char* name, int index);
-EXTERN void rtInvokeEndElement (OOCTXT* pCtxt, const char* name, int index);
-EXTERN void rtInvokeBoolValue (OOCTXT* pCtxt, ASN1BOOL value);
-EXTERN void rtInvokeIntValue (OOCTXT* pCtxt, ASN1INT value);
-EXTERN void rtInvokeUIntValue (OOCTXT* pCtxt, ASN1UINT value);
-EXTERN void rtInvokeBitStrValue (OOCTXT* pCtxt, ASN1UINT numbits,
-                                  const ASN1OCTET* data);
-EXTERN void rtInvokeOctStrValue (OOCTXT* pCtxt, ASN1UINT numocts,
-                                  const ASN1OCTET* data);
-EXTERN void rtInvokeCharStrValue (OOCTXT* pCtxt, const char* value);
-EXTERN void rtInvokeCharStr16BitValue (OOCTXT* pCtxt, ASN1UINT nchars,
-                                   ASN116BITCHAR* data);
-EXTERN void rtInvokeCharStr32BitValue (OOCTXT* pCtxt, ASN1UINT nchars,
-                                   ASN132BITCHAR* data);
-EXTERN void rtInvokeNullValue (OOCTXT* pCtxt);
-EXTERN void rtInvokeOidValue (OOCTXT* pCtxt, ASN1UINT numSubIds,
-                               ASN1UINT* pSubIds);
-EXTERN void rtInvokeRealValue (OOCTXT* pCtxt, double value);
-EXTERN void rtInvokeEnumValue (OOCTXT* pCtxt, ASN1UINT value);
-EXTERN void rtInvokeOpenTypeValue (OOCTXT* pCtxt, ASN1UINT numocts,
-                                    const ASN1OCTET* data);
+EXTERN void invokeStartElement (OOCTXT* pctxt, const char* name, int index);
+EXTERN void invokeEndElement (OOCTXT* pctxt, const char* name, int index);
+EXTERN void invokeBoolValue (OOCTXT* pctxt, ASN1BOOL value);
+EXTERN void invokeIntValue (OOCTXT* pctxt, ASN1INT value);
+EXTERN void invokeUIntValue (OOCTXT* pctxt, ASN1UINT value);
+
+EXTERN void invokeBitStrValue
+(OOCTXT* pctxt, ASN1UINT numbits, const ASN1OCTET* data);
+
+EXTERN void invokeOctStrValue
+(OOCTXT* pctxt, ASN1UINT numocts, const ASN1OCTET* data);
+
+EXTERN void invokeCharStrValue (OOCTXT* pctxt, const char* value);
+
+EXTERN void invokeCharStr16BitValue
+(OOCTXT* pctxt, ASN1UINT nchars, ASN116BITCHAR* data);
+
+EXTERN void invokeNullValue (OOCTXT* pctxt);
+
+EXTERN void invokeOidValue
+(OOCTXT* pctxt, ASN1UINT numSubIds, ASN1UINT* pSubIds);
+
+EXTERN void invokeEnumValue (OOCTXT* pctxt, ASN1UINT value);
+
+EXTERN void invokeOpenTypeValue
+(OOCTXT* pctxt, ASN1UINT numocts, const ASN1OCTET* data);
 
 /**
  * @}

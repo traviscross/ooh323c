@@ -511,17 +511,20 @@ static void ooPrintQ931Message
    int ret;
 
    initializePrintHandler(&printHandler, "H.2250 Message");
-   /* Add event handler to list */
-   rtAddEventHandler (pctxt, &printHandler);
+
+   /* Set event handler */
+   setEventHandler (pctxt, &printHandler);
+
    setPERBuffer (pctxt, msgbuf, msglen, TRUE);
+
    ret = ooQ931Decode (&q931Msg, msglen, msgbuf);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n", call->callType,
-                   call->callToken);
+      OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n",
+                  call->callType, call->callToken);
    }
    finishPrint();
-   rtRemoveEventHandler(pctxt, &printHandler);
+   removeEventHandler(pctxt);
 
 }
 #endif

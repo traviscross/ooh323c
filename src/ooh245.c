@@ -137,8 +137,9 @@ static void ooPrintH245Message
 
    initializePrintHandler(&printHandler, "Sending H.245 Message");
 
-   /* Add event handler to list */
-   rtAddEventHandler (&ctxt, &printHandler);
+   /* Set event handler */
+   setEventHandler (&ctxt, &printHandler);
+
    ret = asn1PD_H245MultimediaSystemControlMessage(&ctxt, &mmMsg);
    if(ret != ASN_OK)
    {

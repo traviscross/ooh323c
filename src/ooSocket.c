@@ -264,7 +264,8 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
    if (bind (socket, (struct sockaddr *) (void*) &m_addr,
                      sizeof (m_addr)) == -1)
    {
-     OOTRACEERR1("Error:Bind failed\n");
+      perror ("bind");
+      OOTRACEERR1("Error:Bind failed\n");
       return ASN_E_INVSOCKET;
    }
 

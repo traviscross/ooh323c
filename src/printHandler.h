@@ -23,12 +23,11 @@
 #ifndef _PRINTHANDLER_H_
 #define _PRINTHANDLER_H_
 
-#include "asn1CEvtHndlr.h"
+#include "eventHandler.h"
 
-Asn1NamedCEventHandler printHandler;
+EventHandler printHandler;
 
-
-void initializePrintHandler(Asn1NamedCEventHandler *printHandler, char * varname);
+void initializePrintHandler(EventHandler *printHandler, char * varname);
 void finishPrint();
 void indent ();
 void printStartElement (const char* name, int index );
@@ -40,13 +39,9 @@ void printBitStrValue (ASN1UINT numbits, const ASN1OCTET* data);
 void printOctStrValue (ASN1UINT numocts, const ASN1OCTET* data);
 void printCharStrValue (const char* value);
 void printCharStr16BitValue (ASN1UINT nchars, ASN116BITCHAR* data);
-void printCharStr32BitValue (ASN1UINT nchars, ASN132BITCHAR* data);
 void printNullValue ();
 void printOidValue (ASN1UINT numSubIds, ASN1UINT* pSubIds);
-void printRealValue (double value);
 void printEnumValue (ASN1UINT value);
 void printOpenTypeValue (ASN1UINT numocts, const ASN1OCTET* data);
-
-
 
 #endif

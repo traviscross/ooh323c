@@ -833,10 +833,12 @@ int ooH2250Receive(ooCallData *call)
 
    OOTRACEDBGC3("Received H.2250 message: (%s, %s)\n",
                 call->callType, call->callToken);
+
    initializePrintHandler(&printHandler, "Received H.2250 Message");
 
-   /* Add event handler to list */
-   rtAddEventHandler (pctxt, &printHandler);
+   /* Set event handler */
+   setEventHandler (pctxt, &printHandler);
+
    ret = ooQ931Decode (pmsg, len, message);
    if(ret != OO_OK)
    {
@@ -846,7 +848,7 @@ int ooH2250Receive(ooCallData *call)
    OOTRACEDBGC3("Decoded Q931 message (%s, %s)\n", call->callType,
                                                              call->callToken);
    finishPrint();
-   rtRemoveEventHandler(pctxt, &printHandler);
+   removeEventHandler(pctxt);
    if(ret == OO_OK)
       ooHandleH2250Message(call, pmsg);
    return ret;
@@ -958,8 +960,9 @@ int ooH245Receive(ooCallData *call)
    setPERBuffer(pctxt, message, recvLen, aligned);
    initializePrintHandler(&printHandler, "Received H.245 Message");
 
-   /* Add event handler to list */
-   rtAddEventHandler (pctxt, &printHandler);
+   /* Set event handler */
+   setEventHandler (pctxt, &printHandler);
+
    ret = asn1PD_H245MultimediaSystemControlMessage(pctxt, &(pmsg->h245Msg));
    if(ret != ASN_OK)
    {
@@ -969,7 +972,7 @@ int ooH245Receive(ooCallData *call)
       return OO_FAILED;
    }
    finishPrint();
-   rtRemoveEventHandler(pctxt, &printHandler);
+   removeEventHandler(pctxt);
    ooHandleH245Message(call, pmsg);
    return OO_OK;
 }

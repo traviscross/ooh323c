@@ -4,7 +4,7 @@
  */
 #include "ooasn1.h"
 #include "H323-MESSAGES.h"
-#include "asn1CEvtHndlr.h"
+#include "eventHandler.h"
 
 /**************************************************************/
 /*                                                            */
@@ -40,7 +40,7 @@ EXTERN int asn1PD_H225ScreeningIndicator (OOCTXT* pctxt, H225ScreeningIndicator*
          default: return ASN_E_INVENUM;
       }
    }
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -62,7 +62,7 @@ EXTERN int asn1PD_H225NumberDigits (OOCTXT* pctxt, H225NumberDigits* pvalue)
 
    stat = decodeConstrainedStringEx (pctxt, pvalue, gs_H323_MESSAGES_NumberDigits_CharSet, 4, 4, 7);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStrValue (pctxt, *pvalue);
+   invokeCharStrValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -81,7 +81,7 @@ EXTERN int asn1PD_H225TBCD_STRING (OOCTXT* pctxt, H225TBCD_STRING* pvalue)
 
    stat = decodeConstrainedStringEx (pctxt, pvalue, gs_H323_MESSAGES_TBCD_STRING_CharSet, 4, 4, 7);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStrValue (pctxt, *pvalue);
+   invokeCharStrValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -104,7 +104,7 @@ EXTERN int asn1PD_H225GloballyUniqueID (OOCTXT* pctxt, H225GloballyUniqueID* pva
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -137,7 +137,7 @@ EXTERN int asn1PD_H225RequestSeqNum (OOCTXT* pctxt, H225RequestSeqNum* pvalue)
 
    stat = decodeConsUInt16 (pctxt, pvalue, 1U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -157,7 +157,7 @@ EXTERN int asn1PD_H225GatekeeperIdentifier (OOCTXT* pctxt, H225GatekeeperIdentif
 
    stat = decodeBMPString (pctxt, pvalue, 0);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
+   invokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
 
    return (stat);
 }
@@ -174,7 +174,7 @@ EXTERN int asn1PD_H225BandWidth (OOCTXT* pctxt, H225BandWidth* pvalue)
 
    stat = decodeConsUnsigned (pctxt, pvalue, 0U, ASN1UINT_MAX);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -191,7 +191,7 @@ EXTERN int asn1PD_H225CallReferenceValue (OOCTXT* pctxt, H225CallReferenceValue*
 
    stat = decodeConsUInt16 (pctxt, pvalue, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -211,7 +211,7 @@ EXTERN int asn1PD_H225EndpointIdentifier (OOCTXT* pctxt, H225EndpointIdentifier*
 
    stat = decodeBMPString (pctxt, pvalue, 0);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
+   invokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
 
    return (stat);
 }
@@ -228,7 +228,7 @@ EXTERN int asn1PD_H225ProtocolIdentifier (OOCTXT* pctxt, H225ProtocolIdentifier*
 
    stat = decodeObjectIdentifier (pctxt, pvalue);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->numids, pvalue->subid);
+   invokeOidValue (pctxt, pvalue->numids, pvalue->subid);
 
    return (stat);
 }
@@ -245,7 +245,7 @@ EXTERN int asn1PD_H225TimeToLive (OOCTXT* pctxt, H225TimeToLive* pvalue)
 
    stat = decodeConsUnsigned (pctxt, pvalue, 1U, ASN1UINT_MAX);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -262,7 +262,7 @@ EXTERN int asn1PD_H225H248PackagesDescriptor (OOCTXT* pctxt, H225H248PackagesDes
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)pvalue);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -279,7 +279,7 @@ EXTERN int asn1PD_H225H248SignalsDescriptor (OOCTXT* pctxt, H225H248SignalsDescr
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)pvalue);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -309,7 +309,7 @@ EXTERN int asn1PD_H225GenericIdentifier (OOCTXT* pctxt, H225GenericIdentifier* p
       switch (ui) {
          /* standard */
          case 0:
-            rtInvokeStartElement (pctxt, "standard", -1);
+            invokeStartElement (pctxt, "standard", -1);
 
             /* extension bit */
 
@@ -323,36 +323,36 @@ EXTERN int asn1PD_H225GenericIdentifier (OOCTXT* pctxt, H225GenericIdentifier* p
                stat = decodeUnconsInteger (pctxt, &pvalue->u.standard);
                if (stat != ASN_OK) return stat;
             }
-            rtInvokeIntValue (pctxt, pvalue->u.standard);
+            invokeIntValue (pctxt, pvalue->u.standard);
 
-            rtInvokeEndElement (pctxt, "standard", -1);
+            invokeEndElement (pctxt, "standard", -1);
 
             break;
 
          /* oid */
          case 1:
-            rtInvokeStartElement (pctxt, "oid", -1);
+            invokeStartElement (pctxt, "oid", -1);
 
             pvalue->u.oid = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.oid);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.oid->numids, pvalue->u.oid->subid);
+            invokeOidValue (pctxt, pvalue->u.oid->numids, pvalue->u.oid->subid);
 
-            rtInvokeEndElement (pctxt, "oid", -1);
+            invokeEndElement (pctxt, "oid", -1);
 
             break;
 
          /* nonStandard */
          case 2:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225GloballyUniqueID);
 
             stat = asn1PD_H225GloballyUniqueID (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
@@ -394,7 +394,7 @@ EXTERN int asn1PD_H225TransportAddress_ipAddress_ip (OOCTXT* pctxt, H225Transpor
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -411,22 +411,22 @@ EXTERN int asn1PD_H225TransportAddress_ipAddress (OOCTXT* pctxt, H225TransportAd
 
    /* decode ip */
 
-   rtInvokeStartElement (pctxt, "ip", -1);
+   invokeStartElement (pctxt, "ip", -1);
 
    stat = asn1PD_H225TransportAddress_ipAddress_ip (pctxt, &pvalue->ip);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "ip", -1);
+   invokeEndElement (pctxt, "ip", -1);
 
    /* decode port */
 
-   rtInvokeStartElement (pctxt, "port", -1);
+   invokeStartElement (pctxt, "port", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->port, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->port);
+   invokeUIntValue (pctxt, pvalue->port);
 
-   rtInvokeEndElement (pctxt, "port", -1);
+   invokeEndElement (pctxt, "port", -1);
 
    return (stat);
 }
@@ -449,7 +449,7 @@ EXTERN int asn1PD_H225TransportAddress_ipSourceRoute_ip (OOCTXT* pctxt, H225Tran
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -472,7 +472,7 @@ EXTERN int asn1PD_H225TransportAddress_ipSourceRoute_route_element (OOCTXT* pctx
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -498,11 +498,11 @@ EXTERN int asn1PD_H225_SeqOfH225TransportAddress_ipSourceRoute_route_element (OO
    ALLOC_ASN1ARRAY (pctxt, pvalue, H225TransportAddress_ipSourceRoute_route_element);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = asn1PD_H225TransportAddress_ipSourceRoute_route_element (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -534,23 +534,23 @@ EXTERN int asn1PD_H225TransportAddress_ipSourceRoute_routing (OOCTXT* pctxt, H22
       switch (ui) {
          /* strict */
          case 0:
-            rtInvokeStartElement (pctxt, "strict", -1);
+            invokeStartElement (pctxt, "strict", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "strict", -1);
+            invokeEndElement (pctxt, "strict", -1);
 
             break;
 
          /* loose */
          case 1:
-            rtInvokeStartElement (pctxt, "loose", -1);
+            invokeStartElement (pctxt, "loose", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "loose", -1);
+            invokeEndElement (pctxt, "loose", -1);
 
             break;
 
@@ -596,40 +596,40 @@ EXTERN int asn1PD_H225TransportAddress_ipSourceRoute (OOCTXT* pctxt, H225Transpo
 
    /* decode ip */
 
-   rtInvokeStartElement (pctxt, "ip", -1);
+   invokeStartElement (pctxt, "ip", -1);
 
    stat = asn1PD_H225TransportAddress_ipSourceRoute_ip (pctxt, &pvalue->ip);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "ip", -1);
+   invokeEndElement (pctxt, "ip", -1);
 
    /* decode port */
 
-   rtInvokeStartElement (pctxt, "port", -1);
+   invokeStartElement (pctxt, "port", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->port, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->port);
+   invokeUIntValue (pctxt, pvalue->port);
 
-   rtInvokeEndElement (pctxt, "port", -1);
+   invokeEndElement (pctxt, "port", -1);
 
    /* decode route */
 
-   rtInvokeStartElement (pctxt, "route", -1);
+   invokeStartElement (pctxt, "route", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress_ipSourceRoute_route_element (pctxt, &pvalue->route);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "route", -1);
+   invokeEndElement (pctxt, "route", -1);
 
    /* decode routing */
 
-   rtInvokeStartElement (pctxt, "routing", -1);
+   invokeStartElement (pctxt, "routing", -1);
 
    stat = asn1PD_H225TransportAddress_ipSourceRoute_routing (pctxt, &pvalue->routing);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "routing", -1);
+   invokeEndElement (pctxt, "routing", -1);
 
    if (extbit) {
 
@@ -680,7 +680,7 @@ EXTERN int asn1PD_H225TransportAddress_ipxAddress_node (OOCTXT* pctxt, H225Trans
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -703,7 +703,7 @@ EXTERN int asn1PD_H225TransportAddress_ipxAddress_netnum (OOCTXT* pctxt, H225Tra
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -726,7 +726,7 @@ EXTERN int asn1PD_H225TransportAddress_ipxAddress_port (OOCTXT* pctxt, H225Trans
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -743,30 +743,30 @@ EXTERN int asn1PD_H225TransportAddress_ipxAddress (OOCTXT* pctxt, H225TransportA
 
    /* decode node */
 
-   rtInvokeStartElement (pctxt, "node", -1);
+   invokeStartElement (pctxt, "node", -1);
 
    stat = asn1PD_H225TransportAddress_ipxAddress_node (pctxt, &pvalue->node);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "node", -1);
+   invokeEndElement (pctxt, "node", -1);
 
    /* decode netnum */
 
-   rtInvokeStartElement (pctxt, "netnum", -1);
+   invokeStartElement (pctxt, "netnum", -1);
 
    stat = asn1PD_H225TransportAddress_ipxAddress_netnum (pctxt, &pvalue->netnum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "netnum", -1);
+   invokeEndElement (pctxt, "netnum", -1);
 
    /* decode port */
 
-   rtInvokeStartElement (pctxt, "port", -1);
+   invokeStartElement (pctxt, "port", -1);
 
    stat = asn1PD_H225TransportAddress_ipxAddress_port (pctxt, &pvalue->port);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "port", -1);
+   invokeEndElement (pctxt, "port", -1);
 
    return (stat);
 }
@@ -789,7 +789,7 @@ EXTERN int asn1PD_H225TransportAddress_ip6Address_ip (OOCTXT* pctxt, H225Transpo
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -816,22 +816,22 @@ EXTERN int asn1PD_H225TransportAddress_ip6Address (OOCTXT* pctxt, H225TransportA
 
    /* decode ip */
 
-   rtInvokeStartElement (pctxt, "ip", -1);
+   invokeStartElement (pctxt, "ip", -1);
 
    stat = asn1PD_H225TransportAddress_ip6Address_ip (pctxt, &pvalue->ip);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "ip", -1);
+   invokeEndElement (pctxt, "ip", -1);
 
    /* decode port */
 
-   rtInvokeStartElement (pctxt, "port", -1);
+   invokeStartElement (pctxt, "port", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->port, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->port);
+   invokeUIntValue (pctxt, pvalue->port);
 
-   rtInvokeEndElement (pctxt, "port", -1);
+   invokeEndElement (pctxt, "port", -1);
 
    if (extbit) {
 
@@ -882,7 +882,7 @@ EXTERN int asn1PD_H225TransportAddress_netBios (OOCTXT* pctxt, H225TransportAddr
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -905,7 +905,7 @@ EXTERN int asn1PD_H225TransportAddress_nsap (OOCTXT* pctxt, H225TransportAddress
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -932,33 +932,33 @@ EXTERN int asn1PD_H225H221NonStandard (OOCTXT* pctxt, H225H221NonStandard* pvalu
 
    /* decode t35CountryCode */
 
-   rtInvokeStartElement (pctxt, "t35CountryCode", -1);
+   invokeStartElement (pctxt, "t35CountryCode", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->t35CountryCode, 0U, 255U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->t35CountryCode);
+   invokeUIntValue (pctxt, pvalue->t35CountryCode);
 
-   rtInvokeEndElement (pctxt, "t35CountryCode", -1);
+   invokeEndElement (pctxt, "t35CountryCode", -1);
 
    /* decode t35Extension */
 
-   rtInvokeStartElement (pctxt, "t35Extension", -1);
+   invokeStartElement (pctxt, "t35Extension", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->t35Extension, 0U, 255U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->t35Extension);
+   invokeUIntValue (pctxt, pvalue->t35Extension);
 
-   rtInvokeEndElement (pctxt, "t35Extension", -1);
+   invokeEndElement (pctxt, "t35Extension", -1);
 
    /* decode manufacturerCode */
 
-   rtInvokeStartElement (pctxt, "manufacturerCode", -1);
+   invokeStartElement (pctxt, "manufacturerCode", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->manufacturerCode, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->manufacturerCode);
+   invokeUIntValue (pctxt, pvalue->manufacturerCode);
 
-   rtInvokeEndElement (pctxt, "manufacturerCode", -1);
+   invokeEndElement (pctxt, "manufacturerCode", -1);
 
    if (extbit) {
 
@@ -1016,28 +1016,28 @@ EXTERN int asn1PD_H225NonStandardIdentifier (OOCTXT* pctxt, H225NonStandardIdent
       switch (ui) {
          /* object */
          case 0:
-            rtInvokeStartElement (pctxt, "object", -1);
+            invokeStartElement (pctxt, "object", -1);
 
             pvalue->u.object = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.object);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.object->numids, pvalue->u.object->subid);
+            invokeOidValue (pctxt, pvalue->u.object->numids, pvalue->u.object->subid);
 
-            rtInvokeEndElement (pctxt, "object", -1);
+            invokeEndElement (pctxt, "object", -1);
 
             break;
 
          /* h221NonStandard */
          case 1:
-            rtInvokeStartElement (pctxt, "h221NonStandard", -1);
+            invokeStartElement (pctxt, "h221NonStandard", -1);
 
             pvalue->u.h221NonStandard = ALLOC_ASN1ELEM (pctxt, H225H221NonStandard);
 
             stat = asn1PD_H225H221NonStandard (pctxt, pvalue->u.h221NonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h221NonStandard", -1);
+            invokeEndElement (pctxt, "h221NonStandard", -1);
 
             break;
 
@@ -1073,22 +1073,22 @@ EXTERN int asn1PD_H225NonStandardParameter (OOCTXT* pctxt, H225NonStandardParame
 
    /* decode nonStandardIdentifier */
 
-   rtInvokeStartElement (pctxt, "nonStandardIdentifier", -1);
+   invokeStartElement (pctxt, "nonStandardIdentifier", -1);
 
    stat = asn1PD_H225NonStandardIdentifier (pctxt, &pvalue->nonStandardIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "nonStandardIdentifier", -1);
+   invokeEndElement (pctxt, "nonStandardIdentifier", -1);
 
    /* decode data */
 
-   rtInvokeStartElement (pctxt, "data", -1);
+   invokeStartElement (pctxt, "data", -1);
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->data);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->data.numocts, pvalue->data.data);
+   invokeOctStrValue (pctxt, pvalue->data.numocts, pvalue->data.data);
 
-   rtInvokeEndElement (pctxt, "data", -1);
+   invokeEndElement (pctxt, "data", -1);
 
    return (stat);
 }
@@ -1118,92 +1118,92 @@ EXTERN int asn1PD_H225TransportAddress (OOCTXT* pctxt, H225TransportAddress* pva
       switch (ui) {
          /* ipAddress */
          case 0:
-            rtInvokeStartElement (pctxt, "ipAddress", -1);
+            invokeStartElement (pctxt, "ipAddress", -1);
 
             pvalue->u.ipAddress = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_ipAddress);
 
             stat = asn1PD_H225TransportAddress_ipAddress (pctxt, pvalue->u.ipAddress);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ipAddress", -1);
+            invokeEndElement (pctxt, "ipAddress", -1);
 
             break;
 
          /* ipSourceRoute */
          case 1:
-            rtInvokeStartElement (pctxt, "ipSourceRoute", -1);
+            invokeStartElement (pctxt, "ipSourceRoute", -1);
 
             pvalue->u.ipSourceRoute = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_ipSourceRoute);
 
             stat = asn1PD_H225TransportAddress_ipSourceRoute (pctxt, pvalue->u.ipSourceRoute);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ipSourceRoute", -1);
+            invokeEndElement (pctxt, "ipSourceRoute", -1);
 
             break;
 
          /* ipxAddress */
          case 2:
-            rtInvokeStartElement (pctxt, "ipxAddress", -1);
+            invokeStartElement (pctxt, "ipxAddress", -1);
 
             pvalue->u.ipxAddress = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_ipxAddress);
 
             stat = asn1PD_H225TransportAddress_ipxAddress (pctxt, pvalue->u.ipxAddress);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ipxAddress", -1);
+            invokeEndElement (pctxt, "ipxAddress", -1);
 
             break;
 
          /* ip6Address */
          case 3:
-            rtInvokeStartElement (pctxt, "ip6Address", -1);
+            invokeStartElement (pctxt, "ip6Address", -1);
 
             pvalue->u.ip6Address = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_ip6Address);
 
             stat = asn1PD_H225TransportAddress_ip6Address (pctxt, pvalue->u.ip6Address);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ip6Address", -1);
+            invokeEndElement (pctxt, "ip6Address", -1);
 
             break;
 
          /* netBios */
          case 4:
-            rtInvokeStartElement (pctxt, "netBios", -1);
+            invokeStartElement (pctxt, "netBios", -1);
 
             pvalue->u.netBios = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_netBios);
 
             stat = asn1PD_H225TransportAddress_netBios (pctxt, pvalue->u.netBios);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "netBios", -1);
+            invokeEndElement (pctxt, "netBios", -1);
 
             break;
 
          /* nsap */
          case 5:
-            rtInvokeStartElement (pctxt, "nsap", -1);
+            invokeStartElement (pctxt, "nsap", -1);
 
             pvalue->u.nsap = ALLOC_ASN1ELEM (pctxt, H225TransportAddress_nsap);
 
             stat = asn1PD_H225TransportAddress_nsap (pctxt, pvalue->u.nsap);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nsap", -1);
+            invokeEndElement (pctxt, "nsap", -1);
 
             break;
 
          /* nonStandardAddress */
          case 6:
-            rtInvokeStartElement (pctxt, "nonStandardAddress", -1);
+            invokeStartElement (pctxt, "nonStandardAddress", -1);
 
             pvalue->u.nonStandardAddress = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandardAddress);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandardAddress", -1);
+            invokeEndElement (pctxt, "nonStandardAddress", -1);
 
             break;
 
@@ -1252,67 +1252,67 @@ EXTERN int asn1PD_H225PublicTypeOfNumber (OOCTXT* pctxt, H225PublicTypeOfNumber*
       switch (ui) {
          /* unknown */
          case 0:
-            rtInvokeStartElement (pctxt, "unknown", -1);
+            invokeStartElement (pctxt, "unknown", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unknown", -1);
+            invokeEndElement (pctxt, "unknown", -1);
 
             break;
 
          /* internationalNumber */
          case 1:
-            rtInvokeStartElement (pctxt, "internationalNumber", -1);
+            invokeStartElement (pctxt, "internationalNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "internationalNumber", -1);
+            invokeEndElement (pctxt, "internationalNumber", -1);
 
             break;
 
          /* nationalNumber */
          case 2:
-            rtInvokeStartElement (pctxt, "nationalNumber", -1);
+            invokeStartElement (pctxt, "nationalNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "nationalNumber", -1);
+            invokeEndElement (pctxt, "nationalNumber", -1);
 
             break;
 
          /* networkSpecificNumber */
          case 3:
-            rtInvokeStartElement (pctxt, "networkSpecificNumber", -1);
+            invokeStartElement (pctxt, "networkSpecificNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "networkSpecificNumber", -1);
+            invokeEndElement (pctxt, "networkSpecificNumber", -1);
 
             break;
 
          /* subscriberNumber */
          case 4:
-            rtInvokeStartElement (pctxt, "subscriberNumber", -1);
+            invokeStartElement (pctxt, "subscriberNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "subscriberNumber", -1);
+            invokeEndElement (pctxt, "subscriberNumber", -1);
 
             break;
 
          /* abbreviatedNumber */
          case 5:
-            rtInvokeStartElement (pctxt, "abbreviatedNumber", -1);
+            invokeStartElement (pctxt, "abbreviatedNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "abbreviatedNumber", -1);
+            invokeEndElement (pctxt, "abbreviatedNumber", -1);
 
             break;
 
@@ -1348,21 +1348,21 @@ EXTERN int asn1PD_H225PublicPartyNumber (OOCTXT* pctxt, H225PublicPartyNumber* p
 
    /* decode publicTypeOfNumber */
 
-   rtInvokeStartElement (pctxt, "publicTypeOfNumber", -1);
+   invokeStartElement (pctxt, "publicTypeOfNumber", -1);
 
    stat = asn1PD_H225PublicTypeOfNumber (pctxt, &pvalue->publicTypeOfNumber);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "publicTypeOfNumber", -1);
+   invokeEndElement (pctxt, "publicTypeOfNumber", -1);
 
    /* decode publicNumberDigits */
 
-   rtInvokeStartElement (pctxt, "publicNumberDigits", -1);
+   invokeStartElement (pctxt, "publicNumberDigits", -1);
 
    stat = asn1PD_H225NumberDigits (pctxt, &pvalue->publicNumberDigits);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "publicNumberDigits", -1);
+   invokeEndElement (pctxt, "publicNumberDigits", -1);
 
    return (stat);
 }
@@ -1392,67 +1392,67 @@ EXTERN int asn1PD_H225PrivateTypeOfNumber (OOCTXT* pctxt, H225PrivateTypeOfNumbe
       switch (ui) {
          /* unknown */
          case 0:
-            rtInvokeStartElement (pctxt, "unknown", -1);
+            invokeStartElement (pctxt, "unknown", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unknown", -1);
+            invokeEndElement (pctxt, "unknown", -1);
 
             break;
 
          /* level2RegionalNumber */
          case 1:
-            rtInvokeStartElement (pctxt, "level2RegionalNumber", -1);
+            invokeStartElement (pctxt, "level2RegionalNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "level2RegionalNumber", -1);
+            invokeEndElement (pctxt, "level2RegionalNumber", -1);
 
             break;
 
          /* level1RegionalNumber */
          case 2:
-            rtInvokeStartElement (pctxt, "level1RegionalNumber", -1);
+            invokeStartElement (pctxt, "level1RegionalNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "level1RegionalNumber", -1);
+            invokeEndElement (pctxt, "level1RegionalNumber", -1);
 
             break;
 
          /* pISNSpecificNumber */
          case 3:
-            rtInvokeStartElement (pctxt, "pISNSpecificNumber", -1);
+            invokeStartElement (pctxt, "pISNSpecificNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "pISNSpecificNumber", -1);
+            invokeEndElement (pctxt, "pISNSpecificNumber", -1);
 
             break;
 
          /* localNumber */
          case 4:
-            rtInvokeStartElement (pctxt, "localNumber", -1);
+            invokeStartElement (pctxt, "localNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "localNumber", -1);
+            invokeEndElement (pctxt, "localNumber", -1);
 
             break;
 
          /* abbreviatedNumber */
          case 5:
-            rtInvokeStartElement (pctxt, "abbreviatedNumber", -1);
+            invokeStartElement (pctxt, "abbreviatedNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "abbreviatedNumber", -1);
+            invokeEndElement (pctxt, "abbreviatedNumber", -1);
 
             break;
 
@@ -1488,21 +1488,21 @@ EXTERN int asn1PD_H225PrivatePartyNumber (OOCTXT* pctxt, H225PrivatePartyNumber*
 
    /* decode privateTypeOfNumber */
 
-   rtInvokeStartElement (pctxt, "privateTypeOfNumber", -1);
+   invokeStartElement (pctxt, "privateTypeOfNumber", -1);
 
    stat = asn1PD_H225PrivateTypeOfNumber (pctxt, &pvalue->privateTypeOfNumber);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "privateTypeOfNumber", -1);
+   invokeEndElement (pctxt, "privateTypeOfNumber", -1);
 
    /* decode privateNumberDigits */
 
-   rtInvokeStartElement (pctxt, "privateNumberDigits", -1);
+   invokeStartElement (pctxt, "privateNumberDigits", -1);
 
    stat = asn1PD_H225NumberDigits (pctxt, &pvalue->privateNumberDigits);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "privateNumberDigits", -1);
+   invokeEndElement (pctxt, "privateNumberDigits", -1);
 
    return (stat);
 }
@@ -1532,60 +1532,60 @@ EXTERN int asn1PD_H225PartyNumber (OOCTXT* pctxt, H225PartyNumber* pvalue)
       switch (ui) {
          /* e164Number */
          case 0:
-            rtInvokeStartElement (pctxt, "e164Number", -1);
+            invokeStartElement (pctxt, "e164Number", -1);
 
             pvalue->u.e164Number = ALLOC_ASN1ELEM (pctxt, H225PublicPartyNumber);
 
             stat = asn1PD_H225PublicPartyNumber (pctxt, pvalue->u.e164Number);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "e164Number", -1);
+            invokeEndElement (pctxt, "e164Number", -1);
 
             break;
 
          /* dataPartyNumber */
          case 1:
-            rtInvokeStartElement (pctxt, "dataPartyNumber", -1);
+            invokeStartElement (pctxt, "dataPartyNumber", -1);
 
             stat = asn1PD_H225NumberDigits (pctxt, &pvalue->u.dataPartyNumber);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "dataPartyNumber", -1);
+            invokeEndElement (pctxt, "dataPartyNumber", -1);
 
             break;
 
          /* telexPartyNumber */
          case 2:
-            rtInvokeStartElement (pctxt, "telexPartyNumber", -1);
+            invokeStartElement (pctxt, "telexPartyNumber", -1);
 
             stat = asn1PD_H225NumberDigits (pctxt, &pvalue->u.telexPartyNumber);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "telexPartyNumber", -1);
+            invokeEndElement (pctxt, "telexPartyNumber", -1);
 
             break;
 
          /* privateNumber */
          case 3:
-            rtInvokeStartElement (pctxt, "privateNumber", -1);
+            invokeStartElement (pctxt, "privateNumber", -1);
 
             pvalue->u.privateNumber = ALLOC_ASN1ELEM (pctxt, H225PrivatePartyNumber);
 
             stat = asn1PD_H225PrivatePartyNumber (pctxt, pvalue->u.privateNumber);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "privateNumber", -1);
+            invokeEndElement (pctxt, "privateNumber", -1);
 
             break;
 
          /* nationalStandardPartyNumber */
          case 4:
-            rtInvokeStartElement (pctxt, "nationalStandardPartyNumber", -1);
+            invokeStartElement (pctxt, "nationalStandardPartyNumber", -1);
 
             stat = asn1PD_H225NumberDigits (pctxt, &pvalue->u.nationalStandardPartyNumber);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nationalStandardPartyNumber", -1);
+            invokeEndElement (pctxt, "nationalStandardPartyNumber", -1);
 
             break;
 
@@ -1640,29 +1640,29 @@ EXTERN int asn1PD_H225ANSI_41_UIM_system_id (OOCTXT* pctxt, H225ANSI_41_UIM_syst
       switch (ui) {
          /* sid */
          case 0:
-            rtInvokeStartElement (pctxt, "sid", -1);
+            invokeStartElement (pctxt, "sid", -1);
 
             addSizeConstraint (pctxt, &sid_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.sid, gs_H323_MESSAGES_ANSI_41_UIM_system_id_sid_CharSet, 4, 4, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.sid);
+            invokeCharStrValue (pctxt, pvalue->u.sid);
 
-            rtInvokeEndElement (pctxt, "sid", -1);
+            invokeEndElement (pctxt, "sid", -1);
 
             break;
 
          /* mid */
          case 1:
-            rtInvokeStartElement (pctxt, "mid", -1);
+            invokeStartElement (pctxt, "mid", -1);
 
             addSizeConstraint (pctxt, &mid_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.mid, gs_H323_MESSAGES_ANSI_41_UIM_system_id_mid_CharSet, 4, 4, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.mid);
+            invokeCharStrValue (pctxt, pvalue->u.mid);
 
-            rtInvokeEndElement (pctxt, "mid", -1);
+            invokeEndElement (pctxt, "mid", -1);
 
             break;
 
@@ -1704,7 +1704,7 @@ EXTERN int asn1PD_H225ANSI_41_UIM_systemMyTypeCode (OOCTXT* pctxt, H225ANSI_41_U
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -1727,7 +1727,7 @@ EXTERN int asn1PD_H225ANSI_41_UIM_systemAccessType (OOCTXT* pctxt, H225ANSI_41_U
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -1750,7 +1750,7 @@ EXTERN int asn1PD_H225ANSI_41_UIM_qualificationInformationCode (OOCTXT* pctxt, H
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -1839,155 +1839,155 @@ EXTERN int asn1PD_H225ANSI_41_UIM (OOCTXT* pctxt, H225ANSI_41_UIM* pvalue)
    /* decode imsi */
 
    if (pvalue->m.imsiPresent) {
-      rtInvokeStartElement (pctxt, "imsi", -1);
+      invokeStartElement (pctxt, "imsi", -1);
 
       addSizeConstraint (pctxt, &imsi_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->imsi, gs_H323_MESSAGES_ANSI_41_UIM_imsi_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->imsi);
+      invokeCharStrValue (pctxt, pvalue->imsi);
 
-      rtInvokeEndElement (pctxt, "imsi", -1);
+      invokeEndElement (pctxt, "imsi", -1);
    }
 
    /* decode min */
 
    if (pvalue->m.minPresent) {
-      rtInvokeStartElement (pctxt, "min", -1);
+      invokeStartElement (pctxt, "min", -1);
 
       addSizeConstraint (pctxt, &min_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->min, gs_H323_MESSAGES_ANSI_41_UIM_min_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->min);
+      invokeCharStrValue (pctxt, pvalue->min);
 
-      rtInvokeEndElement (pctxt, "min", -1);
+      invokeEndElement (pctxt, "min", -1);
    }
 
    /* decode mdn */
 
    if (pvalue->m.mdnPresent) {
-      rtInvokeStartElement (pctxt, "mdn", -1);
+      invokeStartElement (pctxt, "mdn", -1);
 
       addSizeConstraint (pctxt, &mdn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->mdn, gs_H323_MESSAGES_ANSI_41_UIM_mdn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->mdn);
+      invokeCharStrValue (pctxt, pvalue->mdn);
 
-      rtInvokeEndElement (pctxt, "mdn", -1);
+      invokeEndElement (pctxt, "mdn", -1);
    }
 
    /* decode msisdn */
 
    if (pvalue->m.msisdnPresent) {
-      rtInvokeStartElement (pctxt, "msisdn", -1);
+      invokeStartElement (pctxt, "msisdn", -1);
 
       addSizeConstraint (pctxt, &msisdn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->msisdn, gs_H323_MESSAGES_ANSI_41_UIM_msisdn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->msisdn);
+      invokeCharStrValue (pctxt, pvalue->msisdn);
 
-      rtInvokeEndElement (pctxt, "msisdn", -1);
+      invokeEndElement (pctxt, "msisdn", -1);
    }
 
    /* decode esn */
 
    if (pvalue->m.esnPresent) {
-      rtInvokeStartElement (pctxt, "esn", -1);
+      invokeStartElement (pctxt, "esn", -1);
 
       addSizeConstraint (pctxt, &esn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->esn, gs_H323_MESSAGES_ANSI_41_UIM_esn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->esn);
+      invokeCharStrValue (pctxt, pvalue->esn);
 
-      rtInvokeEndElement (pctxt, "esn", -1);
+      invokeEndElement (pctxt, "esn", -1);
    }
 
    /* decode mscid */
 
    if (pvalue->m.mscidPresent) {
-      rtInvokeStartElement (pctxt, "mscid", -1);
+      invokeStartElement (pctxt, "mscid", -1);
 
       addSizeConstraint (pctxt, &mscid_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->mscid, gs_H323_MESSAGES_ANSI_41_UIM_mscid_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->mscid);
+      invokeCharStrValue (pctxt, pvalue->mscid);
 
-      rtInvokeEndElement (pctxt, "mscid", -1);
+      invokeEndElement (pctxt, "mscid", -1);
    }
 
    /* decode system_id */
 
-   rtInvokeStartElement (pctxt, "system_id", -1);
+   invokeStartElement (pctxt, "system_id", -1);
 
    stat = asn1PD_H225ANSI_41_UIM_system_id (pctxt, &pvalue->system_id);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "system_id", -1);
+   invokeEndElement (pctxt, "system_id", -1);
 
    /* decode systemMyTypeCode */
 
    if (pvalue->m.systemMyTypeCodePresent) {
-      rtInvokeStartElement (pctxt, "systemMyTypeCode", -1);
+      invokeStartElement (pctxt, "systemMyTypeCode", -1);
 
       stat = asn1PD_H225ANSI_41_UIM_systemMyTypeCode (pctxt, &pvalue->systemMyTypeCode);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "systemMyTypeCode", -1);
+      invokeEndElement (pctxt, "systemMyTypeCode", -1);
    }
 
    /* decode systemAccessType */
 
    if (pvalue->m.systemAccessTypePresent) {
-      rtInvokeStartElement (pctxt, "systemAccessType", -1);
+      invokeStartElement (pctxt, "systemAccessType", -1);
 
       stat = asn1PD_H225ANSI_41_UIM_systemAccessType (pctxt, &pvalue->systemAccessType);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "systemAccessType", -1);
+      invokeEndElement (pctxt, "systemAccessType", -1);
    }
 
    /* decode qualificationInformationCode */
 
    if (pvalue->m.qualificationInformationCodePresent) {
-      rtInvokeStartElement (pctxt, "qualificationInformationCode", -1);
+      invokeStartElement (pctxt, "qualificationInformationCode", -1);
 
       stat = asn1PD_H225ANSI_41_UIM_qualificationInformationCode (pctxt, &pvalue->qualificationInformationCode);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "qualificationInformationCode", -1);
+      invokeEndElement (pctxt, "qualificationInformationCode", -1);
    }
 
    /* decode sesn */
 
    if (pvalue->m.sesnPresent) {
-      rtInvokeStartElement (pctxt, "sesn", -1);
+      invokeStartElement (pctxt, "sesn", -1);
 
       addSizeConstraint (pctxt, &sesn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->sesn, gs_H323_MESSAGES_ANSI_41_UIM_sesn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->sesn);
+      invokeCharStrValue (pctxt, pvalue->sesn);
 
-      rtInvokeEndElement (pctxt, "sesn", -1);
+      invokeEndElement (pctxt, "sesn", -1);
    }
 
    /* decode soc */
 
    if (pvalue->m.socPresent) {
-      rtInvokeStartElement (pctxt, "soc", -1);
+      invokeStartElement (pctxt, "soc", -1);
 
       addSizeConstraint (pctxt, &soc_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->soc, gs_H323_MESSAGES_ANSI_41_UIM_soc_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->soc);
+      invokeCharStrValue (pctxt, pvalue->soc);
 
-      rtInvokeEndElement (pctxt, "soc", -1);
+      invokeEndElement (pctxt, "soc", -1);
    }
 
    if (extbit) {
@@ -2039,7 +2039,7 @@ EXTERN int asn1PD_H225GSM_UIM_tmsi (OOCTXT* pctxt, H225GSM_UIM_tmsi* pvalue)
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -2104,82 +2104,82 @@ EXTERN int asn1PD_H225GSM_UIM (OOCTXT* pctxt, H225GSM_UIM* pvalue)
    /* decode imsi */
 
    if (pvalue->m.imsiPresent) {
-      rtInvokeStartElement (pctxt, "imsi", -1);
+      invokeStartElement (pctxt, "imsi", -1);
 
       addSizeConstraint (pctxt, &imsi_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->imsi, gs_H323_MESSAGES_GSM_UIM_imsi_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->imsi);
+      invokeCharStrValue (pctxt, pvalue->imsi);
 
-      rtInvokeEndElement (pctxt, "imsi", -1);
+      invokeEndElement (pctxt, "imsi", -1);
    }
 
    /* decode tmsi */
 
    if (pvalue->m.tmsiPresent) {
-      rtInvokeStartElement (pctxt, "tmsi", -1);
+      invokeStartElement (pctxt, "tmsi", -1);
 
       stat = asn1PD_H225GSM_UIM_tmsi (pctxt, &pvalue->tmsi);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tmsi", -1);
+      invokeEndElement (pctxt, "tmsi", -1);
    }
 
    /* decode msisdn */
 
    if (pvalue->m.msisdnPresent) {
-      rtInvokeStartElement (pctxt, "msisdn", -1);
+      invokeStartElement (pctxt, "msisdn", -1);
 
       addSizeConstraint (pctxt, &msisdn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->msisdn, gs_H323_MESSAGES_GSM_UIM_msisdn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->msisdn);
+      invokeCharStrValue (pctxt, pvalue->msisdn);
 
-      rtInvokeEndElement (pctxt, "msisdn", -1);
+      invokeEndElement (pctxt, "msisdn", -1);
    }
 
    /* decode imei */
 
    if (pvalue->m.imeiPresent) {
-      rtInvokeStartElement (pctxt, "imei", -1);
+      invokeStartElement (pctxt, "imei", -1);
 
       addSizeConstraint (pctxt, &imei_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->imei, gs_H323_MESSAGES_GSM_UIM_imei_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->imei);
+      invokeCharStrValue (pctxt, pvalue->imei);
 
-      rtInvokeEndElement (pctxt, "imei", -1);
+      invokeEndElement (pctxt, "imei", -1);
    }
 
    /* decode hplmn */
 
    if (pvalue->m.hplmnPresent) {
-      rtInvokeStartElement (pctxt, "hplmn", -1);
+      invokeStartElement (pctxt, "hplmn", -1);
 
       addSizeConstraint (pctxt, &hplmn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->hplmn, gs_H323_MESSAGES_GSM_UIM_hplmn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->hplmn);
+      invokeCharStrValue (pctxt, pvalue->hplmn);
 
-      rtInvokeEndElement (pctxt, "hplmn", -1);
+      invokeEndElement (pctxt, "hplmn", -1);
    }
 
    /* decode vplmn */
 
    if (pvalue->m.vplmnPresent) {
-      rtInvokeStartElement (pctxt, "vplmn", -1);
+      invokeStartElement (pctxt, "vplmn", -1);
 
       addSizeConstraint (pctxt, &vplmn_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->vplmn, gs_H323_MESSAGES_GSM_UIM_vplmn_CharSet, 4, 4, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->vplmn);
+      invokeCharStrValue (pctxt, pvalue->vplmn);
 
-      rtInvokeEndElement (pctxt, "vplmn", -1);
+      invokeEndElement (pctxt, "vplmn", -1);
    }
 
    if (extbit) {
@@ -2238,27 +2238,27 @@ EXTERN int asn1PD_H225MobileUIM (OOCTXT* pctxt, H225MobileUIM* pvalue)
       switch (ui) {
          /* ansi_41_uim */
          case 0:
-            rtInvokeStartElement (pctxt, "ansi_41_uim", -1);
+            invokeStartElement (pctxt, "ansi_41_uim", -1);
 
             pvalue->u.ansi_41_uim = ALLOC_ASN1ELEM (pctxt, H225ANSI_41_UIM);
 
             stat = asn1PD_H225ANSI_41_UIM (pctxt, pvalue->u.ansi_41_uim);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ansi_41_uim", -1);
+            invokeEndElement (pctxt, "ansi_41_uim", -1);
 
             break;
 
          /* gsm_uim */
          case 1:
-            rtInvokeStartElement (pctxt, "gsm_uim", -1);
+            invokeStartElement (pctxt, "gsm_uim", -1);
 
             pvalue->u.gsm_uim = ALLOC_ASN1ELEM (pctxt, H225GSM_UIM);
 
             stat = asn1PD_H225GSM_UIM (pctxt, pvalue->u.gsm_uim);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "gsm_uim", -1);
+            invokeEndElement (pctxt, "gsm_uim", -1);
 
             break;
 
@@ -2314,29 +2314,29 @@ EXTERN int asn1PD_H225AliasAddress (OOCTXT* pctxt, H225AliasAddress* pvalue)
       switch (ui) {
          /* dialedDigits */
          case 0:
-            rtInvokeStartElement (pctxt, "dialedDigits", -1);
+            invokeStartElement (pctxt, "dialedDigits", -1);
 
             addSizeConstraint (pctxt, &dialedDigits_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.dialedDigits, gs_H323_MESSAGES_AliasAddress_dialedDigits_CharSet, 4, 4, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.dialedDigits);
+            invokeCharStrValue (pctxt, pvalue->u.dialedDigits);
 
-            rtInvokeEndElement (pctxt, "dialedDigits", -1);
+            invokeEndElement (pctxt, "dialedDigits", -1);
 
             break;
 
          /* h323_ID */
          case 1:
-            rtInvokeStartElement (pctxt, "h323_ID", -1);
+            invokeStartElement (pctxt, "h323_ID", -1);
 
             addSizeConstraint (pctxt, &h323_ID_lsize1);
 
             stat = decodeBMPString (pctxt, &pvalue->u.h323_ID, 0);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStr16BitValue (pctxt, pvalue->u.h323_ID.nchars, pvalue->u.h323_ID.data);
+            invokeCharStr16BitValue (pctxt, pvalue->u.h323_ID.nchars, pvalue->u.h323_ID.data);
 
-            rtInvokeEndElement (pctxt, "h323_ID", -1);
+            invokeEndElement (pctxt, "h323_ID", -1);
 
             break;
 
@@ -2361,68 +2361,68 @@ EXTERN int asn1PD_H225AliasAddress (OOCTXT* pctxt, H225AliasAddress* pvalue)
       switch (pvalue->t) {
          /* url_ID */
          case 3:
-            rtInvokeStartElement (pctxt, "url_ID", -1);
+            invokeStartElement (pctxt, "url_ID", -1);
 
             addSizeConstraint (pctxt, &url_ID_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.url_ID, 0, 8, 7, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.url_ID);
+            invokeCharStrValue (pctxt, pvalue->u.url_ID);
 
-            rtInvokeEndElement (pctxt, "url_ID", -1);
+            invokeEndElement (pctxt, "url_ID", -1);
 
             break;
 
          /* transportID */
          case 4:
-            rtInvokeStartElement (pctxt, "transportID", -1);
+            invokeStartElement (pctxt, "transportID", -1);
 
             pvalue->u.transportID = ALLOC_ASN1ELEM (pctxt, H225TransportAddress);
 
             stat = asn1PD_H225TransportAddress (pctxt, pvalue->u.transportID);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "transportID", -1);
+            invokeEndElement (pctxt, "transportID", -1);
 
             break;
 
          /* email_ID */
          case 5:
-            rtInvokeStartElement (pctxt, "email_ID", -1);
+            invokeStartElement (pctxt, "email_ID", -1);
 
             addSizeConstraint (pctxt, &email_ID_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.email_ID, 0, 8, 7, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.email_ID);
+            invokeCharStrValue (pctxt, pvalue->u.email_ID);
 
-            rtInvokeEndElement (pctxt, "email_ID", -1);
+            invokeEndElement (pctxt, "email_ID", -1);
 
             break;
 
          /* partyNumber */
          case 6:
-            rtInvokeStartElement (pctxt, "partyNumber", -1);
+            invokeStartElement (pctxt, "partyNumber", -1);
 
             pvalue->u.partyNumber = ALLOC_ASN1ELEM (pctxt, H225PartyNumber);
 
             stat = asn1PD_H225PartyNumber (pctxt, pvalue->u.partyNumber);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "partyNumber", -1);
+            invokeEndElement (pctxt, "partyNumber", -1);
 
             break;
 
          /* mobileUIM */
          case 7:
-            rtInvokeStartElement (pctxt, "mobileUIM", -1);
+            invokeStartElement (pctxt, "mobileUIM", -1);
 
             pvalue->u.mobileUIM = ALLOC_ASN1ELEM (pctxt, H225MobileUIM);
 
             stat = asn1PD_H225MobileUIM (pctxt, pvalue->u.mobileUIM);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "mobileUIM", -1);
+            invokeEndElement (pctxt, "mobileUIM", -1);
 
             break;
 
@@ -2461,13 +2461,13 @@ EXTERN int asn1PD_H225Content_compound (OOCTXT* pctxt, H225Content_compound* pva
    dListInit (pvalue);
 
    for (xx1 = 0; xx1 < count; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225EnumeratedParameter);
 
       stat = asn1PD_H225EnumeratedParameter (pctxt, (H225EnumeratedParameter*)pdata);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
       dListAppendNode (pctxt, pvalue, pdata);
    }
@@ -2501,13 +2501,13 @@ EXTERN int asn1PD_H225Content_nested (OOCTXT* pctxt, H225Content_nested* pvalue)
    dListInit (pvalue);
 
    for (xx1 = 0; xx1 < count; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225GenericData);
 
       stat = asn1PD_H225GenericData (pctxt, (H225GenericData*)pdata);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
       dListAppendNode (pctxt, pvalue, pdata);
    }
@@ -2540,152 +2540,152 @@ EXTERN int asn1PD_H225Content (OOCTXT* pctxt, H225Content* pvalue)
       switch (ui) {
          /* raw */
          case 0:
-            rtInvokeStartElement (pctxt, "raw", -1);
+            invokeStartElement (pctxt, "raw", -1);
 
             pvalue->u.raw = ALLOC_ASN1ELEM (pctxt, ASN1DynOctStr);
 
             stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)pvalue->u.raw);
             if (stat != ASN_OK) return stat;
-            rtInvokeOctStrValue (pctxt, pvalue->u.raw->numocts, pvalue->u.raw->data);
+            invokeOctStrValue (pctxt, pvalue->u.raw->numocts, pvalue->u.raw->data);
 
-            rtInvokeEndElement (pctxt, "raw", -1);
+            invokeEndElement (pctxt, "raw", -1);
 
             break;
 
          /* text */
          case 1:
-            rtInvokeStartElement (pctxt, "text", -1);
+            invokeStartElement (pctxt, "text", -1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.text, 0, 8, 7, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.text);
+            invokeCharStrValue (pctxt, pvalue->u.text);
 
-            rtInvokeEndElement (pctxt, "text", -1);
+            invokeEndElement (pctxt, "text", -1);
 
             break;
 
          /* unicode */
          case 2:
-            rtInvokeStartElement (pctxt, "unicode", -1);
+            invokeStartElement (pctxt, "unicode", -1);
 
             stat = decodeBMPString (pctxt, &pvalue->u.unicode, 0);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStr16BitValue (pctxt, pvalue->u.unicode.nchars, pvalue->u.unicode.data);
+            invokeCharStr16BitValue (pctxt, pvalue->u.unicode.nchars, pvalue->u.unicode.data);
 
-            rtInvokeEndElement (pctxt, "unicode", -1);
+            invokeEndElement (pctxt, "unicode", -1);
 
             break;
 
          /* bool_ */
          case 3:
-            rtInvokeStartElement (pctxt, "bool_", -1);
+            invokeStartElement (pctxt, "bool_", -1);
 
             stat = DECODEBIT (pctxt, &pvalue->u.bool_);
             if (stat != ASN_OK) return stat;
-            rtInvokeBoolValue (pctxt, pvalue->u.bool_);
+            invokeBoolValue (pctxt, pvalue->u.bool_);
 
-            rtInvokeEndElement (pctxt, "bool_", -1);
+            invokeEndElement (pctxt, "bool_", -1);
 
             break;
 
          /* number8 */
          case 4:
-            rtInvokeStartElement (pctxt, "number8", -1);
+            invokeStartElement (pctxt, "number8", -1);
 
             stat = decodeConsUInt8 (pctxt, &pvalue->u.number8, 0U, 255U);
             if (stat != ASN_OK) return stat;
-            rtInvokeUIntValue (pctxt, pvalue->u.number8);
+            invokeUIntValue (pctxt, pvalue->u.number8);
 
-            rtInvokeEndElement (pctxt, "number8", -1);
+            invokeEndElement (pctxt, "number8", -1);
 
             break;
 
          /* number16 */
          case 5:
-            rtInvokeStartElement (pctxt, "number16", -1);
+            invokeStartElement (pctxt, "number16", -1);
 
             stat = decodeConsUInt16 (pctxt, &pvalue->u.number16, 0U, 65535U);
             if (stat != ASN_OK) return stat;
-            rtInvokeUIntValue (pctxt, pvalue->u.number16);
+            invokeUIntValue (pctxt, pvalue->u.number16);
 
-            rtInvokeEndElement (pctxt, "number16", -1);
+            invokeEndElement (pctxt, "number16", -1);
 
             break;
 
          /* number32 */
          case 6:
-            rtInvokeStartElement (pctxt, "number32", -1);
+            invokeStartElement (pctxt, "number32", -1);
 
             stat = decodeConsUnsigned (pctxt, &pvalue->u.number32, 0U, ASN1UINT_MAX);
             if (stat != ASN_OK) return stat;
-            rtInvokeUIntValue (pctxt, pvalue->u.number32);
+            invokeUIntValue (pctxt, pvalue->u.number32);
 
-            rtInvokeEndElement (pctxt, "number32", -1);
+            invokeEndElement (pctxt, "number32", -1);
 
             break;
 
          /* id */
          case 7:
-            rtInvokeStartElement (pctxt, "id", -1);
+            invokeStartElement (pctxt, "id", -1);
 
             pvalue->u.id = ALLOC_ASN1ELEM (pctxt, H225GenericIdentifier);
 
             stat = asn1PD_H225GenericIdentifier (pctxt, pvalue->u.id);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "id", -1);
+            invokeEndElement (pctxt, "id", -1);
 
             break;
 
          /* alias */
          case 8:
-            rtInvokeStartElement (pctxt, "alias", -1);
+            invokeStartElement (pctxt, "alias", -1);
 
             pvalue->u.alias = ALLOC_ASN1ELEM (pctxt, H225AliasAddress);
 
             stat = asn1PD_H225AliasAddress (pctxt, pvalue->u.alias);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "alias", -1);
+            invokeEndElement (pctxt, "alias", -1);
 
             break;
 
          /* transport */
          case 9:
-            rtInvokeStartElement (pctxt, "transport", -1);
+            invokeStartElement (pctxt, "transport", -1);
 
             pvalue->u.transport = ALLOC_ASN1ELEM (pctxt, H225TransportAddress);
 
             stat = asn1PD_H225TransportAddress (pctxt, pvalue->u.transport);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "transport", -1);
+            invokeEndElement (pctxt, "transport", -1);
 
             break;
 
          /* compound */
          case 10:
-            rtInvokeStartElement (pctxt, "compound", -1);
+            invokeStartElement (pctxt, "compound", -1);
 
             pvalue->u.compound = ALLOC_ASN1ELEM (pctxt, H225Content_compound);
 
             stat = asn1PD_H225Content_compound (pctxt, pvalue->u.compound);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "compound", -1);
+            invokeEndElement (pctxt, "compound", -1);
 
             break;
 
          /* nested */
          case 11:
-            rtInvokeStartElement (pctxt, "nested", -1);
+            invokeStartElement (pctxt, "nested", -1);
 
             pvalue->u.nested = ALLOC_ASN1ELEM (pctxt, H225Content_nested);
 
             stat = asn1PD_H225Content_nested (pctxt, pvalue->u.nested);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nested", -1);
+            invokeEndElement (pctxt, "nested", -1);
 
             break;
 
@@ -2738,22 +2738,22 @@ EXTERN int asn1PD_H225EnumeratedParameter (OOCTXT* pctxt, H225EnumeratedParamete
 
    /* decode id */
 
-   rtInvokeStartElement (pctxt, "id", -1);
+   invokeStartElement (pctxt, "id", -1);
 
    stat = asn1PD_H225GenericIdentifier (pctxt, &pvalue->id);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "id", -1);
+   invokeEndElement (pctxt, "id", -1);
 
    /* decode content */
 
    if (pvalue->m.contentPresent) {
-      rtInvokeStartElement (pctxt, "content", -1);
+      invokeStartElement (pctxt, "content", -1);
 
       stat = asn1PD_H225Content (pctxt, &pvalue->content);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "content", -1);
+      invokeEndElement (pctxt, "content", -1);
    }
 
    if (extbit) {
@@ -2813,13 +2813,13 @@ EXTERN int asn1PD_H225GenericData_parameters (OOCTXT* pctxt, H225GenericData_par
    dListInit (pvalue);
 
    for (xx1 = 0; xx1 < count; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225EnumeratedParameter);
 
       stat = asn1PD_H225EnumeratedParameter (pctxt, pdata);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
       dListAppendNode (pctxt, pvalue, pdata);
    }
@@ -2856,22 +2856,22 @@ EXTERN int asn1PD_H225GenericData (OOCTXT* pctxt, H225GenericData* pvalue)
 
    /* decode id */
 
-   rtInvokeStartElement (pctxt, "id", -1);
+   invokeStartElement (pctxt, "id", -1);
 
    stat = asn1PD_H225GenericIdentifier (pctxt, &pvalue->id);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "id", -1);
+   invokeEndElement (pctxt, "id", -1);
 
    /* decode parameters */
 
    if (pvalue->m.parametersPresent) {
-      rtInvokeStartElement (pctxt, "parameters", -1);
+      invokeStartElement (pctxt, "parameters", -1);
 
       stat = asn1PD_H225GenericData_parameters (pctxt, &pvalue->parameters);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "parameters", -1);
+      invokeEndElement (pctxt, "parameters", -1);
    }
 
    if (extbit) {
@@ -2949,7 +2949,7 @@ EXTERN int asn1PD_H225EncodedFastStartToken (OOCTXT* pctxt, H225EncodedFastStart
 
    stat = decodeOpenType (pctxt, &pvalue->data, &pvalue->numocts);
    if (stat != ASN_OK) return stat;
-   rtInvokeOpenTypeValue
+   invokeOpenTypeValue
       (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
@@ -2973,7 +2973,7 @@ EXTERN int asn1PD_H225H323_UserInformation_user_data_user_information (OOCTXT* p
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -2997,7 +2997,7 @@ EXTERN int asn1PD_H225EndpointType_set (OOCTXT* pctxt, H225EndpointType_set* pva
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -3020,7 +3020,7 @@ EXTERN int asn1PD_H225VendorIdentifier_productId (OOCTXT* pctxt, H225VendorIdent
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3043,7 +3043,7 @@ EXTERN int asn1PD_H225VendorIdentifier_versionId (OOCTXT* pctxt, H225VendorIdent
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3066,7 +3066,7 @@ EXTERN int asn1PD_H225CicInfo_cic_element (OOCTXT* pctxt, H225CicInfo_cic_elemen
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3089,7 +3089,7 @@ EXTERN int asn1PD_H225CicInfo_pointCode (OOCTXT* pctxt, H225CicInfo_pointCode* p
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3112,7 +3112,7 @@ EXTERN int asn1PD_H225CarrierInfo_carrierIdentificationCode (OOCTXT* pctxt, H225
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3135,7 +3135,7 @@ EXTERN int asn1PD_H225CallTerminationCause_releaseCompleteCauseIE (OOCTXT* pctxt
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -3167,13 +3167,13 @@ EXTERN int asn1PD_H225_SeqOfH225AliasAddress (OOCTXT* pctxt, H225_SeqOfH225Alias
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225AliasAddress);
 
          stat = asn1PD_H225AliasAddress (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -3217,33 +3217,33 @@ EXTERN int asn1PD_H225VendorIdentifier (OOCTXT* pctxt, H225VendorIdentifier* pva
 
    /* decode vendor */
 
-   rtInvokeStartElement (pctxt, "vendor", -1);
+   invokeStartElement (pctxt, "vendor", -1);
 
    stat = asn1PD_H225H221NonStandard (pctxt, &pvalue->vendor);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "vendor", -1);
+   invokeEndElement (pctxt, "vendor", -1);
 
    /* decode productId */
 
    if (pvalue->m.productIdPresent) {
-      rtInvokeStartElement (pctxt, "productId", -1);
+      invokeStartElement (pctxt, "productId", -1);
 
       stat = asn1PD_H225VendorIdentifier_productId (pctxt, &pvalue->productId);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "productId", -1);
+      invokeEndElement (pctxt, "productId", -1);
    }
 
    /* decode versionId */
 
    if (pvalue->m.versionIdPresent) {
-      rtInvokeStartElement (pctxt, "versionId", -1);
+      invokeStartElement (pctxt, "versionId", -1);
 
       stat = asn1PD_H225VendorIdentifier_versionId (pctxt, &pvalue->versionId);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "versionId", -1);
+      invokeEndElement (pctxt, "versionId", -1);
    }
 
    if (extbit) {
@@ -3277,13 +3277,13 @@ EXTERN int asn1PD_H225VendorIdentifier (OOCTXT* pctxt, H225VendorIdentifier* pva
                   case 0:
                      pvalue->m.enterpriseNumberPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "enterpriseNumber", -1);
+                     invokeStartElement (pctxt, "enterpriseNumber", -1);
 
                      stat = decodeObjectIdentifier (pctxt, &pvalue->enterpriseNumber);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeOidValue (pctxt, pvalue->enterpriseNumber.numids, pvalue->enterpriseNumber.subid);
+                     invokeOidValue (pctxt, pvalue->enterpriseNumber.numids, pvalue->enterpriseNumber.subid);
 
-                     rtInvokeEndElement (pctxt, "enterpriseNumber", -1);
+                     invokeEndElement (pctxt, "enterpriseNumber", -1);
                      break;
 
                   default:
@@ -3331,12 +3331,12 @@ EXTERN int asn1PD_H225GatekeeperInfo (OOCTXT* pctxt, H225GatekeeperInfo* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -3403,33 +3403,33 @@ EXTERN int asn1PD_H225DataRate (OOCTXT* pctxt, H225DataRate* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode channelRate */
 
-   rtInvokeStartElement (pctxt, "channelRate", -1);
+   invokeStartElement (pctxt, "channelRate", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->channelRate);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "channelRate", -1);
+   invokeEndElement (pctxt, "channelRate", -1);
 
    /* decode channelMultiplier */
 
    if (pvalue->m.channelMultiplierPresent) {
-      rtInvokeStartElement (pctxt, "channelMultiplier", -1);
+      invokeStartElement (pctxt, "channelMultiplier", -1);
 
       stat = decodeConsUInt16 (pctxt, &pvalue->channelMultiplier, 1U, 256U);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->channelMultiplier);
+      invokeUIntValue (pctxt, pvalue->channelMultiplier);
 
-      rtInvokeEndElement (pctxt, "channelMultiplier", -1);
+      invokeEndElement (pctxt, "channelMultiplier", -1);
    }
 
    if (extbit) {
@@ -3490,13 +3490,13 @@ EXTERN int asn1PD_H225_SeqOfH225DataRate (OOCTXT* pctxt, H225_SeqOfH225DataRate*
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225DataRate);
 
          stat = asn1PD_H225DataRate (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -3537,22 +3537,22 @@ EXTERN int asn1PD_H225SupportedPrefix (OOCTXT* pctxt, H225SupportedPrefix* pvalu
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode prefix */
 
-   rtInvokeStartElement (pctxt, "prefix", -1);
+   invokeStartElement (pctxt, "prefix", -1);
 
    stat = asn1PD_H225AliasAddress (pctxt, &pvalue->prefix);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "prefix", -1);
+   invokeEndElement (pctxt, "prefix", -1);
 
    if (extbit) {
 
@@ -3612,13 +3612,13 @@ EXTERN int asn1PD_H225_SeqOfH225SupportedPrefix (OOCTXT* pctxt, H225_SeqOfH225Su
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225SupportedPrefix);
 
          stat = asn1PD_H225SupportedPrefix (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -3660,12 +3660,12 @@ EXTERN int asn1PD_H225H310Caps (OOCTXT* pctxt, H225H310Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -3699,23 +3699,23 @@ EXTERN int asn1PD_H225H310Caps (OOCTXT* pctxt, H225H310Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -3764,12 +3764,12 @@ EXTERN int asn1PD_H225H320Caps (OOCTXT* pctxt, H225H320Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -3803,23 +3803,23 @@ EXTERN int asn1PD_H225H320Caps (OOCTXT* pctxt, H225H320Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -3868,12 +3868,12 @@ EXTERN int asn1PD_H225H321Caps (OOCTXT* pctxt, H225H321Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -3907,23 +3907,23 @@ EXTERN int asn1PD_H225H321Caps (OOCTXT* pctxt, H225H321Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -3972,12 +3972,12 @@ EXTERN int asn1PD_H225H322Caps (OOCTXT* pctxt, H225H322Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -4011,23 +4011,23 @@ EXTERN int asn1PD_H225H322Caps (OOCTXT* pctxt, H225H322Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -4076,12 +4076,12 @@ EXTERN int asn1PD_H225H323Caps (OOCTXT* pctxt, H225H323Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -4115,23 +4115,23 @@ EXTERN int asn1PD_H225H323Caps (OOCTXT* pctxt, H225H323Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -4180,12 +4180,12 @@ EXTERN int asn1PD_H225H324Caps (OOCTXT* pctxt, H225H324Caps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -4219,23 +4219,23 @@ EXTERN int asn1PD_H225H324Caps (OOCTXT* pctxt, H225H324Caps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -4284,12 +4284,12 @@ EXTERN int asn1PD_H225VoiceCaps (OOCTXT* pctxt, H225VoiceCaps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -4323,23 +4323,23 @@ EXTERN int asn1PD_H225VoiceCaps (OOCTXT* pctxt, H225VoiceCaps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -4388,12 +4388,12 @@ EXTERN int asn1PD_H225T120OnlyCaps (OOCTXT* pctxt, H225T120OnlyCaps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -4427,23 +4427,23 @@ EXTERN int asn1PD_H225T120OnlyCaps (OOCTXT* pctxt, H225T120OnlyCaps* pvalue)
                   case 0:
                      pvalue->m.dataRatesSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+                     invokeStartElement (pctxt, "dataRatesSupported", -1);
 
                      stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+                     invokeEndElement (pctxt, "dataRatesSupported", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   default:
@@ -4494,33 +4494,33 @@ EXTERN int asn1PD_H225NonStandardProtocol (OOCTXT* pctxt, H225NonStandardProtoco
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode dataRatesSupported */
 
    if (pvalue->m.dataRatesSupportedPresent) {
-      rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+      invokeStartElement (pctxt, "dataRatesSupported", -1);
 
       stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+      invokeEndElement (pctxt, "dataRatesSupported", -1);
    }
 
    /* decode supportedPrefixes */
 
-   rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+   invokeStartElement (pctxt, "supportedPrefixes", -1);
 
    stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+   invokeEndElement (pctxt, "supportedPrefixes", -1);
 
    if (extbit) {
 
@@ -4586,51 +4586,51 @@ EXTERN int asn1PD_H225T38FaxAnnexbOnlyCaps (OOCTXT* pctxt, H225T38FaxAnnexbOnlyC
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode dataRatesSupported */
 
    if (pvalue->m.dataRatesSupportedPresent) {
-      rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+      invokeStartElement (pctxt, "dataRatesSupported", -1);
 
       stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+      invokeEndElement (pctxt, "dataRatesSupported", -1);
    }
 
    /* decode supportedPrefixes */
 
-   rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+   invokeStartElement (pctxt, "supportedPrefixes", -1);
 
    stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+   invokeEndElement (pctxt, "supportedPrefixes", -1);
 
    /* decode t38FaxProtocol */
 
-   rtInvokeStartElement (pctxt, "t38FaxProtocol", -1);
+   invokeStartElement (pctxt, "t38FaxProtocol", -1);
 
    stat = asn1PD_H245DataProtocolCapability (pctxt, &pvalue->t38FaxProtocol);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "t38FaxProtocol", -1);
+   invokeEndElement (pctxt, "t38FaxProtocol", -1);
 
    /* decode t38FaxProfile */
 
-   rtInvokeStartElement (pctxt, "t38FaxProfile", -1);
+   invokeStartElement (pctxt, "t38FaxProfile", -1);
 
    stat = asn1PD_H245T38FaxProfile (pctxt, &pvalue->t38FaxProfile);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "t38FaxProfile", -1);
+   invokeEndElement (pctxt, "t38FaxProfile", -1);
 
    if (extbit) {
 
@@ -4699,34 +4699,34 @@ EXTERN int asn1PD_H225SIPCaps (OOCTXT* pctxt, H225SIPCaps* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode dataRatesSupported */
 
    if (pvalue->m.dataRatesSupportedPresent) {
-      rtInvokeStartElement (pctxt, "dataRatesSupported", -1);
+      invokeStartElement (pctxt, "dataRatesSupported", -1);
 
       stat = asn1PD_H225_SeqOfH225DataRate (pctxt, &pvalue->dataRatesSupported);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "dataRatesSupported", -1);
+      invokeEndElement (pctxt, "dataRatesSupported", -1);
    }
 
    /* decode supportedPrefixes */
 
    if (pvalue->m.supportedPrefixesPresent) {
-      rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+      invokeStartElement (pctxt, "supportedPrefixes", -1);
 
       stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+      invokeEndElement (pctxt, "supportedPrefixes", -1);
    }
 
    if (extbit) {
@@ -4786,118 +4786,118 @@ EXTERN int asn1PD_H225SupportedProtocols (OOCTXT* pctxt, H225SupportedProtocols*
       switch (ui) {
          /* nonStandardData */
          case 0:
-            rtInvokeStartElement (pctxt, "nonStandardData", -1);
+            invokeStartElement (pctxt, "nonStandardData", -1);
 
             pvalue->u.nonStandardData = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandardData);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandardData", -1);
+            invokeEndElement (pctxt, "nonStandardData", -1);
 
             break;
 
          /* h310 */
          case 1:
-            rtInvokeStartElement (pctxt, "h310", -1);
+            invokeStartElement (pctxt, "h310", -1);
 
             pvalue->u.h310 = ALLOC_ASN1ELEM (pctxt, H225H310Caps);
 
             stat = asn1PD_H225H310Caps (pctxt, pvalue->u.h310);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h310", -1);
+            invokeEndElement (pctxt, "h310", -1);
 
             break;
 
          /* h320 */
          case 2:
-            rtInvokeStartElement (pctxt, "h320", -1);
+            invokeStartElement (pctxt, "h320", -1);
 
             pvalue->u.h320 = ALLOC_ASN1ELEM (pctxt, H225H320Caps);
 
             stat = asn1PD_H225H320Caps (pctxt, pvalue->u.h320);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h320", -1);
+            invokeEndElement (pctxt, "h320", -1);
 
             break;
 
          /* h321 */
          case 3:
-            rtInvokeStartElement (pctxt, "h321", -1);
+            invokeStartElement (pctxt, "h321", -1);
 
             pvalue->u.h321 = ALLOC_ASN1ELEM (pctxt, H225H321Caps);
 
             stat = asn1PD_H225H321Caps (pctxt, pvalue->u.h321);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h321", -1);
+            invokeEndElement (pctxt, "h321", -1);
 
             break;
 
          /* h322 */
          case 4:
-            rtInvokeStartElement (pctxt, "h322", -1);
+            invokeStartElement (pctxt, "h322", -1);
 
             pvalue->u.h322 = ALLOC_ASN1ELEM (pctxt, H225H322Caps);
 
             stat = asn1PD_H225H322Caps (pctxt, pvalue->u.h322);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h322", -1);
+            invokeEndElement (pctxt, "h322", -1);
 
             break;
 
          /* h323 */
          case 5:
-            rtInvokeStartElement (pctxt, "h323", -1);
+            invokeStartElement (pctxt, "h323", -1);
 
             pvalue->u.h323 = ALLOC_ASN1ELEM (pctxt, H225H323Caps);
 
             stat = asn1PD_H225H323Caps (pctxt, pvalue->u.h323);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h323", -1);
+            invokeEndElement (pctxt, "h323", -1);
 
             break;
 
          /* h324 */
          case 6:
-            rtInvokeStartElement (pctxt, "h324", -1);
+            invokeStartElement (pctxt, "h324", -1);
 
             pvalue->u.h324 = ALLOC_ASN1ELEM (pctxt, H225H324Caps);
 
             stat = asn1PD_H225H324Caps (pctxt, pvalue->u.h324);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "h324", -1);
+            invokeEndElement (pctxt, "h324", -1);
 
             break;
 
          /* voice */
          case 7:
-            rtInvokeStartElement (pctxt, "voice", -1);
+            invokeStartElement (pctxt, "voice", -1);
 
             pvalue->u.voice = ALLOC_ASN1ELEM (pctxt, H225VoiceCaps);
 
             stat = asn1PD_H225VoiceCaps (pctxt, pvalue->u.voice);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "voice", -1);
+            invokeEndElement (pctxt, "voice", -1);
 
             break;
 
          /* t120_only */
          case 8:
-            rtInvokeStartElement (pctxt, "t120_only", -1);
+            invokeStartElement (pctxt, "t120_only", -1);
 
             pvalue->u.t120_only = ALLOC_ASN1ELEM (pctxt, H225T120OnlyCaps);
 
             stat = asn1PD_H225T120OnlyCaps (pctxt, pvalue->u.t120_only);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "t120_only", -1);
+            invokeEndElement (pctxt, "t120_only", -1);
 
             break;
 
@@ -4922,40 +4922,40 @@ EXTERN int asn1PD_H225SupportedProtocols (OOCTXT* pctxt, H225SupportedProtocols*
       switch (pvalue->t) {
          /* nonStandardProtocol */
          case 10:
-            rtInvokeStartElement (pctxt, "nonStandardProtocol", -1);
+            invokeStartElement (pctxt, "nonStandardProtocol", -1);
 
             pvalue->u.nonStandardProtocol = ALLOC_ASN1ELEM (pctxt, H225NonStandardProtocol);
 
             stat = asn1PD_H225NonStandardProtocol (pctxt, pvalue->u.nonStandardProtocol);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandardProtocol", -1);
+            invokeEndElement (pctxt, "nonStandardProtocol", -1);
 
             break;
 
          /* t38FaxAnnexbOnly */
          case 11:
-            rtInvokeStartElement (pctxt, "t38FaxAnnexbOnly", -1);
+            invokeStartElement (pctxt, "t38FaxAnnexbOnly", -1);
 
             pvalue->u.t38FaxAnnexbOnly = ALLOC_ASN1ELEM (pctxt, H225T38FaxAnnexbOnlyCaps);
 
             stat = asn1PD_H225T38FaxAnnexbOnlyCaps (pctxt, pvalue->u.t38FaxAnnexbOnly);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "t38FaxAnnexbOnly", -1);
+            invokeEndElement (pctxt, "t38FaxAnnexbOnly", -1);
 
             break;
 
          /* sip */
          case 12:
-            rtInvokeStartElement (pctxt, "sip", -1);
+            invokeStartElement (pctxt, "sip", -1);
 
             pvalue->u.sip = ALLOC_ASN1ELEM (pctxt, H225SIPCaps);
 
             stat = asn1PD_H225SIPCaps (pctxt, pvalue->u.sip);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "sip", -1);
+            invokeEndElement (pctxt, "sip", -1);
 
             break;
 
@@ -4995,13 +4995,13 @@ EXTERN int asn1PD_H225_SeqOfH225SupportedProtocols (OOCTXT* pctxt, H225_SeqOfH22
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225SupportedProtocols);
 
          stat = asn1PD_H225SupportedProtocols (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -5045,23 +5045,23 @@ EXTERN int asn1PD_H225GatewayInfo (OOCTXT* pctxt, H225GatewayInfo* pvalue)
    /* decode protocol */
 
    if (pvalue->m.protocolPresent) {
-      rtInvokeStartElement (pctxt, "protocol", -1);
+      invokeStartElement (pctxt, "protocol", -1);
 
       stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->protocol);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "protocol", -1);
+      invokeEndElement (pctxt, "protocol", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -5126,12 +5126,12 @@ EXTERN int asn1PD_H225McuInfo (OOCTXT* pctxt, H225McuInfo* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -5165,12 +5165,12 @@ EXTERN int asn1PD_H225McuInfo (OOCTXT* pctxt, H225McuInfo* pvalue)
                   case 0:
                      pvalue->m.protocolPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "protocol", -1);
+                     invokeStartElement (pctxt, "protocol", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->protocol);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "protocol", -1);
+                     invokeEndElement (pctxt, "protocol", -1);
                      break;
 
                   default:
@@ -5218,12 +5218,12 @@ EXTERN int asn1PD_H225TerminalInfo (OOCTXT* pctxt, H225TerminalInfo* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -5288,28 +5288,28 @@ EXTERN int asn1PD_H225TunnelledProtocolAlternateIdentifier (OOCTXT* pctxt, H225T
 
    /* decode protocolType */
 
-   rtInvokeStartElement (pctxt, "protocolType", -1);
+   invokeStartElement (pctxt, "protocolType", -1);
 
    addSizeConstraint (pctxt, &protocolType_lsize1);
 
    stat = decodeConstrainedStringEx (pctxt, &pvalue->protocolType, 0, 8, 7, 7);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStrValue (pctxt, pvalue->protocolType);
+   invokeCharStrValue (pctxt, pvalue->protocolType);
 
-   rtInvokeEndElement (pctxt, "protocolType", -1);
+   invokeEndElement (pctxt, "protocolType", -1);
 
    /* decode protocolVariant */
 
    if (pvalue->m.protocolVariantPresent) {
-      rtInvokeStartElement (pctxt, "protocolVariant", -1);
+      invokeStartElement (pctxt, "protocolVariant", -1);
 
       addSizeConstraint (pctxt, &protocolVariant_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->protocolVariant, 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->protocolVariant);
+      invokeCharStrValue (pctxt, pvalue->protocolVariant);
 
-      rtInvokeEndElement (pctxt, "protocolVariant", -1);
+      invokeEndElement (pctxt, "protocolVariant", -1);
    }
 
    if (extbit) {
@@ -5368,28 +5368,28 @@ EXTERN int asn1PD_H225TunnelledProtocol_id (OOCTXT* pctxt, H225TunnelledProtocol
       switch (ui) {
          /* tunnelledProtocolObjectID */
          case 0:
-            rtInvokeStartElement (pctxt, "tunnelledProtocolObjectID", -1);
+            invokeStartElement (pctxt, "tunnelledProtocolObjectID", -1);
 
             pvalue->u.tunnelledProtocolObjectID = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.tunnelledProtocolObjectID);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.tunnelledProtocolObjectID->numids, pvalue->u.tunnelledProtocolObjectID->subid);
+            invokeOidValue (pctxt, pvalue->u.tunnelledProtocolObjectID->numids, pvalue->u.tunnelledProtocolObjectID->subid);
 
-            rtInvokeEndElement (pctxt, "tunnelledProtocolObjectID", -1);
+            invokeEndElement (pctxt, "tunnelledProtocolObjectID", -1);
 
             break;
 
          /* tunnelledProtocolAlternateID */
          case 1:
-            rtInvokeStartElement (pctxt, "tunnelledProtocolAlternateID", -1);
+            invokeStartElement (pctxt, "tunnelledProtocolAlternateID", -1);
 
             pvalue->u.tunnelledProtocolAlternateID = ALLOC_ASN1ELEM (pctxt, H225TunnelledProtocolAlternateIdentifier);
 
             stat = asn1PD_H225TunnelledProtocolAlternateIdentifier (pctxt, pvalue->u.tunnelledProtocolAlternateID);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "tunnelledProtocolAlternateID", -1);
+            invokeEndElement (pctxt, "tunnelledProtocolAlternateID", -1);
 
             break;
 
@@ -5443,25 +5443,25 @@ EXTERN int asn1PD_H225TunnelledProtocol (OOCTXT* pctxt, H225TunnelledProtocol* p
 
    /* decode id */
 
-   rtInvokeStartElement (pctxt, "id", -1);
+   invokeStartElement (pctxt, "id", -1);
 
    stat = asn1PD_H225TunnelledProtocol_id (pctxt, &pvalue->id);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "id", -1);
+   invokeEndElement (pctxt, "id", -1);
 
    /* decode subIdentifier */
 
    if (pvalue->m.subIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "subIdentifier", -1);
+      invokeStartElement (pctxt, "subIdentifier", -1);
 
       addSizeConstraint (pctxt, &subIdentifier_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->subIdentifier, 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->subIdentifier);
+      invokeCharStrValue (pctxt, pvalue->subIdentifier);
 
-      rtInvokeEndElement (pctxt, "subIdentifier", -1);
+      invokeEndElement (pctxt, "subIdentifier", -1);
    }
 
    if (extbit) {
@@ -5522,13 +5522,13 @@ EXTERN int asn1PD_H225_SeqOfH225TunnelledProtocol (OOCTXT* pctxt, H225_SeqOfH225
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225TunnelledProtocol);
 
          stat = asn1PD_H225TunnelledProtocol (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -5585,88 +5585,88 @@ EXTERN int asn1PD_H225EndpointType (OOCTXT* pctxt, H225EndpointType* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode vendor */
 
    if (pvalue->m.vendorPresent) {
-      rtInvokeStartElement (pctxt, "vendor", -1);
+      invokeStartElement (pctxt, "vendor", -1);
 
       stat = asn1PD_H225VendorIdentifier (pctxt, &pvalue->vendor);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "vendor", -1);
+      invokeEndElement (pctxt, "vendor", -1);
    }
 
    /* decode gatekeeper */
 
    if (pvalue->m.gatekeeperPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeper", -1);
+      invokeStartElement (pctxt, "gatekeeper", -1);
 
       stat = asn1PD_H225GatekeeperInfo (pctxt, &pvalue->gatekeeper);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeper", -1);
+      invokeEndElement (pctxt, "gatekeeper", -1);
    }
 
    /* decode gateway */
 
    if (pvalue->m.gatewayPresent) {
-      rtInvokeStartElement (pctxt, "gateway", -1);
+      invokeStartElement (pctxt, "gateway", -1);
 
       stat = asn1PD_H225GatewayInfo (pctxt, &pvalue->gateway);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gateway", -1);
+      invokeEndElement (pctxt, "gateway", -1);
    }
 
    /* decode mcu */
 
    if (pvalue->m.mcuPresent) {
-      rtInvokeStartElement (pctxt, "mcu", -1);
+      invokeStartElement (pctxt, "mcu", -1);
 
       stat = asn1PD_H225McuInfo (pctxt, &pvalue->mcu);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "mcu", -1);
+      invokeEndElement (pctxt, "mcu", -1);
    }
 
    /* decode terminal */
 
    if (pvalue->m.terminalPresent) {
-      rtInvokeStartElement (pctxt, "terminal", -1);
+      invokeStartElement (pctxt, "terminal", -1);
 
       stat = asn1PD_H225TerminalInfo (pctxt, &pvalue->terminal);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminal", -1);
+      invokeEndElement (pctxt, "terminal", -1);
    }
 
    /* decode mc */
 
-   rtInvokeStartElement (pctxt, "mc", -1);
+   invokeStartElement (pctxt, "mc", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->mc);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->mc);
+   invokeBoolValue (pctxt, pvalue->mc);
 
-   rtInvokeEndElement (pctxt, "mc", -1);
+   invokeEndElement (pctxt, "mc", -1);
 
    /* decode undefinedNode */
 
-   rtInvokeStartElement (pctxt, "undefinedNode", -1);
+   invokeStartElement (pctxt, "undefinedNode", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->undefinedNode);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->undefinedNode);
+   invokeBoolValue (pctxt, pvalue->undefinedNode);
 
-   rtInvokeEndElement (pctxt, "undefinedNode", -1);
+   invokeEndElement (pctxt, "undefinedNode", -1);
 
    if (extbit) {
 
@@ -5699,23 +5699,23 @@ EXTERN int asn1PD_H225EndpointType (OOCTXT* pctxt, H225EndpointType* pvalue)
                   case 0:
                      pvalue->m.setPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "set", -1);
+                     invokeStartElement (pctxt, "set", -1);
 
                      stat = asn1PD_H225EndpointType_set (pctxt, &pvalue->set);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "set", -1);
+                     invokeEndElement (pctxt, "set", -1);
                      break;
 
                   case 1:
                      pvalue->m.supportedTunnelledProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedTunnelledProtocols", -1);
+                     invokeStartElement (pctxt, "supportedTunnelledProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225TunnelledProtocol (pctxt, &pvalue->supportedTunnelledProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedTunnelledProtocols", -1);
+                     invokeEndElement (pctxt, "supportedTunnelledProtocols", -1);
                      break;
 
                   default:
@@ -5754,11 +5754,11 @@ EXTERN int asn1PD_H225_SeqOfH225CallReferenceValue (OOCTXT* pctxt, H225_SeqOfH22
    ALLOC_ASN1ARRAY (pctxt, pvalue, H225CallReferenceValue);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -5791,34 +5791,34 @@ EXTERN int asn1PD_H225Setup_UUIE_conferenceGoal (OOCTXT* pctxt, H225Setup_UUIE_c
       switch (ui) {
          /* create */
          case 0:
-            rtInvokeStartElement (pctxt, "create", -1);
+            invokeStartElement (pctxt, "create", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "create", -1);
+            invokeEndElement (pctxt, "create", -1);
 
             break;
 
          /* join */
          case 1:
-            rtInvokeStartElement (pctxt, "join", -1);
+            invokeStartElement (pctxt, "join", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "join", -1);
+            invokeEndElement (pctxt, "join", -1);
 
             break;
 
          /* invite */
          case 2:
-            rtInvokeStartElement (pctxt, "invite", -1);
+            invokeStartElement (pctxt, "invite", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invite", -1);
+            invokeEndElement (pctxt, "invite", -1);
 
             break;
 
@@ -5843,23 +5843,23 @@ EXTERN int asn1PD_H225Setup_UUIE_conferenceGoal (OOCTXT* pctxt, H225Setup_UUIE_c
       switch (pvalue->t) {
          /* capability_negotiation */
          case 4:
-            rtInvokeStartElement (pctxt, "capability_negotiation", -1);
+            invokeStartElement (pctxt, "capability_negotiation", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "capability_negotiation", -1);
+            invokeEndElement (pctxt, "capability_negotiation", -1);
 
             break;
 
          /* callIndependentSupplementaryService */
          case 5:
-            rtInvokeStartElement (pctxt, "callIndependentSupplementaryService", -1);
+            invokeStartElement (pctxt, "callIndependentSupplementaryService", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "callIndependentSupplementaryService", -1);
+            invokeEndElement (pctxt, "callIndependentSupplementaryService", -1);
 
             break;
 
@@ -5894,23 +5894,23 @@ EXTERN int asn1PD_H225Q954Details (OOCTXT* pctxt, H225Q954Details* pvalue)
 
    /* decode conferenceCalling */
 
-   rtInvokeStartElement (pctxt, "conferenceCalling", -1);
+   invokeStartElement (pctxt, "conferenceCalling", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->conferenceCalling);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->conferenceCalling);
+   invokeBoolValue (pctxt, pvalue->conferenceCalling);
 
-   rtInvokeEndElement (pctxt, "conferenceCalling", -1);
+   invokeEndElement (pctxt, "conferenceCalling", -1);
 
    /* decode threePartyService */
 
-   rtInvokeStartElement (pctxt, "threePartyService", -1);
+   invokeStartElement (pctxt, "threePartyService", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->threePartyService);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->threePartyService);
+   invokeBoolValue (pctxt, pvalue->threePartyService);
 
-   rtInvokeEndElement (pctxt, "threePartyService", -1);
+   invokeEndElement (pctxt, "threePartyService", -1);
 
    if (extbit) {
 
@@ -5965,82 +5965,82 @@ EXTERN int asn1PD_H225QseriesOptions (OOCTXT* pctxt, H225QseriesOptions* pvalue)
 
    /* decode q932Full */
 
-   rtInvokeStartElement (pctxt, "q932Full", -1);
+   invokeStartElement (pctxt, "q932Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q932Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q932Full);
+   invokeBoolValue (pctxt, pvalue->q932Full);
 
-   rtInvokeEndElement (pctxt, "q932Full", -1);
+   invokeEndElement (pctxt, "q932Full", -1);
 
    /* decode q951Full */
 
-   rtInvokeStartElement (pctxt, "q951Full", -1);
+   invokeStartElement (pctxt, "q951Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q951Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q951Full);
+   invokeBoolValue (pctxt, pvalue->q951Full);
 
-   rtInvokeEndElement (pctxt, "q951Full", -1);
+   invokeEndElement (pctxt, "q951Full", -1);
 
    /* decode q952Full */
 
-   rtInvokeStartElement (pctxt, "q952Full", -1);
+   invokeStartElement (pctxt, "q952Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q952Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q952Full);
+   invokeBoolValue (pctxt, pvalue->q952Full);
 
-   rtInvokeEndElement (pctxt, "q952Full", -1);
+   invokeEndElement (pctxt, "q952Full", -1);
 
    /* decode q953Full */
 
-   rtInvokeStartElement (pctxt, "q953Full", -1);
+   invokeStartElement (pctxt, "q953Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q953Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q953Full);
+   invokeBoolValue (pctxt, pvalue->q953Full);
 
-   rtInvokeEndElement (pctxt, "q953Full", -1);
+   invokeEndElement (pctxt, "q953Full", -1);
 
    /* decode q955Full */
 
-   rtInvokeStartElement (pctxt, "q955Full", -1);
+   invokeStartElement (pctxt, "q955Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q955Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q955Full);
+   invokeBoolValue (pctxt, pvalue->q955Full);
 
-   rtInvokeEndElement (pctxt, "q955Full", -1);
+   invokeEndElement (pctxt, "q955Full", -1);
 
    /* decode q956Full */
 
-   rtInvokeStartElement (pctxt, "q956Full", -1);
+   invokeStartElement (pctxt, "q956Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q956Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q956Full);
+   invokeBoolValue (pctxt, pvalue->q956Full);
 
-   rtInvokeEndElement (pctxt, "q956Full", -1);
+   invokeEndElement (pctxt, "q956Full", -1);
 
    /* decode q957Full */
 
-   rtInvokeStartElement (pctxt, "q957Full", -1);
+   invokeStartElement (pctxt, "q957Full", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->q957Full);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->q957Full);
+   invokeBoolValue (pctxt, pvalue->q957Full);
 
-   rtInvokeEndElement (pctxt, "q957Full", -1);
+   invokeEndElement (pctxt, "q957Full", -1);
 
    /* decode q954Info */
 
-   rtInvokeStartElement (pctxt, "q954Info", -1);
+   invokeStartElement (pctxt, "q954Info", -1);
 
    stat = asn1PD_H225Q954Details (pctxt, &pvalue->q954Info);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "q954Info", -1);
+   invokeEndElement (pctxt, "q954Info", -1);
 
    if (extbit) {
 
@@ -6098,45 +6098,45 @@ EXTERN int asn1PD_H225CallType (OOCTXT* pctxt, H225CallType* pvalue)
       switch (ui) {
          /* pointToPoint */
          case 0:
-            rtInvokeStartElement (pctxt, "pointToPoint", -1);
+            invokeStartElement (pctxt, "pointToPoint", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "pointToPoint", -1);
+            invokeEndElement (pctxt, "pointToPoint", -1);
 
             break;
 
          /* oneToN */
          case 1:
-            rtInvokeStartElement (pctxt, "oneToN", -1);
+            invokeStartElement (pctxt, "oneToN", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "oneToN", -1);
+            invokeEndElement (pctxt, "oneToN", -1);
 
             break;
 
          /* nToOne */
          case 2:
-            rtInvokeStartElement (pctxt, "nToOne", -1);
+            invokeStartElement (pctxt, "nToOne", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "nToOne", -1);
+            invokeEndElement (pctxt, "nToOne", -1);
 
             break;
 
          /* nToN */
          case 3:
-            rtInvokeStartElement (pctxt, "nToN", -1);
+            invokeStartElement (pctxt, "nToN", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "nToN", -1);
+            invokeEndElement (pctxt, "nToN", -1);
 
             break;
 
@@ -6182,12 +6182,12 @@ EXTERN int asn1PD_H225CallIdentifier (OOCTXT* pctxt, H225CallIdentifier* pvalue)
 
    /* decode guid */
 
-   rtInvokeStartElement (pctxt, "guid", -1);
+   invokeStartElement (pctxt, "guid", -1);
 
    stat = asn1PD_H225GloballyUniqueID (pctxt, &pvalue->guid);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "guid", -1);
+   invokeEndElement (pctxt, "guid", -1);
 
    if (extbit) {
 
@@ -6245,36 +6245,36 @@ EXTERN int asn1PD_H225SecurityServiceMode (OOCTXT* pctxt, H225SecurityServiceMod
       switch (ui) {
          /* nonStandard */
          case 0:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
          /* none */
          case 1:
-            rtInvokeStartElement (pctxt, "none", -1);
+            invokeStartElement (pctxt, "none", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "none", -1);
+            invokeEndElement (pctxt, "none", -1);
 
             break;
 
          /* default_ */
          case 2:
-            rtInvokeStartElement (pctxt, "default_", -1);
+            invokeStartElement (pctxt, "default_", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "default_", -1);
+            invokeEndElement (pctxt, "default_", -1);
 
             break;
 
@@ -6328,40 +6328,40 @@ EXTERN int asn1PD_H225SecurityCapabilities (OOCTXT* pctxt, H225SecurityCapabilit
    /* decode nonStandard */
 
    if (pvalue->m.nonStandardPresent) {
-      rtInvokeStartElement (pctxt, "nonStandard", -1);
+      invokeStartElement (pctxt, "nonStandard", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandard);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandard", -1);
+      invokeEndElement (pctxt, "nonStandard", -1);
    }
 
    /* decode encryption */
 
-   rtInvokeStartElement (pctxt, "encryption", -1);
+   invokeStartElement (pctxt, "encryption", -1);
 
    stat = asn1PD_H225SecurityServiceMode (pctxt, &pvalue->encryption);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "encryption", -1);
+   invokeEndElement (pctxt, "encryption", -1);
 
    /* decode authenticaton */
 
-   rtInvokeStartElement (pctxt, "authenticaton", -1);
+   invokeStartElement (pctxt, "authenticaton", -1);
 
    stat = asn1PD_H225SecurityServiceMode (pctxt, &pvalue->authenticaton);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "authenticaton", -1);
+   invokeEndElement (pctxt, "authenticaton", -1);
 
    /* decode integrity */
 
-   rtInvokeStartElement (pctxt, "integrity", -1);
+   invokeStartElement (pctxt, "integrity", -1);
 
    stat = asn1PD_H225SecurityServiceMode (pctxt, &pvalue->integrity);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "integrity", -1);
+   invokeEndElement (pctxt, "integrity", -1);
 
    if (extbit) {
 
@@ -6419,51 +6419,51 @@ EXTERN int asn1PD_H225H245Security (OOCTXT* pctxt, H225H245Security* pvalue)
       switch (ui) {
          /* nonStandard */
          case 0:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
          /* noSecurity */
          case 1:
-            rtInvokeStartElement (pctxt, "noSecurity", -1);
+            invokeStartElement (pctxt, "noSecurity", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noSecurity", -1);
+            invokeEndElement (pctxt, "noSecurity", -1);
 
             break;
 
          /* tls */
          case 2:
-            rtInvokeStartElement (pctxt, "tls", -1);
+            invokeStartElement (pctxt, "tls", -1);
 
             pvalue->u.tls = ALLOC_ASN1ELEM (pctxt, H225SecurityCapabilities);
 
             stat = asn1PD_H225SecurityCapabilities (pctxt, pvalue->u.tls);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "tls", -1);
+            invokeEndElement (pctxt, "tls", -1);
 
             break;
 
          /* ipsec */
          case 3:
-            rtInvokeStartElement (pctxt, "ipsec", -1);
+            invokeStartElement (pctxt, "ipsec", -1);
 
             pvalue->u.ipsec = ALLOC_ASN1ELEM (pctxt, H225SecurityCapabilities);
 
             stat = asn1PD_H225SecurityCapabilities (pctxt, pvalue->u.ipsec);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "ipsec", -1);
+            invokeEndElement (pctxt, "ipsec", -1);
 
             break;
 
@@ -6514,13 +6514,13 @@ EXTERN int asn1PD_H225_SeqOfH225H245Security (OOCTXT* pctxt, H225_SeqOfH225H245S
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225H245Security);
 
          stat = asn1PD_H225H245Security (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -6558,13 +6558,13 @@ EXTERN int asn1PD_H225_SeqOfH225ClearToken (OOCTXT* pctxt, H225_SeqOfH225ClearTo
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H235ClearToken);
 
          stat = asn1PD_H235ClearToken (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -6587,30 +6587,30 @@ EXTERN int asn1PD_H225CryptoH323Token_cryptoEPPwdHash (OOCTXT* pctxt, H225Crypto
 
    /* decode alias */
 
-   rtInvokeStartElement (pctxt, "alias", -1);
+   invokeStartElement (pctxt, "alias", -1);
 
    stat = asn1PD_H225AliasAddress (pctxt, &pvalue->alias);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "alias", -1);
+   invokeEndElement (pctxt, "alias", -1);
 
    /* decode timeStamp */
 
-   rtInvokeStartElement (pctxt, "timeStamp", -1);
+   invokeStartElement (pctxt, "timeStamp", -1);
 
    stat = asn1PD_H235TimeStamp (pctxt, &pvalue->timeStamp);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "timeStamp", -1);
+   invokeEndElement (pctxt, "timeStamp", -1);
 
    /* decode token */
 
-   rtInvokeStartElement (pctxt, "token", -1);
+   invokeStartElement (pctxt, "token", -1);
 
    stat = asn1PD_H235HASHED (pctxt, &pvalue->token);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "token", -1);
+   invokeEndElement (pctxt, "token", -1);
 
    return (stat);
 }
@@ -6627,30 +6627,30 @@ EXTERN int asn1PD_H225CryptoH323Token_cryptoGKPwdHash (OOCTXT* pctxt, H225Crypto
 
    /* decode gatekeeperId */
 
-   rtInvokeStartElement (pctxt, "gatekeeperId", -1);
+   invokeStartElement (pctxt, "gatekeeperId", -1);
 
    stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperId);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "gatekeeperId", -1);
+   invokeEndElement (pctxt, "gatekeeperId", -1);
 
    /* decode timeStamp */
 
-   rtInvokeStartElement (pctxt, "timeStamp", -1);
+   invokeStartElement (pctxt, "timeStamp", -1);
 
    stat = asn1PD_H235TimeStamp (pctxt, &pvalue->timeStamp);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "timeStamp", -1);
+   invokeEndElement (pctxt, "timeStamp", -1);
 
    /* decode token */
 
-   rtInvokeStartElement (pctxt, "token", -1);
+   invokeStartElement (pctxt, "token", -1);
 
    stat = asn1PD_H235HASHED (pctxt, &pvalue->token);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "token", -1);
+   invokeEndElement (pctxt, "token", -1);
 
    return (stat);
 }
@@ -6667,42 +6667,42 @@ EXTERN int asn1PD_H225CryptoH323Token_cryptoEPCert (OOCTXT* pctxt, H225CryptoH32
 
    /* decode toBeSigned */
 
-   rtInvokeStartElement (pctxt, "toBeSigned", -1);
+   invokeStartElement (pctxt, "toBeSigned", -1);
 
    stat = asn1PD_H235EncodedPwdCertToken (pctxt, &pvalue->toBeSigned);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "toBeSigned", -1);
+   invokeEndElement (pctxt, "toBeSigned", -1);
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode signature */
 
-   rtInvokeStartElement (pctxt, "signature", -1);
+   invokeStartElement (pctxt, "signature", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->signature);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
+   invokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
 
-   rtInvokeEndElement (pctxt, "signature", -1);
+   invokeEndElement (pctxt, "signature", -1);
 
    return (stat);
 }
@@ -6719,42 +6719,42 @@ EXTERN int asn1PD_H225CryptoH323Token_cryptoGKCert (OOCTXT* pctxt, H225CryptoH32
 
    /* decode toBeSigned */
 
-   rtInvokeStartElement (pctxt, "toBeSigned", -1);
+   invokeStartElement (pctxt, "toBeSigned", -1);
 
    stat = asn1PD_H235EncodedPwdCertToken (pctxt, &pvalue->toBeSigned);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "toBeSigned", -1);
+   invokeEndElement (pctxt, "toBeSigned", -1);
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode signature */
 
-   rtInvokeStartElement (pctxt, "signature", -1);
+   invokeStartElement (pctxt, "signature", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->signature);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
+   invokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
 
-   rtInvokeEndElement (pctxt, "signature", -1);
+   invokeEndElement (pctxt, "signature", -1);
 
    return (stat);
 }
@@ -6771,42 +6771,42 @@ EXTERN int asn1PD_H225CryptoH323Token_cryptoFastStart (OOCTXT* pctxt, H225Crypto
 
    /* decode toBeSigned */
 
-   rtInvokeStartElement (pctxt, "toBeSigned", -1);
+   invokeStartElement (pctxt, "toBeSigned", -1);
 
    stat = asn1PD_H225EncodedFastStartToken (pctxt, &pvalue->toBeSigned);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "toBeSigned", -1);
+   invokeEndElement (pctxt, "toBeSigned", -1);
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode signature */
 
-   rtInvokeStartElement (pctxt, "signature", -1);
+   invokeStartElement (pctxt, "signature", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->signature);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
+   invokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
 
-   rtInvokeEndElement (pctxt, "signature", -1);
+   invokeEndElement (pctxt, "signature", -1);
 
    return (stat);
 }
@@ -6836,105 +6836,105 @@ EXTERN int asn1PD_H225CryptoH323Token (OOCTXT* pctxt, H225CryptoH323Token* pvalu
       switch (ui) {
          /* cryptoEPPwdHash */
          case 0:
-            rtInvokeStartElement (pctxt, "cryptoEPPwdHash", -1);
+            invokeStartElement (pctxt, "cryptoEPPwdHash", -1);
 
             pvalue->u.cryptoEPPwdHash = ALLOC_ASN1ELEM (pctxt, H225CryptoH323Token_cryptoEPPwdHash);
 
             stat = asn1PD_H225CryptoH323Token_cryptoEPPwdHash (pctxt, pvalue->u.cryptoEPPwdHash);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoEPPwdHash", -1);
+            invokeEndElement (pctxt, "cryptoEPPwdHash", -1);
 
             break;
 
          /* cryptoGKPwdHash */
          case 1:
-            rtInvokeStartElement (pctxt, "cryptoGKPwdHash", -1);
+            invokeStartElement (pctxt, "cryptoGKPwdHash", -1);
 
             pvalue->u.cryptoGKPwdHash = ALLOC_ASN1ELEM (pctxt, H225CryptoH323Token_cryptoGKPwdHash);
 
             stat = asn1PD_H225CryptoH323Token_cryptoGKPwdHash (pctxt, pvalue->u.cryptoGKPwdHash);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoGKPwdHash", -1);
+            invokeEndElement (pctxt, "cryptoGKPwdHash", -1);
 
             break;
 
          /* cryptoEPPwdEncr */
          case 2:
-            rtInvokeStartElement (pctxt, "cryptoEPPwdEncr", -1);
+            invokeStartElement (pctxt, "cryptoEPPwdEncr", -1);
 
             pvalue->u.cryptoEPPwdEncr = ALLOC_ASN1ELEM (pctxt, H235ENCRYPTED);
 
             stat = asn1PD_H235ENCRYPTED (pctxt, pvalue->u.cryptoEPPwdEncr);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoEPPwdEncr", -1);
+            invokeEndElement (pctxt, "cryptoEPPwdEncr", -1);
 
             break;
 
          /* cryptoGKPwdEncr */
          case 3:
-            rtInvokeStartElement (pctxt, "cryptoGKPwdEncr", -1);
+            invokeStartElement (pctxt, "cryptoGKPwdEncr", -1);
 
             pvalue->u.cryptoGKPwdEncr = ALLOC_ASN1ELEM (pctxt, H235ENCRYPTED);
 
             stat = asn1PD_H235ENCRYPTED (pctxt, pvalue->u.cryptoGKPwdEncr);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoGKPwdEncr", -1);
+            invokeEndElement (pctxt, "cryptoGKPwdEncr", -1);
 
             break;
 
          /* cryptoEPCert */
          case 4:
-            rtInvokeStartElement (pctxt, "cryptoEPCert", -1);
+            invokeStartElement (pctxt, "cryptoEPCert", -1);
 
             pvalue->u.cryptoEPCert = ALLOC_ASN1ELEM (pctxt, H225CryptoH323Token_cryptoEPCert);
 
             stat = asn1PD_H225CryptoH323Token_cryptoEPCert (pctxt, pvalue->u.cryptoEPCert);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoEPCert", -1);
+            invokeEndElement (pctxt, "cryptoEPCert", -1);
 
             break;
 
          /* cryptoGKCert */
          case 5:
-            rtInvokeStartElement (pctxt, "cryptoGKCert", -1);
+            invokeStartElement (pctxt, "cryptoGKCert", -1);
 
             pvalue->u.cryptoGKCert = ALLOC_ASN1ELEM (pctxt, H225CryptoH323Token_cryptoGKCert);
 
             stat = asn1PD_H225CryptoH323Token_cryptoGKCert (pctxt, pvalue->u.cryptoGKCert);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoGKCert", -1);
+            invokeEndElement (pctxt, "cryptoGKCert", -1);
 
             break;
 
          /* cryptoFastStart */
          case 6:
-            rtInvokeStartElement (pctxt, "cryptoFastStart", -1);
+            invokeStartElement (pctxt, "cryptoFastStart", -1);
 
             pvalue->u.cryptoFastStart = ALLOC_ASN1ELEM (pctxt, H225CryptoH323Token_cryptoFastStart);
 
             stat = asn1PD_H225CryptoH323Token_cryptoFastStart (pctxt, pvalue->u.cryptoFastStart);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoFastStart", -1);
+            invokeEndElement (pctxt, "cryptoFastStart", -1);
 
             break;
 
          /* nestedcryptoToken */
          case 7:
-            rtInvokeStartElement (pctxt, "nestedcryptoToken", -1);
+            invokeStartElement (pctxt, "nestedcryptoToken", -1);
 
             pvalue->u.nestedcryptoToken = ALLOC_ASN1ELEM (pctxt, H235CryptoToken);
 
             stat = asn1PD_H235CryptoToken (pctxt, pvalue->u.nestedcryptoToken);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nestedcryptoToken", -1);
+            invokeEndElement (pctxt, "nestedcryptoToken", -1);
 
             break;
 
@@ -6985,13 +6985,13 @@ EXTERN int asn1PD_H225_SeqOfH225CryptoH323Token (OOCTXT* pctxt, H225_SeqOfH225Cr
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225CryptoH323Token);
 
          stat = asn1PD_H225CryptoH323Token (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -7023,12 +7023,12 @@ EXTERN int asn1PD_H225Setup_UUIE_fastStart (OOCTXT* pctxt, H225Setup_UUIE_fastSt
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -7060,78 +7060,78 @@ EXTERN int asn1PD_H225ScnConnectionType (OOCTXT* pctxt, H225ScnConnectionType* p
       switch (ui) {
          /* unknown */
          case 0:
-            rtInvokeStartElement (pctxt, "unknown", -1);
+            invokeStartElement (pctxt, "unknown", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unknown", -1);
+            invokeEndElement (pctxt, "unknown", -1);
 
             break;
 
          /* bChannel */
          case 1:
-            rtInvokeStartElement (pctxt, "bChannel", -1);
+            invokeStartElement (pctxt, "bChannel", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "bChannel", -1);
+            invokeEndElement (pctxt, "bChannel", -1);
 
             break;
 
          /* hybrid2x64 */
          case 2:
-            rtInvokeStartElement (pctxt, "hybrid2x64", -1);
+            invokeStartElement (pctxt, "hybrid2x64", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hybrid2x64", -1);
+            invokeEndElement (pctxt, "hybrid2x64", -1);
 
             break;
 
          /* hybrid384 */
          case 3:
-            rtInvokeStartElement (pctxt, "hybrid384", -1);
+            invokeStartElement (pctxt, "hybrid384", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hybrid384", -1);
+            invokeEndElement (pctxt, "hybrid384", -1);
 
             break;
 
          /* hybrid1536 */
          case 4:
-            rtInvokeStartElement (pctxt, "hybrid1536", -1);
+            invokeStartElement (pctxt, "hybrid1536", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hybrid1536", -1);
+            invokeEndElement (pctxt, "hybrid1536", -1);
 
             break;
 
          /* hybrid1920 */
          case 5:
-            rtInvokeStartElement (pctxt, "hybrid1920", -1);
+            invokeStartElement (pctxt, "hybrid1920", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hybrid1920", -1);
+            invokeEndElement (pctxt, "hybrid1920", -1);
 
             break;
 
          /* multirate */
          case 6:
-            rtInvokeStartElement (pctxt, "multirate", -1);
+            invokeStartElement (pctxt, "multirate", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "multirate", -1);
+            invokeEndElement (pctxt, "multirate", -1);
 
             break;
 
@@ -7180,67 +7180,67 @@ EXTERN int asn1PD_H225ScnConnectionAggregation (OOCTXT* pctxt, H225ScnConnection
       switch (ui) {
          /* auto_ */
          case 0:
-            rtInvokeStartElement (pctxt, "auto_", -1);
+            invokeStartElement (pctxt, "auto_", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "auto_", -1);
+            invokeEndElement (pctxt, "auto_", -1);
 
             break;
 
          /* none */
          case 1:
-            rtInvokeStartElement (pctxt, "none", -1);
+            invokeStartElement (pctxt, "none", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "none", -1);
+            invokeEndElement (pctxt, "none", -1);
 
             break;
 
          /* h221 */
          case 2:
-            rtInvokeStartElement (pctxt, "h221", -1);
+            invokeStartElement (pctxt, "h221", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "h221", -1);
+            invokeEndElement (pctxt, "h221", -1);
 
             break;
 
          /* bonded_mode1 */
          case 3:
-            rtInvokeStartElement (pctxt, "bonded_mode1", -1);
+            invokeStartElement (pctxt, "bonded_mode1", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "bonded_mode1", -1);
+            invokeEndElement (pctxt, "bonded_mode1", -1);
 
             break;
 
          /* bonded_mode2 */
          case 4:
-            rtInvokeStartElement (pctxt, "bonded_mode2", -1);
+            invokeStartElement (pctxt, "bonded_mode2", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "bonded_mode2", -1);
+            invokeEndElement (pctxt, "bonded_mode2", -1);
 
             break;
 
          /* bonded_mode3 */
          case 5:
-            rtInvokeStartElement (pctxt, "bonded_mode3", -1);
+            invokeStartElement (pctxt, "bonded_mode3", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "bonded_mode3", -1);
+            invokeEndElement (pctxt, "bonded_mode3", -1);
 
             break;
 
@@ -7286,31 +7286,31 @@ EXTERN int asn1PD_H225Setup_UUIE_connectionParameters (OOCTXT* pctxt, H225Setup_
 
    /* decode connectionType */
 
-   rtInvokeStartElement (pctxt, "connectionType", -1);
+   invokeStartElement (pctxt, "connectionType", -1);
 
    stat = asn1PD_H225ScnConnectionType (pctxt, &pvalue->connectionType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "connectionType", -1);
+   invokeEndElement (pctxt, "connectionType", -1);
 
    /* decode numberOfScnConnections */
 
-   rtInvokeStartElement (pctxt, "numberOfScnConnections", -1);
+   invokeStartElement (pctxt, "numberOfScnConnections", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->numberOfScnConnections, 0U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->numberOfScnConnections);
+   invokeUIntValue (pctxt, pvalue->numberOfScnConnections);
 
-   rtInvokeEndElement (pctxt, "numberOfScnConnections", -1);
+   invokeEndElement (pctxt, "numberOfScnConnections", -1);
 
    /* decode connectionAggregation */
 
-   rtInvokeStartElement (pctxt, "connectionAggregation", -1);
+   invokeStartElement (pctxt, "connectionAggregation", -1);
 
    stat = asn1PD_H225ScnConnectionAggregation (pctxt, &pvalue->connectionAggregation);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "connectionAggregation", -1);
+   invokeEndElement (pctxt, "connectionAggregation", -1);
 
    if (extbit) {
 
@@ -7365,14 +7365,14 @@ EXTERN int asn1PD_H225Setup_UUIE_language (OOCTXT* pctxt, H225Setup_UUIE_languag
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1IA5String);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       addSizeConstraint (pctxt, &element_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->elem[xx1], 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->elem[xx1]);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeCharStrValue (pctxt, pvalue->elem[xx1]);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -7404,34 +7404,34 @@ EXTERN int asn1PD_H225PresentationIndicator (OOCTXT* pctxt, H225PresentationIndi
       switch (ui) {
          /* presentationAllowed */
          case 0:
-            rtInvokeStartElement (pctxt, "presentationAllowed", -1);
+            invokeStartElement (pctxt, "presentationAllowed", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "presentationAllowed", -1);
+            invokeEndElement (pctxt, "presentationAllowed", -1);
 
             break;
 
          /* presentationRestricted */
          case 1:
-            rtInvokeStartElement (pctxt, "presentationRestricted", -1);
+            invokeStartElement (pctxt, "presentationRestricted", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "presentationRestricted", -1);
+            invokeEndElement (pctxt, "presentationRestricted", -1);
 
             break;
 
          /* addressNotAvailable */
          case 2:
-            rtInvokeStartElement (pctxt, "addressNotAvailable", -1);
+            invokeStartElement (pctxt, "addressNotAvailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "addressNotAvailable", -1);
+            invokeEndElement (pctxt, "addressNotAvailable", -1);
 
             break;
 
@@ -7480,23 +7480,23 @@ EXTERN int asn1PD_H225CallCreditServiceControl_billingMode (OOCTXT* pctxt, H225C
       switch (ui) {
          /* credit */
          case 0:
-            rtInvokeStartElement (pctxt, "credit", -1);
+            invokeStartElement (pctxt, "credit", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "credit", -1);
+            invokeEndElement (pctxt, "credit", -1);
 
             break;
 
          /* debit */
          case 1:
-            rtInvokeStartElement (pctxt, "debit", -1);
+            invokeStartElement (pctxt, "debit", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "debit", -1);
+            invokeEndElement (pctxt, "debit", -1);
 
             break;
 
@@ -7545,23 +7545,23 @@ EXTERN int asn1PD_H225CallCreditServiceControl_callStartingPoint (OOCTXT* pctxt,
       switch (ui) {
          /* alerting */
          case 0:
-            rtInvokeStartElement (pctxt, "alerting", -1);
+            invokeStartElement (pctxt, "alerting", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "alerting", -1);
+            invokeEndElement (pctxt, "alerting", -1);
 
             break;
 
          /* connect */
          case 1:
-            rtInvokeStartElement (pctxt, "connect", -1);
+            invokeStartElement (pctxt, "connect", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "connect", -1);
+            invokeEndElement (pctxt, "connect", -1);
 
             break;
 
@@ -7628,61 +7628,61 @@ EXTERN int asn1PD_H225CallCreditServiceControl (OOCTXT* pctxt, H225CallCreditSer
    /* decode amountString */
 
    if (pvalue->m.amountStringPresent) {
-      rtInvokeStartElement (pctxt, "amountString", -1);
+      invokeStartElement (pctxt, "amountString", -1);
 
       addSizeConstraint (pctxt, &amountString_lsize1);
 
       stat = decodeBMPString (pctxt, &pvalue->amountString, 0);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStr16BitValue (pctxt, pvalue->amountString.nchars, pvalue->amountString.data);
+      invokeCharStr16BitValue (pctxt, pvalue->amountString.nchars, pvalue->amountString.data);
 
-      rtInvokeEndElement (pctxt, "amountString", -1);
+      invokeEndElement (pctxt, "amountString", -1);
    }
 
    /* decode billingMode */
 
    if (pvalue->m.billingModePresent) {
-      rtInvokeStartElement (pctxt, "billingMode", -1);
+      invokeStartElement (pctxt, "billingMode", -1);
 
       stat = asn1PD_H225CallCreditServiceControl_billingMode (pctxt, &pvalue->billingMode);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "billingMode", -1);
+      invokeEndElement (pctxt, "billingMode", -1);
    }
 
    /* decode callDurationLimit */
 
    if (pvalue->m.callDurationLimitPresent) {
-      rtInvokeStartElement (pctxt, "callDurationLimit", -1);
+      invokeStartElement (pctxt, "callDurationLimit", -1);
 
       stat = decodeConsUnsigned (pctxt, &pvalue->callDurationLimit, 1U, ASN1UINT_MAX);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->callDurationLimit);
+      invokeUIntValue (pctxt, pvalue->callDurationLimit);
 
-      rtInvokeEndElement (pctxt, "callDurationLimit", -1);
+      invokeEndElement (pctxt, "callDurationLimit", -1);
    }
 
    /* decode enforceCallDurationLimit */
 
    if (pvalue->m.enforceCallDurationLimitPresent) {
-      rtInvokeStartElement (pctxt, "enforceCallDurationLimit", -1);
+      invokeStartElement (pctxt, "enforceCallDurationLimit", -1);
 
       stat = DECODEBIT (pctxt, &pvalue->enforceCallDurationLimit);
       if (stat != ASN_OK) return stat;
-      rtInvokeBoolValue (pctxt, pvalue->enforceCallDurationLimit);
+      invokeBoolValue (pctxt, pvalue->enforceCallDurationLimit);
 
-      rtInvokeEndElement (pctxt, "enforceCallDurationLimit", -1);
+      invokeEndElement (pctxt, "enforceCallDurationLimit", -1);
    }
 
    /* decode callStartingPoint */
 
    if (pvalue->m.callStartingPointPresent) {
-      rtInvokeStartElement (pctxt, "callStartingPoint", -1);
+      invokeStartElement (pctxt, "callStartingPoint", -1);
 
       stat = asn1PD_H225CallCreditServiceControl_callStartingPoint (pctxt, &pvalue->callStartingPoint);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callStartingPoint", -1);
+      invokeEndElement (pctxt, "callStartingPoint", -1);
    }
 
    if (extbit) {
@@ -7742,54 +7742,54 @@ EXTERN int asn1PD_H225ServiceControlDescriptor (OOCTXT* pctxt, H225ServiceContro
       switch (ui) {
          /* url */
          case 0:
-            rtInvokeStartElement (pctxt, "url", -1);
+            invokeStartElement (pctxt, "url", -1);
 
             addSizeConstraint (pctxt, &url_lsize1);
 
             stat = decodeConstrainedStringEx (pctxt, &pvalue->u.url, 0, 8, 7, 7);
             if (stat != ASN_OK) return stat;
-            rtInvokeCharStrValue (pctxt, pvalue->u.url);
+            invokeCharStrValue (pctxt, pvalue->u.url);
 
-            rtInvokeEndElement (pctxt, "url", -1);
+            invokeEndElement (pctxt, "url", -1);
 
             break;
 
          /* signal */
          case 1:
-            rtInvokeStartElement (pctxt, "signal", -1);
+            invokeStartElement (pctxt, "signal", -1);
 
             pvalue->u.signal = ALLOC_ASN1ELEM (pctxt, H225H248SignalsDescriptor);
 
             stat = asn1PD_H225H248SignalsDescriptor (pctxt, pvalue->u.signal);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "signal", -1);
+            invokeEndElement (pctxt, "signal", -1);
 
             break;
 
          /* nonStandard */
          case 2:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
          /* callCreditServiceControl */
          case 3:
-            rtInvokeStartElement (pctxt, "callCreditServiceControl", -1);
+            invokeStartElement (pctxt, "callCreditServiceControl", -1);
 
             pvalue->u.callCreditServiceControl = ALLOC_ASN1ELEM (pctxt, H225CallCreditServiceControl);
 
             stat = asn1PD_H225CallCreditServiceControl (pctxt, pvalue->u.callCreditServiceControl);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "callCreditServiceControl", -1);
+            invokeEndElement (pctxt, "callCreditServiceControl", -1);
 
             break;
 
@@ -7838,34 +7838,34 @@ EXTERN int asn1PD_H225ServiceControlSession_reason (OOCTXT* pctxt, H225ServiceCo
       switch (ui) {
          /* open */
          case 0:
-            rtInvokeStartElement (pctxt, "open", -1);
+            invokeStartElement (pctxt, "open", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "open", -1);
+            invokeEndElement (pctxt, "open", -1);
 
             break;
 
          /* refresh */
          case 1:
-            rtInvokeStartElement (pctxt, "refresh", -1);
+            invokeStartElement (pctxt, "refresh", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "refresh", -1);
+            invokeEndElement (pctxt, "refresh", -1);
 
             break;
 
          /* close */
          case 2:
-            rtInvokeStartElement (pctxt, "close", -1);
+            invokeStartElement (pctxt, "close", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "close", -1);
+            invokeEndElement (pctxt, "close", -1);
 
             break;
 
@@ -7918,33 +7918,33 @@ EXTERN int asn1PD_H225ServiceControlSession (OOCTXT* pctxt, H225ServiceControlSe
 
    /* decode sessionId */
 
-   rtInvokeStartElement (pctxt, "sessionId", -1);
+   invokeStartElement (pctxt, "sessionId", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->sessionId, 0U, 255U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->sessionId);
+   invokeUIntValue (pctxt, pvalue->sessionId);
 
-   rtInvokeEndElement (pctxt, "sessionId", -1);
+   invokeEndElement (pctxt, "sessionId", -1);
 
    /* decode contents */
 
    if (pvalue->m.contentsPresent) {
-      rtInvokeStartElement (pctxt, "contents", -1);
+      invokeStartElement (pctxt, "contents", -1);
 
       stat = asn1PD_H225ServiceControlDescriptor (pctxt, &pvalue->contents);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "contents", -1);
+      invokeEndElement (pctxt, "contents", -1);
    }
 
    /* decode reason */
 
-   rtInvokeStartElement (pctxt, "reason", -1);
+   invokeStartElement (pctxt, "reason", -1);
 
    stat = asn1PD_H225ServiceControlSession_reason (pctxt, &pvalue->reason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "reason", -1);
+   invokeEndElement (pctxt, "reason", -1);
 
    if (extbit) {
 
@@ -8004,13 +8004,13 @@ EXTERN int asn1PD_H225_SeqOfH225ServiceControlSession (OOCTXT* pctxt, H225_SeqOf
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225ServiceControlSession);
 
          stat = asn1PD_H225ServiceControlSession (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -8055,26 +8055,26 @@ EXTERN int asn1PD_H225CarrierInfo (OOCTXT* pctxt, H225CarrierInfo* pvalue)
    /* decode carrierIdentificationCode */
 
    if (pvalue->m.carrierIdentificationCodePresent) {
-      rtInvokeStartElement (pctxt, "carrierIdentificationCode", -1);
+      invokeStartElement (pctxt, "carrierIdentificationCode", -1);
 
       stat = asn1PD_H225CarrierInfo_carrierIdentificationCode (pctxt, &pvalue->carrierIdentificationCode);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "carrierIdentificationCode", -1);
+      invokeEndElement (pctxt, "carrierIdentificationCode", -1);
    }
 
    /* decode carrierName */
 
    if (pvalue->m.carrierNamePresent) {
-      rtInvokeStartElement (pctxt, "carrierName", -1);
+      invokeStartElement (pctxt, "carrierName", -1);
 
       addSizeConstraint (pctxt, &carrierName_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->carrierName, 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->carrierName);
+      invokeCharStrValue (pctxt, pvalue->carrierName);
 
-      rtInvokeEndElement (pctxt, "carrierName", -1);
+      invokeEndElement (pctxt, "carrierName", -1);
    }
 
    if (extbit) {
@@ -8139,26 +8139,26 @@ EXTERN int asn1PD_H225CallsAvailable (OOCTXT* pctxt, H225CallsAvailable* pvalue)
 
    /* decode calls */
 
-   rtInvokeStartElement (pctxt, "calls", -1);
+   invokeStartElement (pctxt, "calls", -1);
 
    stat = decodeConsUnsigned (pctxt, &pvalue->calls, 0U, ASN1UINT_MAX);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->calls);
+   invokeUIntValue (pctxt, pvalue->calls);
 
-   rtInvokeEndElement (pctxt, "calls", -1);
+   invokeEndElement (pctxt, "calls", -1);
 
    /* decode group */
 
    if (pvalue->m.groupPresent) {
-      rtInvokeStartElement (pctxt, "group", -1);
+      invokeStartElement (pctxt, "group", -1);
 
       addSizeConstraint (pctxt, &group_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->group, 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->group);
+      invokeCharStrValue (pctxt, pvalue->group);
 
-      rtInvokeEndElement (pctxt, "group", -1);
+      invokeEndElement (pctxt, "group", -1);
    }
 
    if (extbit) {
@@ -8192,12 +8192,12 @@ EXTERN int asn1PD_H225CallsAvailable (OOCTXT* pctxt, H225CallsAvailable* pvalue)
                   case 0:
                      pvalue->m.carrierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "carrier", -1);
+                     invokeStartElement (pctxt, "carrier", -1);
 
                      stat = asn1PD_H225CarrierInfo (pctxt, &pvalue->carrier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "carrier", -1);
+                     invokeEndElement (pctxt, "carrier", -1);
                      break;
 
                   default:
@@ -8242,13 +8242,13 @@ EXTERN int asn1PD_H225_SeqOfH225CallsAvailable (OOCTXT* pctxt, H225_SeqOfH225Cal
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225CallsAvailable);
 
          stat = asn1PD_H225CallsAvailable (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -8320,122 +8320,122 @@ EXTERN int asn1PD_H225CallCapacityInfo (OOCTXT* pctxt, H225CallCapacityInfo* pva
    /* decode voiceGwCallsAvailable */
 
    if (pvalue->m.voiceGwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "voiceGwCallsAvailable", -1);
+      invokeStartElement (pctxt, "voiceGwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->voiceGwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "voiceGwCallsAvailable", -1);
+      invokeEndElement (pctxt, "voiceGwCallsAvailable", -1);
    }
 
    /* decode h310GwCallsAvailable */
 
    if (pvalue->m.h310GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h310GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h310GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h310GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h310GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h310GwCallsAvailable", -1);
    }
 
    /* decode h320GwCallsAvailable */
 
    if (pvalue->m.h320GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h320GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h320GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h320GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h320GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h320GwCallsAvailable", -1);
    }
 
    /* decode h321GwCallsAvailable */
 
    if (pvalue->m.h321GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h321GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h321GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h321GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h321GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h321GwCallsAvailable", -1);
    }
 
    /* decode h322GwCallsAvailable */
 
    if (pvalue->m.h322GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h322GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h322GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h322GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h322GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h322GwCallsAvailable", -1);
    }
 
    /* decode h323GwCallsAvailable */
 
    if (pvalue->m.h323GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h323GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h323GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h323GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h323GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h323GwCallsAvailable", -1);
    }
 
    /* decode h324GwCallsAvailable */
 
    if (pvalue->m.h324GwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "h324GwCallsAvailable", -1);
+      invokeStartElement (pctxt, "h324GwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->h324GwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h324GwCallsAvailable", -1);
+      invokeEndElement (pctxt, "h324GwCallsAvailable", -1);
    }
 
    /* decode t120OnlyGwCallsAvailable */
 
    if (pvalue->m.t120OnlyGwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "t120OnlyGwCallsAvailable", -1);
+      invokeStartElement (pctxt, "t120OnlyGwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->t120OnlyGwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "t120OnlyGwCallsAvailable", -1);
+      invokeEndElement (pctxt, "t120OnlyGwCallsAvailable", -1);
    }
 
    /* decode t38FaxAnnexbOnlyGwCallsAvailable */
 
    if (pvalue->m.t38FaxAnnexbOnlyGwCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "t38FaxAnnexbOnlyGwCallsAvailable", -1);
+      invokeStartElement (pctxt, "t38FaxAnnexbOnlyGwCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->t38FaxAnnexbOnlyGwCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "t38FaxAnnexbOnlyGwCallsAvailable", -1);
+      invokeEndElement (pctxt, "t38FaxAnnexbOnlyGwCallsAvailable", -1);
    }
 
    /* decode terminalCallsAvailable */
 
    if (pvalue->m.terminalCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "terminalCallsAvailable", -1);
+      invokeStartElement (pctxt, "terminalCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->terminalCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminalCallsAvailable", -1);
+      invokeEndElement (pctxt, "terminalCallsAvailable", -1);
    }
 
    /* decode mcuCallsAvailable */
 
    if (pvalue->m.mcuCallsAvailablePresent) {
-      rtInvokeStartElement (pctxt, "mcuCallsAvailable", -1);
+      invokeStartElement (pctxt, "mcuCallsAvailable", -1);
 
       stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->mcuCallsAvailable);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "mcuCallsAvailable", -1);
+      invokeEndElement (pctxt, "mcuCallsAvailable", -1);
    }
 
    if (extbit) {
@@ -8469,12 +8469,12 @@ EXTERN int asn1PD_H225CallCapacityInfo (OOCTXT* pctxt, H225CallCapacityInfo* pva
                   case 0:
                      pvalue->m.sipGwCallsAvailablePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sipGwCallsAvailable", -1);
+                     invokeStartElement (pctxt, "sipGwCallsAvailable", -1);
 
                      stat = asn1PD_H225_SeqOfH225CallsAvailable (pctxt, &pvalue->sipGwCallsAvailable);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sipGwCallsAvailable", -1);
+                     invokeEndElement (pctxt, "sipGwCallsAvailable", -1);
                      break;
 
                   default:
@@ -8525,23 +8525,23 @@ EXTERN int asn1PD_H225CallCapacity (OOCTXT* pctxt, H225CallCapacity* pvalue)
    /* decode maximumCallCapacity */
 
    if (pvalue->m.maximumCallCapacityPresent) {
-      rtInvokeStartElement (pctxt, "maximumCallCapacity", -1);
+      invokeStartElement (pctxt, "maximumCallCapacity", -1);
 
       stat = asn1PD_H225CallCapacityInfo (pctxt, &pvalue->maximumCallCapacity);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "maximumCallCapacity", -1);
+      invokeEndElement (pctxt, "maximumCallCapacity", -1);
    }
 
    /* decode currentCallCapacity */
 
    if (pvalue->m.currentCallCapacityPresent) {
-      rtInvokeStartElement (pctxt, "currentCallCapacity", -1);
+      invokeStartElement (pctxt, "currentCallCapacity", -1);
 
       stat = asn1PD_H225CallCapacityInfo (pctxt, &pvalue->currentCallCapacity);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "currentCallCapacity", -1);
+      invokeEndElement (pctxt, "currentCallCapacity", -1);
    }
 
    if (extbit) {
@@ -8596,11 +8596,11 @@ EXTERN int asn1PD_H225_SeqOfH225CicInfo_cic_element (OOCTXT* pctxt, H225_SeqOfH2
    ALLOC_ASN1ARRAY (pctxt, pvalue, H225CicInfo_cic_element);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = asn1PD_H225CicInfo_cic_element (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -8629,21 +8629,21 @@ EXTERN int asn1PD_H225CicInfo (OOCTXT* pctxt, H225CicInfo* pvalue)
 
    /* decode cic */
 
-   rtInvokeStartElement (pctxt, "cic", -1);
+   invokeStartElement (pctxt, "cic", -1);
 
    stat = asn1PD_H225_SeqOfH225CicInfo_cic_element (pctxt, &pvalue->cic);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "cic", -1);
+   invokeEndElement (pctxt, "cic", -1);
 
    /* decode pointCode */
 
-   rtInvokeStartElement (pctxt, "pointCode", -1);
+   invokeStartElement (pctxt, "pointCode", -1);
 
    stat = asn1PD_H225CicInfo_pointCode (pctxt, &pvalue->pointCode);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "pointCode", -1);
+   invokeEndElement (pctxt, "pointCode", -1);
 
    if (extbit) {
 
@@ -8697,12 +8697,12 @@ EXTERN int asn1PD_H225GroupID_member (OOCTXT* pctxt, H225GroupID_member* pvalue)
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1USINT);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeConsUInt16 (pctxt, &pvalue->elem[xx1], 0U, 65535U);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->elem[xx1]);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeUIntValue (pctxt, pvalue->elem[xx1]);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -8740,25 +8740,25 @@ EXTERN int asn1PD_H225GroupID (OOCTXT* pctxt, H225GroupID* pvalue)
    /* decode member */
 
    if (pvalue->m.memberPresent) {
-      rtInvokeStartElement (pctxt, "member", -1);
+      invokeStartElement (pctxt, "member", -1);
 
       stat = asn1PD_H225GroupID_member (pctxt, &pvalue->member);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "member", -1);
+      invokeEndElement (pctxt, "member", -1);
    }
 
    /* decode group */
 
-   rtInvokeStartElement (pctxt, "group", -1);
+   invokeStartElement (pctxt, "group", -1);
 
    addSizeConstraint (pctxt, &group_lsize1);
 
    stat = decodeConstrainedStringEx (pctxt, &pvalue->group, 0, 8, 7, 7);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStrValue (pctxt, pvalue->group);
+   invokeCharStrValue (pctxt, pvalue->group);
 
-   rtInvokeEndElement (pctxt, "group", -1);
+   invokeEndElement (pctxt, "group", -1);
 
    if (extbit) {
 
@@ -8825,23 +8825,23 @@ EXTERN int asn1PD_H225CircuitIdentifier (OOCTXT* pctxt, H225CircuitIdentifier* p
    /* decode cic */
 
    if (pvalue->m.cicPresent) {
-      rtInvokeStartElement (pctxt, "cic", -1);
+      invokeStartElement (pctxt, "cic", -1);
 
       stat = asn1PD_H225CicInfo (pctxt, &pvalue->cic);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cic", -1);
+      invokeEndElement (pctxt, "cic", -1);
    }
 
    /* decode group */
 
    if (pvalue->m.groupPresent) {
-      rtInvokeStartElement (pctxt, "group", -1);
+      invokeStartElement (pctxt, "group", -1);
 
       stat = asn1PD_H225GroupID (pctxt, &pvalue->group);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "group", -1);
+      invokeEndElement (pctxt, "group", -1);
    }
 
    if (extbit) {
@@ -8875,12 +8875,12 @@ EXTERN int asn1PD_H225CircuitIdentifier (OOCTXT* pctxt, H225CircuitIdentifier* p
                   case 0:
                      pvalue->m.carrierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "carrier", -1);
+                     invokeStartElement (pctxt, "carrier", -1);
 
                      stat = asn1PD_H225CarrierInfo (pctxt, &pvalue->carrier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "carrier", -1);
+                     invokeEndElement (pctxt, "carrier", -1);
                      break;
 
                   default:
@@ -8925,13 +8925,13 @@ EXTERN int asn1PD_H225_SeqOfH225GenericData (OOCTXT* pctxt, H225_SeqOfH225Generi
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225GenericData);
 
          stat = asn1PD_H225GenericData (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -8978,34 +8978,34 @@ EXTERN int asn1PD_H225CircuitInfo (OOCTXT* pctxt, H225CircuitInfo* pvalue)
    /* decode sourceCircuitID */
 
    if (pvalue->m.sourceCircuitIDPresent) {
-      rtInvokeStartElement (pctxt, "sourceCircuitID", -1);
+      invokeStartElement (pctxt, "sourceCircuitID", -1);
 
       stat = asn1PD_H225CircuitIdentifier (pctxt, &pvalue->sourceCircuitID);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "sourceCircuitID", -1);
+      invokeEndElement (pctxt, "sourceCircuitID", -1);
    }
 
    /* decode destinationCircuitID */
 
    if (pvalue->m.destinationCircuitIDPresent) {
-      rtInvokeStartElement (pctxt, "destinationCircuitID", -1);
+      invokeStartElement (pctxt, "destinationCircuitID", -1);
 
       stat = asn1PD_H225CircuitIdentifier (pctxt, &pvalue->destinationCircuitID);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destinationCircuitID", -1);
+      invokeEndElement (pctxt, "destinationCircuitID", -1);
    }
 
    /* decode genericData */
 
    if (pvalue->m.genericDataPresent) {
-      rtInvokeStartElement (pctxt, "genericData", -1);
+      invokeStartElement (pctxt, "genericData", -1);
 
       stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "genericData", -1);
+      invokeEndElement (pctxt, "genericData", -1);
    }
 
    if (extbit) {
@@ -9066,13 +9066,13 @@ EXTERN int asn1PD_H225_SeqOfH225FeatureDescriptor (OOCTXT* pctxt, H225_SeqOfH225
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225FeatureDescriptor);
 
          stat = asn1PD_H225FeatureDescriptor (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -9104,12 +9104,12 @@ EXTERN int asn1PD_H225Setup_UUIE_parallelH245Control (OOCTXT* pctxt, H225Setup_U
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -9148,33 +9148,33 @@ EXTERN int asn1PD_H225ExtendedAliasAddress (OOCTXT* pctxt, H225ExtendedAliasAddr
 
    /* decode address */
 
-   rtInvokeStartElement (pctxt, "address", -1);
+   invokeStartElement (pctxt, "address", -1);
 
    stat = asn1PD_H225AliasAddress (pctxt, &pvalue->address);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "address", -1);
+   invokeEndElement (pctxt, "address", -1);
 
    /* decode presentationIndicator */
 
    if (pvalue->m.presentationIndicatorPresent) {
-      rtInvokeStartElement (pctxt, "presentationIndicator", -1);
+      invokeStartElement (pctxt, "presentationIndicator", -1);
 
       stat = asn1PD_H225PresentationIndicator (pctxt, &pvalue->presentationIndicator);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "presentationIndicator", -1);
+      invokeEndElement (pctxt, "presentationIndicator", -1);
    }
 
    /* decode screeningIndicator */
 
    if (pvalue->m.screeningIndicatorPresent) {
-      rtInvokeStartElement (pctxt, "screeningIndicator", -1);
+      invokeStartElement (pctxt, "screeningIndicator", -1);
 
       stat = asn1PD_H225ScreeningIndicator (pctxt, &pvalue->screeningIndicator);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "screeningIndicator", -1);
+      invokeEndElement (pctxt, "screeningIndicator", -1);
    }
 
    if (extbit) {
@@ -9235,13 +9235,13 @@ EXTERN int asn1PD_H225_SeqOfH225ExtendedAliasAddress (OOCTXT* pctxt, H225_SeqOfH
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225ExtendedAliasAddress);
 
          stat = asn1PD_H225ExtendedAliasAddress (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -9300,135 +9300,135 @@ EXTERN int asn1PD_H225Setup_UUIE (OOCTXT* pctxt, H225Setup_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode h245Address */
 
    if (pvalue->m.h245AddressPresent) {
-      rtInvokeStartElement (pctxt, "h245Address", -1);
+      invokeStartElement (pctxt, "h245Address", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245Address", -1);
+      invokeEndElement (pctxt, "h245Address", -1);
    }
 
    /* decode sourceAddress */
 
    if (pvalue->m.sourceAddressPresent) {
-      rtInvokeStartElement (pctxt, "sourceAddress", -1);
+      invokeStartElement (pctxt, "sourceAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->sourceAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "sourceAddress", -1);
+      invokeEndElement (pctxt, "sourceAddress", -1);
    }
 
    /* decode sourceInfo */
 
-   rtInvokeStartElement (pctxt, "sourceInfo", -1);
+   invokeStartElement (pctxt, "sourceInfo", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->sourceInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "sourceInfo", -1);
+   invokeEndElement (pctxt, "sourceInfo", -1);
 
    /* decode destinationAddress */
 
    if (pvalue->m.destinationAddressPresent) {
-      rtInvokeStartElement (pctxt, "destinationAddress", -1);
+      invokeStartElement (pctxt, "destinationAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destinationAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destinationAddress", -1);
+      invokeEndElement (pctxt, "destinationAddress", -1);
    }
 
    /* decode destCallSignalAddress */
 
    if (pvalue->m.destCallSignalAddressPresent) {
-      rtInvokeStartElement (pctxt, "destCallSignalAddress", -1);
+      invokeStartElement (pctxt, "destCallSignalAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->destCallSignalAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destCallSignalAddress", -1);
+      invokeEndElement (pctxt, "destCallSignalAddress", -1);
    }
 
    /* decode destExtraCallInfo */
 
    if (pvalue->m.destExtraCallInfoPresent) {
-      rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+      invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+      invokeEndElement (pctxt, "destExtraCallInfo", -1);
    }
 
    /* decode destExtraCRV */
 
    if (pvalue->m.destExtraCRVPresent) {
-      rtInvokeStartElement (pctxt, "destExtraCRV", -1);
+      invokeStartElement (pctxt, "destExtraCRV", -1);
 
       stat = asn1PD_H225_SeqOfH225CallReferenceValue (pctxt, &pvalue->destExtraCRV);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destExtraCRV", -1);
+      invokeEndElement (pctxt, "destExtraCRV", -1);
    }
 
    /* decode activeMC */
 
-   rtInvokeStartElement (pctxt, "activeMC", -1);
+   invokeStartElement (pctxt, "activeMC", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->activeMC);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->activeMC);
+   invokeBoolValue (pctxt, pvalue->activeMC);
 
-   rtInvokeEndElement (pctxt, "activeMC", -1);
+   invokeEndElement (pctxt, "activeMC", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode conferenceGoal */
 
-   rtInvokeStartElement (pctxt, "conferenceGoal", -1);
+   invokeStartElement (pctxt, "conferenceGoal", -1);
 
    stat = asn1PD_H225Setup_UUIE_conferenceGoal (pctxt, &pvalue->conferenceGoal);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceGoal", -1);
+   invokeEndElement (pctxt, "conferenceGoal", -1);
 
    /* decode callServices */
 
    if (pvalue->m.callServicesPresent) {
-      rtInvokeStartElement (pctxt, "callServices", -1);
+      invokeStartElement (pctxt, "callServices", -1);
 
       stat = asn1PD_H225QseriesOptions (pctxt, &pvalue->callServices);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callServices", -1);
+      invokeEndElement (pctxt, "callServices", -1);
    }
 
    /* decode callType */
 
-   rtInvokeStartElement (pctxt, "callType", -1);
+   invokeStartElement (pctxt, "callType", -1);
 
    stat = asn1PD_H225CallType (pctxt, &pvalue->callType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callType", -1);
+   invokeEndElement (pctxt, "callType", -1);
 
    if (extbit) {
 
@@ -9461,303 +9461,303 @@ EXTERN int asn1PD_H225Setup_UUIE (OOCTXT* pctxt, H225Setup_UUIE* pvalue)
                   case 0:
                      pvalue->m.sourceCallSignalAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sourceCallSignalAddress", -1);
+                     invokeStartElement (pctxt, "sourceCallSignalAddress", -1);
 
                      stat = asn1PD_H225TransportAddress (pctxt, &pvalue->sourceCallSignalAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sourceCallSignalAddress", -1);
+                     invokeEndElement (pctxt, "sourceCallSignalAddress", -1);
                      break;
 
                   case 1:
                      pvalue->m.remoteExtensionAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeStartElement (pctxt, "remoteExtensionAddress", -1);
 
                      stat = asn1PD_H225AliasAddress (pctxt, &pvalue->remoteExtensionAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeEndElement (pctxt, "remoteExtensionAddress", -1);
                      break;
 
                   case 2:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 3:
                      pvalue->m.h245SecurityCapabilityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245SecurityCapability", -1);
+                     invokeStartElement (pctxt, "h245SecurityCapability", -1);
 
                      stat = asn1PD_H225_SeqOfH225H245Security (pctxt, &pvalue->h245SecurityCapability);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245SecurityCapability", -1);
+                     invokeEndElement (pctxt, "h245SecurityCapability", -1);
                      break;
 
                   case 4:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 5:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 6:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225Setup_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 7:
                      pvalue->m.mediaWaitForConnectPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "mediaWaitForConnect", -1);
+                     invokeStartElement (pctxt, "mediaWaitForConnect", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->mediaWaitForConnect);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->mediaWaitForConnect);
+                     invokeBoolValue (pctxt, pvalue->mediaWaitForConnect);
 
-                     rtInvokeEndElement (pctxt, "mediaWaitForConnect", -1);
+                     invokeEndElement (pctxt, "mediaWaitForConnect", -1);
                      break;
 
                   case 8:
                      pvalue->m.canOverlapSendPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "canOverlapSend", -1);
+                     invokeStartElement (pctxt, "canOverlapSend", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->canOverlapSend);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->canOverlapSend);
+                     invokeBoolValue (pctxt, pvalue->canOverlapSend);
 
-                     rtInvokeEndElement (pctxt, "canOverlapSend", -1);
+                     invokeEndElement (pctxt, "canOverlapSend", -1);
                      break;
 
                   case 9:
                      pvalue->m.endpointIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+                     invokeStartElement (pctxt, "endpointIdentifier", -1);
 
                      stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+                     invokeEndElement (pctxt, "endpointIdentifier", -1);
                      break;
 
                   case 10:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 11:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 12:
                      pvalue->m.connectionParametersPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "connectionParameters", -1);
+                     invokeStartElement (pctxt, "connectionParameters", -1);
 
                      stat = asn1PD_H225Setup_UUIE_connectionParameters (pctxt, &pvalue->connectionParameters);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "connectionParameters", -1);
+                     invokeEndElement (pctxt, "connectionParameters", -1);
                      break;
 
                   case 13:
                      pvalue->m.languagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "language", -1);
+                     invokeStartElement (pctxt, "language", -1);
 
                      stat = asn1PD_H225Setup_UUIE_language (pctxt, &pvalue->language);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "language", -1);
+                     invokeEndElement (pctxt, "language", -1);
                      break;
 
                   case 14:
                      pvalue->m.presentationIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "presentationIndicator", -1);
+                     invokeStartElement (pctxt, "presentationIndicator", -1);
 
                      stat = asn1PD_H225PresentationIndicator (pctxt, &pvalue->presentationIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "presentationIndicator", -1);
+                     invokeEndElement (pctxt, "presentationIndicator", -1);
                      break;
 
                   case 15:
                      pvalue->m.screeningIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "screeningIndicator", -1);
+                     invokeStartElement (pctxt, "screeningIndicator", -1);
 
                      stat = asn1PD_H225ScreeningIndicator (pctxt, &pvalue->screeningIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "screeningIndicator", -1);
+                     invokeEndElement (pctxt, "screeningIndicator", -1);
                      break;
 
                   case 16:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 17:
                      pvalue->m.symmetricOperationRequiredPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "symmetricOperationRequired", -1);
+                     invokeStartElement (pctxt, "symmetricOperationRequired", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "symmetricOperationRequired", -1);
+                     invokeEndElement (pctxt, "symmetricOperationRequired", -1);
                      break;
 
                   case 18:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 19:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 20:
                      pvalue->m.desiredProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredProtocols", -1);
+                     invokeStartElement (pctxt, "desiredProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->desiredProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredProtocols", -1);
+                     invokeEndElement (pctxt, "desiredProtocols", -1);
                      break;
 
                   case 21:
                      pvalue->m.neededFeaturesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "neededFeatures", -1);
+                     invokeStartElement (pctxt, "neededFeatures", -1);
 
                      stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->neededFeatures);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "neededFeatures", -1);
+                     invokeEndElement (pctxt, "neededFeatures", -1);
                      break;
 
                   case 22:
                      pvalue->m.desiredFeaturesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredFeatures", -1);
+                     invokeStartElement (pctxt, "desiredFeatures", -1);
 
                      stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->desiredFeatures);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredFeatures", -1);
+                     invokeEndElement (pctxt, "desiredFeatures", -1);
                      break;
 
                   case 23:
                      pvalue->m.supportedFeaturesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedFeatures", -1);
+                     invokeStartElement (pctxt, "supportedFeatures", -1);
 
                      stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->supportedFeatures);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedFeatures", -1);
+                     invokeEndElement (pctxt, "supportedFeatures", -1);
                      break;
 
                   case 24:
                      pvalue->m.parallelH245ControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "parallelH245Control", -1);
+                     invokeStartElement (pctxt, "parallelH245Control", -1);
 
                      stat = asn1PD_H225Setup_UUIE_parallelH245Control (pctxt, &pvalue->parallelH245Control);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "parallelH245Control", -1);
+                     invokeEndElement (pctxt, "parallelH245Control", -1);
                      break;
 
                   case 25:
                      pvalue->m.additionalSourceAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "additionalSourceAddresses", -1);
+                     invokeStartElement (pctxt, "additionalSourceAddresses", -1);
 
                      stat = asn1PD_H225_SeqOfH225ExtendedAliasAddress (pctxt, &pvalue->additionalSourceAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "additionalSourceAddresses", -1);
+                     invokeEndElement (pctxt, "additionalSourceAddresses", -1);
                      break;
 
                   case 26:
                      pvalue->m.hopCountPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "hopCount", -1);
+                     invokeStartElement (pctxt, "hopCount", -1);
 
                      stat = decodeConsUInt8 (pctxt, &pvalue->hopCount, 1U, 31U);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeUIntValue (pctxt, pvalue->hopCount);
+                     invokeUIntValue (pctxt, pvalue->hopCount);
 
-                     rtInvokeEndElement (pctxt, "hopCount", -1);
+                     invokeEndElement (pctxt, "hopCount", -1);
                      break;
 
                   default:
@@ -9796,12 +9796,12 @@ EXTERN int asn1PD_H225CallProceeding_UUIE_fastStart (OOCTXT* pctxt, H225CallProc
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -9843,45 +9843,45 @@ EXTERN int asn1PD_H225FeatureSet (OOCTXT* pctxt, H225FeatureSet* pvalue)
 
    /* decode replacementFeatureSet */
 
-   rtInvokeStartElement (pctxt, "replacementFeatureSet", -1);
+   invokeStartElement (pctxt, "replacementFeatureSet", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->replacementFeatureSet);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->replacementFeatureSet);
+   invokeBoolValue (pctxt, pvalue->replacementFeatureSet);
 
-   rtInvokeEndElement (pctxt, "replacementFeatureSet", -1);
+   invokeEndElement (pctxt, "replacementFeatureSet", -1);
 
    /* decode neededFeatures */
 
    if (pvalue->m.neededFeaturesPresent) {
-      rtInvokeStartElement (pctxt, "neededFeatures", -1);
+      invokeStartElement (pctxt, "neededFeatures", -1);
 
       stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->neededFeatures);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "neededFeatures", -1);
+      invokeEndElement (pctxt, "neededFeatures", -1);
    }
 
    /* decode desiredFeatures */
 
    if (pvalue->m.desiredFeaturesPresent) {
-      rtInvokeStartElement (pctxt, "desiredFeatures", -1);
+      invokeStartElement (pctxt, "desiredFeatures", -1);
 
       stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->desiredFeatures);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "desiredFeatures", -1);
+      invokeEndElement (pctxt, "desiredFeatures", -1);
    }
 
    /* decode supportedFeatures */
 
    if (pvalue->m.supportedFeaturesPresent) {
-      rtInvokeStartElement (pctxt, "supportedFeatures", -1);
+      invokeStartElement (pctxt, "supportedFeatures", -1);
 
       stat = asn1PD_H225_SeqOfH225FeatureDescriptor (pctxt, &pvalue->supportedFeatures);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "supportedFeatures", -1);
+      invokeEndElement (pctxt, "supportedFeatures", -1);
    }
 
    if (extbit) {
@@ -9945,31 +9945,31 @@ EXTERN int asn1PD_H225CallProceeding_UUIE (OOCTXT* pctxt, H225CallProceeding_UUI
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode destinationInfo */
 
-   rtInvokeStartElement (pctxt, "destinationInfo", -1);
+   invokeStartElement (pctxt, "destinationInfo", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destinationInfo", -1);
+   invokeEndElement (pctxt, "destinationInfo", -1);
 
    /* decode h245Address */
 
    if (pvalue->m.h245AddressPresent) {
-      rtInvokeStartElement (pctxt, "h245Address", -1);
+      invokeStartElement (pctxt, "h245Address", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245Address", -1);
+      invokeEndElement (pctxt, "h245Address", -1);
    }
 
    if (extbit) {
@@ -10003,102 +10003,102 @@ EXTERN int asn1PD_H225CallProceeding_UUIE (OOCTXT* pctxt, H225CallProceeding_UUI
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.h245SecurityModePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245SecurityMode", -1);
+                     invokeStartElement (pctxt, "h245SecurityMode", -1);
 
                      stat = asn1PD_H225H245Security (pctxt, &pvalue->h245SecurityMode);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245SecurityMode", -1);
+                     invokeEndElement (pctxt, "h245SecurityMode", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225CallProceeding_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 5:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 6:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 7:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   case 8:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   default:
@@ -10137,12 +10137,12 @@ EXTERN int asn1PD_H225Connect_UUIE_fastStart (OOCTXT* pctxt, H225Connect_UUIE_fa
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -10171,14 +10171,14 @@ EXTERN int asn1PD_H225Connect_UUIE_language (OOCTXT* pctxt, H225Connect_UUIE_lan
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1IA5String);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       addSizeConstraint (pctxt, &element_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->elem[xx1], 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->elem[xx1]);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeCharStrValue (pctxt, pvalue->elem[xx1]);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -10215,41 +10215,41 @@ EXTERN int asn1PD_H225Connect_UUIE (OOCTXT* pctxt, H225Connect_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode h245Address */
 
    if (pvalue->m.h245AddressPresent) {
-      rtInvokeStartElement (pctxt, "h245Address", -1);
+      invokeStartElement (pctxt, "h245Address", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245Address", -1);
+      invokeEndElement (pctxt, "h245Address", -1);
    }
 
    /* decode destinationInfo */
 
-   rtInvokeStartElement (pctxt, "destinationInfo", -1);
+   invokeStartElement (pctxt, "destinationInfo", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destinationInfo", -1);
+   invokeEndElement (pctxt, "destinationInfo", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    if (extbit) {
 
@@ -10282,168 +10282,168 @@ EXTERN int asn1PD_H225Connect_UUIE (OOCTXT* pctxt, H225Connect_UUIE* pvalue)
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.h245SecurityModePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245SecurityMode", -1);
+                     invokeStartElement (pctxt, "h245SecurityMode", -1);
 
                      stat = asn1PD_H225H245Security (pctxt, &pvalue->h245SecurityMode);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245SecurityMode", -1);
+                     invokeEndElement (pctxt, "h245SecurityMode", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225Connect_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 5:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 6:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 7:
                      pvalue->m.languagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "language", -1);
+                     invokeStartElement (pctxt, "language", -1);
 
                      stat = asn1PD_H225Connect_UUIE_language (pctxt, &pvalue->language);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "language", -1);
+                     invokeEndElement (pctxt, "language", -1);
                      break;
 
                   case 8:
                      pvalue->m.connectedAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "connectedAddress", -1);
+                     invokeStartElement (pctxt, "connectedAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->connectedAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "connectedAddress", -1);
+                     invokeEndElement (pctxt, "connectedAddress", -1);
                      break;
 
                   case 9:
                      pvalue->m.presentationIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "presentationIndicator", -1);
+                     invokeStartElement (pctxt, "presentationIndicator", -1);
 
                      stat = asn1PD_H225PresentationIndicator (pctxt, &pvalue->presentationIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "presentationIndicator", -1);
+                     invokeEndElement (pctxt, "presentationIndicator", -1);
                      break;
 
                   case 10:
                      pvalue->m.screeningIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "screeningIndicator", -1);
+                     invokeStartElement (pctxt, "screeningIndicator", -1);
 
                      stat = asn1PD_H225ScreeningIndicator (pctxt, &pvalue->screeningIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "screeningIndicator", -1);
+                     invokeEndElement (pctxt, "screeningIndicator", -1);
                      break;
 
                   case 11:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   case 12:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 13:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 14:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   default:
@@ -10482,12 +10482,12 @@ EXTERN int asn1PD_H225Alerting_UUIE_fastStart (OOCTXT* pctxt, H225Alerting_UUIE_
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -10524,31 +10524,31 @@ EXTERN int asn1PD_H225Alerting_UUIE (OOCTXT* pctxt, H225Alerting_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode destinationInfo */
 
-   rtInvokeStartElement (pctxt, "destinationInfo", -1);
+   invokeStartElement (pctxt, "destinationInfo", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destinationInfo", -1);
+   invokeEndElement (pctxt, "destinationInfo", -1);
 
    /* decode h245Address */
 
    if (pvalue->m.h245AddressPresent) {
-      rtInvokeStartElement (pctxt, "h245Address", -1);
+      invokeStartElement (pctxt, "h245Address", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245Address", -1);
+      invokeEndElement (pctxt, "h245Address", -1);
    }
 
    if (extbit) {
@@ -10582,157 +10582,157 @@ EXTERN int asn1PD_H225Alerting_UUIE (OOCTXT* pctxt, H225Alerting_UUIE* pvalue)
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.h245SecurityModePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245SecurityMode", -1);
+                     invokeStartElement (pctxt, "h245SecurityMode", -1);
 
                      stat = asn1PD_H225H245Security (pctxt, &pvalue->h245SecurityMode);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245SecurityMode", -1);
+                     invokeEndElement (pctxt, "h245SecurityMode", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225Alerting_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 5:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 6:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 7:
                      pvalue->m.alertingAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alertingAddress", -1);
+                     invokeStartElement (pctxt, "alertingAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->alertingAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alertingAddress", -1);
+                     invokeEndElement (pctxt, "alertingAddress", -1);
                      break;
 
                   case 8:
                      pvalue->m.presentationIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "presentationIndicator", -1);
+                     invokeStartElement (pctxt, "presentationIndicator", -1);
 
                      stat = asn1PD_H225PresentationIndicator (pctxt, &pvalue->presentationIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "presentationIndicator", -1);
+                     invokeEndElement (pctxt, "presentationIndicator", -1);
                      break;
 
                   case 9:
                      pvalue->m.screeningIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "screeningIndicator", -1);
+                     invokeStartElement (pctxt, "screeningIndicator", -1);
 
                      stat = asn1PD_H225ScreeningIndicator (pctxt, &pvalue->screeningIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "screeningIndicator", -1);
+                     invokeEndElement (pctxt, "screeningIndicator", -1);
                      break;
 
                   case 10:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   case 11:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 12:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 13:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   default:
@@ -10771,12 +10771,12 @@ EXTERN int asn1PD_H225Information_UUIE_fastStart (OOCTXT* pctxt, H225Information
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -10810,12 +10810,12 @@ EXTERN int asn1PD_H225Information_UUIE (OOCTXT* pctxt, H225Information_UUIE* pva
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    if (extbit) {
 
@@ -10848,67 +10848,67 @@ EXTERN int asn1PD_H225Information_UUIE (OOCTXT* pctxt, H225Information_UUIE* pva
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225Information_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 4:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   case 5:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   default:
@@ -10951,177 +10951,177 @@ EXTERN int asn1PD_H225SecurityErrors (OOCTXT* pctxt, H225SecurityErrors* pvalue)
       switch (ui) {
          /* securityWrongSyncTime */
          case 0:
-            rtInvokeStartElement (pctxt, "securityWrongSyncTime", -1);
+            invokeStartElement (pctxt, "securityWrongSyncTime", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongSyncTime", -1);
+            invokeEndElement (pctxt, "securityWrongSyncTime", -1);
 
             break;
 
          /* securityReplay */
          case 1:
-            rtInvokeStartElement (pctxt, "securityReplay", -1);
+            invokeStartElement (pctxt, "securityReplay", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityReplay", -1);
+            invokeEndElement (pctxt, "securityReplay", -1);
 
             break;
 
          /* securityWrongGeneralID */
          case 2:
-            rtInvokeStartElement (pctxt, "securityWrongGeneralID", -1);
+            invokeStartElement (pctxt, "securityWrongGeneralID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongGeneralID", -1);
+            invokeEndElement (pctxt, "securityWrongGeneralID", -1);
 
             break;
 
          /* securityWrongSendersID */
          case 3:
-            rtInvokeStartElement (pctxt, "securityWrongSendersID", -1);
+            invokeStartElement (pctxt, "securityWrongSendersID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongSendersID", -1);
+            invokeEndElement (pctxt, "securityWrongSendersID", -1);
 
             break;
 
          /* securityIntegrityFailed */
          case 4:
-            rtInvokeStartElement (pctxt, "securityIntegrityFailed", -1);
+            invokeStartElement (pctxt, "securityIntegrityFailed", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityIntegrityFailed", -1);
+            invokeEndElement (pctxt, "securityIntegrityFailed", -1);
 
             break;
 
          /* securityWrongOID */
          case 5:
-            rtInvokeStartElement (pctxt, "securityWrongOID", -1);
+            invokeStartElement (pctxt, "securityWrongOID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongOID", -1);
+            invokeEndElement (pctxt, "securityWrongOID", -1);
 
             break;
 
          /* securityDHmismatch */
          case 6:
-            rtInvokeStartElement (pctxt, "securityDHmismatch", -1);
+            invokeStartElement (pctxt, "securityDHmismatch", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDHmismatch", -1);
+            invokeEndElement (pctxt, "securityDHmismatch", -1);
 
             break;
 
          /* securityCertificateExpired */
          case 7:
-            rtInvokeStartElement (pctxt, "securityCertificateExpired", -1);
+            invokeStartElement (pctxt, "securityCertificateExpired", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateExpired", -1);
+            invokeEndElement (pctxt, "securityCertificateExpired", -1);
 
             break;
 
          /* securityCertificateDateInvalid */
          case 8:
-            rtInvokeStartElement (pctxt, "securityCertificateDateInvalid", -1);
+            invokeStartElement (pctxt, "securityCertificateDateInvalid", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateDateInvalid", -1);
+            invokeEndElement (pctxt, "securityCertificateDateInvalid", -1);
 
             break;
 
          /* securityCertificateRevoked */
          case 9:
-            rtInvokeStartElement (pctxt, "securityCertificateRevoked", -1);
+            invokeStartElement (pctxt, "securityCertificateRevoked", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateRevoked", -1);
+            invokeEndElement (pctxt, "securityCertificateRevoked", -1);
 
             break;
 
          /* securityCertificateNotReadable */
          case 10:
-            rtInvokeStartElement (pctxt, "securityCertificateNotReadable", -1);
+            invokeStartElement (pctxt, "securityCertificateNotReadable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateNotReadable", -1);
+            invokeEndElement (pctxt, "securityCertificateNotReadable", -1);
 
             break;
 
          /* securityCertificateSignatureInvalid */
          case 11:
-            rtInvokeStartElement (pctxt, "securityCertificateSignatureInvalid", -1);
+            invokeStartElement (pctxt, "securityCertificateSignatureInvalid", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateSignatureInvalid", -1);
+            invokeEndElement (pctxt, "securityCertificateSignatureInvalid", -1);
 
             break;
 
          /* securityCertificateMissing */
          case 12:
-            rtInvokeStartElement (pctxt, "securityCertificateMissing", -1);
+            invokeStartElement (pctxt, "securityCertificateMissing", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateMissing", -1);
+            invokeEndElement (pctxt, "securityCertificateMissing", -1);
 
             break;
 
          /* securityCertificateIncomplete */
          case 13:
-            rtInvokeStartElement (pctxt, "securityCertificateIncomplete", -1);
+            invokeStartElement (pctxt, "securityCertificateIncomplete", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityCertificateIncomplete", -1);
+            invokeEndElement (pctxt, "securityCertificateIncomplete", -1);
 
             break;
 
          /* securityUnsupportedCertificateAlgOID */
          case 14:
-            rtInvokeStartElement (pctxt, "securityUnsupportedCertificateAlgOID", -1);
+            invokeStartElement (pctxt, "securityUnsupportedCertificateAlgOID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityUnsupportedCertificateAlgOID", -1);
+            invokeEndElement (pctxt, "securityUnsupportedCertificateAlgOID", -1);
 
             break;
 
          /* securityUnknownCA */
          case 15:
-            rtInvokeStartElement (pctxt, "securityUnknownCA", -1);
+            invokeStartElement (pctxt, "securityUnknownCA", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityUnknownCA", -1);
+            invokeEndElement (pctxt, "securityUnknownCA", -1);
 
             break;
 
@@ -11171,133 +11171,133 @@ EXTERN int asn1PD_H225ReleaseCompleteReason (OOCTXT* pctxt, H225ReleaseCompleteR
       switch (ui) {
          /* noBandwidth */
          case 0:
-            rtInvokeStartElement (pctxt, "noBandwidth", -1);
+            invokeStartElement (pctxt, "noBandwidth", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noBandwidth", -1);
+            invokeEndElement (pctxt, "noBandwidth", -1);
 
             break;
 
          /* gatekeeperResources */
          case 1:
-            rtInvokeStartElement (pctxt, "gatekeeperResources", -1);
+            invokeStartElement (pctxt, "gatekeeperResources", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "gatekeeperResources", -1);
+            invokeEndElement (pctxt, "gatekeeperResources", -1);
 
             break;
 
          /* unreachableDestination */
          case 2:
-            rtInvokeStartElement (pctxt, "unreachableDestination", -1);
+            invokeStartElement (pctxt, "unreachableDestination", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unreachableDestination", -1);
+            invokeEndElement (pctxt, "unreachableDestination", -1);
 
             break;
 
          /* destinationRejection */
          case 3:
-            rtInvokeStartElement (pctxt, "destinationRejection", -1);
+            invokeStartElement (pctxt, "destinationRejection", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "destinationRejection", -1);
+            invokeEndElement (pctxt, "destinationRejection", -1);
 
             break;
 
          /* invalidRevision */
          case 4:
-            rtInvokeStartElement (pctxt, "invalidRevision", -1);
+            invokeStartElement (pctxt, "invalidRevision", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidRevision", -1);
+            invokeEndElement (pctxt, "invalidRevision", -1);
 
             break;
 
          /* noPermission */
          case 5:
-            rtInvokeStartElement (pctxt, "noPermission", -1);
+            invokeStartElement (pctxt, "noPermission", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noPermission", -1);
+            invokeEndElement (pctxt, "noPermission", -1);
 
             break;
 
          /* unreachableGatekeeper */
          case 6:
-            rtInvokeStartElement (pctxt, "unreachableGatekeeper", -1);
+            invokeStartElement (pctxt, "unreachableGatekeeper", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unreachableGatekeeper", -1);
+            invokeEndElement (pctxt, "unreachableGatekeeper", -1);
 
             break;
 
          /* gatewayResources */
          case 7:
-            rtInvokeStartElement (pctxt, "gatewayResources", -1);
+            invokeStartElement (pctxt, "gatewayResources", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "gatewayResources", -1);
+            invokeEndElement (pctxt, "gatewayResources", -1);
 
             break;
 
          /* badFormatAddress */
          case 8:
-            rtInvokeStartElement (pctxt, "badFormatAddress", -1);
+            invokeStartElement (pctxt, "badFormatAddress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "badFormatAddress", -1);
+            invokeEndElement (pctxt, "badFormatAddress", -1);
 
             break;
 
          /* adaptiveBusy */
          case 9:
-            rtInvokeStartElement (pctxt, "adaptiveBusy", -1);
+            invokeStartElement (pctxt, "adaptiveBusy", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "adaptiveBusy", -1);
+            invokeEndElement (pctxt, "adaptiveBusy", -1);
 
             break;
 
          /* inConf */
          case 10:
-            rtInvokeStartElement (pctxt, "inConf", -1);
+            invokeStartElement (pctxt, "inConf", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "inConf", -1);
+            invokeEndElement (pctxt, "inConf", -1);
 
             break;
 
          /* undefinedReason */
          case 11:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -11322,150 +11322,150 @@ EXTERN int asn1PD_H225ReleaseCompleteReason (OOCTXT* pctxt, H225ReleaseCompleteR
       switch (pvalue->t) {
          /* facilityCallDeflection */
          case 13:
-            rtInvokeStartElement (pctxt, "facilityCallDeflection", -1);
+            invokeStartElement (pctxt, "facilityCallDeflection", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "facilityCallDeflection", -1);
+            invokeEndElement (pctxt, "facilityCallDeflection", -1);
 
             break;
 
          /* securityDenied */
          case 14:
-            rtInvokeStartElement (pctxt, "securityDenied", -1);
+            invokeStartElement (pctxt, "securityDenied", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenied", -1);
+            invokeEndElement (pctxt, "securityDenied", -1);
 
             break;
 
          /* calledPartyNotRegistered */
          case 15:
-            rtInvokeStartElement (pctxt, "calledPartyNotRegistered", -1);
+            invokeStartElement (pctxt, "calledPartyNotRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "calledPartyNotRegistered", -1);
+            invokeEndElement (pctxt, "calledPartyNotRegistered", -1);
 
             break;
 
          /* callerNotRegistered */
          case 16:
-            rtInvokeStartElement (pctxt, "callerNotRegistered", -1);
+            invokeStartElement (pctxt, "callerNotRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "callerNotRegistered", -1);
+            invokeEndElement (pctxt, "callerNotRegistered", -1);
 
             break;
 
          /* newConnectionNeeded */
          case 17:
-            rtInvokeStartElement (pctxt, "newConnectionNeeded", -1);
+            invokeStartElement (pctxt, "newConnectionNeeded", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "newConnectionNeeded", -1);
+            invokeEndElement (pctxt, "newConnectionNeeded", -1);
 
             break;
 
          /* nonStandardReason */
          case 18:
-            rtInvokeStartElement (pctxt, "nonStandardReason", -1);
+            invokeStartElement (pctxt, "nonStandardReason", -1);
 
             pvalue->u.nonStandardReason = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandardReason);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandardReason", -1);
+            invokeEndElement (pctxt, "nonStandardReason", -1);
 
             break;
 
          /* replaceWithConferenceInvite */
          case 19:
-            rtInvokeStartElement (pctxt, "replaceWithConferenceInvite", -1);
+            invokeStartElement (pctxt, "replaceWithConferenceInvite", -1);
 
             pvalue->u.replaceWithConferenceInvite = ALLOC_ASN1ELEM (pctxt, H225ConferenceIdentifier);
 
             stat = asn1PD_H225ConferenceIdentifier (pctxt, pvalue->u.replaceWithConferenceInvite);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "replaceWithConferenceInvite", -1);
+            invokeEndElement (pctxt, "replaceWithConferenceInvite", -1);
 
             break;
 
          /* genericDataReason */
          case 20:
-            rtInvokeStartElement (pctxt, "genericDataReason", -1);
+            invokeStartElement (pctxt, "genericDataReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "genericDataReason", -1);
+            invokeEndElement (pctxt, "genericDataReason", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 21:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
          /* tunnelledSignallingRejected */
          case 22:
-            rtInvokeStartElement (pctxt, "tunnelledSignallingRejected", -1);
+            invokeStartElement (pctxt, "tunnelledSignallingRejected", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "tunnelledSignallingRejected", -1);
+            invokeEndElement (pctxt, "tunnelledSignallingRejected", -1);
 
             break;
 
          /* invalidCID */
          case 23:
-            rtInvokeStartElement (pctxt, "invalidCID", -1);
+            invokeStartElement (pctxt, "invalidCID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidCID", -1);
+            invokeEndElement (pctxt, "invalidCID", -1);
 
             break;
 
          /* securityError */
          case 24:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors);
 
             stat = asn1PD_H225SecurityErrors (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
          /* hopCountExceeded */
          case 25:
-            rtInvokeStartElement (pctxt, "hopCountExceeded", -1);
+            invokeStartElement (pctxt, "hopCountExceeded", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hopCountExceeded", -1);
+            invokeEndElement (pctxt, "hopCountExceeded", -1);
 
             break;
 
@@ -11508,22 +11508,22 @@ EXTERN int asn1PD_H225ReleaseComplete_UUIE (OOCTXT* pctxt, H225ReleaseComplete_U
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode reason */
 
    if (pvalue->m.reasonPresent) {
-      rtInvokeStartElement (pctxt, "reason", -1);
+      invokeStartElement (pctxt, "reason", -1);
 
       stat = asn1PD_H225ReleaseCompleteReason (pctxt, &pvalue->reason);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "reason", -1);
+      invokeEndElement (pctxt, "reason", -1);
    }
 
    if (extbit) {
@@ -11557,100 +11557,100 @@ EXTERN int asn1PD_H225ReleaseComplete_UUIE (OOCTXT* pctxt, H225ReleaseComplete_U
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.busyAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "busyAddress", -1);
+                     invokeStartElement (pctxt, "busyAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->busyAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "busyAddress", -1);
+                     invokeEndElement (pctxt, "busyAddress", -1);
                      break;
 
                   case 4:
                      pvalue->m.presentationIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "presentationIndicator", -1);
+                     invokeStartElement (pctxt, "presentationIndicator", -1);
 
                      stat = asn1PD_H225PresentationIndicator (pctxt, &pvalue->presentationIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "presentationIndicator", -1);
+                     invokeEndElement (pctxt, "presentationIndicator", -1);
                      break;
 
                   case 5:
                      pvalue->m.screeningIndicatorPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "screeningIndicator", -1);
+                     invokeStartElement (pctxt, "screeningIndicator", -1);
 
                      stat = asn1PD_H225ScreeningIndicator (pctxt, &pvalue->screeningIndicator);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "screeningIndicator", -1);
+                     invokeEndElement (pctxt, "screeningIndicator", -1);
                      break;
 
                   case 6:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 7:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 8:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   default:
@@ -11694,45 +11694,45 @@ EXTERN int asn1PD_H225FacilityReason (OOCTXT* pctxt, H225FacilityReason* pvalue)
       switch (ui) {
          /* routeCallToGatekeeper */
          case 0:
-            rtInvokeStartElement (pctxt, "routeCallToGatekeeper", -1);
+            invokeStartElement (pctxt, "routeCallToGatekeeper", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "routeCallToGatekeeper", -1);
+            invokeEndElement (pctxt, "routeCallToGatekeeper", -1);
 
             break;
 
          /* callForwarded */
          case 1:
-            rtInvokeStartElement (pctxt, "callForwarded", -1);
+            invokeStartElement (pctxt, "callForwarded", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "callForwarded", -1);
+            invokeEndElement (pctxt, "callForwarded", -1);
 
             break;
 
          /* routeCallToMC */
          case 2:
-            rtInvokeStartElement (pctxt, "routeCallToMC", -1);
+            invokeStartElement (pctxt, "routeCallToMC", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "routeCallToMC", -1);
+            invokeEndElement (pctxt, "routeCallToMC", -1);
 
             break;
 
          /* undefinedReason */
          case 3:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -11757,78 +11757,78 @@ EXTERN int asn1PD_H225FacilityReason (OOCTXT* pctxt, H225FacilityReason* pvalue)
       switch (pvalue->t) {
          /* conferenceListChoice */
          case 5:
-            rtInvokeStartElement (pctxt, "conferenceListChoice", -1);
+            invokeStartElement (pctxt, "conferenceListChoice", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "conferenceListChoice", -1);
+            invokeEndElement (pctxt, "conferenceListChoice", -1);
 
             break;
 
          /* startH245 */
          case 6:
-            rtInvokeStartElement (pctxt, "startH245", -1);
+            invokeStartElement (pctxt, "startH245", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "startH245", -1);
+            invokeEndElement (pctxt, "startH245", -1);
 
             break;
 
          /* noH245 */
          case 7:
-            rtInvokeStartElement (pctxt, "noH245", -1);
+            invokeStartElement (pctxt, "noH245", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noH245", -1);
+            invokeEndElement (pctxt, "noH245", -1);
 
             break;
 
          /* newTokens */
          case 8:
-            rtInvokeStartElement (pctxt, "newTokens", -1);
+            invokeStartElement (pctxt, "newTokens", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "newTokens", -1);
+            invokeEndElement (pctxt, "newTokens", -1);
 
             break;
 
          /* featureSetUpdate */
          case 9:
-            rtInvokeStartElement (pctxt, "featureSetUpdate", -1);
+            invokeStartElement (pctxt, "featureSetUpdate", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "featureSetUpdate", -1);
+            invokeEndElement (pctxt, "featureSetUpdate", -1);
 
             break;
 
          /* forwardedElements */
          case 10:
-            rtInvokeStartElement (pctxt, "forwardedElements", -1);
+            invokeStartElement (pctxt, "forwardedElements", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "forwardedElements", -1);
+            invokeEndElement (pctxt, "forwardedElements", -1);
 
             break;
 
          /* transportedInformation */
          case 11:
-            rtInvokeStartElement (pctxt, "transportedInformation", -1);
+            invokeStartElement (pctxt, "transportedInformation", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "transportedInformation", -1);
+            invokeEndElement (pctxt, "transportedInformation", -1);
 
             break;
 
@@ -11877,34 +11877,34 @@ EXTERN int asn1PD_H225ConferenceList (OOCTXT* pctxt, H225ConferenceList* pvalue)
    /* decode conferenceID */
 
    if (pvalue->m.conferenceIDPresent) {
-      rtInvokeStartElement (pctxt, "conferenceID", -1);
+      invokeStartElement (pctxt, "conferenceID", -1);
 
       stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "conferenceID", -1);
+      invokeEndElement (pctxt, "conferenceID", -1);
    }
 
    /* decode conferenceAlias */
 
    if (pvalue->m.conferenceAliasPresent) {
-      rtInvokeStartElement (pctxt, "conferenceAlias", -1);
+      invokeStartElement (pctxt, "conferenceAlias", -1);
 
       stat = asn1PD_H225AliasAddress (pctxt, &pvalue->conferenceAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "conferenceAlias", -1);
+      invokeEndElement (pctxt, "conferenceAlias", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -11965,13 +11965,13 @@ EXTERN int asn1PD_H225_SeqOfH225ConferenceList (OOCTXT* pctxt, H225_SeqOfH225Con
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225ConferenceList);
 
          stat = asn1PD_H225ConferenceList (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -12003,12 +12003,12 @@ EXTERN int asn1PD_H225Facility_UUIE_fastStart (OOCTXT* pctxt, H225Facility_UUIE_
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -12051,54 +12051,54 @@ EXTERN int asn1PD_H225Facility_UUIE (OOCTXT* pctxt, H225Facility_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode alternativeAddress */
 
    if (pvalue->m.alternativeAddressPresent) {
-      rtInvokeStartElement (pctxt, "alternativeAddress", -1);
+      invokeStartElement (pctxt, "alternativeAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->alternativeAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "alternativeAddress", -1);
+      invokeEndElement (pctxt, "alternativeAddress", -1);
    }
 
    /* decode alternativeAliasAddress */
 
    if (pvalue->m.alternativeAliasAddressPresent) {
-      rtInvokeStartElement (pctxt, "alternativeAliasAddress", -1);
+      invokeStartElement (pctxt, "alternativeAliasAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->alternativeAliasAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "alternativeAliasAddress", -1);
+      invokeEndElement (pctxt, "alternativeAliasAddress", -1);
    }
 
    /* decode conferenceID */
 
    if (pvalue->m.conferenceIDPresent) {
-      rtInvokeStartElement (pctxt, "conferenceID", -1);
+      invokeStartElement (pctxt, "conferenceID", -1);
 
       stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "conferenceID", -1);
+      invokeEndElement (pctxt, "conferenceID", -1);
    }
 
    /* decode reason */
 
-   rtInvokeStartElement (pctxt, "reason", -1);
+   invokeStartElement (pctxt, "reason", -1);
 
    stat = asn1PD_H225FacilityReason (pctxt, &pvalue->reason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "reason", -1);
+   invokeEndElement (pctxt, "reason", -1);
 
    if (extbit) {
 
@@ -12131,179 +12131,179 @@ EXTERN int asn1PD_H225Facility_UUIE (OOCTXT* pctxt, H225Facility_UUIE* pvalue)
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.destExtraCallInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+                     invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+                     invokeEndElement (pctxt, "destExtraCallInfo", -1);
                      break;
 
                   case 2:
                      pvalue->m.remoteExtensionAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeStartElement (pctxt, "remoteExtensionAddress", -1);
 
                      stat = asn1PD_H225AliasAddress (pctxt, &pvalue->remoteExtensionAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeEndElement (pctxt, "remoteExtensionAddress", -1);
                      break;
 
                   case 3:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 5:
                      pvalue->m.conferencesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "conferences", -1);
+                     invokeStartElement (pctxt, "conferences", -1);
 
                      stat = asn1PD_H225_SeqOfH225ConferenceList (pctxt, &pvalue->conferences);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "conferences", -1);
+                     invokeEndElement (pctxt, "conferences", -1);
                      break;
 
                   case 6:
                      pvalue->m.h245AddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245Address", -1);
+                     invokeStartElement (pctxt, "h245Address", -1);
 
                      stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245Address", -1);
+                     invokeEndElement (pctxt, "h245Address", -1);
                      break;
 
                   case 7:
                      pvalue->m.fastStartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastStart", -1);
+                     invokeStartElement (pctxt, "fastStart", -1);
 
                      stat = asn1PD_H225Facility_UUIE_fastStart (pctxt, &pvalue->fastStart);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "fastStart", -1);
+                     invokeEndElement (pctxt, "fastStart", -1);
                      break;
 
                   case 8:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 9:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 10:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   case 11:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 12:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 13:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 14:
                      pvalue->m.destinationInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destinationInfo", -1);
+                     invokeStartElement (pctxt, "destinationInfo", -1);
 
                      stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destinationInfo", -1);
+                     invokeEndElement (pctxt, "destinationInfo", -1);
                      break;
 
                   case 15:
                      pvalue->m.h245SecurityModePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245SecurityMode", -1);
+                     invokeStartElement (pctxt, "h245SecurityMode", -1);
 
                      stat = asn1PD_H225H245Security (pctxt, &pvalue->h245SecurityMode);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245SecurityMode", -1);
+                     invokeEndElement (pctxt, "h245SecurityMode", -1);
                      break;
 
                   default:
@@ -12342,12 +12342,12 @@ EXTERN int asn1PD_H225Progress_UUIE_fastStart (OOCTXT* pctxt, H225Progress_UUIE_
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -12396,84 +12396,84 @@ EXTERN int asn1PD_H225Progress_UUIE (OOCTXT* pctxt, H225Progress_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode destinationInfo */
 
-   rtInvokeStartElement (pctxt, "destinationInfo", -1);
+   invokeStartElement (pctxt, "destinationInfo", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destinationInfo", -1);
+   invokeEndElement (pctxt, "destinationInfo", -1);
 
    /* decode h245Address */
 
    if (pvalue->m.h245AddressPresent) {
-      rtInvokeStartElement (pctxt, "h245Address", -1);
+      invokeStartElement (pctxt, "h245Address", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->h245Address);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245Address", -1);
+      invokeEndElement (pctxt, "h245Address", -1);
    }
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode h245SecurityMode */
 
    if (pvalue->m.h245SecurityModePresent) {
-      rtInvokeStartElement (pctxt, "h245SecurityMode", -1);
+      invokeStartElement (pctxt, "h245SecurityMode", -1);
 
       stat = asn1PD_H225H245Security (pctxt, &pvalue->h245SecurityMode);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "h245SecurityMode", -1);
+      invokeEndElement (pctxt, "h245SecurityMode", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode fastStart */
 
    if (pvalue->m.fastStartPresent) {
-      rtInvokeStartElement (pctxt, "fastStart", -1);
+      invokeStartElement (pctxt, "fastStart", -1);
 
       stat = asn1PD_H225Progress_UUIE_fastStart (pctxt, &pvalue->fastStart);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "fastStart", -1);
+      invokeEndElement (pctxt, "fastStart", -1);
    }
 
    if (extbit) {
@@ -12507,36 +12507,36 @@ EXTERN int asn1PD_H225Progress_UUIE (OOCTXT* pctxt, H225Progress_UUIE* pvalue)
                   case 0:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 1:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 2:
                      pvalue->m.fastConnectRefusedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "fastConnectRefused", -1);
+                     invokeStartElement (pctxt, "fastConnectRefused", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "fastConnectRefused", -1);
+                     invokeEndElement (pctxt, "fastConnectRefused", -1);
                      break;
 
                   default:
@@ -12586,42 +12586,42 @@ EXTERN int asn1PD_H225Status_UUIE (OOCTXT* pctxt, H225Status_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    if (extbit) {
@@ -12687,42 +12687,42 @@ EXTERN int asn1PD_H225StatusInquiry_UUIE (OOCTXT* pctxt, H225StatusInquiry_UUIE*
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    if (extbit) {
@@ -12788,42 +12788,42 @@ EXTERN int asn1PD_H225SetupAcknowledge_UUIE (OOCTXT* pctxt, H225SetupAcknowledge
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    if (extbit) {
@@ -12889,42 +12889,42 @@ EXTERN int asn1PD_H225Notify_UUIE (OOCTXT* pctxt, H225Notify_UUIE* pvalue)
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    if (extbit) {
@@ -12984,92 +12984,92 @@ EXTERN int asn1PD_H225H323_UU_PDU_h323_message_body (OOCTXT* pctxt, H225H323_UU_
       switch (ui) {
          /* setup */
          case 0:
-            rtInvokeStartElement (pctxt, "setup", -1);
+            invokeStartElement (pctxt, "setup", -1);
 
             pvalue->u.setup = ALLOC_ASN1ELEM (pctxt, H225Setup_UUIE);
 
             stat = asn1PD_H225Setup_UUIE (pctxt, pvalue->u.setup);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "setup", -1);
+            invokeEndElement (pctxt, "setup", -1);
 
             break;
 
          /* callProceeding */
          case 1:
-            rtInvokeStartElement (pctxt, "callProceeding", -1);
+            invokeStartElement (pctxt, "callProceeding", -1);
 
             pvalue->u.callProceeding = ALLOC_ASN1ELEM (pctxt, H225CallProceeding_UUIE);
 
             stat = asn1PD_H225CallProceeding_UUIE (pctxt, pvalue->u.callProceeding);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "callProceeding", -1);
+            invokeEndElement (pctxt, "callProceeding", -1);
 
             break;
 
          /* connect */
          case 2:
-            rtInvokeStartElement (pctxt, "connect", -1);
+            invokeStartElement (pctxt, "connect", -1);
 
             pvalue->u.connect = ALLOC_ASN1ELEM (pctxt, H225Connect_UUIE);
 
             stat = asn1PD_H225Connect_UUIE (pctxt, pvalue->u.connect);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "connect", -1);
+            invokeEndElement (pctxt, "connect", -1);
 
             break;
 
          /* alerting */
          case 3:
-            rtInvokeStartElement (pctxt, "alerting", -1);
+            invokeStartElement (pctxt, "alerting", -1);
 
             pvalue->u.alerting = ALLOC_ASN1ELEM (pctxt, H225Alerting_UUIE);
 
             stat = asn1PD_H225Alerting_UUIE (pctxt, pvalue->u.alerting);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "alerting", -1);
+            invokeEndElement (pctxt, "alerting", -1);
 
             break;
 
          /* information */
          case 4:
-            rtInvokeStartElement (pctxt, "information", -1);
+            invokeStartElement (pctxt, "information", -1);
 
             pvalue->u.information = ALLOC_ASN1ELEM (pctxt, H225Information_UUIE);
 
             stat = asn1PD_H225Information_UUIE (pctxt, pvalue->u.information);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "information", -1);
+            invokeEndElement (pctxt, "information", -1);
 
             break;
 
          /* releaseComplete */
          case 5:
-            rtInvokeStartElement (pctxt, "releaseComplete", -1);
+            invokeStartElement (pctxt, "releaseComplete", -1);
 
             pvalue->u.releaseComplete = ALLOC_ASN1ELEM (pctxt, H225ReleaseComplete_UUIE);
 
             stat = asn1PD_H225ReleaseComplete_UUIE (pctxt, pvalue->u.releaseComplete);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "releaseComplete", -1);
+            invokeEndElement (pctxt, "releaseComplete", -1);
 
             break;
 
          /* facility */
          case 6:
-            rtInvokeStartElement (pctxt, "facility", -1);
+            invokeStartElement (pctxt, "facility", -1);
 
             pvalue->u.facility = ALLOC_ASN1ELEM (pctxt, H225Facility_UUIE);
 
             stat = asn1PD_H225Facility_UUIE (pctxt, pvalue->u.facility);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "facility", -1);
+            invokeEndElement (pctxt, "facility", -1);
 
             break;
 
@@ -13094,77 +13094,77 @@ EXTERN int asn1PD_H225H323_UU_PDU_h323_message_body (OOCTXT* pctxt, H225H323_UU_
       switch (pvalue->t) {
          /* progress */
          case 8:
-            rtInvokeStartElement (pctxt, "progress", -1);
+            invokeStartElement (pctxt, "progress", -1);
 
             pvalue->u.progress = ALLOC_ASN1ELEM (pctxt, H225Progress_UUIE);
 
             stat = asn1PD_H225Progress_UUIE (pctxt, pvalue->u.progress);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "progress", -1);
+            invokeEndElement (pctxt, "progress", -1);
 
             break;
 
          /* empty */
          case 9:
-            rtInvokeStartElement (pctxt, "empty", -1);
+            invokeStartElement (pctxt, "empty", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "empty", -1);
+            invokeEndElement (pctxt, "empty", -1);
 
             break;
 
          /* status */
          case 10:
-            rtInvokeStartElement (pctxt, "status", -1);
+            invokeStartElement (pctxt, "status", -1);
 
             pvalue->u.status = ALLOC_ASN1ELEM (pctxt, H225Status_UUIE);
 
             stat = asn1PD_H225Status_UUIE (pctxt, pvalue->u.status);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "status", -1);
+            invokeEndElement (pctxt, "status", -1);
 
             break;
 
          /* statusInquiry */
          case 11:
-            rtInvokeStartElement (pctxt, "statusInquiry", -1);
+            invokeStartElement (pctxt, "statusInquiry", -1);
 
             pvalue->u.statusInquiry = ALLOC_ASN1ELEM (pctxt, H225StatusInquiry_UUIE);
 
             stat = asn1PD_H225StatusInquiry_UUIE (pctxt, pvalue->u.statusInquiry);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "statusInquiry", -1);
+            invokeEndElement (pctxt, "statusInquiry", -1);
 
             break;
 
          /* setupAcknowledge */
          case 12:
-            rtInvokeStartElement (pctxt, "setupAcknowledge", -1);
+            invokeStartElement (pctxt, "setupAcknowledge", -1);
 
             pvalue->u.setupAcknowledge = ALLOC_ASN1ELEM (pctxt, H225SetupAcknowledge_UUIE);
 
             stat = asn1PD_H225SetupAcknowledge_UUIE (pctxt, pvalue->u.setupAcknowledge);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "setupAcknowledge", -1);
+            invokeEndElement (pctxt, "setupAcknowledge", -1);
 
             break;
 
          /* notify */
          case 13:
-            rtInvokeStartElement (pctxt, "notify", -1);
+            invokeStartElement (pctxt, "notify", -1);
 
             pvalue->u.notify = ALLOC_ASN1ELEM (pctxt, H225Notify_UUIE);
 
             stat = asn1PD_H225Notify_UUIE (pctxt, pvalue->u.notify);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "notify", -1);
+            invokeEndElement (pctxt, "notify", -1);
 
             break;
 
@@ -13198,12 +13198,12 @@ EXTERN int asn1PD_H225H323_UU_PDU_h4501SupplementaryService (OOCTXT* pctxt, H225
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -13231,12 +13231,12 @@ EXTERN int asn1PD_H225H323_UU_PDU_h245Control (OOCTXT* pctxt, H225H323_UU_PDU_h2
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -13270,13 +13270,13 @@ EXTERN int asn1PD_H225_SeqOfH225NonStandardParameter (OOCTXT* pctxt, H225_SeqOfH
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225NonStandardParameter);
 
          stat = asn1PD_H225NonStandardParameter (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -13320,23 +13320,23 @@ EXTERN int asn1PD_H225CallLinkage (OOCTXT* pctxt, H225CallLinkage* pvalue)
    /* decode globalCallId */
 
    if (pvalue->m.globalCallIdPresent) {
-      rtInvokeStartElement (pctxt, "globalCallId", -1);
+      invokeStartElement (pctxt, "globalCallId", -1);
 
       stat = asn1PD_H225GloballyUniqueID (pctxt, &pvalue->globalCallId);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "globalCallId", -1);
+      invokeEndElement (pctxt, "globalCallId", -1);
    }
 
    /* decode threadId */
 
    if (pvalue->m.threadIdPresent) {
-      rtInvokeStartElement (pctxt, "threadId", -1);
+      invokeStartElement (pctxt, "threadId", -1);
 
       stat = asn1PD_H225GloballyUniqueID (pctxt, &pvalue->threadId);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "threadId", -1);
+      invokeEndElement (pctxt, "threadId", -1);
    }
 
    if (extbit) {
@@ -13391,12 +13391,12 @@ EXTERN int asn1PD_H225H323_UU_PDU_tunnelledSignallingMessage_messageContent (OOC
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1DynOctStr);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOctStrValue (pctxt, pvalue->elem[xx1].numocts, pvalue->elem[xx1].data);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -13435,42 +13435,42 @@ EXTERN int asn1PD_H225H323_UU_PDU_tunnelledSignallingMessage (OOCTXT* pctxt, H22
 
    /* decode tunnelledProtocolID */
 
-   rtInvokeStartElement (pctxt, "tunnelledProtocolID", -1);
+   invokeStartElement (pctxt, "tunnelledProtocolID", -1);
 
    stat = asn1PD_H225TunnelledProtocol (pctxt, &pvalue->tunnelledProtocolID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "tunnelledProtocolID", -1);
+   invokeEndElement (pctxt, "tunnelledProtocolID", -1);
 
    /* decode messageContent */
 
-   rtInvokeStartElement (pctxt, "messageContent", -1);
+   invokeStartElement (pctxt, "messageContent", -1);
 
    stat = asn1PD_H225H323_UU_PDU_tunnelledSignallingMessage_messageContent (pctxt, &pvalue->messageContent);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "messageContent", -1);
+   invokeEndElement (pctxt, "messageContent", -1);
 
    /* decode tunnellingRequired */
 
    if (pvalue->m.tunnellingRequiredPresent) {
-      rtInvokeStartElement (pctxt, "tunnellingRequired", -1);
+      invokeStartElement (pctxt, "tunnellingRequired", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "tunnellingRequired", -1);
+      invokeEndElement (pctxt, "tunnellingRequired", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -13540,35 +13540,35 @@ EXTERN int asn1PD_H225StimulusControl (OOCTXT* pctxt, H225StimulusControl* pvalu
    /* decode nonStandard */
 
    if (pvalue->m.nonStandardPresent) {
-      rtInvokeStartElement (pctxt, "nonStandard", -1);
+      invokeStartElement (pctxt, "nonStandard", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandard);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandard", -1);
+      invokeEndElement (pctxt, "nonStandard", -1);
    }
 
    /* decode isText */
 
    if (pvalue->m.isTextPresent) {
-      rtInvokeStartElement (pctxt, "isText", -1);
+      invokeStartElement (pctxt, "isText", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "isText", -1);
+      invokeEndElement (pctxt, "isText", -1);
    }
 
    /* decode h248Message */
 
    if (pvalue->m.h248MessagePresent) {
-      rtInvokeStartElement (pctxt, "h248Message", -1);
+      invokeStartElement (pctxt, "h248Message", -1);
 
       stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->h248Message);
       if (stat != ASN_OK) return stat;
-      rtInvokeOctStrValue (pctxt, pvalue->h248Message.numocts, pvalue->h248Message.data);
+      invokeOctStrValue (pctxt, pvalue->h248Message.numocts, pvalue->h248Message.data);
 
-      rtInvokeEndElement (pctxt, "h248Message", -1);
+      invokeEndElement (pctxt, "h248Message", -1);
    }
 
    if (extbit) {
@@ -13632,22 +13632,22 @@ EXTERN int asn1PD_H225H323_UU_PDU (OOCTXT* pctxt, H225H323_UU_PDU* pvalue)
 
    /* decode h323_message_body */
 
-   rtInvokeStartElement (pctxt, "h323_message_body", -1);
+   invokeStartElement (pctxt, "h323_message_body", -1);
 
    stat = asn1PD_H225H323_UU_PDU_h323_message_body (pctxt, &pvalue->h323_message_body);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "h323_message_body", -1);
+   invokeEndElement (pctxt, "h323_message_body", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -13681,101 +13681,101 @@ EXTERN int asn1PD_H225H323_UU_PDU (OOCTXT* pctxt, H225H323_UU_PDU* pvalue)
                   case 0:
                      pvalue->m.h4501SupplementaryServicePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h4501SupplementaryService", -1);
+                     invokeStartElement (pctxt, "h4501SupplementaryService", -1);
 
                      stat = asn1PD_H225H323_UU_PDU_h4501SupplementaryService (pctxt, &pvalue->h4501SupplementaryService);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h4501SupplementaryService", -1);
+                     invokeEndElement (pctxt, "h4501SupplementaryService", -1);
                      break;
 
                   case 1:
                      pvalue->m.h245TunnelingPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245Tunneling", -1);
+                     invokeStartElement (pctxt, "h245Tunneling", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->h245Tunneling);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->h245Tunneling);
+                     invokeBoolValue (pctxt, pvalue->h245Tunneling);
 
-                     rtInvokeEndElement (pctxt, "h245Tunneling", -1);
+                     invokeEndElement (pctxt, "h245Tunneling", -1);
                      break;
 
                   case 2:
                      pvalue->m.h245ControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "h245Control", -1);
+                     invokeStartElement (pctxt, "h245Control", -1);
 
                      stat = asn1PD_H225H323_UU_PDU_h245Control (pctxt, &pvalue->h245Control);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "h245Control", -1);
+                     invokeEndElement (pctxt, "h245Control", -1);
                      break;
 
                   case 3:
                      pvalue->m.nonStandardControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "nonStandardControl", -1);
+                     invokeStartElement (pctxt, "nonStandardControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225NonStandardParameter (pctxt, &pvalue->nonStandardControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "nonStandardControl", -1);
+                     invokeEndElement (pctxt, "nonStandardControl", -1);
                      break;
 
                   case 4:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 5:
                      pvalue->m.tunnelledSignallingMessagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tunnelledSignallingMessage", -1);
+                     invokeStartElement (pctxt, "tunnelledSignallingMessage", -1);
 
                      stat = asn1PD_H225H323_UU_PDU_tunnelledSignallingMessage (pctxt, &pvalue->tunnelledSignallingMessage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tunnelledSignallingMessage", -1);
+                     invokeEndElement (pctxt, "tunnelledSignallingMessage", -1);
                      break;
 
                   case 6:
                      pvalue->m.provisionalRespToH245TunnelingPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "provisionalRespToH245Tunneling", -1);
+                     invokeStartElement (pctxt, "provisionalRespToH245Tunneling", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "provisionalRespToH245Tunneling", -1);
+                     invokeEndElement (pctxt, "provisionalRespToH245Tunneling", -1);
                      break;
 
                   case 7:
                      pvalue->m.stimulusControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "stimulusControl", -1);
+                     invokeStartElement (pctxt, "stimulusControl", -1);
 
                      stat = asn1PD_H225StimulusControl (pctxt, &pvalue->stimulusControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "stimulusControl", -1);
+                     invokeEndElement (pctxt, "stimulusControl", -1);
                      break;
 
                   case 8:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -13815,22 +13815,22 @@ EXTERN int asn1PD_H225H323_UserInformation_user_data (OOCTXT* pctxt, H225H323_Us
 
    /* decode protocol_discriminator */
 
-   rtInvokeStartElement (pctxt, "protocol_discriminator", -1);
+   invokeStartElement (pctxt, "protocol_discriminator", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->protocol_discriminator, 0U, 255U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->protocol_discriminator);
+   invokeUIntValue (pctxt, pvalue->protocol_discriminator);
 
-   rtInvokeEndElement (pctxt, "protocol_discriminator", -1);
+   invokeEndElement (pctxt, "protocol_discriminator", -1);
 
    /* decode user_information */
 
-   rtInvokeStartElement (pctxt, "user_information", -1);
+   invokeStartElement (pctxt, "user_information", -1);
 
    stat = asn1PD_H225H323_UserInformation_user_data_user_information (pctxt, &pvalue->user_information);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "user_information", -1);
+   invokeEndElement (pctxt, "user_information", -1);
 
    if (extbit) {
 
@@ -13892,22 +13892,22 @@ EXTERN int asn1PD_H225H323_UserInformation (OOCTXT* pctxt, H225H323_UserInformat
 
    /* decode h323_uu_pdu */
 
-   rtInvokeStartElement (pctxt, "h323_uu_pdu", -1);
+   invokeStartElement (pctxt, "h323_uu_pdu", -1);
 
    stat = asn1PD_H225H323_UU_PDU (pctxt, &pvalue->h323_uu_pdu);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "h323_uu_pdu", -1);
+   invokeEndElement (pctxt, "h323_uu_pdu", -1);
 
    /* decode user_data */
 
    if (pvalue->m.user_dataPresent) {
-      rtInvokeStartElement (pctxt, "user_data", -1);
+      invokeStartElement (pctxt, "user_data", -1);
 
       stat = asn1PD_H225H323_UserInformation_user_data (pctxt, &pvalue->user_data);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "user_data", -1);
+      invokeEndElement (pctxt, "user_data", -1);
    }
 
    if (extbit) {
@@ -13953,21 +13953,21 @@ EXTERN int asn1PD_H225AddressPattern_range (OOCTXT* pctxt, H225AddressPattern_ra
 
    /* decode startOfRange */
 
-   rtInvokeStartElement (pctxt, "startOfRange", -1);
+   invokeStartElement (pctxt, "startOfRange", -1);
 
    stat = asn1PD_H225PartyNumber (pctxt, &pvalue->startOfRange);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "startOfRange", -1);
+   invokeEndElement (pctxt, "startOfRange", -1);
 
    /* decode endOfRange */
 
-   rtInvokeStartElement (pctxt, "endOfRange", -1);
+   invokeStartElement (pctxt, "endOfRange", -1);
 
    stat = asn1PD_H225PartyNumber (pctxt, &pvalue->endOfRange);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endOfRange", -1);
+   invokeEndElement (pctxt, "endOfRange", -1);
 
    return (stat);
 }
@@ -13997,27 +13997,27 @@ EXTERN int asn1PD_H225AddressPattern (OOCTXT* pctxt, H225AddressPattern* pvalue)
       switch (ui) {
          /* wildcard */
          case 0:
-            rtInvokeStartElement (pctxt, "wildcard", -1);
+            invokeStartElement (pctxt, "wildcard", -1);
 
             pvalue->u.wildcard = ALLOC_ASN1ELEM (pctxt, H225AliasAddress);
 
             stat = asn1PD_H225AliasAddress (pctxt, pvalue->u.wildcard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "wildcard", -1);
+            invokeEndElement (pctxt, "wildcard", -1);
 
             break;
 
          /* range */
          case 1:
-            rtInvokeStartElement (pctxt, "range", -1);
+            invokeStartElement (pctxt, "range", -1);
 
             pvalue->u.range = ALLOC_ASN1ELEM (pctxt, H225AddressPattern_range);
 
             stat = asn1PD_H225AddressPattern_range (pctxt, pvalue->u.range);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "range", -1);
+            invokeEndElement (pctxt, "range", -1);
 
             break;
 
@@ -14068,13 +14068,13 @@ EXTERN int asn1PD_H225_SeqOfH225TransportAddress (OOCTXT* pctxt, H225_SeqOfH225T
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225TransportAddress);
 
          stat = asn1PD_H225TransportAddress (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -14116,12 +14116,12 @@ EXTERN int asn1PD_H225AlternateTransportAddresses (OOCTXT* pctxt, H225AlternateT
    /* decode annexE */
 
    if (pvalue->m.annexEPresent) {
-      rtInvokeStartElement (pctxt, "annexE", -1);
+      invokeStartElement (pctxt, "annexE", -1);
 
       stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->annexE);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "annexE", -1);
+      invokeEndElement (pctxt, "annexE", -1);
    }
 
    if (extbit) {
@@ -14155,12 +14155,12 @@ EXTERN int asn1PD_H225AlternateTransportAddresses (OOCTXT* pctxt, H225AlternateT
                   case 0:
                      pvalue->m.sctpPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sctp", -1);
+                     invokeStartElement (pctxt, "sctp", -1);
 
                      stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->sctp);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sctp", -1);
+                     invokeEndElement (pctxt, "sctp", -1);
                      break;
 
                   default:
@@ -14236,112 +14236,112 @@ EXTERN int asn1PD_H225Endpoint (OOCTXT* pctxt, H225Endpoint* pvalue)
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode aliasAddress */
 
    if (pvalue->m.aliasAddressPresent) {
-      rtInvokeStartElement (pctxt, "aliasAddress", -1);
+      invokeStartElement (pctxt, "aliasAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->aliasAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "aliasAddress", -1);
+      invokeEndElement (pctxt, "aliasAddress", -1);
    }
 
    /* decode callSignalAddress */
 
    if (pvalue->m.callSignalAddressPresent) {
-      rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+      invokeStartElement (pctxt, "callSignalAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+      invokeEndElement (pctxt, "callSignalAddress", -1);
    }
 
    /* decode rasAddress */
 
    if (pvalue->m.rasAddressPresent) {
-      rtInvokeStartElement (pctxt, "rasAddress", -1);
+      invokeStartElement (pctxt, "rasAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->rasAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "rasAddress", -1);
+      invokeEndElement (pctxt, "rasAddress", -1);
    }
 
    /* decode endpointType */
 
    if (pvalue->m.endpointTypePresent) {
-      rtInvokeStartElement (pctxt, "endpointType", -1);
+      invokeStartElement (pctxt, "endpointType", -1);
 
       stat = asn1PD_H225EndpointType (pctxt, &pvalue->endpointType);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointType", -1);
+      invokeEndElement (pctxt, "endpointType", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode priority */
 
    if (pvalue->m.priorityPresent) {
-      rtInvokeStartElement (pctxt, "priority", -1);
+      invokeStartElement (pctxt, "priority", -1);
 
       stat = decodeConsUInt8 (pctxt, &pvalue->priority, 0U, 127U);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->priority);
+      invokeUIntValue (pctxt, pvalue->priority);
 
-      rtInvokeEndElement (pctxt, "priority", -1);
+      invokeEndElement (pctxt, "priority", -1);
    }
 
    /* decode remoteExtensionAddress */
 
    if (pvalue->m.remoteExtensionAddressPresent) {
-      rtInvokeStartElement (pctxt, "remoteExtensionAddress", -1);
+      invokeStartElement (pctxt, "remoteExtensionAddress", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->remoteExtensionAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "remoteExtensionAddress", -1);
+      invokeEndElement (pctxt, "remoteExtensionAddress", -1);
    }
 
    /* decode destExtraCallInfo */
 
    if (pvalue->m.destExtraCallInfoPresent) {
-      rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+      invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+      invokeEndElement (pctxt, "destExtraCallInfo", -1);
    }
 
    if (extbit) {
@@ -14375,34 +14375,34 @@ EXTERN int asn1PD_H225Endpoint (OOCTXT* pctxt, H225Endpoint* pvalue)
                   case 0:
                      pvalue->m.alternateTransportAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeStartElement (pctxt, "alternateTransportAddresses", -1);
 
                      stat = asn1PD_H225AlternateTransportAddresses (pctxt, &pvalue->alternateTransportAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeEndElement (pctxt, "alternateTransportAddresses", -1);
                      break;
 
                   case 1:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 2:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   default:
@@ -14446,23 +14446,23 @@ EXTERN int asn1PD_H225UseSpecifiedTransport (OOCTXT* pctxt, H225UseSpecifiedTran
       switch (ui) {
          /* tcp */
          case 0:
-            rtInvokeStartElement (pctxt, "tcp", -1);
+            invokeStartElement (pctxt, "tcp", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "tcp", -1);
+            invokeEndElement (pctxt, "tcp", -1);
 
             break;
 
          /* annexE */
          case 1:
-            rtInvokeStartElement (pctxt, "annexE", -1);
+            invokeStartElement (pctxt, "annexE", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "annexE", -1);
+            invokeEndElement (pctxt, "annexE", -1);
 
             break;
 
@@ -14487,12 +14487,12 @@ EXTERN int asn1PD_H225UseSpecifiedTransport (OOCTXT* pctxt, H225UseSpecifiedTran
       switch (pvalue->t) {
          /* sctp */
          case 3:
-            rtInvokeStartElement (pctxt, "sctp", -1);
+            invokeStartElement (pctxt, "sctp", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "sctp", -1);
+            invokeEndElement (pctxt, "sctp", -1);
 
             break;
 
@@ -14534,43 +14534,43 @@ EXTERN int asn1PD_H225AlternateGK (OOCTXT* pctxt, H225AlternateGK* pvalue)
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode needToRegister */
 
-   rtInvokeStartElement (pctxt, "needToRegister", -1);
+   invokeStartElement (pctxt, "needToRegister", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->needToRegister);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->needToRegister);
+   invokeBoolValue (pctxt, pvalue->needToRegister);
 
-   rtInvokeEndElement (pctxt, "needToRegister", -1);
+   invokeEndElement (pctxt, "needToRegister", -1);
 
    /* decode priority */
 
-   rtInvokeStartElement (pctxt, "priority", -1);
+   invokeStartElement (pctxt, "priority", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->priority, 0U, 127U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->priority);
+   invokeUIntValue (pctxt, pvalue->priority);
 
-   rtInvokeEndElement (pctxt, "priority", -1);
+   invokeEndElement (pctxt, "priority", -1);
 
    if (extbit) {
 
@@ -14630,13 +14630,13 @@ EXTERN int asn1PD_H225_SeqOfH225AlternateGK (OOCTXT* pctxt, H225_SeqOfH225Altern
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225AlternateGK);
 
          stat = asn1PD_H225AlternateGK (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -14669,22 +14669,22 @@ EXTERN int asn1PD_H225AltGKInfo (OOCTXT* pctxt, H225AltGKInfo* pvalue)
 
    /* decode alternateGatekeeper */
 
-   rtInvokeStartElement (pctxt, "alternateGatekeeper", -1);
+   invokeStartElement (pctxt, "alternateGatekeeper", -1);
 
    stat = asn1PD_H225_SeqOfH225AlternateGK (pctxt, &pvalue->alternateGatekeeper);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "alternateGatekeeper", -1);
+   invokeEndElement (pctxt, "alternateGatekeeper", -1);
 
    /* decode altGKisPermanent */
 
-   rtInvokeStartElement (pctxt, "altGKisPermanent", -1);
+   invokeStartElement (pctxt, "altGKisPermanent", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->altGKisPermanent);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->altGKisPermanent);
+   invokeBoolValue (pctxt, pvalue->altGKisPermanent);
 
-   rtInvokeEndElement (pctxt, "altGKisPermanent", -1);
+   invokeEndElement (pctxt, "altGKisPermanent", -1);
 
    if (extbit) {
 
@@ -14742,67 +14742,67 @@ EXTERN int asn1PD_H225SecurityErrors2 (OOCTXT* pctxt, H225SecurityErrors2* pvalu
       switch (ui) {
          /* securityWrongSyncTime */
          case 0:
-            rtInvokeStartElement (pctxt, "securityWrongSyncTime", -1);
+            invokeStartElement (pctxt, "securityWrongSyncTime", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongSyncTime", -1);
+            invokeEndElement (pctxt, "securityWrongSyncTime", -1);
 
             break;
 
          /* securityReplay */
          case 1:
-            rtInvokeStartElement (pctxt, "securityReplay", -1);
+            invokeStartElement (pctxt, "securityReplay", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityReplay", -1);
+            invokeEndElement (pctxt, "securityReplay", -1);
 
             break;
 
          /* securityWrongGeneralID */
          case 2:
-            rtInvokeStartElement (pctxt, "securityWrongGeneralID", -1);
+            invokeStartElement (pctxt, "securityWrongGeneralID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongGeneralID", -1);
+            invokeEndElement (pctxt, "securityWrongGeneralID", -1);
 
             break;
 
          /* securityWrongSendersID */
          case 3:
-            rtInvokeStartElement (pctxt, "securityWrongSendersID", -1);
+            invokeStartElement (pctxt, "securityWrongSendersID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongSendersID", -1);
+            invokeEndElement (pctxt, "securityWrongSendersID", -1);
 
             break;
 
          /* securityIntegrityFailed */
          case 4:
-            rtInvokeStartElement (pctxt, "securityIntegrityFailed", -1);
+            invokeStartElement (pctxt, "securityIntegrityFailed", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityIntegrityFailed", -1);
+            invokeEndElement (pctxt, "securityIntegrityFailed", -1);
 
             break;
 
          /* securityWrongOID */
          case 5:
-            rtInvokeStartElement (pctxt, "securityWrongOID", -1);
+            invokeStartElement (pctxt, "securityWrongOID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityWrongOID", -1);
+            invokeEndElement (pctxt, "securityWrongOID", -1);
 
             break;
 
@@ -14851,28 +14851,28 @@ EXTERN int asn1PD_H225EncryptIntAlg (OOCTXT* pctxt, H225EncryptIntAlg* pvalue)
       switch (ui) {
          /* nonStandard */
          case 0:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
          /* isoAlgorithm */
          case 1:
-            rtInvokeStartElement (pctxt, "isoAlgorithm", -1);
+            invokeStartElement (pctxt, "isoAlgorithm", -1);
 
             pvalue->u.isoAlgorithm = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.isoAlgorithm);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.isoAlgorithm->numids, pvalue->u.isoAlgorithm->subid);
+            invokeOidValue (pctxt, pvalue->u.isoAlgorithm->numids, pvalue->u.isoAlgorithm->subid);
 
-            rtInvokeEndElement (pctxt, "isoAlgorithm", -1);
+            invokeEndElement (pctxt, "isoAlgorithm", -1);
 
             break;
 
@@ -14921,52 +14921,52 @@ EXTERN int asn1PD_H225NonIsoIntegrityMechanism (OOCTXT* pctxt, H225NonIsoIntegri
       switch (ui) {
          /* hMAC_MD5 */
          case 0:
-            rtInvokeStartElement (pctxt, "hMAC_MD5", -1);
+            invokeStartElement (pctxt, "hMAC_MD5", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hMAC_MD5", -1);
+            invokeEndElement (pctxt, "hMAC_MD5", -1);
 
             break;
 
          /* hMAC_iso10118_2_s */
          case 1:
-            rtInvokeStartElement (pctxt, "hMAC_iso10118_2_s", -1);
+            invokeStartElement (pctxt, "hMAC_iso10118_2_s", -1);
 
             pvalue->u.hMAC_iso10118_2_s = ALLOC_ASN1ELEM (pctxt, H225EncryptIntAlg);
 
             stat = asn1PD_H225EncryptIntAlg (pctxt, pvalue->u.hMAC_iso10118_2_s);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "hMAC_iso10118_2_s", -1);
+            invokeEndElement (pctxt, "hMAC_iso10118_2_s", -1);
 
             break;
 
          /* hMAC_iso10118_2_l */
          case 2:
-            rtInvokeStartElement (pctxt, "hMAC_iso10118_2_l", -1);
+            invokeStartElement (pctxt, "hMAC_iso10118_2_l", -1);
 
             pvalue->u.hMAC_iso10118_2_l = ALLOC_ASN1ELEM (pctxt, H225EncryptIntAlg);
 
             stat = asn1PD_H225EncryptIntAlg (pctxt, pvalue->u.hMAC_iso10118_2_l);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "hMAC_iso10118_2_l", -1);
+            invokeEndElement (pctxt, "hMAC_iso10118_2_l", -1);
 
             break;
 
          /* hMAC_iso10118_3 */
          case 3:
-            rtInvokeStartElement (pctxt, "hMAC_iso10118_3", -1);
+            invokeStartElement (pctxt, "hMAC_iso10118_3", -1);
 
             pvalue->u.hMAC_iso10118_3 = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.hMAC_iso10118_3);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.hMAC_iso10118_3->numids, pvalue->u.hMAC_iso10118_3->subid);
+            invokeOidValue (pctxt, pvalue->u.hMAC_iso10118_3->numids, pvalue->u.hMAC_iso10118_3->subid);
 
-            rtInvokeEndElement (pctxt, "hMAC_iso10118_3", -1);
+            invokeEndElement (pctxt, "hMAC_iso10118_3", -1);
 
             break;
 
@@ -15015,52 +15015,52 @@ EXTERN int asn1PD_H225IntegrityMechanism (OOCTXT* pctxt, H225IntegrityMechanism*
       switch (ui) {
          /* nonStandard */
          case 0:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H225NonStandardParameter);
 
             stat = asn1PD_H225NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
          /* digSig */
          case 1:
-            rtInvokeStartElement (pctxt, "digSig", -1);
+            invokeStartElement (pctxt, "digSig", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "digSig", -1);
+            invokeEndElement (pctxt, "digSig", -1);
 
             break;
 
          /* iso9797 */
          case 2:
-            rtInvokeStartElement (pctxt, "iso9797", -1);
+            invokeStartElement (pctxt, "iso9797", -1);
 
             pvalue->u.iso9797 = ALLOC_ASN1ELEM (pctxt, ASN1OBJID);
 
             stat = decodeObjectIdentifier (pctxt, pvalue->u.iso9797);
             if (stat != ASN_OK) return stat;
-            rtInvokeOidValue (pctxt, pvalue->u.iso9797->numids, pvalue->u.iso9797->subid);
+            invokeOidValue (pctxt, pvalue->u.iso9797->numids, pvalue->u.iso9797->subid);
 
-            rtInvokeEndElement (pctxt, "iso9797", -1);
+            invokeEndElement (pctxt, "iso9797", -1);
 
             break;
 
          /* nonIsoIM */
          case 3:
-            rtInvokeStartElement (pctxt, "nonIsoIM", -1);
+            invokeStartElement (pctxt, "nonIsoIM", -1);
 
             pvalue->u.nonIsoIM = ALLOC_ASN1ELEM (pctxt, H225NonIsoIntegrityMechanism);
 
             stat = asn1PD_H225NonIsoIntegrityMechanism (pctxt, pvalue->u.nonIsoIM);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonIsoIM", -1);
+            invokeEndElement (pctxt, "nonIsoIM", -1);
 
             break;
 
@@ -15096,24 +15096,24 @@ EXTERN int asn1PD_H225ICV (OOCTXT* pctxt, H225ICV* pvalue)
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode icv */
 
-   rtInvokeStartElement (pctxt, "icv", -1);
+   invokeStartElement (pctxt, "icv", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->icv);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->icv.numbits, pvalue->icv.data);
+   invokeBitStrValue (pctxt, pvalue->icv.numbits, pvalue->icv.data);
 
-   rtInvokeEndElement (pctxt, "icv", -1);
+   invokeEndElement (pctxt, "icv", -1);
 
    return (stat);
 }
@@ -15140,13 +15140,13 @@ EXTERN int asn1PD_H225CapacityReportingCapability (OOCTXT* pctxt, H225CapacityRe
 
    /* decode canReportCallCapacity */
 
-   rtInvokeStartElement (pctxt, "canReportCallCapacity", -1);
+   invokeStartElement (pctxt, "canReportCallCapacity", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->canReportCallCapacity);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->canReportCallCapacity);
+   invokeBoolValue (pctxt, pvalue->canReportCallCapacity);
 
-   rtInvokeEndElement (pctxt, "canReportCallCapacity", -1);
+   invokeEndElement (pctxt, "canReportCallCapacity", -1);
 
    if (extbit) {
 
@@ -15212,23 +15212,23 @@ EXTERN int asn1PD_H225CapacityReportingSpecification_when (OOCTXT* pctxt, H225Ca
    /* decode callStart */
 
    if (pvalue->m.callStartPresent) {
-      rtInvokeStartElement (pctxt, "callStart", -1);
+      invokeStartElement (pctxt, "callStart", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "callStart", -1);
+      invokeEndElement (pctxt, "callStart", -1);
    }
 
    /* decode callEnd */
 
    if (pvalue->m.callEndPresent) {
-      rtInvokeStartElement (pctxt, "callEnd", -1);
+      invokeStartElement (pctxt, "callEnd", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "callEnd", -1);
+      invokeEndElement (pctxt, "callEnd", -1);
    }
 
    if (extbit) {
@@ -15284,12 +15284,12 @@ EXTERN int asn1PD_H225CapacityReportingSpecification (OOCTXT* pctxt, H225Capacit
 
    /* decode when */
 
-   rtInvokeStartElement (pctxt, "when", -1);
+   invokeStartElement (pctxt, "when", -1);
 
    stat = asn1PD_H225CapacityReportingSpecification_when (pctxt, &pvalue->when);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "when", -1);
+   invokeEndElement (pctxt, "when", -1);
 
    if (extbit) {
 
@@ -15357,44 +15357,44 @@ EXTERN int asn1PD_H225RasUsageInfoTypes (OOCTXT* pctxt, H225RasUsageInfoTypes* p
 
    /* decode nonStandardUsageTypes */
 
-   rtInvokeStartElement (pctxt, "nonStandardUsageTypes", -1);
+   invokeStartElement (pctxt, "nonStandardUsageTypes", -1);
 
    stat = asn1PD_H225_SeqOfH225NonStandardParameter (pctxt, &pvalue->nonStandardUsageTypes);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "nonStandardUsageTypes", -1);
+   invokeEndElement (pctxt, "nonStandardUsageTypes", -1);
 
    /* decode startTime */
 
    if (pvalue->m.startTimePresent) {
-      rtInvokeStartElement (pctxt, "startTime", -1);
+      invokeStartElement (pctxt, "startTime", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "startTime", -1);
+      invokeEndElement (pctxt, "startTime", -1);
    }
 
    /* decode endTime */
 
    if (pvalue->m.endTimePresent) {
-      rtInvokeStartElement (pctxt, "endTime", -1);
+      invokeStartElement (pctxt, "endTime", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "endTime", -1);
+      invokeEndElement (pctxt, "endTime", -1);
    }
 
    /* decode terminationCause */
 
    if (pvalue->m.terminationCausePresent) {
-      rtInvokeStartElement (pctxt, "terminationCause", -1);
+      invokeStartElement (pctxt, "terminationCause", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "terminationCause", -1);
+      invokeEndElement (pctxt, "terminationCause", -1);
    }
 
    if (extbit) {
@@ -15464,34 +15464,34 @@ EXTERN int asn1PD_H225RasUsageSpecification_when (OOCTXT* pctxt, H225RasUsageSpe
    /* decode start */
 
    if (pvalue->m.startPresent) {
-      rtInvokeStartElement (pctxt, "start", -1);
+      invokeStartElement (pctxt, "start", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "start", -1);
+      invokeEndElement (pctxt, "start", -1);
    }
 
    /* decode end */
 
    if (pvalue->m.endPresent) {
-      rtInvokeStartElement (pctxt, "end", -1);
+      invokeStartElement (pctxt, "end", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "end", -1);
+      invokeEndElement (pctxt, "end", -1);
    }
 
    /* decode inIrr */
 
    if (pvalue->m.inIrrPresent) {
-      rtInvokeStartElement (pctxt, "inIrr", -1);
+      invokeStartElement (pctxt, "inIrr", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "inIrr", -1);
+      invokeEndElement (pctxt, "inIrr", -1);
    }
 
    if (extbit) {
@@ -15558,23 +15558,23 @@ EXTERN int asn1PD_H225RasUsageSpecification_callStartingPoint (OOCTXT* pctxt, H2
    /* decode alerting */
 
    if (pvalue->m.alertingPresent) {
-      rtInvokeStartElement (pctxt, "alerting", -1);
+      invokeStartElement (pctxt, "alerting", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "alerting", -1);
+      invokeEndElement (pctxt, "alerting", -1);
    }
 
    /* decode connect */
 
    if (pvalue->m.connectPresent) {
-      rtInvokeStartElement (pctxt, "connect", -1);
+      invokeStartElement (pctxt, "connect", -1);
 
       /* NULL */
-      rtInvokeNullValue (pctxt);
+      invokeNullValue (pctxt);
 
-      rtInvokeEndElement (pctxt, "connect", -1);
+      invokeEndElement (pctxt, "connect", -1);
    }
 
    if (extbit) {
@@ -15637,32 +15637,32 @@ EXTERN int asn1PD_H225RasUsageSpecification (OOCTXT* pctxt, H225RasUsageSpecific
 
    /* decode when */
 
-   rtInvokeStartElement (pctxt, "when", -1);
+   invokeStartElement (pctxt, "when", -1);
 
    stat = asn1PD_H225RasUsageSpecification_when (pctxt, &pvalue->when);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "when", -1);
+   invokeEndElement (pctxt, "when", -1);
 
    /* decode callStartingPoint */
 
    if (pvalue->m.callStartingPointPresent) {
-      rtInvokeStartElement (pctxt, "callStartingPoint", -1);
+      invokeStartElement (pctxt, "callStartingPoint", -1);
 
       stat = asn1PD_H225RasUsageSpecification_callStartingPoint (pctxt, &pvalue->callStartingPoint);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callStartingPoint", -1);
+      invokeEndElement (pctxt, "callStartingPoint", -1);
    }
 
    /* decode required */
 
-   rtInvokeStartElement (pctxt, "required", -1);
+   invokeStartElement (pctxt, "required", -1);
 
    stat = asn1PD_H225RasUsageInfoTypes (pctxt, &pvalue->required);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "required", -1);
+   invokeEndElement (pctxt, "required", -1);
 
    if (extbit) {
 
@@ -15730,44 +15730,44 @@ EXTERN int asn1PD_H225RasUsageInformation (OOCTXT* pctxt, H225RasUsageInformatio
 
    /* decode nonStandardUsageFields */
 
-   rtInvokeStartElement (pctxt, "nonStandardUsageFields", -1);
+   invokeStartElement (pctxt, "nonStandardUsageFields", -1);
 
    stat = asn1PD_H225_SeqOfH225NonStandardParameter (pctxt, &pvalue->nonStandardUsageFields);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "nonStandardUsageFields", -1);
+   invokeEndElement (pctxt, "nonStandardUsageFields", -1);
 
    /* decode alertingTime */
 
    if (pvalue->m.alertingTimePresent) {
-      rtInvokeStartElement (pctxt, "alertingTime", -1);
+      invokeStartElement (pctxt, "alertingTime", -1);
 
       stat = asn1PD_H235TimeStamp (pctxt, &pvalue->alertingTime);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "alertingTime", -1);
+      invokeEndElement (pctxt, "alertingTime", -1);
    }
 
    /* decode connectTime */
 
    if (pvalue->m.connectTimePresent) {
-      rtInvokeStartElement (pctxt, "connectTime", -1);
+      invokeStartElement (pctxt, "connectTime", -1);
 
       stat = asn1PD_H235TimeStamp (pctxt, &pvalue->connectTime);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "connectTime", -1);
+      invokeEndElement (pctxt, "connectTime", -1);
    }
 
    /* decode endTime */
 
    if (pvalue->m.endTimePresent) {
-      rtInvokeStartElement (pctxt, "endTime", -1);
+      invokeStartElement (pctxt, "endTime", -1);
 
       stat = asn1PD_H235TimeStamp (pctxt, &pvalue->endTime);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endTime", -1);
+      invokeEndElement (pctxt, "endTime", -1);
    }
 
    if (extbit) {
@@ -15826,27 +15826,27 @@ EXTERN int asn1PD_H225CallTerminationCause (OOCTXT* pctxt, H225CallTerminationCa
       switch (ui) {
          /* releaseCompleteReason */
          case 0:
-            rtInvokeStartElement (pctxt, "releaseCompleteReason", -1);
+            invokeStartElement (pctxt, "releaseCompleteReason", -1);
 
             pvalue->u.releaseCompleteReason = ALLOC_ASN1ELEM (pctxt, H225ReleaseCompleteReason);
 
             stat = asn1PD_H225ReleaseCompleteReason (pctxt, pvalue->u.releaseCompleteReason);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "releaseCompleteReason", -1);
+            invokeEndElement (pctxt, "releaseCompleteReason", -1);
 
             break;
 
          /* releaseCompleteCauseIE */
          case 1:
-            rtInvokeStartElement (pctxt, "releaseCompleteCauseIE", -1);
+            invokeStartElement (pctxt, "releaseCompleteCauseIE", -1);
 
             pvalue->u.releaseCompleteCauseIE = ALLOC_ASN1ELEM (pctxt, H225CallTerminationCause_releaseCompleteCauseIE);
 
             stat = asn1PD_H225CallTerminationCause_releaseCompleteCauseIE (pctxt, pvalue->u.releaseCompleteCauseIE);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "releaseCompleteCauseIE", -1);
+            invokeEndElement (pctxt, "releaseCompleteCauseIE", -1);
 
             break;
 
@@ -15903,23 +15903,23 @@ EXTERN int asn1PD_H225TransportChannelInfo (OOCTXT* pctxt, H225TransportChannelI
    /* decode sendAddress */
 
    if (pvalue->m.sendAddressPresent) {
-      rtInvokeStartElement (pctxt, "sendAddress", -1);
+      invokeStartElement (pctxt, "sendAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->sendAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "sendAddress", -1);
+      invokeEndElement (pctxt, "sendAddress", -1);
    }
 
    /* decode recvAddress */
 
    if (pvalue->m.recvAddressPresent) {
-      rtInvokeStartElement (pctxt, "recvAddress", -1);
+      invokeStartElement (pctxt, "recvAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->recvAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "recvAddress", -1);
+      invokeEndElement (pctxt, "recvAddress", -1);
    }
 
    if (extbit) {
@@ -15975,41 +15975,41 @@ EXTERN int asn1PD_H225BandwidthDetails (OOCTXT* pctxt, H225BandwidthDetails* pva
 
    /* decode sender */
 
-   rtInvokeStartElement (pctxt, "sender", -1);
+   invokeStartElement (pctxt, "sender", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->sender);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->sender);
+   invokeBoolValue (pctxt, pvalue->sender);
 
-   rtInvokeEndElement (pctxt, "sender", -1);
+   invokeEndElement (pctxt, "sender", -1);
 
    /* decode multicast */
 
-   rtInvokeStartElement (pctxt, "multicast", -1);
+   invokeStartElement (pctxt, "multicast", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->multicast);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->multicast);
+   invokeBoolValue (pctxt, pvalue->multicast);
 
-   rtInvokeEndElement (pctxt, "multicast", -1);
+   invokeEndElement (pctxt, "multicast", -1);
 
    /* decode bandwidth */
 
-   rtInvokeStartElement (pctxt, "bandwidth", -1);
+   invokeStartElement (pctxt, "bandwidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandwidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandwidth", -1);
+   invokeEndElement (pctxt, "bandwidth", -1);
 
    /* decode rtcpAddresses */
 
-   rtInvokeStartElement (pctxt, "rtcpAddresses", -1);
+   invokeStartElement (pctxt, "rtcpAddresses", -1);
 
    stat = asn1PD_H225TransportChannelInfo (pctxt, &pvalue->rtcpAddresses);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rtcpAddresses", -1);
+   invokeEndElement (pctxt, "rtcpAddresses", -1);
 
    if (extbit) {
 
@@ -16075,25 +16075,25 @@ EXTERN int asn1PD_H225CallCreditCapability (OOCTXT* pctxt, H225CallCreditCapabil
    /* decode canDisplayAmountString */
 
    if (pvalue->m.canDisplayAmountStringPresent) {
-      rtInvokeStartElement (pctxt, "canDisplayAmountString", -1);
+      invokeStartElement (pctxt, "canDisplayAmountString", -1);
 
       stat = DECODEBIT (pctxt, &pvalue->canDisplayAmountString);
       if (stat != ASN_OK) return stat;
-      rtInvokeBoolValue (pctxt, pvalue->canDisplayAmountString);
+      invokeBoolValue (pctxt, pvalue->canDisplayAmountString);
 
-      rtInvokeEndElement (pctxt, "canDisplayAmountString", -1);
+      invokeEndElement (pctxt, "canDisplayAmountString", -1);
    }
 
    /* decode canEnforceDurationLimit */
 
    if (pvalue->m.canEnforceDurationLimitPresent) {
-      rtInvokeStartElement (pctxt, "canEnforceDurationLimit", -1);
+      invokeStartElement (pctxt, "canEnforceDurationLimit", -1);
 
       stat = DECODEBIT (pctxt, &pvalue->canEnforceDurationLimit);
       if (stat != ASN_OK) return stat;
-      rtInvokeBoolValue (pctxt, pvalue->canEnforceDurationLimit);
+      invokeBoolValue (pctxt, pvalue->canEnforceDurationLimit);
 
-      rtInvokeEndElement (pctxt, "canEnforceDurationLimit", -1);
+      invokeEndElement (pctxt, "canEnforceDurationLimit", -1);
    }
 
    if (extbit) {
@@ -16148,12 +16148,12 @@ EXTERN int asn1PD_H225RTPSession_associatedSessionIds (OOCTXT* pctxt, H225RTPSes
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1UINT8);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeConsUInt8 (pctxt, &pvalue->elem[xx1], 1U, 255U);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->elem[xx1]);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeUIntValue (pctxt, pvalue->elem[xx1]);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -16187,60 +16187,60 @@ EXTERN int asn1PD_H225RTPSession (OOCTXT* pctxt, H225RTPSession* pvalue)
 
    /* decode rtpAddress */
 
-   rtInvokeStartElement (pctxt, "rtpAddress", -1);
+   invokeStartElement (pctxt, "rtpAddress", -1);
 
    stat = asn1PD_H225TransportChannelInfo (pctxt, &pvalue->rtpAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rtpAddress", -1);
+   invokeEndElement (pctxt, "rtpAddress", -1);
 
    /* decode rtcpAddress */
 
-   rtInvokeStartElement (pctxt, "rtcpAddress", -1);
+   invokeStartElement (pctxt, "rtcpAddress", -1);
 
    stat = asn1PD_H225TransportChannelInfo (pctxt, &pvalue->rtcpAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rtcpAddress", -1);
+   invokeEndElement (pctxt, "rtcpAddress", -1);
 
    /* decode cname */
 
-   rtInvokeStartElement (pctxt, "cname", -1);
+   invokeStartElement (pctxt, "cname", -1);
 
    stat = decodeConstrainedStringEx (pctxt, &pvalue->cname, 0, 8, 7, 7);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStrValue (pctxt, pvalue->cname);
+   invokeCharStrValue (pctxt, pvalue->cname);
 
-   rtInvokeEndElement (pctxt, "cname", -1);
+   invokeEndElement (pctxt, "cname", -1);
 
    /* decode ssrc */
 
-   rtInvokeStartElement (pctxt, "ssrc", -1);
+   invokeStartElement (pctxt, "ssrc", -1);
 
    stat = decodeConsUnsigned (pctxt, &pvalue->ssrc, 1U, ASN1UINT_MAX);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->ssrc);
+   invokeUIntValue (pctxt, pvalue->ssrc);
 
-   rtInvokeEndElement (pctxt, "ssrc", -1);
+   invokeEndElement (pctxt, "ssrc", -1);
 
    /* decode sessionId */
 
-   rtInvokeStartElement (pctxt, "sessionId", -1);
+   invokeStartElement (pctxt, "sessionId", -1);
 
    stat = decodeConsUInt8 (pctxt, &pvalue->sessionId, 1U, 255U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->sessionId);
+   invokeUIntValue (pctxt, pvalue->sessionId);
 
-   rtInvokeEndElement (pctxt, "sessionId", -1);
+   invokeEndElement (pctxt, "sessionId", -1);
 
    /* decode associatedSessionIds */
 
-   rtInvokeStartElement (pctxt, "associatedSessionIds", -1);
+   invokeStartElement (pctxt, "associatedSessionIds", -1);
 
    stat = asn1PD_H225RTPSession_associatedSessionIds (pctxt, &pvalue->associatedSessionIds);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "associatedSessionIds", -1);
+   invokeEndElement (pctxt, "associatedSessionIds", -1);
 
    if (extbit) {
 
@@ -16273,23 +16273,23 @@ EXTERN int asn1PD_H225RTPSession (OOCTXT* pctxt, H225RTPSession* pvalue)
                   case 0:
                      pvalue->m.multicastPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multicast", -1);
+                     invokeStartElement (pctxt, "multicast", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "multicast", -1);
+                     invokeEndElement (pctxt, "multicast", -1);
                      break;
 
                   case 1:
                      pvalue->m.bandwidthPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "bandwidth", -1);
+                     invokeStartElement (pctxt, "bandwidth", -1);
 
                      stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandwidth);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "bandwidth", -1);
+                     invokeEndElement (pctxt, "bandwidth", -1);
                      break;
 
                   default:
@@ -16334,13 +16334,13 @@ EXTERN int asn1PD_H225_SeqOfH225Endpoint (OOCTXT* pctxt, H225_SeqOfH225Endpoint*
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225Endpoint);
 
          stat = asn1PD_H225Endpoint (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -16378,13 +16378,13 @@ EXTERN int asn1PD_H225_SeqOfH225AuthenticationMechanism (OOCTXT* pctxt, H225_Seq
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H235AuthenticationMechanism);
 
          stat = asn1PD_H235AuthenticationMechanism (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -16416,12 +16416,12 @@ EXTERN int asn1PD_H225GatekeeperRequest_algorithmOIDs (OOCTXT* pctxt, H225Gateke
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1OBJID);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = decodeObjectIdentifier (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeOidValue (pctxt, pvalue->elem[xx1].numids, pvalue->elem[xx1].subid);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeOidValue (pctxt, pvalue->elem[xx1].numids, pvalue->elem[xx1].subid);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -16455,13 +16455,13 @@ EXTERN int asn1PD_H225_SeqOfH225IntegrityMechanism (OOCTXT* pctxt, H225_SeqOfH22
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225IntegrityMechanism);
 
          stat = asn1PD_H225IntegrityMechanism (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -16511,82 +16511,82 @@ EXTERN int asn1PD_H225GatekeeperRequest (OOCTXT* pctxt, H225GatekeeperRequest* p
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    /* decode endpointType */
 
-   rtInvokeStartElement (pctxt, "endpointType", -1);
+   invokeStartElement (pctxt, "endpointType", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->endpointType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointType", -1);
+   invokeEndElement (pctxt, "endpointType", -1);
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode callServices */
 
    if (pvalue->m.callServicesPresent) {
-      rtInvokeStartElement (pctxt, "callServices", -1);
+      invokeStartElement (pctxt, "callServices", -1);
 
       stat = asn1PD_H225QseriesOptions (pctxt, &pvalue->callServices);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callServices", -1);
+      invokeEndElement (pctxt, "callServices", -1);
    }
 
    /* decode endpointAlias */
 
    if (pvalue->m.endpointAliasPresent) {
-      rtInvokeStartElement (pctxt, "endpointAlias", -1);
+      invokeStartElement (pctxt, "endpointAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->endpointAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointAlias", -1);
+      invokeEndElement (pctxt, "endpointAlias", -1);
    }
 
    if (extbit) {
@@ -16620,111 +16620,111 @@ EXTERN int asn1PD_H225GatekeeperRequest (OOCTXT* pctxt, H225GatekeeperRequest* p
                   case 0:
                      pvalue->m.alternateEndpointsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateEndpoints", -1);
+                     invokeStartElement (pctxt, "alternateEndpoints", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->alternateEndpoints);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateEndpoints", -1);
+                     invokeEndElement (pctxt, "alternateEndpoints", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.authenticationCapabilityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "authenticationCapability", -1);
+                     invokeStartElement (pctxt, "authenticationCapability", -1);
 
                      stat = asn1PD_H225_SeqOfH225AuthenticationMechanism (pctxt, &pvalue->authenticationCapability);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "authenticationCapability", -1);
+                     invokeEndElement (pctxt, "authenticationCapability", -1);
                      break;
 
                   case 4:
                      pvalue->m.algorithmOIDsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "algorithmOIDs", -1);
+                     invokeStartElement (pctxt, "algorithmOIDs", -1);
 
                      stat = asn1PD_H225GatekeeperRequest_algorithmOIDs (pctxt, &pvalue->algorithmOIDs);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "algorithmOIDs", -1);
+                     invokeEndElement (pctxt, "algorithmOIDs", -1);
                      break;
 
                   case 5:
                      pvalue->m.integrityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrity", -1);
+                     invokeStartElement (pctxt, "integrity", -1);
 
                      stat = asn1PD_H225_SeqOfH225IntegrityMechanism (pctxt, &pvalue->integrity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrity", -1);
+                     invokeEndElement (pctxt, "integrity", -1);
                      break;
 
                   case 6:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 7:
                      pvalue->m.supportsAltGKPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportsAltGK", -1);
+                     invokeStartElement (pctxt, "supportsAltGK", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "supportsAltGK", -1);
+                     invokeEndElement (pctxt, "supportsAltGK", -1);
                      break;
 
                   case 8:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 9:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -16775,52 +16775,52 @@ EXTERN int asn1PD_H225GatekeeperConfirm (OOCTXT* pctxt, H225GatekeeperConfirm* p
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    if (extbit) {
 
@@ -16853,101 +16853,101 @@ EXTERN int asn1PD_H225GatekeeperConfirm (OOCTXT* pctxt, H225GatekeeperConfirm* p
                   case 0:
                      pvalue->m.alternateGatekeeperPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateGatekeeper", -1);
+                     invokeStartElement (pctxt, "alternateGatekeeper", -1);
 
                      stat = asn1PD_H225_SeqOfH225AlternateGK (pctxt, &pvalue->alternateGatekeeper);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateGatekeeper", -1);
+                     invokeEndElement (pctxt, "alternateGatekeeper", -1);
                      break;
 
                   case 1:
                      pvalue->m.authenticationModePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "authenticationMode", -1);
+                     invokeStartElement (pctxt, "authenticationMode", -1);
 
                      stat = asn1PD_H235AuthenticationMechanism (pctxt, &pvalue->authenticationMode);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "authenticationMode", -1);
+                     invokeEndElement (pctxt, "authenticationMode", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.algorithmOIDPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "algorithmOID", -1);
+                     invokeStartElement (pctxt, "algorithmOID", -1);
 
                      stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+                     invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-                     rtInvokeEndElement (pctxt, "algorithmOID", -1);
+                     invokeEndElement (pctxt, "algorithmOID", -1);
                      break;
 
                   case 5:
                      pvalue->m.integrityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrity", -1);
+                     invokeStartElement (pctxt, "integrity", -1);
 
                      stat = asn1PD_H225_SeqOfH225IntegrityMechanism (pctxt, &pvalue->integrity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrity", -1);
+                     invokeEndElement (pctxt, "integrity", -1);
                      break;
 
                   case 6:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 7:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 8:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -16991,45 +16991,45 @@ EXTERN int asn1PD_H225GatekeeperRejectReason (OOCTXT* pctxt, H225GatekeeperRejec
       switch (ui) {
          /* resourceUnavailable */
          case 0:
-            rtInvokeStartElement (pctxt, "resourceUnavailable", -1);
+            invokeStartElement (pctxt, "resourceUnavailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "resourceUnavailable", -1);
+            invokeEndElement (pctxt, "resourceUnavailable", -1);
 
             break;
 
          /* terminalExcluded */
          case 1:
-            rtInvokeStartElement (pctxt, "terminalExcluded", -1);
+            invokeStartElement (pctxt, "terminalExcluded", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "terminalExcluded", -1);
+            invokeEndElement (pctxt, "terminalExcluded", -1);
 
             break;
 
          /* invalidRevision */
          case 2:
-            rtInvokeStartElement (pctxt, "invalidRevision", -1);
+            invokeStartElement (pctxt, "invalidRevision", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidRevision", -1);
+            invokeEndElement (pctxt, "invalidRevision", -1);
 
             break;
 
          /* undefinedReason */
          case 3:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -17054,47 +17054,47 @@ EXTERN int asn1PD_H225GatekeeperRejectReason (OOCTXT* pctxt, H225GatekeeperRejec
       switch (pvalue->t) {
          /* securityDenial */
          case 5:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* genericDataReason */
          case 6:
-            rtInvokeStartElement (pctxt, "genericDataReason", -1);
+            invokeStartElement (pctxt, "genericDataReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "genericDataReason", -1);
+            invokeEndElement (pctxt, "genericDataReason", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 7:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
          /* securityError */
          case 8:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors);
 
             stat = asn1PD_H225SecurityErrors (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -17140,52 +17140,52 @@ EXTERN int asn1PD_H225GatekeeperReject (OOCTXT* pctxt, H225GatekeeperReject* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225GatekeeperRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    if (extbit) {
 
@@ -17218,67 +17218,67 @@ EXTERN int asn1PD_H225GatekeeperReject (OOCTXT* pctxt, H225GatekeeperReject* pva
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 5:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -17323,13 +17323,13 @@ EXTERN int asn1PD_H225_SeqOfH225AddressPattern (OOCTXT* pctxt, H225_SeqOfH225Add
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225AddressPattern);
 
          stat = asn1PD_H225AddressPattern (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -17361,11 +17361,11 @@ EXTERN int asn1PD_H225_SeqOfH225H248PackagesDescriptor (OOCTXT* pctxt, H225_SeqO
    ALLOC_ASN1ARRAY (pctxt, pvalue, H225H248PackagesDescriptor);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = asn1PD_H225H248PackagesDescriptor (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -17408,100 +17408,100 @@ EXTERN int asn1PD_H225RegistrationRequest (OOCTXT* pctxt, H225RegistrationReques
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode discoveryComplete */
 
-   rtInvokeStartElement (pctxt, "discoveryComplete", -1);
+   invokeStartElement (pctxt, "discoveryComplete", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->discoveryComplete);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->discoveryComplete);
+   invokeBoolValue (pctxt, pvalue->discoveryComplete);
 
-   rtInvokeEndElement (pctxt, "discoveryComplete", -1);
+   invokeEndElement (pctxt, "discoveryComplete", -1);
 
    /* decode callSignalAddress */
 
-   rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+   invokeStartElement (pctxt, "callSignalAddress", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+   invokeEndElement (pctxt, "callSignalAddress", -1);
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    /* decode terminalType */
 
-   rtInvokeStartElement (pctxt, "terminalType", -1);
+   invokeStartElement (pctxt, "terminalType", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->terminalType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "terminalType", -1);
+   invokeEndElement (pctxt, "terminalType", -1);
 
    /* decode terminalAlias */
 
    if (pvalue->m.terminalAliasPresent) {
-      rtInvokeStartElement (pctxt, "terminalAlias", -1);
+      invokeStartElement (pctxt, "terminalAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->terminalAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminalAlias", -1);
+      invokeEndElement (pctxt, "terminalAlias", -1);
    }
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode endpointVendor */
 
-   rtInvokeStartElement (pctxt, "endpointVendor", -1);
+   invokeStartElement (pctxt, "endpointVendor", -1);
 
    stat = asn1PD_H225VendorIdentifier (pctxt, &pvalue->endpointVendor);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointVendor", -1);
+   invokeEndElement (pctxt, "endpointVendor", -1);
 
    if (extbit) {
 
@@ -17534,258 +17534,258 @@ EXTERN int asn1PD_H225RegistrationRequest (OOCTXT* pctxt, H225RegistrationReques
                   case 0:
                      pvalue->m.alternateEndpointsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateEndpoints", -1);
+                     invokeStartElement (pctxt, "alternateEndpoints", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->alternateEndpoints);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateEndpoints", -1);
+                     invokeEndElement (pctxt, "alternateEndpoints", -1);
                      break;
 
                   case 1:
                      pvalue->m.timeToLivePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "timeToLive", -1);
+                     invokeStartElement (pctxt, "timeToLive", -1);
 
                      stat = asn1PD_H225TimeToLive (pctxt, &pvalue->timeToLive);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "timeToLive", -1);
+                     invokeEndElement (pctxt, "timeToLive", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.keepAlivePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "keepAlive", -1);
+                     invokeStartElement (pctxt, "keepAlive", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->keepAlive);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->keepAlive);
+                     invokeBoolValue (pctxt, pvalue->keepAlive);
 
-                     rtInvokeEndElement (pctxt, "keepAlive", -1);
+                     invokeEndElement (pctxt, "keepAlive", -1);
                      break;
 
                   case 6:
                      pvalue->m.endpointIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+                     invokeStartElement (pctxt, "endpointIdentifier", -1);
 
                      stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+                     invokeEndElement (pctxt, "endpointIdentifier", -1);
                      break;
 
                   case 7:
                      pvalue->m.willSupplyUUIEsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "willSupplyUUIEs", -1);
+                     invokeStartElement (pctxt, "willSupplyUUIEs", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->willSupplyUUIEs);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->willSupplyUUIEs);
+                     invokeBoolValue (pctxt, pvalue->willSupplyUUIEs);
 
-                     rtInvokeEndElement (pctxt, "willSupplyUUIEs", -1);
+                     invokeEndElement (pctxt, "willSupplyUUIEs", -1);
                      break;
 
                   case 8:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 9:
                      pvalue->m.alternateTransportAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeStartElement (pctxt, "alternateTransportAddresses", -1);
 
                      stat = asn1PD_H225AlternateTransportAddresses (pctxt, &pvalue->alternateTransportAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeEndElement (pctxt, "alternateTransportAddresses", -1);
                      break;
 
                   case 10:
                      pvalue->m.additiveRegistrationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "additiveRegistration", -1);
+                     invokeStartElement (pctxt, "additiveRegistration", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "additiveRegistration", -1);
+                     invokeEndElement (pctxt, "additiveRegistration", -1);
                      break;
 
                   case 11:
                      pvalue->m.terminalAliasPatternPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "terminalAliasPattern", -1);
+                     invokeStartElement (pctxt, "terminalAliasPattern", -1);
 
                      stat = asn1PD_H225_SeqOfH225AddressPattern (pctxt, &pvalue->terminalAliasPattern);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "terminalAliasPattern", -1);
+                     invokeEndElement (pctxt, "terminalAliasPattern", -1);
                      break;
 
                   case 12:
                      pvalue->m.supportsAltGKPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportsAltGK", -1);
+                     invokeStartElement (pctxt, "supportsAltGK", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "supportsAltGK", -1);
+                     invokeEndElement (pctxt, "supportsAltGK", -1);
                      break;
 
                   case 13:
                      pvalue->m.usageReportingCapabilityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageReportingCapability", -1);
+                     invokeStartElement (pctxt, "usageReportingCapability", -1);
 
                      stat = asn1PD_H225RasUsageInfoTypes (pctxt, &pvalue->usageReportingCapability);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageReportingCapability", -1);
+                     invokeEndElement (pctxt, "usageReportingCapability", -1);
                      break;
 
                   case 14:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 15:
                      pvalue->m.supportedH248PackagesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedH248Packages", -1);
+                     invokeStartElement (pctxt, "supportedH248Packages", -1);
 
                      stat = asn1PD_H225_SeqOfH225H248PackagesDescriptor (pctxt, &pvalue->supportedH248Packages);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedH248Packages", -1);
+                     invokeEndElement (pctxt, "supportedH248Packages", -1);
                      break;
 
                   case 16:
                      pvalue->m.callCreditCapabilityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callCreditCapability", -1);
+                     invokeStartElement (pctxt, "callCreditCapability", -1);
 
                      stat = asn1PD_H225CallCreditCapability (pctxt, &pvalue->callCreditCapability);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callCreditCapability", -1);
+                     invokeEndElement (pctxt, "callCreditCapability", -1);
                      break;
 
                   case 17:
                      pvalue->m.capacityReportingCapabilityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacityReportingCapability", -1);
+                     invokeStartElement (pctxt, "capacityReportingCapability", -1);
 
                      stat = asn1PD_H225CapacityReportingCapability (pctxt, &pvalue->capacityReportingCapability);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacityReportingCapability", -1);
+                     invokeEndElement (pctxt, "capacityReportingCapability", -1);
                      break;
 
                   case 18:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 19:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 20:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 21:
                      pvalue->m.restartPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "restart", -1);
+                     invokeStartElement (pctxt, "restart", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "restart", -1);
+                     invokeEndElement (pctxt, "restart", -1);
                      break;
 
                   case 22:
                      pvalue->m.supportsACFSequencesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportsACFSequences", -1);
+                     invokeStartElement (pctxt, "supportsACFSequences", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "supportsACFSequences", -1);
+                     invokeEndElement (pctxt, "supportsACFSequences", -1);
                      break;
 
                   default:
@@ -17830,43 +17830,43 @@ EXTERN int asn1PD_H225RegistrationConfirm_preGrantedARQ (OOCTXT* pctxt, H225Regi
 
    /* decode makeCall */
 
-   rtInvokeStartElement (pctxt, "makeCall", -1);
+   invokeStartElement (pctxt, "makeCall", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->makeCall);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->makeCall);
+   invokeBoolValue (pctxt, pvalue->makeCall);
 
-   rtInvokeEndElement (pctxt, "makeCall", -1);
+   invokeEndElement (pctxt, "makeCall", -1);
 
    /* decode useGKCallSignalAddressToMakeCall */
 
-   rtInvokeStartElement (pctxt, "useGKCallSignalAddressToMakeCall", -1);
+   invokeStartElement (pctxt, "useGKCallSignalAddressToMakeCall", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->useGKCallSignalAddressToMakeCall);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->useGKCallSignalAddressToMakeCall);
+   invokeBoolValue (pctxt, pvalue->useGKCallSignalAddressToMakeCall);
 
-   rtInvokeEndElement (pctxt, "useGKCallSignalAddressToMakeCall", -1);
+   invokeEndElement (pctxt, "useGKCallSignalAddressToMakeCall", -1);
 
    /* decode answerCall */
 
-   rtInvokeStartElement (pctxt, "answerCall", -1);
+   invokeStartElement (pctxt, "answerCall", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->answerCall);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->answerCall);
+   invokeBoolValue (pctxt, pvalue->answerCall);
 
-   rtInvokeEndElement (pctxt, "answerCall", -1);
+   invokeEndElement (pctxt, "answerCall", -1);
 
    /* decode useGKCallSignalAddressToAnswer */
 
-   rtInvokeStartElement (pctxt, "useGKCallSignalAddressToAnswer", -1);
+   invokeStartElement (pctxt, "useGKCallSignalAddressToAnswer", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->useGKCallSignalAddressToAnswer);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->useGKCallSignalAddressToAnswer);
+   invokeBoolValue (pctxt, pvalue->useGKCallSignalAddressToAnswer);
 
-   rtInvokeEndElement (pctxt, "useGKCallSignalAddressToAnswer", -1);
+   invokeEndElement (pctxt, "useGKCallSignalAddressToAnswer", -1);
 
    if (extbit) {
 
@@ -17899,46 +17899,46 @@ EXTERN int asn1PD_H225RegistrationConfirm_preGrantedARQ (OOCTXT* pctxt, H225Regi
                   case 0:
                      pvalue->m.irrFrequencyInCallPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "irrFrequencyInCall", -1);
+                     invokeStartElement (pctxt, "irrFrequencyInCall", -1);
 
                      stat = decodeConsUInt16 (pctxt, &pvalue->irrFrequencyInCall, 1U, 65535U);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeUIntValue (pctxt, pvalue->irrFrequencyInCall);
+                     invokeUIntValue (pctxt, pvalue->irrFrequencyInCall);
 
-                     rtInvokeEndElement (pctxt, "irrFrequencyInCall", -1);
+                     invokeEndElement (pctxt, "irrFrequencyInCall", -1);
                      break;
 
                   case 1:
                      pvalue->m.totalBandwidthRestrictionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "totalBandwidthRestriction", -1);
+                     invokeStartElement (pctxt, "totalBandwidthRestriction", -1);
 
                      stat = asn1PD_H225BandWidth (pctxt, &pvalue->totalBandwidthRestriction);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "totalBandwidthRestriction", -1);
+                     invokeEndElement (pctxt, "totalBandwidthRestriction", -1);
                      break;
 
                   case 2:
                      pvalue->m.alternateTransportAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeStartElement (pctxt, "alternateTransportAddresses", -1);
 
                      stat = asn1PD_H225AlternateTransportAddresses (pctxt, &pvalue->alternateTransportAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeEndElement (pctxt, "alternateTransportAddresses", -1);
                      break;
 
                   case 3:
                      pvalue->m.useSpecifiedTransportPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "useSpecifiedTransport", -1);
+                     invokeStartElement (pctxt, "useSpecifiedTransport", -1);
 
                      stat = asn1PD_H225UseSpecifiedTransport (pctxt, &pvalue->useSpecifiedTransport);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "useSpecifiedTransport", -1);
+                     invokeEndElement (pctxt, "useSpecifiedTransport", -1);
                      break;
 
                   default:
@@ -17983,13 +17983,13 @@ EXTERN int asn1PD_H225_SeqOfH225RasUsageSpecification (OOCTXT* pctxt, H225_SeqOf
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225RasUsageSpecification);
 
          stat = asn1PD_H225RasUsageSpecification (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -18036,72 +18036,72 @@ EXTERN int asn1PD_H225RegistrationConfirm (OOCTXT* pctxt, H225RegistrationConfir
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode callSignalAddress */
 
-   rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+   invokeStartElement (pctxt, "callSignalAddress", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+   invokeEndElement (pctxt, "callSignalAddress", -1);
 
    /* decode terminalAlias */
 
    if (pvalue->m.terminalAliasPresent) {
-      rtInvokeStartElement (pctxt, "terminalAlias", -1);
+      invokeStartElement (pctxt, "terminalAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->terminalAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminalAlias", -1);
+      invokeEndElement (pctxt, "terminalAlias", -1);
    }
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    if (extbit) {
 
@@ -18134,190 +18134,190 @@ EXTERN int asn1PD_H225RegistrationConfirm (OOCTXT* pctxt, H225RegistrationConfir
                   case 0:
                      pvalue->m.alternateGatekeeperPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateGatekeeper", -1);
+                     invokeStartElement (pctxt, "alternateGatekeeper", -1);
 
                      stat = asn1PD_H225_SeqOfH225AlternateGK (pctxt, &pvalue->alternateGatekeeper);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateGatekeeper", -1);
+                     invokeEndElement (pctxt, "alternateGatekeeper", -1);
                      break;
 
                   case 1:
                      pvalue->m.timeToLivePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "timeToLive", -1);
+                     invokeStartElement (pctxt, "timeToLive", -1);
 
                      stat = asn1PD_H225TimeToLive (pctxt, &pvalue->timeToLive);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "timeToLive", -1);
+                     invokeEndElement (pctxt, "timeToLive", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.willRespondToIRRPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "willRespondToIRR", -1);
+                     invokeStartElement (pctxt, "willRespondToIRR", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->willRespondToIRR);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->willRespondToIRR);
+                     invokeBoolValue (pctxt, pvalue->willRespondToIRR);
 
-                     rtInvokeEndElement (pctxt, "willRespondToIRR", -1);
+                     invokeEndElement (pctxt, "willRespondToIRR", -1);
                      break;
 
                   case 6:
                      pvalue->m.preGrantedARQPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "preGrantedARQ", -1);
+                     invokeStartElement (pctxt, "preGrantedARQ", -1);
 
                      stat = asn1PD_H225RegistrationConfirm_preGrantedARQ (pctxt, &pvalue->preGrantedARQ);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "preGrantedARQ", -1);
+                     invokeEndElement (pctxt, "preGrantedARQ", -1);
                      break;
 
                   case 7:
                      pvalue->m.maintainConnectionPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "maintainConnection", -1);
+                     invokeStartElement (pctxt, "maintainConnection", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->maintainConnection);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->maintainConnection);
+                     invokeBoolValue (pctxt, pvalue->maintainConnection);
 
-                     rtInvokeEndElement (pctxt, "maintainConnection", -1);
+                     invokeEndElement (pctxt, "maintainConnection", -1);
                      break;
 
                   case 8:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 9:
                      pvalue->m.supportsAdditiveRegistrationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportsAdditiveRegistration", -1);
+                     invokeStartElement (pctxt, "supportsAdditiveRegistration", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "supportsAdditiveRegistration", -1);
+                     invokeEndElement (pctxt, "supportsAdditiveRegistration", -1);
                      break;
 
                   case 10:
                      pvalue->m.terminalAliasPatternPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "terminalAliasPattern", -1);
+                     invokeStartElement (pctxt, "terminalAliasPattern", -1);
 
                      stat = asn1PD_H225_SeqOfH225AddressPattern (pctxt, &pvalue->terminalAliasPattern);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "terminalAliasPattern", -1);
+                     invokeEndElement (pctxt, "terminalAliasPattern", -1);
                      break;
 
                   case 11:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   case 12:
                      pvalue->m.usageSpecPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageSpec", -1);
+                     invokeStartElement (pctxt, "usageSpec", -1);
 
                      stat = asn1PD_H225_SeqOfH225RasUsageSpecification (pctxt, &pvalue->usageSpec);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageSpec", -1);
+                     invokeEndElement (pctxt, "usageSpec", -1);
                      break;
 
                   case 13:
                      pvalue->m.featureServerAliasPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureServerAlias", -1);
+                     invokeStartElement (pctxt, "featureServerAlias", -1);
 
                      stat = asn1PD_H225AliasAddress (pctxt, &pvalue->featureServerAlias);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureServerAlias", -1);
+                     invokeEndElement (pctxt, "featureServerAlias", -1);
                      break;
 
                   case 14:
                      pvalue->m.capacityReportingSpecPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacityReportingSpec", -1);
+                     invokeStartElement (pctxt, "capacityReportingSpec", -1);
 
                      stat = asn1PD_H225CapacityReportingSpecification (pctxt, &pvalue->capacityReportingSpec);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacityReportingSpec", -1);
+                     invokeEndElement (pctxt, "capacityReportingSpec", -1);
                      break;
 
                   case 15:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 16:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -18371,34 +18371,34 @@ EXTERN int asn1PD_H225RegistrationRejectReason_invalidTerminalAliases (OOCTXT* p
    /* decode terminalAlias */
 
    if (pvalue->m.terminalAliasPresent) {
-      rtInvokeStartElement (pctxt, "terminalAlias", -1);
+      invokeStartElement (pctxt, "terminalAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->terminalAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminalAlias", -1);
+      invokeEndElement (pctxt, "terminalAlias", -1);
    }
 
    /* decode terminalAliasPattern */
 
    if (pvalue->m.terminalAliasPatternPresent) {
-      rtInvokeStartElement (pctxt, "terminalAliasPattern", -1);
+      invokeStartElement (pctxt, "terminalAliasPattern", -1);
 
       stat = asn1PD_H225_SeqOfH225AddressPattern (pctxt, &pvalue->terminalAliasPattern);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "terminalAliasPattern", -1);
+      invokeEndElement (pctxt, "terminalAliasPattern", -1);
    }
 
    /* decode supportedPrefixes */
 
    if (pvalue->m.supportedPrefixesPresent) {
-      rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+      invokeStartElement (pctxt, "supportedPrefixes", -1);
 
       stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+      invokeEndElement (pctxt, "supportedPrefixes", -1);
    }
 
    if (extbit) {
@@ -18458,91 +18458,91 @@ EXTERN int asn1PD_H225RegistrationRejectReason (OOCTXT* pctxt, H225RegistrationR
       switch (ui) {
          /* discoveryRequired */
          case 0:
-            rtInvokeStartElement (pctxt, "discoveryRequired", -1);
+            invokeStartElement (pctxt, "discoveryRequired", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "discoveryRequired", -1);
+            invokeEndElement (pctxt, "discoveryRequired", -1);
 
             break;
 
          /* invalidRevision */
          case 1:
-            rtInvokeStartElement (pctxt, "invalidRevision", -1);
+            invokeStartElement (pctxt, "invalidRevision", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidRevision", -1);
+            invokeEndElement (pctxt, "invalidRevision", -1);
 
             break;
 
          /* invalidCallSignalAddress */
          case 2:
-            rtInvokeStartElement (pctxt, "invalidCallSignalAddress", -1);
+            invokeStartElement (pctxt, "invalidCallSignalAddress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidCallSignalAddress", -1);
+            invokeEndElement (pctxt, "invalidCallSignalAddress", -1);
 
             break;
 
          /* invalidRASAddress */
          case 3:
-            rtInvokeStartElement (pctxt, "invalidRASAddress", -1);
+            invokeStartElement (pctxt, "invalidRASAddress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidRASAddress", -1);
+            invokeEndElement (pctxt, "invalidRASAddress", -1);
 
             break;
 
          /* duplicateAlias */
          case 4:
-            rtInvokeStartElement (pctxt, "duplicateAlias", -1);
+            invokeStartElement (pctxt, "duplicateAlias", -1);
 
             pvalue->u.duplicateAlias = ALLOC_ASN1ELEM (pctxt, H225_SeqOfH225AliasAddress);
 
             stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, pvalue->u.duplicateAlias);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "duplicateAlias", -1);
+            invokeEndElement (pctxt, "duplicateAlias", -1);
 
             break;
 
          /* invalidTerminalType */
          case 5:
-            rtInvokeStartElement (pctxt, "invalidTerminalType", -1);
+            invokeStartElement (pctxt, "invalidTerminalType", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidTerminalType", -1);
+            invokeEndElement (pctxt, "invalidTerminalType", -1);
 
             break;
 
          /* undefinedReason */
          case 6:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
          /* transportNotSupported */
          case 7:
-            rtInvokeStartElement (pctxt, "transportNotSupported", -1);
+            invokeStartElement (pctxt, "transportNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "transportNotSupported", -1);
+            invokeEndElement (pctxt, "transportNotSupported", -1);
 
             break;
 
@@ -18567,115 +18567,115 @@ EXTERN int asn1PD_H225RegistrationRejectReason (OOCTXT* pctxt, H225RegistrationR
       switch (pvalue->t) {
          /* transportQOSNotSupported */
          case 9:
-            rtInvokeStartElement (pctxt, "transportQOSNotSupported", -1);
+            invokeStartElement (pctxt, "transportQOSNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "transportQOSNotSupported", -1);
+            invokeEndElement (pctxt, "transportQOSNotSupported", -1);
 
             break;
 
          /* resourceUnavailable */
          case 10:
-            rtInvokeStartElement (pctxt, "resourceUnavailable", -1);
+            invokeStartElement (pctxt, "resourceUnavailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "resourceUnavailable", -1);
+            invokeEndElement (pctxt, "resourceUnavailable", -1);
 
             break;
 
          /* invalidAlias */
          case 11:
-            rtInvokeStartElement (pctxt, "invalidAlias", -1);
+            invokeStartElement (pctxt, "invalidAlias", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidAlias", -1);
+            invokeEndElement (pctxt, "invalidAlias", -1);
 
             break;
 
          /* securityDenial */
          case 12:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* fullRegistrationRequired */
          case 13:
-            rtInvokeStartElement (pctxt, "fullRegistrationRequired", -1);
+            invokeStartElement (pctxt, "fullRegistrationRequired", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "fullRegistrationRequired", -1);
+            invokeEndElement (pctxt, "fullRegistrationRequired", -1);
 
             break;
 
          /* additiveRegistrationNotSupported */
          case 14:
-            rtInvokeStartElement (pctxt, "additiveRegistrationNotSupported", -1);
+            invokeStartElement (pctxt, "additiveRegistrationNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "additiveRegistrationNotSupported", -1);
+            invokeEndElement (pctxt, "additiveRegistrationNotSupported", -1);
 
             break;
 
          /* invalidTerminalAliases */
          case 15:
-            rtInvokeStartElement (pctxt, "invalidTerminalAliases", -1);
+            invokeStartElement (pctxt, "invalidTerminalAliases", -1);
 
             pvalue->u.invalidTerminalAliases = ALLOC_ASN1ELEM (pctxt, H225RegistrationRejectReason_invalidTerminalAliases);
 
             stat = asn1PD_H225RegistrationRejectReason_invalidTerminalAliases (pctxt, pvalue->u.invalidTerminalAliases);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "invalidTerminalAliases", -1);
+            invokeEndElement (pctxt, "invalidTerminalAliases", -1);
 
             break;
 
          /* genericDataReason */
          case 16:
-            rtInvokeStartElement (pctxt, "genericDataReason", -1);
+            invokeStartElement (pctxt, "genericDataReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "genericDataReason", -1);
+            invokeEndElement (pctxt, "genericDataReason", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 17:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
          /* securityError */
          case 18:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors);
 
             stat = asn1PD_H225SecurityErrors (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -18721,51 +18721,51 @@ EXTERN int asn1PD_H225RegistrationReject (OOCTXT* pctxt, H225RegistrationReject*
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225RegistrationRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode gatekeeperIdentifier */
 
    if (pvalue->m.gatekeeperIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
       stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+      invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
    }
 
    if (extbit) {
@@ -18799,67 +18799,67 @@ EXTERN int asn1PD_H225RegistrationReject (OOCTXT* pctxt, H225RegistrationReject*
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 5:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -18903,45 +18903,45 @@ EXTERN int asn1PD_H225UnregRequestReason (OOCTXT* pctxt, H225UnregRequestReason*
       switch (ui) {
          /* reregistrationRequired */
          case 0:
-            rtInvokeStartElement (pctxt, "reregistrationRequired", -1);
+            invokeStartElement (pctxt, "reregistrationRequired", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "reregistrationRequired", -1);
+            invokeEndElement (pctxt, "reregistrationRequired", -1);
 
             break;
 
          /* ttlExpired */
          case 1:
-            rtInvokeStartElement (pctxt, "ttlExpired", -1);
+            invokeStartElement (pctxt, "ttlExpired", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "ttlExpired", -1);
+            invokeEndElement (pctxt, "ttlExpired", -1);
 
             break;
 
          /* securityDenial */
          case 2:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* undefinedReason */
          case 3:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -18966,25 +18966,25 @@ EXTERN int asn1PD_H225UnregRequestReason (OOCTXT* pctxt, H225UnregRequestReason*
       switch (pvalue->t) {
          /* maintenance */
          case 5:
-            rtInvokeStartElement (pctxt, "maintenance", -1);
+            invokeStartElement (pctxt, "maintenance", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "maintenance", -1);
+            invokeEndElement (pctxt, "maintenance", -1);
 
             break;
 
          /* securityError */
          case 6:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -19033,53 +19033,53 @@ EXTERN int asn1PD_H225UnregistrationRequest (OOCTXT* pctxt, H225UnregistrationRe
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode callSignalAddress */
 
-   rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+   invokeStartElement (pctxt, "callSignalAddress", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+   invokeEndElement (pctxt, "callSignalAddress", -1);
 
    /* decode endpointAlias */
 
    if (pvalue->m.endpointAliasPresent) {
-      rtInvokeStartElement (pctxt, "endpointAlias", -1);
+      invokeStartElement (pctxt, "endpointAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->endpointAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointAlias", -1);
+      invokeEndElement (pctxt, "endpointAlias", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode endpointIdentifier */
 
    if (pvalue->m.endpointIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+      invokeStartElement (pctxt, "endpointIdentifier", -1);
 
       stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+      invokeEndElement (pctxt, "endpointIdentifier", -1);
    }
 
    if (extbit) {
@@ -19113,111 +19113,111 @@ EXTERN int asn1PD_H225UnregistrationRequest (OOCTXT* pctxt, H225UnregistrationRe
                   case 0:
                      pvalue->m.alternateEndpointsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateEndpoints", -1);
+                     invokeStartElement (pctxt, "alternateEndpoints", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->alternateEndpoints);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateEndpoints", -1);
+                     invokeEndElement (pctxt, "alternateEndpoints", -1);
                      break;
 
                   case 1:
                      pvalue->m.gatekeeperIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
                      stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.reasonPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "reason", -1);
+                     invokeStartElement (pctxt, "reason", -1);
 
                      stat = asn1PD_H225UnregRequestReason (pctxt, &pvalue->reason);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "reason", -1);
+                     invokeEndElement (pctxt, "reason", -1);
                      break;
 
                   case 6:
                      pvalue->m.endpointAliasPatternPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "endpointAliasPattern", -1);
+                     invokeStartElement (pctxt, "endpointAliasPattern", -1);
 
                      stat = asn1PD_H225_SeqOfH225AddressPattern (pctxt, &pvalue->endpointAliasPattern);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "endpointAliasPattern", -1);
+                     invokeEndElement (pctxt, "endpointAliasPattern", -1);
                      break;
 
                   case 7:
                      pvalue->m.supportedPrefixesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedPrefixes", -1);
+                     invokeStartElement (pctxt, "supportedPrefixes", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedPrefix (pctxt, &pvalue->supportedPrefixes);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedPrefixes", -1);
+                     invokeEndElement (pctxt, "supportedPrefixes", -1);
                      break;
 
                   case 8:
                      pvalue->m.alternateGatekeeperPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateGatekeeper", -1);
+                     invokeStartElement (pctxt, "alternateGatekeeper", -1);
 
                      stat = asn1PD_H225_SeqOfH225AlternateGK (pctxt, &pvalue->alternateGatekeeper);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateGatekeeper", -1);
+                     invokeEndElement (pctxt, "alternateGatekeeper", -1);
                      break;
 
                   case 9:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -19265,22 +19265,22 @@ EXTERN int asn1PD_H225UnregistrationConfirm (OOCTXT* pctxt, H225UnregistrationCo
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -19314,45 +19314,45 @@ EXTERN int asn1PD_H225UnregistrationConfirm (OOCTXT* pctxt, H225UnregistrationCo
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -19396,34 +19396,34 @@ EXTERN int asn1PD_H225UnregRejectReason (OOCTXT* pctxt, H225UnregRejectReason* p
       switch (ui) {
          /* notCurrentlyRegistered */
          case 0:
-            rtInvokeStartElement (pctxt, "notCurrentlyRegistered", -1);
+            invokeStartElement (pctxt, "notCurrentlyRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notCurrentlyRegistered", -1);
+            invokeEndElement (pctxt, "notCurrentlyRegistered", -1);
 
             break;
 
          /* callInProgress */
          case 1:
-            rtInvokeStartElement (pctxt, "callInProgress", -1);
+            invokeStartElement (pctxt, "callInProgress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "callInProgress", -1);
+            invokeEndElement (pctxt, "callInProgress", -1);
 
             break;
 
          /* undefinedReason */
          case 2:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -19448,36 +19448,36 @@ EXTERN int asn1PD_H225UnregRejectReason (OOCTXT* pctxt, H225UnregRejectReason* p
       switch (pvalue->t) {
          /* permissionDenied */
          case 4:
-            rtInvokeStartElement (pctxt, "permissionDenied", -1);
+            invokeStartElement (pctxt, "permissionDenied", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "permissionDenied", -1);
+            invokeEndElement (pctxt, "permissionDenied", -1);
 
             break;
 
          /* securityDenial */
          case 5:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* securityError */
          case 6:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -19520,31 +19520,31 @@ EXTERN int asn1PD_H225UnregistrationReject (OOCTXT* pctxt, H225UnregistrationRej
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225UnregRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -19578,56 +19578,56 @@ EXTERN int asn1PD_H225UnregistrationReject (OOCTXT* pctxt, H225UnregistrationRej
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -19670,23 +19670,23 @@ EXTERN int asn1PD_H225CallModel (OOCTXT* pctxt, H225CallModel* pvalue)
       switch (ui) {
          /* direct */
          case 0:
-            rtInvokeStartElement (pctxt, "direct", -1);
+            invokeStartElement (pctxt, "direct", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "direct", -1);
+            invokeEndElement (pctxt, "direct", -1);
 
             break;
 
          /* gatekeeperRouted */
          case 1:
-            rtInvokeStartElement (pctxt, "gatekeeperRouted", -1);
+            invokeStartElement (pctxt, "gatekeeperRouted", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "gatekeeperRouted", -1);
+            invokeEndElement (pctxt, "gatekeeperRouted", -1);
 
             break;
 
@@ -19735,34 +19735,34 @@ EXTERN int asn1PD_H225TransportQOS (OOCTXT* pctxt, H225TransportQOS* pvalue)
       switch (ui) {
          /* endpointControlled */
          case 0:
-            rtInvokeStartElement (pctxt, "endpointControlled", -1);
+            invokeStartElement (pctxt, "endpointControlled", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "endpointControlled", -1);
+            invokeEndElement (pctxt, "endpointControlled", -1);
 
             break;
 
          /* gatekeeperControlled */
          case 1:
-            rtInvokeStartElement (pctxt, "gatekeeperControlled", -1);
+            invokeStartElement (pctxt, "gatekeeperControlled", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "gatekeeperControlled", -1);
+            invokeEndElement (pctxt, "gatekeeperControlled", -1);
 
             break;
 
          /* noControl */
          case 2:
-            rtInvokeStartElement (pctxt, "noControl", -1);
+            invokeStartElement (pctxt, "noControl", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noControl", -1);
+            invokeEndElement (pctxt, "noControl", -1);
 
             break;
 
@@ -19834,163 +19834,163 @@ EXTERN int asn1PD_H225AdmissionRequest (OOCTXT* pctxt, H225AdmissionRequest* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode callType */
 
-   rtInvokeStartElement (pctxt, "callType", -1);
+   invokeStartElement (pctxt, "callType", -1);
 
    stat = asn1PD_H225CallType (pctxt, &pvalue->callType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callType", -1);
+   invokeEndElement (pctxt, "callType", -1);
 
    /* decode callModel */
 
    if (pvalue->m.callModelPresent) {
-      rtInvokeStartElement (pctxt, "callModel", -1);
+      invokeStartElement (pctxt, "callModel", -1);
 
       stat = asn1PD_H225CallModel (pctxt, &pvalue->callModel);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callModel", -1);
+      invokeEndElement (pctxt, "callModel", -1);
    }
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    /* decode destinationInfo */
 
    if (pvalue->m.destinationInfoPresent) {
-      rtInvokeStartElement (pctxt, "destinationInfo", -1);
+      invokeStartElement (pctxt, "destinationInfo", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destinationInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destinationInfo", -1);
+      invokeEndElement (pctxt, "destinationInfo", -1);
    }
 
    /* decode destCallSignalAddress */
 
    if (pvalue->m.destCallSignalAddressPresent) {
-      rtInvokeStartElement (pctxt, "destCallSignalAddress", -1);
+      invokeStartElement (pctxt, "destCallSignalAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->destCallSignalAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destCallSignalAddress", -1);
+      invokeEndElement (pctxt, "destCallSignalAddress", -1);
    }
 
    /* decode destExtraCallInfo */
 
    if (pvalue->m.destExtraCallInfoPresent) {
-      rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+      invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+      invokeEndElement (pctxt, "destExtraCallInfo", -1);
    }
 
    /* decode srcInfo */
 
-   rtInvokeStartElement (pctxt, "srcInfo", -1);
+   invokeStartElement (pctxt, "srcInfo", -1);
 
    stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->srcInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "srcInfo", -1);
+   invokeEndElement (pctxt, "srcInfo", -1);
 
    /* decode srcCallSignalAddress */
 
    if (pvalue->m.srcCallSignalAddressPresent) {
-      rtInvokeStartElement (pctxt, "srcCallSignalAddress", -1);
+      invokeStartElement (pctxt, "srcCallSignalAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->srcCallSignalAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "srcCallSignalAddress", -1);
+      invokeEndElement (pctxt, "srcCallSignalAddress", -1);
    }
 
    /* decode bandWidth */
 
-   rtInvokeStartElement (pctxt, "bandWidth", -1);
+   invokeStartElement (pctxt, "bandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandWidth", -1);
+   invokeEndElement (pctxt, "bandWidth", -1);
 
    /* decode callReferenceValue */
 
-   rtInvokeStartElement (pctxt, "callReferenceValue", -1);
+   invokeStartElement (pctxt, "callReferenceValue", -1);
 
    stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->callReferenceValue);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callReferenceValue", -1);
+   invokeEndElement (pctxt, "callReferenceValue", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode callServices */
 
    if (pvalue->m.callServicesPresent) {
-      rtInvokeStartElement (pctxt, "callServices", -1);
+      invokeStartElement (pctxt, "callServices", -1);
 
       stat = asn1PD_H225QseriesOptions (pctxt, &pvalue->callServices);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callServices", -1);
+      invokeEndElement (pctxt, "callServices", -1);
    }
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode activeMC */
 
-   rtInvokeStartElement (pctxt, "activeMC", -1);
+   invokeStartElement (pctxt, "activeMC", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->activeMC);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->activeMC);
+   invokeBoolValue (pctxt, pvalue->activeMC);
 
-   rtInvokeEndElement (pctxt, "activeMC", -1);
+   invokeEndElement (pctxt, "activeMC", -1);
 
    /* decode answerCall */
 
-   rtInvokeStartElement (pctxt, "answerCall", -1);
+   invokeStartElement (pctxt, "answerCall", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->answerCall);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->answerCall);
+   invokeBoolValue (pctxt, pvalue->answerCall);
 
-   rtInvokeEndElement (pctxt, "answerCall", -1);
+   invokeEndElement (pctxt, "answerCall", -1);
 
    if (extbit) {
 
@@ -20023,213 +20023,213 @@ EXTERN int asn1PD_H225AdmissionRequest (OOCTXT* pctxt, H225AdmissionRequest* pva
                   case 0:
                      pvalue->m.canMapAliasPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "canMapAlias", -1);
+                     invokeStartElement (pctxt, "canMapAlias", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->canMapAlias);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->canMapAlias);
+                     invokeBoolValue (pctxt, pvalue->canMapAlias);
 
-                     rtInvokeEndElement (pctxt, "canMapAlias", -1);
+                     invokeEndElement (pctxt, "canMapAlias", -1);
                      break;
 
                   case 1:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 2:
                      pvalue->m.srcAlternativesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "srcAlternatives", -1);
+                     invokeStartElement (pctxt, "srcAlternatives", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->srcAlternatives);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "srcAlternatives", -1);
+                     invokeEndElement (pctxt, "srcAlternatives", -1);
                      break;
 
                   case 3:
                      pvalue->m.destAlternativesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destAlternatives", -1);
+                     invokeStartElement (pctxt, "destAlternatives", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->destAlternatives);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destAlternatives", -1);
+                     invokeEndElement (pctxt, "destAlternatives", -1);
                      break;
 
                   case 4:
                      pvalue->m.gatekeeperIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
                      stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
                      break;
 
                   case 5:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 6:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 7:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 8:
                      pvalue->m.transportQOSPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "transportQOS", -1);
+                     invokeStartElement (pctxt, "transportQOS", -1);
 
                      stat = asn1PD_H225TransportQOS (pctxt, &pvalue->transportQOS);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "transportQOS", -1);
+                     invokeEndElement (pctxt, "transportQOS", -1);
                      break;
 
                   case 9:
                      pvalue->m.willSupplyUUIEsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "willSupplyUUIEs", -1);
+                     invokeStartElement (pctxt, "willSupplyUUIEs", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->willSupplyUUIEs);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->willSupplyUUIEs);
+                     invokeBoolValue (pctxt, pvalue->willSupplyUUIEs);
 
-                     rtInvokeEndElement (pctxt, "willSupplyUUIEs", -1);
+                     invokeEndElement (pctxt, "willSupplyUUIEs", -1);
                      break;
 
                   case 10:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 11:
                      pvalue->m.gatewayDataRatePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatewayDataRate", -1);
+                     invokeStartElement (pctxt, "gatewayDataRate", -1);
 
                      stat = asn1PD_H225DataRate (pctxt, &pvalue->gatewayDataRate);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatewayDataRate", -1);
+                     invokeEndElement (pctxt, "gatewayDataRate", -1);
                      break;
 
                   case 12:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 13:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 14:
                      pvalue->m.desiredProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredProtocols", -1);
+                     invokeStartElement (pctxt, "desiredProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->desiredProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredProtocols", -1);
+                     invokeEndElement (pctxt, "desiredProtocols", -1);
                      break;
 
                   case 15:
                      pvalue->m.desiredTunnelledProtocolPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredTunnelledProtocol", -1);
+                     invokeStartElement (pctxt, "desiredTunnelledProtocol", -1);
 
                      stat = asn1PD_H225TunnelledProtocol (pctxt, &pvalue->desiredTunnelledProtocol);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredTunnelledProtocol", -1);
+                     invokeEndElement (pctxt, "desiredTunnelledProtocol", -1);
                      break;
 
                   case 16:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 17:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 18:
                      pvalue->m.canMapSrcAliasPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "canMapSrcAlias", -1);
+                     invokeStartElement (pctxt, "canMapSrcAlias", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->canMapSrcAlias);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->canMapSrcAlias);
+                     invokeBoolValue (pctxt, pvalue->canMapSrcAlias);
 
-                     rtInvokeEndElement (pctxt, "canMapSrcAlias", -1);
+                     invokeEndElement (pctxt, "canMapSrcAlias", -1);
                      break;
 
                   default:
@@ -20272,93 +20272,93 @@ EXTERN int asn1PD_H225UUIEsRequested (OOCTXT* pctxt, H225UUIEsRequested* pvalue)
 
    /* decode setup */
 
-   rtInvokeStartElement (pctxt, "setup", -1);
+   invokeStartElement (pctxt, "setup", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->setup);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->setup);
+   invokeBoolValue (pctxt, pvalue->setup);
 
-   rtInvokeEndElement (pctxt, "setup", -1);
+   invokeEndElement (pctxt, "setup", -1);
 
    /* decode callProceeding */
 
-   rtInvokeStartElement (pctxt, "callProceeding", -1);
+   invokeStartElement (pctxt, "callProceeding", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->callProceeding);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->callProceeding);
+   invokeBoolValue (pctxt, pvalue->callProceeding);
 
-   rtInvokeEndElement (pctxt, "callProceeding", -1);
+   invokeEndElement (pctxt, "callProceeding", -1);
 
    /* decode connect */
 
-   rtInvokeStartElement (pctxt, "connect", -1);
+   invokeStartElement (pctxt, "connect", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->connect);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->connect);
+   invokeBoolValue (pctxt, pvalue->connect);
 
-   rtInvokeEndElement (pctxt, "connect", -1);
+   invokeEndElement (pctxt, "connect", -1);
 
    /* decode alerting */
 
-   rtInvokeStartElement (pctxt, "alerting", -1);
+   invokeStartElement (pctxt, "alerting", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->alerting);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->alerting);
+   invokeBoolValue (pctxt, pvalue->alerting);
 
-   rtInvokeEndElement (pctxt, "alerting", -1);
+   invokeEndElement (pctxt, "alerting", -1);
 
    /* decode information */
 
-   rtInvokeStartElement (pctxt, "information", -1);
+   invokeStartElement (pctxt, "information", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->information);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->information);
+   invokeBoolValue (pctxt, pvalue->information);
 
-   rtInvokeEndElement (pctxt, "information", -1);
+   invokeEndElement (pctxt, "information", -1);
 
    /* decode releaseComplete */
 
-   rtInvokeStartElement (pctxt, "releaseComplete", -1);
+   invokeStartElement (pctxt, "releaseComplete", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->releaseComplete);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->releaseComplete);
+   invokeBoolValue (pctxt, pvalue->releaseComplete);
 
-   rtInvokeEndElement (pctxt, "releaseComplete", -1);
+   invokeEndElement (pctxt, "releaseComplete", -1);
 
    /* decode facility */
 
-   rtInvokeStartElement (pctxt, "facility", -1);
+   invokeStartElement (pctxt, "facility", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->facility);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->facility);
+   invokeBoolValue (pctxt, pvalue->facility);
 
-   rtInvokeEndElement (pctxt, "facility", -1);
+   invokeEndElement (pctxt, "facility", -1);
 
    /* decode progress */
 
-   rtInvokeStartElement (pctxt, "progress", -1);
+   invokeStartElement (pctxt, "progress", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->progress);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->progress);
+   invokeBoolValue (pctxt, pvalue->progress);
 
-   rtInvokeEndElement (pctxt, "progress", -1);
+   invokeEndElement (pctxt, "progress", -1);
 
    /* decode empty */
 
-   rtInvokeStartElement (pctxt, "empty", -1);
+   invokeStartElement (pctxt, "empty", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->empty);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->empty);
+   invokeBoolValue (pctxt, pvalue->empty);
 
-   rtInvokeEndElement (pctxt, "empty", -1);
+   invokeEndElement (pctxt, "empty", -1);
 
    if (extbit) {
 
@@ -20391,49 +20391,49 @@ EXTERN int asn1PD_H225UUIEsRequested (OOCTXT* pctxt, H225UUIEsRequested* pvalue)
                   case 0:
                      pvalue->m.statusPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "status", -1);
+                     invokeStartElement (pctxt, "status", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->status);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->status);
+                     invokeBoolValue (pctxt, pvalue->status);
 
-                     rtInvokeEndElement (pctxt, "status", -1);
+                     invokeEndElement (pctxt, "status", -1);
                      break;
 
                   case 1:
                      pvalue->m.statusInquiryPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "statusInquiry", -1);
+                     invokeStartElement (pctxt, "statusInquiry", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->statusInquiry);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->statusInquiry);
+                     invokeBoolValue (pctxt, pvalue->statusInquiry);
 
-                     rtInvokeEndElement (pctxt, "statusInquiry", -1);
+                     invokeEndElement (pctxt, "statusInquiry", -1);
                      break;
 
                   case 2:
                      pvalue->m.setupAcknowledgePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "setupAcknowledge", -1);
+                     invokeStartElement (pctxt, "setupAcknowledge", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->setupAcknowledge);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->setupAcknowledge);
+                     invokeBoolValue (pctxt, pvalue->setupAcknowledge);
 
-                     rtInvokeEndElement (pctxt, "setupAcknowledge", -1);
+                     invokeEndElement (pctxt, "setupAcknowledge", -1);
                      break;
 
                   case 3:
                      pvalue->m.notifyPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "notify", -1);
+                     invokeStartElement (pctxt, "notify", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->notify);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->notify);
+                     invokeBoolValue (pctxt, pvalue->notify);
 
-                     rtInvokeEndElement (pctxt, "notify", -1);
+                     invokeEndElement (pctxt, "notify", -1);
                      break;
 
                   default:
@@ -20473,14 +20473,14 @@ EXTERN int asn1PD_H225AdmissionConfirm_language (OOCTXT* pctxt, H225AdmissionCon
    ALLOC_ASN1ARRAY (pctxt, pvalue, ASN1IA5String);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       addSizeConstraint (pctxt, &element_lsize1);
 
       stat = decodeConstrainedStringEx (pctxt, &pvalue->elem[xx1], 0, 8, 7, 7);
       if (stat != ASN_OK) return stat;
-      rtInvokeCharStrValue (pctxt, pvalue->elem[xx1]);
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeCharStrValue (pctxt, pvalue->elem[xx1]);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -20520,61 +20520,61 @@ EXTERN int asn1PD_H225AdmissionConfirm (OOCTXT* pctxt, H225AdmissionConfirm* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode bandWidth */
 
-   rtInvokeStartElement (pctxt, "bandWidth", -1);
+   invokeStartElement (pctxt, "bandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandWidth", -1);
+   invokeEndElement (pctxt, "bandWidth", -1);
 
    /* decode callModel */
 
-   rtInvokeStartElement (pctxt, "callModel", -1);
+   invokeStartElement (pctxt, "callModel", -1);
 
    stat = asn1PD_H225CallModel (pctxt, &pvalue->callModel);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callModel", -1);
+   invokeEndElement (pctxt, "callModel", -1);
 
    /* decode destCallSignalAddress */
 
-   rtInvokeStartElement (pctxt, "destCallSignalAddress", -1);
+   invokeStartElement (pctxt, "destCallSignalAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->destCallSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destCallSignalAddress", -1);
+   invokeEndElement (pctxt, "destCallSignalAddress", -1);
 
    /* decode irrFrequency */
 
    if (pvalue->m.irrFrequencyPresent) {
-      rtInvokeStartElement (pctxt, "irrFrequency", -1);
+      invokeStartElement (pctxt, "irrFrequency", -1);
 
       stat = decodeConsUInt16 (pctxt, &pvalue->irrFrequency, 1U, 65535U);
       if (stat != ASN_OK) return stat;
-      rtInvokeUIntValue (pctxt, pvalue->irrFrequency);
+      invokeUIntValue (pctxt, pvalue->irrFrequency);
 
-      rtInvokeEndElement (pctxt, "irrFrequency", -1);
+      invokeEndElement (pctxt, "irrFrequency", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -20608,245 +20608,245 @@ EXTERN int asn1PD_H225AdmissionConfirm (OOCTXT* pctxt, H225AdmissionConfirm* pva
                   case 0:
                      pvalue->m.destinationInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destinationInfo", -1);
+                     invokeStartElement (pctxt, "destinationInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destinationInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destinationInfo", -1);
+                     invokeEndElement (pctxt, "destinationInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.destExtraCallInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+                     invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+                     invokeEndElement (pctxt, "destExtraCallInfo", -1);
                      break;
 
                   case 2:
                      pvalue->m.destinationTypePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destinationType", -1);
+                     invokeStartElement (pctxt, "destinationType", -1);
 
                      stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationType);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destinationType", -1);
+                     invokeEndElement (pctxt, "destinationType", -1);
                      break;
 
                   case 3:
                      pvalue->m.remoteExtensionAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeStartElement (pctxt, "remoteExtensionAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->remoteExtensionAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeEndElement (pctxt, "remoteExtensionAddress", -1);
                      break;
 
                   case 4:
                      pvalue->m.alternateEndpointsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateEndpoints", -1);
+                     invokeStartElement (pctxt, "alternateEndpoints", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->alternateEndpoints);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateEndpoints", -1);
+                     invokeEndElement (pctxt, "alternateEndpoints", -1);
                      break;
 
                   case 5:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 6:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 7:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 8:
                      pvalue->m.transportQOSPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "transportQOS", -1);
+                     invokeStartElement (pctxt, "transportQOS", -1);
 
                      stat = asn1PD_H225TransportQOS (pctxt, &pvalue->transportQOS);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "transportQOS", -1);
+                     invokeEndElement (pctxt, "transportQOS", -1);
                      break;
 
                   case 9:
                      pvalue->m.willRespondToIRRPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "willRespondToIRR", -1);
+                     invokeStartElement (pctxt, "willRespondToIRR", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->willRespondToIRR);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->willRespondToIRR);
+                     invokeBoolValue (pctxt, pvalue->willRespondToIRR);
 
-                     rtInvokeEndElement (pctxt, "willRespondToIRR", -1);
+                     invokeEndElement (pctxt, "willRespondToIRR", -1);
                      break;
 
                   case 10:
                      pvalue->m.uuiesRequestedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "uuiesRequested", -1);
+                     invokeStartElement (pctxt, "uuiesRequested", -1);
 
                      stat = asn1PD_H225UUIEsRequested (pctxt, &pvalue->uuiesRequested);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "uuiesRequested", -1);
+                     invokeEndElement (pctxt, "uuiesRequested", -1);
                      break;
 
                   case 11:
                      pvalue->m.languagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "language", -1);
+                     invokeStartElement (pctxt, "language", -1);
 
                      stat = asn1PD_H225AdmissionConfirm_language (pctxt, &pvalue->language);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "language", -1);
+                     invokeEndElement (pctxt, "language", -1);
                      break;
 
                   case 12:
                      pvalue->m.alternateTransportAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeStartElement (pctxt, "alternateTransportAddresses", -1);
 
                      stat = asn1PD_H225AlternateTransportAddresses (pctxt, &pvalue->alternateTransportAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeEndElement (pctxt, "alternateTransportAddresses", -1);
                      break;
 
                   case 13:
                      pvalue->m.useSpecifiedTransportPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "useSpecifiedTransport", -1);
+                     invokeStartElement (pctxt, "useSpecifiedTransport", -1);
 
                      stat = asn1PD_H225UseSpecifiedTransport (pctxt, &pvalue->useSpecifiedTransport);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "useSpecifiedTransport", -1);
+                     invokeEndElement (pctxt, "useSpecifiedTransport", -1);
                      break;
 
                   case 14:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 15:
                      pvalue->m.usageSpecPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageSpec", -1);
+                     invokeStartElement (pctxt, "usageSpec", -1);
 
                      stat = asn1PD_H225_SeqOfH225RasUsageSpecification (pctxt, &pvalue->usageSpec);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageSpec", -1);
+                     invokeEndElement (pctxt, "usageSpec", -1);
                      break;
 
                   case 16:
                      pvalue->m.supportedProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedProtocols", -1);
+                     invokeStartElement (pctxt, "supportedProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->supportedProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedProtocols", -1);
+                     invokeEndElement (pctxt, "supportedProtocols", -1);
                      break;
 
                   case 17:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 18:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 19:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 20:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 21:
                      pvalue->m.modifiedSrcInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "modifiedSrcInfo", -1);
+                     invokeStartElement (pctxt, "modifiedSrcInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->modifiedSrcInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "modifiedSrcInfo", -1);
+                     invokeEndElement (pctxt, "modifiedSrcInfo", -1);
                      break;
 
                   default:
@@ -20891,13 +20891,13 @@ EXTERN int asn1PD_H225_SeqOfH225PartyNumber (OOCTXT* pctxt, H225_SeqOfH225PartyN
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225PartyNumber);
 
          stat = asn1PD_H225PartyNumber (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -20934,89 +20934,89 @@ EXTERN int asn1PD_H225AdmissionRejectReason (OOCTXT* pctxt, H225AdmissionRejectR
       switch (ui) {
          /* calledPartyNotRegistered */
          case 0:
-            rtInvokeStartElement (pctxt, "calledPartyNotRegistered", -1);
+            invokeStartElement (pctxt, "calledPartyNotRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "calledPartyNotRegistered", -1);
+            invokeEndElement (pctxt, "calledPartyNotRegistered", -1);
 
             break;
 
          /* invalidPermission */
          case 1:
-            rtInvokeStartElement (pctxt, "invalidPermission", -1);
+            invokeStartElement (pctxt, "invalidPermission", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidPermission", -1);
+            invokeEndElement (pctxt, "invalidPermission", -1);
 
             break;
 
          /* requestDenied */
          case 2:
-            rtInvokeStartElement (pctxt, "requestDenied", -1);
+            invokeStartElement (pctxt, "requestDenied", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "requestDenied", -1);
+            invokeEndElement (pctxt, "requestDenied", -1);
 
             break;
 
          /* undefinedReason */
          case 3:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
          /* callerNotRegistered */
          case 4:
-            rtInvokeStartElement (pctxt, "callerNotRegistered", -1);
+            invokeStartElement (pctxt, "callerNotRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "callerNotRegistered", -1);
+            invokeEndElement (pctxt, "callerNotRegistered", -1);
 
             break;
 
          /* routeCallToGatekeeper */
          case 5:
-            rtInvokeStartElement (pctxt, "routeCallToGatekeeper", -1);
+            invokeStartElement (pctxt, "routeCallToGatekeeper", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "routeCallToGatekeeper", -1);
+            invokeEndElement (pctxt, "routeCallToGatekeeper", -1);
 
             break;
 
          /* invalidEndpointIdentifier */
          case 6:
-            rtInvokeStartElement (pctxt, "invalidEndpointIdentifier", -1);
+            invokeStartElement (pctxt, "invalidEndpointIdentifier", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidEndpointIdentifier", -1);
+            invokeEndElement (pctxt, "invalidEndpointIdentifier", -1);
 
             break;
 
          /* resourceUnavailable */
          case 7:
-            rtInvokeStartElement (pctxt, "resourceUnavailable", -1);
+            invokeStartElement (pctxt, "resourceUnavailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "resourceUnavailable", -1);
+            invokeEndElement (pctxt, "resourceUnavailable", -1);
 
             break;
 
@@ -21041,159 +21041,159 @@ EXTERN int asn1PD_H225AdmissionRejectReason (OOCTXT* pctxt, H225AdmissionRejectR
       switch (pvalue->t) {
          /* securityDenial */
          case 9:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* qosControlNotSupported */
          case 10:
-            rtInvokeStartElement (pctxt, "qosControlNotSupported", -1);
+            invokeStartElement (pctxt, "qosControlNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "qosControlNotSupported", -1);
+            invokeEndElement (pctxt, "qosControlNotSupported", -1);
 
             break;
 
          /* incompleteAddress */
          case 11:
-            rtInvokeStartElement (pctxt, "incompleteAddress", -1);
+            invokeStartElement (pctxt, "incompleteAddress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "incompleteAddress", -1);
+            invokeEndElement (pctxt, "incompleteAddress", -1);
 
             break;
 
          /* aliasesInconsistent */
          case 12:
-            rtInvokeStartElement (pctxt, "aliasesInconsistent", -1);
+            invokeStartElement (pctxt, "aliasesInconsistent", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "aliasesInconsistent", -1);
+            invokeEndElement (pctxt, "aliasesInconsistent", -1);
 
             break;
 
          /* routeCallToSCN */
          case 13:
-            rtInvokeStartElement (pctxt, "routeCallToSCN", -1);
+            invokeStartElement (pctxt, "routeCallToSCN", -1);
 
             pvalue->u.routeCallToSCN = ALLOC_ASN1ELEM (pctxt, H225_SeqOfH225PartyNumber);
 
             stat = asn1PD_H225_SeqOfH225PartyNumber (pctxt, pvalue->u.routeCallToSCN);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "routeCallToSCN", -1);
+            invokeEndElement (pctxt, "routeCallToSCN", -1);
 
             break;
 
          /* exceedsCallCapacity */
          case 14:
-            rtInvokeStartElement (pctxt, "exceedsCallCapacity", -1);
+            invokeStartElement (pctxt, "exceedsCallCapacity", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "exceedsCallCapacity", -1);
+            invokeEndElement (pctxt, "exceedsCallCapacity", -1);
 
             break;
 
          /* collectDestination */
          case 15:
-            rtInvokeStartElement (pctxt, "collectDestination", -1);
+            invokeStartElement (pctxt, "collectDestination", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "collectDestination", -1);
+            invokeEndElement (pctxt, "collectDestination", -1);
 
             break;
 
          /* collectPIN */
          case 16:
-            rtInvokeStartElement (pctxt, "collectPIN", -1);
+            invokeStartElement (pctxt, "collectPIN", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "collectPIN", -1);
+            invokeEndElement (pctxt, "collectPIN", -1);
 
             break;
 
          /* genericDataReason */
          case 17:
-            rtInvokeStartElement (pctxt, "genericDataReason", -1);
+            invokeStartElement (pctxt, "genericDataReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "genericDataReason", -1);
+            invokeEndElement (pctxt, "genericDataReason", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 18:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
          /* securityErrors */
          case 19:
-            rtInvokeStartElement (pctxt, "securityErrors", -1);
+            invokeStartElement (pctxt, "securityErrors", -1);
 
             pvalue->u.securityErrors = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityErrors);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityErrors", -1);
+            invokeEndElement (pctxt, "securityErrors", -1);
 
             break;
 
          /* securityDHmismatch */
          case 20:
-            rtInvokeStartElement (pctxt, "securityDHmismatch", -1);
+            invokeStartElement (pctxt, "securityDHmismatch", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDHmismatch", -1);
+            invokeEndElement (pctxt, "securityDHmismatch", -1);
 
             break;
 
          /* noRouteToDestination */
          case 21:
-            rtInvokeStartElement (pctxt, "noRouteToDestination", -1);
+            invokeStartElement (pctxt, "noRouteToDestination", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noRouteToDestination", -1);
+            invokeEndElement (pctxt, "noRouteToDestination", -1);
 
             break;
 
          /* unallocatedNumber */
          case 22:
-            rtInvokeStartElement (pctxt, "unallocatedNumber", -1);
+            invokeStartElement (pctxt, "unallocatedNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unallocatedNumber", -1);
+            invokeEndElement (pctxt, "unallocatedNumber", -1);
 
             break;
 
@@ -21236,31 +21236,31 @@ EXTERN int asn1PD_H225AdmissionReject (OOCTXT* pctxt, H225AdmissionReject* pvalu
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225AdmissionRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -21294,89 +21294,89 @@ EXTERN int asn1PD_H225AdmissionReject (OOCTXT* pctxt, H225AdmissionReject* pvalu
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.callSignalAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+                     invokeStartElement (pctxt, "callSignalAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+                     invokeEndElement (pctxt, "callSignalAddress", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 6:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 7:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -21421,13 +21421,13 @@ EXTERN int asn1PD_H225_SeqOfH225BandwidthDetails (OOCTXT* pctxt, H225_SeqOfH225B
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225BandwidthDetails);
 
          stat = asn1PD_H225BandwidthDetails (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -21471,69 +21471,69 @@ EXTERN int asn1PD_H225BandwidthRequest (OOCTXT* pctxt, H225BandwidthRequest* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode callReferenceValue */
 
-   rtInvokeStartElement (pctxt, "callReferenceValue", -1);
+   invokeStartElement (pctxt, "callReferenceValue", -1);
 
    stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->callReferenceValue);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callReferenceValue", -1);
+   invokeEndElement (pctxt, "callReferenceValue", -1);
 
    /* decode callType */
 
    if (pvalue->m.callTypePresent) {
-      rtInvokeStartElement (pctxt, "callType", -1);
+      invokeStartElement (pctxt, "callType", -1);
 
       stat = asn1PD_H225CallType (pctxt, &pvalue->callType);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callType", -1);
+      invokeEndElement (pctxt, "callType", -1);
    }
 
    /* decode bandWidth */
 
-   rtInvokeStartElement (pctxt, "bandWidth", -1);
+   invokeStartElement (pctxt, "bandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandWidth", -1);
+   invokeEndElement (pctxt, "bandWidth", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -21567,123 +21567,123 @@ EXTERN int asn1PD_H225BandwidthRequest (OOCTXT* pctxt, H225BandwidthRequest* pva
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.gatekeeperIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
                      stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.answeredCallPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "answeredCall", -1);
+                     invokeStartElement (pctxt, "answeredCall", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->answeredCall);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->answeredCall);
+                     invokeBoolValue (pctxt, pvalue->answeredCall);
 
-                     rtInvokeEndElement (pctxt, "answeredCall", -1);
+                     invokeEndElement (pctxt, "answeredCall", -1);
                      break;
 
                   case 6:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 7:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 8:
                      pvalue->m.usageInformationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageInformation", -1);
+                     invokeStartElement (pctxt, "usageInformation", -1);
 
                      stat = asn1PD_H225RasUsageInformation (pctxt, &pvalue->usageInformation);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageInformation", -1);
+                     invokeEndElement (pctxt, "usageInformation", -1);
                      break;
 
                   case 9:
                      pvalue->m.bandwidthDetailsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "bandwidthDetails", -1);
+                     invokeStartElement (pctxt, "bandwidthDetails", -1);
 
                      stat = asn1PD_H225_SeqOfH225BandwidthDetails (pctxt, &pvalue->bandwidthDetails);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "bandwidthDetails", -1);
+                     invokeEndElement (pctxt, "bandwidthDetails", -1);
                      break;
 
                   case 10:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -21731,31 +21731,31 @@ EXTERN int asn1PD_H225BandwidthConfirm (OOCTXT* pctxt, H225BandwidthConfirm* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode bandWidth */
 
-   rtInvokeStartElement (pctxt, "bandWidth", -1);
+   invokeStartElement (pctxt, "bandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandWidth", -1);
+   invokeEndElement (pctxt, "bandWidth", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -21789,56 +21789,56 @@ EXTERN int asn1PD_H225BandwidthConfirm (OOCTXT* pctxt, H225BandwidthConfirm* pva
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 4:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -21882,67 +21882,67 @@ EXTERN int asn1PD_H225BandRejectReason (OOCTXT* pctxt, H225BandRejectReason* pva
       switch (ui) {
          /* notBound */
          case 0:
-            rtInvokeStartElement (pctxt, "notBound", -1);
+            invokeStartElement (pctxt, "notBound", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notBound", -1);
+            invokeEndElement (pctxt, "notBound", -1);
 
             break;
 
          /* invalidConferenceID */
          case 1:
-            rtInvokeStartElement (pctxt, "invalidConferenceID", -1);
+            invokeStartElement (pctxt, "invalidConferenceID", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidConferenceID", -1);
+            invokeEndElement (pctxt, "invalidConferenceID", -1);
 
             break;
 
          /* invalidPermission */
          case 2:
-            rtInvokeStartElement (pctxt, "invalidPermission", -1);
+            invokeStartElement (pctxt, "invalidPermission", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidPermission", -1);
+            invokeEndElement (pctxt, "invalidPermission", -1);
 
             break;
 
          /* insufficientResources */
          case 3:
-            rtInvokeStartElement (pctxt, "insufficientResources", -1);
+            invokeStartElement (pctxt, "insufficientResources", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "insufficientResources", -1);
+            invokeEndElement (pctxt, "insufficientResources", -1);
 
             break;
 
          /* invalidRevision */
          case 4:
-            rtInvokeStartElement (pctxt, "invalidRevision", -1);
+            invokeStartElement (pctxt, "invalidRevision", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidRevision", -1);
+            invokeEndElement (pctxt, "invalidRevision", -1);
 
             break;
 
          /* undefinedReason */
          case 5:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -21967,25 +21967,25 @@ EXTERN int asn1PD_H225BandRejectReason (OOCTXT* pctxt, H225BandRejectReason* pva
       switch (pvalue->t) {
          /* securityDenial */
          case 7:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* securityError */
          case 8:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -22028,40 +22028,40 @@ EXTERN int asn1PD_H225BandwidthReject (OOCTXT* pctxt, H225BandwidthReject* pvalu
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225BandRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode allowedBandWidth */
 
-   rtInvokeStartElement (pctxt, "allowedBandWidth", -1);
+   invokeStartElement (pctxt, "allowedBandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->allowedBandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "allowedBandWidth", -1);
+   invokeEndElement (pctxt, "allowedBandWidth", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -22095,56 +22095,56 @@ EXTERN int asn1PD_H225BandwidthReject (OOCTXT* pctxt, H225BandwidthReject* pvalu
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -22187,34 +22187,34 @@ EXTERN int asn1PD_H225DisengageReason (OOCTXT* pctxt, H225DisengageReason* pvalu
       switch (ui) {
          /* forcedDrop */
          case 0:
-            rtInvokeStartElement (pctxt, "forcedDrop", -1);
+            invokeStartElement (pctxt, "forcedDrop", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "forcedDrop", -1);
+            invokeEndElement (pctxt, "forcedDrop", -1);
 
             break;
 
          /* normalDrop */
          case 1:
-            rtInvokeStartElement (pctxt, "normalDrop", -1);
+            invokeStartElement (pctxt, "normalDrop", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "normalDrop", -1);
+            invokeEndElement (pctxt, "normalDrop", -1);
 
             break;
 
          /* undefinedReason */
          case 2:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -22268,58 +22268,58 @@ EXTERN int asn1PD_H225DisengageRequest (OOCTXT* pctxt, H225DisengageRequest* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode callReferenceValue */
 
-   rtInvokeStartElement (pctxt, "callReferenceValue", -1);
+   invokeStartElement (pctxt, "callReferenceValue", -1);
 
    stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->callReferenceValue);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callReferenceValue", -1);
+   invokeEndElement (pctxt, "callReferenceValue", -1);
 
    /* decode disengageReason */
 
-   rtInvokeStartElement (pctxt, "disengageReason", -1);
+   invokeStartElement (pctxt, "disengageReason", -1);
 
    stat = asn1PD_H225DisengageReason (pctxt, &pvalue->disengageReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "disengageReason", -1);
+   invokeEndElement (pctxt, "disengageReason", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -22353,145 +22353,145 @@ EXTERN int asn1PD_H225DisengageRequest (OOCTXT* pctxt, H225DisengageRequest* pva
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.gatekeeperIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
                      stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
                      break;
 
                   case 2:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 5:
                      pvalue->m.answeredCallPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "answeredCall", -1);
+                     invokeStartElement (pctxt, "answeredCall", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->answeredCall);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->answeredCall);
+                     invokeBoolValue (pctxt, pvalue->answeredCall);
 
-                     rtInvokeEndElement (pctxt, "answeredCall", -1);
+                     invokeEndElement (pctxt, "answeredCall", -1);
                      break;
 
                   case 6:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 7:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 8:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 9:
                      pvalue->m.usageInformationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageInformation", -1);
+                     invokeStartElement (pctxt, "usageInformation", -1);
 
                      stat = asn1PD_H225RasUsageInformation (pctxt, &pvalue->usageInformation);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageInformation", -1);
+                     invokeEndElement (pctxt, "usageInformation", -1);
                      break;
 
                   case 10:
                      pvalue->m.terminationCausePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "terminationCause", -1);
+                     invokeStartElement (pctxt, "terminationCause", -1);
 
                      stat = asn1PD_H225CallTerminationCause (pctxt, &pvalue->terminationCause);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "terminationCause", -1);
+                     invokeEndElement (pctxt, "terminationCause", -1);
                      break;
 
                   case 11:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 12:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -22539,22 +22539,22 @@ EXTERN int asn1PD_H225DisengageConfirm (OOCTXT* pctxt, H225DisengageConfirm* pva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -22588,78 +22588,78 @@ EXTERN int asn1PD_H225DisengageConfirm (OOCTXT* pctxt, H225DisengageConfirm* pva
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 4:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 5:
                      pvalue->m.usageInformationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageInformation", -1);
+                     invokeStartElement (pctxt, "usageInformation", -1);
 
                      stat = asn1PD_H225RasUsageInformation (pctxt, &pvalue->usageInformation);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageInformation", -1);
+                     invokeEndElement (pctxt, "usageInformation", -1);
                      break;
 
                   case 6:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -22703,23 +22703,23 @@ EXTERN int asn1PD_H225DisengageRejectReason (OOCTXT* pctxt, H225DisengageRejectR
       switch (ui) {
          /* notRegistered */
          case 0:
-            rtInvokeStartElement (pctxt, "notRegistered", -1);
+            invokeStartElement (pctxt, "notRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notRegistered", -1);
+            invokeEndElement (pctxt, "notRegistered", -1);
 
             break;
 
          /* requestToDropOther */
          case 1:
-            rtInvokeStartElement (pctxt, "requestToDropOther", -1);
+            invokeStartElement (pctxt, "requestToDropOther", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "requestToDropOther", -1);
+            invokeEndElement (pctxt, "requestToDropOther", -1);
 
             break;
 
@@ -22744,25 +22744,25 @@ EXTERN int asn1PD_H225DisengageRejectReason (OOCTXT* pctxt, H225DisengageRejectR
       switch (pvalue->t) {
          /* securityDenial */
          case 3:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* securityError */
          case 4:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -22805,31 +22805,31 @@ EXTERN int asn1PD_H225DisengageReject (OOCTXT* pctxt, H225DisengageReject* pvalu
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225DisengageRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -22863,56 +22863,56 @@ EXTERN int asn1PD_H225DisengageReject (OOCTXT* pctxt, H225DisengageReject* pvalu
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -22963,52 +22963,52 @@ EXTERN int asn1PD_H225LocationRequest (OOCTXT* pctxt, H225LocationRequest* pvalu
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode endpointIdentifier */
 
    if (pvalue->m.endpointIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+      invokeStartElement (pctxt, "endpointIdentifier", -1);
 
       stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+      invokeEndElement (pctxt, "endpointIdentifier", -1);
    }
 
    /* decode destinationInfo */
 
-   rtInvokeStartElement (pctxt, "destinationInfo", -1);
+   invokeStartElement (pctxt, "destinationInfo", -1);
 
    stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destinationInfo);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "destinationInfo", -1);
+   invokeEndElement (pctxt, "destinationInfo", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode replyAddress */
 
-   rtInvokeStartElement (pctxt, "replyAddress", -1);
+   invokeStartElement (pctxt, "replyAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->replyAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "replyAddress", -1);
+   invokeEndElement (pctxt, "replyAddress", -1);
 
    if (extbit) {
 
@@ -23041,180 +23041,180 @@ EXTERN int asn1PD_H225LocationRequest (OOCTXT* pctxt, H225LocationRequest* pvalu
                   case 0:
                      pvalue->m.sourceInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sourceInfo", -1);
+                     invokeStartElement (pctxt, "sourceInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->sourceInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sourceInfo", -1);
+                     invokeEndElement (pctxt, "sourceInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.canMapAliasPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "canMapAlias", -1);
+                     invokeStartElement (pctxt, "canMapAlias", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->canMapAlias);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->canMapAlias);
+                     invokeBoolValue (pctxt, pvalue->canMapAlias);
 
-                     rtInvokeEndElement (pctxt, "canMapAlias", -1);
+                     invokeEndElement (pctxt, "canMapAlias", -1);
                      break;
 
                   case 2:
                      pvalue->m.gatekeeperIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeStartElement (pctxt, "gatekeeperIdentifier", -1);
 
                      stat = asn1PD_H225GatekeeperIdentifier (pctxt, &pvalue->gatekeeperIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "gatekeeperIdentifier", -1);
+                     invokeEndElement (pctxt, "gatekeeperIdentifier", -1);
                      break;
 
                   case 3:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 4:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 5:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 6:
                      pvalue->m.desiredProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredProtocols", -1);
+                     invokeStartElement (pctxt, "desiredProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->desiredProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredProtocols", -1);
+                     invokeEndElement (pctxt, "desiredProtocols", -1);
                      break;
 
                   case 7:
                      pvalue->m.desiredTunnelledProtocolPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "desiredTunnelledProtocol", -1);
+                     invokeStartElement (pctxt, "desiredTunnelledProtocol", -1);
 
                      stat = asn1PD_H225TunnelledProtocol (pctxt, &pvalue->desiredTunnelledProtocol);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "desiredTunnelledProtocol", -1);
+                     invokeEndElement (pctxt, "desiredTunnelledProtocol", -1);
                      break;
 
                   case 8:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 9:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 10:
                      pvalue->m.hopCountPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "hopCount", -1);
+                     invokeStartElement (pctxt, "hopCount", -1);
 
                      stat = decodeConsUInt8 (pctxt, &pvalue->hopCount, 1U, 255U);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeUIntValue (pctxt, pvalue->hopCount);
+                     invokeUIntValue (pctxt, pvalue->hopCount);
 
-                     rtInvokeEndElement (pctxt, "hopCount", -1);
+                     invokeEndElement (pctxt, "hopCount", -1);
                      break;
 
                   case 11:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 12:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 13:
                      pvalue->m.bandWidthPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "bandWidth", -1);
+                     invokeStartElement (pctxt, "bandWidth", -1);
 
                      stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "bandWidth", -1);
+                     invokeEndElement (pctxt, "bandWidth", -1);
                      break;
 
                   case 14:
                      pvalue->m.sourceEndpointInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sourceEndpointInfo", -1);
+                     invokeStartElement (pctxt, "sourceEndpointInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->sourceEndpointInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sourceEndpointInfo", -1);
+                     invokeEndElement (pctxt, "sourceEndpointInfo", -1);
                      break;
 
                   case 15:
                      pvalue->m.canMapSrcAliasPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "canMapSrcAlias", -1);
+                     invokeStartElement (pctxt, "canMapSrcAlias", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->canMapSrcAlias);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->canMapSrcAlias);
+                     invokeBoolValue (pctxt, pvalue->canMapSrcAlias);
 
-                     rtInvokeEndElement (pctxt, "canMapSrcAlias", -1);
+                     invokeEndElement (pctxt, "canMapSrcAlias", -1);
                      break;
 
                   default:
@@ -23262,40 +23262,40 @@ EXTERN int asn1PD_H225LocationConfirm (OOCTXT* pctxt, H225LocationConfirm* pvalu
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode callSignalAddress */
 
-   rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+   invokeStartElement (pctxt, "callSignalAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->callSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+   invokeEndElement (pctxt, "callSignalAddress", -1);
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -23329,189 +23329,189 @@ EXTERN int asn1PD_H225LocationConfirm (OOCTXT* pctxt, H225LocationConfirm* pvalu
                   case 0:
                      pvalue->m.destinationInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destinationInfo", -1);
+                     invokeStartElement (pctxt, "destinationInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destinationInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destinationInfo", -1);
+                     invokeEndElement (pctxt, "destinationInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.destExtraCallInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destExtraCallInfo", -1);
+                     invokeStartElement (pctxt, "destExtraCallInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->destExtraCallInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destExtraCallInfo", -1);
+                     invokeEndElement (pctxt, "destExtraCallInfo", -1);
                      break;
 
                   case 2:
                      pvalue->m.destinationTypePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "destinationType", -1);
+                     invokeStartElement (pctxt, "destinationType", -1);
 
                      stat = asn1PD_H225EndpointType (pctxt, &pvalue->destinationType);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "destinationType", -1);
+                     invokeEndElement (pctxt, "destinationType", -1);
                      break;
 
                   case 3:
                      pvalue->m.remoteExtensionAddressPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeStartElement (pctxt, "remoteExtensionAddress", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->remoteExtensionAddress);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "remoteExtensionAddress", -1);
+                     invokeEndElement (pctxt, "remoteExtensionAddress", -1);
                      break;
 
                   case 4:
                      pvalue->m.alternateEndpointsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateEndpoints", -1);
+                     invokeStartElement (pctxt, "alternateEndpoints", -1);
 
                      stat = asn1PD_H225_SeqOfH225Endpoint (pctxt, &pvalue->alternateEndpoints);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateEndpoints", -1);
+                     invokeEndElement (pctxt, "alternateEndpoints", -1);
                      break;
 
                   case 5:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 6:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 7:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 8:
                      pvalue->m.alternateTransportAddressesPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeStartElement (pctxt, "alternateTransportAddresses", -1);
 
                      stat = asn1PD_H225AlternateTransportAddresses (pctxt, &pvalue->alternateTransportAddresses);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "alternateTransportAddresses", -1);
+                     invokeEndElement (pctxt, "alternateTransportAddresses", -1);
                      break;
 
                   case 9:
                      pvalue->m.supportedProtocolsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "supportedProtocols", -1);
+                     invokeStartElement (pctxt, "supportedProtocols", -1);
 
                      stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->supportedProtocols);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "supportedProtocols", -1);
+                     invokeEndElement (pctxt, "supportedProtocols", -1);
                      break;
 
                   case 10:
                      pvalue->m.multipleCallsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "multipleCalls", -1);
+                     invokeStartElement (pctxt, "multipleCalls", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->multipleCalls);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->multipleCalls);
+                     invokeBoolValue (pctxt, pvalue->multipleCalls);
 
-                     rtInvokeEndElement (pctxt, "multipleCalls", -1);
+                     invokeEndElement (pctxt, "multipleCalls", -1);
                      break;
 
                   case 11:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 12:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 13:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   case 14:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   case 15:
                      pvalue->m.modifiedSrcInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "modifiedSrcInfo", -1);
+                     invokeStartElement (pctxt, "modifiedSrcInfo", -1);
 
                      stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->modifiedSrcInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "modifiedSrcInfo", -1);
+                     invokeEndElement (pctxt, "modifiedSrcInfo", -1);
                      break;
 
                   case 16:
                      pvalue->m.bandWidthPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "bandWidth", -1);
+                     invokeStartElement (pctxt, "bandWidth", -1);
 
                      stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "bandWidth", -1);
+                     invokeEndElement (pctxt, "bandWidth", -1);
                      break;
 
                   default:
@@ -23555,45 +23555,45 @@ EXTERN int asn1PD_H225LocationRejectReason (OOCTXT* pctxt, H225LocationRejectRea
       switch (ui) {
          /* notRegistered */
          case 0:
-            rtInvokeStartElement (pctxt, "notRegistered", -1);
+            invokeStartElement (pctxt, "notRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notRegistered", -1);
+            invokeEndElement (pctxt, "notRegistered", -1);
 
             break;
 
          /* invalidPermission */
          case 1:
-            rtInvokeStartElement (pctxt, "invalidPermission", -1);
+            invokeStartElement (pctxt, "invalidPermission", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidPermission", -1);
+            invokeEndElement (pctxt, "invalidPermission", -1);
 
             break;
 
          /* requestDenied */
          case 2:
-            rtInvokeStartElement (pctxt, "requestDenied", -1);
+            invokeStartElement (pctxt, "requestDenied", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "requestDenied", -1);
+            invokeEndElement (pctxt, "requestDenied", -1);
 
             break;
 
          /* undefinedReason */
          case 3:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -23618,137 +23618,137 @@ EXTERN int asn1PD_H225LocationRejectReason (OOCTXT* pctxt, H225LocationRejectRea
       switch (pvalue->t) {
          /* securityDenial */
          case 5:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* aliasesInconsistent */
          case 6:
-            rtInvokeStartElement (pctxt, "aliasesInconsistent", -1);
+            invokeStartElement (pctxt, "aliasesInconsistent", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "aliasesInconsistent", -1);
+            invokeEndElement (pctxt, "aliasesInconsistent", -1);
 
             break;
 
          /* routeCalltoSCN */
          case 7:
-            rtInvokeStartElement (pctxt, "routeCalltoSCN", -1);
+            invokeStartElement (pctxt, "routeCalltoSCN", -1);
 
             pvalue->u.routeCalltoSCN = ALLOC_ASN1ELEM (pctxt, H225_SeqOfH225PartyNumber);
 
             stat = asn1PD_H225_SeqOfH225PartyNumber (pctxt, pvalue->u.routeCalltoSCN);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "routeCalltoSCN", -1);
+            invokeEndElement (pctxt, "routeCalltoSCN", -1);
 
             break;
 
          /* resourceUnavailable */
          case 8:
-            rtInvokeStartElement (pctxt, "resourceUnavailable", -1);
+            invokeStartElement (pctxt, "resourceUnavailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "resourceUnavailable", -1);
+            invokeEndElement (pctxt, "resourceUnavailable", -1);
 
             break;
 
          /* genericDataReason */
          case 9:
-            rtInvokeStartElement (pctxt, "genericDataReason", -1);
+            invokeStartElement (pctxt, "genericDataReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "genericDataReason", -1);
+            invokeEndElement (pctxt, "genericDataReason", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 10:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
          /* hopCountExceeded */
          case 11:
-            rtInvokeStartElement (pctxt, "hopCountExceeded", -1);
+            invokeStartElement (pctxt, "hopCountExceeded", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "hopCountExceeded", -1);
+            invokeEndElement (pctxt, "hopCountExceeded", -1);
 
             break;
 
          /* incompleteAddress */
          case 12:
-            rtInvokeStartElement (pctxt, "incompleteAddress", -1);
+            invokeStartElement (pctxt, "incompleteAddress", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "incompleteAddress", -1);
+            invokeEndElement (pctxt, "incompleteAddress", -1);
 
             break;
 
          /* securityError */
          case 13:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
          /* securityDHmismatch */
          case 14:
-            rtInvokeStartElement (pctxt, "securityDHmismatch", -1);
+            invokeStartElement (pctxt, "securityDHmismatch", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDHmismatch", -1);
+            invokeEndElement (pctxt, "securityDHmismatch", -1);
 
             break;
 
          /* noRouteToDestination */
          case 15:
-            rtInvokeStartElement (pctxt, "noRouteToDestination", -1);
+            invokeStartElement (pctxt, "noRouteToDestination", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "noRouteToDestination", -1);
+            invokeEndElement (pctxt, "noRouteToDestination", -1);
 
             break;
 
          /* unallocatedNumber */
          case 16:
-            rtInvokeStartElement (pctxt, "unallocatedNumber", -1);
+            invokeStartElement (pctxt, "unallocatedNumber", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "unallocatedNumber", -1);
+            invokeEndElement (pctxt, "unallocatedNumber", -1);
 
             break;
 
@@ -23791,31 +23791,31 @@ EXTERN int asn1PD_H225LocationReject (OOCTXT* pctxt, H225LocationReject* pvalue)
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode rejectReason */
 
-   rtInvokeStartElement (pctxt, "rejectReason", -1);
+   invokeStartElement (pctxt, "rejectReason", -1);
 
    stat = asn1PD_H225LocationRejectReason (pctxt, &pvalue->rejectReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rejectReason", -1);
+   invokeEndElement (pctxt, "rejectReason", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    if (extbit) {
@@ -23849,78 +23849,78 @@ EXTERN int asn1PD_H225LocationReject (OOCTXT* pctxt, H225LocationReject* pvalue)
                   case 0:
                      pvalue->m.altGKInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "altGKInfo", -1);
+                     invokeStartElement (pctxt, "altGKInfo", -1);
 
                      stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "altGKInfo", -1);
+                     invokeEndElement (pctxt, "altGKInfo", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 5:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   case 6:
                      pvalue->m.serviceControlPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "serviceControl", -1);
+                     invokeStartElement (pctxt, "serviceControl", -1);
 
                      stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "serviceControl", -1);
+                     invokeEndElement (pctxt, "serviceControl", -1);
                      break;
 
                   default:
@@ -23971,42 +23971,42 @@ EXTERN int asn1PD_H225InfoRequest (OOCTXT* pctxt, H225InfoRequest* pvalue)
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode callReferenceValue */
 
-   rtInvokeStartElement (pctxt, "callReferenceValue", -1);
+   invokeStartElement (pctxt, "callReferenceValue", -1);
 
    stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->callReferenceValue);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callReferenceValue", -1);
+   invokeEndElement (pctxt, "callReferenceValue", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode replyAddress */
 
    if (pvalue->m.replyAddressPresent) {
-      rtInvokeStartElement (pctxt, "replyAddress", -1);
+      invokeStartElement (pctxt, "replyAddress", -1);
 
       stat = asn1PD_H225TransportAddress (pctxt, &pvalue->replyAddress);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "replyAddress", -1);
+      invokeEndElement (pctxt, "replyAddress", -1);
    }
 
    if (extbit) {
@@ -24040,123 +24040,123 @@ EXTERN int asn1PD_H225InfoRequest (OOCTXT* pctxt, H225InfoRequest* pvalue)
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 4:
                      pvalue->m.uuiesRequestedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "uuiesRequested", -1);
+                     invokeStartElement (pctxt, "uuiesRequested", -1);
 
                      stat = asn1PD_H225UUIEsRequested (pctxt, &pvalue->uuiesRequested);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "uuiesRequested", -1);
+                     invokeEndElement (pctxt, "uuiesRequested", -1);
                      break;
 
                   case 5:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 6:
                      pvalue->m.usageInfoRequestedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageInfoRequested", -1);
+                     invokeStartElement (pctxt, "usageInfoRequested", -1);
 
                      stat = asn1PD_H225RasUsageInfoTypes (pctxt, &pvalue->usageInfoRequested);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageInfoRequested", -1);
+                     invokeEndElement (pctxt, "usageInfoRequested", -1);
                      break;
 
                   case 7:
                      pvalue->m.segmentedResponseSupportedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "segmentedResponseSupported", -1);
+                     invokeStartElement (pctxt, "segmentedResponseSupported", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "segmentedResponseSupported", -1);
+                     invokeEndElement (pctxt, "segmentedResponseSupported", -1);
                      break;
 
                   case 8:
                      pvalue->m.nextSegmentRequestedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "nextSegmentRequested", -1);
+                     invokeStartElement (pctxt, "nextSegmentRequested", -1);
 
                      stat = decodeConsUInt16 (pctxt, &pvalue->nextSegmentRequested, 0U, 65535U);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeUIntValue (pctxt, pvalue->nextSegmentRequested);
+                     invokeUIntValue (pctxt, pvalue->nextSegmentRequested);
 
-                     rtInvokeEndElement (pctxt, "nextSegmentRequested", -1);
+                     invokeEndElement (pctxt, "nextSegmentRequested", -1);
                      break;
 
                   case 9:
                      pvalue->m.capacityInfoRequestedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacityInfoRequested", -1);
+                     invokeStartElement (pctxt, "capacityInfoRequested", -1);
 
                      /* NULL */
-                     rtInvokeNullValue (pctxt);
+                     invokeNullValue (pctxt);
 
-                     rtInvokeEndElement (pctxt, "capacityInfoRequested", -1);
+                     invokeEndElement (pctxt, "capacityInfoRequested", -1);
                      break;
 
                   case 10:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -24201,13 +24201,13 @@ EXTERN int asn1PD_H225_SeqOfH225RTPSession (OOCTXT* pctxt, H225_SeqOfH225RTPSess
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225RTPSession);
 
          stat = asn1PD_H225RTPSession (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -24245,13 +24245,13 @@ EXTERN int asn1PD_H225_SeqOfH225TransportChannelInfo (OOCTXT* pctxt, H225_SeqOfH
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225TransportChannelInfo);
 
          stat = asn1PD_H225TransportChannelInfo (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -24283,11 +24283,11 @@ EXTERN int asn1PD_H225_SeqOfH225ConferenceIdentifier (OOCTXT* pctxt, H225_SeqOfH
    ALLOC_ASN1ARRAY (pctxt, pvalue, H225ConferenceIdentifier);
 
    for (xx1 = 0; xx1 < pvalue->n; xx1++) {
-      rtInvokeStartElement (pctxt, "elem", xx1);
+      invokeStartElement (pctxt, "elem", xx1);
 
       stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->elem[xx1]);
       if (stat != ASN_OK) return stat;
-      rtInvokeEndElement (pctxt, "elem", xx1);
+      invokeEndElement (pctxt, "elem", xx1);
 
    }
 
@@ -24306,22 +24306,22 @@ EXTERN int asn1PD_H225InfoRequestResponse_perCallInfo_element_pdu_element (OOCTX
 
    /* decode h323pdu */
 
-   rtInvokeStartElement (pctxt, "h323pdu", -1);
+   invokeStartElement (pctxt, "h323pdu", -1);
 
    stat = asn1PD_H225H323_UU_PDU (pctxt, &pvalue->h323pdu);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "h323pdu", -1);
+   invokeEndElement (pctxt, "h323pdu", -1);
 
    /* decode sent */
 
-   rtInvokeStartElement (pctxt, "sent", -1);
+   invokeStartElement (pctxt, "sent", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->sent);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->sent);
+   invokeBoolValue (pctxt, pvalue->sent);
 
-   rtInvokeEndElement (pctxt, "sent", -1);
+   invokeEndElement (pctxt, "sent", -1);
 
    return (stat);
 }
@@ -24353,13 +24353,13 @@ EXTERN int asn1PD_H225_SeqOfH225InfoRequestResponse_perCallInfo_element_pdu_elem
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225InfoRequestResponse_perCallInfo_element_pdu_element);
 
          stat = asn1PD_H225InfoRequestResponse_perCallInfo_element_pdu_element (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -24413,121 +24413,121 @@ EXTERN int asn1PD_H225InfoRequestResponse_perCallInfo_element (OOCTXT* pctxt, H2
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode callReferenceValue */
 
-   rtInvokeStartElement (pctxt, "callReferenceValue", -1);
+   invokeStartElement (pctxt, "callReferenceValue", -1);
 
    stat = asn1PD_H225CallReferenceValue (pctxt, &pvalue->callReferenceValue);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callReferenceValue", -1);
+   invokeEndElement (pctxt, "callReferenceValue", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode originator */
 
    if (pvalue->m.originatorPresent) {
-      rtInvokeStartElement (pctxt, "originator", -1);
+      invokeStartElement (pctxt, "originator", -1);
 
       stat = DECODEBIT (pctxt, &pvalue->originator);
       if (stat != ASN_OK) return stat;
-      rtInvokeBoolValue (pctxt, pvalue->originator);
+      invokeBoolValue (pctxt, pvalue->originator);
 
-      rtInvokeEndElement (pctxt, "originator", -1);
+      invokeEndElement (pctxt, "originator", -1);
    }
 
    /* decode audio */
 
    if (pvalue->m.audioPresent) {
-      rtInvokeStartElement (pctxt, "audio", -1);
+      invokeStartElement (pctxt, "audio", -1);
 
       stat = asn1PD_H225_SeqOfH225RTPSession (pctxt, &pvalue->audio);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "audio", -1);
+      invokeEndElement (pctxt, "audio", -1);
    }
 
    /* decode video */
 
    if (pvalue->m.videoPresent) {
-      rtInvokeStartElement (pctxt, "video", -1);
+      invokeStartElement (pctxt, "video", -1);
 
       stat = asn1PD_H225_SeqOfH225RTPSession (pctxt, &pvalue->video);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "video", -1);
+      invokeEndElement (pctxt, "video", -1);
    }
 
    /* decode data */
 
    if (pvalue->m.dataPresent) {
-      rtInvokeStartElement (pctxt, "data", -1);
+      invokeStartElement (pctxt, "data", -1);
 
       stat = asn1PD_H225_SeqOfH225TransportChannelInfo (pctxt, &pvalue->data);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "data", -1);
+      invokeEndElement (pctxt, "data", -1);
    }
 
    /* decode h245 */
 
-   rtInvokeStartElement (pctxt, "h245", -1);
+   invokeStartElement (pctxt, "h245", -1);
 
    stat = asn1PD_H225TransportChannelInfo (pctxt, &pvalue->h245);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "h245", -1);
+   invokeEndElement (pctxt, "h245", -1);
 
    /* decode callSignaling */
 
-   rtInvokeStartElement (pctxt, "callSignaling", -1);
+   invokeStartElement (pctxt, "callSignaling", -1);
 
    stat = asn1PD_H225TransportChannelInfo (pctxt, &pvalue->callSignaling);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignaling", -1);
+   invokeEndElement (pctxt, "callSignaling", -1);
 
    /* decode callType */
 
-   rtInvokeStartElement (pctxt, "callType", -1);
+   invokeStartElement (pctxt, "callType", -1);
 
    stat = asn1PD_H225CallType (pctxt, &pvalue->callType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callType", -1);
+   invokeEndElement (pctxt, "callType", -1);
 
    /* decode bandWidth */
 
-   rtInvokeStartElement (pctxt, "bandWidth", -1);
+   invokeStartElement (pctxt, "bandWidth", -1);
 
    stat = asn1PD_H225BandWidth (pctxt, &pvalue->bandWidth);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "bandWidth", -1);
+   invokeEndElement (pctxt, "bandWidth", -1);
 
    /* decode callModel */
 
-   rtInvokeStartElement (pctxt, "callModel", -1);
+   invokeStartElement (pctxt, "callModel", -1);
 
    stat = asn1PD_H225CallModel (pctxt, &pvalue->callModel);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callModel", -1);
+   invokeEndElement (pctxt, "callModel", -1);
 
    if (extbit) {
 
@@ -24560,89 +24560,89 @@ EXTERN int asn1PD_H225InfoRequestResponse_perCallInfo_element (OOCTXT* pctxt, H2
                   case 0:
                      pvalue->m.callIdentifierPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callIdentifier", -1);
+                     invokeStartElement (pctxt, "callIdentifier", -1);
 
                      stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callIdentifier", -1);
+                     invokeEndElement (pctxt, "callIdentifier", -1);
                      break;
 
                   case 1:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 3:
                      pvalue->m.substituteConfIDsPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "substituteConfIDs", -1);
+                     invokeStartElement (pctxt, "substituteConfIDs", -1);
 
                      stat = asn1PD_H225_SeqOfH225ConferenceIdentifier (pctxt, &pvalue->substituteConfIDs);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "substituteConfIDs", -1);
+                     invokeEndElement (pctxt, "substituteConfIDs", -1);
                      break;
 
                   case 4:
                      pvalue->m.pduPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "pdu", -1);
+                     invokeStartElement (pctxt, "pdu", -1);
 
                      stat = asn1PD_H225_SeqOfH225InfoRequestResponse_perCallInfo_element_pdu_element (pctxt, &pvalue->pdu);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "pdu", -1);
+                     invokeEndElement (pctxt, "pdu", -1);
                      break;
 
                   case 5:
                      pvalue->m.callLinkagePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "callLinkage", -1);
+                     invokeStartElement (pctxt, "callLinkage", -1);
 
                      stat = asn1PD_H225CallLinkage (pctxt, &pvalue->callLinkage);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "callLinkage", -1);
+                     invokeEndElement (pctxt, "callLinkage", -1);
                      break;
 
                   case 6:
                      pvalue->m.usageInformationPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "usageInformation", -1);
+                     invokeStartElement (pctxt, "usageInformation", -1);
 
                      stat = asn1PD_H225RasUsageInformation (pctxt, &pvalue->usageInformation);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "usageInformation", -1);
+                     invokeEndElement (pctxt, "usageInformation", -1);
                      break;
 
                   case 7:
                      pvalue->m.circuitInfoPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "circuitInfo", -1);
+                     invokeStartElement (pctxt, "circuitInfo", -1);
 
                      stat = asn1PD_H225CircuitInfo (pctxt, &pvalue->circuitInfo);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "circuitInfo", -1);
+                     invokeEndElement (pctxt, "circuitInfo", -1);
                      break;
 
                   default:
@@ -24687,13 +24687,13 @@ EXTERN int asn1PD_H225_SeqOfH225InfoRequestResponse_perCallInfo_element (OOCTXT*
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225InfoRequestResponse_perCallInfo_element);
 
          stat = asn1PD_H225InfoRequestResponse_perCallInfo_element (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -24729,46 +24729,46 @@ EXTERN int asn1PD_H225InfoRequestResponseStatus (OOCTXT* pctxt, H225InfoRequestR
       switch (ui) {
          /* complete */
          case 0:
-            rtInvokeStartElement (pctxt, "complete", -1);
+            invokeStartElement (pctxt, "complete", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "complete", -1);
+            invokeEndElement (pctxt, "complete", -1);
 
             break;
 
          /* incomplete */
          case 1:
-            rtInvokeStartElement (pctxt, "incomplete", -1);
+            invokeStartElement (pctxt, "incomplete", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "incomplete", -1);
+            invokeEndElement (pctxt, "incomplete", -1);
 
             break;
 
          /* segment */
          case 2:
-            rtInvokeStartElement (pctxt, "segment", -1);
+            invokeStartElement (pctxt, "segment", -1);
 
             stat = decodeConsUInt16 (pctxt, &pvalue->u.segment, 0U, 65535U);
             if (stat != ASN_OK) return stat;
-            rtInvokeUIntValue (pctxt, pvalue->u.segment);
+            invokeUIntValue (pctxt, pvalue->u.segment);
 
-            rtInvokeEndElement (pctxt, "segment", -1);
+            invokeEndElement (pctxt, "segment", -1);
 
             break;
 
          /* invalidCall */
          case 3:
-            rtInvokeStartElement (pctxt, "invalidCall", -1);
+            invokeStartElement (pctxt, "invalidCall", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "invalidCall", -1);
+            invokeEndElement (pctxt, "invalidCall", -1);
 
             break;
 
@@ -24829,79 +24829,79 @@ EXTERN int asn1PD_H225InfoRequestResponse (OOCTXT* pctxt, H225InfoRequestRespons
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode endpointType */
 
-   rtInvokeStartElement (pctxt, "endpointType", -1);
+   invokeStartElement (pctxt, "endpointType", -1);
 
    stat = asn1PD_H225EndpointType (pctxt, &pvalue->endpointType);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointType", -1);
+   invokeEndElement (pctxt, "endpointType", -1);
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    /* decode rasAddress */
 
-   rtInvokeStartElement (pctxt, "rasAddress", -1);
+   invokeStartElement (pctxt, "rasAddress", -1);
 
    stat = asn1PD_H225TransportAddress (pctxt, &pvalue->rasAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "rasAddress", -1);
+   invokeEndElement (pctxt, "rasAddress", -1);
 
    /* decode callSignalAddress */
 
-   rtInvokeStartElement (pctxt, "callSignalAddress", -1);
+   invokeStartElement (pctxt, "callSignalAddress", -1);
 
    stat = asn1PD_H225_SeqOfH225TransportAddress (pctxt, &pvalue->callSignalAddress);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callSignalAddress", -1);
+   invokeEndElement (pctxt, "callSignalAddress", -1);
 
    /* decode endpointAlias */
 
    if (pvalue->m.endpointAliasPresent) {
-      rtInvokeStartElement (pctxt, "endpointAlias", -1);
+      invokeStartElement (pctxt, "endpointAlias", -1);
 
       stat = asn1PD_H225_SeqOfH225AliasAddress (pctxt, &pvalue->endpointAlias);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointAlias", -1);
+      invokeEndElement (pctxt, "endpointAlias", -1);
    }
 
    /* decode perCallInfo */
 
    if (pvalue->m.perCallInfoPresent) {
-      rtInvokeStartElement (pctxt, "perCallInfo", -1);
+      invokeStartElement (pctxt, "perCallInfo", -1);
 
       stat = asn1PD_H225_SeqOfH225InfoRequestResponse_perCallInfo_element (pctxt, &pvalue->perCallInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "perCallInfo", -1);
+      invokeEndElement (pctxt, "perCallInfo", -1);
    }
 
    if (extbit) {
@@ -24935,91 +24935,91 @@ EXTERN int asn1PD_H225InfoRequestResponse (OOCTXT* pctxt, H225InfoRequestRespons
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.needResponsePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "needResponse", -1);
+                     invokeStartElement (pctxt, "needResponse", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->needResponse);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->needResponse);
+                     invokeBoolValue (pctxt, pvalue->needResponse);
 
-                     rtInvokeEndElement (pctxt, "needResponse", -1);
+                     invokeEndElement (pctxt, "needResponse", -1);
                      break;
 
                   case 4:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 5:
                      pvalue->m.irrStatusPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "irrStatus", -1);
+                     invokeStartElement (pctxt, "irrStatus", -1);
 
                      stat = asn1PD_H225InfoRequestResponseStatus (pctxt, &pvalue->irrStatus);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "irrStatus", -1);
+                     invokeEndElement (pctxt, "irrStatus", -1);
                      break;
 
                   case 6:
                      pvalue->m.unsolicitedPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "unsolicited", -1);
+                     invokeStartElement (pctxt, "unsolicited", -1);
 
                      stat = DECODEBIT (pctxt, &pvalue->unsolicited);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeBoolValue (pctxt, pvalue->unsolicited);
+                     invokeBoolValue (pctxt, pvalue->unsolicited);
 
-                     rtInvokeEndElement (pctxt, "unsolicited", -1);
+                     invokeEndElement (pctxt, "unsolicited", -1);
                      break;
 
                   case 7:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -25064,21 +25064,21 @@ EXTERN int asn1PD_H225NonStandardMessage (OOCTXT* pctxt, H225NonStandardMessage*
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
-   rtInvokeStartElement (pctxt, "nonStandardData", -1);
+   invokeStartElement (pctxt, "nonStandardData", -1);
 
    stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "nonStandardData", -1);
+   invokeEndElement (pctxt, "nonStandardData", -1);
 
    if (extbit) {
 
@@ -25111,56 +25111,56 @@ EXTERN int asn1PD_H225NonStandardMessage (OOCTXT* pctxt, H225NonStandardMessage*
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.featureSetPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "featureSet", -1);
+                     invokeStartElement (pctxt, "featureSet", -1);
 
                      stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "featureSet", -1);
+                     invokeEndElement (pctxt, "featureSet", -1);
                      break;
 
                   case 4:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -25205,12 +25205,12 @@ EXTERN int asn1PD_H225UnknownMessageResponse (OOCTXT* pctxt, H225UnknownMessageR
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    if (extbit) {
 
@@ -25243,46 +25243,46 @@ EXTERN int asn1PD_H225UnknownMessageResponse (OOCTXT* pctxt, H225UnknownMessageR
                   case 0:
                      pvalue->m.tokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "tokens", -1);
+                     invokeStartElement (pctxt, "tokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "tokens", -1);
+                     invokeEndElement (pctxt, "tokens", -1);
                      break;
 
                   case 1:
                      pvalue->m.cryptoTokensPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+                     invokeStartElement (pctxt, "cryptoTokens", -1);
 
                      stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+                     invokeEndElement (pctxt, "cryptoTokens", -1);
                      break;
 
                   case 2:
                      pvalue->m.integrityCheckValuePresent = 1;
 
-                     rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+                     invokeStartElement (pctxt, "integrityCheckValue", -1);
 
                      stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+                     invokeEndElement (pctxt, "integrityCheckValue", -1);
                      break;
 
                   case 3:
                      pvalue->m.messageNotUnderstoodPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "messageNotUnderstood", -1);
+                     invokeStartElement (pctxt, "messageNotUnderstood", -1);
 
                      stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->messageNotUnderstood);
                      if (stat != ASN_OK) return stat;
-                     rtInvokeOctStrValue (pctxt, pvalue->messageNotUnderstood.numocts, pvalue->messageNotUnderstood.data);
+                     invokeOctStrValue (pctxt, pvalue->messageNotUnderstood.numocts, pvalue->messageNotUnderstood.data);
 
-                     rtInvokeEndElement (pctxt, "messageNotUnderstood", -1);
+                     invokeEndElement (pctxt, "messageNotUnderstood", -1);
                      break;
 
                   default:
@@ -25338,66 +25338,66 @@ EXTERN int asn1PD_H225RequestInProgress (OOCTXT* pctxt, H225RequestInProgress* p
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    /* decode delay */
 
-   rtInvokeStartElement (pctxt, "delay", -1);
+   invokeStartElement (pctxt, "delay", -1);
 
    stat = decodeConsUInt16 (pctxt, &pvalue->delay, 1U, 65535U);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, pvalue->delay);
+   invokeUIntValue (pctxt, pvalue->delay);
 
-   rtInvokeEndElement (pctxt, "delay", -1);
+   invokeEndElement (pctxt, "delay", -1);
 
    if (extbit) {
 
@@ -25469,92 +25469,92 @@ EXTERN int asn1PD_H225ResourcesAvailableIndicate (OOCTXT* pctxt, H225ResourcesAv
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode endpointIdentifier */
 
-   rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+   invokeStartElement (pctxt, "endpointIdentifier", -1);
 
    stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+   invokeEndElement (pctxt, "endpointIdentifier", -1);
 
    /* decode protocols */
 
-   rtInvokeStartElement (pctxt, "protocols", -1);
+   invokeStartElement (pctxt, "protocols", -1);
 
    stat = asn1PD_H225_SeqOfH225SupportedProtocols (pctxt, &pvalue->protocols);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocols", -1);
+   invokeEndElement (pctxt, "protocols", -1);
 
    /* decode almostOutOfResources */
 
-   rtInvokeStartElement (pctxt, "almostOutOfResources", -1);
+   invokeStartElement (pctxt, "almostOutOfResources", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->almostOutOfResources);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->almostOutOfResources);
+   invokeBoolValue (pctxt, pvalue->almostOutOfResources);
 
-   rtInvokeEndElement (pctxt, "almostOutOfResources", -1);
+   invokeEndElement (pctxt, "almostOutOfResources", -1);
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    if (extbit) {
@@ -25588,23 +25588,23 @@ EXTERN int asn1PD_H225ResourcesAvailableIndicate (OOCTXT* pctxt, H225ResourcesAv
                   case 0:
                      pvalue->m.capacityPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "capacity", -1);
+                     invokeStartElement (pctxt, "capacity", -1);
 
                      stat = asn1PD_H225CallCapacity (pctxt, &pvalue->capacity);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "capacity", -1);
+                     invokeEndElement (pctxt, "capacity", -1);
                      break;
 
                   case 1:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -25661,64 +25661,64 @@ EXTERN int asn1PD_H225ResourcesAvailableConfirm (OOCTXT* pctxt, H225ResourcesAva
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode protocolIdentifier */
 
-   rtInvokeStartElement (pctxt, "protocolIdentifier", -1);
+   invokeStartElement (pctxt, "protocolIdentifier", -1);
 
    stat = asn1PD_H225ProtocolIdentifier (pctxt, &pvalue->protocolIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "protocolIdentifier", -1);
+   invokeEndElement (pctxt, "protocolIdentifier", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    if (extbit) {
@@ -25752,12 +25752,12 @@ EXTERN int asn1PD_H225ResourcesAvailableConfirm (OOCTXT* pctxt, H225ResourcesAva
                   case 0:
                      pvalue->m.genericDataPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "genericData", -1);
+                     invokeStartElement (pctxt, "genericData", -1);
 
                      stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "genericData", -1);
+                     invokeEndElement (pctxt, "genericData", -1);
                      break;
 
                   default:
@@ -25813,55 +25813,55 @@ EXTERN int asn1PD_H225InfoRequestAck (OOCTXT* pctxt, H225InfoRequestAck* pvalue)
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    if (extbit) {
@@ -25921,34 +25921,34 @@ EXTERN int asn1PD_H225InfoRequestNakReason (OOCTXT* pctxt, H225InfoRequestNakRea
       switch (ui) {
          /* notRegistered */
          case 0:
-            rtInvokeStartElement (pctxt, "notRegistered", -1);
+            invokeStartElement (pctxt, "notRegistered", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notRegistered", -1);
+            invokeEndElement (pctxt, "notRegistered", -1);
 
             break;
 
          /* securityDenial */
          case 1:
-            rtInvokeStartElement (pctxt, "securityDenial", -1);
+            invokeStartElement (pctxt, "securityDenial", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "securityDenial", -1);
+            invokeEndElement (pctxt, "securityDenial", -1);
 
             break;
 
          /* undefinedReason */
          case 2:
-            rtInvokeStartElement (pctxt, "undefinedReason", -1);
+            invokeStartElement (pctxt, "undefinedReason", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "undefinedReason", -1);
+            invokeEndElement (pctxt, "undefinedReason", -1);
 
             break;
 
@@ -25973,14 +25973,14 @@ EXTERN int asn1PD_H225InfoRequestNakReason (OOCTXT* pctxt, H225InfoRequestNakRea
       switch (pvalue->t) {
          /* securityError */
          case 4:
-            rtInvokeStartElement (pctxt, "securityError", -1);
+            invokeStartElement (pctxt, "securityError", -1);
 
             pvalue->u.securityError = ALLOC_ASN1ELEM (pctxt, H225SecurityErrors2);
 
             stat = asn1PD_H225SecurityErrors2 (pctxt, pvalue->u.securityError);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "securityError", -1);
+            invokeEndElement (pctxt, "securityError", -1);
 
             break;
 
@@ -26034,75 +26034,75 @@ EXTERN int asn1PD_H225InfoRequestNak (OOCTXT* pctxt, H225InfoRequestNak* pvalue)
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode nakReason */
 
-   rtInvokeStartElement (pctxt, "nakReason", -1);
+   invokeStartElement (pctxt, "nakReason", -1);
 
    stat = asn1PD_H225InfoRequestNakReason (pctxt, &pvalue->nakReason);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "nakReason", -1);
+   invokeEndElement (pctxt, "nakReason", -1);
 
    /* decode altGKInfo */
 
    if (pvalue->m.altGKInfoPresent) {
-      rtInvokeStartElement (pctxt, "altGKInfo", -1);
+      invokeStartElement (pctxt, "altGKInfo", -1);
 
       stat = asn1PD_H225AltGKInfo (pctxt, &pvalue->altGKInfo);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "altGKInfo", -1);
+      invokeEndElement (pctxt, "altGKInfo", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    if (extbit) {
@@ -26158,31 +26158,31 @@ EXTERN int asn1PD_H225ServiceControlIndication_callSpecific (OOCTXT* pctxt, H225
 
    /* decode callIdentifier */
 
-   rtInvokeStartElement (pctxt, "callIdentifier", -1);
+   invokeStartElement (pctxt, "callIdentifier", -1);
 
    stat = asn1PD_H225CallIdentifier (pctxt, &pvalue->callIdentifier);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "callIdentifier", -1);
+   invokeEndElement (pctxt, "callIdentifier", -1);
 
    /* decode conferenceID */
 
-   rtInvokeStartElement (pctxt, "conferenceID", -1);
+   invokeStartElement (pctxt, "conferenceID", -1);
 
    stat = asn1PD_H225ConferenceIdentifier (pctxt, &pvalue->conferenceID);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "conferenceID", -1);
+   invokeEndElement (pctxt, "conferenceID", -1);
 
    /* decode answeredCall */
 
-   rtInvokeStartElement (pctxt, "answeredCall", -1);
+   invokeStartElement (pctxt, "answeredCall", -1);
 
    stat = DECODEBIT (pctxt, &pvalue->answeredCall);
    if (stat != ASN_OK) return stat;
-   rtInvokeBoolValue (pctxt, pvalue->answeredCall);
+   invokeBoolValue (pctxt, pvalue->answeredCall);
 
-   rtInvokeEndElement (pctxt, "answeredCall", -1);
+   invokeEndElement (pctxt, "answeredCall", -1);
 
    if (extbit) {
 
@@ -26265,108 +26265,108 @@ EXTERN int asn1PD_H225ServiceControlIndication (OOCTXT* pctxt, H225ServiceContro
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode serviceControl */
 
-   rtInvokeStartElement (pctxt, "serviceControl", -1);
+   invokeStartElement (pctxt, "serviceControl", -1);
 
    stat = asn1PD_H225_SeqOfH225ServiceControlSession (pctxt, &pvalue->serviceControl);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "serviceControl", -1);
+   invokeEndElement (pctxt, "serviceControl", -1);
 
    /* decode endpointIdentifier */
 
    if (pvalue->m.endpointIdentifierPresent) {
-      rtInvokeStartElement (pctxt, "endpointIdentifier", -1);
+      invokeStartElement (pctxt, "endpointIdentifier", -1);
 
       stat = asn1PD_H225EndpointIdentifier (pctxt, &pvalue->endpointIdentifier);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "endpointIdentifier", -1);
+      invokeEndElement (pctxt, "endpointIdentifier", -1);
    }
 
    /* decode callSpecific */
 
    if (pvalue->m.callSpecificPresent) {
-      rtInvokeStartElement (pctxt, "callSpecific", -1);
+      invokeStartElement (pctxt, "callSpecific", -1);
 
       stat = asn1PD_H225ServiceControlIndication_callSpecific (pctxt, &pvalue->callSpecific);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "callSpecific", -1);
+      invokeEndElement (pctxt, "callSpecific", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    /* decode featureSet */
 
    if (pvalue->m.featureSetPresent) {
-      rtInvokeStartElement (pctxt, "featureSet", -1);
+      invokeStartElement (pctxt, "featureSet", -1);
 
       stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "featureSet", -1);
+      invokeEndElement (pctxt, "featureSet", -1);
    }
 
    /* decode genericData */
 
    if (pvalue->m.genericDataPresent) {
-      rtInvokeStartElement (pctxt, "genericData", -1);
+      invokeStartElement (pctxt, "genericData", -1);
 
       stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "genericData", -1);
+      invokeEndElement (pctxt, "genericData", -1);
    }
 
    if (extbit) {
@@ -26425,56 +26425,56 @@ EXTERN int asn1PD_H225ServiceControlResponse_result (OOCTXT* pctxt, H225ServiceC
       switch (ui) {
          /* started */
          case 0:
-            rtInvokeStartElement (pctxt, "started", -1);
+            invokeStartElement (pctxt, "started", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "started", -1);
+            invokeEndElement (pctxt, "started", -1);
 
             break;
 
          /* failed */
          case 1:
-            rtInvokeStartElement (pctxt, "failed", -1);
+            invokeStartElement (pctxt, "failed", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "failed", -1);
+            invokeEndElement (pctxt, "failed", -1);
 
             break;
 
          /* stopped */
          case 2:
-            rtInvokeStartElement (pctxt, "stopped", -1);
+            invokeStartElement (pctxt, "stopped", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "stopped", -1);
+            invokeEndElement (pctxt, "stopped", -1);
 
             break;
 
          /* notAvailable */
          case 3:
-            rtInvokeStartElement (pctxt, "notAvailable", -1);
+            invokeStartElement (pctxt, "notAvailable", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "notAvailable", -1);
+            invokeEndElement (pctxt, "notAvailable", -1);
 
             break;
 
          /* neededFeatureNotSupported */
          case 4:
-            rtInvokeStartElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeStartElement (pctxt, "neededFeatureNotSupported", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "neededFeatureNotSupported", -1);
+            invokeEndElement (pctxt, "neededFeatureNotSupported", -1);
 
             break;
 
@@ -26545,88 +26545,88 @@ EXTERN int asn1PD_H225ServiceControlResponse (OOCTXT* pctxt, H225ServiceControlR
 
    /* decode requestSeqNum */
 
-   rtInvokeStartElement (pctxt, "requestSeqNum", -1);
+   invokeStartElement (pctxt, "requestSeqNum", -1);
 
    stat = asn1PD_H225RequestSeqNum (pctxt, &pvalue->requestSeqNum);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "requestSeqNum", -1);
+   invokeEndElement (pctxt, "requestSeqNum", -1);
 
    /* decode result */
 
    if (pvalue->m.resultPresent) {
-      rtInvokeStartElement (pctxt, "result", -1);
+      invokeStartElement (pctxt, "result", -1);
 
       stat = asn1PD_H225ServiceControlResponse_result (pctxt, &pvalue->result);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "result", -1);
+      invokeEndElement (pctxt, "result", -1);
    }
 
    /* decode nonStandardData */
 
    if (pvalue->m.nonStandardDataPresent) {
-      rtInvokeStartElement (pctxt, "nonStandardData", -1);
+      invokeStartElement (pctxt, "nonStandardData", -1);
 
       stat = asn1PD_H225NonStandardParameter (pctxt, &pvalue->nonStandardData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandardData", -1);
+      invokeEndElement (pctxt, "nonStandardData", -1);
    }
 
    /* decode tokens */
 
    if (pvalue->m.tokensPresent) {
-      rtInvokeStartElement (pctxt, "tokens", -1);
+      invokeStartElement (pctxt, "tokens", -1);
 
       stat = asn1PD_H225_SeqOfH225ClearToken (pctxt, &pvalue->tokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "tokens", -1);
+      invokeEndElement (pctxt, "tokens", -1);
    }
 
    /* decode cryptoTokens */
 
    if (pvalue->m.cryptoTokensPresent) {
-      rtInvokeStartElement (pctxt, "cryptoTokens", -1);
+      invokeStartElement (pctxt, "cryptoTokens", -1);
 
       stat = asn1PD_H225_SeqOfH225CryptoH323Token (pctxt, &pvalue->cryptoTokens);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "cryptoTokens", -1);
+      invokeEndElement (pctxt, "cryptoTokens", -1);
    }
 
    /* decode integrityCheckValue */
 
    if (pvalue->m.integrityCheckValuePresent) {
-      rtInvokeStartElement (pctxt, "integrityCheckValue", -1);
+      invokeStartElement (pctxt, "integrityCheckValue", -1);
 
       stat = asn1PD_H225ICV (pctxt, &pvalue->integrityCheckValue);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "integrityCheckValue", -1);
+      invokeEndElement (pctxt, "integrityCheckValue", -1);
    }
 
    /* decode featureSet */
 
    if (pvalue->m.featureSetPresent) {
-      rtInvokeStartElement (pctxt, "featureSet", -1);
+      invokeStartElement (pctxt, "featureSet", -1);
 
       stat = asn1PD_H225FeatureSet (pctxt, &pvalue->featureSet);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "featureSet", -1);
+      invokeEndElement (pctxt, "featureSet", -1);
    }
 
    /* decode genericData */
 
    if (pvalue->m.genericDataPresent) {
-      rtInvokeStartElement (pctxt, "genericData", -1);
+      invokeStartElement (pctxt, "genericData", -1);
 
       stat = asn1PD_H225_SeqOfH225GenericData (pctxt, &pvalue->genericData);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "genericData", -1);
+      invokeEndElement (pctxt, "genericData", -1);
    }
 
    if (extbit) {
@@ -26687,13 +26687,13 @@ EXTERN int asn1PD_H225_SeqOfH225AdmissionConfirm (OOCTXT* pctxt, H225_SeqOfH225A
       /* decode elements */
 
       for (xx1 = 0; xx1 < count; xx1++) {
-         rtInvokeStartElement (pctxt, "elem", xx1);
+         invokeStartElement (pctxt, "elem", xx1);
 
          pdata = ALLOC_ASN1ELEMDNODE (pctxt, H225AdmissionConfirm);
 
          stat = asn1PD_H225AdmissionConfirm (pctxt, pdata);
          if (stat != ASN_OK) return stat;
-         rtInvokeEndElement (pctxt, "elem", xx1);
+         invokeEndElement (pctxt, "elem", xx1);
 
          dListAppendNode (pctxt, pvalue, pdata);
       }
@@ -26730,326 +26730,326 @@ EXTERN int asn1PD_H225RasMessage (OOCTXT* pctxt, H225RasMessage* pvalue)
       switch (ui) {
          /* gatekeeperRequest */
          case 0:
-            rtInvokeStartElement (pctxt, "gatekeeperRequest", -1);
+            invokeStartElement (pctxt, "gatekeeperRequest", -1);
 
             pvalue->u.gatekeeperRequest = ALLOC_ASN1ELEM (pctxt, H225GatekeeperRequest);
 
             stat = asn1PD_H225GatekeeperRequest (pctxt, pvalue->u.gatekeeperRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "gatekeeperRequest", -1);
+            invokeEndElement (pctxt, "gatekeeperRequest", -1);
 
             break;
 
          /* gatekeeperConfirm */
          case 1:
-            rtInvokeStartElement (pctxt, "gatekeeperConfirm", -1);
+            invokeStartElement (pctxt, "gatekeeperConfirm", -1);
 
             pvalue->u.gatekeeperConfirm = ALLOC_ASN1ELEM (pctxt, H225GatekeeperConfirm);
 
             stat = asn1PD_H225GatekeeperConfirm (pctxt, pvalue->u.gatekeeperConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "gatekeeperConfirm", -1);
+            invokeEndElement (pctxt, "gatekeeperConfirm", -1);
 
             break;
 
          /* gatekeeperReject */
          case 2:
-            rtInvokeStartElement (pctxt, "gatekeeperReject", -1);
+            invokeStartElement (pctxt, "gatekeeperReject", -1);
 
             pvalue->u.gatekeeperReject = ALLOC_ASN1ELEM (pctxt, H225GatekeeperReject);
 
             stat = asn1PD_H225GatekeeperReject (pctxt, pvalue->u.gatekeeperReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "gatekeeperReject", -1);
+            invokeEndElement (pctxt, "gatekeeperReject", -1);
 
             break;
 
          /* registrationRequest */
          case 3:
-            rtInvokeStartElement (pctxt, "registrationRequest", -1);
+            invokeStartElement (pctxt, "registrationRequest", -1);
 
             pvalue->u.registrationRequest = ALLOC_ASN1ELEM (pctxt, H225RegistrationRequest);
 
             stat = asn1PD_H225RegistrationRequest (pctxt, pvalue->u.registrationRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "registrationRequest", -1);
+            invokeEndElement (pctxt, "registrationRequest", -1);
 
             break;
 
          /* registrationConfirm */
          case 4:
-            rtInvokeStartElement (pctxt, "registrationConfirm", -1);
+            invokeStartElement (pctxt, "registrationConfirm", -1);
 
             pvalue->u.registrationConfirm = ALLOC_ASN1ELEM (pctxt, H225RegistrationConfirm);
 
             stat = asn1PD_H225RegistrationConfirm (pctxt, pvalue->u.registrationConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "registrationConfirm", -1);
+            invokeEndElement (pctxt, "registrationConfirm", -1);
 
             break;
 
          /* registrationReject */
          case 5:
-            rtInvokeStartElement (pctxt, "registrationReject", -1);
+            invokeStartElement (pctxt, "registrationReject", -1);
 
             pvalue->u.registrationReject = ALLOC_ASN1ELEM (pctxt, H225RegistrationReject);
 
             stat = asn1PD_H225RegistrationReject (pctxt, pvalue->u.registrationReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "registrationReject", -1);
+            invokeEndElement (pctxt, "registrationReject", -1);
 
             break;
 
          /* unregistrationRequest */
          case 6:
-            rtInvokeStartElement (pctxt, "unregistrationRequest", -1);
+            invokeStartElement (pctxt, "unregistrationRequest", -1);
 
             pvalue->u.unregistrationRequest = ALLOC_ASN1ELEM (pctxt, H225UnregistrationRequest);
 
             stat = asn1PD_H225UnregistrationRequest (pctxt, pvalue->u.unregistrationRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "unregistrationRequest", -1);
+            invokeEndElement (pctxt, "unregistrationRequest", -1);
 
             break;
 
          /* unregistrationConfirm */
          case 7:
-            rtInvokeStartElement (pctxt, "unregistrationConfirm", -1);
+            invokeStartElement (pctxt, "unregistrationConfirm", -1);
 
             pvalue->u.unregistrationConfirm = ALLOC_ASN1ELEM (pctxt, H225UnregistrationConfirm);
 
             stat = asn1PD_H225UnregistrationConfirm (pctxt, pvalue->u.unregistrationConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "unregistrationConfirm", -1);
+            invokeEndElement (pctxt, "unregistrationConfirm", -1);
 
             break;
 
          /* unregistrationReject */
          case 8:
-            rtInvokeStartElement (pctxt, "unregistrationReject", -1);
+            invokeStartElement (pctxt, "unregistrationReject", -1);
 
             pvalue->u.unregistrationReject = ALLOC_ASN1ELEM (pctxt, H225UnregistrationReject);
 
             stat = asn1PD_H225UnregistrationReject (pctxt, pvalue->u.unregistrationReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "unregistrationReject", -1);
+            invokeEndElement (pctxt, "unregistrationReject", -1);
 
             break;
 
          /* admissionRequest */
          case 9:
-            rtInvokeStartElement (pctxt, "admissionRequest", -1);
+            invokeStartElement (pctxt, "admissionRequest", -1);
 
             pvalue->u.admissionRequest = ALLOC_ASN1ELEM (pctxt, H225AdmissionRequest);
 
             stat = asn1PD_H225AdmissionRequest (pctxt, pvalue->u.admissionRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "admissionRequest", -1);
+            invokeEndElement (pctxt, "admissionRequest", -1);
 
             break;
 
          /* admissionConfirm */
          case 10:
-            rtInvokeStartElement (pctxt, "admissionConfirm", -1);
+            invokeStartElement (pctxt, "admissionConfirm", -1);
 
             pvalue->u.admissionConfirm = ALLOC_ASN1ELEM (pctxt, H225AdmissionConfirm);
 
             stat = asn1PD_H225AdmissionConfirm (pctxt, pvalue->u.admissionConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "admissionConfirm", -1);
+            invokeEndElement (pctxt, "admissionConfirm", -1);
 
             break;
 
          /* admissionReject */
          case 11:
-            rtInvokeStartElement (pctxt, "admissionReject", -1);
+            invokeStartElement (pctxt, "admissionReject", -1);
 
             pvalue->u.admissionReject = ALLOC_ASN1ELEM (pctxt, H225AdmissionReject);
 
             stat = asn1PD_H225AdmissionReject (pctxt, pvalue->u.admissionReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "admissionReject", -1);
+            invokeEndElement (pctxt, "admissionReject", -1);
 
             break;
 
          /* bandwidthRequest */
          case 12:
-            rtInvokeStartElement (pctxt, "bandwidthRequest", -1);
+            invokeStartElement (pctxt, "bandwidthRequest", -1);
 
             pvalue->u.bandwidthRequest = ALLOC_ASN1ELEM (pctxt, H225BandwidthRequest);
 
             stat = asn1PD_H225BandwidthRequest (pctxt, pvalue->u.bandwidthRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "bandwidthRequest", -1);
+            invokeEndElement (pctxt, "bandwidthRequest", -1);
 
             break;
 
          /* bandwidthConfirm */
          case 13:
-            rtInvokeStartElement (pctxt, "bandwidthConfirm", -1);
+            invokeStartElement (pctxt, "bandwidthConfirm", -1);
 
             pvalue->u.bandwidthConfirm = ALLOC_ASN1ELEM (pctxt, H225BandwidthConfirm);
 
             stat = asn1PD_H225BandwidthConfirm (pctxt, pvalue->u.bandwidthConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "bandwidthConfirm", -1);
+            invokeEndElement (pctxt, "bandwidthConfirm", -1);
 
             break;
 
          /* bandwidthReject */
          case 14:
-            rtInvokeStartElement (pctxt, "bandwidthReject", -1);
+            invokeStartElement (pctxt, "bandwidthReject", -1);
 
             pvalue->u.bandwidthReject = ALLOC_ASN1ELEM (pctxt, H225BandwidthReject);
 
             stat = asn1PD_H225BandwidthReject (pctxt, pvalue->u.bandwidthReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "bandwidthReject", -1);
+            invokeEndElement (pctxt, "bandwidthReject", -1);
 
             break;
 
          /* disengageRequest */
          case 15:
-            rtInvokeStartElement (pctxt, "disengageRequest", -1);
+            invokeStartElement (pctxt, "disengageRequest", -1);
 
             pvalue->u.disengageRequest = ALLOC_ASN1ELEM (pctxt, H225DisengageRequest);
 
             stat = asn1PD_H225DisengageRequest (pctxt, pvalue->u.disengageRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "disengageRequest", -1);
+            invokeEndElement (pctxt, "disengageRequest", -1);
 
             break;
 
          /* disengageConfirm */
          case 16:
-            rtInvokeStartElement (pctxt, "disengageConfirm", -1);
+            invokeStartElement (pctxt, "disengageConfirm", -1);
 
             pvalue->u.disengageConfirm = ALLOC_ASN1ELEM (pctxt, H225DisengageConfirm);
 
             stat = asn1PD_H225DisengageConfirm (pctxt, pvalue->u.disengageConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "disengageConfirm", -1);
+            invokeEndElement (pctxt, "disengageConfirm", -1);
 
             break;
 
          /* disengageReject */
          case 17:
-            rtInvokeStartElement (pctxt, "disengageReject", -1);
+            invokeStartElement (pctxt, "disengageReject", -1);
 
             pvalue->u.disengageReject = ALLOC_ASN1ELEM (pctxt, H225DisengageReject);
 
             stat = asn1PD_H225DisengageReject (pctxt, pvalue->u.disengageReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "disengageReject", -1);
+            invokeEndElement (pctxt, "disengageReject", -1);
 
             break;
 
          /* locationRequest */
          case 18:
-            rtInvokeStartElement (pctxt, "locationRequest", -1);
+            invokeStartElement (pctxt, "locationRequest", -1);
 
             pvalue->u.locationRequest = ALLOC_ASN1ELEM (pctxt, H225LocationRequest);
 
             stat = asn1PD_H225LocationRequest (pctxt, pvalue->u.locationRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "locationRequest", -1);
+            invokeEndElement (pctxt, "locationRequest", -1);
 
             break;
 
          /* locationConfirm */
          case 19:
-            rtInvokeStartElement (pctxt, "locationConfirm", -1);
+            invokeStartElement (pctxt, "locationConfirm", -1);
 
             pvalue->u.locationConfirm = ALLOC_ASN1ELEM (pctxt, H225LocationConfirm);
 
             stat = asn1PD_H225LocationConfirm (pctxt, pvalue->u.locationConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "locationConfirm", -1);
+            invokeEndElement (pctxt, "locationConfirm", -1);
 
             break;
 
          /* locationReject */
          case 20:
-            rtInvokeStartElement (pctxt, "locationReject", -1);
+            invokeStartElement (pctxt, "locationReject", -1);
 
             pvalue->u.locationReject = ALLOC_ASN1ELEM (pctxt, H225LocationReject);
 
             stat = asn1PD_H225LocationReject (pctxt, pvalue->u.locationReject);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "locationReject", -1);
+            invokeEndElement (pctxt, "locationReject", -1);
 
             break;
 
          /* infoRequest */
          case 21:
-            rtInvokeStartElement (pctxt, "infoRequest", -1);
+            invokeStartElement (pctxt, "infoRequest", -1);
 
             pvalue->u.infoRequest = ALLOC_ASN1ELEM (pctxt, H225InfoRequest);
 
             stat = asn1PD_H225InfoRequest (pctxt, pvalue->u.infoRequest);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "infoRequest", -1);
+            invokeEndElement (pctxt, "infoRequest", -1);
 
             break;
 
          /* infoRequestResponse */
          case 22:
-            rtInvokeStartElement (pctxt, "infoRequestResponse", -1);
+            invokeStartElement (pctxt, "infoRequestResponse", -1);
 
             pvalue->u.infoRequestResponse = ALLOC_ASN1ELEM (pctxt, H225InfoRequestResponse);
 
             stat = asn1PD_H225InfoRequestResponse (pctxt, pvalue->u.infoRequestResponse);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "infoRequestResponse", -1);
+            invokeEndElement (pctxt, "infoRequestResponse", -1);
 
             break;
 
          /* nonStandardMessage */
          case 23:
-            rtInvokeStartElement (pctxt, "nonStandardMessage", -1);
+            invokeStartElement (pctxt, "nonStandardMessage", -1);
 
             pvalue->u.nonStandardMessage = ALLOC_ASN1ELEM (pctxt, H225NonStandardMessage);
 
             stat = asn1PD_H225NonStandardMessage (pctxt, pvalue->u.nonStandardMessage);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandardMessage", -1);
+            invokeEndElement (pctxt, "nonStandardMessage", -1);
 
             break;
 
          /* unknownMessageResponse */
          case 24:
-            rtInvokeStartElement (pctxt, "unknownMessageResponse", -1);
+            invokeStartElement (pctxt, "unknownMessageResponse", -1);
 
             pvalue->u.unknownMessageResponse = ALLOC_ASN1ELEM (pctxt, H225UnknownMessageResponse);
 
             stat = asn1PD_H225UnknownMessageResponse (pctxt, pvalue->u.unknownMessageResponse);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "unknownMessageResponse", -1);
+            invokeEndElement (pctxt, "unknownMessageResponse", -1);
 
             break;
 
@@ -27074,105 +27074,105 @@ EXTERN int asn1PD_H225RasMessage (OOCTXT* pctxt, H225RasMessage* pvalue)
       switch (pvalue->t) {
          /* requestInProgress */
          case 26:
-            rtInvokeStartElement (pctxt, "requestInProgress", -1);
+            invokeStartElement (pctxt, "requestInProgress", -1);
 
             pvalue->u.requestInProgress = ALLOC_ASN1ELEM (pctxt, H225RequestInProgress);
 
             stat = asn1PD_H225RequestInProgress (pctxt, pvalue->u.requestInProgress);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "requestInProgress", -1);
+            invokeEndElement (pctxt, "requestInProgress", -1);
 
             break;
 
          /* resourcesAvailableIndicate */
          case 27:
-            rtInvokeStartElement (pctxt, "resourcesAvailableIndicate", -1);
+            invokeStartElement (pctxt, "resourcesAvailableIndicate", -1);
 
             pvalue->u.resourcesAvailableIndicate = ALLOC_ASN1ELEM (pctxt, H225ResourcesAvailableIndicate);
 
             stat = asn1PD_H225ResourcesAvailableIndicate (pctxt, pvalue->u.resourcesAvailableIndicate);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "resourcesAvailableIndicate", -1);
+            invokeEndElement (pctxt, "resourcesAvailableIndicate", -1);
 
             break;
 
          /* resourcesAvailableConfirm */
          case 28:
-            rtInvokeStartElement (pctxt, "resourcesAvailableConfirm", -1);
+            invokeStartElement (pctxt, "resourcesAvailableConfirm", -1);
 
             pvalue->u.resourcesAvailableConfirm = ALLOC_ASN1ELEM (pctxt, H225ResourcesAvailableConfirm);
 
             stat = asn1PD_H225ResourcesAvailableConfirm (pctxt, pvalue->u.resourcesAvailableConfirm);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "resourcesAvailableConfirm", -1);
+            invokeEndElement (pctxt, "resourcesAvailableConfirm", -1);
 
             break;
 
          /* infoRequestAck */
          case 29:
-            rtInvokeStartElement (pctxt, "infoRequestAck", -1);
+            invokeStartElement (pctxt, "infoRequestAck", -1);
 
             pvalue->u.infoRequestAck = ALLOC_ASN1ELEM (pctxt, H225InfoRequestAck);
 
             stat = asn1PD_H225InfoRequestAck (pctxt, pvalue->u.infoRequestAck);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "infoRequestAck", -1);
+            invokeEndElement (pctxt, "infoRequestAck", -1);
 
             break;
 
          /* infoRequestNak */
          case 30:
-            rtInvokeStartElement (pctxt, "infoRequestNak", -1);
+            invokeStartElement (pctxt, "infoRequestNak", -1);
 
             pvalue->u.infoRequestNak = ALLOC_ASN1ELEM (pctxt, H225InfoRequestNak);
 
             stat = asn1PD_H225InfoRequestNak (pctxt, pvalue->u.infoRequestNak);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "infoRequestNak", -1);
+            invokeEndElement (pctxt, "infoRequestNak", -1);
 
             break;
 
          /* serviceControlIndication */
          case 31:
-            rtInvokeStartElement (pctxt, "serviceControlIndication", -1);
+            invokeStartElement (pctxt, "serviceControlIndication", -1);
 
             pvalue->u.serviceControlIndication = ALLOC_ASN1ELEM (pctxt, H225ServiceControlIndication);
 
             stat = asn1PD_H225ServiceControlIndication (pctxt, pvalue->u.serviceControlIndication);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "serviceControlIndication", -1);
+            invokeEndElement (pctxt, "serviceControlIndication", -1);
 
             break;
 
          /* serviceControlResponse */
          case 32:
-            rtInvokeStartElement (pctxt, "serviceControlResponse", -1);
+            invokeStartElement (pctxt, "serviceControlResponse", -1);
 
             pvalue->u.serviceControlResponse = ALLOC_ASN1ELEM (pctxt, H225ServiceControlResponse);
 
             stat = asn1PD_H225ServiceControlResponse (pctxt, pvalue->u.serviceControlResponse);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "serviceControlResponse", -1);
+            invokeEndElement (pctxt, "serviceControlResponse", -1);
 
             break;
 
          /* admissionConfirmSequence */
          case 33:
-            rtInvokeStartElement (pctxt, "admissionConfirmSequence", -1);
+            invokeStartElement (pctxt, "admissionConfirmSequence", -1);
 
             pvalue->u.admissionConfirmSequence = ALLOC_ASN1ELEM (pctxt, H225_SeqOfH225AdmissionConfirm);
 
             stat = asn1PD_H225_SeqOfH225AdmissionConfirm (pctxt, pvalue->u.admissionConfirmSequence);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "admissionConfirmSequence", -1);
+            invokeEndElement (pctxt, "admissionConfirmSequence", -1);
 
             break;
 

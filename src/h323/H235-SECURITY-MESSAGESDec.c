@@ -4,7 +4,7 @@
  */
 #include "ooasn1.h"
 #include "H235-SECURITY-MESSAGES.h"
-#include "asn1CEvtHndlr.h"
+#include "eventHandler.h"
 
 /**************************************************************/
 /*                                                            */
@@ -24,7 +24,7 @@ EXTERN int asn1PD_H235ChallengeString (OOCTXT* pctxt, H235ChallengeString* pvalu
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -41,7 +41,7 @@ EXTERN int asn1PD_H235TimeStamp (OOCTXT* pctxt, H235TimeStamp* pvalue)
 
    stat = decodeConsUnsigned (pctxt, pvalue, 1U, ASN1UINT_MAX);
    if (stat != ASN_OK) return stat;
-   rtInvokeUIntValue (pctxt, *pvalue);
+   invokeUIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -58,7 +58,7 @@ EXTERN int asn1PD_H235RandomVal (OOCTXT* pctxt, H235RandomVal* pvalue)
 
    stat = decodeUnconsInteger (pctxt, pvalue);
    if (stat != ASN_OK) return stat;
-   rtInvokeIntValue (pctxt, *pvalue);
+   invokeIntValue (pctxt, *pvalue);
 
    return (stat);
 }
@@ -78,7 +78,7 @@ EXTERN int asn1PD_H235Password (OOCTXT* pctxt, H235Password* pvalue)
 
    stat = decodeBMPString (pctxt, pvalue, 0);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
+   invokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
 
    return (stat);
 }
@@ -95,7 +95,7 @@ EXTERN int asn1PD_H235EncodedPwdCertToken (OOCTXT* pctxt, H235EncodedPwdCertToke
 
    stat = decodeOpenType (pctxt, &pvalue->data, &pvalue->numocts);
    if (stat != ASN_OK) return stat;
-   rtInvokeOpenTypeValue
+   invokeOpenTypeValue
       (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
@@ -113,23 +113,23 @@ EXTERN int asn1PD_H235NonStandardParameter (OOCTXT* pctxt, H235NonStandardParame
 
    /* decode nonStandardIdentifier */
 
-   rtInvokeStartElement (pctxt, "nonStandardIdentifier", -1);
+   invokeStartElement (pctxt, "nonStandardIdentifier", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->nonStandardIdentifier);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->nonStandardIdentifier.numids, pvalue->nonStandardIdentifier.subid);
+   invokeOidValue (pctxt, pvalue->nonStandardIdentifier.numids, pvalue->nonStandardIdentifier.subid);
 
-   rtInvokeEndElement (pctxt, "nonStandardIdentifier", -1);
+   invokeEndElement (pctxt, "nonStandardIdentifier", -1);
 
    /* decode data */
 
-   rtInvokeStartElement (pctxt, "data", -1);
+   invokeStartElement (pctxt, "data", -1);
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->data);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->data.numocts, pvalue->data.data);
+   invokeOctStrValue (pctxt, pvalue->data.numocts, pvalue->data.data);
 
-   rtInvokeEndElement (pctxt, "data", -1);
+   invokeEndElement (pctxt, "data", -1);
 
    return (stat);
 }
@@ -159,23 +159,23 @@ EXTERN int asn1PD_H235AuthenticationBES (OOCTXT* pctxt, H235AuthenticationBES* p
       switch (ui) {
          /* default_ */
          case 0:
-            rtInvokeStartElement (pctxt, "default_", -1);
+            invokeStartElement (pctxt, "default_", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "default_", -1);
+            invokeEndElement (pctxt, "default_", -1);
 
             break;
 
          /* radius */
          case 1:
-            rtInvokeStartElement (pctxt, "radius", -1);
+            invokeStartElement (pctxt, "radius", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "radius", -1);
+            invokeEndElement (pctxt, "radius", -1);
 
             break;
 
@@ -225,80 +225,80 @@ EXTERN int asn1PD_H235AuthenticationMechanism (OOCTXT* pctxt, H235Authentication
       switch (ui) {
          /* dhExch */
          case 0:
-            rtInvokeStartElement (pctxt, "dhExch", -1);
+            invokeStartElement (pctxt, "dhExch", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "dhExch", -1);
+            invokeEndElement (pctxt, "dhExch", -1);
 
             break;
 
          /* pwdSymEnc */
          case 1:
-            rtInvokeStartElement (pctxt, "pwdSymEnc", -1);
+            invokeStartElement (pctxt, "pwdSymEnc", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "pwdSymEnc", -1);
+            invokeEndElement (pctxt, "pwdSymEnc", -1);
 
             break;
 
          /* pwdHash */
          case 2:
-            rtInvokeStartElement (pctxt, "pwdHash", -1);
+            invokeStartElement (pctxt, "pwdHash", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "pwdHash", -1);
+            invokeEndElement (pctxt, "pwdHash", -1);
 
             break;
 
          /* certSign */
          case 3:
-            rtInvokeStartElement (pctxt, "certSign", -1);
+            invokeStartElement (pctxt, "certSign", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "certSign", -1);
+            invokeEndElement (pctxt, "certSign", -1);
 
             break;
 
          /* ipsec */
          case 4:
-            rtInvokeStartElement (pctxt, "ipsec", -1);
+            invokeStartElement (pctxt, "ipsec", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "ipsec", -1);
+            invokeEndElement (pctxt, "ipsec", -1);
 
             break;
 
          /* tls */
          case 5:
-            rtInvokeStartElement (pctxt, "tls", -1);
+            invokeStartElement (pctxt, "tls", -1);
 
             /* NULL */
-            rtInvokeNullValue (pctxt);
+            invokeNullValue (pctxt);
 
-            rtInvokeEndElement (pctxt, "tls", -1);
+            invokeEndElement (pctxt, "tls", -1);
 
             break;
 
          /* nonStandard */
          case 6:
-            rtInvokeStartElement (pctxt, "nonStandard", -1);
+            invokeStartElement (pctxt, "nonStandard", -1);
 
             pvalue->u.nonStandard = ALLOC_ASN1ELEM (pctxt, H235NonStandardParameter);
 
             stat = asn1PD_H235NonStandardParameter (pctxt, pvalue->u.nonStandard);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "nonStandard", -1);
+            invokeEndElement (pctxt, "nonStandard", -1);
 
             break;
 
@@ -323,14 +323,14 @@ EXTERN int asn1PD_H235AuthenticationMechanism (OOCTXT* pctxt, H235Authentication
       switch (pvalue->t) {
          /* authenticationBES */
          case 8:
-            rtInvokeStartElement (pctxt, "authenticationBES", -1);
+            invokeStartElement (pctxt, "authenticationBES", -1);
 
             pvalue->u.authenticationBES = ALLOC_ASN1ELEM (pctxt, H235AuthenticationBES);
 
             stat = asn1PD_H235AuthenticationBES (pctxt, pvalue->u.authenticationBES);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "authenticationBES", -1);
+            invokeEndElement (pctxt, "authenticationBES", -1);
 
             break;
 
@@ -362,7 +362,7 @@ EXTERN int asn1PD_H235DHset_halfkey (OOCTXT* pctxt, H235DHset_halfkey* pvalue)
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -386,7 +386,7 @@ EXTERN int asn1PD_H235DHset_modSize (OOCTXT* pctxt, H235DHset_modSize* pvalue)
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -410,7 +410,7 @@ EXTERN int asn1PD_H235DHset_generator (OOCTXT* pctxt, H235DHset_generator* pvalu
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -437,30 +437,30 @@ EXTERN int asn1PD_H235DHset (OOCTXT* pctxt, H235DHset* pvalue)
 
    /* decode halfkey */
 
-   rtInvokeStartElement (pctxt, "halfkey", -1);
+   invokeStartElement (pctxt, "halfkey", -1);
 
    stat = asn1PD_H235DHset_halfkey (pctxt, &pvalue->halfkey);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "halfkey", -1);
+   invokeEndElement (pctxt, "halfkey", -1);
 
    /* decode modSize */
 
-   rtInvokeStartElement (pctxt, "modSize", -1);
+   invokeStartElement (pctxt, "modSize", -1);
 
    stat = asn1PD_H235DHset_modSize (pctxt, &pvalue->modSize);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "modSize", -1);
+   invokeEndElement (pctxt, "modSize", -1);
 
    /* decode generator */
 
-   rtInvokeStartElement (pctxt, "generator", -1);
+   invokeStartElement (pctxt, "generator", -1);
 
    stat = asn1PD_H235DHset_generator (pctxt, &pvalue->generator);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "generator", -1);
+   invokeEndElement (pctxt, "generator", -1);
 
    if (extbit) {
 
@@ -515,23 +515,23 @@ EXTERN int asn1PD_H235TypedCertificate (OOCTXT* pctxt, H235TypedCertificate* pva
 
    /* decode type */
 
-   rtInvokeStartElement (pctxt, "type", -1);
+   invokeStartElement (pctxt, "type", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->type);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->type.numids, pvalue->type.subid);
+   invokeOidValue (pctxt, pvalue->type.numids, pvalue->type.subid);
 
-   rtInvokeEndElement (pctxt, "type", -1);
+   invokeEndElement (pctxt, "type", -1);
 
    /* decode certificate */
 
-   rtInvokeStartElement (pctxt, "certificate", -1);
+   invokeStartElement (pctxt, "certificate", -1);
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->certificate);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->certificate.numocts, pvalue->certificate.data);
+   invokeOctStrValue (pctxt, pvalue->certificate.numocts, pvalue->certificate.data);
 
-   rtInvokeEndElement (pctxt, "certificate", -1);
+   invokeEndElement (pctxt, "certificate", -1);
 
    if (extbit) {
 
@@ -579,7 +579,7 @@ EXTERN int asn1PD_H235Identifier (OOCTXT* pctxt, H235Identifier* pvalue)
 
    stat = decodeBMPString (pctxt, pvalue, 0);
    if (stat != ASN_OK) return stat;
-   rtInvokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
+   invokeCharStr16BitValue (pctxt, pvalue->nchars, pvalue->data);
 
    return (stat);
 }
@@ -603,7 +603,7 @@ EXTERN int asn1PD_H235ECpoint_x (OOCTXT* pctxt, H235ECpoint_x* pvalue)
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -627,7 +627,7 @@ EXTERN int asn1PD_H235ECpoint_y (OOCTXT* pctxt, H235ECpoint_y* pvalue)
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -665,23 +665,23 @@ EXTERN int asn1PD_H235ECpoint (OOCTXT* pctxt, H235ECpoint* pvalue)
    /* decode x */
 
    if (pvalue->m.xPresent) {
-      rtInvokeStartElement (pctxt, "x", -1);
+      invokeStartElement (pctxt, "x", -1);
 
       stat = asn1PD_H235ECpoint_x (pctxt, &pvalue->x);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "x", -1);
+      invokeEndElement (pctxt, "x", -1);
    }
 
    /* decode y */
 
    if (pvalue->m.yPresent) {
-      rtInvokeStartElement (pctxt, "y", -1);
+      invokeStartElement (pctxt, "y", -1);
 
       stat = asn1PD_H235ECpoint_y (pctxt, &pvalue->y);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "y", -1);
+      invokeEndElement (pctxt, "y", -1);
    }
 
    if (extbit) {
@@ -734,7 +734,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdhp_modulus (OOCTXT* pctxt, H235ECKASDH_eckas
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -758,7 +758,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdhp_weierstrassA (OOCTXT* pctxt, H235ECKASDH_
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -782,7 +782,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdhp_weierstrassB (OOCTXT* pctxt, H235ECKASDH_
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -799,48 +799,48 @@ EXTERN int asn1PD_H235ECKASDH_eckasdhp (OOCTXT* pctxt, H235ECKASDH_eckasdhp* pva
 
    /* decode public_key */
 
-   rtInvokeStartElement (pctxt, "public_key", -1);
+   invokeStartElement (pctxt, "public_key", -1);
 
    stat = asn1PD_H235ECpoint (pctxt, &pvalue->public_key);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "public_key", -1);
+   invokeEndElement (pctxt, "public_key", -1);
 
    /* decode modulus */
 
-   rtInvokeStartElement (pctxt, "modulus", -1);
+   invokeStartElement (pctxt, "modulus", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdhp_modulus (pctxt, &pvalue->modulus);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "modulus", -1);
+   invokeEndElement (pctxt, "modulus", -1);
 
    /* decode base */
 
-   rtInvokeStartElement (pctxt, "base", -1);
+   invokeStartElement (pctxt, "base", -1);
 
    stat = asn1PD_H235ECpoint (pctxt, &pvalue->base);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "base", -1);
+   invokeEndElement (pctxt, "base", -1);
 
    /* decode weierstrassA */
 
-   rtInvokeStartElement (pctxt, "weierstrassA", -1);
+   invokeStartElement (pctxt, "weierstrassA", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdhp_weierstrassA (pctxt, &pvalue->weierstrassA);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "weierstrassA", -1);
+   invokeEndElement (pctxt, "weierstrassA", -1);
 
    /* decode weierstrassB */
 
-   rtInvokeStartElement (pctxt, "weierstrassB", -1);
+   invokeStartElement (pctxt, "weierstrassB", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdhp_weierstrassB (pctxt, &pvalue->weierstrassB);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "weierstrassB", -1);
+   invokeEndElement (pctxt, "weierstrassB", -1);
 
    return (stat);
 }
@@ -864,7 +864,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdh2_fieldSize (OOCTXT* pctxt, H235ECKASDH_eck
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -888,7 +888,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdh2_weierstrassA (OOCTXT* pctxt, H235ECKASDH_
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -912,7 +912,7 @@ EXTERN int asn1PD_H235ECKASDH_eckasdh2_weierstrassB (OOCTXT* pctxt, H235ECKASDH_
                         sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
+   invokeBitStrValue (pctxt, pvalue->numbits, pvalue->data);
 
    return (stat);
 }
@@ -929,48 +929,48 @@ EXTERN int asn1PD_H235ECKASDH_eckasdh2 (OOCTXT* pctxt, H235ECKASDH_eckasdh2* pva
 
    /* decode public_key */
 
-   rtInvokeStartElement (pctxt, "public_key", -1);
+   invokeStartElement (pctxt, "public_key", -1);
 
    stat = asn1PD_H235ECpoint (pctxt, &pvalue->public_key);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "public_key", -1);
+   invokeEndElement (pctxt, "public_key", -1);
 
    /* decode fieldSize */
 
-   rtInvokeStartElement (pctxt, "fieldSize", -1);
+   invokeStartElement (pctxt, "fieldSize", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdh2_fieldSize (pctxt, &pvalue->fieldSize);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "fieldSize", -1);
+   invokeEndElement (pctxt, "fieldSize", -1);
 
    /* decode base */
 
-   rtInvokeStartElement (pctxt, "base", -1);
+   invokeStartElement (pctxt, "base", -1);
 
    stat = asn1PD_H235ECpoint (pctxt, &pvalue->base);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "base", -1);
+   invokeEndElement (pctxt, "base", -1);
 
    /* decode weierstrassA */
 
-   rtInvokeStartElement (pctxt, "weierstrassA", -1);
+   invokeStartElement (pctxt, "weierstrassA", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdh2_weierstrassA (pctxt, &pvalue->weierstrassA);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "weierstrassA", -1);
+   invokeEndElement (pctxt, "weierstrassA", -1);
 
    /* decode weierstrassB */
 
-   rtInvokeStartElement (pctxt, "weierstrassB", -1);
+   invokeStartElement (pctxt, "weierstrassB", -1);
 
    stat = asn1PD_H235ECKASDH_eckasdh2_weierstrassB (pctxt, &pvalue->weierstrassB);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "weierstrassB", -1);
+   invokeEndElement (pctxt, "weierstrassB", -1);
 
    return (stat);
 }
@@ -1000,27 +1000,27 @@ EXTERN int asn1PD_H235ECKASDH (OOCTXT* pctxt, H235ECKASDH* pvalue)
       switch (ui) {
          /* eckasdhp */
          case 0:
-            rtInvokeStartElement (pctxt, "eckasdhp", -1);
+            invokeStartElement (pctxt, "eckasdhp", -1);
 
             pvalue->u.eckasdhp = ALLOC_ASN1ELEM (pctxt, H235ECKASDH_eckasdhp);
 
             stat = asn1PD_H235ECKASDH_eckasdhp (pctxt, pvalue->u.eckasdhp);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "eckasdhp", -1);
+            invokeEndElement (pctxt, "eckasdhp", -1);
 
             break;
 
          /* eckasdh2 */
          case 1:
-            rtInvokeStartElement (pctxt, "eckasdh2", -1);
+            invokeStartElement (pctxt, "eckasdh2", -1);
 
             pvalue->u.eckasdh2 = ALLOC_ASN1ELEM (pctxt, H235ECKASDH_eckasdh2);
 
             stat = asn1PD_H235ECKASDH_eckasdh2 (pctxt, pvalue->u.eckasdh2);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "eckasdh2", -1);
+            invokeEndElement (pctxt, "eckasdh2", -1);
 
             break;
 
@@ -1095,100 +1095,100 @@ EXTERN int asn1PD_H235ClearToken (OOCTXT* pctxt, H235ClearToken* pvalue)
 
    /* decode tokenOID */
 
-   rtInvokeStartElement (pctxt, "tokenOID", -1);
+   invokeStartElement (pctxt, "tokenOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->tokenOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
+   invokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
 
-   rtInvokeEndElement (pctxt, "tokenOID", -1);
+   invokeEndElement (pctxt, "tokenOID", -1);
 
    /* decode timeStamp */
 
    if (pvalue->m.timeStampPresent) {
-      rtInvokeStartElement (pctxt, "timeStamp", -1);
+      invokeStartElement (pctxt, "timeStamp", -1);
 
       stat = asn1PD_H235TimeStamp (pctxt, &pvalue->timeStamp);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "timeStamp", -1);
+      invokeEndElement (pctxt, "timeStamp", -1);
    }
 
    /* decode password */
 
    if (pvalue->m.passwordPresent) {
-      rtInvokeStartElement (pctxt, "password", -1);
+      invokeStartElement (pctxt, "password", -1);
 
       stat = asn1PD_H235Password (pctxt, &pvalue->password);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "password", -1);
+      invokeEndElement (pctxt, "password", -1);
    }
 
    /* decode dhkey */
 
    if (pvalue->m.dhkeyPresent) {
-      rtInvokeStartElement (pctxt, "dhkey", -1);
+      invokeStartElement (pctxt, "dhkey", -1);
 
       stat = asn1PD_H235DHset (pctxt, &pvalue->dhkey);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "dhkey", -1);
+      invokeEndElement (pctxt, "dhkey", -1);
    }
 
    /* decode challenge */
 
    if (pvalue->m.challengePresent) {
-      rtInvokeStartElement (pctxt, "challenge", -1);
+      invokeStartElement (pctxt, "challenge", -1);
 
       stat = asn1PD_H235ChallengeString (pctxt, &pvalue->challenge);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "challenge", -1);
+      invokeEndElement (pctxt, "challenge", -1);
    }
 
    /* decode random */
 
    if (pvalue->m.randomPresent) {
-      rtInvokeStartElement (pctxt, "random", -1);
+      invokeStartElement (pctxt, "random", -1);
 
       stat = asn1PD_H235RandomVal (pctxt, &pvalue->random);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "random", -1);
+      invokeEndElement (pctxt, "random", -1);
    }
 
    /* decode certificate */
 
    if (pvalue->m.certificatePresent) {
-      rtInvokeStartElement (pctxt, "certificate", -1);
+      invokeStartElement (pctxt, "certificate", -1);
 
       stat = asn1PD_H235TypedCertificate (pctxt, &pvalue->certificate);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "certificate", -1);
+      invokeEndElement (pctxt, "certificate", -1);
    }
 
    /* decode generalID */
 
    if (pvalue->m.generalIDPresent) {
-      rtInvokeStartElement (pctxt, "generalID", -1);
+      invokeStartElement (pctxt, "generalID", -1);
 
       stat = asn1PD_H235Identifier (pctxt, &pvalue->generalID);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "generalID", -1);
+      invokeEndElement (pctxt, "generalID", -1);
    }
 
    /* decode nonStandard */
 
    if (pvalue->m.nonStandardPresent) {
-      rtInvokeStartElement (pctxt, "nonStandard", -1);
+      invokeStartElement (pctxt, "nonStandard", -1);
 
       stat = asn1PD_H235NonStandardParameter (pctxt, &pvalue->nonStandard);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "nonStandard", -1);
+      invokeEndElement (pctxt, "nonStandard", -1);
    }
 
    if (extbit) {
@@ -1222,23 +1222,23 @@ EXTERN int asn1PD_H235ClearToken (OOCTXT* pctxt, H235ClearToken* pvalue)
                   case 0:
                      pvalue->m.eckasdhkeyPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "eckasdhkey", -1);
+                     invokeStartElement (pctxt, "eckasdhkey", -1);
 
                      stat = asn1PD_H235ECKASDH (pctxt, &pvalue->eckasdhkey);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "eckasdhkey", -1);
+                     invokeEndElement (pctxt, "eckasdhkey", -1);
                      break;
 
                   case 1:
                      pvalue->m.sendersIDPresent = 1;
 
-                     rtInvokeStartElement (pctxt, "sendersID", -1);
+                     invokeStartElement (pctxt, "sendersID", -1);
 
                      stat = asn1PD_H235Identifier (pctxt, &pvalue->sendersID);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "sendersID", -1);
+                     invokeEndElement (pctxt, "sendersID", -1);
                      break;
 
                   default:
@@ -1274,7 +1274,7 @@ EXTERN int asn1PD_H235IV8 (OOCTXT* pctxt, H235IV8* pvalue)
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -1297,7 +1297,7 @@ EXTERN int asn1PD_H235IV16 (OOCTXT* pctxt, H235IV16* pvalue)
                           pvalue->data,
                           sizeof(pvalue->data));
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
+   invokeOctStrValue (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
 }
@@ -1336,24 +1336,24 @@ EXTERN int asn1PD_H235Params (OOCTXT* pctxt, H235Params* pvalue)
    /* decode ranInt */
 
    if (pvalue->m.ranIntPresent) {
-      rtInvokeStartElement (pctxt, "ranInt", -1);
+      invokeStartElement (pctxt, "ranInt", -1);
 
       stat = decodeUnconsInteger (pctxt, &pvalue->ranInt);
       if (stat != ASN_OK) return stat;
-      rtInvokeIntValue (pctxt, pvalue->ranInt);
+      invokeIntValue (pctxt, pvalue->ranInt);
 
-      rtInvokeEndElement (pctxt, "ranInt", -1);
+      invokeEndElement (pctxt, "ranInt", -1);
    }
 
    /* decode iv8 */
 
    if (pvalue->m.iv8Present) {
-      rtInvokeStartElement (pctxt, "iv8", -1);
+      invokeStartElement (pctxt, "iv8", -1);
 
       stat = asn1PD_H235IV8 (pctxt, &pvalue->iv8);
       if (stat != ASN_OK) return stat;
 
-      rtInvokeEndElement (pctxt, "iv8", -1);
+      invokeEndElement (pctxt, "iv8", -1);
    }
 
    if (extbit) {
@@ -1387,12 +1387,12 @@ EXTERN int asn1PD_H235Params (OOCTXT* pctxt, H235Params* pvalue)
                   case 0:
                      pvalue->m.iv16Present = 1;
 
-                     rtInvokeStartElement (pctxt, "iv16", -1);
+                     invokeStartElement (pctxt, "iv16", -1);
 
                      stat = asn1PD_H235IV16 (pctxt, &pvalue->iv16);
                      if (stat != ASN_OK) return stat;
 
-                     rtInvokeEndElement (pctxt, "iv16", -1);
+                     invokeEndElement (pctxt, "iv16", -1);
                      break;
 
                   default:
@@ -1422,32 +1422,32 @@ EXTERN int asn1PD_H235ENCRYPTED (OOCTXT* pctxt, H235ENCRYPTED* pvalue)
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode encryptedData */
 
-   rtInvokeStartElement (pctxt, "encryptedData", -1);
+   invokeStartElement (pctxt, "encryptedData", -1);
 
    stat = decodeDynOctetString (pctxt, (ASN1DynOctStr*)&pvalue->encryptedData);
    if (stat != ASN_OK) return stat;
-   rtInvokeOctStrValue (pctxt, pvalue->encryptedData.numocts, pvalue->encryptedData.data);
+   invokeOctStrValue (pctxt, pvalue->encryptedData.numocts, pvalue->encryptedData.data);
 
-   rtInvokeEndElement (pctxt, "encryptedData", -1);
+   invokeEndElement (pctxt, "encryptedData", -1);
 
    return (stat);
 }
@@ -1464,22 +1464,22 @@ EXTERN int asn1PD_H235CryptoToken_cryptoEncryptedToken (OOCTXT* pctxt, H235Crypt
 
    /* decode tokenOID */
 
-   rtInvokeStartElement (pctxt, "tokenOID", -1);
+   invokeStartElement (pctxt, "tokenOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->tokenOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
+   invokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
 
-   rtInvokeEndElement (pctxt, "tokenOID", -1);
+   invokeEndElement (pctxt, "tokenOID", -1);
 
    /* decode token */
 
-   rtInvokeStartElement (pctxt, "token", -1);
+   invokeStartElement (pctxt, "token", -1);
 
    stat = asn1PD_H235ENCRYPTED (pctxt, &pvalue->token);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "token", -1);
+   invokeEndElement (pctxt, "token", -1);
 
    return (stat);
 }
@@ -1496,7 +1496,7 @@ EXTERN int asn1PD_H235EncodedGeneralToken (OOCTXT* pctxt, H235EncodedGeneralToke
 
    stat = decodeOpenType (pctxt, &pvalue->data, &pvalue->numocts);
    if (stat != ASN_OK) return stat;
-   rtInvokeOpenTypeValue
+   invokeOpenTypeValue
       (pctxt, pvalue->numocts, pvalue->data);
 
    return (stat);
@@ -1514,42 +1514,42 @@ EXTERN int asn1PD_H235CryptoToken_cryptoSignedToken_token (OOCTXT* pctxt, H235Cr
 
    /* decode toBeSigned */
 
-   rtInvokeStartElement (pctxt, "toBeSigned", -1);
+   invokeStartElement (pctxt, "toBeSigned", -1);
 
    stat = asn1PD_H235EncodedGeneralToken (pctxt, &pvalue->toBeSigned);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "toBeSigned", -1);
+   invokeEndElement (pctxt, "toBeSigned", -1);
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode signature */
 
-   rtInvokeStartElement (pctxt, "signature", -1);
+   invokeStartElement (pctxt, "signature", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->signature);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
+   invokeBitStrValue (pctxt, pvalue->signature.numbits, pvalue->signature.data);
 
-   rtInvokeEndElement (pctxt, "signature", -1);
+   invokeEndElement (pctxt, "signature", -1);
 
    return (stat);
 }
@@ -1566,22 +1566,22 @@ EXTERN int asn1PD_H235CryptoToken_cryptoSignedToken (OOCTXT* pctxt, H235CryptoTo
 
    /* decode tokenOID */
 
-   rtInvokeStartElement (pctxt, "tokenOID", -1);
+   invokeStartElement (pctxt, "tokenOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->tokenOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
+   invokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
 
-   rtInvokeEndElement (pctxt, "tokenOID", -1);
+   invokeEndElement (pctxt, "tokenOID", -1);
 
    /* decode token */
 
-   rtInvokeStartElement (pctxt, "token", -1);
+   invokeStartElement (pctxt, "token", -1);
 
    stat = asn1PD_H235CryptoToken_cryptoSignedToken_token (pctxt, &pvalue->token);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "token", -1);
+   invokeEndElement (pctxt, "token", -1);
 
    return (stat);
 }
@@ -1598,33 +1598,33 @@ EXTERN int asn1PD_H235HASHED (OOCTXT* pctxt, H235HASHED* pvalue)
 
    /* decode algorithmOID */
 
-   rtInvokeStartElement (pctxt, "algorithmOID", -1);
+   invokeStartElement (pctxt, "algorithmOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->algorithmOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
+   invokeOidValue (pctxt, pvalue->algorithmOID.numids, pvalue->algorithmOID.subid);
 
-   rtInvokeEndElement (pctxt, "algorithmOID", -1);
+   invokeEndElement (pctxt, "algorithmOID", -1);
 
    /* decode paramS */
 
-   rtInvokeStartElement (pctxt, "paramS", -1);
+   invokeStartElement (pctxt, "paramS", -1);
 
    stat = asn1PD_H235Params (pctxt, &pvalue->paramS);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "paramS", -1);
+   invokeEndElement (pctxt, "paramS", -1);
 
    /* decode hash */
 
-   rtInvokeStartElement (pctxt, "hash", -1);
+   invokeStartElement (pctxt, "hash", -1);
 
    stat = decodeDynBitString (pctxt, (ASN1DynBitStr*)&pvalue->hash);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeBitStrValue (pctxt, pvalue->hash.numbits, pvalue->hash.data);
+   invokeBitStrValue (pctxt, pvalue->hash.numbits, pvalue->hash.data);
 
-   rtInvokeEndElement (pctxt, "hash", -1);
+   invokeEndElement (pctxt, "hash", -1);
 
    return (stat);
 }
@@ -1641,31 +1641,31 @@ EXTERN int asn1PD_H235CryptoToken_cryptoHashedToken (OOCTXT* pctxt, H235CryptoTo
 
    /* decode tokenOID */
 
-   rtInvokeStartElement (pctxt, "tokenOID", -1);
+   invokeStartElement (pctxt, "tokenOID", -1);
 
    stat = decodeObjectIdentifier (pctxt, &pvalue->tokenOID);
    if (stat != ASN_OK) return stat;
-   rtInvokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
+   invokeOidValue (pctxt, pvalue->tokenOID.numids, pvalue->tokenOID.subid);
 
-   rtInvokeEndElement (pctxt, "tokenOID", -1);
+   invokeEndElement (pctxt, "tokenOID", -1);
 
    /* decode hashedVals */
 
-   rtInvokeStartElement (pctxt, "hashedVals", -1);
+   invokeStartElement (pctxt, "hashedVals", -1);
 
    stat = asn1PD_H235ClearToken (pctxt, &pvalue->hashedVals);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "hashedVals", -1);
+   invokeEndElement (pctxt, "hashedVals", -1);
 
    /* decode token */
 
-   rtInvokeStartElement (pctxt, "token", -1);
+   invokeStartElement (pctxt, "token", -1);
 
    stat = asn1PD_H235HASHED (pctxt, &pvalue->token);
    if (stat != ASN_OK) return stat;
 
-   rtInvokeEndElement (pctxt, "token", -1);
+   invokeEndElement (pctxt, "token", -1);
 
    return (stat);
 }
@@ -1695,53 +1695,53 @@ EXTERN int asn1PD_H235CryptoToken (OOCTXT* pctxt, H235CryptoToken* pvalue)
       switch (ui) {
          /* cryptoEncryptedToken */
          case 0:
-            rtInvokeStartElement (pctxt, "cryptoEncryptedToken", -1);
+            invokeStartElement (pctxt, "cryptoEncryptedToken", -1);
 
             pvalue->u.cryptoEncryptedToken = ALLOC_ASN1ELEM (pctxt, H235CryptoToken_cryptoEncryptedToken);
 
             stat = asn1PD_H235CryptoToken_cryptoEncryptedToken (pctxt, pvalue->u.cryptoEncryptedToken);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoEncryptedToken", -1);
+            invokeEndElement (pctxt, "cryptoEncryptedToken", -1);
 
             break;
 
          /* cryptoSignedToken */
          case 1:
-            rtInvokeStartElement (pctxt, "cryptoSignedToken", -1);
+            invokeStartElement (pctxt, "cryptoSignedToken", -1);
 
             pvalue->u.cryptoSignedToken = ALLOC_ASN1ELEM (pctxt, H235CryptoToken_cryptoSignedToken);
 
             stat = asn1PD_H235CryptoToken_cryptoSignedToken (pctxt, pvalue->u.cryptoSignedToken);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoSignedToken", -1);
+            invokeEndElement (pctxt, "cryptoSignedToken", -1);
 
             break;
 
          /* cryptoHashedToken */
          case 2:
-            rtInvokeStartElement (pctxt, "cryptoHashedToken", -1);
+            invokeStartElement (pctxt, "cryptoHashedToken", -1);
 
             pvalue->u.cryptoHashedToken = ALLOC_ASN1ELEM (pctxt, H235CryptoToken_cryptoHashedToken);
 
             stat = asn1PD_H235CryptoToken_cryptoHashedToken (pctxt, pvalue->u.cryptoHashedToken);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoHashedToken", -1);
+            invokeEndElement (pctxt, "cryptoHashedToken", -1);
 
             break;
 
          /* cryptoPwdEncr */
          case 3:
-            rtInvokeStartElement (pctxt, "cryptoPwdEncr", -1);
+            invokeStartElement (pctxt, "cryptoPwdEncr", -1);
 
             pvalue->u.cryptoPwdEncr = ALLOC_ASN1ELEM (pctxt, H235ENCRYPTED);
 
             stat = asn1PD_H235ENCRYPTED (pctxt, pvalue->u.cryptoPwdEncr);
             if (stat != ASN_OK) return stat;
 
-            rtInvokeEndElement (pctxt, "cryptoPwdEncr", -1);
+            invokeEndElement (pctxt, "cryptoPwdEncr", -1);
 
             break;
 
