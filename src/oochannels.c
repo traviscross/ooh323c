@@ -998,11 +998,9 @@ int ooSendMsg(ooCallData *call, int type)
       p_msgNode = call->pH225Channel->outQueue.head;
       msgptr = (ASN1OCTET*) p_msgNode->data;
       msgType = msgptr[0];
-      msgType = msgType<<8;
-      msgType = (msgType | msgptr[1]);
-      len = msgptr[2];
+      len = msgptr[3];
       len = len<<8;
-      len = (len | msgptr[3]);
+      len = (len | msgptr[4]);
 
       /* Remove the message from rtdlist pH225Channel->outQueue */
       dListRemove(&(call->pH225Channel->outQueue), p_msgNode);
@@ -1010,7 +1008,7 @@ int ooSendMsg(ooCallData *call, int type)
          memFreePtr(call->pctxt, p_msgNode);
 
       /* Send message out via TCP */
-      ret = ooSocketSend(call->pH225Channel->sock, msgptr+4, len);
+      ret = ooSocketSend(call->pH225Channel->sock, msgptr+1, len);
       if(ret == ASN_OK)
       {
          memFreePtr (call->pctxt, msgptr);

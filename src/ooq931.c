@@ -541,37 +541,27 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    }
 
    if(pq931Msg->messageType == Q931SetupMsg){
-      msgbuf[i++] = OOSetup>>8;
       msgbuf[i++] = OOSetup;
    }
    else if(pq931Msg->messageType == Q931ConnectMsg){
-      msgbuf[i++] = OOConnect>>8;
       msgbuf[i++] = OOConnect;
    }
    else if(pq931Msg->messageType == Q931CallProceedingMsg){
-      msgbuf[i++] = OOCallProceeding>>8;
       msgbuf[i++] = OOCallProceeding;
    }
    else if(pq931Msg->messageType == Q931AlertingMsg){
-      msgbuf[i++] = OOAlert>>8;
       msgbuf[i++] = OOAlert;
    }
    else if(pq931Msg->messageType == Q931ReleaseCompleteMsg){
-      msgbuf[i++] = OOReleaseComplete>>8;
       msgbuf[i++] = OOReleaseComplete;
    }
    else if(pq931Msg->messageType == Q931FacilityMsg){
-      msgbuf[i++] = OOFacility>>8;
       msgbuf[i++] = OOFacility;
    }
    else{
       OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-
-   /* This will contain the total length of the encoded message */
-   msgbuf[i++]=0;
-   msgbuf[i++]=0;
 
    stat = ooEncodeUUIE(pq931Msg);
    if(stat != OO_OK)
@@ -639,15 +629,13 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
       }
    }
    len = i+1-4; /* complete message length */
-   /* length octets */
-   msgbuf[2] = (len>>8);
-   msgbuf[3] = len;
+
    /* Tpkt length octets populated with total length of the message */
-   msgbuf[6] = (len >> 8);
-   msgbuf[7] = len;        /* including tpkt header */
+   msgbuf[3] = (len >> 8);
+   msgbuf[4] = len;        /* including tpkt header */
  
 #ifndef _COMPACT
-  ooPrintQ931Message (call, msgbuf+8, len-4);
+  ooPrintQ931Message (call, msgbuf+5, len-4);
 #endif
    return OO_OK;
 }
