@@ -743,7 +743,7 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
             finishPrint();
             rtRemoveEventHandler(pctxt, &printHandler);
             ooHandleH245Message(call, pmsg);
-            pctxt = NULL;
+            ASN1MEMFREEPTR(pctxt, pmsg);
             pmsg = NULL;
          }/* End of For loop */
       }/* End of if(h245Tunneling) */
