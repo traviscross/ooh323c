@@ -175,7 +175,7 @@ int osEpOnAlerting(ooCallData* call)
    ooGetLocalIPAddress(localip);
    mediaInfo1.lMediaCntrlPort = 5001;
    mediaInfo1.lMediaPort = 5000;
-   mediaInfo1.cap = OO_CAP_ULAW_64k_180;
+   mediaInfo1.cap = OO_CAP_ULAW_64k_30;
    strcpy(mediaInfo1.lMediaIP, localip);
    strcpy(mediaInfo1.dir, "transmit");
    ooAddMediaInfo(call, mediaInfo1);
@@ -211,7 +211,7 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    mediaInfo1.lMediaPort = 5000;
    strcpy(mediaInfo1.lMediaIP, localip);
    strcpy(mediaInfo1.dir, "transmit");
-   mediaInfo1.cap = OO_CAP_ULAW_64k_180;
+   mediaInfo1.cap = OO_CAP_ULAW_64k_30;
    ooAddMediaInfo(call, mediaInfo1);
   
    /* Configure mediainfo for receive media channel of type G711 */
