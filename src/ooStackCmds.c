@@ -73,7 +73,7 @@ int ooMakeCall(char * dest, char*callToken)
    return OO_OK;
 }
 
-EXTERN int ooAnswerCall(char *callToken)
+int ooAnswerCall(char *callToken)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -109,7 +109,7 @@ EXTERN int ooAnswerCall(char *callToken)
    return OO_OK;
 }
 
-EXTERN int ooRejectCall(char* callToken, int cause)
+int ooRejectCall(char* callToken, int cause)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -146,7 +146,7 @@ EXTERN int ooRejectCall(char* callToken, int cause)
 }
 
 
-EXTERN int ooHangCall(char * callToken)
+int ooHangCall(char * callToken)
 {
    ooCommand *cmd;
 #ifdef _WIN32
