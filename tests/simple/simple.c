@@ -43,6 +43,7 @@ char callToken[20];
 int main(int argc, char ** argv)
 {
    int ret=0;
+   char localip[20]; //test
    H245AudioCapability audioCap;
 #ifdef _WIN32
    HANDLE threadHdl;
@@ -63,6 +64,14 @@ int main(int argc, char ** argv)
       return -1;
    }
 
+
+
+
+   /* Configure mediainfo for transmit media channel of type G711 */
+   memset(localip, 0, 20);//test
+   ooGetLocalIPAddress(localip);//test
+   printf("Local ip is %s\n", localip);
+  
    /* Add audio capability */
    audioCap.t = T_H245AudioCapability_g711Ulaw64k;
    audioCap.u.g711Ulaw64k = 240;
