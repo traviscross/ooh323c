@@ -1331,7 +1331,7 @@ int ooOnSendMsg
          return OO_FAILED;
       }
       cbData->call = call;
-      cbData->timerType = OO_MSD_TIMER;
+      cbData->timerType = OO_TCS_TIMER;
       if(!ooTimerCreate(call->pctxt, &call->timerList, &ooTCSTimerExpired,
                         gH323ep.tcsTimeout, cbData, FALSE))
       {
