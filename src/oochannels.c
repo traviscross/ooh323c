@@ -504,6 +504,9 @@ int ooMonitorChannels()
             }
            dListRemove (&gCmdList, curNode);
            ASN1MEMFREEPTR(&gCtxt, curNode);
+           if(cmd->param1) ASN1MEMFREEPTR(&gCtxt, cmd->param1);
+           if(cmd->param2) ASN1MEMFREEPTR(&gCtxt, cmd->param2);
+           if(cmd->param3) ASN1MEMFREEPTR(&gCtxt, cmd->param3);
            ASN1MEMFREEPTR(&gCtxt, cmd);
          }
       }
@@ -549,7 +552,7 @@ int ooMonitorChannels()
                   if(ret != OO_OK)
                   {
                      OOTRACEERR3("ERROR:Failed ooH2250Receive - Clearing call "
-                                 "(%s, %s)\n", call->callType, call->callToken);
+                                "(%s, %s)\n", call->callType, call->callToken);
                      if(call->callState < OO_CALL_CLEAR)
                      {
                         call->callEndReason = OO_HOST_CLEARED;
@@ -590,7 +593,8 @@ int ooMonitorChannels()
             {
                if(FD_ISSET(*(call->h245Channel), &writefds))
                {                          
-                  ooSendMsg(call, OOH245MSG);
+                  if(call->sendH245>0)
+                     ooSendMsg(call, OOH245MSG);
                }
             }
             else if(call->h245listener)
@@ -635,6 +639,8 @@ int ooH2250Receive(ooCallData *call)
    {
       OOTRACEERR3("ERROR:Failed to allocate memory for incoming H.2250 message"
                   " (%s, %s)\n", call->callType, call->callToken);
+      freeContext(pctxt);
+      ASN1CRTFREE0(pctxt);
       return OO_FAILED;
    }
    pmsg->pctxt = pctxt;
@@ -651,6 +657,7 @@ int ooH2250Receive(ooCallData *call)
          call->callState = OO_CALL_CLEARED;
         
       }
+      ooFreeQ931Message(pmsg);
       return OO_OK;
    }
    OOTRACEDBGC3("Receiving H.2250 message (%s, %s)\n",
@@ -736,6 +743,9 @@ int ooH2250Receive(ooCallData *call)
    /* Add event handler to list */
    rtAddEventHandler (pctxt, &printHandler);
    ooQ931Decode (pmsg, len, message);
+   OOTRACEDBGC3("Decoded Q931 message (%s, %s)\n", call->callType,
+                                                             call->callToken);
+   rtRemoveEventHandler(pctxt, &printHandler);
    ooHandleH2250Message(call, pmsg);
    return OO_OK;
 }
@@ -865,9 +875,9 @@ int ooH245Receive(ooCallData *call)
       ooFreeH245Message(pmsg);
       return OO_FAILED;
    }
-   
-  ooHandleH245Message(call, pmsg);
-  return OO_OK;
+   rtRemoveEventHandler(pctxt, &printHandler);
+   ooHandleH245Message(call, pmsg);
+   return OO_OK;
 
 }
 
@@ -884,7 +894,8 @@ int ooSendMsg(ooCallData *call, int type)
    memset(msgbuf, 0, sizeof(msgbuf));
    if(type == OOQ931MSG)
    {
-     
+      OOTRACEDBGA3("Sending Q931 message (%s, %s)\n", call->callType,
+                                                      call->callToken);
       if(ooGetOutgoingQ931Msgbuf(call, msgbuf, &len, &msgType)!=OO_OK)
       {
          OOTRACEERR3("ERROR:Could not retrieve message buffer for outgoing "
@@ -922,6 +933,8 @@ int ooSendMsg(ooCallData *call, int type)
    }/* end of type==OOQ931MSG */
    if(type == OOH245MSG)
    {
+      OOTRACEDBGA3("Sending H.245 message (%s, %s)\n", call->callType,
+                                                      call->callToken);
       if(ooGetOutgoingH245Msgbuf(call, msgbuf, &len, &msgType)!=OO_OK)
       {
          OOTRACEERR3("ERROR:Could not retrieve message buffer for outgoing "
@@ -954,7 +967,7 @@ int ooSendMsg(ooCallData *call, int type)
       {
          ret = ooSocketSend(*(call->h245Channel), msgbuf, len);
          if(ret == ASN_OK)
-                 {
+         {
             OOTRACEDBGA3("H245 Message sent successfully (%s, %s)\n",
                           call->callType, call->callToken);
             ooOnSendMsg(call, msgType);
@@ -1050,6 +1063,7 @@ int ooOnSendMsg(ooCallData *call, int msgType)
       if(gH323ep.onCallCleared)
          gH323ep.onCallCleared(call);
 #ifdef __USING_RAS
+      if(RasNoGatekeeper != ooRasGetGatekeeperMode())
          ooRasSendDisengageRequest(call);
 #endif
       break;

@@ -146,9 +146,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    }
    OOTRACEINFO2("\tCallerName - %s\n", gH323ep.callername);
 
-   dListInit(&gH323ep.audioCaps);
-   dListInit(&gH323ep.dataApplicationCaps);
-   dListInit(&gH323ep.videoCaps);
+   gH323ep.myCaps = NULL;
+   gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
   
    gH323ep.callMode = callMode;
@@ -315,17 +314,19 @@ int ooSetAliasTransportID(char * ipaddress)
    
 int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
                               cb_OnIncomingCall onIncomingCall,
+                              cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted,
                               cb_OnOutgoingCall onOutgoingCall,
                               cb_OnCallEstablished onCallEstablished,
-                              cb_OnCallCleared onCallCleared,
-                              cb_OnStartLogicalChannel onStartLogicalChannel)
+                              cb_OnCallCleared onCallCleared)
+
 {
    gH323ep.onAlerting = onAlerting;
    gH323ep.onIncomingCall = onIncomingCall;
+   gH323ep.onOutgoingCallAdmitted = onOutgoingCallAdmitted;
    gH323ep.onOutgoingCall = onOutgoingCall;
    gH323ep.onCallEstablished = onCallEstablished;
    gH323ep.onCallCleared = onCallCleared;
-   gH323ep.onStartLogicalChannel = onStartLogicalChannel;
+
    return OO_OK;
 }
 
@@ -354,7 +355,7 @@ int ooDestroyH323Ep(void)
    }
   
    freeContext(&(gH323ep.ctxt));
-  
+   ooDestroyRas();  
 #ifdef _WIN32
    DeleteCriticalSection(&gCmdMutex);
 #endif

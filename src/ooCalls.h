@@ -104,9 +104,9 @@ EXTERN int ooCleanCall(ooCallData *call);
  *
  * @return          Pointer to logical channel, on success. NULL, on failure
  */
-EXTERN ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
-                                  int sessionID, char *type, char * dir,
-                                  ooH323EpCapability *epCap);
+EXTERN ooLogicalChannel* ooAddNewLogicalChannel
+         (ooCallData *call, int channelNo, int sessionID, char *type,
+          char * dir, ooH323EpCapability *epCap);
 
 /**
  * This function is used to find a logical channel by logical channel number.
@@ -130,7 +130,8 @@ EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOnLogicalChannelEstablished(ooCallData *call, ooLogicalChannel * pChannel);
+EXTERN int ooOnLogicalChannelEstablished
+                              (ooCallData *call, ooLogicalChannel * pChannel);
 
 /**
  * This fuction is used to check whether a specified session in specified direction
@@ -142,7 +143,8 @@ EXTERN int ooOnLogicalChannelEstablished(ooCallData *call, ooLogicalChannel * pC
  *
  * @return           1, if session active. 0, otherwise.
  */
-EXTERN ASN1BOOL ooIsSessionEstablished(ooCallData *call, int sessionID, char* dir);
+EXTERN ASN1BOOL ooIsSessionEstablished
+                                  (ooCallData *call, int sessionID, char* dir);
 
 /**
  * This function is used to retrieve a logical channel with particular sessionID. Note
@@ -203,8 +205,8 @@ EXTERN int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo);
  * @return         Returns the corresponding logical channel if found,
  *                 else returns NULL.
  */
-EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
-                               H245OpenLogicalChannel *olc);
+EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC
+                               (ooCallData *call, H245OpenLogicalChannel *olc);
 
 /**
  * This function is used to find a logical channel based on session Id,

@@ -1,8 +1,8 @@
 CFLAGS = @OOH323CFLAGS@
 
 noinst_PROGRAMS = ooPlayer
-ooPlayer_SOURCES = ooPlayer.c ooPlayer.h
-INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323 -I$(top_builddir)/src/h450
+ooPlayer_SOURCES = ooPlayer.c ooPlayer.h oosndrtp.c oosndrtp.h
+INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
 ooPlayer_LDADD = -loostk -ldl -lpthread
 ooPlayer_LDFLAGS = -L$(top_builddir)/src
 

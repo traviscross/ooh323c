@@ -27,7 +27,6 @@ ooCallData* ooCreateCall(char * type, char*callToken)
 {
    ooCallData *call=NULL;
    OOCTXT *pctxt=NULL;
-/*   char localip[20];*/
 
    pctxt = newContext();
    if(!pctxt)
@@ -49,7 +48,7 @@ ooCallData* ooCreateCall(char * type, char*callToken)
    sprintf(call->callType, "%s", type);
   
    call->remoteAliases = NULL;
-   /*   call->localAliases = NULL;*/
+   call->gkEngaged = 0;
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
@@ -90,21 +89,37 @@ int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call)
 
 int ooEndCall(ooCallData *call)
 {
+   OOTRACEDBGA5("In ooEndCall call state is - %d(%s) (%s, %s)\n",
+                 call->callState, ooGetText(call->callState), call->callType,
+                 call->callToken);
    if(call->logicalChans)
    {
       if(call->callState == OO_CALL_CLEAR)
       {
-         OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
+         if(call->isTunnelingActive || call->h245Channel)
+         {
+            OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
                        call->callType, call->callToken);
-         ooCloseAllLogicalChannels(call);
-         call->callState = OO_CALL_CLEAR_CLOLCS;
-         return OO_OK;
+            ooCloseAllLogicalChannels(call);
+            call->callState = OO_CALL_CLEAR_CLOLCS;
+            return OO_OK;
+         }else{
+            OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. (%s, %s)\n",
+                       call->callType, call->callToken);
+            ooClearAllLogicalChannels(call);
+            call->callState = OO_CALL_CLEAR_CLELCS;
+            return OO_OK;
+         }
       }
       if(call->callState >= OO_CALL_CLEAR_CLOLCS)
       {
          /* Wait till all the queued H245 messages are sent */
          if(call->sendH245 > 0)
+         {
+            OOTRACEDBGA4("ooEndCall - Still %d H.245 messages have to be sent"
+                "(%s, %s)\n", call->sendH245, call->callType, call->callToken);
             return OO_OK;
+         }
          OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. (%s, %s)\n",
                        call->callType, call->callToken);
          ooClearAllLogicalChannels(call);
@@ -131,7 +146,11 @@ int ooEndCall(ooCallData *call)
       {
          /* Wait till all the queued H245 messages are sent */
          if(call->sendH245 > 0)
+         {
+            OOTRACEDBGA4("ooEndCall - Still %d H.245 messages have to be sent"
+                "(%s, %s)\n", call->sendH245, call->callType, call->callToken);
             return OO_OK;
+         }
          OOTRACEINFO3("Call Clearing - CloseH245Connection. (%s, %s)\n",
                        call->callType, call->callToken);
          ooCloseH245Connection(call);
@@ -197,14 +216,7 @@ int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
 int ooCleanCall(ooCallData *call)
 {
    OOCTXT *pctxt;
-   //   int msg = call->callEndReason - 20;
 
-   /*   if(msg >= 0 && msg < OO_TotalMessages)
-      OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
-                   call->callType, call->callToken, messages[msg]);
-   else
-      OOTRACEWARN3("Cleaning Call (%s, %s)- reason:unknown\n",
-      call->callType, call->callToken);*/
    OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
               call->callType, call->callToken, ooGetText(call->callEndReason));
 
@@ -231,7 +243,7 @@ int ooCleanCall(ooCallData *call)
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
  
-   gH323ep.onCallCleared(call);
+   /*   gH323ep.onCallCleared(call);*/
    pctxt = call->pctxt;
    freeContext(pctxt);
    ASN1CRTFREE0(pctxt);
@@ -271,15 +283,16 @@ ooCallData* ooFindCallByToken(char *callToken)
 
 
 
-ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int sessionID,
-                                         char *type, char * dir, ooH323EpCapability *epCap)
+ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
+                                         int sessionID, char *type, char * dir,
+                                         ooH323EpCapability *epCap)
 {
-   H245AudioCapability *audioCap;
    ooLogicalChannel *pNewChannel=NULL, *pChannel=NULL;
    ooMediaInfo *pMediaInfo = NULL;
 
    /* Create a new logical channel entry */
-   pNewChannel = (ooLogicalChannel*)ASN1MALLOC(call->pctxt, sizeof(ooLogicalChannel));
+   pNewChannel = (ooLogicalChannel*)ASN1MALLOC(call->pctxt,
+                                                     sizeof(ooLogicalChannel));
    if(!pNewChannel)
    {
       OOTRACEERR3("ERROR:Memory allocation for new logical channel failed "
@@ -295,7 +308,7 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int se
    strcpy(pNewChannel->dir, dir);
    /* Create h323ep capability */
    pNewChannel->chanCap = (ooH323EpCapability*)ASN1MALLOC(call->pctxt,
-                                                           sizeof(ooH323EpCapability));
+                                                   sizeof(ooH323EpCapability));
    if(!pNewChannel->chanCap)
    {
       OOTRACEERR3("ERROR:Memory allocation for new logical channels chanCap "
@@ -306,86 +319,31 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int se
   
    memset(pNewChannel->chanCap, 0, sizeof(ooH323EpCapability));
   
-   pNewChannel->chanCap->t = epCap->t;
+   pNewChannel->chanCap->dir = epCap->dir;
   
    pNewChannel->chanCap->startReceiveChannel = epCap->startReceiveChannel;
    pNewChannel->chanCap->startTransmitChannel = epCap->startTransmitChannel;
    pNewChannel->chanCap->stopReceiveChannel = epCap->stopReceiveChannel;
    pNewChannel->chanCap->stopTransmitChannel = epCap->stopTransmitChannel;
-  
-   /* If audio Capability */
-   if(epCap->t == T_H245Capability_receiveAudioCapability ||
-      epCap->t == T_H245Capability_transmitAudioCapability ||
-      epCap->t == T_H245Capability_receiveAndTransmitAudioCapability)
-   {
-          
-      /* Allocate mem for audio cap */
-      pNewChannel->chanCap->cap = (void*)ASN1MALLOC(call->pctxt, sizeof(H245AudioCapability));
-      if(!pNewChannel->chanCap->cap)
-      {
-         OOTRACEERR3("ERROR:Memory allocation for new logical channels audio "
-                     "capability failed (%s, %s)n", call->callType,
-                     call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, pNewChannel->chanCap);
-         ASN1MEMFREEPTR(call->pctxt, pNewChannel);
-         return NULL;
-      }
-      memset(pNewChannel->chanCap->cap, 0, sizeof(H245AudioCapability));
-      audioCap = (H245AudioCapability*)epCap->cap;
-      /* For handling these capabilities we will have to add ASN1MALLOCS as they are dynamic*/
-      if(audioCap->t == T_H245AudioCapability_nonStandard ||
-          audioCap->t == T_H245AudioCapability_g7231 ||
-          audioCap->t == T_H245AudioCapability_is11172AudioCapability ||
-          audioCap->t == T_H245AudioCapability_is13818AudioCapability ||
-          audioCap->t == T_H245AudioCapability_g7231AnnexCCapability ||
-          audioCap->t == T_H245AudioCapability_gsmFullRate ||
-          audioCap->t == T_H245AudioCapability_gsmHalfRate ||
-          audioCap->t == T_H245AudioCapability_gsmEnhancedFullRate ||
-          audioCap->t == T_H245AudioCapability_genericAudioCapability ||
-          audioCap->t == T_H245AudioCapability_g729Extensions ||
-          audioCap->t == T_H245AudioCapability_vbd ||
-          audioCap->t == T_H245AudioCapability_audioTelephonyEvent ||
-          audioCap->t == T_H245AudioCapability_audioTone ||
-          audioCap->t == T_H245AudioCapability_extElem1)
-      {
-         ASN1MEMFREEPTR(call->pctxt, pNewChannel->chanCap->cap);
-         ASN1MEMFREEPTR(call->pctxt, pNewChannel->chanCap);
-         ASN1MEMFREEPTR(call->pctxt, pNewChannel);
-         OOTRACEERR3("ERROR:AddNewLogicalChannel - Unhandled capability type "
-                     "(%s, %s)\n", call->callType, call->callToken);
-         return NULL;
-      }
+   pNewChannel->chanCap->cap = epCap->cap;
+   pNewChannel->chanCap->capType = epCap->capType;
 
-      /* Copy audio Capability */
-      memcpy((void*)pNewChannel->chanCap->cap, (void*)epCap->cap, sizeof(H245AudioCapability));
-   }
-   else
-   {
-      /* Only audio capabilities supported at this point */
-      ASN1MEMFREEPTR(call->pctxt, pNewChannel->chanCap);
-      ASN1MEMFREEPTR(call->pctxt, pNewChannel);
-      OOTRACEERR3("ERROR: AddNewLogicalChannel - Unhandled Capability type "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return NULL;
-   }
-  
    /* As per standards, media control port should be same for all
       proposed channels with same session ID. However, most applications
       use same media port for transmit and receive of audio streams. Infact,
-      testing of OpenH323 based asterisk assumed that same ports are used. Hence
-      we first search for existing media ports for smae session and use them. This
-      should take care of all cases.
+      testing of OpenH323 based asterisk assumed that same ports are used.
+      Hence we first search for existing media ports for smae session and use
+      them. This should take care of all cases.
    */
    if(call->mediaInfo)
    {
       pMediaInfo = call->mediaInfo;
       while(pMediaInfo)
       {
-         if(!strcmp(pMediaInfo->mediaType, type) &&
-            !strcmp(pMediaInfo->dir, dir))
+         if(!strcmp(pMediaInfo->dir, dir) &&
+            (pMediaInfo->cap == epCap->cap))
          {
-            if(!call->isFastStartActive || (pMediaInfo->capType == audioCap->t))
-               break;
+            break;
          }
          pMediaInfo = pMediaInfo->next;
       }
@@ -422,7 +380,8 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo, int se
    return pNewChannel;
 }
 
-ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(ooCallData *call,int ChannelNo)
+ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(ooCallData *call,
+                                                         int ChannelNo)
 {
    ooLogicalChannel *pLogicalChannel=NULL;
    if(!call->logicalChans)
@@ -449,23 +408,36 @@ ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
 {
    H245DataType * psDataType=NULL;
    H245H2250LogicalChannelParameters * pslcp=NULL;
-
+   OOTRACEDBGC4("ooFindLogicalChannel by olc %d (%s, %s)\n",
+            olc->forwardLogicalChannelNumber, call->callType, call->callToken);
    if(olc->m.reverseLogicalChannelParametersPresent)
    {
+      OOTRACEDBGC3("Finding receive channel (%s,%s)\n", call->callType,
+                                                       call->callToken);
       psDataType = &olc->reverseLogicalChannelParameters.dataType;
       /* Only H2250LogicalChannelParameters are supported */
       if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
-         T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+         T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters){
+         OOTRACEERR4("Error:Invalid olc %d received (%s, %s)\n",
+           olc->forwardLogicalChannelNumber, call->callType, call->callToken);
          return NULL;
+      }
       pslcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+
       return ooFindLogicalChannel(call, pslcp->sessionID, "receive", psDataType);
    }
    else{
+      OOTRACEDBGC3("Finding transmit channel (%s, %s)\n", call->callType,
+                                                           call->callToken);
       psDataType = &olc->forwardLogicalChannelParameters.dataType;
       /* Only H2250LogicalChannelParameters are supported */
       if(olc->forwardLogicalChannelParameters.multiplexParameters.t !=
          T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+      {
+         OOTRACEERR4("Error:Invalid olc %d received (%s, %s)\n",
+           olc->forwardLogicalChannelNumber, call->callType, call->callToken);
          return NULL;
+      }
       pslcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
       return ooFindLogicalChannel(call, pslcp->sessionID, "transmit", psDataType);
    }
@@ -484,9 +456,19 @@ ooLogicalChannel * ooFindLogicalChannel(ooCallData *call, int sessionID,
          {
             if(dataType->t == T_H245DataType_audioData)
             {
-               if(ooCompareAudioCaps(call, (H245AudioCapability*)pChannel->chanCap->cap,
-                                   dataType->u.audioData))
-                  return pChannel;
+               if(!strcmp(dir, "receive"))
+               {
+                  if(ooCompareAudioCaps(pChannel->chanCap->cap,
+                     dataType->u.audioData,
+                     T_H245Capability_receiveAudioCapability))
+                     return pChannel;
+               }else if(!strcmp(dir, "transmit"))
+               {
+                  if(ooCompareAudioCaps(pChannel->chanCap->cap,
+                     dataType->u.audioData,
+                     T_H245Capability_transmitAudioCapability))
+                     return pChannel;
+               }
             }
          }
       }
@@ -612,7 +594,7 @@ int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo)
       {
          if(!prev)   call->logicalChans = temp->next;
          else   prev->next = temp->next;
-         ASN1MEMFREEPTR(call->pctxt, temp->chanCap->cap);
+         //ASN1MEMFREEPTR(call->pctxt, temp->chanCap->cap);
          ASN1MEMFREEPTR(call->pctxt, temp->chanCap);
          ASN1MEMFREEPTR(call->pctxt, temp);
          OOTRACEDBGC4("Removed logical channel %d (%s, %s)\n", ChannelNo,
@@ -679,11 +661,10 @@ int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
    }
    memset(newMediaInfo, 0, sizeof(ooMediaInfo));
    strcpy(newMediaInfo->dir, mediaInfo.dir);
-   strcpy(newMediaInfo->mediaType, mediaInfo.mediaType);
    newMediaInfo->lMediaCntrlPort = mediaInfo.lMediaCntrlPort;
    strcpy(newMediaInfo->lMediaIP,mediaInfo.lMediaIP);
    newMediaInfo->lMediaPort = mediaInfo.lMediaPort;
-   newMediaInfo->capType = mediaInfo.capType;
+   newMediaInfo->cap = mediaInfo.cap;
    newMediaInfo->next = NULL;
 
    if(!call->mediaInfo)

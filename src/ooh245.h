@@ -25,7 +25,7 @@
 #include "ootypes.h"
 #include "oochannels.h"
 #include "oo.h"
-#include "oosndrtp.h"
+//#include "oosndrtp.h"
 #include "ooq931.h"
 #include "MULTIMEDIA-SYSTEM-CONTROL.h"
 
@@ -165,6 +165,17 @@ EXTERN int ooHandleOpenLogicalAudioChannel
 EXTERN int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
                                             H245OpenLogicalChannelAck *olcAck);
 
+
+/**
+ * This function is used to handle the received OpenLogicalChannelReject
+ * message.
+ * @param call         Handle to the call for which the message is received.
+ * @param olcRejected  Pointer to received OpenLogicalChannelReject message.
+ *
+ * @return             OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooOnReceivedOpenLogicalChannelRejected(ooCallData *call,
+                                    H245OpenLogicalChannelReject *olcRejected);
 /**
  * This message is used to send an EndSession command. It builds a EndSession
  * command message and queues it into the calls outgoing queue.

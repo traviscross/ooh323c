@@ -373,7 +373,9 @@ int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize,
    if(remoteport)
       *remoteport = ntohs(m_addr.sin_port);
    if(remotehost)
+   {
       strcpy(remotehost, inet_ntoa(m_addr.sin_addr));
+   }
    return len;
 }
 
@@ -407,6 +409,7 @@ int ooGetLocalIPAddress(char * pIPAddrs)
          return -1; /* Need to define a return value if made part of rtsrc */
       memcpy(&addr, phost->h_addr_list[0], sizeof(struct in_addr));
       strcpy(pIPAddrs, inet_ntoa(addr));
+    
    }
    else{
       return -1;

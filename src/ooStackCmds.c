@@ -33,6 +33,7 @@ int ooMakeCall(char * dest, char*callToken)
                   "MakeCall\n");
       return OO_FAILED;
    }
+   memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_MAKECALL;
    cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(dest)+1);
    if(!cmd->param1)
@@ -87,6 +88,7 @@ int ooAnswerCall(char *callToken)
       OOTRACEERR1("Error:Allocating memory for command structure - AnswerCall\n");
       return OO_FAILED;
    }
+   memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_ANSCALL;
 
    cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
@@ -123,6 +125,7 @@ int ooRejectCall(char* callToken, int cause)
       OOTRACEERR1("Error:Allocating memory for command structure - RejectCall\n");
       return OO_FAILED;
    }
+   memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_REJECTCALL;
 
    cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
@@ -160,6 +163,8 @@ int ooHangCall(char * callToken)
       OOTRACEERR1("Error:Allocating memory for command structure - HangCall\n");
       return OO_FAILED;
    }
+
+   memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_HANGCALL;
    cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
    if(!cmd->param1)
@@ -195,6 +200,7 @@ int ooStopMonitor()
       OOTRACEERR1("Error:Allocating memory for command structure - StopMonitor\n");
       return OO_FAILED;
    }
+   memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_STOPMONITOR;
   
    dListAppend(&gCtxt, &gCmdList, cmd);

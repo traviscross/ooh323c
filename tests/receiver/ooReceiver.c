@@ -45,7 +45,6 @@ int main(int argc, char ** argv)
 {
   int ret=0;
 
-   H245AudioCapability audioCap;
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -56,7 +55,7 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize the H323 endpoint */
-   ret = ooInitializeH323Ep("receiver.log", 0, 0, 28, 9, 0, 61, "obj-sys",
+   ret = ooInitializeH323Ep("receiver.log", 1, 1, 28, 9, 0, 61, "obj-sys",
                       "Version 0.3", T_H225CallType_pointToPoint, 1720,
                       "objsyscall", "receiver", OO_CALLMODE_AUDIORX);
    if(ret != OO_OK)
@@ -65,13 +64,12 @@ int main(int argc, char ** argv)
       return -1;
    }
    /* Add audio capability */
-   audioCap.t = T_H245AudioCapability_g711Ulaw64k;
-   audioCap.u.g711Ulaw64k = 240;
-   ooAddAudioCapability(audioCap, T_H245Capability_receiveAudioCapability,
-                             &osEpStartReceiveChannel, NULL,
-                             &osEpStopReceiveChannel, NULL);
+   ooAddCapability(OO_CAP_ULAW_64k_180,T_H245Capability_receiveAudioCapability,
+                   &osEpStartReceiveChannel, NULL, &osEpStopReceiveChannel,
+                   NULL);
+
    ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
-                             NULL, &osEpOnCallCleared, NULL);
+                             NULL, NULL, &osEpOnCallCleared);
    /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
@@ -171,7 +169,7 @@ int osEpOnAlerting(ooCallData* call )
    ooGetLocalIPAddress(localip);
    mediaInfo.lMediaCntrlPort = 5001;
    mediaInfo.lMediaPort = 5000;
-   mediaInfo.capType = T_H245AudioCapability_g711Ulaw64k;
+   mediaInfo.cap = OO_CAP_ULAW_64k_180;
    strcpy(mediaInfo.lMediaIP, localip);
    strcpy(mediaInfo.dir, "receive");
    ooAddMediaInfo(call, mediaInfo);

@@ -206,8 +206,9 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
             will be processed at the time of sending CONNECT message. */
          dListAppend(call->pctxt, &call->remoteFastStartOLCs, olc);
       }
+      rtRemoveEventHandler(call->pctxt, &printHandler);
    }
-  
+
    return OO_OK;
 }
 
@@ -382,6 +383,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          */
          ooOnLogicalChannelEstablished(call, pChannel);
       }
+      rtRemoveEventHandler(call->pctxt, &printHandler);
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
@@ -444,7 +446,25 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    if(call->isTunnelingActive)
    {
      ret = ooHandleTunneledH245Messages(call, &q931Msg->userInfo->h323_uu_pdu);
-     return ret;
+     if(!call->isFastStartActive)
+     {
+        /* Start terminal capability exchange and master slave determination */
+        ret = ooSendTermCapMsg(call);
+        if(ret != OO_OK)
+        {
+           OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
+                        call->callType, call->callToken);
+           return ret;
+        }
+        ret = ooSendMasterSlaveDetermination(call);
+        if(ret != OO_OK)
+        {
+           OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                    "(%s, %s)\n", call->callType, call->callToken);
+           return ret;
+        }  
+     }
+    
    }
    return OO_OK; 
 }
@@ -505,7 +525,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
                         call->callType, call->callToken);
          else{
             if(gH323ep.onCallEstablished)
-                gH323ep.onCallEstablished(call);
+               gH323ep.onCallEstablished(call);
          }
          ooFreeQ931Message(q931Msg);
          break;
@@ -715,6 +735,7 @@ int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
                ooFreeH245Message(pmsg);
                return OO_FAILED;
             }
+            rtRemoveEventHandler(pctxt, &printHandler);
             ooHandleH245Message(call, pmsg);
             pctxt = NULL;
             pmsg = NULL;

@@ -133,11 +133,26 @@ typedef struct {
 
 /**
  * This function is used to initialize the Ras module by setting gatekeeper
- * mode and Creating Ras Channel
+ * mode and Creating Ras Channel.
+ * @param localRasPort     local port to be used for RAS channel
+ * @param eGkMode          Gatekeeper mode.
+ * @param szGkAddr         Dotted gk ip address, if gk has to be specified.
+ * @param iGkPort          Gk port.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ *
  */
 EXTERN int ooInitRas(int localRasPort, enum RasGatekeeperMode eGkMode,
                      char *szGkAddr, int iGkPort );
 
+
+/**
+ * This function is used to destroy RasModule. It releases all the associated
+ * memory.
+ *
+ * @return     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooDestroyRas(void);
 
 /**
  * This function is called periodically to monitor the process the RAS
@@ -254,6 +269,7 @@ EXTERN int ooRasSendDisengageRequest(ooCallData *call);
 #define ooRasExplorer()
 #define ooRasGetSocket() 0
 #define ooRasReceive()
+#define ooDestroyRas()
 #define ooRasSetGatekeeperMode( eGkMode, szGkAddr, usGkPort )
 #define ooRasGetGatekeeperMode( peGkMode, szGkAddr, usGkPort )
 #define ooRasGetGatekeeperStatus( szGatekeeperId, psGkAddr )

@@ -22,6 +22,40 @@
 #include "ootypes.h"
 #include "ooasn1.h"
 
+/* Various types of caps. Note that not all
+   supported */
+
+#define OO_AUCAPS_MIN       1
+#define OO_CAP_ULAW_64k_240 1 /* g711 ulaw 64k 240 frs/pkt */
+#define OO_CAP_ULAW_64k_180 2
+#define OO_CAP_ULAW_64k_30  3
+#define OO_CAP_ULAW_64k_MAX 3
+
+#define OO_CAP_ULAW_56k_MIN 4
+#define OO_CAP_ULAW_56k_240 4
+#define OO_CAP_ULAW_56k_180 5
+#define OO_CAP_ULAW_56k_30  6
+#define OO_CAP_ULAW_56k_MAX 6
+
+#define OO_CAP_ALAW_64k_MIN 7
+#define OO_CAP_ALAW_64k_240 7
+#define OO_CAP_ALAW_64k_180 8
+#define OO_CAP_ALAW_64k_30  9
+#define OO_CAP_ALAW_64k_MAX 9
+
+#define OO_CAP_ALAW_56k_MIN 10
+#define OO_CAP_ALAW_56k_240 10
+#define OO_CAP_ALAW_56k_180 11
+#define OO_CAP_ALAW_56k_30  12
+#define OO_CAP_ALAW_56k_MAX 12
+
+
+#define OO_CAP_GSM          13
+#define OO_CAP_G729A        14
+#define OO_CAP_SPEEX        15
+#define OO_CAP_G723_1       16
+#define OO_AUCAPS_MAX       16
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,138 +72,108 @@ extern "C" {
  * @defgroup capmgmt  Capability Management
  * @{
  */
+
 /**
- * Function to add audio capabilities to the endpoint. 'dir' indicates
- * whether we have a transmit capability or a receive capability or both.
- * Last four parameters are the callback functions for channel control
- * @param audioCap            Audio Capability to be added.
- * @param dir                 Direction - Indicates whether endpoint has
- *                            receive capability, or transmit capability or
- *                            both.ex T_H245Capability_receiveAudioCapability
- * @param startReceiveChannel Callback function to call receive channel.
+ * This function is used to add a new capability to the endpoint.
+ * @param cap                  Type of capability to be added.
+ * @param dir                  Direction - Indicates whether endpoint has
+ *                             receive capability, or transmit capability or
+ *                             both.ex T_H245Capability_receiveAudioCapability.
+ * @param startReceiveChannel  Callback function to start receive channel.
  * @param startTransmitChannel Callback function to start transmit channel.
  * @param stopReceiveChannel   Callback function to stop receive channel.
  * @param stopTransmitChannel  Callback function to stop transmit channel.
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
-*/
-EXTERN int ooAddAudioCapability(H245AudioCapability audioCap, int dir,
-                                cb_StartReceiveChannel startReceiveChannel,
-                                cb_StartTransmitChannel startTransmitChannel,
-                                cb_StopReceiveChannel stopReceiveChannel,
-                                cb_StopTransmitChannel stopTransmitChannel);
+ */
+EXTERN int ooAddCapability(int cap, int dir,
+                    cb_StartReceiveChannel startReceiveChannel,
+                    cb_StartTransmitChannel startTransmitChannel,
+                    cb_StopReceiveChannel stopReceiveChannel,
+                    cb_StopTransmitChannel stopTransmitChannel);
 
 /**
- * This function is used to create a duplicate audio capability from the one supplied
- * as parameter.
- * @param call     Handle to the call for which duplicate capability has to be created.
- * @param audioCap Source audio capability.
- * @param pctxt    Pointer to an OOCTXT which will be used to allocate memory for the
- *                 new capability.
+ * This function is used to create a audio capability structure using the
+ * capability type.
+ * @param cap         Capability.
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
+ *                    for new audio capability.
  *
- * @return         Pointer to the newly created audio capability or NULL in case of failure
+ * @return            Newly created audio capability on success, NULL on
+ *                    failure.
  */
-EXTERN H245AudioCapability * ooCreateDupAudioCap
-   (ooCallData *call, H245AudioCapability *audioCap, OOCTXT *pctxt);
+struct H245AudioCapability* ooCreateAudioCapability
+                                  (int cap, OOCTXT *pctxt);
 
 /**
- * This function is used to create a duplicate GSM audio capability.
- * @param call     Handle to the call for which duplicate has to be created.
- * @param gsmCap   Pointer to the source capability.
- * @param pctxt    Pointer to the OOCTXT context which will be used for memory allocation.
+ * This function is used to create a g711 audio capability structure.
+ * @param cap        Capability
+ * @param pctxt      Handle to OOCTXT which will be used to allocate memory
+ *                    for new audio capability.
  *
- * @return         Pointer to the newly created GSM capability or NULL in case of failure.
+ * @return            Newly created audio capability on success, NULL on
+ *                    failure.
  */
-EXTERN H245GSMAudioCapability* ooCreateDupGSMAudioCap
-   (ooCallData *call, H245GSMAudioCapability *gsmCap, OOCTXT *pctxt);
+struct H245AudioCapability* ooCreateG711Capability
+                                  (int cap, OOCTXT* pctxt);
+
 
 /**
- * This function is used to check whether local endpoint supports a particular
- * type of audio capability.
- * @param call     Handle to the call.
- * @param audioCap Pointer to the audio capability
- * @param dir      Direction in which support is required.
- *                 ex. T_H245Capability_receiveAudioCapability
+ * This function is used to determine whether a particular capability
+ * can be supported by the endpoint.
+ * @param call       Handle to the call.
+ * @param audioCap   Handle to the audio capability.
+ * @param dir        Direction in which support is desired.
  *
- * @return         Pointer to the matching capability, if found. Null,
- *                 otherwise.
+ * @return          Handle to the capability which supports audioCap, Null
+ *                  if none found
  */
-EXTERN ooH323EpCapability* ooIsAudioCapSupported
-   (ooCallData *call, H245AudioCapability* audioCap, int dir);
+ooH323EpCapability* ooIsAudioCapSupported
+                (ooCallData *call, H245AudioCapability* audioCap, int dir);
+
 
 /**
- * This function is used to compare two audio capabilities for a match.
- * @param call     Handle to the call for which comparison is being carried out.
- * @param cap1     First capability to be compared.
- * @param cap2     Second capability to be compared.
+ * This function is used to determine a capability match
+ * @param cap       Local capability to be matched.
+ * @param audioCap  Remote capability to be matched.
+ * @param dir       Direction for local capability.
  *
- * @return         1, on match. 0. otherwise.
+ * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCompareAudioCaps
-   (ooCallData *call, H245AudioCapability * cap1, H245AudioCapability *cap2);
+int ooCompareAudioCaps(int cap, H245AudioCapability * audioCap, int dir);
 
 /**
- * This function is used to compare two G711 audio capabilities for a match.
- * @param cap1     First G711 capability to be compared.
- * @param cap2     Second G711 capability to be compared.
+ * This function is used to determine a ulaw capability match
+ * @param cap       Local capability to be matched.
+ * @param audioCap  Remote capability to be matched.
+ * @param dir       Direction for local capability.
  *
- * @return         1, on match. 0. otherwise.
+ * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCompareG711Caps(H245AudioCapability * cap1, H245AudioCapability *cap2);
+int ooCompareUlawCaps(int cap, H245AudioCapability* audioCap, int dir);
 
 /**
- * This function is used to compare two GSM audio capabilities for a match.
- * @param cap1     First GSM capability to be compared.
- * @param cap2     Second GSM capability to be compared.
+ * This function is used to determine a Alaw capability match
+ * @param cap       Local capability to be matched.
+ * @param audioCap  Remote capability to be matched.
+ * @param dir       Direction for local capability.
  *
- * @return         1, on match. 0. otherwise.
+ * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCompareGSMCaps(H245AudioCapability *cap1, H245AudioCapability *cap2);
+int ooCompareAlawCaps(int cap, H245AudioCapability* audioCap, int dir);
 
 /**
- * Checks whether a particular datatype is supported by the end point.
- * @param call     Handle to the call
- * @param data     Pointer to the data type
- * @param dir      Direction in which support is required.
+ * This function is used to determine whether a particular datatype
+ * can be supported by the endpoint.
+ * @param call       Handle to the call.
+ * @param data       Handle to the data type.
+ * @param dir        Direction in which support is desired.
  *
- * @return         Pointer to the matching capability, if supported, else NULL.
+ * @return          Handle to the capability which supports 'data', Null
+ *                  if none found
  */
-EXTERN ooH323EpCapability* ooIsDataTypeSupported(ooCallData *call,
-                                                 H245DataType *data, int dir);
-
-/**
- * Checks whether a particular audio datatype is supported by the end point.
- * @param call      Handle to the call
- * @param audioData Pointer to the audio data type
- * @param dir       Direction in which support is required.
- *
- * @return          Pointer to the matching capability, if supported, else NULL.
- */
-EXTERN ooH323EpCapability* ooIsAudioDataTypeSupported(ooCallData* call,
-                                    H245AudioCapability* audioData, int dir);
-
-EXTERN ooH323EpCapability* ooIsNonStandardDataTypeSupported(ooCallData* call,
-                               H245NonStandardParameter *nonStandard, int dir);
-
-EXTERN ooH323EpCapability* ooIsVideoDataTypeSupported(ooCallData* call,
-                                    H245VideoCapability* videoData, int dir);
-
-EXTERN ooH323EpCapability* ooIsApplicationDataTypeSupported(ooCallData* call,
-                                 H245DataApplicationCapability *data, int dir);
-
-EXTERN ooH323EpCapability* ooIsEncryptedDataTypeSupported(ooCallData* call,
-                                  H245EncryptionMode *encryptionData, int dir);
-
-EXTERN ooH323EpCapability* ooIsH235ControlDataTypeSupported(ooCallData* call,
-                               H245NonStandardParameter *h235Control, int dir);
-
-EXTERN ooH323EpCapability* ooIsH235MediaDataTypeSupported(ooCallData* call,
-                                        H245H235Media *h235Media, int dir);
-
-EXTERN ooH323EpCapability* ooIsMultiplexedStreamDataTypeSupported
-       (ooCallData* call, H245MultiplexedStreamParameter *multiplexedStream,
-        int dir);
-
+ooH323EpCapability* ooIsDataTypeSupported
+                           (ooCallData *call, H245DataType *data, int dir);
 /**
  * @}
  */

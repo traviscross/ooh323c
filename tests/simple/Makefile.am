@@ -1,7 +1,7 @@
 CFLAGS= @OOH323CFLAGS@
 noinst_PROGRAMS = simple
-simple_SOURCES = simple.c
-INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323 -I$(top_builddir)/src/h450
+simple_SOURCES = simple.c oosndrtp.c oosndrtp.h
+INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
 simple_LDADD = -loostk -ldl -lpthread
 simple_LDFLAGS = -L$(top_builddir)/src
 

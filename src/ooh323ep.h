@@ -126,23 +126,25 @@ EXTERN int ooSetAliasTransportID(char * ipaddress);
  *                              message is sent.
  * @param onIncomingCall        Callback function to be called when a new
  *                              incoming call is accepted.
+ * @param onOutgoingCallAdmitted Callback function to be called when a
+ *                                outgoing call is admitted by gk.
+ *
  * @param onOutgoingCall        Callback function to be called when an outgoing
  *                              call is placed on behalf of the application.
  * @param onCallEstablished     Callback function to be called when a call is
  *                              established with the remote end point.
  * @param onCallCleared         Callback function to be called when a call is
  *                              cleared.
- * @param onStartLogicalChannel Callback function to be called when a logical
- *                              channel is started.
+ *                             
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
                               cb_OnIncomingCall onIncomingCall,
+                              cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted,
                               cb_OnOutgoingCall onOutgoingCall,
                               cb_OnCallEstablished onCallEstablished,
-                              cb_OnCallCleared onCallCleared,
-                              cb_OnStartLogicalChannel onStartLogicalChannel);
+                              cb_OnCallCleared onCallCleared);
 
 /**
  * This function is the last function to be invoked after done using the

@@ -102,7 +102,7 @@
 */
 #define OOTERMTYPE 60
 
-#define MAXLOGMSGLEN 1024
+#define MAXLOGMSGLEN 2048
 /**
    Various message types for H225 and H245 messages
 */
@@ -251,9 +251,8 @@ struct ooH323EpCapability;
 
 /* Store local and remote media endpoint info, for media type */
 typedef struct ooMediaInfo{
-   char  dir[15]; /* tx/rx/tx&rx*/
-   char  mediaType[10]; /* audio/video/data*/
-   int   capType;
+   char  dir[15]; /* transmit/receive*/
+   int   cap;
    int   lMediaPort;
    int   lMediaCntrlPort;
    char  lMediaIP[20];
@@ -304,7 +303,7 @@ typedef struct ooCallData {
    int                  h245SessionState;
    int                  isTunnelingActive;
    int                  isFastStartActive; /***TODO - Need to update this field */
-  
+   int                  gkEngaged;  
    ooMediaInfo          *mediaInfo;
    char                 localIP[20];/* Local IP address */
    OOSOCKET             *h225Channel;/* The h225 channel socket if the channel
@@ -363,12 +362,14 @@ typedef int (*cb_StopTransmitChannel)(ooCallData *call, ooLogicalChannel *pChann
  * capability
  */
 typedef struct ooH323EpCapability{
-   int t;
-   void *cap;
+   int dir;
+   int cap;
+   int capType;
    cb_StartReceiveChannel startReceiveChannel;
    cb_StartTransmitChannel startTransmitChannel;
    cb_StopReceiveChannel stopReceiveChannel;
    cb_StopTransmitChannel stopTransmitChannel;
+   struct ooH323EpCapability *next;
 }ooH323EpCapability;
 
 typedef int (*cb_OnAlerting)(ooCallData * call);
@@ -377,7 +378,7 @@ typedef int (*cb_OnOutgoingCall)(ooCallData* call );
 typedef int (*cb_OnCallAnswered)(ooCallData* call);
 typedef int (*cb_OnCallCleared)(ooCallData* call );
 typedef int (*cb_OnCallEstablished)(ooCallData* call );
-typedef int (*cb_OnStartLogicalChannel)(ooCallData* call );
+typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 
 /** Structure to store all the config information related to the
  * endpoint created by an application */
@@ -406,15 +407,17 @@ typedef struct ooEndPoint{
    OOSOCKET *stackSocket;
    ooAliases *aliases;
    int callType;
-   DList audioCaps;
-   DList dataApplicationCaps;
-   DList videoCaps;
+  //   DList audioCaps;
+  //  DList dataApplicationCaps;
+  //  DList videoCaps;
+   ooH323EpCapability *myCaps;
+   int noOfCaps;
    cb_OnAlerting onAlerting;
    cb_OnIncomingCall onIncomingCall;
    cb_OnOutgoingCall onOutgoingCall;
    cb_OnCallEstablished onCallEstablished;
    cb_OnCallCleared onCallCleared;
-   cb_OnStartLogicalChannel onStartLogicalChannel;
+   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
    char signallingIP[20];
    int listenPort;
    OOSOCKET *listener;

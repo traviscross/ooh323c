@@ -16,12 +16,15 @@
 
 #include "ootypes.h"
 #include "oo.h"
+#include "ooCommon.h"
 #include "ooq931.h"
 #include "ooh245.h"
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+
+static OOUINT32 gs_traceLevel = TRACELVL;
 /**
  * Reasons for ending call
  */
@@ -36,6 +39,7 @@ static char * messages[] = {
 
 static char* callStates[] = {
    "OO_CALL_CREATED",
+   "OO_CALL_WAITING_ADMISSION",
    "OO_CALL_CONNECTING",
    "OO_CALL_CONNECTED",
    "OO_CALL_CLEAR",
@@ -83,21 +87,35 @@ char * ooGetText(int code)
 
    if(code >= OO_CALL_STATE_MIN &&
       code <= OO_CALL_STATE_MAX)
-      return callStates[code-OO_CALL_STATE_MAX];
+      return callStates[code-OO_CALL_STATE_MIN];
 
    if(code >= OO_MSGTYPE_MIN &&
       code <= OO_MSGTYPE_MAX)
-      return msgTypes[code-OO_MSGTYPE_MAX];
+      return msgTypes[code-OO_MSGTYPE_MIN];
 
    return "unknown";
 }
 
 
-void ooTrace( const char * fmtspec, ...)
+void ooSetTraceThreshold(OOUINT32 traceLevel)
+{
+   gs_traceLevel = traceLevel;
+}
+void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...)
 {
    va_list arglist;
-   char timeString[100];
    char logMessage[MAXLOGMSGLEN];
+   if(traceLevel > gs_traceLevel) return;
+   va_start (arglist, fmtspec);
+   memset(logMessage, 0, MAXLOGMSGLEN);
+   vsprintf(logMessage, fmtspec, arglist);  
+   va_end(arglist);
+   ooTraceLogMessage(logMessage);
+}
+
+void ooTraceLogMessage(const char * logMessage)
+{
+   char timeString[100];
    char currtime[3];
    static int lasttime=25;
    int printDate =0;
@@ -126,10 +144,6 @@ void ooTrace( const char * fmtspec, ...)
    lasttime = atoi(currtime);  
 #endif
 
-   va_start (arglist, fmtspec);
-   memset(logMessage, 0, MAXLOGMSGLEN);
-   vsprintf(logMessage, fmtspec, arglist);
-  
      
 #ifdef _WIN32
    if(printDate)
@@ -167,7 +181,6 @@ void ooTrace( const char * fmtspec, ...)
    else
       printTime = 0;
 
-   va_end(arglist);
 }
 
 int ooLogAsn1Error(int stat, const char * fname, int lno)

@@ -81,6 +81,7 @@ typedef struct RasCallAdmissionInfo
    ASN1USINT irrFrequency;
 } RasCallAdmissionInfo;
 
+static int giRasInitialized=0;
 static OOCTXT gsRASCTXT;
 static OOSOCKET gRASSocket=0;
 static gLocalRASPort = 0;
@@ -143,6 +144,13 @@ static int ooRasSendGRQ();
 
 
 
+int ooDestroyRas()
+{
+   if(giRasInitialized)
+      freeContext(&gsRASCTXT);
+   giRasInitialized = 0;
+   return OO_OK;
+}
 /**
  * RAS module startup stuff.
  */
@@ -151,6 +159,7 @@ int ooInitRas(int localRasPort, enum RasGatekeeperMode eGkMode,
 {
    int iRet;
    initContext(&(gsRASCTXT));
+   giRasInitialized = 1;
    geRasStatus=RasIdle;
    guiRRQRetries=0;
    memset((void*)&sGatekeeperId, 0, sizeof(H225GatekeeperIdentifier));
@@ -658,6 +667,7 @@ int ooRasReceive()
    rtAddEventHandler (psContext, &printHandler);
    if ( ASN_OK== asn1PD_H225RasMessage( psContext, &psRasMsg->sMessage ) )
    {
+      rtRemoveEventHandler(psContext, &printHandler);
       iRet=ooRasManageMessage( psRasMsg );
       if(iRet != OO_OK)
       {
@@ -666,6 +676,7 @@ int ooRasReceive()
    }
    else{
       OOTRACEERR1("ERROR:Failed to decode receive RAS message\n");
+      rtRemoveEventHandler(psContext, &printHandler);
       freeContext(psContext);
       ASN1CRTFREE0(psContext);
       return OO_FAILED;
@@ -1531,14 +1542,14 @@ static int ooRasManageAdmissionConfirm( H225AdmissionConfirm *psAdmissionConfirm
             OOTRACEERR1("Error:Destination Call Signal Address provided by"
                         "Gatekeeper is not an IPv4 address\n");
             return OO_FAILED;
-                 }
+         }
          ipAddress = psAdmissionConfirm->destCallSignalAddress.u.ipAddress;
          sprintf(psCallAdmInfo->call->remoteIP, "%d.%d.%d.%d", ipAddress->ip.data[0],
                                                 ipAddress->ip.data[1],
                                                 ipAddress->ip.data[2],
                                                 ipAddress->ip.data[3]);
          psCallAdmInfo->call->remotePort = ipAddress->port;
-        
+         psCallAdmInfo->call->gkEngaged = 1;        
          ooH323CallAdmitted( psCallAdmInfo->call);
          dListRemove( &gsCallsPendingList, psNode );
          dListAppend(&gsRASCTXT, &gsCallsAdmittedList, psNode->data);
@@ -1575,6 +1586,12 @@ int ooRasSendDisengageRequest(ooCallData *call)
    DListNode *psNode = NULL;
    H225DisengageRequest * psDRQ = NULL;
    RasCallAdmissionInfo* psCallAdmInfo=NULL;
+   if(!call->gkEngaged)
+   {
+      OOTRACEDBGC3("No need to send Disengage request as gatekeeper is not "
+                   "engaged. (%s, %s)\n", call->callType, call->callToken);
+      return OO_OK;
+   }
    if(!ooRasIsRegistered())
    {
       OOTRACEERR1("Error:Disengage can't be sent as endpoint is not"
@@ -1673,7 +1690,7 @@ int ooRasSendDisengageRequest(ooCallData *call)
       OOTRACEERR1("Error: Failed to send DRQ message\n");
    }
   
-  
+   call->gkEngaged = 0; 
    /* Search call in admitted calls list */
    psNode=(DListNode*)gsCallsAdmittedList.head;
    for( uiAux=0 ; uiAux<gsCallsPendingList.count ; uiAux++ )

@@ -457,14 +457,14 @@ int ooDecodeUUIE(Q931Message *q931Msg)
    memset(q931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
 
    setPERBuffer (q931Msg->pctxt, ie->data, ie->length, aligned);
-  
+   OOTRACEDBGC2("Decoding UUIE - ie length %d\n", ie->length);
    stat = asn1PD_H225H323_UserInformation (q931Msg->pctxt, q931Msg->userInfo);
    if(stat != ASN_OK)
    {
       OOTRACEERR1("Error: UserUser IE decode failed\n");
       return OO_FAILED;
    }
-  
+   OOTRACEDBGC1("UUIE decode successful\n");
    return OO_OK;
 }
 
@@ -922,7 +922,6 @@ int ooSendConnect(ooCallData *call)
 int ooAcceptCall(ooCallData *call)
 {
    int ret = 0, i=0, j=0, remoteRtpPort=0;
-   /*char localip[20], hexip[20];*/
    char hexip[20];
    int addr_part1, addr_part2, addr_part3, addr_part4;
    H225Connect_UUIE *connect;
@@ -956,7 +955,7 @@ int ooAcceptCall(ooCallData *call)
    }  
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = FALSE;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
                      T_H225H323_UU_PDU_h323_message_body_connect;
   
@@ -977,7 +976,8 @@ int ooAcceptCall(ooCallData *call)
   
     /* Add h245 listener address. Do not add H245 listener address in case
        of fast-start. */
-   if(!gH323ep.fastStart || call->remoteFastStartOLCs.count == 0)
+   if((!gH323ep.fastStart || call->remoteFastStartOLCs.count == 0)&&
+      !call->isTunnelingActive)
    {
       ooCreateH245Listener(call); /* First create an H.245 listener */
       connect->m.h245AddressPresent = 1;
@@ -1252,6 +1252,8 @@ int ooH323CallAdmitted(ooCallData *call)
 
    if(!strcmp(call->callType, "outgoing"))
    {
+      if(gH323ep.onOutgoingCallAdmitted)
+         gH323ep.onOutgoingCallAdmitted(call);
       ret = ooCreateH225Connection(call);
       if(ret != OO_OK)
       {
@@ -1260,6 +1262,7 @@ int ooH323CallAdmitted(ooCallData *call)
          ooCleanCall(call);
          return OO_FAILED;
       }
+     
       ret = ooH323MakeCall_helper(call);
    } else { /* An incoming call */
       if(gH323ep.onIncomingCall)
@@ -1274,7 +1277,7 @@ int ooH323CallAdmitted(ooCallData *call)
 
 int ooH323MakeCall_helper(ooCallData *call)
 {
-   int ret=0,i;
+   int ret=0,i=0;
    Q931Message *q931msg = NULL;
    H225Setup_UUIE *setup;
 
@@ -1413,26 +1416,13 @@ int ooH323MakeCall_helper(ooCallData *call)
    }
    else{
       setup->m.fastStartPresent = TRUE;
-      pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt, gH323ep.audioCaps.count*
+      pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt, gH323ep.noOfCaps*
                                        sizeof(ASN1DynOctStr));
-      for(i=0; i<(int) gH323ep.audioCaps.count; i++)
+
+      epCap = gH323ep.myCaps;
+      i=0;
+      while(epCap)
       {
-         /* Retrieve local capability */
-         curNode = dListFindByIndex (&gH323ep.audioCaps, i) ;
-         if(!curNode)
-         {
-            OOTRACEERR3("ERROR: Failed to get handle of capability (%s, %s)\n",
-                        call->callType, call->callToken);
-            freeContext(pctxt);
-            ASN1CRTFREE0(pctxt);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_HOST_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
-         }
-         epCap = (ooH323EpCapability*)curNode->data;
          olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
                                                sizeof(H245OpenLogicalChannel));
          if(!olc)
@@ -1471,6 +1461,9 @@ int ooH323MakeCall_helper(ooCallData *call)
          }
          pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
          olc = NULL;
+         epCap = epCap->next;
+         i++;
+         OOTRACEINFO2("Added fs element %d\n", i);
       }
       OOTRACEINFO4("Added %d fast start elements to SETUP message (%s, %s)\n",
                    i, call->callType, call->callToken);
@@ -1505,7 +1498,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.setup = setup;
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
   
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = gH323ep.h245Tunneling;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = call->isTunnelingActive;
    /* For H.323 version 4 and higher, if fast connect, tunneling should be
       supported.
    */
