@@ -22,6 +22,9 @@
 /** Global endpoint structure */
 ooEndPoint gH323ep;
 
+extern DList g_TimerList;
+
+
 /* Initialize the application context within stack */
 int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
                         int fastStart, int termType, int t35CountryCode,
@@ -166,7 +169,9 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    pthread_mutex_init(&gCallRefMutex, 0);
 #endif
    dListInit(&gCmdList);
-   ooInitTimerList();
+
+   dListInit(&g_TimerList);/* This is for test application chansetup only*/
+
    initContext(&gCtxt);
    gCallTokenBase = 1;
    gCallTokenMax = 1000;

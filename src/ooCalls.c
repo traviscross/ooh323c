@@ -102,7 +102,8 @@ int ooEndCall(ooCallData *call)
       {
          /*TODO: Do we want to send closeChannel for channels opened
                  by faststart*/
-         if(call->isTunnelingActive || call->pH245Channel)
+         if((call->isTunnelingActive || call->pH245Channel) &&
+            !call->isFastStartActive)
          {
             OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
                        call->callType, call->callToken);

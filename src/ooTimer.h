@@ -40,9 +40,6 @@ typedef struct _OOTimer {
 extern "C" {
 #endif
 
-
-void ooInitTimerList();
-
 /**
  * This function computes the relative expiration time from the current
  * time for the given timer object.
@@ -61,15 +58,16 @@ EXTERN void ooTimerComputeExpireTime (OOTimer* pTimer);
  * @return             Pointer to created timer object.
  */
 EXTERN OOTimer* ooTimerCreate
-(OOCTXT* pctxt, OOTimerCbFunc cb, OOUINT32 deltaSecs, void *data,
+(OOCTXT* pctxt, DList *pList, OOTimerCbFunc cb, OOUINT32 deltaSecs, void *data,
  OOBOOL reRegister);
 
 /**
  * This function deletes the given timer object.
  *
  * @param pTimer       Pointer to timer object.
+ * @param pList        timer list to operate on
  */
-EXTERN void ooTimerDelete (OOCTXT* pctxt, OOTimer* pTimer);
+EXTERN void ooTimerDelete (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 
 /**
  * This function checks a timer to determine if it is expired.
@@ -83,7 +81,7 @@ EXTERN OOBOOL ooTimerExpired (OOTimer* pTimer);
  * This function loops through the global timer list and fires all
  * expired timers by calling the registered callback functions.
  */
-EXTERN void ooTimerFireExpired (OOCTXT* pctxt);
+EXTERN void ooTimerFireExpired (OOCTXT* pctxt, DList* pList);
 
 /**
  * This function inserts the given timer object into the correct
@@ -92,7 +90,7 @@ EXTERN void ooTimerFireExpired (OOCTXT* pctxt);
  * @param pTimer       Pointer to timer object.
  * @return             Index to position where inserted in list.
  */
-EXTERN int ooTimerInsertEntry (OOCTXT* pctxt, OOTimer* pTimer);
+EXTERN int ooTimerInsertEntry (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 
 /**
  * This function calculates the relative time from the current time
@@ -101,7 +99,7 @@ EXTERN int ooTimerInsertEntry (OOCTXT* pctxt, OOTimer* pTimer);
  * @param ptimeout      timeval structure to receive timeout value.
  * @return              ptimeout
  */
-EXTERN struct timeval* ooTimerNextTimeout (struct timeval* ptimeout);
+EXTERN struct timeval* ooTimerNextTimeout (DList* pList, struct timeval* ptimeout);
 
 /**
  * This function resets the given timer object if its reregister flag
@@ -109,7 +107,7 @@ EXTERN struct timeval* ooTimerNextTimeout (struct timeval* ptimeout);
  *
  * @param pTimer       Pointer to timer object.
  */
-EXTERN void ooTimerReset (OOCTXT* pctxt, OOTimer* pTimer);
+EXTERN void ooTimerReset (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 
 #ifdef __cplusplus
 }

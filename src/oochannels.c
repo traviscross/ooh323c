@@ -29,6 +29,9 @@
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
+extern DList g_TimerList;
+
+
 int ooCreateH245Listener(ooCallData *call)
 {
    int ret=0;
@@ -497,8 +500,12 @@ int ooMonitorChannels()
          OOTRACEERR1("Error in select ...exiting\n");
          exit(-1);
       }
-      /* Check expired timers and call callbacks */
-      ooTimerFireExpired(&gH323ep.ctxt);
+
+      /*This is for test application. Not part of actual stack */
+
+      ooTimerFireExpired(&gH323ep.ctxt, &g_TimerList);
+
+
 #ifdef _WIN32
       EnterCriticalSection(&gCmdMutex);
 #else

@@ -416,8 +416,9 @@ int ooSendTermCapMsg(ooCallData *call)
 ASN1UINT ooGenerateStatusDeterminationNumber()
 {
    ASN1UINT statusDeterminationNumber;
+   ASN1UINT random_factor = (ASN1UINT)rand();
 
-   srand((unsigned)time( NULL ) );
+   srand((unsigned)time( NULL )+random_factor );
    statusDeterminationNumber = rand()%16777215;
    return statusDeterminationNumber;
 }

@@ -51,10 +51,11 @@ static char USAGE[]={
 };
 
 static int gCalls=0;
-static int gDuration = 100; /*millisec*/
+static int gDuration = 5; /*sec*/
 static int gInterval = 0; /* 0 interval means let previous call finish */
 static char gDest[256];
 static int gCallCounter=0;
+
 
 int main (int argc, char** argv)
 {
@@ -180,9 +181,9 @@ int main (int argc, char** argv)
       {
          token = (char*)malloc(strlen(callToken)+1);
          strcpy(token, callToken);
-         pTimer =  ooTimerCreate(&gH323ep.ctxt, callIntervalTimerExpired,
+         pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,
                                   gInterval, token, FALSE);
-         ooTimerInsertEntry (&gH323ep.ctxt, pTimer);     
+
       }
    }
 
@@ -201,8 +202,8 @@ int main (int argc, char** argv)
 
 static int startReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf ("Starting receive channel at %s:%d\n",
-           call->localIP, pChannel->localRtpPort);
+   printf ("Starting receive channel at %s:%d - %s\n",
+           call->localIP, pChannel->localRtpPort, call->callToken);
 
    /* TODO: user would add application specific logic here to start     */
    /* the media receive channel..                                       */
@@ -216,13 +217,16 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
    OOTimer* timer = NULL;
    char *token=NULL;
-   printf ("Starting transmit channel to %s:%d\n",
-           call->remoteIP, pChannel->remoteRtpPort);
-   token = (char*)malloc(strlen(call->callToken)+1);
-   strcpy(token, call->callToken);
-   timer =  ooTimerCreate(&gH323ep.ctxt, callDurationTimerExpired, gDuration,
+   printf ("Starting transmit channel to %s:%d - %s\n",
+           call->remoteIP, pChannel->remoteRtpPort, call->callToken);
+   if(gCalls != 0)
+   {
+      token = (char*)malloc(strlen(call->callToken)+1);
+      strcpy(token, call->callToken);
+      timer =  ooTimerCreate(&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
                           token, FALSE);
-   ooTimerInsertEntry (&gH323ep.ctxt, timer);
+
+   }
    /* TODO: user would add application specific logic here to start     */
    /* the media transmit channel..                                      */
 
@@ -233,7 +237,7 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
 
 static int stopReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf ("Stopping receive channel\n");
+   printf ("Stopping receive channel - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to stop      */
    /* the media receive channel..                                       */
@@ -245,7 +249,7 @@ static int stopReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel)
 
 static int stopTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf ("Stopping transmit channel\n");
+   printf ("Stopping transmit channel - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to stop      */
    /* the media transmit channel..                                      */
@@ -257,7 +261,7 @@ static int stopTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
 
 static int onAlerting (ooCallData* call)
 {
-   printf ("Received H.225 alerting message\n");
+   printf ("onAlerting - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to handle    */
    /* an H.225 alerting message..                                       */
@@ -269,7 +273,7 @@ static int onAlerting (ooCallData* call)
 
 static int onIncomingCall (ooCallData* call)
 {
-   printf ("Received incoming call request\n");
+   printf ("onIncomingCall - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to handle    */
    /* an incoming call request..                                        */
@@ -281,7 +285,7 @@ static int onIncomingCall (ooCallData* call)
 
 static int onOutgoingCallAdmitted (ooCallData* call)
 {
-   printf ("Received outgoing call admitted\n");
+   printf ("onOutgoingCallAdmitted - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to handle    */
    /* outgoing call admitted..                                          */
@@ -294,7 +298,7 @@ static int onOutgoingCallAdmitted (ooCallData* call)
 static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
-   printf ("Received call cleared\n");
+   printf ("onCallCleared - %s\n", call->callToken);
    if(gInterval == 0 && gCallCounter <gCalls){
       ooMakeCall(gDest, callToken);
       gCallCounter++;
@@ -309,6 +313,7 @@ static int onCallCleared (ooCallData* call)
 
 static int callDurationTimerExpired (OOTimer* ptimer, void *pdata)
 {
+   printf("callDurationTimerExpired - %s\n", (char*)pdata);
    ooHangCall((char*)pdata);
    free(pdata);
    return OO_OK;
@@ -319,15 +324,15 @@ static int callIntervalTimerExpired(OOTimer* ptimer, void *pdata)
    char callToken[20];
    char *token=NULL;
    OOTimer* pTimer = NULL;
+   printf("callIntervalTimerExpired\n");
    memset(callToken, 0, sizeof(callToken));
    if(gCallCounter < gCalls)
    {
       ooMakeCall(gDest, callToken); /* Make call */
       token = (char*)malloc(strlen(callToken)+1);
       strcpy(token, callToken);
-      pTimer =  ooTimerCreate(&gH323ep.ctxt, callIntervalTimerExpired,
+      pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,
                                gInterval, token, FALSE);
-      ooTimerInsertEntry (&gH323ep.ctxt, pTimer);     
       gCallCounter++;
    }
 

@@ -25,18 +25,14 @@
 #define MICROSEC USECS_IN_SECS
 #endif
 
-/*
- * Global timer list (list of OOTimer*)
+/**
+ * This is a timer list used by test application chansetup only.
  */
-static DList gs_TimerList;
 
-void ooInitTimerList()
-{
-   dListInit(&gs_TimerList);
-}
+DList g_TimerList;
 
 OOTimer* ooTimerCreate
-(OOCTXT* pctxt, OOTimerCbFunc cb, OOUINT32 deltaSecs, void *data,
+(OOCTXT* pctxt, DList *pList, OOTimerCbFunc cb, OOUINT32 deltaSecs, void *data,
  OOBOOL reRegister)
 {
    OOTimer* pTimer = (OOTimer*) memAlloc (pctxt, sizeof(OOTimer));
@@ -54,8 +50,10 @@ OOTimer* ooTimerCreate
    ooTimerComputeExpireTime (pTimer);
 
    /* Insert this timer into the complete list */
-
-   ooTimerInsertEntry (pctxt, pTimer);
+   if(pList)
+      ooTimerInsertEntry (pctxt, pList, pTimer);
+   else
+      ooTimerInsertEntry (pctxt, &g_TimerList, pTimer);
 
    return pTimer;
 }
@@ -76,9 +74,9 @@ void ooTimerComputeExpireTime (OOTimer* pTimer)
    }
 }
 
-void ooTimerDelete (OOCTXT* pctxt, OOTimer* pTimer)
+void ooTimerDelete (OOCTXT* pctxt, DList *pList, OOTimer* pTimer)
 {
-   dListFindAndRemove (&gs_TimerList, pTimer);
+   dListFindAndRemove (pList, pTimer);
    memFreePtr (pctxt, pTimer);
 }
 
@@ -97,38 +95,38 @@ OOBOOL ooTimerExpired (OOTimer* pTimer)
    return FALSE;
 }
 
-void ooTimerFireExpired (OOCTXT* pctxt)
+void ooTimerFireExpired (OOCTXT* pctxt, DList *pList)
 {
    OOTimer* pTimer;
    int stat;
 
-   while (gs_TimerList.count > 0) {
-      pTimer = (OOTimer*) gs_TimerList.head->data;
+   while (pList->count > 0) {
+      pTimer = (OOTimer*) pList->head->data;
 
       if (ooTimerExpired (pTimer)) {
-        OOTRACEDBGC1("TEST -Found expired timer\n");
+         OOTRACEINFO1("TEST -Found expired timer\n");
          /*
           * Re-register before calling callback function in case it is
           * a long duration callback.                                  
           */
-         if (pTimer->reRegister) ooTimerReset (pctxt, pTimer);
+         if (pTimer->reRegister) ooTimerReset (pctxt, pList, pTimer);
 
          stat = (*pTimer->timeoutCB)(pTimer, pTimer->cbData);
 
          if (0 != stat || !pTimer->reRegister) {
-            ooTimerDelete (pctxt, pTimer);
+            ooTimerDelete (pctxt, pList, pTimer);
          }
       }
       else break;
    }
 }
 
-int ooTimerInsertEntry (OOCTXT* pctxt, OOTimer* pTimer)
+int ooTimerInsertEntry (OOCTXT* pctxt, DList *pList, OOTimer* pTimer)
 {  DListNode* pNode;
    OOTimer* p;
    int i = 0;
 
-   for (pNode = gs_TimerList.head; pNode != 0; pNode = pNode->next) {
+   for (pNode = pList->head; pNode != 0; pNode = pNode->next) {
       p = (OOTimer*) pNode->data;
       if (pTimer->expireTime.tv_sec  <  p->expireTime.tv_sec) break;
       if (pTimer->expireTime.tv_sec  == p->expireTime.tv_sec &&
@@ -136,18 +134,18 @@ int ooTimerInsertEntry (OOCTXT* pctxt, OOTimer* pTimer)
       i++;
    }
 
-   dListInsertBefore (pctxt, &gs_TimerList, pNode, pTimer);
+   dListInsertBefore (pctxt, pList, pNode, pTimer);
 
    return i;
 }
 
-struct timeval* ooTimerNextTimeout (struct timeval* ptimeout)
+struct timeval* ooTimerNextTimeout (DList *pList, struct timeval* ptimeout)
 {
    OOTimer* ptimer;
    struct timeval tvstr;
 
-   if (gs_TimerList.count == 0) return 0;
-   ptimer = (OOTimer*) gs_TimerList.head->data;
+   if (pList->count == 0) return 0;
+   ptimer = (OOTimer*) pList->head->data;
 
    ooGetTimeOfDay (&tvstr, 0);
 
@@ -172,13 +170,13 @@ struct timeval* ooTimerNextTimeout (struct timeval* ptimeout)
  * the current pointer in the timer list to the next element to be
  * processed..
  */
-void ooTimerReset (OOCTXT* pctxt, OOTimer* pTimer)
+void ooTimerReset (OOCTXT* pctxt, DList *pList, OOTimer* pTimer)
 {
    if (pTimer->reRegister) {
-      dListFindAndRemove (&gs_TimerList, pTimer);
+      dListFindAndRemove (pList, pTimer);
       ooTimerComputeExpireTime (pTimer);
-      ooTimerInsertEntry (pctxt, pTimer);
+      ooTimerInsertEntry (pctxt, pList, pTimer);
    }
    else
-      ooTimerDelete (pctxt, pTimer);
+      ooTimerDelete (pctxt, pList, pTimer);
 }
