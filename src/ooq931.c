@@ -633,14 +633,17 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
          return OO_FAILED;
       }
    }
-   len = i+1-4; /* complete message length */
+   //   len = i+1-4; /* complete message length */
+  
 
    /* Tpkt length octets populated with total length of the message */
    if(msgbuf[0] != OOFacility)
    {
+      len = i-1
       msgbuf[3] = (len >> 8);
       msgbuf[4] = len;        /* including tpkt header */
    }else{
+      len = i-4;
       msgbuf[6] = (len >> 8);
       msgbuf[7] = len;
    }
