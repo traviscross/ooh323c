@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #include "ootypes.h"
-#include "oo.h"
+#include "ootrace.h"
 #include "ooCommon.h"
 #include "ooCapability.h"
 #include "ooq931.h"

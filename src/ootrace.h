@@ -15,13 +15,13 @@
  *****************************************************************************/
 
 /**
- * @file oo.h
+ * @file ootrace.h
  * This file defines the trace functionality
  */
 
 #include "ooCommon.h"
-#ifndef _OO_H_
-#define _OO_H_
+#ifndef _OOTRACE_H_
+#define _OOTRACE_H_
 
 
 /* tracing */
@@ -66,6 +66,7 @@
 #define OOTRACEINFO3(a,b,c)   ooTrace(OOTRCLVLINFO,a,b,c)
 #define OOTRACEINFO4(a,b,c,d) ooTrace(OOTRCLVLINFO,a,b,c,d)
 #define OOTRACEINFO5(a,b,c,d,e) ooTrace(OOTRCLVLINFO,a,b,c,d,e)
+#ifndef _COMPACT
 #define OOTRACEDBGA1(a)       ooTrace(OOTRCLVLDBGA,a)
 #define OOTRACEDBGA2(a,b)     ooTrace(OOTRCLVLDBGA,a,b)
 #define OOTRACEDBGA3(a,b,c)   ooTrace(OOTRCLVLDBGA,a,b,c)
@@ -80,6 +81,22 @@
 #define OOTRACEDBGC3(a,b,c)   ooTrace(OOTRCLVLDBGC,a,b,c)
 #define OOTRACEDBGC4(a,b,c,d) ooTrace(OOTRCLVLDBGC,a,b,c,d)
 #define OOTRACEDBGC5(a,b,c,d,e) ooTrace(OOTRCLVLDBGC,a,b,c,d,e)
+#else
+#define OOTRACEDBGA1(a)
+#define OOTRACEDBGA2(a,b)
+#define OOTRACEDBGA3(a,b,c)
+#define OOTRACEDBGA4(a,b,c,d)
+#define OOTRACEDBGA5(a,b,c,d,e)
+#define OOTRACEDBGB1(a)
+#define OOTRACEDBGB2(a,b)
+#define OOTRACEDBGB3(a,b,c)
+#define OOTRACEDBGB4(a,b,c,d)
+#define OOTRACEDBGC1(a)
+#define OOTRACEDBGC2(a,b)
+#define OOTRACEDBGC3(a,b,c)
+#define OOTRACEDBGC4(a,b,c,d)
+#define OOTRACEDBGC5(a,b,c,d,e)
+#endif
 
 #ifdef __cplusplus
 extern "C" {
