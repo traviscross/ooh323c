@@ -22,6 +22,77 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * Reasons for ending call
+ */
+static char * messages[] = {
+   "Reason unknown",
+   "Remote endpoint closed H.225 TCP connection",
+   "Remote endpoint closed H.245 TCP connection",
+   "Remote Ended call",
+   "Local host ended call",
+   "Normal End of Call"
+};
+
+static char* callStates[] = {
+   "OO_CALL_CREATED",
+   "OO_CALL_CONNECTING",
+   "OO_CALL_CONNECTED",
+   "OO_CALL_CLEAR",
+   "OO_CALL_CLEAR_CLOLCS",
+   "OO_CALL_CLEAR_CLELCS",
+   "OO_CALL_CLEAR_ENDSESSION",
+   "OO_CALL_CLEAR_CLOSEH245",
+   "OO_CALL_CLEAR_RELEASE",
+   "OO_CALL_CLEARED"
+};
+
+static char *msgTypes[]={
+   "OOQ931MSG",
+   "OOH245MSG",
+   "OOSetup",
+   "OOCallProceeding",
+   "OOAlert",
+   "OOConnect",
+   "OOReleaseComplete",
+   "OOFacility",
+   "OOMasterSlaveDetermination",
+   "OOMasterSlaveAck",
+   "OOMasterSlaveReject",
+   "OOMasterSlaveRelease",
+   "OOTerminalCapabilitySet",
+   "OOTerminalCapabilitySetAck",
+   "OOTerminalCapabilitySetReject",
+   "OOOpenLogicalChannel",
+   "OOOpenLogicalChannelAck",
+   "OOOpenLogicalChannelReject",
+   "OOOpenLogicalChannelRelease",
+   "OOEndSessionCommand",
+   "OOCloseLogicalChannel",
+   "OOCloseLogicalChannelAck",
+   "OORequestChannelClose",
+   "OORequestChannelCloseAck"
+};
+
+
+char * ooGetText(int code)
+{
+   if(code >= OO_CALL_ENDREASON_MIN &&
+      code <= OO_CALL_ENDREASON_MAX )
+      return messages[code-OO_CALL_ENDREASON_MIN];
+
+   if(code >= OO_CALL_STATE_MIN &&
+      code <= OO_CALL_STATE_MAX)
+      return callStates[code-OO_CALL_STATE_MAX];
+
+   if(code >= OO_MSGTYPE_MIN &&
+      code <= OO_MSGTYPE_MAX)
+      return msgTypes[code-OO_MSGTYPE_MAX];
+
+   return "unknown";
+}
+
+
 void ooTrace( const char * fmtspec, ...)
 {
    va_list arglist;

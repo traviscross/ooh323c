@@ -59,29 +59,20 @@
 #define OO_FASTSTART_REFUSED         18
 
 /** Call Clear Reasons */
+#define OO_CALL_ENDREASON_MIN            20
 #define OO_UNKNOWN                       20
 #define OO_REMOTE_CLOSED_CONNECTION      21
 #define OO_REMOTE_CLOSED_H245_CONNECTION 22
 #define OO_REMOTE_CLEARED                23
 #define OO_HOST_CLEARED                  24
 #define OO_NORMAL                        25
+#define OO_CALL_ENDREASON_MAX            25
 
-#define OO_TotalMessages  5
 
-/**
- * Reasons for ending call
- */
-static char * messages[] = {
-   "Reason unknown",
-   "Remote endpoint closed H.225 TCP connection",
-   "Remote endpoint closed H.245 TCP connection",
-   "Remote Ended call",
-   "Local host ended call",
-   "Normal End of Call"
-};
 
 
 /** call states */
+#define OO_CALL_STATE_MIN         50
 #define OO_CALL_CREATED           50
 #define OO_CALL_WAITING_ADMISSION 51    
 #define OO_CALL_CONNECTING        52
@@ -93,20 +84,9 @@ static char * messages[] = {
 #define OO_CALL_CLEAR_CLOSEH245   58 /* H245 sockets closed*/
 #define OO_CALL_CLEAR_RELEASE     59 /* Release Sent */
 #define OO_CALL_CLEARED           60 /* Call Cleared */
+#define OO_CALL_STATE_MAX         60
 
-#define CALL_STATE_BASE 50
-static char* callStates[] = {
-   "OO_CALL_CREATED",
-   "OO_CALL_CONNECTING",
-   "OO_CALL_CONNECTED",
-   "OO_CALL_CLEAR",
-   "OO_CALL_CLEAR_CLOLCS",
-   "OO_CALL_CLEAR_CLELCS",
-   "OO_CALL_CLEAR_ENDSESSION",
-   "OO_CALL_CLEAR_CLOSEH245",
-   "OO_CALL_CLEAR_RELEASE",
-   "OO_CALL_CLEARED"
-};
+
 
 /** H245 Session state */
 #define OO_H245SESSION_INACTIVE 61
@@ -126,6 +106,7 @@ static char* callStates[] = {
 /**
    Various message types for H225 and H245 messages
 */
+#define OO_MSGTYPE_MIN                101
 #define OOQ931MSG                     101
 #define OOH245MSG                     102
 #define OOSetup                       103
@@ -148,36 +129,10 @@ static char* callStates[] = {
 #define OOEndSessionCommand           120
 #define OOCloseLogicalChannel         121
 #define OOCloseLogicalChannelAck      122
-#define OORequestChannelClose  123
-#define OORequestChannelCloseAck 124
+#define OORequestChannelClose         123
+#define OORequestChannelCloseAck      124
+#define OO_MSGTYPE_MAX                125
 
-#define OO_MSGTYPE_BASE 101
-static char *msgTypes[]={
-   "OOQ931MSG",
-   "OOH245MSG",
-   "OOSetup",
-   "OOCallProceeding",
-   "OOAlert",
-   "OOConnect",
-   "OOReleaseComplete",
-   "OOFacility",
-   "OOMasterSlaveDetermination",
-   "OOMasterSlaveAck",
-   "OOMasterSlaveReject",
-   "OOMasterSlaveRelease",
-   "OOTerminalCapabilitySet",
-   "OOTerminalCapabilitySetAck",
-   "OOTerminalCapabilitySetReject",
-   "OOOpenLogicalChannel",
-   "OOOpenLogicalChannelAck",
-   "OOOpenLogicalChannelReject",
-   "OOOpenLogicalChannelRelease",
-   "OOEndSessionCommand",
-   "OOCloseLogicalChannel",
-   "OOCloseLogicalChannelAck",
-   "OORequestChannelClose",
-   "OORequestChannelCloseAck"
-};
 
 /**
   Default port ranges used

@@ -197,14 +197,16 @@ int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
 int ooCleanCall(ooCallData *call)
 {
    OOCTXT *pctxt;
-   int msg = call->callEndReason - 20;
+   //   int msg = call->callEndReason - 20;
 
-   if(msg >= 0 && msg < OO_TotalMessages)
+   /*   if(msg >= 0 && msg < OO_TotalMessages)
       OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
                    call->callType, call->callToken, messages[msg]);
    else
       OOTRACEWARN3("Cleaning Call (%s, %s)- reason:unknown\n",
-                   call->callType, call->callToken);
+      call->callType, call->callToken);*/
+   OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
+              call->callType, call->callToken, ooGetText(call->callEndReason));
 
    /* First close all the logical channels. */
    if(call->logicalChans)

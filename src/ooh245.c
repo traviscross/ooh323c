@@ -1947,7 +1947,7 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int len, int ms
    pQ931Msg = (Q931Message*)pNode->data;
   
    /* Print tunneling log message */  
-   OOTRACEINFO2("Adding %s H245 message to ", msgTypes[msgType-OO_MSGTYPE_BASE]);
+   OOTRACEINFO2("Adding %s H245 message to ", ooGetText(msgType));
    if(pQ931Msg->messageType == Q931SetupMsg)
    {
       OOTRACEINFO3("outgoing Setup message. (%s, %s)\n", call->callType,

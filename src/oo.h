@@ -86,6 +86,14 @@ extern "C" {
 
 
 /**
+ * This function is used to retireve the description text for a code.
+ * @param code     Code for which description is required.
+ *
+ * @return         The text description string.
+ */
+EXTERN char * ooGetText(int code);
+
+/**
  * This function is used to write the messages to the trace file.
  *
  * @param fmtspec   Printf style format spec.
