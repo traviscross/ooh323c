@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 1997-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -46,6 +46,7 @@ static LPFN_GETHOSTBYNAME gethostbyname;
 static LPFN_WSAGETLASTERROR  WSAGetLastError;
 static LPFN_WSACLEANUP WSACleanup;
 static LPFN_CLOSESOCKET closesocket;
+static LPFN_GETSOCKNAME getsockname;
 static HMODULE ws32 = 0;
 #define SEND_FLAGS     0
 #define SHUTDOWN_FLAGS SD_BOTH
@@ -131,6 +132,9 @@ int ooSocketsInit ()
   
    closesocket = (LPFN_CLOSESOCKET) GetProcAddress (ws32, "closesocket");
    if (closesocket == NULL) return ASN_E_NOTINIT;
+
+   getsockname = (LPFN_GETSOCKNAME) GetProcAddress (ws32, "getsockname");
+   if (getsockname == NULL) return ASN_E_NOTINIT;
   
    sendto = (LPFN_SENDTO) GetProcAddress (ws32, "sendto");
    if (sendto == NULL) return ASN_E_NOTINIT;
@@ -173,6 +177,7 @@ typedef size_t OOSOCKLEN;
 int ooSocketCreate (OOSOCKET* psocket)
 {
    int on;
+
    struct linger linger;
    OOSOCKET sock = socket (AF_INET,
                              SOCK_STREAM,
@@ -244,6 +249,18 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
    return ASN_OK;
 }
 
+#ifdef _WIN32
+int ooGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
+{
+   int ret;
+   ret = getsockname(socket, (struct sockaddr*)name, size);
+   if(ret == 0)
+      return ASN_OK;
+   else
+      return ASN_E_INVSOCKET;
+}
+#endif
+
 int ooSocketListen (OOSOCKET socket, int maxConnection)
 {
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
@@ -281,7 +298,7 @@ int ooSocketConnect (OOSOCKET socket, const char* host, int port)
   
    if (socket == OOSOCKET_INVALID)
    {
-           return ASN_E_INVSOCKET;
+      return ASN_E_INVSOCKET;
    }
   
    memset (&m_addr, 0, sizeof (m_addr));
@@ -293,6 +310,7 @@ int ooSocketConnect (OOSOCKET socket, const char* host, int port)
    if (connect (socket, (struct sockaddr *) (void*) &m_addr,
                 sizeof (m_addr)) == -1)
    {
+
       return ASN_E_INVSOCKET;
    }
    return ASN_OK;
@@ -378,11 +396,11 @@ int ooGetLocalIPAddress(char * pIPAddrs)
    int ret;
    struct hostent *phost;
    struct in_addr addr;
-   char hostname[20];
+   char hostname[100];
 
    if(pIPAddrs == NULL)
       return -1; /* Need to find suitable return value */
-   ret = gethostname(hostname, 20);
+   ret = gethostname(hostname, 100);
    if(ret == 0)
    {
       phost = gethostbyname(hostname);

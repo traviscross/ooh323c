@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -13,15 +13,16 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
-
+/**
+ * @file ooh323ep.h
+ * This file contains H323 endpoint related functions.
+ */
 #ifndef OO_H323EP_H_
 #define OO_H323EP_H_
 #include "ootypes.h"
 #include "ooasn1.h"
 
-#define OO_RX_CAP 51
-#define OO_TX_CAP 52
-#define OO_RXTX_CAP 53
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,14 +59,14 @@ extern "C" {
  * @param listenport     Port on which to listen for incoming calls
  * @param callerid       ID to be used for outgoing calls.
  * @param callername     Caller name to be used for outgoing calls
- * @param txAudioChan    1, if transmit audio channel has to be opened, 0
- *                       otherwise.
+ * @param callMode       Type of calls to be made(audio/video/fax).
+ *                       (OO_CALLMODE_AUDIO, OO_CALLMODE_VIDEO)
  * @return               OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
          int fastStart, int termType, int t35CountryCode, int t35Extension,
          int manufacturer, char *productID, char *versionID, int callType,
-         int listenport, char *callerid, char *callername, int txAudioChan);
+         int listenport, char *callerid, char *callername, int callMode);
 
 /**
  * This function is used to register the H323 Endpoint callback functions.
@@ -101,47 +102,8 @@ EXTERN int ooH323EpRegisterCallbacks(cb_OnIncomingCall onIncomingCall,
  */
 EXTERN int ooDestroyH323Ep();
 
-/**
- * Function to add audio capabilities to the endpoint. 'dir' indicates
- * whether we have a transmit capability or a receive capability or both.
- * Last four parameters are the callback functions for channel control
- * @param audioCap            Audio Capability to be added.
- * @param dir                 Direction - Indicates whether endpoint has
- *                            receive capability, or transmit capability or
- *                            both.
- * @param startReceiveChannel Callback function to call receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
-*/
-EXTERN int ooAddAudioCapability(H245AudioCapability audioCap, int dir,
-                                cb_StartReceiveChannel startReceiveChannel,
-                                cb_StartTransmitChannel startTransmitChannel,
-                                cb_StopReceiveChannel stopReceiveChannel,
-                                cb_StopTransmitChannel stopTransmitChannel);
 
-/**
- * This function is used to copy audio capability from src to destination.
- * @param src                  Pointer to audio capability to be copied.
- * @param dest                 Pointer to destination audio capability
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure
- */
-EXTERN int ooCopyAudioCapability(H245AudioCapability *src,
-                                 H245AudioCapability *dest);
 
-/**
- * This function is used to check whether local endpoint supports a particular
- * type of audio capability.
- * @param capType              Type of audio capability to serach for.
- * @param dir                  Direction in which support is required(RX/TX).
- *
- * @return                     Pointer to the capability, if found. Null,
- *                             otherwise.
- */
-EXTERN ooH323EpCapability* ooIsAudioCapabilitySupported(int capType, int dir);
 
 
 /**

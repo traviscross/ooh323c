@@ -165,6 +165,10 @@ SOURCE=.\ooCalls.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooCapability.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\oochannels.c
 # End Source File
 # Begin Source File

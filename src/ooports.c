@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -159,4 +159,27 @@ int ooBindPort(ooEndPoint *ep, int type,
    }
 }
 
-       
+#ifdef _WIN32       
+int ooBindOSAllocatedPort(OOSOCKET socket)
+{
+   OOIPADDR ipAddrs;
+   char localip[40];
+   int size, ret;
+   struct sockaddr_in name;
+   size = sizeof(struct sockaddr_in);
+   ooGetLocalIPAddress(localip);
+   ret= ooSocketStrToAddr (localip, &ipAddrs);
+   if((ret=ooSocketBind(socket, ipAddrs,
+                     0))==ASN_OK)
+   {
+      ret = ooGetSockName(socket, &name, &size);
+      if(ret == ASN_OK)
+      {
+         return name.sin_port;
+        
+      }
+   }
+
+   return OO_FAILED;
+}
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -18,17 +18,20 @@
 #include "oo.h"
 #include "oochannels.h"
 #include "ooh323ep.h"
+#include "ooCalls.h"
+#include "ooCapability.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"
 #ifndef _WIN32
 #include <pthread.h>
 #endif
 
-int osEpStartReceiveChannel(ooCallData *call);
-int osEpStartTransmitChannel(ooCallData *call);
-int osEpStopReceiveChannel(ooCallData *call);
-int osEpStopTransmitChannel(ooCallData *call);
+int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
+int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
+int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
+int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
+int osEpOnOutgoingCall(ooCallData* call );
 int osEpOnCallCleared(ooCallData* call );
 void * osEpHandleCommand(void*);
 
@@ -48,27 +51,28 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-
-   ret = ooInitializeH323Ep("simple.log", 0, 0, 30, 9, 0, 61, "obj-sys",
-                      "Version 0.3", T_H225CallType_pointToPoint, 1720,
-                      "objsyscall", "simple", 1);
+   /* Initialize the H323 endpoint - faststart and tunneling enabled*/
+   ret = ooInitializeH323Ep("simple.log", 1, 1, 30, 9, 0, 61, "obj-sys",
+                      "Version 0.4", T_H225CallType_pointToPoint, 1720,
+                      "objsyscall", "simple", OO_CALLMODE_AUDIOCALL);
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+   /* Add audio capability */
    audioCap.t = T_H245AudioCapability_g711Ulaw64k;
    audioCap.u.g711Ulaw64k = 240;
-   ooAddAudioCapability(audioCap, OO_TX_CAP,
+   ooAddAudioCapability(audioCap, T_H245Capability_transmitAudioCapability,
                         NULL, &osEpStartTransmitChannel, NULL,
                         &osEpStopTransmitChannel);
-    ooAddAudioCapability(audioCap, OO_RX_CAP,
+   ooAddAudioCapability(audioCap, T_H245Capability_receiveAudioCapability,
                          &osEpStartReceiveChannel, NULL,
                          &osEpStopReceiveChannel, NULL);
-
-   ooH323EpRegisterCallbacks(&osEpOnIncomingCall, NULL, NULL, osEpOnCallCleared, NULL);  
+   /* Register callbacks */
+   ooH323EpRegisterCallbacks(&osEpOnIncomingCall, &osEpOnOutgoingCall, NULL, osEpOnCallCleared, NULL);  
  
-   /* Load plug-in*/
+   /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
    if(ret != OO_OK)
@@ -95,7 +99,7 @@ int main(int argc, char ** argv)
    {
       printf("Calling %s\n", argv[1]);
       memset(callToken, 0, 20);
-      ooMakeCall(argv[1], 1720, callToken);
+      ooMakeCall(argv[1], 1720, callToken); /* Make call */
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
@@ -107,46 +111,110 @@ int main(int argc, char ** argv)
    return 0;
 }
 
-int osEpStartReceiveChannel(ooCallData *call)
+/* Callback to start receive media channel */
+int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting Receive channel\n");
+   printf("Starting Receive channel at %s:%d\n", call->localIP,
+                                                 pChannel->localRtpPort);
    isActive = 1;
    ooCreateReceiveRTPChannel(call->localIP,
-                             call->localRtpPort);
+                             pChannel->localRtpPort);
    ooStartReceiveAudioAndPlayback();
    return OO_OK;
 }
-int osEpStartTransmitChannel(ooCallData *call)
+
+/* Callback to start transmit media channel */
+int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting transmit channel\n");
+   printf("Starting transmit channel to %s:%d\n", call->remoteIP,
+                                                  pChannel->remoteRtpPort);
    isActive = 1;
    ooCreateTransmitRTPChannel(call->remoteIP,
-                              call->remoteRtpPort);
+                              pChannel->remoteRtpPort);
    ooStartTransmitMic();
    return OO_OK;
 }
 
-int osEpStopReceiveChannel(ooCallData *call)
+/* Callback to stop receive media channel */
+int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Receive Channel\n");
    ooStopReceiveAudioAndPlayback();
    return OO_OK;
 }
 
-int osEpStopTransmitChannel(ooCallData *call)
+/* Callback to stop transmit media channel */
+int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Transmit Channel\n");
    ooStopTransmitMic();
    return OO_OK;
 }
 
+/* on incoming call callback */
 int osEpOnIncomingCall(ooCallData* call )
 {
+   ooMediaInfo mediaInfo1, mediaInfo2;
+   char localip[20];
+   memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
+   memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
+   /* Configure mediainfo for transmit media channel of type G711 */
+   memset(localip, 0, 20);
+   ooGetLocalIPAddress(localip);
+   mediaInfo1.lMediaCntrlPort = 5001;
+   mediaInfo1.lMediaPort = 5000;
+   mediaInfo1.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo1.lMediaIP, localip);
+   strcpy(mediaInfo1.dir, "transmit");
+   ooAddMediaInfo(call, mediaInfo1);
+  
+   /* Configure mediainfo for receive media channel of type G711 */
+   mediaInfo2.lMediaCntrlPort = 5001;
+   mediaInfo2.lMediaPort = 5000;
+   mediaInfo2.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo2.lMediaIP, localip);
+   strcpy(mediaInfo2.dir, "receive");
+   ooAddMediaInfo(call, mediaInfo2);
+    
    strcpy(callToken, call->callToken);
    isActive = 1;
+  
    return OO_OK;
 }
 
+int osEpOnOutgoingCall(ooCallData* call )
+{
+   ooMediaInfo mediaInfo1, mediaInfo2;
+   char localip[20];
+   memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
+   memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
+   /* Configure mediainfo for transmit media channel of type G711 */
+   memset(localip, 0, 20);
+   ooGetLocalIPAddress(localip);
+   mediaInfo1.lMediaCntrlPort = 5001;
+   mediaInfo1.lMediaPort = 5000;
+   strcpy(mediaInfo1.lMediaIP, localip);
+   strcpy(mediaInfo1.dir, "transmit");
+   mediaInfo1.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo1.mediaType, "audio");
+   ooAddMediaInfo(call, mediaInfo1);
+  
+   /* Configure mediainfo for receive media channel of type G711 */
+   mediaInfo2.lMediaCntrlPort = 5001;
+   mediaInfo2.lMediaPort = 5000;
+   strcpy(mediaInfo2.lMediaIP, localip);
+   strcpy(mediaInfo2.dir, "receive");
+   mediaInfo2.capType = T_H245AudioCapability_g711Ulaw64k;
+   strcpy(mediaInfo2.mediaType, "audio");
+   ooAddMediaInfo(call, mediaInfo2);
+    
+   strcpy(callToken, call->callToken);
+
+  
+   return OO_OK;
+}
+
+/* CallCleared callback */
 int osEpOnCallCleared(ooCallData* call )
 {
    printf("Call Ended\n");

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -331,6 +331,16 @@ EXTERN int ooSendCallProceeding(ooCallData *call);
 EXTERN int ooSendAlerting(ooCallData *call);
 
 /**
+ * This function is invoked to send Facility message.
+ *
+ * @param call     Pointer to the call for which Facility message have to be
+ *                 sent. 
+ *
+ * @return         Completion status - 0 on success, -1 on failure
+ */
+EXTERN int ooSendFacility(ooCallData *call);
+
+/**
  * This function is invoked to send a Connect message in response to received 
  * setup message.
  *
@@ -362,26 +372,25 @@ EXTERN int ooH323MakeCall(char *destip, int port, char *callToken);
  */
 EXTERN int ooH323HangCall(char * callToken);
 
-EXTERN int ooAcceptCall_fs(ooCallData *call);
-
 
 /**
- * Function to accept a call by sending connect without faststart
+ * Function to accept a call by sending connect. This function is used
+ * as a helper function to ooSendConnect.
  * @param call      Pointer to the call for which connect has to be sent
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAcceptCall_normal(ooCallData *call);
+EXTERN int ooAcceptCall(ooCallData *call);
 
 /**
- * Function to make a new call by sending SETUP message without faststart
- * @param call      Pointer to the call for which SETUP has to be sent.
+ * An helper function to ooMakeCall.
+ * @param call      Pointer to the new call.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323MakeCall_normal(ooCallData *call);
+EXTERN int ooH323MakeCall_helper(ooCallData *call);
 
-EXTERN int ooH323MakeCall_fs(ooCallData *call);
+
 /**
  * @}
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -28,8 +28,8 @@
  *             -1, on failure.
  */
 void* osEpHandleCommand(void*);
-int osEpStartReceiveChannel(ooCallData *call);
-int osEpStopReceiveChannel(ooCallData *call);
+int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
+int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
 #endif
 

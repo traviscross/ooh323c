@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 1997-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -329,6 +329,10 @@ EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
  *                   negative return value is error.
  */
 EXTERN int ooGetLocalIPAddress(char * pIPAddrs);
+
+#ifdef _WIN32
+EXTERN int ooGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size);
+#endif
 
 EXTERN long ooHTONL(long val);
 

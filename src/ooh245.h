@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -59,7 +59,6 @@ extern "C" {
  */
 EXTERN int ooCreateH245Message(H245Message **msg, int type);
 
-
 /**
  * Frees up the memory used by the H245 message.
  *
@@ -68,8 +67,6 @@ EXTERN int ooCreateH245Message(H245Message **msg, int type);
  * @return          OO_OK, on success. OO_FAILED, on failure        
  */
 EXTERN int ooFreeH245Message(H245Message *pmsg);
-
-
 
 /**
  * This function is used to retrieve an H.245 message enqueued in the outgoing
@@ -294,10 +291,11 @@ EXTERN int ooOpenLogicalAudioChannel(ooCallData *call);
  * G711ULaw64K capability
  * @param call            Pointer to call for which OpenLogicalChannel message have
  *                        to be built.
+ * @param epCap           Pointer to G711ULaw capability
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOpenG711ULaw64KChannel(ooCallData* call);
+EXTERN int ooOpenG711ULaw64KChannel(ooCallData* call, ooH323EpCapability *epCap);
 
 /**
  * This function is used to request a remote end point to close a logical
@@ -325,14 +323,37 @@ EXTERN int ooSendRequestCloseLogicalChannel(ooCallData *call,
 EXTERN int ooOnReceivedRequestChannelClose(ooCallData *call,
                                            H245RequestChannelClose *rclc);
 
-
-EXTERN int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup);
-
-
+/**
+ * Builds an OLC with an audio capability passed as parameter.
+ * @param call             Handle to call for which OLC has to be built.
+ * @param olc              Pointer to an OLC structure which will be populated.
+ * @param epCap            Pointer to the capability which will be used to build OLC.
+ * @param pctxt            Pointer to an OOCTXT structure which will be used to allocate
+ *                         additional memory for OLC.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                                           H245OpenLogicalChannel *olc,
                                           ooH323EpCapability *epCap,
                                           OOCTXT*pctxt);
+
+/**
+ * This function sends an encoded H.245 message buffer as a tunneled
+ * H.245 message. If there is an outgoing H.225 message, it is used to tunnel
+ * the H.245 message and if there is no H.225 message, then a new Facility
+ * message is created for tunneling purpose.
+ * @param call             Pointer to the call for which H.245 message has to
+ *                         be tunneled.
+ * @param msgbuf           Pointer to the encoded H.245 message to be tunneled.
+ *
+ * @param len              Length of the encoded H.245 message buffer.
+ * @param msgType          Type of the H245 message
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
+                                   int len, int msgType);
 /**
  * @}
  */

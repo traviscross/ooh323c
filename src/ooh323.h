@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -73,6 +73,45 @@ EXTERN int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg);
 EXTERN int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg);
 
 /**
+ * This function is used to process a received Facility message.
+ * @param call       Handle to the call for which message has been received.
+ * @param pQ931Msg   Pointer the the received Facility message.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg);
+
+/**
+ * This function is used to process tunneled H245 messages
+ * @param call       Handle to the call
+ * @param pH323UUPdu Pointer to the pdu containing tunneled messages.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooHandleTunneledH245Messages(ooCallData *call,
+                                        H225H323_UU_PDU * pH323UUPdu);
+
+/**
+ * This is a helper function used to handle an startH245 Facility message.
+ * @param call       Handle to the call
+ * @param facility   Pointer to the facility message.
+ */
+EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
+                                            H225Facility_UUIE *facility);
+
+/**
+ * This function is used to retrieve the aliases from Sequence of alias
+ * addresses.
+ * @param call       Handle to the call.
+ * @param pAddresses Pointer to the sequence of alias addresses.
+ * @param remote     Indicates whether aliases are for remote host.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooRetrieveAliases(ooCallData *call,
+                             H225_SeqOfH225AliasAddress *pAddresses,
+                             int remote);
+/**
  * @}
  */
 #ifdef __cplusplus
@@ -80,3 +119,4 @@ EXTERN int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg);
 #endif
 
 #endif
+

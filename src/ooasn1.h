@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2004 by Objective Systems, Inc.
+ * Copyright (C) 1997-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -854,7 +854,7 @@ EXTERN SListNode* sListAppend (SList* pList, void* pData);
  * @param pList       Pointer to the list in which data has to be searched.
  * @param pData       Pointer to the data to be searched.
  *
- * @retrun            1 if found, 0 otherwise.
+ * @return            1 if found, 0 otherwise.
  */
 EXTERN ASN1BOOL sListFind (SList* pList, void* pData);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -105,6 +105,17 @@ EXTERN int ooGetNextPort(ooEndPoint *ep, int type);
 */
 EXTERN int ooBindPort(ooEndPoint *ep, int type,
                         OOSOCKET socket);
+
+/**
+ * This function is supported for windows version only.
+ *  Windows sockets have problem in reusing the addresses even after
+ *  setting SO_REUSEADDR, hence in windows we just allow os to bind
+ *  to any random port.
+*/
+
+#ifdef _WIN32       
+EXTERN int ooBindOSAllocatedPort(OOSOCKET socket);
+#endif
 
 #ifdef __cplusplus
 }

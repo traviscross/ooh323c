@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -41,7 +41,7 @@ int ooMakeCall(char * destip, int port, char*callToken)
    }
    memset(cmd->param1, 0, strlen(destip));
    strcpy((char*)cmd->param1, destip);
-   printf("param1 is %s\n", (char*)cmd->param1);
+
    cmd->param2 = (void*) ASN1MALLOC(&gCtxt, sizeof(int));
    if(!cmd->param2)
    {
