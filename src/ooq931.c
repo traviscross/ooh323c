@@ -26,6 +26,9 @@
 #include "ooras.h"
 #include <time.h>
 
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
 static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };

@@ -24,6 +24,10 @@
 #include <stdlib.h>
 #include <time.h>
 #endif
+
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
 static ASN1OBJID gh245ProtocolID = {
   6, { 0, 0, 8, 245, 0, 8 }
 };

@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
 
 static OOUINT32 gs_traceLevel = TRACELVL;
 /**

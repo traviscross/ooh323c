@@ -19,6 +19,9 @@
 #include "ooCapability.h"
 #include "ooras.h"
 
+/** Global endpoint structure */
+ooEndPoint gH323ep;
+
 /* Initialize the application context within stack */
 int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
                         int fastStart, int termType, int t35CountryCode,

@@ -17,6 +17,9 @@
 #include "oo.h"
 #include "ooCalls.h"
 
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
 static int giDynamicRTPPayloadType = 101;
 
 int ooEnableDTMFRFC2833(int dynamicRTPPayloadType)

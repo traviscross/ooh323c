@@ -32,6 +32,9 @@
 #include "ooDateTime.h"
 #include "ooq931.h"
 
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
 #define OORAS_MAX_ID_LENGTH 128
 #define DEFAULT_GKPORT 1719
 #define MULTICAST_GKADDRESS "224.0.1.41"

@@ -14,7 +14,6 @@
  *
  *****************************************************************************/
 
-
 #include "oo.h"
 #include "ootypes.h"
 #include "ooCalls.h"
@@ -22,6 +21,9 @@
 #include "oochannels.h"
 #include "ooh245.h"
 #include "ooCapability.h"
+
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
 
 ooCallData* ooCreateCall(char * type, char*callToken)
 {

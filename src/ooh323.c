@@ -24,6 +24,9 @@
 #include "ooh323.h"
 #include "ooras.h"
 
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
+
 int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
 {
    H225Setup_UUIE *setup=NULL;

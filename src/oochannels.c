@@ -25,7 +25,8 @@
 #include "ooras.h"
 #include "stdio.h"
 
-
+/** Global endpoint structure */
+extern ooEndPoint gH323ep;
 
 int ooCreateH245Listener(ooCallData *call)
 {

@@ -453,7 +453,6 @@ typedef struct ooEndPoint{
    int dtmfmode;
 
 } ooEndPoint;
-/** Global endpoint structure */
-ooEndPoint gH323ep;
+
 #endif
 
