@@ -256,5 +256,6 @@ int errSetData (ASN1ErrInfo* pErrInfo, int status,
    if (pErrInfo->status == 0) {
       pErrInfo->status = status;
    }
+   ooLogAsn1Error(status, module, lno);
    return status;
 }

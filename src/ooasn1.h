@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stddef.h>
-
+#include "oo.h"
 /**
  * @defgroup cruntime C Runtime Common Functions
  * @{
@@ -1013,6 +1013,8 @@ errSetData(&(ctxt)->errInfo,stat,__FILE__,__LINE__)
 #define LOG_ASN1ERR(ctxt,stat) \
 ((ctxt)->errInfo.status = stat, stat)
 #endif
+
+
 
 #define LOG_ASN1ERR_AND_FREE(pctxt,stat,lctxt) \
 freeContext ((lctxt)), LOG_ASN1ERR(pctxt, stat)
