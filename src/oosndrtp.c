@@ -18,6 +18,17 @@
 #include "ooports.h"
 #include "oo.h"
 
+static MediaAPI_CreateTxRTPChan   FuncPtr_CreateTxRTPChan = 0;
+static MediaAPI_CloseTxRTPChan    FuncPtr_CloseTxRTPChan = 0;
+static MediaAPI_CreateRecvRTPChan FuncPtr_CreateRecvRTPChan = 0;
+static MediaAPI_CloseRecvRTPChan  FuncPtr_CloseRecvRTPChan = 0;
+static MediaAPI_StartTxWaveFile   FuncPtr_StartTxWaveFile = 0;
+static MediaAPI_StopTxWaveFile    FuncPtr_StopTxWaveFile = 0;
+static MediaAPI_StartTxMic        FuncPtr_StartTxMic = 0;
+static MediaAPI_StopTxMic         FuncPtr_StopTxMic = 0;
+static MediaAPI_StartRecvAndPlayback FuncPtr_StartRecvAndPlayback = 0;
+static MediaAPI_StopRecvAndPlayback  FuncPtr_StopRecvAndPlayback = 0;
+static MediaAPI_InitializePlugin  FuncPtr_InitializePlugin = 0;
 
 int ooLoadSndRTPPlugin(char * name)
 {
