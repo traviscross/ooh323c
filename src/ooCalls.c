@@ -158,7 +158,7 @@ int ooEndCall(ooCallData *call)
       else
          call->callState = OO_CALL_CLEAR_RELEASE;
    }
-   if(call->callState = OO_CALL_CLEAR_RELEASE)
+   if(call->callState == OO_CALL_CLEAR_RELEASE)
    {
       /* Wait till all the queued H.2250 messages are sent */
       if(call->sendH225 > 0)
