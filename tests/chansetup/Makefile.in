@@ -87,24 +87,21 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 CFLAGS = @OOH323CFLAGS@
-
-noinst_PROGRAMS = ooPlayer
-ooPlayer_SOURCES = ooPlayer.c ooPlayer.h oosndrtp.c oosndrtp.h
+noinst_PROGRAMS = h323peer
+h323peer_SOURCES = h323peer.c
 INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323
-ooPlayer_LDADD = -loostk -ldl -lpthread
-ooPlayer_LDFLAGS = -L$(top_builddir)/src
-
-EXTRA_DIST = ooPlayer.dsp space.raw states.wav space.wav
-subdir = tests/player
+h323peer_LDADD = -loostk -ldl -lpthread
+h323peer_LDFLAGS = -L$(top_builddir)/src
+subdir = tests/chansetup
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-noinst_PROGRAMS = ooPlayer$(EXEEXT)
+noinst_PROGRAMS = h323peer$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 
-am_ooPlayer_OBJECTS = ooPlayer.$(OBJEXT) oosndrtp.$(OBJEXT)
-ooPlayer_OBJECTS = $(am_ooPlayer_OBJECTS)
-ooPlayer_DEPENDENCIES =
+am_h323peer_OBJECTS = h323peer.$(OBJEXT)
+h323peer_OBJECTS = $(am_h323peer_OBJECTS)
+h323peer_DEPENDENCIES =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -113,7 +110,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ooPlayer.Po ./$(DEPDIR)/oosndrtp.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/h323peer.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -121,9 +118,9 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
         $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(ooPlayer_SOURCES)
+DIST_SOURCES = $(h323peer_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(ooPlayer_SOURCES)
+SOURCES = $(h323peer_SOURCES)
 
 all: all-am
 
@@ -131,7 +128,7 @@ all: all-am
 .SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
         cd $(top_srcdir) && \
-          $(AUTOMAKE) --gnu  tests/player/Makefile
+          $(AUTOMAKE) --gnu  tests/chansetup/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
         cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 
@@ -141,9 +138,9 @@ clean-noinstPROGRAMS:
           echo " rm -f $$p $$f"; \
           rm -f $$p $$f ; \
         done
-ooPlayer$(EXEEXT): $(ooPlayer_OBJECTS) $(ooPlayer_DEPENDENCIES)
-        @rm -f ooPlayer$(EXEEXT)
-        $(LINK) $(ooPlayer_LDFLAGS) $(ooPlayer_OBJECTS) $(ooPlayer_LDADD) $(LIBS)
+h323peer$(EXEEXT): $(h323peer_OBJECTS) $(h323peer_DEPENDENCIES)
+        @rm -f h323peer$(EXEEXT)
+        $(LINK) $(h323peer_LDFLAGS) $(h323peer_OBJECTS) $(h323peer_LDADD) $(LIBS)
 
 mostlyclean-compile:
         -rm -f *.$(OBJEXT) core *.core
@@ -151,8 +148,7 @@ mostlyclean-compile:
 distclean-compile:
         -rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooPlayer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oosndrtp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/h323peer.Po@am__quote@
 
 distclean-depend:
         -rm -rf ./$(DEPDIR)
