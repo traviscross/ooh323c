@@ -14,7 +14,7 @@
  *
  *****************************************************************************/
 /**
- * @file ooTime.h
+ * @file ooDateTime.h
  * Time functions that reconcile differences between Windows and UNIX.
  */
 #ifndef _OOTIME_H_
