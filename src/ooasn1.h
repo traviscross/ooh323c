@@ -169,7 +169,7 @@
 #define ASN_K_MAXENUM   100     /* maximum enum values in an enum type  */
 #define ASN_K_MAXERRP   5       /* maximum error parameters             */
 #define ASN_K_MAXERRSTK 8       /* maximum levels on error ctxt stack   */
-#define ASN_K_ENCBUFSIZ 16*1024 /* dynamic encode buffer extent size    */
+#define ASN_K_ENCBUFSIZ 2*1024 /* dynamic encode buffer extent size    */
 #define ASN_K_MEMBUFSEG 1024    /* memory buffer extent size            */
 
 /* Canonical character set definitions */

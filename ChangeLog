@@ -1,3 +1,8 @@
+Added dtmf rfc2833 support
+Reduced dynamic encode buffer extension size from 16*1024 to 2*1024, as large size causes problems in some embedded systems like uclinux.
+
+
+
 Release 0.5.1
 1. Callback functions updated.
 2. Consolidated Text/Error descriptions in oo.c
