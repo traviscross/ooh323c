@@ -17,7 +17,7 @@
 #include "oo.h"
 #include "ooCalls.h"
 #include "ooCapability.h"
-
+#include "ooras.h"
 
 /* Initialize the application context within stack */
 int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
