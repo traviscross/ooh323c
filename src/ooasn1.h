@@ -2030,7 +2030,6 @@ EXTERN void init16BitCharSet
 
 EXTERN ASN1BOOL isExtendableSize (Asn1SizeCnst* pSizeList);
 
-static ASN1BOOL isFixedSize (Asn1SizeCnst* pSizeList);
 
 EXTERN void set16BitCharSet
 (OOCTXT* pctxt, Asn116BitCharSet* pCharSet, Asn116BitCharSet* pAlphabet);

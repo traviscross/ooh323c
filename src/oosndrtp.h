@@ -72,7 +72,7 @@ typedef int (*MediaAPI_StartRecvAndPlayback)(int channelId);
 /** Signature for function to stop receiving rtp data */
 typedef int (*MediaAPI_StopRecvAndPlayback)(int channelId);
 /** Signature for function to Initialize the media plug-in*/
-typedef int (*MediaAPI_InitializePlugin)();
+typedef int (*MediaAPI_InitializePlugin)(void);
 /**
  * @}
  */
@@ -115,7 +115,7 @@ EXTERN int ooLoadSndRTPPlugin(char * name);
  *
  * @return          Completion status - 0 on success, -1 on failure 
  */
-EXTERN int ooReleaseSndRTPPlugin();
+EXTERN int ooReleaseSndRTPPlugin(void);
 
 /**
  * Creates a transmit RTP channel. Basically calls the corresponding function
@@ -135,7 +135,7 @@ EXTERN int ooCreateTransmitRTPChannel
  * @return           Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooCloseTransmitRTPChannel
-   ();
+   (void);
 
 /**
  * Creates a receive RTP channel. Basically calls the corresponding function
@@ -155,7 +155,7 @@ EXTERN int ooCreateReceiveRTPChannel
  * @return           Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooCloseReceiveRTPChannel
-   ();
+   (void);
 
 /**
  * Start transmitting a audio file. This calls corresponding function
@@ -174,7 +174,7 @@ EXTERN int ooStartTransmitWaveFile
  * @return              Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooStopTransmitWaveFile
-   ();
+   (void);
 
 /**
  * Starts capturing audio data from mic and transmits it as rtp stream. This
@@ -183,7 +183,7 @@ EXTERN int ooStopTransmitWaveFile
  * @return            Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooStartTransmitMic
-   ();
+   (void);
 
 /**
  * Stop transmission of mic audio data. This calls corresponding interface
@@ -192,7 +192,7 @@ EXTERN int ooStartTransmitMic
  * @return              Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooStopTransmitMic
-   ();
+   (void);
 
 /**
  * Starts receiving rtp stream data and play it on the speakers. This
@@ -201,7 +201,7 @@ EXTERN int ooStopTransmitMic
  * @return            Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooStartReceiveAudioAndPlayback
-   ();
+   (void);
 
 /**
  * Stop receiving rtp stream data.This calls corresponding interface function
@@ -210,14 +210,14 @@ EXTERN int ooStartReceiveAudioAndPlayback
  * @return            Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooStopReceiveAudioAndPlayback
-   ();
+   (void);
 
 /** Not suuported currently */
 EXTERN int ooStartReceiveAudioAndRecord
-   ();
+   (void);
 /** Not supported currently */
 EXTERN int ooStopReceiveAudioAndRecord
-   ();
+   (void);
 
 /**
  * Set local RTP and RTCP addresses for the session. This function
@@ -225,7 +225,7 @@ EXTERN int ooStopReceiveAudioAndRecord
  *
  * @return            Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSetLocalRTPAndRTCPAddrs();
+EXTERN int ooSetLocalRTPAndRTCPAddrs(void);
 
 /**
  * Closes transmit and receive RTP channels, if open. This calls
@@ -233,7 +233,7 @@ EXTERN int ooSetLocalRTPAndRTCPAddrs();
  *
  * @return           Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooRTPShutDown();
+EXTERN int ooRTPShutDown(void);
 /**
  * @}
  */
