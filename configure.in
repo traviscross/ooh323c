@@ -1,0 +1,52 @@
+AC_PREREQ(2.57)
+AC_INIT([OOH323C],[0.3],[Objective Systems <support@obj-sys.com>],[ooh323c])
+PACKAGE=ooh323c
+VERSION=0.3
+
+AC_CONFIG_AUX_DIR(config)
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AC_CONFIG_SRCDIR([src/context.c])
+AM_CONFIG_HEADER(config.h)
+dnl should include it in src files before using here
+
+OOH323CDIR=`pwd`
+AC_SUBST(OOH323CDIR)
+
+if test "x$prefix" = "xNONE"; then
+   INSTALLPREFIX="."
+else
+   INSTALLPREFIX="${prefix}"
+fi
+
+
+AC_SUBST(INSTALLPREFIX)
+OOH323CFLAGS="-DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -D_COMPACT"
+AC_SUBST(OOH323CFLAGS)
+
+
+AC_PROG_CC
+AC_PROG_LIBTOOL
+AC_LANG_C
+
+dnl not required as using libtool AC_PROG_RANLIB
+AC_HEADER_STDC
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h netdb.h netinet/in.h stddef.h stdlib.h string.h sys/socket.h unistd.h sys/ioctl.h linux/soundcard.h])
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+
+dnl Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_SELECT_ARGTYPES
+AC_FUNC_STRFTIME
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname gethostname])
+
+
+dnl AC_CONFIG_FILES([src/Makefile media/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile])
+dnl AC_OUTPUT
+AC_OUTPUT(Makefile src/Makefile media/Makefile tests/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile)
+dnl AC_OUTPUT(media/Makefile)

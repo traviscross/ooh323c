@@ -1,0 +1,1215 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>ooasn1.h File Reference</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>ooasn1.h File Reference</h1>Common ASN.1 runtime constants, data structure definitions, and run-time functions to support BER/DER/PER as defined in the ITU-T standards. 
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;limits.h&gt;</code><br>
+<code>#include &lt;stdio.h&gt;</code><br>
+<code>#include &lt;string.h&gt;</code><br>
+<code>#include &lt;stddef.h&gt;</code><br>
+
+<p>
+<a href="ooasn1_8h-source.shtml">Go to the source code of this file.</a><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OBJID</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OctStr</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1DynOctStr</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1DynBitStr</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1SeqOf</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1SeqOfOctStr</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OpenType</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Asn116BitCharString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Asn132BitCharString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Asn1CharArray</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Asn1CharSet</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Asn116BitCharSet</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_SListNode</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_SList</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_DListNode</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_DList</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_Asn1SizeCnst</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFFER</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFSAVE</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ErrLocn</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ErrInfo</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>OOCTXT</b></td></tr>
+
+<tr><td colspan=2><br><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga37" doxytag="ooasn1.h::TV_UNIV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_UNIV</b>&nbsp;&nbsp;&nbsp;0       /* universal                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga38" doxytag="ooasn1.h::TV_APPL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_APPL</b>&nbsp;&nbsp;&nbsp;1       /* application-wide             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga39" doxytag="ooasn1.h::TV_CTXT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_CTXT</b>&nbsp;&nbsp;&nbsp;2       /* context-specific             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga40" doxytag="ooasn1.h::TV_PRIV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_PRIV</b>&nbsp;&nbsp;&nbsp;3       /* private-use                  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga41" doxytag="ooasn1.h::TV_PRIM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_PRIM</b>&nbsp;&nbsp;&nbsp;0       /* primitive                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga42" doxytag="ooasn1.h::TV_CONS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_CONS</b>&nbsp;&nbsp;&nbsp;1       /* constructor                  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga43" doxytag="ooasn1.h::TM_UNIV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_UNIV</b>&nbsp;&nbsp;&nbsp;0x00000000  /* universal class          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga44" doxytag="ooasn1.h::TM_APPL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_APPL</b>&nbsp;&nbsp;&nbsp;0x40000000  /* application-wide class   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga45" doxytag="ooasn1.h::TM_CTXT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CTXT</b>&nbsp;&nbsp;&nbsp;0x80000000  /* context-specific class   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga46" doxytag="ooasn1.h::TM_PRIV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_PRIV</b>&nbsp;&nbsp;&nbsp;0xC0000000  /* private-use class        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga47" doxytag="ooasn1.h::TM_PRIM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_PRIM</b>&nbsp;&nbsp;&nbsp;0x00000000  /* primitive form           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga48" doxytag="ooasn1.h::TM_CONS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CONS</b>&nbsp;&nbsp;&nbsp;0x20000000  /* constructor form         */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga49" doxytag="ooasn1.h::TM_IDCODE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_IDCODE</b>&nbsp;&nbsp;&nbsp;0x1FFFFFFF  /* ID code mask             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga50" doxytag="ooasn1.h::ASN_K_BADTAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_BADTAG</b>&nbsp;&nbsp;&nbsp;0xFFFFFFFF  /* invalid tag code         */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga51" doxytag="ooasn1.h::ASN_K_NOTAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_NOTAG</b>&nbsp;&nbsp;&nbsp;0xFFFFFFFF  /* no tag input parameter   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga52" doxytag="ooasn1.h::TM_CLASS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CLASS</b>&nbsp;&nbsp;&nbsp;0xC0    /* class mask                   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga53" doxytag="ooasn1.h::TM_FORM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_FORM</b>&nbsp;&nbsp;&nbsp;0x20    /* form mask                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga54" doxytag="ooasn1.h::TM_CLASS_FORM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CLASS_FORM</b>&nbsp;&nbsp;&nbsp;0xE0    /* class/form mask              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga55" doxytag="ooasn1.h::TM_B_IDCODE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_B_IDCODE</b>&nbsp;&nbsp;&nbsp;0x1F    /* id code mask (byte)          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga56" doxytag="ooasn1.h::MINMSGLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>MINMSGLEN</b>&nbsp;&nbsp;&nbsp;8       /* minimum message length               */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga57" doxytag="ooasn1.h::ASN_OK" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_OK</b>&nbsp;&nbsp;&nbsp;0      /* normal completion status             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga58" doxytag="ooasn1.h::ASN_OK_FRAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_OK_FRAG</b>&nbsp;&nbsp;&nbsp;2      /* message fragment detected            */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga59" doxytag="ooasn1.h::ASN_E_BUFOVFLW" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BUFOVFLW</b>&nbsp;&nbsp;&nbsp;-1      /* encode buffer overflow               */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga60" doxytag="ooasn1.h::ASN_E_ENDOFBUF" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ENDOFBUF</b>&nbsp;&nbsp;&nbsp;-2      /* unexpected end of buffer on decode   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga61" doxytag="ooasn1.h::ASN_E_IDNOTFOU" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_IDNOTFOU</b>&nbsp;&nbsp;&nbsp;-3      /* identifer not found                  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga62" doxytag="ooasn1.h::ASN_E_INVOBJID" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVOBJID</b>&nbsp;&nbsp;&nbsp;-4      /* invalid object identifier            */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga63" doxytag="ooasn1.h::ASN_E_INVLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVLEN</b>&nbsp;&nbsp;&nbsp;-5      /* invalid field length                 */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga64" doxytag="ooasn1.h::ASN_E_INVENUM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVENUM</b>&nbsp;&nbsp;&nbsp;-6      /* enumerated value not in defined set  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga65" doxytag="ooasn1.h::ASN_E_SETDUPL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SETDUPL</b>&nbsp;&nbsp;&nbsp;-7      /* duplicate element in set             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga66" doxytag="ooasn1.h::ASN_E_SETMISRQ" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SETMISRQ</b>&nbsp;&nbsp;&nbsp;-8      /* missing required element in set      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga67" doxytag="ooasn1.h::ASN_E_NOTINSET" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTINSET</b>&nbsp;&nbsp;&nbsp;-9      /* element not part of set              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga68" doxytag="ooasn1.h::ASN_E_SEQOVFLW" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SEQOVFLW</b>&nbsp;&nbsp;&nbsp;-10     /* sequence of field overflow           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga69" doxytag="ooasn1.h::ASN_E_INVOPT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVOPT</b>&nbsp;&nbsp;&nbsp;-11     /* invalid option encountered in choice */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga70" doxytag="ooasn1.h::ASN_E_NOMEM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOMEM</b>&nbsp;&nbsp;&nbsp;-12     /* no dynamic memory available          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga71" doxytag="ooasn1.h::ASN_E_INVHEXS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVHEXS</b>&nbsp;&nbsp;&nbsp;-14     /* invalid hex string                   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga72" doxytag="ooasn1.h::ASN_E_INVBINS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVBINS</b>&nbsp;&nbsp;&nbsp;-15     /* invalid binary string                */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga73" doxytag="ooasn1.h::ASN_E_INVREAL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVREAL</b>&nbsp;&nbsp;&nbsp;-16     /* invalid real value                   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga74" doxytag="ooasn1.h::ASN_E_STROVFLW" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_STROVFLW</b>&nbsp;&nbsp;&nbsp;-17     /* octet or bit string field overflow   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga75" doxytag="ooasn1.h::ASN_E_BADVALUE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BADVALUE</b>&nbsp;&nbsp;&nbsp;-18     /* invalid value specification          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga76" doxytag="ooasn1.h::ASN_E_UNDEFVAL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_UNDEFVAL</b>&nbsp;&nbsp;&nbsp;-19     /* no def found for ref'd defined value */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="ooasn1.h::ASN_E_UNDEFTYP" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_UNDEFTYP</b>&nbsp;&nbsp;&nbsp;-20     /* no def found for ref'd defined type  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="ooasn1.h::ASN_E_BADTAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BADTAG</b>&nbsp;&nbsp;&nbsp;-21     /* invalid tag value                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga79" doxytag="ooasn1.h::ASN_E_TOODEEP" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_TOODEEP</b>&nbsp;&nbsp;&nbsp;-22     /* nesting level is too deep            */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga80" doxytag="ooasn1.h::ASN_E_CONSVIO" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_CONSVIO</b>&nbsp;&nbsp;&nbsp;-23     /* value constraint violation           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga81" doxytag="ooasn1.h::ASN_E_RANGERR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_RANGERR</b>&nbsp;&nbsp;&nbsp;-24     /* invalid range (lower &gt; upper)        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga82" doxytag="ooasn1.h::ASN_E_ENDOFFILE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ENDOFFILE</b>&nbsp;&nbsp;&nbsp;-25     /* end of file on file decode           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga83" doxytag="ooasn1.h::ASN_E_INVUTF8" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVUTF8</b>&nbsp;&nbsp;&nbsp;-26     /* invalid UTF-8 encoding               */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga84" doxytag="ooasn1.h::ASN_E_CONCMODF" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_CONCMODF</b>&nbsp;&nbsp;&nbsp;-27     /* Concurrent list modification         */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga85" doxytag="ooasn1.h::ASN_E_ILLSTATE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ILLSTATE</b>&nbsp;&nbsp;&nbsp;-28     /* Illegal state error                  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga86" doxytag="ooasn1.h::ASN_E_OUTOFBND" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_OUTOFBND</b>&nbsp;&nbsp;&nbsp;-29     /* out of bounds (of array, etc)        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga87" doxytag="ooasn1.h::ASN_E_INVPARAM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVPARAM</b>&nbsp;&nbsp;&nbsp;-30     /* invalid parameter                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga88" doxytag="ooasn1.h::ASN_E_INVFORMAT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVFORMAT</b>&nbsp;&nbsp;&nbsp;-31     /* invalid time string format           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga89" doxytag="ooasn1.h::ASN_E_NOTINIT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTINIT</b>&nbsp;&nbsp;&nbsp;-32     /* not initialized                      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga90" doxytag="ooasn1.h::ASN_E_TOOBIG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_TOOBIG</b>&nbsp;&nbsp;&nbsp;-33     /* value is too big for given data type */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga91" doxytag="ooasn1.h::ASN_E_INVCHAR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVCHAR</b>&nbsp;&nbsp;&nbsp;-34     /* invalid character (not in char set)  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga92" doxytag="ooasn1.h::ASN_E_XMLSTATE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLSTATE</b>&nbsp;&nbsp;&nbsp;-35     /* XML state error                      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga93" doxytag="ooasn1.h::ASN_E_XMLPARSE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLPARSE</b>&nbsp;&nbsp;&nbsp;-36     /* XML parse error                      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga94" doxytag="ooasn1.h::ASN_E_SEQORDER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SEQORDER</b>&nbsp;&nbsp;&nbsp;-37     /* SEQUENCE elements not in order       */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga95" doxytag="ooasn1.h::ASN_E_INVINDEX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVINDEX</b>&nbsp;&nbsp;&nbsp;-38     /* invalid index for TC id              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga96" doxytag="ooasn1.h::ASN_E_INVTCVAL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVTCVAL</b>&nbsp;&nbsp;&nbsp;-39     /* invalid value for TC field           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga97" doxytag="ooasn1.h::ASN_E_FILNOTFOU" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILNOTFOU</b>&nbsp;&nbsp;&nbsp;-40     /* file not found                       */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga98" doxytag="ooasn1.h::ASN_E_FILEREAD" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILEREAD</b>&nbsp;&nbsp;&nbsp;-41     /* error occurred reading file          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga99" doxytag="ooasn1.h::ASN_E_FILEWRITE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILEWRITE</b>&nbsp;&nbsp;&nbsp;-42     /* error occurred writing file          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga100" doxytag="ooasn1.h::ASN_E_INVBASE64" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVBASE64</b>&nbsp;&nbsp;&nbsp;-43     /* invalid base64 encoding              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga101" doxytag="ooasn1.h::ASN_E_INVSOCKET" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVSOCKET</b>&nbsp;&nbsp;&nbsp;-44     /* invalid socket operation             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga102" doxytag="ooasn1.h::ASN_E_XMLLIBNFOU" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLLIBNFOU</b>&nbsp;&nbsp;&nbsp;-45     /* XML library is not found             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga103" doxytag="ooasn1.h::ASN_E_XMLLIBINV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLLIBINV</b>&nbsp;&nbsp;&nbsp;-46     /* XML library is invalid               */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga104" doxytag="ooasn1.h::ASN_E_NOTSUPP" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTSUPP</b>&nbsp;&nbsp;&nbsp;-99     /* non-supported ASN construct          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga105" doxytag="ooasn1.h::ASN_K_INDEFLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_INDEFLEN</b>&nbsp;&nbsp;&nbsp;-9999   /* indefinite length message indicator  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga106" doxytag="ooasn1.h::ASN_ID_EOC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EOC</b>&nbsp;&nbsp;&nbsp;0       /* end of contents              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga107" doxytag="ooasn1.h::ASN_ID_BOOL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BOOL</b>&nbsp;&nbsp;&nbsp;1       /* boolean                      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga108" doxytag="ooasn1.h::ASN_ID_INT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_INT</b>&nbsp;&nbsp;&nbsp;2       /* integer                      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga109" doxytag="ooasn1.h::ASN_ID_BITSTR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BITSTR</b>&nbsp;&nbsp;&nbsp;3       /* bit string                   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga110" doxytag="ooasn1.h::ASN_ID_OCTSTR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OCTSTR</b>&nbsp;&nbsp;&nbsp;4       /* byte (octet) string          */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga111" doxytag="ooasn1.h::ASN_ID_NULL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_NULL</b>&nbsp;&nbsp;&nbsp;5       /* null                         */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga112" doxytag="ooasn1.h::ASN_ID_OBJID" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OBJID</b>&nbsp;&nbsp;&nbsp;6       /* object ID                    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga113" doxytag="ooasn1.h::ASN_ID_OBJDSC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OBJDSC</b>&nbsp;&nbsp;&nbsp;7       /* object descriptor            */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga114" doxytag="ooasn1.h::ASN_ID_EXTERN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EXTERN</b>&nbsp;&nbsp;&nbsp;8       /* external type                */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga115" doxytag="ooasn1.h::ASN_ID_REAL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_REAL</b>&nbsp;&nbsp;&nbsp;9       /* real                         */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga116" doxytag="ooasn1.h::ASN_ID_ENUM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_ENUM</b>&nbsp;&nbsp;&nbsp;10      /* enumerated value             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga117" doxytag="ooasn1.h::ASN_ID_EPDV" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EPDV</b>&nbsp;&nbsp;&nbsp;11      /* EmbeddedPDV type             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga118" doxytag="ooasn1.h::ASN_ID_RELOID" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_RELOID</b>&nbsp;&nbsp;&nbsp;13      /* relative object ID           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga119" doxytag="ooasn1.h::ASN_ID_SEQ" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_SEQ</b>&nbsp;&nbsp;&nbsp;16      /* sequence, sequence of        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga120" doxytag="ooasn1.h::ASN_ID_SET" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_SET</b>&nbsp;&nbsp;&nbsp;17      /* set, set of                  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga121" doxytag="ooasn1.h::ASN_SEQ_TAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_SEQ_TAG</b>&nbsp;&nbsp;&nbsp;0x30    /* SEQUENCE universal tag byte  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga122" doxytag="ooasn1.h::ASN_SET_TAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_SET_TAG</b>&nbsp;&nbsp;&nbsp;0x31    /* SET universal tag byte       */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga123" doxytag="ooasn1.h::ASN_ID_NumericString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_NumericString</b>&nbsp;&nbsp;&nbsp;18</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga124" doxytag="ooasn1.h::ASN_ID_PrintableString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_PrintableString</b>&nbsp;&nbsp;&nbsp;19</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga125" doxytag="ooasn1.h::ASN_ID_TeletexString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_TeletexString</b>&nbsp;&nbsp;&nbsp;20</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga126" doxytag="ooasn1.h::ASN_ID_T61String" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_T61String</b>&nbsp;&nbsp;&nbsp;ASN_ID_TeletexString</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga127" doxytag="ooasn1.h::ASN_ID_VideotexString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_VideotexString</b>&nbsp;&nbsp;&nbsp;21</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga128" doxytag="ooasn1.h::ASN_ID_IA5String" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_IA5String</b>&nbsp;&nbsp;&nbsp;22</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga129" doxytag="ooasn1.h::ASN_ID_UTCTime" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_UTCTime</b>&nbsp;&nbsp;&nbsp;23</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga130" doxytag="ooasn1.h::ASN_ID_GeneralTime" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GeneralTime</b>&nbsp;&nbsp;&nbsp;24</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga131" doxytag="ooasn1.h::ASN_ID_GraphicString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GraphicString</b>&nbsp;&nbsp;&nbsp;25</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga132" doxytag="ooasn1.h::ASN_ID_VisibleString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_VisibleString</b>&nbsp;&nbsp;&nbsp;26</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga133" doxytag="ooasn1.h::ASN_ID_GeneralString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GeneralString</b>&nbsp;&nbsp;&nbsp;27</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga134" doxytag="ooasn1.h::ASN_ID_UniversalString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_UniversalString</b>&nbsp;&nbsp;&nbsp;28</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga135" doxytag="ooasn1.h::ASN_ID_BMPString" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BMPString</b>&nbsp;&nbsp;&nbsp;30</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga136" doxytag="ooasn1.h::XM_SEEK" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_SEEK</b>&nbsp;&nbsp;&nbsp;0x01    /* seek match until found or end-of-buf */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga137" doxytag="ooasn1.h::XM_ADVANCE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_ADVANCE</b>&nbsp;&nbsp;&nbsp;0x02    /* advance pointer to contents on match */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga138" doxytag="ooasn1.h::XM_DYNAMIC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_DYNAMIC</b>&nbsp;&nbsp;&nbsp;0x04    /* alloc dyn mem for decoded variable   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga139" doxytag="ooasn1.h::XM_SKIP" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_SKIP</b>&nbsp;&nbsp;&nbsp;0x08    /* skip to next field after parsing tag */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga140" doxytag="ooasn1.h::ASN_K_MAXDEPTH" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXDEPTH</b>&nbsp;&nbsp;&nbsp;32      /* maximum nesting depth for messages   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga141" doxytag="ooasn1.h::ASN_K_MAXSUBIDS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXSUBIDS</b>&nbsp;&nbsp;&nbsp;128     /* maximum sub-id's in an object ID     */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga142" doxytag="ooasn1.h::ASN_K_MAXENUM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXENUM</b>&nbsp;&nbsp;&nbsp;100     /* maximum enum values in an enum type  */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga143" doxytag="ooasn1.h::ASN_K_MAXERRP" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXERRP</b>&nbsp;&nbsp;&nbsp;5       /* maximum error parameters             */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga144" doxytag="ooasn1.h::ASN_K_MAXERRSTK" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXERRSTK</b>&nbsp;&nbsp;&nbsp;8       /* maximum levels on error ctxt stack   */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga145" doxytag="ooasn1.h::ASN_K_ENCBUFSIZ" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_ENCBUFSIZ</b>&nbsp;&nbsp;&nbsp;16*1024 /* dynamic encode buffer extent size    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga146" doxytag="ooasn1.h::ASN_K_MEMBUFSEG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MEMBUFSEG</b>&nbsp;&nbsp;&nbsp;1024    /* memory buffer extent size            */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga147" doxytag="ooasn1.h::NUM_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_ABITS</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga148" doxytag="ooasn1.h::NUM_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_UBITS</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga149" doxytag="ooasn1.h::NUM_CANSET" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_CANSET</b>&nbsp;&nbsp;&nbsp;" 0123456789"</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga150" doxytag="ooasn1.h::PRN_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga151" doxytag="ooasn1.h::PRN_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga152" doxytag="ooasn1.h::PRN_CANSET" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_CANSET</b>&nbsp;&nbsp;&nbsp;" '()+,-./0123456789:=?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga153" doxytag="ooasn1.h::VIS_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga154" doxytag="ooasn1.h::VIS_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_CANSET</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga156" doxytag="ooasn1.h::T61_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga157" doxytag="ooasn1.h::T61_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_CANSET</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga159" doxytag="ooasn1.h::IA5_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga160" doxytag="ooasn1.h::IA5_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_CANSET</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga162" doxytag="ooasn1.h::IA5_RANGE1_LOWER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_RANGE1_LOWER</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga163" doxytag="ooasn1.h::IA5_RANGE2_LOWER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_RANGE2_LOWER</b>&nbsp;&nbsp;&nbsp;0x5f</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga164" doxytag="ooasn1.h::GEN_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga165" doxytag="ooasn1.h::GEN_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_CANSET</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga167" doxytag="ooasn1.h::BMP_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_ABITS</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga168" doxytag="ooasn1.h::BMP_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_UBITS</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga169" doxytag="ooasn1.h::BMP_FIRST" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_FIRST</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga170" doxytag="ooasn1.h::BMP_LAST" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_LAST</b>&nbsp;&nbsp;&nbsp;0xffff</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga171" doxytag="ooasn1.h::UCS_ABITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_ABITS</b>&nbsp;&nbsp;&nbsp;32</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga172" doxytag="ooasn1.h::UCS_UBITS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_UBITS</b>&nbsp;&nbsp;&nbsp;32</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga173" doxytag="ooasn1.h::UCS_FIRST" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_FIRST</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga174" doxytag="ooasn1.h::UCS_LAST" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_LAST</b>&nbsp;&nbsp;&nbsp;0xfffffffful</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga175" doxytag="ooasn1.h::ASN1TAG_LSHIFT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TAG_LSHIFT</b>&nbsp;&nbsp;&nbsp;24</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga176" doxytag="ooasn1.h::ASN1UINT_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UINT_MAX</b>&nbsp;&nbsp;&nbsp;4294967295U</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga177" doxytag="ooasn1.h::ASN1INT_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT_MAX</b>&nbsp;&nbsp;&nbsp;((ASN1INT)2147483647L)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga178" doxytag="ooasn1.h::ASN1INT_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT_MIN</b>&nbsp;&nbsp;&nbsp;((ASN1INT)(-ASN1INT_MAX-1))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga179" doxytag="ooasn1.h::ASN1INT64" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT64</b>&nbsp;&nbsp;&nbsp;long</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga180" doxytag="ooasn1.h::FALSE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>FALSE</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga181" doxytag="ooasn1.h::TRUE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TRUE</b>&nbsp;&nbsp;&nbsp;1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga182" doxytag="ooasn1.h::XM_K_MEMBLKSIZ" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_K_MEMBLKSIZ</b>&nbsp;&nbsp;&nbsp;(4*1024)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga183" doxytag="ooasn1.h::ASN1DYNCTXT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1DYNCTXT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga184" doxytag="ooasn1.h::ASN1INDEFLEN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INDEFLEN</b>&nbsp;&nbsp;&nbsp;0x4000</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga185" doxytag="ooasn1.h::ASN1TRACE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TRACE</b>&nbsp;&nbsp;&nbsp;0x2000</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga186" doxytag="ooasn1.h::ASN1LASTEOC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1LASTEOC</b>&nbsp;&nbsp;&nbsp;0x1000</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga187" doxytag="ooasn1.h::ASN1FASTCOPY" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1FASTCOPY</b>&nbsp;&nbsp;&nbsp;0x0800  /* turns on the "fast copy" mode        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga188" doxytag="ooasn1.h::ASN1CONSTAG" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CONSTAG</b>&nbsp;&nbsp;&nbsp;0x0400  /* form of last parsed tag              */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga189" doxytag="ooasn1.h::ASN1CANXER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CANXER</b>&nbsp;&nbsp;&nbsp;0x0200  /* canonical XER                        */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga190" doxytag="ooasn1.h::ASN1SAVEBUF" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1SAVEBUF</b>&nbsp;&nbsp;&nbsp;0x0100  /* do not free dynamic encode buffer    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga191" doxytag="ooasn1.h::ASN1OPENTYPE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OPENTYPE</b>&nbsp;&nbsp;&nbsp;0x0080  /* item is an open type field           */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga192" doxytag="ooasn1.h::ASN1MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1MAX</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&gt;(b))?(a):(b))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga193" doxytag="ooasn1.h::ASN1MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1MIN</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&lt;(b))?(a):(b))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__mem.shtml#ga0">ALLOC_ASN1ARRAY</a>(pctxt, pseqof, type)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate a dynamic array.  <a href="group__mem.shtml#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__mem.shtml#ga1">ALLOC_ASN1ELEM</a>(pctxt, type)&nbsp;&nbsp;&nbsp;(type*) memHeapAllocZ (&amp;(pctxt)-&gt;pTypeMemHeap, sizeof(type))</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate and zero an ASN.1 element.  <a href="group__mem.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ALLOC_ASN1ELEMDNODE</b>(pctxt, type)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__mem.shtml#ga3">ASN1MALLOC</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAlloc(&amp;(pctxt)-&gt;pTypeMemHeap, nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate memory.  <a href="group__mem.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__mem.shtml#ga4">ASN1MEMFREE</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapFreeAll(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory associated with a context.  <a href="group__mem.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__mem.shtml#ga5">ASN1MEMFREEPTR</a>(pctxt, pmem)&nbsp;&nbsp;&nbsp;memHeapFreePtr(&amp;(pctxt)-&gt;pTypeMemHeap, (void*)pmem)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory pointer.  <a href="group__mem.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga194" doxytag="ooasn1.h::ASN1BUFCUR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFCUR</b>(cp)&nbsp;&nbsp;&nbsp;(cp)-&gt;buffer.data[(cp)-&gt;buffer.byteIndex]</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga195" doxytag="ooasn1.h::ASN1BUFPTR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFPTR</b>(cp)&nbsp;&nbsp;&nbsp;&amp;(cp)-&gt;buffer.data[(cp)-&gt;buffer.byteIndex]</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga196" doxytag="ooasn1.h::EXTERN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>EXTERN</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga197" doxytag="ooasn1.h::ASN1CRTMALLOC0" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTMALLOC0</b>(nbytes)&nbsp;&nbsp;&nbsp;malloc(nbytes)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga198" doxytag="ooasn1.h::ASN1CRTFREE0" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTFREE0</b>(ptr)&nbsp;&nbsp;&nbsp;free(ptr)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga199" doxytag="ooasn1.h::ASN1CRTMALLOC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTMALLOC</b>&nbsp;&nbsp;&nbsp;memHeapAlloc</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga200" doxytag="ooasn1.h::ASN1CRTFREE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTFREE</b>&nbsp;&nbsp;&nbsp;ASN1MEMFREEPTR</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DE_INCRBITIDX</b>(pctxt)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DE_BIT</b>(pctxt, pvalue)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga203" doxytag="ooasn1.h::encodeIA5String" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeIA5String</b>(pctxt, value, permCharSet)&nbsp;&nbsp;&nbsp;encodeConstrainedStringEx (pctxt, value, permCharSet, 8, 7, 7)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga204" doxytag="ooasn1.h::encodeGeneralizedTime" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeGeneralizedTime</b>&nbsp;&nbsp;&nbsp;encodeIA5String</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga205" doxytag="ooasn1.h::decodeIA5String" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>decodeIA5String</b>(pctxt, pvalue, permCharSet)&nbsp;&nbsp;&nbsp;decodeConstrainedStringEx (pctxt, pvalue, permCharSet, 8, 7, 7)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga206" doxytag="ooasn1.h::decodeGeneralizedTime" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>decodeGeneralizedTime</b>&nbsp;&nbsp;&nbsp;decodeIA5String</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="ooasn1.h::ZEROCONTEXT" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>ZEROCONTEXT</b>(pctxt)&nbsp;&nbsp;&nbsp;memset(pctxt,0,sizeof(OOCTXT))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="ooasn1.h::LOG_ASN1ERR" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>LOG_ASN1ERR</b>(ctxt, stat)&nbsp;&nbsp;&nbsp;errSetData(&amp;(ctxt)-&gt;errInfo,stat,__FILE__,__LINE__)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga11" doxytag="ooasn1.h::LOG_ASN1ERR_AND_FREE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>LOG_ASN1ERR_AND_FREE</b>(pctxt, stat, lctxt)&nbsp;&nbsp;&nbsp;freeContext ((lctxt)), LOG_ASN1ERR(pctxt, stat)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga15" doxytag="ooasn1.h::RT_MH_DONTKEEPFREE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>RT_MH_DONTKEEPFREE</b>&nbsp;&nbsp;&nbsp;0x1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga16" doxytag="ooasn1.h::OSRTMH_PROPID_DEFBLKSIZE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSRTMH_PROPID_DEFBLKSIZE</b>&nbsp;&nbsp;&nbsp;1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga17" doxytag="ooasn1.h::OSRTMH_PROPID_SETFLAGS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSRTMH_PROPID_SETFLAGS</b>&nbsp;&nbsp;&nbsp;2</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga18" doxytag="ooasn1.h::OSRTMH_PROPID_CLEARFLAGS" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSRTMH_PROPID_CLEARFLAGS</b>&nbsp;&nbsp;&nbsp;3</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga19" doxytag="ooasn1.h::OSRTMH_PROPID_USER" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSRTMH_PROPID_USER</b>&nbsp;&nbsp;&nbsp;10</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga80">memAlloc</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAlloc(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate memory.  <a href="group__rtmem.shtml#ga80"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga81">memAllocZ</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAllocZ(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate and zero memory.  <a href="group__rtmem.shtml#ga81"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga82">memRealloc</a>(pctxt, mem_p, nbytes)&nbsp;&nbsp;&nbsp;memHeapRealloc(&amp;(pctxt)-&gt;pTypeMemHeap, (void*)mem_p, nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reallocate memory.  <a href="group__rtmem.shtml#ga82"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga83">memFreePtr</a>(pctxt, mem_p)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory pointer.  <a href="group__rtmem.shtml#ga83"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga84">memFree</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapFreeAll(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory associated with a context.  <a href="group__rtmem.shtml#ga84"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga85">memReset</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapReset(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset memory associated with a context.  <a href="group__rtmem.shtml#ga85"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga86" doxytag="ooasn1.h::OSCDECL" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSCDECL</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>INCRBITIDX</b>(pctxt)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DECODEBIT</b>(pctxt, pvalue)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga89">decodeUnconsInteger</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsInteger(pctxt, pvalue, ASN1INT_MIN)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained integer.  <a href="group__rtmem.shtml#ga89"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga90">decodeUnconsUnsigned</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsUnsigned(pctxt, pvalue, 0U)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained unsigned integer.  <a href="group__rtmem.shtml#ga90"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga91">encodeUnconsInteger</a>(pctxt, value)&nbsp;&nbsp;&nbsp;encodeSemiConsInteger(pctxt,value,ASN1INT_MIN)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an unconstrained integer.  <a href="group__rtmem.shtml#ga91"></a><br><br></td></tr>
+<tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="ooasn1.h::ASN1CHAR" ></a>
+typedef char&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CHAR</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="ooasn1.h::ASN1OCTET" ></a>
+typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OCTET</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="ooasn1.h::ASN1BOOL" ></a>
+typedef ASN1OCTET&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BOOL</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga3" doxytag="ooasn1.h::ASN1INT8" ></a>
+typedef signed char&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT8</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="ooasn1.h::ASN1UINT8" ></a>
+typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UINT8</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="ooasn1.h::ASN1INT" ></a>
+typedef int&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga6" doxytag="ooasn1.h::ASN1UINT" ></a>
+typedef unsigned int&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UINT</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga7" doxytag="ooasn1.h::ASN1ENUM" ></a>
+typedef ASN1INT&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ENUM</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga8" doxytag="ooasn1.h::ASN1REAL" ></a>
+typedef double&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1REAL</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="ooasn1.h::ASN1SINT" ></a>
+typedef short&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1SINT</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="ooasn1.h::ASN1USINT" ></a>
+typedef unsigned short&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1USINT</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga11" doxytag="ooasn1.h::ASN1TAG" ></a>
+typedef ASN1UINT&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TAG</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga12" doxytag="ooasn1.h::ASN116BITCHAR" ></a>
+typedef ASN1USINT&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN116BITCHAR</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga13" doxytag="ooasn1.h::ASN132BITCHAR" ></a>
+typedef ASN1UINT&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN132BITCHAR</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga14" doxytag="ooasn1.h::ASN1ANY" ></a>
+typedef void *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ANY</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga15" doxytag="ooasn1.h::ASN1GeneralizedTime" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1GeneralizedTime</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga16" doxytag="ooasn1.h::ASN1GeneralString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1GeneralString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga17" doxytag="ooasn1.h::ASN1GraphicString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1GraphicString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga18" doxytag="ooasn1.h::ASN1IA5String" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1IA5String</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga19" doxytag="ooasn1.h::ASN1ISO646String" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ISO646String</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga20" doxytag="ooasn1.h::ASN1NumericString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1NumericString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga21" doxytag="ooasn1.h::ASN1ObjectDescriptor" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1ObjectDescriptor</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga22" doxytag="ooasn1.h::ASN1PrintableString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1PrintableString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga23" doxytag="ooasn1.h::ASN1TeletexString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TeletexString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga24" doxytag="ooasn1.h::ASN1T61String" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1T61String</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga25" doxytag="ooasn1.h::ASN1UTCTime" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UTCTime</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga26" doxytag="ooasn1.h::ASN1UTF8String" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UTF8String</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga27" doxytag="ooasn1.h::ASN1VideotexString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1VideotexString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga28" doxytag="ooasn1.h::ASN1VisibleString" ></a>
+typedef const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1VisibleString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga29" doxytag="ooasn1.h::ASN1BMPString" ></a>
+typedef Asn116BitCharString&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BMPString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga30" doxytag="ooasn1.h::ASN1UniversalString" ></a>
+typedef Asn132BitCharString&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UniversalString</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga31" doxytag="ooasn1.h::SListNode" ></a>
+typedef _SListNode&nbsp;</td><td class="memItemRight" valign=bottom><b>SListNode</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga32" doxytag="ooasn1.h::SList" ></a>
+typedef _SList&nbsp;</td><td class="memItemRight" valign=bottom><b>SList</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga33" doxytag="ooasn1.h::DListNode" ></a>
+typedef _DListNode&nbsp;</td><td class="memItemRight" valign=bottom><b>DListNode</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga34" doxytag="ooasn1.h::DList" ></a>
+typedef _DList&nbsp;</td><td class="memItemRight" valign=bottom><b>DList</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga35" doxytag="ooasn1.h::Asn1SizeCnst" ></a>
+typedef _Asn1SizeCnst&nbsp;</td><td class="memItemRight" valign=bottom><b>Asn1SizeCnst</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga36" doxytag="ooasn1.h::OOCTXT" ></a>
+typedef OOCTXT&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCTXT</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="ooasn1.h::OSMallocFunc" ></a>
+typedef void *OSCDECL *&nbsp;</td><td class="memItemRight" valign=bottom><b>OSMallocFunc</b> (size_t size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="ooasn1.h::OSReallocFunc" ></a>
+typedef void *OSCDECL *&nbsp;</td><td class="memItemRight" valign=bottom><b>OSReallocFunc</b> (void *ptr, size_t size)</td></tr>
+
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga0">initContextBuffer</a> (OOCTXT *pctxt, const ASN1OCTET *bufaddr, ASN1UINT bufsiz)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function assigns a buffer to a context block.  <a href="group__cmfun.shtml#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga1">initContext</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function initializes a context block.  <a href="group__cmfun.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga2">freeContext</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function frees all dynamic memory associated with a context.  <a href="group__cmfun.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN OOCTXT *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga3">newContext</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function allocates a new OOCTXT block and initializes it.  <a href="group__cmfun.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="ooasn1.h::copyContext" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>copyContext</b> (OOCTXT *pdest, OOCTXT *psrc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="ooasn1.h::initSubContext" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>initSubContext</b> (OOCTXT *pctxt, OOCTXT *psrc)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga6" doxytag="ooasn1.h::setCtxtFlag" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>setCtxtFlag</b> (OOCTXT *pctxt, ASN1USINT mask)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga7" doxytag="ooasn1.h::clearCtxtFlag" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>clearCtxtFlag</b> (OOCTXT *pctxt, ASN1USINT mask)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga8" doxytag="ooasn1.h::setPERBuffer" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>setPERBuffer</b> (OOCTXT *pctxt, ASN1OCTET *bufaddr, ASN1UINT bufsiz, ASN1BOOL aligned)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="ooasn1.h::setPERBufferUsingCtxt" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>setPERBufferUsingCtxt</b> (OOCTXT *pTarget, OOCTXT *pSource)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN DListNode *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga0">dListAppend</a> (OOCTXT *pctxt, DList *pList, void *pData)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function appends an item to the linked list structure.  <a href="group__llfuns.shtml#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="ooasn1.h::dListAppendNode" ></a>
+EXTERN DListNode *&nbsp;</td><td class="memItemRight" valign=bottom><b>dListAppendNode</b> (OOCTXT *pctxt, DList *pList, void *pData)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="ooasn1.h::dListFindByIndex" ></a>
+EXTERN DListNode *&nbsp;</td><td class="memItemRight" valign=bottom><b>dListFindByIndex</b> (DList *pList, int index)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga3">dListInit</a> (DList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function initializes a doubly linked list structure.  <a href="group__llfuns.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga4">dListFreeNodes</a> (OOCTXT *pctxt, DList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function removes all nodes from the linked list and releases the memory that was allocated for storing the node structures (DListNode).  <a href="group__llfuns.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga5">dListFreeAll</a> (OOCTXT *pctxt, DList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function removes all nodes from the linked list structure and releases the memory that was allocated for storing the node structures (DListNode) and for data.  <a href="group__llfuns.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga6">dListRemove</a> (DList *pList, DListNode *node)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function removes a node from the linked list structure.  <a href="group__llfuns.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga7">sListInit</a> (SList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to initialize a singly-linked list.  <a href="group__llfuns.shtml#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga8">sListInitEx</a> (OOCTXT *pctxt, SList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to initialize a singly-linked list and assigns a context to be used for the list.  <a href="group__llfuns.shtml#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga9">sListFree</a> (SList *pList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to free-up all the nodes in the singly-linked list.  <a href="group__llfuns.shtml#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SList *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga10">sListCreate</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a new singly-linked list.  <a href="group__llfuns.shtml#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SList *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga11">sListCreateEx</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a singly-linked list.  <a href="group__llfuns.shtml#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SListNode *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga12">sListAppend</a> (SList *pList, void *pData)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to append a new data member to the list.  <a href="group__llfuns.shtml#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga13">sListFind</a> (SList *pList, void *pData)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to search for a particular data in the list.  <a href="group__llfuns.shtml#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga14">sListRemove</a> (SList *pList, void *pData)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to remove a particular data member from the list.  <a href="group__llfuns.shtml#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga0">errAddIntParm</a> (ASN1ErrInfo *pErrInfo, int errParm)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function adds an integer parameter to an error information structure.  <a href="group__errfp.shtml#ga0"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga1">errAddStrParm</a> (ASN1ErrInfo *pErrInfo, const char *errprm_p)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function adds an string parameter to an error information structure.  <a href="group__errfp.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga2">errAddUIntParm</a> (ASN1ErrInfo *pErrInfo, unsigned int errParm)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function adds an unsigned integer parameter to an error information structure.  <a href="group__errfp.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga3" doxytag="ooasn1.h::errCopyData" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>errCopyData</b> (ASN1ErrInfo *pSrcErrInfo, ASN1ErrInfo *pDestErrInfo)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga4">errFreeParms</a> (ASN1ErrInfo *pErrInfo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function frees memory associated with the storage of parameters associated with an error message.  <a href="group__errfp.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="ooasn1.h::errFmtMsg" ></a>
+EXTERN char *&nbsp;</td><td class="memItemRight" valign=bottom><b>errFmtMsg</b> (ASN1ErrInfo *pErrInfo, char *bufp)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN char *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga6">errGetText</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function gets the text of the error.  <a href="group__errfp.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga7">errPrint</a> (ASN1ErrInfo *pErrInfo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function prints error information to the standard output device.  <a href="group__errfp.shtml#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga8">errReset</a> (ASN1ErrInfo *pErrInfo)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function resets the error information in the error information sturcture.  <a href="group__errfp.shtml#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__errfp.shtml#ga9">errSetData</a> (ASN1ErrInfo *pErrInfo, int status, const char *module, int lno)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function sets error information in an error information structure.  <a href="group__errfp.shtml#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="ooasn1.h::void" ></a>
+typedef&nbsp;</td><td class="memItemRight" valign=bottom><b>void</b> (OSCDECL *OSFreeFunc)(void *ptr)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga3" doxytag="ooasn1.h::memHeapAddRef" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapAddRef</b> (void **ppvMemHeap)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="ooasn1.h::memHeapAlloc" ></a>
+EXTERN void *&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapAlloc</b> (void **ppvMemHeap, int nbytes)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="ooasn1.h::memHeapAllocZ" ></a>
+EXTERN void *&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapAllocZ</b> (void **ppvMemHeap, int nbytes)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga6" doxytag="ooasn1.h::memHeapCheckPtr" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapCheckPtr</b> (void **ppvMemHeap, void *mem_p)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga7" doxytag="ooasn1.h::memHeapCreate" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapCreate</b> (void **ppvMemHeap)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga8" doxytag="ooasn1.h::memHeapFreeAll" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapFreeAll</b> (void **ppvMemHeap)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="ooasn1.h::memHeapFreePtr" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapFreePtr</b> (void **ppvMemHeap, void *mem_p)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="ooasn1.h::memHeapRealloc" ></a>
+EXTERN void *&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapRealloc</b> (void **ppvMemHeap, void *mem_p, int nbytes_)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga11" doxytag="ooasn1.h::memHeapRelease" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapRelease</b> (void **ppvMemHeap)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga12" doxytag="ooasn1.h::memHeapReset" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapReset</b> (void **ppvMemHeap)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga13" doxytag="ooasn1.h::memHeapMarkSaved" ></a>
+EXTERN void *&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapMarkSaved</b> (void **ppvMemHeap, const void *mem_p, ASN1BOOL saved)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga14" doxytag="ooasn1.h::memHeapSetProperty" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapSetProperty</b> (void **ppvMemHeap, ASN1UINT propId, void *pProp)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga15">memSetAllocFuncs</a> (OSMallocFunc malloc_func, OSReallocFunc realloc_func, OSFreeFunc free_func)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function sets the pointers to standard allocation functions.  <a href="group__rtmem.shtml#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga16" doxytag="ooasn1.h::memFreeOpenSeqExt" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memFreeOpenSeqExt</b> (OOCTXT *pctxt, DList *pElemList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga17" doxytag="ooasn1.h::memHeapSetFlags" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapSetFlags</b> (OOCTXT *pctxt, ASN1UINT flags)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga18" doxytag="ooasn1.h::memHeapClearFlags" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>memHeapClearFlags</b> (OOCTXT *pctxt, ASN1UINT flags)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga19">memHeapSetDefBlkSize</a> (OOCTXT *pctxt, ASN1UINT blkSize)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function sets the pointer to standard allocation functions.  <a href="group__rtmem.shtml#ga19"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1UINT&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga20">memHeapGetDefBlkSize</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function returns the actual granularity of memory blocks.  <a href="group__rtmem.shtml#ga20"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga21">decodeBits</a> (OOCTXT *pctxt, ASN1UINT *pvalue, ASN1UINT nbits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a series of multiple bits and place the results in an unsigned integer variable.  <a href="group__rtmem.shtml#ga21"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga22">decodeBitString</a> (OOCTXT *pctxt, ASN1UINT *numbits_p, ASN1OCTET *buffer, ASN1UINT bufsiz)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a value of the ASN.1 bit string type whose maximum size is is known in advance.  <a href="group__rtmem.shtml#ga22"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga23">decodeBMPString</a> (OOCTXT *pctxt, ASN1BMPString *pvalue, Asn116BitCharSet *permCharSet)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a variable of the ASN.1 BMP character string.  <a href="group__rtmem.shtml#ga23"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga24">decodeByteAlign</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will position the decode bit cursor on the next byte boundary.  <a href="group__rtmem.shtml#ga24"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga25">decodeConsInteger</a> (OOCTXT *pctxt, ASN1INT *pvalue, ASN1INT lower, ASN1INT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga25"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga26">decodeConsUnsigned</a> (OOCTXT *pctxt, ASN1UINT *pvalue, ASN1UINT lower, ASN1UINT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unsigned integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga26"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga27">decodeConsUInt8</a> (OOCTXT *pctxt, ASN1UINT8 *pvalue, ASN1UINT lower, ASN1UINT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an 8-bit unsigned integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga27"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga28">decodeConsUInt16</a> (OOCTXT *pctxt, ASN1USINT *pvalue, ASN1UINT lower, ASN1UINT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a 16-bit unsigned integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga28"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga29">decodeConsWholeNumber</a> (OOCTXT *pctxt, ASN1UINT *padjusted_value, ASN1UINT range_value)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function decodes a constrained whole number as specified in Section 10.5 of the X.691 standard.  <a href="group__rtmem.shtml#ga29"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga30">decodeConstrainedStringEx</a> (OOCTXT *pctxt, const char **string, const char *charSet, ASN1UINT abits, ASN1UINT ubits, ASN1UINT canSetBits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function decodes a constrained string value.  <a href="group__rtmem.shtml#ga30"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga31">decodeDynBitString</a> (OOCTXT *pctxt, ASN1DynBitStr *pBitStr)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a variable of thr ASN.1 BIT STRING type.  <a href="group__rtmem.shtml#ga31"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga32">decodeDynOctetString</a> (OOCTXT *pctxt, ASN1DynOctStr *pOctStr)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a value of the ASN.1 octet string type whose maximum size is known in advance.  <a href="group__rtmem.shtml#ga32"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga33">decodeLength</a> (OOCTXT *pctxt, ASN1UINT *pvalue)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a length determinant value.  <a href="group__rtmem.shtml#ga33"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga34">moveBitCursor</a> (OOCTXT *pctxt, int bitOffset)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga35">decodeObjectIdentifier</a> (OOCTXT *pctxt, ASN1OBJID *pvalue)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function decodes a value of the ASN.1 object identifier type.  <a href="group__rtmem.shtml#ga35"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga36">decodeOctetString</a> (OOCTXT *pctxt, ASN1UINT *numocts_p, ASN1OCTET *buffer, ASN1UINT bufsiz)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a value of the ASN.1 octet string type whose maximun size is known in advance.  <a href="group__rtmem.shtml#ga36"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga37">decodeOpenType</a> (OOCTXT *pctxt, const ASN1OCTET **object_p2, ASN1UINT *numocts_p)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an ASN.1 open type.  <a href="group__rtmem.shtml#ga37"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga38">decodeSmallNonNegWholeNumber</a> (OOCTXT *pctxt, ASN1UINT *pvalue)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a small non-negative whole number as specified in Section 10.6 of the X.691 standard.  <a href="group__rtmem.shtml#ga38"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga39">decodeSemiConsInteger</a> (OOCTXT *pctxt, ASN1INT *pvalue, ASN1INT lower)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a semi-constrained integer.  <a href="group__rtmem.shtml#ga39"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga40">decodeSemiConsUnsigned</a> (OOCTXT *pctxt, ASN1UINT *pvalue, ASN1UINT lower)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode a semi-constrained unsigned integer.  <a href="group__rtmem.shtml#ga40"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga41" doxytag="ooasn1.h::decodeVarWidthCharString" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>decodeVarWidthCharString</b> (OOCTXT *pctxt, const char **pvalue)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga42">encodeBit</a> (OOCTXT *pctxt, ASN1BOOL value)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode a variable of the ASN.1 BOOLEAN type in a single bit.  <a href="group__rtmem.shtml#ga42"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga43">encodeBits</a> (OOCTXT *pctxt, ASN1UINT value, ASN1UINT nbits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes multiple bits.  <a href="group__rtmem.shtml#ga43"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga44">encodeBitString</a> (OOCTXT *pctxt, ASN1UINT numocts, const ASN1OCTET *data)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode a value of the ASN.1 bit string type.  <a href="group__rtmem.shtml#ga44"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga45">encodeBMPString</a> (OOCTXT *pctxt, ASN1BMPString value, Asn116BitCharSet *permCharSet)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode a variable of the ASN.1 BMP character string.  <a href="group__rtmem.shtml#ga45"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga46">encodeByteAlign</a> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will position the encode bit cursor on the next byte boundry.  <a href="group__rtmem.shtml#ga46"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga47">encodeCheckBuffer</a> (OOCTXT *pctxt, ASN1UINT nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will determine if the given number of bytes will fit in the encode buffer.  <a href="group__rtmem.shtml#ga47"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga48">encodeConstrainedStringEx</a> (OOCTXT *pctxt, const char *string, const char *charSet, ASN1UINT abits, ASN1UINT ubits, ASN1UINT canSetBits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes a constrained string value.  <a href="group__rtmem.shtml#ga48"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga49">encodeConsInteger</a> (OOCTXT *pctxt, ASN1INT value, ASN1INT lower, ASN1INT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga49"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga50">encodeConsUnsigned</a> (OOCTXT *pctxt, ASN1UINT value, ASN1UINT lower, ASN1UINT upper)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an unsigned integer constrained either by a value or value range constraint.  <a href="group__rtmem.shtml#ga50"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga51">encodeConsWholeNumber</a> (OOCTXT *pctxt, ASN1UINT adjusted_value, ASN1UINT range_value)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes a constrained whole number as specified in Section 10.5 of the X.691 standard.  <a href="group__rtmem.shtml#ga51"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga52">encodeExpandBuffer</a> (OOCTXT *pctxt, ASN1UINT nbytes)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will expand the buffer to hold the given number of bytes.  <a href="group__rtmem.shtml#ga52"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1OCTET *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga53">encodeGetMsgPtr</a> (OOCTXT *pctxt, int *pLength)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will return the message pointer and length of an encoded message.  <a href="group__rtmem.shtml#ga53"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga54">encodeLength</a> (OOCTXT *pctxt, ASN1UINT value)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode a length determinant value.  <a href="group__rtmem.shtml#ga54"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga55">encodeObjectIdentifier</a> (OOCTXT *pctxt, ASN1OBJID *pvalue)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes a value of the ASN.1 object identifier type.  <a href="group__rtmem.shtml#ga55"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga56">encodebitsFromOctet</a> (OOCTXT *pctxt, ASN1OCTET value, ASN1UINT nbits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes bits from a given octet to the output buffer.  <a href="group__rtmem.shtml#ga56"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga57">encodeOctets</a> (OOCTXT *pctxt, const ASN1OCTET *pvalue, ASN1UINT nbits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This fuction will encode an array of octets.  <a href="group__rtmem.shtml#ga57"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga58">encodeOctetString</a> (OOCTXT *pctxt, ASN1UINT numocts, const ASN1OCTET *data)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode a value of the ASN.1 octet string type.  <a href="group__rtmem.shtml#ga58"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga59">encodeOpenType</a> (OOCTXT *pctxt, ASN1UINT numocts, const ASN1OCTET *data)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode an ASN.1 open type.  <a href="group__rtmem.shtml#ga59"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga60">encodeOpenTypeExt</a> (OOCTXT *pctxt, DList *pElemList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will encode an ASN.1 open type extension.  <a href="group__rtmem.shtml#ga60"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga61" doxytag="ooasn1.h::encodeOpenTypeExtBits" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeOpenTypeExtBits</b> (OOCTXT *pctxt, DList *pElemList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga62">encodeSmallNonNegWholeNumber</a> (OOCTXT *pctxt, ASN1UINT value)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will endcode a small, non-negative whole number as specified in Section 10.6 of teh X.691 standard.  <a href="group__rtmem.shtml#ga62"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga63">encodeSemiConsInteger</a> (OOCTXT *pctxt, ASN1INT value, ASN1INT lower)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes a semi-constrained integer.  <a href="group__rtmem.shtml#ga63"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga64">encodeSemiConsUnsigned</a> (OOCTXT *pctxt, ASN1UINT value, ASN1UINT lower)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an semi-constrained unsigned integer.  <a href="group__rtmem.shtml#ga64"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga65" doxytag="ooasn1.h::encodeVarWidthCharString" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeVarWidthCharString</b> (OOCTXT *pctxt, const char *value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga66" doxytag="ooasn1.h::addSizeConstraint" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>addSizeConstraint</b> (OOCTXT *pctxt, Asn1SizeCnst *pSize)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga67" doxytag="ooasn1.h::alignCharStr" ></a>
+EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><b>alignCharStr</b> (OOCTXT *pctxt, ASN1UINT len, ASN1UINT nbits, Asn1SizeCnst *pSize)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga68" doxytag="ooasn1.h::bitAndOctetStringAlignmentTest" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>bitAndOctetStringAlignmentTest</b> (Asn1SizeCnst *pSizeList, ASN1UINT itemCount, ASN1BOOL bitStrFlag, ASN1BOOL *pAlignFlag)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga69" doxytag="ooasn1.h::getPERMsgLen" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>getPERMsgLen</b> (OOCTXT *pctxt)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga70" doxytag="ooasn1.h::getSizeConstraint" ></a>
+EXTERN Asn1SizeCnst *&nbsp;</td><td class="memItemRight" valign=bottom><b>getSizeConstraint</b> (OOCTXT *pctxt, ASN1BOOL extbit)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga71" doxytag="ooasn1.h::checkSizeConstraint" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><b>checkSizeConstraint</b> (OOCTXT *pctxt, int size)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga72" doxytag="ooasn1.h::getUIntBitCount" ></a>
+EXTERN ASN1UINT&nbsp;</td><td class="memItemRight" valign=bottom><b>getUIntBitCount</b> (ASN1UINT value)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga73" doxytag="ooasn1.h::checkSize" ></a>
+EXTERN Asn1SizeCnst *&nbsp;</td><td class="memItemRight" valign=bottom><b>checkSize</b> (Asn1SizeCnst *pSizeList, ASN1UINT value, ASN1BOOL *pExtendable)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga74" doxytag="ooasn1.h::init16BitCharSet" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>init16BitCharSet</b> (Asn116BitCharSet *pCharSet, ASN116BITCHAR first, ASN116BITCHAR last, ASN1UINT abits, ASN1UINT ubits)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga75" doxytag="ooasn1.h::isExtendableSize" ></a>
+EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><b>isExtendableSize</b> (Asn1SizeCnst *pSizeList)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="ooasn1.h::set16BitCharSet" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>set16BitCharSet</b> (OOCTXT *pctxt, Asn116BitCharSet *pCharSet, Asn116BitCharSet *pAlphabet)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="ooasn1.h::rtBitStrToString" ></a>
+EXTERN const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>rtBitStrToString</b> (ASN1UINT numbits, const ASN1OCTET *data, char *buffer, size_t bufsiz)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga79" doxytag="ooasn1.h::rtOctStrToString" ></a>
+EXTERN const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>rtOctStrToString</b> (ASN1UINT numocts, const ASN1OCTET *data, char *buffer, size_t bufsiz)</td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Common ASN.1 runtime constants, data structure definitions, and run-time functions to support BER/DER/PER as defined in the ITU-T standards.
+<p>
+
+<p>
+Definition in file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Nov 2004.<BR> H323FrameworkStack, Version 0.3 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

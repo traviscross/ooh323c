@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>ooWave.h Source File</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>ooWave.h</h1><a href="ooWave_8h.shtml">Go to the documentation of this file.</a><pre class="fragment"><div>00001 <span class="comment">/*</span>
+00002 <span class="comment"> * Copyright (C) 2004 by Objective Systems, Inc.</span>
+00003 <span class="comment"> *</span>
+00004 <span class="comment"> * This software is furnished under an open source license and may be </span>
+00005 <span class="comment"> * used and copied only in accordance with the terms of this license. </span>
+00006 <span class="comment"> * The text of the license may generally be found in the root </span>
+00007 <span class="comment"> * directory of this installation in the LICENSE.txt file.  It </span>
+00008 <span class="comment"> * can also be viewed online at the following URL:</span>
+00009 <span class="comment"> *</span>
+00010 <span class="comment"> *   http://www.obj-sys.com/open/license.html</span>
+00011 <span class="comment"> *</span>
+00012 <span class="comment"> * Any redistributions of this file including modified versions must </span>
+00013 <span class="comment"> * maintain this copyright notice.</span>
+00014 <span class="comment"> *</span>
+00015 <span class="comment"> *****************************************************************************/</span>
+00016
+00022 <span class="preprocessor">#ifndef _OOWAVE_H_</span>
+00023 <span class="preprocessor"></span><span class="preprocessor">#define _OOWAVE_H_</span>
+00024 <span class="preprocessor"></span>
+00025
+00026 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
+00027 <span class="preprocessor">#include "<a class="code" href="ooCommon_8h.shtml">ooCommon.h</a>"</span>
+00028 <span class="preprocessor">#include &lt;Windows.h&gt;</span>
+00029 <span class="preprocessor">#include &lt;Mmsystem.h&gt;</span>
+00030 <span class="preprocessor">#include &lt;Basetsd.h&gt;</span>
+00031
+00032
+00033
+00034 <span class="preprocessor">#ifdef __cplusplus</span>
+00035 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
+00036 <span class="preprocessor">#endif</span>
+00037 <span class="preprocessor"></span>
+00038 <span class="preprocessor">#ifndef EXTERN</span>
+00039 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
+00040 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
+00041 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00042 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
+00043 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
+00044 <span class="preprocessor">#endif</span>
+00045 <span class="preprocessor"></span>
+<a name="l00054"></a><a class="code" href="structooWaveFile.shtml">00054</a> <span class="keyword">struct </span><a class="code" href="structooWaveFile.shtml">ooWaveFile</a>{
+00055    <span class="keywordtype">char</span> filename[1024];
+<a name="l00056"></a><a class="code" href="structooWaveFile.shtml#o1">00056</a>    HMMIO <a class="code" href="structooWaveFile.shtml#o1">hWaveFile</a>;
+<a name="l00057"></a><a class="code" href="structooWaveFile.shtml#o2">00057</a>    WAVEFORMATEX <a class="code" href="structooWaveFile.shtml#o2">waveFormat</a>;
+<a name="l00058"></a><a class="code" href="structooWaveFile.shtml#o3">00058</a>    <span class="keywordtype">int</span> <a class="code" href="structooWaveFile.shtml#o3">dataSize</a>;
+00059 };
+00060
+<a name="l00062"></a><a class="code" href="group__winhelpers.shtml#ga0">00062</a> <span class="keyword">struct </span><a class="code" href="structooWaveFile.shtml">ooWaveFile</a> <a class="code" href="group__winhelpers.shtml#ga0">gWaveFile</a>;
+00063
+00064
+<a name="l00070"></a><a class="code" href="structWaveBuffer.shtml">00070</a> <span class="keyword">struct </span><a class="code" href="structWaveBuffer.shtml">WaveBuffer</a>{
+00071    WAVEHDR* pWaveHdr;
+00072    <span class="keyword">struct </span><a class="code" href="structWaveBuffer.shtml">WaveBuffer</a> * next;
+00073 };
+<a name="l00075"></a><a class="code" href="group__winhelpers.shtml#ga2">00075</a> <span class="keyword">struct </span><a class="code" href="structWaveBuffer.shtml">WaveBuffer</a> *<a class="code" href="group__winhelpers.shtml#ga1">gpWaveHead</a>, *<a class="code" href="group__winhelpers.shtml#ga2">gpWaveTail</a>;
+00076
+00077 <span class="keywordtype">int</span> gRecording; <span class="comment">/* Flag indicating whether recording is on/off */</span>
+<a name="l00079"></a><a class="code" href="group__winhelpers.shtml#ga4">00079</a> <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga4">gQueuedBufCount</a>;
+00080
+<a name="l00083"></a><a class="code" href="structBufferNode.shtml">00083</a> <span class="keyword">struct </span><a class="code" href="structBufferNode.shtml">BufferNode</a>{
+00084    <span class="keywordtype">char</span>* buf;
+00085    <span class="keyword">struct </span><a class="code" href="structBufferNode.shtml">BufferNode</a> * next;
+00086 };
+<a name="l00088"></a><a class="code" href="group__winhelpers.shtml#ga6">00088</a> <span class="keyword">struct </span><a class="code" href="structBufferNode.shtml">BufferNode</a> *<a class="code" href="group__winhelpers.shtml#ga5">gpFreeBufHead</a>, *<a class="code" href="group__winhelpers.shtml#ga6">gpFreeBufTail</a>;
+00089
+00090 <span class="comment">/* Count of number of buffers queued inside wave-out device for plaback. */</span>
+00091 <span class="keywordtype">int</span> gPlayQueueCount;
+00092
+<a name="l00094"></a><a class="code" href="group__winhelpers.shtml#ga8">00094</a> HWAVEIN <a class="code" href="group__winhelpers.shtml#ga8">ghWaveIn</a>;
+<a name="l00096"></a><a class="code" href="group__winhelpers.shtml#ga9">00096</a> HWAVEOUT <a class="code" href="group__winhelpers.shtml#ga9">ghWaveOut</a>;
+00097
+<a name="l00101"></a><a class="code" href="group__winhelpers.shtml#ga11">00101</a> CRITICAL_SECTION <a class="code" href="group__winhelpers.shtml#ga10">gPlayMutex</a>, <a class="code" href="group__winhelpers.shtml#ga11">gReadMutex</a>;
+00102
+00110 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga12">ooOpenWaveFileForRead</a>(<span class="keywordtype">char</span> *filename);
+00111
+00117 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__linuxhelpers.shtml#ga4">ooCloseWaveFile</a>();
+00118
+00127 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga14">ooReadWaveFileData</a>(<span class="keywordtype">char</span> * buffer, <span class="keywordtype">int</span> size);
+00128
+00138 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga15">ooOpenSpeaker</a>(HWAVEOUT * phWaveOut, WAVEFORMATEX waveFormat);
+00139
+00140
+00150 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga16">ooPlayWaveBuffer</a>(HWAVEOUT hWaveOut, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> * buff,
+00151                             <span class="keywordtype">long</span> size);
+00152
+00160 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga17">ooCloseSpeaker</a>(HWAVEOUT hWaveOut);
+00161
+00167 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga18">ooOpenMic</a>();
+00168
+00175 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga19">ooStartMicDataCapture</a>(HWAVEIN hWaveIn);
+00176
+00177
+00186 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga20">ooStopMicDataCapture</a>(HWAVEIN hWaveIn);
+00187
+00195 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga21">ooCloseMic</a>(HWAVEIN hWaveIn);
+00196
+00197
+00208 EXTERN <span class="keywordtype">void</span> CALLBACK <a class="code" href="group__winhelpers.shtml#ga22">ooMICCallback</a>(HWAVEIN hwi, UINT uMsg, DWORD dwInstance,
+00209                                    DWORD dwParam1, DWORD dwParam2);
+00210
+00222 EXTERN <span class="keywordtype">void</span> CALLBACK <a class="code" href="group__winhelpers.shtml#ga23">ooSpeakerCallback</a>(HWAVEOUT hwo, UINT uMsg,
+00223                              DWORD dwInstance, DWORD dwParam1, DWORD dwParam2);
+00224
+00234 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga24">ooAddToWaveBufferList</a>(WAVEHDR * waveHdr);
+00235
+00243 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga25">ooRemoveHeadOfWaveBufferList</a>();
+00244
+00252 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__winhelpers.shtml#ga26">ooAddToFreeBufferList</a>(<span class="keywordtype">char</span> * buffer);
+00253
+00261 EXTERN <span class="keywordtype">char</span>* <a class="code" href="group__winhelpers.shtml#ga27">ooGetFreeBuffer</a>();
+00266 <span class="preprocessor">#ifdef __cplusplus</span>
+00267 <span class="preprocessor"></span>}
+00268 <span class="preprocessor">#endif</span>
+00269 <span class="preprocessor"></span>
+00270 <span class="preprocessor">#endif </span><span class="comment">/* _OOWAVE_H_ */</span>
+</div></pre><!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                9 Aug 2004.<BR> MediaPlug-inlibrary, Version 0.1 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

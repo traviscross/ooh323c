@@ -1,0 +1,216 @@
+Copyright (C) 2004 by Objective Systems, Inc.
+
+Objective Open H.323 README
+
+Introduction
+
+Thank you for downloading the Objective Open H.323 software. This
+package contains a simple H.323 stack developed in C.  The ASN.1
+messaging code was developed using the Objective Systems ASN1C
+compiler to implement the H.225, H.245, and H.450 specifications. 
+Then additional code was developed which makes use of the compiler
+generated code for presenting a comparatively high level stack API.
+
+The media part, which includes RTP and audio support, is implemented
+as a plugin. The media plugin uses G.711 code made available by Sun
+Microsystems to the open source community. Please refer to their
+license for more details.
+
+Features supported in this package include the following:
+
+1. At the H.225 level, the framework allows the exchange of basic
+   Q.931 signalling messages for call setup.
+
+2. At the H.245 level, the following messages are supported
+ -   MasterSlaveDetermination
+ -   MasterSlaveDeterminationAck
+ -   TerminalCapabilitySet
+ -   TerminalCapabilitySetAck
+ -   OpenLogicalChannel
+ -   OpenLogicalChannelAck
+ -   CloseLogicalChannel
+ -   CloseLogicalChannelAck
+ -   RequestChannelClose
+ -   RequestChannelCloseAck
+
+   Note that "supported" means that these items have a sample
+   implementation. However, other message types such as RAS can be
+   easily supported by following the same implementation pattern.
+
+3. Plugin architecture for RTP and media support. Objective systems
+   has provided a sample plugin which can send/receive RTP data. It
+   can also play the received audio onto speakers and can collect
+   audio from Mic for transmitting as rtp stream. Apart from this,
+   it also supports transmitting audio files over RTP channel. The
+   windows version supports 16 bit, 8000 samples per second wave
+   file where as linux version supports raw 16 bit audio data file.
+
+4. Sample H.323 based audio file player and receiver programs are
+   provided with this package.
+
+5. This package also contains a sample H.323 VoIP phone application
+   which opens g711ulaw64k channels and transmits and receives voice.
+   It is tested successfully against ohPhone, a widely used open source
+   H.323 phone application.
+
+
+Getting Started
+   This section describes how to build the complete package on linux and
+   windows systems respectively.
+  
+   Building on Linux:
+   ------------------
+ 
+   1. Change directory to package root directory
+      ooh323c-x.y. (x.y indicate the release version of the stack)
+
+   2. To generate make files:
+
+         >./configure --prefix=<install-dir>
+
+      The configure script will generate the requred makefiles. The
+      <install-dir> is where the libraries will be installed. By default
+      the libraries are installed in /usr/local/lib. The static and shared
+      versions of h323 stack library(liboostk) and media plug-in library
+      (liboomedia) are installed.
+
+
+   3. To build the complete mackage, run makefile in the package root directory,
+      ooh323c-x.y
+         >make
+      This will build all the libraries and sample applications.
+  
+      To build optimized version:
+         >make opt 
+
+      To build debug version:
+         >make debug
+
+   4. To install libraries, from package root directory run
+
+         >make install
+
+   5. To run examples, make sure that all the libraries(liboostk.a,
+      liboomedia.so) are in your LD_LIBRARY_PATH. The libraries are located
+      in <install-dir>/lib directory.
+
+      Now run the receiver from command prompt:
+  
+        >./ooReceiver
+  
+      A log file will be created in the ooh323c-x.y/tests/receiver
+      directory (ooReceiver.log). Also, the log file for the media plugin will
+      be created in the same directory (media.log).
+
+     Now run the player from command prompt:
+  
+        >./ooPlayer space.raw
+   
+      A log file will be created in the ooh323c-x.y/tests/player
+      directory (ooPlayer.log). Also, a log file for the media plug-in will be
+      created in the same directory (media.log).
+
+   6. To run the H.323 endpoint sample application:
+      Make sure all the libraries(liboostk.a, liboomedia.so) are in your
+      LD_LIBRARY_PATH path. The libraries are located in <install-dir>/lib
+      directory.
+
+      To run the telephony application:
+      From package root directory ooh323c-x.y
+         >cd tests/simple
+        
+      To make a call:
+         >./simple <dest-ip>
+      where <dest-ip> is the dotted representation of the destinations IP
+      address.
+     
+      To receive a call:
+         >./simple
+
+      You will find simple.log and media.log in the current directory.
+     
+
+   7. For testing against ohphone, make sure -T -F -n options for ohphone
+      are enabled. This ensures that ohphone does not use tunneling and
+      faststart, which we do not support in this release.
+
+
+   Building on Windows
+   -------------------
+
+   The package includes Visual Studio 6 based workspace and project files.
+
+   1. Open the package root directory ooh323c-x.y, where x.y indicate the
+      release number.
+  
+   2. Open the ooh323c.dsw workspace which includes all the projects within
+      the package.
+
+   3. You can now do a batch build to build the complete package.
+
+   4. To build individual projects, dependencies are as follows:
+      oostk.dsp - none
+      oomedia.dsp - none
+      simple.dsp - oostk.dsp, oomedia.dsp
+      ooPlayer.dsp - oostk.dsp, oomedia.dsp
+      ooReceiver.dsp - oostk.dsp, oomedia.dsp
+
+   5. After a successful build the libraries will be installed in
+      ooh323c-x.y\lib\release and ooh323c-x.y\lib\debug directories.
+
+   6. To run examples, make sure that the media plug-in library oomedia.dll
+      is in your PATH. The libraries is located in
+      ooh323c-x.y\lib\release and  ooh323c-x.y\lib\debug directories.
+
+      Now run the receiver from command prompt:
+      From package root directory ooh323c-x.y
+
+        >cd tests\receiver\Release
+        >ooReceiver.exe
+  
+      A log file will be created in the current directory (ooReceiver.log).
+      Also, a log file for the media plugin will be created in the same
+      directory (media.log).
+
+      Now run the player from command prompt:
+      From package root directory ooh323c-x.y
+         >cd tests\player\Release
+         >ooPlayer.exe states.WAV
+   
+      A log file will be created in the current directory (ooReceiver.log).
+      Also, a log file for the media plugin will be created in the same
+      directory (media.log).
+  
+   7. To run the sample telephony endpoint application, again ensure that
+      the media plug-in library oomedia.dll is in your PATH. The library
+      is located in ooh323c-x.y\lib\release and  ooh323c-x.y\lib\debug
+      directories.      
+     
+      To run the telephony application:
+      From package root directory ooh323c-x.y
+         >cd tests\simple\Release
+        
+      To make a call:
+         >simple <dest-ip>
+      where <dest-ip> is the dotted representation of the destinations IP
+      address.
+     
+      To receive a call:
+         >simple.exe
+
+      You will find simple.log and media.log in the current directory.
+
+   8. For testing against ohphone, make sure -T -F -n options for ohphone
+      are enabled. This ensures that ohphone does not use tunneling and
+      faststart, which we do not support in this release.
+
+
+Reporting Problems:
+
+Report problems you encounter by sending E-mail to support@obj-sys.com.
+
+If you have any further questions or comments on what you would like to
+see in the product or what is difficult to use or understand, please
+communicate them to us. Your feedback is important to us. Please let us
+know how it works out for you - either good or bad.
+

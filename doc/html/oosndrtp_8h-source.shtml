@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>oosndrtp.h Source File</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>oosndrtp.h</h1><a href="oosndrtp_8h.shtml">Go to the documentation of this file.</a><pre class="fragment"><div>00001 <span class="comment">/*</span>
+00002 <span class="comment"> * Copyright (C) 2004 by Objective Systems, Inc.</span>
+00003 <span class="comment"> *</span>
+00004 <span class="comment"> * This software is furnished under an open source license and may be </span>
+00005 <span class="comment"> * used and copied only in accordance with the terms of this license. </span>
+00006 <span class="comment"> * The text of the license may generally be found in the root </span>
+00007 <span class="comment"> * directory of this installation in the COPYING file.  It </span>
+00008 <span class="comment"> * can also be viewed online at the following URL:</span>
+00009 <span class="comment"> *</span>
+00010 <span class="comment"> *   http://www.obj-sys.com/open/license.html</span>
+00011 <span class="comment"> *</span>
+00012 <span class="comment"> * Any redistributions of this file including modified versions must </span>
+00013 <span class="comment"> * maintain this copyright notice.</span>
+00014 <span class="comment"> *</span>
+00015 <span class="comment"> *****************************************************************************/</span>
+00016
+00024 <span class="preprocessor">#ifndef _OO_SNDRTP_H_</span>
+00025 <span class="preprocessor"></span><span class="preprocessor">#define _OO_SNDRTP_H_</span>
+00026 <span class="preprocessor"></span>
+00027
+00028 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
+00029 <span class="preprocessor">#include "<a class="code" href="ootypes_8h.shtml">ootypes.h</a>"</span>
+00030
+00031
+00032 <span class="preprocessor">#ifndef _WIN32</span>
+00033 <span class="preprocessor"></span><span class="preprocessor">#include &lt;dlfcn.h&gt;</span>
+00034 <span class="preprocessor">#endif</span>
+00035 <span class="preprocessor"></span>
+00036 <span class="preprocessor">#ifdef __cplusplus</span>
+00037 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
+00038 <span class="preprocessor">#endif</span>
+00039 <span class="preprocessor"></span>
+00040 <span class="preprocessor">#ifndef EXTERN</span>
+00041 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
+00042 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
+00043 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00044 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
+00045 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
+00046 <span class="preprocessor">#endif</span>
+00047 <span class="preprocessor"></span>
+<a name="l00053"></a><a class="code" href="group__pluginInterface.shtml#ga0">00053</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga0">MediaAPI_CreateTxRTPChan</a>)(<span class="keywordtype">int</span>* channelId, <span class="keywordtype">char</span> * destip, <span class="keywordtype">int</span> port);
+<a name="l00055"></a><a class="code" href="group__pluginInterface.shtml#ga1">00055</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga1">MediaAPI_CloseTxRTPChan</a>)(<span class="keywordtype">int</span>);
+<a name="l00057"></a><a class="code" href="group__pluginInterface.shtml#ga2">00057</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga2">MediaAPI_CreateRecvRTPChan</a>)(<span class="keywordtype">int</span>* channelId, <span class="keywordtype">char</span>* localip, <span class="keywordtype">int</span> localport);
+<a name="l00059"></a><a class="code" href="group__pluginInterface.shtml#ga3">00059</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga3">MediaAPI_CloseRecvRTPChan</a>)(<span class="keywordtype">int</span>);
+<a name="l00061"></a><a class="code" href="group__pluginInterface.shtml#ga4">00061</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga4">MediaAPI_StartTxWaveFile</a>)(<span class="keywordtype">int</span> channelId, <span class="keywordtype">char</span> * filename);
+<a name="l00063"></a><a class="code" href="group__pluginInterface.shtml#ga5">00063</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga5">MediaAPI_StopTxWaveFile</a>)(<span class="keywordtype">int</span> channelId);
+<a name="l00067"></a><a class="code" href="group__pluginInterface.shtml#ga6">00067</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga6">MediaAPI_StartTxMic</a>)(<span class="keywordtype">int</span> channelId);
+<a name="l00069"></a><a class="code" href="group__pluginInterface.shtml#ga7">00069</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga7">MediaAPI_StopTxMic</a>)(<span class="keywordtype">int</span> channelId);
+<a name="l00071"></a><a class="code" href="group__pluginInterface.shtml#ga8">00071</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga8">MediaAPI_StartRecvAndPlayback</a>)(<span class="keywordtype">int</span> channelId);
+<a name="l00073"></a><a class="code" href="group__pluginInterface.shtml#ga9">00073</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga9">MediaAPI_StopRecvAndPlayback</a>)(<span class="keywordtype">int</span> channelId);
+<a name="l00075"></a><a class="code" href="group__pluginInterface.shtml#ga10">00075</a> <span class="keyword">typedef</span> int (*<a class="code" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a>)();
+00085 <span class="comment">/* Media API */</span>
+00086 <span class="preprocessor">#ifdef _WIN32</span>
+00087 <span class="preprocessor"></span>HMODULE media;
+00088 <span class="preprocessor">#else</span>
+00089 <span class="preprocessor"></span><span class="keywordtype">void</span> * media;
+00090 <span class="preprocessor">#endif</span>
+00091 <span class="preprocessor"></span>
+00092 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga0">MediaAPI_CreateTxRTPChan</a>   FuncPtr_CreateTxRTPChan = 0;
+00093 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga1">MediaAPI_CloseTxRTPChan</a>    FuncPtr_CloseTxRTPChan = 0;
+00094 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga2">MediaAPI_CreateRecvRTPChan</a> FuncPtr_CreateRecvRTPChan = 0;
+00095 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga3">MediaAPI_CloseRecvRTPChan</a>  FuncPtr_CloseRecvRTPChan = 0;
+00096 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga4">MediaAPI_StartTxWaveFile</a>   FuncPtr_StartTxWaveFile = 0;
+00097 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga5">MediaAPI_StopTxWaveFile</a>    FuncPtr_StopTxWaveFile = 0;
+00098 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga6">MediaAPI_StartTxMic</a>        FuncPtr_StartTxMic = 0;
+00099 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga7">MediaAPI_StopTxMic</a>         FuncPtr_StopTxMic = 0;
+00100 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga8">MediaAPI_StartRecvAndPlayback</a> FuncPtr_StartRecvAndPlayback = 0;
+00101 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga9">MediaAPI_StopRecvAndPlayback</a>  FuncPtr_StopRecvAndPlayback = 0;
+00102 <span class="keyword">static</span> <a class="code" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a>  FuncPtr_InitializePlugin = 0;
+00103
+00104
+00111 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga12">ooLoadSndRTPPlugin</a>(<span class="keywordtype">char</span> * name);
+00112
+00118 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga13">ooReleaseSndRTPPlugin</a>();
+00119
+00128 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga14">ooCreateTransmitRTPChannel</a>
+00129    ( <span class="keywordtype">char</span> * destip, <span class="keywordtype">int</span> port);
+00130
+00137 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga15">ooCloseTransmitRTPChannel</a>
+00138    ();
+00139
+00148 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga16">ooCreateReceiveRTPChannel</a>
+00149    (<span class="keywordtype">char</span>* localip, <span class="keywordtype">int</span> localport);
+00150
+00157 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga17">ooCloseReceiveRTPChannel</a>
+00158    ();
+00159
+00167 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga18">ooStartTransmitWaveFile</a>
+00168    (<span class="keywordtype">char</span> * filename);
+00169
+00176 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga19">ooStopTransmitWaveFile</a>
+00177    ();
+00178
+00185 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga20">ooStartTransmitMic</a>
+00186    ();
+00187
+00194 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga21">ooStopTransmitMic</a>
+00195    ();
+00196
+00203 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga22">ooStartReceiveAudioAndPlayback</a>
+00204    ();
+00205
+00212 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga23">ooStopReceiveAudioAndPlayback</a>
+00213    ();
+00214
+00216 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga24">ooStartReceiveAudioAndRecord</a>
+00217    ();
+00219 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga25">ooStopReceiveAudioAndRecord</a>
+00220    ();
+00221
+00228 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga26">ooSetLocalRTPAndRTCPAddrs</a>();
+00229
+00236 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__media.shtml#ga27">ooRTPShutDown</a>();
+00240 <span class="preprocessor">#ifdef __cplusplus</span>
+00241 <span class="preprocessor"></span>}
+00242 <span class="preprocessor">#endif</span>
+00243 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+</div></pre><!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                21 Nov 2004.<BR> H323FrameworkStack, Version 0.3 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

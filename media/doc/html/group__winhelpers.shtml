@@ -1,0 +1,882 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>Media API Internal Windows Helper Functions</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>Media API Internal Windows Helper Functions</h1><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="structooWaveFile.shtml">ooWaveFile</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper structure for reading wavefile.  <a href="structooWaveFile.shtml#_details">More...</a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="structWaveBuffer.shtml">WaveBuffer</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This holds a list of buffers holding recorded data from MIC.  <a href="structWaveBuffer.shtml#_details">More...</a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="structBufferNode.shtml">BufferNode</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This holds the list of free buffers which can be used for sending data to waveout device.  <a href="structBufferNode.shtml#_details">More...</a><br><br></td></tr>
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga12">ooOpenWaveFileForRead</a> (char *filename)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Opens a WaveFile for read and traverses upto the data chunk, so that next mmioRead will return wavedata.  <a href="#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga13">ooCloseWaveFile</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes the open WaveFile.  <a href="#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga14">ooReadWaveFileData</a> (char *buffer, int size)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reads data from already opened wave file.  <a href="#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga15">ooOpenSpeaker</a> (HWAVEOUT *phWaveOut, WAVEFORMATEX waveFormat)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Opens a waveOut device, i.e., speaker for playback.  <a href="#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga16">ooPlayWaveBuffer</a> (HWAVEOUT hWaveOut, unsigned char *buff, long size)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Plays the number of bytes specified by the size parameter from the buff onto the speaker device.  <a href="#ga16"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga17">ooCloseSpeaker</a> (HWAVEOUT hWaveOut)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Release all the buffers queued into the waveOut device(speaker) for playback and close speaker.  <a href="#ga17"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga18">ooOpenMic</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Opens the WaveIn device, MIC, for recording and queues the buffers into the device which can be used for storing recorded data.  <a href="#ga18"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga19">ooStartMicDataCapture</a> (HWAVEIN hWaveIn)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Start recording audio into the buffers.  <a href="#ga19"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga20">ooStopMicDataCapture</a> (HWAVEIN hWaveIn)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop recording audio.  <a href="#ga20"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga21">ooCloseMic</a> (HWAVEIN hWaveIn)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This releases all the buffers queued inside wave-in device, mic, and then closes the mic.  <a href="#ga21"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void CALLBACK&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga22">ooMICCallback</a> (HWAVEIN hwi, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This is a callback function registered with the mic.  <a href="#ga22"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void CALLBACK&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga23">ooSpeakerCallback</a> (HWAVEOUT hwo, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This is a callback function registered with the speaker.  <a href="#ga23"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga24">ooAddToWaveBufferList</a> (WAVEHDR *waveHdr)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper function to maintain the list of buffers returned by mic, after recording.  <a href="#ga24"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga25">ooRemoveHeadOfWaveBufferList</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper function which removes the WAVEHDR at the front of the list.  <a href="#ga25"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga26">ooAddToFreeBufferList</a> (char *buffer)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper function to put a buffer back into the free buffer list.  <a href="#ga26"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN char *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga27">ooGetFreeBuffer</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a free buffer from free buffer list.  <a href="#ga27"></a><br><br></td></tr>
+<tr><td colspan=2><br><h2>Variables</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="winhelpers::gWaveFile" ></a>
+<a class="el" href="structooWaveFile.shtml">ooWaveFile</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga0">gWaveFile</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global handle to open wave file. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="winhelpers::gpWaveHead" ></a>
+<a class="el" href="structWaveBuffer.shtml">WaveBuffer</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga1">gpWaveHead</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global pointers to list of wave buffers. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="winhelpers::gpWaveTail" ></a>
+<a class="el" href="structWaveBuffer.shtml">WaveBuffer</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga2">gpWaveTail</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global pointers to list of wave buffers. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga3" doxytag="winhelpers::gRecording" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>gRecording</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="winhelpers::gQueuedBufCount" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga4">gQueuedBufCount</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Count of number of buffers queued inside the wave-in device. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga5" doxytag="winhelpers::gpFreeBufHead" ></a>
+<a class="el" href="structBufferNode.shtml">BufferNode</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga5">gpFreeBufHead</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global pointers to the list holding free buffers. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga6" doxytag="winhelpers::gpFreeBufTail" ></a>
+<a class="el" href="structBufferNode.shtml">BufferNode</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga6">gpFreeBufTail</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global pointers to the list holding free buffers. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga7" doxytag="winhelpers::gPlayQueueCount" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>gPlayQueueCount</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga8" doxytag="winhelpers::ghWaveIn" ></a>
+HWAVEIN&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga8">ghWaveIn</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global handle to open wave-in device. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga9" doxytag="winhelpers::ghWaveOut" ></a>
+HWAVEOUT&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga9">ghWaveOut</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Global handle to open wave-out device. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="winhelpers::gPlayMutex" ></a>
+CRITICAL_SECTION&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga10">gPlayMutex</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">As callback functions run in their own threads, we need mutex protection for data which is used by multiple threads. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga11" doxytag="winhelpers::gReadMutex" ></a>
+CRITICAL_SECTION&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__winhelpers.shtml#ga11">gReadMutex</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">As callback functions run in their own threads, we need mutex protection for data which is used by multiple threads. <br><br></td></tr>
+</table>
+<hr><h2>Function Documentation</h2>
+<a class="anchor" name="ga26" doxytag="ooWave.h::ooAddToFreeBufferList" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooAddToFreeBufferList           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>buffer</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Helper function to put a buffer back into the free buffer list.
+<p>
+Once the buffer playback is done, it can be added to the free list <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>buffer</em>&nbsp;</td><td>Pointer to the buffer to be added to the free list.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga24" doxytag="ooWave.h::ooAddToWaveBufferList" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooAddToWaveBufferList           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">WAVEHDR *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>waveHdr</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Helper function to maintain the list of buffers returned by mic, after recording.
+<p>
+These buffers are kept in this list till there processing is done and then again queued back into the mic for further recording. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>waveHdr</em>&nbsp;</td><td>Pointer to wave header structure which in turn contains the data buffer.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga21" doxytag="ooWave.h::ooCloseMic" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooCloseMic           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEIN&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>hWaveIn</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This releases all the buffers queued inside wave-in device, mic, and then closes the mic.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hWaveIn</em>&nbsp;</td><td>Handle to the wave-in device.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga17" doxytag="ooWave.h::ooCloseSpeaker" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooCloseSpeaker           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEOUT&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>hWaveOut</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Release all the buffers queued into the waveOut device(speaker) for playback and close speaker.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hWaveOut</em>&nbsp;</td><td>Handle to the wave out device to be closed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga13" doxytag="ooWave.h::ooCloseWaveFile" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooCloseWaveFile           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Closes the open WaveFile.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga27" doxytag="ooWave.h::ooGetFreeBuffer" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN char* ooGetFreeBuffer           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Get a free buffer from free buffer list.
+<p>
+A free buffer is retrieved using this function for storing data which will then passed onto ooPlayWaveBuffer function for playback.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Pointer to a character buffer </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga22" doxytag="ooWave.h::ooMICCallback" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN void CALLBACK ooMICCallback           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEIN&nbsp;</td>
+          <td class="mdname" nowrap> <em>hwi</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>UINT&nbsp;</td>
+          <td class="mdname" nowrap> <em>uMsg</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwInstance</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwParam1</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwParam2</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This is a callback function registered with the mic.
+<p>
+It will be called by mic device when a buffer full of data is recorded. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hwi</em>&nbsp;</td><td>Handle to the wave-in device. </td></tr>
+    <tr><td valign=top><em>uMsg</em>&nbsp;</td><td>Event message sent by the device. </td></tr>
+    <tr><td valign=top><em>dwInstance</em>&nbsp;</td><td>User data. </td></tr>
+    <tr><td valign=top><em>dwParam1</em>&nbsp;</td><td>Message parameter. </td></tr>
+    <tr><td valign=top><em>dwParam2</em>&nbsp;</td><td>Message parameter.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>None </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga18" doxytag="ooWave.h::ooOpenMic" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooOpenMic           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Opens the WaveIn device, MIC, for recording and queues the buffers into the device which can be used for storing recorded data.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga15" doxytag="ooWave.h::ooOpenSpeaker" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooOpenSpeaker           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEOUT *&nbsp;</td>
+          <td class="mdname" nowrap> <em>phWaveOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>WAVEFORMATEX&nbsp;</td>
+          <td class="mdname" nowrap> <em>waveFormat</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Opens a waveOut device, i.e., speaker for playback.
+<p>
+waveFormat specifies the format to be used for playback. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>phWaveOut</em>&nbsp;</td><td>Pointer to an empty HWAVEOUT handle which will contain the handle to the opened device on return. </td></tr>
+    <tr><td valign=top><em>waveFormat</em>&nbsp;</td><td>Wave format to be used for playback.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga12" doxytag="ooWave.h::ooOpenWaveFileForRead" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooOpenWaveFileForRead           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>filename</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Opens a WaveFile for read and traverses upto the data chunk, so that next mmioRead will return wavedata.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>filename</em>&nbsp;</td><td>Name of the wave file to be opened.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga16" doxytag="ooWave.h::ooPlayWaveBuffer" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooPlayWaveBuffer           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEOUT&nbsp;</td>
+          <td class="mdname" nowrap> <em>hWaveOut</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>unsigned char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>buff</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>long&nbsp;</td>
+          <td class="mdname" nowrap> <em>size</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Plays the number of bytes specified by the size parameter from the buff onto the speaker device.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hWaveOut</em>&nbsp;</td><td>Handle to the speaker device. </td></tr>
+    <tr><td valign=top><em>buff</em>&nbsp;</td><td>Pointer to the buffer containing the data to be played. </td></tr>
+    <tr><td valign=top><em>size</em>&nbsp;</td><td>Size of the buffer to be played out.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga14" doxytag="ooWave.h::ooReadWaveFileData" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooReadWaveFileData           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>size</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Reads data from already opened wave file.
+<p>
+Number of bytes to be read is specified by the "size" parameter. The data is returned in "buffer" parameter and the number of bytes read is returned as a return value. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>buffer</em>&nbsp;</td><td>Buffer which will contain the data read. </td></tr>
+    <tr><td valign=top><em>size</em>&nbsp;</td><td>Size of the buffer passed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Number of bytes read on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga25" doxytag="ooWave.h::ooRemoveHeadOfWaveBufferList" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRemoveHeadOfWaveBufferList           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Helper function which removes the WAVEHDR at the front of the list.
+<p>
+Note this does not free up the mem used by WAVEHDR as it will be queued into the mic for further recording.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga23" doxytag="ooWave.h::ooSpeakerCallback" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN void CALLBACK ooSpeakerCallback           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEOUT&nbsp;</td>
+          <td class="mdname" nowrap> <em>hwo</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>UINT&nbsp;</td>
+          <td class="mdname" nowrap> <em>uMsg</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwInstance</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwParam1</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>DWORD&nbsp;</td>
+          <td class="mdname" nowrap> <em>dwParam2</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This is a callback function registered with the speaker.
+<p>
+It is called by the speaker, when a buffer full of data is played back. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hwo</em>&nbsp;</td><td>Handle to the wave out device. </td></tr>
+    <tr><td valign=top><em>uMsg</em>&nbsp;</td><td>Waveform audio output message. </td></tr>
+    <tr><td valign=top><em>dwInstance</em>&nbsp;</td><td>User instance data passed during waveOutOpen. </td></tr>
+    <tr><td valign=top><em>dwParam1</em>&nbsp;</td><td>Message parameter. </td></tr>
+    <tr><td valign=top><em>dwParam2</em>&nbsp;</td><td>Message parameter</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>None </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga19" doxytag="ooWave.h::ooStartMicDataCapture" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooStartMicDataCapture           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEIN&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>hWaveIn</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Start recording audio into the buffers.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hWaveIn</em>&nbsp;</td><td>Handle to wave-in device.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga20" doxytag="ooWave.h::ooStopMicDataCapture" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooStopMicDataCapture           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">HWAVEIN&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>hWaveIn</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Stop recording audio.
+<p>
+Note that this marks current buffer as done and frees it by calling callback function. However, other queued buffers will stay there in wave-in device. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>hWaveIn</em>&nbsp;</td><td>Handle to the wave-in device.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                9 Aug 2004.<BR> MediaPlug-inlibrary, Version 0.1 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

@@ -1,0 +1,95 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "ooPlayer"=.\tests\player\ooPlayer.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name oomedia
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name oostk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ooReceiver"=.\tests\receiver\ooReceiver.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name oomedia
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name oostk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "oomedia"=.\media\oomedia.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "oostk"=.\src\oostk.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "simple"=.\tests\simple\simple.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name oomedia
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name oostk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

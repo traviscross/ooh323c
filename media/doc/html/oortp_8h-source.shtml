@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>oortp.h Source File</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>oortp.h</h1><a href="oortp_8h.shtml">Go to the documentation of this file.</a><pre class="fragment"><div>00001 <span class="comment">/*</span>
+00002 <span class="comment"> * Copyright (C) 2004 by Objective Systems, Inc.</span>
+00003 <span class="comment"> *</span>
+00004 <span class="comment"> * This software is furnished under an open source license and may be </span>
+00005 <span class="comment"> * used and copied only in accordance with the terms of this license. </span>
+00006 <span class="comment"> * The text of the license may generally be found in the root </span>
+00007 <span class="comment"> * directory of this installation in the LICENSE.txt file.  It </span>
+00008 <span class="comment"> * can also be viewed online at the following URL:</span>
+00009 <span class="comment"> *</span>
+00010 <span class="comment"> *   http://www.obj-sys.com/open/license.html</span>
+00011 <span class="comment"> *</span>
+00012 <span class="comment"> * Any redistributions of this file including modified versions must </span>
+00013 <span class="comment"> * maintain this copyright notice.</span>
+00014 <span class="comment"> *</span>
+00015 <span class="comment"> *****************************************************************************/</span>
+00021 <span class="preprocessor">#ifndef _OORTP_H_</span>
+00022 <span class="preprocessor"></span><span class="preprocessor">#define _OORTP_H_</span>
+00023 <span class="preprocessor"></span>
+00024 <span class="comment">/* oortp.h */</span>
+00025
+00026 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
+00027 <span class="preprocessor">#include "<a class="code" href="ooSock_8h.shtml">ooSock.h</a>"</span>
+00028 <span class="preprocessor">#include "<a class="code" href="ooCommon_8h.shtml">ooCommon.h</a>"</span>
+00029
+00030 <span class="preprocessor">#ifdef __cplusplus</span>
+00031 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
+00032 <span class="preprocessor">#endif</span>
+00033 <span class="preprocessor"></span>
+00034 <span class="preprocessor">#ifndef EXTERN</span>
+00035 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
+00036 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
+00037 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00038 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
+00039 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
+00040 <span class="preprocessor">#endif</span>
+00041 <span class="preprocessor"></span>
+00047 <span class="preprocessor">#define OO_CHAN_CLOSE 0</span>
+00048 <span class="preprocessor"></span><span class="preprocessor">#define OO_CHAN_OPEN  1</span>
+00049 <span class="preprocessor"></span>
+00050
+00051 <span class="comment">/* Structure for holding RTP channel information*/</span>
+00052 <span class="keyword">struct </span>OORTPChannel{
+00053    <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> sock;
+00054    <span class="keywordtype">char</span>    ip[20];<span class="comment">/*Remote ip for transmit channel, local ip for recv channel*/</span>
+00055    <span class="keywordtype">int</span> port; <span class="comment">/*remote port for xmit chan and local port for recv chan*/</span>
+00056    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> seqNo; <span class="comment">/* last SeqNo recv or xmitted */</span>
+00057    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> timestamp; <span class="comment">/* last timestamp recv or xmitted */</span>
+00058    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ssrc; <span class="comment">/* synchronization source */</span>
+00059    <span class="keywordtype">int</span> status; <span class="comment">/* 0 - closed, 1- open */</span>
+00060 } gXmitChannel, gRecvChannel; <span class="comment">/* Xmit and Recv RTP channels */</span>
+00061
+00062
+00063 <span class="keyword">static</span> <span class="keywordtype">int</span> gRecvPlayLoop, gXmitFileLoop, gXmitMicLoop;
+00064
+00065 <span class="comment">/* Thread handles, for Xmit and Recv threads. */</span>
+00066 <span class="preprocessor">#ifdef _WIN32</span>
+00067 <span class="preprocessor"></span>HANDLE gXmitThrdHdl, gRecvThrdHdl;
+00068 <span class="preprocessor">#else</span>
+00069 <span class="preprocessor"></span>pthread_t gXmitThrdHdl, gRecvThrdHdl;
+00070 <span class="preprocessor">#endif</span>
+00071 <span class="preprocessor"></span>
+00076 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga7">ooInitializePlugin</a>();
+00077
+00089 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga8">ooCreateTransmitRTPChannel</a>(<span class="keywordtype">int</span>* channelId, <span class="keywordtype">char</span> * destip, <span class="keywordtype">int</span> port);
+00090
+00100 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga9">ooCloseTransmitRTPChannel</a>(<span class="keywordtype">int</span> channelId);
+00101
+00113 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga10">ooCreateReceiveRTPChannel</a>(<span class="keywordtype">int</span>* channelId, <span class="keywordtype">char</span>* localip,
+00114                                      <span class="keywordtype">int</span> localport);
+00115
+00125 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga11">ooCloseReceiveRTPChannel</a>(<span class="keywordtype">int</span> channelId);
+00126
+00138 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga12">ooStartTransmitWaveFile</a>(<span class="keywordtype">int</span> channelId, <span class="keywordtype">char</span> * filename);
+00139
+00148 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga13">ooStopTransmitWaveFile</a>(<span class="keywordtype">int</span> channelId);
+00149
+00159 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga14">ooStartTransmitMic</a>(<span class="keywordtype">int</span> channelId);
+00160
+00169 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga15">ooStopTransmitMic</a>(<span class="keywordtype">int</span> channelId);
+00170
+00180 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga16">ooStartReceiveAudioAndPlayback</a>(<span class="keywordtype">int</span> channelId);
+00181
+00190 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__mediaapi.shtml#ga17">ooStopReceiveAudioAndPlayback</a>(<span class="keywordtype">int</span> channelId);
+00191
+00192 <span class="comment">/* Not Available currently*/</span>
+00193 EXTERN <span class="keywordtype">int</span> ooStartReceiveAudioAndRecord(<span class="keywordtype">int</span> channelId);
+00194 <span class="comment">/* Not Available currently*/</span>
+00195 EXTERN <span class="keywordtype">int</span> ooStopReceiveAudioAndRecord(<span class="keywordtype">int</span> channelId);
+00200 <span class="comment">/*</span>
+00201 <span class="comment"> * @defgroup winhelpers Media API Windows Helper Functions</span>
+00202 <span class="comment"> * @{</span>
+00203 <span class="comment"> */</span>
+00204
+00210 <span class="keyword">static</span> <span class="keywordtype">int</span> ooTransmitFileThreadFunc();
+00211
+00217 <span class="keyword">static</span> <span class="keywordtype">int</span> ooTransmitMicThreadFunc();
+00218
+00224 <span class="keyword">static</span> <span class="keywordtype">int</span> ooReceiveSpeakerThreadFunc();
+00225 <span class="comment">/* </span>
+00226 <span class="comment"> * @} </span>
+00227 <span class="comment"> */</span>
+00228
+00239 <span class="keyword">static</span> <span class="keywordtype">int</span> ooTransmitMicThreadFuncLnx();
+00240
+00247 <span class="keyword">static</span> <span class="keywordtype">int</span> ooReceiveSpeakerThreadFuncLnx();
+00248
+00255 <span class="keyword">static</span> <span class="keywordtype">int</span> ooTransmitFileThreadFuncLnx();
+00260 <span class="preprocessor">#ifdef __cplusplus</span>
+00261 <span class="preprocessor"></span>}
+00262 <span class="preprocessor">#endif</span>
+00263 <span class="preprocessor"></span>
+00264 <span class="preprocessor">#endif</span>
+</div></pre><!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                9 Aug 2004.<BR> MediaPlug-inlibrary, Version 0.1 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

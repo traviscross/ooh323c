@@ -1,0 +1,26 @@
+Release 0.3: New Features
+1. New Design
+   a. Allows handling multiple simultaneous calls
+   b. Unique call identifiers for calls
+   c. Applications can add capabilities and register control functions
+      such as start/stop for managing those media channels. The stack
+      just calls start/stop callback functions to start or stop media
+      channel.
+   d. Applications are much simpler to write as they just have to initialize
+      end point with all the capabilities and stack handles all the message
+      exchanges, unlike the earlier design where application had to build
+      SETUP, CONNECT etc. messages
+
+2. Debugging capabilities
+   a. Prints all received messages to log
+   b. Prints call-ids to identify which log message is associated with which
+      call.
+
+3. Detects remote endpoints abruptly closing TCP connections.
+
+4.Verifies that the Capability specified in the OpenLogicalChannel by remote
+  endpoint is actually supported by local endpoint.
+
+
+  
+        
