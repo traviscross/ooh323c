@@ -61,6 +61,9 @@ int main(int argc, char ** argv)
    pthread_t threadHdl;
 #endif
 
+#ifdef _WIN32
+   ooSocketsInit (); /*Initialize the windows socket api  */
+#endif
    if(argc>6)
    {
       printf("USAGE:\n%s", USAGE);
@@ -101,15 +104,12 @@ int main(int argc, char ** argv)
    if(!strcmp(ourip, "127.0.0.1"))
    {
       printf("Failed to determine local ip, please specify as command line"
-             "option\n");
+             " option\n");
       printf("USAGE:\n%s", USAGE);
       return -1;
    }
       
           
-#ifdef _WIN32
-   ooSocketsInit (); /*Initialize the windows socket api  */
-#endif
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
    ret = ooInitializeH323Ep("simple.log", 1, 1, 30, 9, 0, 71, "obj-sys",
                       "Version 0.4", T_H225CallType_pointToPoint, 1720,
