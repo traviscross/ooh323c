@@ -1,3 +1,19 @@
+#!/usr/local/bin/perl
+#
+# * Copyright (C) 2004-2005 by Objective Systems, Inc.
+# *
+# * This software is furnished under an open source license and may be
+# * used and copied only in accordance with the terms of this license.
+# * The text of the license may generally be found in the root
+# * directory of this installation in the COPYING file.  It
+# * can also be viewed online at the following URL:
+# *
+# *   http://www.obj-sys.com/open/license.html
+# *
+# * Any redistributions of this file including modified versions must
+# * maintain this copyright notice.
+# *
+# ***************************************************************************/
 if(@ARGV < 2) {
    print "Usage - perl mkfwkit.pl [compact|standard] [version]";
    exit(0);
@@ -26,6 +42,7 @@ print `cp -f ./README ./ooh323c-${version}/README`;
 
 print `cp -f ./configure ./ooh323c-${version}/configure`;
 print `cp -f ./configure.in ./ooh323c-${version}/configure.in`;
+print `cp -f ./config.h.in ./ooh323c-${version}/config.h.in`;
 print `cp -f ./ooh323c.dsw ./ooh323c-${version}/ooh323c.dsw`;
 
 mkdir ("ooh323c-${version}/config", 0777);
@@ -104,7 +121,9 @@ print `cp -r -f ./media/Makefile.in ./ooh323c-${version}/media/Makefile.in`;
 print `cp -r -f ./media/oomedia.dsp ./ooh323c-${version}/media/oomedia.dsp`;
 
 
- 
+`perl dos2unix.pl  ooh323c-${version} ooh323c-${version}-temp`;
+`rm -rf ooh323c-${version}`;
+`mv ooh323c-${version}-temp ooh323c-${version}`;
 `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
 `gzip ooh323c-${version}.tar`;
 #`rm -rf ooh323c`;
