@@ -1222,7 +1222,7 @@ int ooSendEndSessionCommand(ooCallData *call)
 int ooHandleH245Command(ooCallData *call,
                         H245CommandMessage *command)
 {
-   int i;
+   ASN1UINT i;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
    OOTRACEDBGC3("Handling H.245 command message. (%s, %s)\n", call->callType,
@@ -1985,7 +1985,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
 
 int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
 {
-  int ret = 0,k;
+   int ret = 0,k;
    OOCTXT *pctxt=NULL;
    H245TerminalCapabilitySet *tcs=NULL;
    DListNode *pNode=NULL;
@@ -2683,7 +2683,6 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
 
 int ooCloseLogicalChannelTimerExpired(void *pdata)
 {
-   int ret;
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
    ooCallData *call = cbData->call;
    ooLogicalChannel *pChannel = NULL;

@@ -479,7 +479,8 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
 
 int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
 {
-   int ret=OO_OK, i;
+   int ret=OO_OK;
+   ASN1UINT i;
    DListNode *pNode = NULL;
    OOTimer *pTimer=NULL;
    int type = q931Msg->messageType;
