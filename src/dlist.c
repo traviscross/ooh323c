@@ -28,7 +28,7 @@ void dListInit (DList* pList)
 DListNode* dListAppend (OOCTXT* pctxt, DList* pList, void* pData)
 {
    DListNode* pListNode = (DListNode*)
-      ASN1MALLOC (pctxt, sizeof(DListNode));
+      memAlloc (pctxt, sizeof(DListNode));
 
    if (0 != pListNode) {
       pListNode->data = pData;
@@ -78,7 +78,7 @@ void dListFreeNodes (OOCTXT* pctxt, DList* pList)
 
    for (pNode = pList->head; pNode != 0; pNode = pNextNode) {
       pNextNode = pNode->next;
-      ASN1MEMFREEPTR (pctxt, pNode);
+      memFreePtr (pctxt, pNode);
    }
    pList->count = 0;
    pList->head = pList->tail = 0;
@@ -92,14 +92,14 @@ void dListFreeAll (OOCTXT* pctxt, DList* pList)
    for (pNode = pList->head; pNode != 0; pNode = pNextNode) {
       pNextNode = pNode->next;
      
-      ASN1MEMFREEPTR (pctxt, pNode->data);
-      ASN1MEMFREEPTR (pctxt, pNode);
+      memFreePtr (pctxt, pNode->data);
+      memFreePtr (pctxt, pNode);
    }
    pList->count = 0;
    pList->head = pList->tail = 0;
 }
 
-/* Remove node from list. Node is not freeing */
+/* Remove node from list. Node is not freed */
 void dListRemove (DList* pList, DListNode* node)
 {
    if(node->next != 0) {
@@ -127,4 +127,102 @@ DListNode* dListFindByIndex (DList* pList, int index)
       curNode = curNode->next;
    }
    return curNode;
+}
+
+/* Insert item before given node */
+
+DListNode* dListInsertBefore
+(OOCTXT* pctxt, DList* pList, DListNode* node, const void* pData)
+{
+   DListNode* pListNode = (DListNode*) memAlloc (pctxt, sizeof(DListNode));
+ 
+   if (0 != pListNode) {
+      pListNode->data = pData;
+
+      if (node == 0) { /* insert before end (as last element) */
+         pListNode->next = (DListNode*) 0;
+         if (0 != pList->tail) {
+            pList->tail->next = pListNode;
+            pListNode->prev = pList->tail;
+         }
+         if (0 == pList->head) {
+            pList->head = pListNode;
+            pListNode->prev = (DListNode*) 0;
+         }
+         pList->tail = pListNode;
+      }
+      else if (node == pList->head) { /* insert as head (head case) */
+         pListNode->next = pList->head;
+         pListNode->prev = (DListNode*) 0;
+         if(pList->head != 0) {
+            pList->head->prev = pListNode;
+         }
+         if(pList->tail == 0) {
+            pList->tail = pListNode;
+         }
+         pList->head = pListNode;
+      }
+      else { /* other cases */
+         pListNode->next = node;
+         pListNode->prev = node->prev;
+         node->prev = pListNode;
+         /* here, pListNode->prev always should be non-zero,
+          * because if pListNode->prev is zero - it is head case (see above).
+          */
+         pListNode->prev->next = pListNode;
+      }
+
+      pList->count++;
+   }
+
+   return pListNode;
+}
+
+/* Insert item after given node */
+
+DListNode* dListInsertAfter
+(OOCTXT* pctxt, DList* pList, DListNode* node, const void* pData)
+{
+   DListNode* pListNode = (DListNode*) memAlloc (pctxt, sizeof(DListNode));
+
+   if (0 != pListNode) {
+      pListNode->data = pData;
+
+      if (node == 0) { /* insert as head (as first element) */
+         pListNode->next = pList->head;
+         pListNode->prev = (DListNode*) 0;
+         if (pList->head != 0) {
+            pList->head->prev = pListNode;
+         }
+         if (pList->tail == 0) {
+            pList->tail = pListNode;
+         }
+         pList->head = pListNode;
+      }
+      else if (node == pList->tail) { /* insert as tail (as last element) */
+         pListNode->next = (DListNode*) 0;
+         if (0 != pList->tail) {
+            pList->tail->next = pListNode;
+            pListNode->prev = pList->tail;
+         }
+         if (0 == pList->head) {
+            pList->head = pListNode;
+            pListNode->prev = (DListNode*) 0;
+         }
+         pList->tail = pListNode;
+      }
+      else { /* other cases */
+         pListNode->next = node->next;
+         pListNode->prev = node;
+         node->next = pListNode;
+         /* here, pListNode->next always should be non-zero,
+          * because if pListNode->next is zero - it is tail case (see above).
+          */
+         pListNode->next->prev = pListNode;
+      }
+
+      pList->count++;
+   }
+
+   return pListNode;
 }

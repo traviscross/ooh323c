@@ -780,13 +780,47 @@ EXTERN void dListFreeNodes (OOCTXT* pctxt, DList* pList);
 EXTERN void dListFreeAll (OOCTXT* pctxt, DList* pList);
 
 /**
+ * This function inserts an item into the linked list structure before the
+ * specified element.
+ *
+ * @param pctxt         Pointer to a context structure.
+ * @param pList         A pointer to a linked list structure into which the
+ *                        data item is to be inserted.
+ * @param node          The position in the list where the item is to be
+ *                        inserted.  The item will be inserted before this
+ *                        node or appended to the list if node is null.
+ * @param pData         A pointer to the data item to be inserted to the list.
+ * @return              A pointer to an allocated node structure used to
+ *                        link the given data value into the list.
+ */
+EXTERN DListNode* dListInsertBefore
+(OOCTXT* pctxt, DList* pList, DListNode* node, const void* pData);
+
+/**
+ * This function inserts an item into the linked list structure after the
+ * specified element.
+ *
+ * @param pctxt         Pointer to a context structure.
+ * @param pList         A pointer to a linked list structure into which the
+ *                        data item is to be inserted.
+ * @param node          The position in the list where the item is to be
+ *                        inserted.  The item will be inserted after this
+ *                        node or added as the head element if node is null.
+ * @param pData         A pointer to the data item to be inserted to the list.
+ * @return              A pointer to an allocated node structure used to
+ *                        link the given data value into the list.
+ */
+EXTERN DListNode* dListInsertAfter
+(OOCTXT* pctxt, DList* pList, DListNode* node, const void* pData);
+
+/**
  * This function removes a node from the linked list structure. The memAlloc
  * function was used to allocate the memory for the list node structure,
  * therefore, all internal list memory will be released whenever memFree or
  * memFreePtr is called.
  *
  * @param pList        A pointer to a linked list structure onto which the data
- *                     item is to be appended. A pointer to an updated linked
+ *                     item is to be removed. A pointer to an updated linked
  *                     list structure.
  * @param node         A pointer to the node that is to be removed. It should
  *                     already be in the linked list structure.

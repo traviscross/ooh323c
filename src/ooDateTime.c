@@ -14,9 +14,9 @@
  *
  *****************************************************************************/
 
-#include "ooDateTime.h"
+#include "ooCommon.h"
 
-#if defined(_WIN32)||defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
 #include <SYS\TIMEB.H>
 int gettimeofday (struct timeval *tv, struct timezone *tz)
 {

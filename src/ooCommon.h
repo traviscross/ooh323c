@@ -43,8 +43,8 @@
 #endif
 
 /**
- * cruntime C Runtime Common Constant and Type Definitions.
- *
+ * @defgroup cruntime C Runtime Common Constant and Type Definitions.
+ * @{
  */
 
 /* Basic type definitions */
@@ -114,7 +114,7 @@ typedef struct _OOMsgBuf {
 #endif /* _DLL */
 #endif /* EXTERN */
 
-/*
+/**
  * @}
  */
 #endif /* _OOCOMMON_H_ */
