@@ -439,11 +439,14 @@ int ooGenerateCallToken(char *callToken, int size);
  *
  * @param h245Len          Length of the encoded H.245 message buffer.
  * @param h245MsgType      Type of the H245 message
+ * @param associatedChan   The logical channel number with which the tunneled
+ *                         message is associated. In case of no channel, this
+ *                         value should be 0.
  *
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
-                                   int h245Len, int h245MsgType);
+                         int h245Len, int h245MsgType, int associatedChan);
 
 
 int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,

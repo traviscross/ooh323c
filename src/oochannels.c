@@ -976,14 +976,39 @@ int ooH245Receive(ooCallData *call)
 /* Generic Send Message functionality. Based on type of message to be sent,
    it calls the corresponding function to retrieve the message buffer and
    then transmits on the associated channel
+   Interpreting msgptr:
+      Q931 messages except facility
+                             1st octet - msgType, next 4 octets - tpkt header,
+                             followed by encoded msg
+      Q931 message facility
+                             1st octect - OOFacility, 2nd octet - tunneled msg
+                             type(in case no tunneled msg - OOFacility),
+                             3rd and 4th octet - associated logical channel
+                             of the tunneled msg(0 when no channel is
+                             associated. ex. in case of MSD, TCS), next
+                             4 octets - tpkt header, followed by encoded
+                             message.
+
+      H.245 messages no tunneling
+                             1st octet - msg type, next two octets - logical
+                             channel number(0, when no channel is associated),
+                             next two octets - total length of the message
+                            (including tpkt header)
+
+      H.245 messages - tunneling.
+                             1st octet - msg type, next two octets - logical
+                             channel number(0, when no channel is associated),
+                             next two octets - total length of the message.
+                             Note, no tpkt header is present in this case.
+                           
 */
 int ooSendMsg(ooCallData *call, int type)
 {
 
-  int len=0, ret=0, msgType=0;
+   int len=0, ret=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
    int i =0;
    DListNode * p_msgNode=NULL;
-   ASN1OCTET *msgptr;
+   ASN1OCTET *msgptr, *msgToSend=NULL;
 
    if(type == OOQ931MSG)
    {
@@ -998,9 +1023,22 @@ int ooSendMsg(ooCallData *call, int type)
       p_msgNode = call->pH225Channel->outQueue.head;
       msgptr = (ASN1OCTET*) p_msgNode->data;
       msgType = msgptr[0];
-      len = msgptr[3];
-      len = len<<8;
-      len = (len | msgptr[4]);
+      if(msgType == OOFacility)
+      {
+         tunneledMsgType = msgptr[1];
+         logicalChannelNo = msgptr[2];
+         logicalChannelNo = logicalChannelNo << 8;
+         logicalChannelNo = (logicalChannelNo | msgptr[3]);
+         len = msgptr[6];
+         len = len<<8;
+         len = (len | msgptr[7]);
+         msgToSend = msgptr+4;
+      }else {
+         len = msgptr[3];
+         len = len<<8;
+         len = (len | msgptr[4]);
+         msgToSend = msgptr+1;
+      }
 
       /* Remove the message from rtdlist pH225Channel->outQueue */
       dListRemove(&(call->pH225Channel->outQueue), p_msgNode);
@@ -1008,13 +1046,13 @@ int ooSendMsg(ooCallData *call, int type)
          memFreePtr(call->pctxt, p_msgNode);
 
       /* Send message out via TCP */
-      ret = ooSocketSend(call->pH225Channel->sock, msgptr+1, len);
+      ret = ooSocketSend(call->pH225Channel->sock, msgToSend, len);
       if(ret == ASN_OK)
       {
          memFreePtr (call->pctxt, msgptr);
          OOTRACEDBGC3("H2250/Q931 Message sent successfully (%s, %s)\n",
                       call->callType, call->callToken);
-         ooOnSendMsg(call, msgType);
+         ooOnSendMsg(call, msgType, tunneledMsgType, logicalChannelNo);
          return OO_OK;
       }
       else{
@@ -1042,9 +1080,14 @@ int ooSendMsg(ooCallData *call, int type)
       p_msgNode = call->pH245Channel->outQueue.head;
       msgptr = (ASN1OCTET*) p_msgNode->data;
       msgType = msgptr[0];
-      len = msgptr[1];
+
+      logicalChannelNo = msgptr[1];
+      logicalChannelNo = logicalChannelNo << 8;
+      logicalChannelNo = (logicalChannelNo | msgptr[2]);
+
+      len = msgptr[3];
       len = len<<8;
-      len = (len | msgptr[2]);
+      len = (len | msgptr[4]);
       /* Remove the message from queue */
       dListRemove(&(call->pH245Channel->outQueue), p_msgNode);
       if(p_msgNode)
@@ -1071,13 +1114,13 @@ int ooSendMsg(ooCallData *call, int type)
                       "(%s, %s)\n", ooGetText(msgType), call->callType,
                       call->callToken);
          
-         ret = ooSocketSend(call->pH245Channel->sock, msgptr+3, len);
+         ret = ooSocketSend(call->pH245Channel->sock, msgptr+5, len);
          if(ret == ASN_OK)
          {
             memFreePtr (call->pctxt, msgptr);
             OOTRACEDBGA3("H245 Message sent successfully (%s, %s)\n",
                           call->callType, call->callToken);
-            ooOnSendMsg(call, msgType);
+            ooOnSendMsg(call, msgType, tunneledMsgType, logicalChannelNo);
             return OO_OK;
          }
          else{
@@ -1096,7 +1139,8 @@ int ooSendMsg(ooCallData *call, int type)
                       "(%s, %s)\n", ooGetText(msgType), call->callType,
                       call->callToken);
          
-         ret = ooSendAsTunneledMessage(call, msgptr+3,len,msgType);
+         ret = ooSendAsTunneledMessage(call, msgptr+5,len,msgType,
+                                                          logicalChannelNo);
          if(ret != OO_OK)
          {
             memFreePtr (call->pctxt, msgptr);
@@ -1145,7 +1189,8 @@ int ooCloseH245Connection(ooCallData *call)
    return OO_OK;
 }
 
-int ooOnSendMsg(ooCallData *call, int msgType)
+int ooOnSendMsg
+      (ooCallData *call, int msgType, int tunneledMsgType, int associatedChan)
 {
    ooTimerCallback *cbData=NULL;
    switch(msgType)
@@ -1203,12 +1248,27 @@ int ooOnSendMsg(ooCallData *call, int msgType)
 #endif
       break;
    case OOFacility:
-      OOTRACEINFO3("Sent Message - Facility (%s, %s)\n", call->callType,
-                    call->callToken);
+      if(tunneledMsgType == OOFacility)
+      {
+         OOTRACEINFO3("Sent Message - Facility. (%s, %s)\n",
+                      call->callType, call->callToken);
+      }
+      else{
+         OOTRACEINFO4("Sent Message - Facility(%s) (%s, %s)\n",
+                      ooGetText(tunneledMsgType), call->callType,
+                      call->callToken);
+         ooOnSendMsg(call, tunneledMsgType, 0, associatedChan);
+      }
+
+     
       break;
    case OOMasterSlaveDetermination:
-      OOTRACEINFO3("Sent Message - MasterSlaveDetermination (%s, %s)\n",
-                    call->callType, call->callToken);
+     if(call->isTunnelingActive)
+        OOTRACEINFO3("Tinneled Message - MasterSlaveDetermination (%s, %s)\n",
+                      call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - MasterSlaveDetermination (%s, %s)\n",
+                       call->callType, call->callToken);
        /* Start MSD timer */
       cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
                                                      sizeof(ooTimerCallback));
@@ -1231,20 +1291,36 @@ int ooOnSendMsg(ooCallData *call, int msgType)
 
       break;
    case OOMasterSlaveAck:
-      OOTRACEINFO3("Sent Message - MasterSlaveDeterminationAck (%s, %s)\n",
+     if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationAck (%s, %s)"
+                      "\n",  call->callType, call->callToken);
+     else
+        OOTRACEINFO3("Sent Message - MasterSlaveDeterminationAck (%s, %s)\n",
                     call->callType, call->callToken);
       break;
    case OOMasterSlaveReject:
-      OOTRACEINFO3("Sent Message - MasterSlaveDeterminationReject (%s, %s)\n",
+     if(call->isTunnelingActive)
+        OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationReject "
+                     "(%s, %s)\n", call->callType, call->callToken);
+     else
+        OOTRACEINFO3("Sent Message - MasterSlaveDeterminationReject(%s, %s)\n",
                     call->callType, call->callToken);
       break;
    case OOMasterSlaveRelease:
-      OOTRACEINFO3("Sent Message - MasterSlaveDeterminationRelease (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - MasterSlaveDeterminationRelease "
+                      "(%s, %s)\n", call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - MasterSlaveDeterminationRelease "
+                      "(%s, %s)\n", call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySet:
-      OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - TerminalCapabilitySet (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
+                       call->callType, call->callToken);
       /* Start TCS timer */
       cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
                                                      sizeof(ooTimerCallback));
@@ -1267,16 +1343,28 @@ int ooOnSendMsg(ooCallData *call, int msgType)
 
       break;
    case OOTerminalCapabilitySetAck:
-      OOTRACEINFO3("Sent Message - TerminalCapabilitySetAck (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - TerminalCapabilitySetAck (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - TerminalCapabilitySetAck (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySetReject:
-      OOTRACEINFO3("Sent Message - TerminalCapabilitySetReject (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - TerminalCapabilitySetReject "
+                      "(%s, %s)\n",  call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - TerminalCapabilitySetReject (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OOOpenLogicalChannel:
-      OOTRACEINFO3("Sent Message - OpenLogicalChannel (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - OpenLogicalChannel (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - OpenLogicalChannel (%s, %s)\n",
+                       call->callType, call->callToken);
       /* Start LogicalChannel timer */
       cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
                                                      sizeof(ooTimerCallback));
@@ -1288,6 +1376,7 @@ int ooOnSendMsg(ooCallData *call, int msgType)
       }
       cbData->call = call;
       cbData->timerType = OO_OLC_TIMER;
+      cbData->channelNumber = associatedChan;
       if(!ooTimerCreate(call->pctxt, &call->timerList,
           &ooOpenLogicalChannelTimerExpired, gH323ep.logicalChannelTimeout,
           cbData, FALSE))
@@ -1300,23 +1389,34 @@ int ooOnSendMsg(ooCallData *call, int msgType)
      
       break;
    case OOOpenLogicalChannelAck:
-      OOTRACEINFO3("Sent Message - OpenLogicalChannelAck (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - OpenLogicalChannelAck (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - OpenLogicalChannelAck (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OOOpenLogicalChannelReject:
-      OOTRACEINFO3("Sent Message - OpenLogicalChannelReject (%s, %s)\n",
-                    call->callType, call->callToken);
-      break;
-   case OOOpenLogicalChannelRelease:
-      OOTRACEINFO3("Sent Message - OpenLogicalChannelRelease (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - OpenLogicalChannelReject (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - OpenLogicalChannelReject (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OOEndSessionCommand:
-      OOTRACEINFO1("Sent Message - EndSessionCommand\n");
+      if(call->isTunnelingActive)
+         OOTRACEINFO1("Tunneled Message - EndSessionCommand\n");
+      else
+         OOTRACEINFO1("Sent Message - EndSessionCommand\n");
       break;
    case OOCloseLogicalChannel:
-      OOTRACEINFO3("Sent Message - CloseLogicalChannel (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - CloseLogicalChannel (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - CloseLogicalChannel (%s, %s)\n",
+                       call->callType, call->callToken);
       /* Start LogicalChannel timer */
       cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
                                                      sizeof(ooTimerCallback));
@@ -1328,6 +1428,7 @@ int ooOnSendMsg(ooCallData *call, int msgType)
       }
       cbData->call = call;
       cbData->timerType = OO_CLC_TIMER;
+      cbData->channelNumber = associatedChan;
       if(!ooTimerCreate(call->pctxt, &call->timerList,
           &ooCloseLogicalChannelTimerExpired, gH323ep.logicalChannelTimeout,
           cbData, FALSE))
@@ -1340,16 +1441,28 @@ int ooOnSendMsg(ooCallData *call, int msgType)
      
       break;
    case OOCloseLogicalChannelAck:
-      OOTRACEINFO3("Sent Message - CloseLogicalChannelAck (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - CloseLogicalChannelAck (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - CloseLogicalChannelAck (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OORequestChannelClose:
-      OOTRACEINFO3("Sent Message - RequestChannelClose (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - RequestChannelClose (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - RequestChannelClose (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
    case OORequestChannelCloseAck:
-      OOTRACEINFO3("Sent Message - RequestChannelCloseAck (%s, %s)\n",
-                    call->callType, call->callToken);
+      if(call->isTunnelingActive)
+         OOTRACEINFO3("Tunneled Message - RequestChannelCloseAck (%s, %s)\n",
+                       call->callType, call->callToken);
+      else
+         OOTRACEINFO3("Sent Message - RequestChannelCloseAck (%s, %s)\n",
+                       call->callType, call->callToken);
       break;
   
    default:

@@ -186,12 +186,17 @@ EXTERN int ooSendMsg(ooCallData *call, int type);
 /**
  * This function is called after a message is sent on the call's channel.
  * It can be used to some followup action after message has been sent.
- * @param call       Pointer to call for which message has been sent.
- * @param msgType    Type of message
+ * @param call            Pointer to call for which message has been sent.
+ * @param msgType         Type of message
+ * @param tunneledMsgType If this message is carrying a tunneled message, then
+ *                        type of the tunneled message.
+ * @param associatedChan  The channel number associated with the message sent,
+ *                        or tunneled message. 0, if no channel is associated.
  *
- * @return           OO_OK, on success. OO_FAILED, on failure
+ * @return                OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooOnSendMsg(ooCallData *call, int msgType);
+EXTERN int ooOnSendMsg
+   (ooCallData *call, int msgType, int tunneledMsgType, int associateChan);
 
 
 

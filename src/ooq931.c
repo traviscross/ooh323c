@@ -268,6 +268,8 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
       (*q931msg)->protocolDiscriminator = 8;
       (*q931msg)->fromDestination = FALSE;
       (*q931msg)->messageType = msgType;
+      (*q931msg)->tunneledMsgType = msgType;
+      (*q931msg)->logicalChannelNo = 0;
       return OO_OK;
    }
 }
@@ -557,6 +559,9 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    }
    else if(pq931Msg->messageType == Q931FacilityMsg){
       msgbuf[i++] = OOFacility;
+      msgbuf[i++] = pq931Msg->tunneledMsgType;
+      msgbuf[i++] = pq931Msg->logicalChannelNo>>8;
+      msgbuf[i++] = pq931Msg->logicalChannelNo;
    }
    else{
       OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType, call->callToken);
@@ -631,11 +636,20 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    len = i+1-4; /* complete message length */
 
    /* Tpkt length octets populated with total length of the message */
-   msgbuf[3] = (len >> 8);
-   msgbuf[4] = len;        /* including tpkt header */
+   if(msgbuf[0] != OOFacility)
+   {
+      msgbuf[3] = (len >> 8);
+      msgbuf[4] = len;        /* including tpkt header */
+   }else{
+      msgbuf[6] = (len >> 8);
+      msgbuf[7] = len;
+   }
  
 #ifndef _COMPACT
-  ooPrintQ931Message (call, msgbuf+5, len-4);
+   if(msgbuf[0] != OOFacility)
+      ooPrintQ931Message (call, msgbuf+5, len-4);
+   else
+      ooPrintQ931Message (call, msgbuf+8, len-4);
 #endif
    return OO_OK;
 }
@@ -1887,7 +1901,7 @@ int ooParseDestination(ooCallData *call, char *dest)
 
 /* Build a Facility message and tunnel H.245 message through it */
 int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
-                            int h245MsgType)
+                            int h245MsgType, int associatedChan)
 {
    DListNode *pNode = NULL;
    Q931Message *pQ931Msg = NULL;
@@ -1963,6 +1977,8 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    elem->numocts = h245Len;
    pH245Control->elem = elem;
    pH245Control->n = 1;
+   pQ931Msg->tunneledMsgType = h245MsgType;
+   pQ931Msg->logicalChannelNo = associatedChan;
    ret = ooSendH225Msg(call, pQ931Msg);
    if(ret != OO_OK)
    {

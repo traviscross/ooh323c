@@ -126,13 +126,16 @@
 #define OOOpenLogicalChannel           117
 #define OOOpenLogicalChannelAck        118
 #define OOOpenLogicalChannelReject     119
-#define OOOpenLogicalChannelRelease    120
-#define OOEndSessionCommand            121
-#define OOCloseLogicalChannel          122
-#define OOCloseLogicalChannelAck       123
-#define OORequestChannelClose          124
-#define OORequestChannelCloseAck       125
-#define OO_MSGTYPE_MAX                 125
+#define OOOpenLogicalChannelConfirm    120
+#define OOCloseLogicalChannel          121
+#define OOCloseLogicalChannelAck       122
+#define OORequestChannelClose          123
+#define OORequestChannelCloseAck       124
+#define OORequestChannelCloseReject    125
+#define OORequestChannelCloseRelease   126
+#define OOEndSessionCommand            127
+#define OO_MSGTYPE_MAX                 127
+
 
 /* Timer types */
 #define OO_CALLESTB_TIMER  (1<<0)
@@ -263,6 +266,9 @@ typedef struct Q931Message {
    unsigned callReference;
    ASN1BOOL fromDestination;
    unsigned messageType; /* Q931MsgTypes  */
+   unsigned tunneledMsgType;  /* The H245 message this message is tunneling*/
+   int      logicalChannelNo; /* channel number associated with tunneled */
+                              /*message, 0 if no channel */
    DList ies;
    H225H323_UserInformation *userInfo;
 } Q931Message;
@@ -274,6 +280,7 @@ typedef struct Q931Message {
 typedef struct H245Message {
    H245MultimediaSystemControlMessage h245Msg;
    ASN1UINT msgType;
+   ASN1INT  logicalChannelNo;
 } H245Message;
 
 struct ooH323EpCapability;
@@ -338,7 +345,7 @@ struct ooCallData;
 typedef struct ooTimerCallback{
    struct ooCallData* call;
    ASN1UINT    timerType;
-   ASN1UINT    sequenceNumber;
+   ASN1UINT    channelNumber;
 } ooTimerCallback;
 
 typedef struct ooCallData {

@@ -46,6 +46,7 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
    else
    {
       (*pph245msg)->h245Msg.t = type;
+      (*pph245msg)->logicalChannelNo = 0;
       switch(type)
       {
          case  T_H245MultimediaSystemControlMessage_request:
@@ -169,6 +170,8 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
    }
 
    msgbuf[i++] = ph245Msg->msgType;
+   msgbuf[i++] = (ph245Msg->logicalChannelNo>>8);
+   msgbuf[i++] = ph245Msg->logicalChannelNo;
    /* This will contain the total length of the encoded message */
    msgbuf[i++] = 0;
    msgbuf[i++] = 0;
@@ -199,12 +202,12 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
   
    encodePtr = encodeGetMsgPtr(pctxt, &encodeLen);
    len +=encodeLen;
-   msgbuf[1] = (len>>8);
-   msgbuf[2] = len;
+   msgbuf[3] = (len>>8);
+   msgbuf[4] = len;
    if(!call->isTunnelingActive)
    {
-      msgbuf[5] = len>>8;
-      msgbuf[6] = len;
+      msgbuf[7] = len>>8;
+      msgbuf[8] = len;
    }
 #ifndef _COMPACT
    ooPrintH245Message (call, encodePtr, encodeLen);
@@ -870,6 +873,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
    }
 
    ph245msg->msgType = OOOpenLogicalChannelAck;
+   ph245msg->logicalChannelNo = olc->forwardLogicalChannelNumber;
    response = ph245msg->h245Msg.u.response;
    pctxt = &gH323ep.msgctxt;
    memset(response, 0, sizeof(H245ResponseMessage));
@@ -1303,6 +1307,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
       return OO_FAILED;
    }
    ph245msg->msgType = OOCloseLogicalChannel;
+   ph245msg->logicalChannelNo = logicalChan->channelNo;
    pctxt = &gH323ep.msgctxt;
    request = ph245msg->h245Msg.u.request;
 
@@ -1370,6 +1375,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
       return OO_FAILED;
    }
    ph245msg->msgType = OORequestChannelClose;
+   ph245msg->logicalChannelNo = logicalChan->channelNo;
    pctxt = &gH323ep.msgctxt;
    request = ph245msg->h245Msg.u.request;
 
@@ -1444,6 +1450,7 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
    }
    pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OORequestChannelCloseAck;
+   ph245msg->logicalChannelNo = rclc->forwardLogicalChannelNumber;
    response = ph245msg->h245Msg.u.response;
    response->t = T_H245ResponseMessage_requestChannelCloseAck;
    response->u.requestChannelCloseAck = (H245RequestChannelCloseAck*)ASN1MALLOC
@@ -1517,6 +1524,7 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    }
    pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OOCloseLogicalChannelAck;
+   ph245msg->logicalChannelNo = clc->forwardLogicalChannelNumber;
    response = ph245msg->h245Msg.u.response;
    response->t = T_H245ResponseMessage_closeLogicalChannelAck;
    response->u.closeLogicalChannelAck = (H245CloseLogicalChannelAck*)
@@ -1708,7 +1716,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
                pNode = dListFindByIndex(&call->timerList, i);
                pTimer = (OOTimer*)pNode->data;
                if((((ooTimerCallback*)pTimer->cbData)->timerType & OO_OLC_TIMER)                                            &&
-                   ((ooTimerCallback*)pTimer->cbData)->sequenceNumber ==
+                   ((ooTimerCallback*)pTimer->cbData)->channelNumber ==
                 response->u.openLogicalChannelAck->forwardLogicalChannelNumber)
                {
 
@@ -1730,7 +1738,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
                pNode = dListFindByIndex(&call->timerList, i);
                pTimer = (OOTimer*)pNode->data;
                if((((ooTimerCallback*)pTimer->cbData)->timerType & OO_OLC_TIMER)                                            &&
-                   ((ooTimerCallback*)pTimer->cbData)->sequenceNumber ==
+                   ((ooTimerCallback*)pTimer->cbData)->channelNumber ==
                 response->u.openLogicalChannelAck->forwardLogicalChannelNumber)
                {
 
@@ -1753,7 +1761,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
                pNode = dListFindByIndex(&call->timerList, i);
                pTimer = (OOTimer*)pNode->data;
                if((((ooTimerCallback*)pTimer->cbData)->timerType & OO_CLC_TIMER)                                            &&
-                   ((ooTimerCallback*)pTimer->cbData)->sequenceNumber ==
+                   ((ooTimerCallback*)pTimer->cbData)->channelNumber ==
                response->u.closeLogicalChannelAck->forwardLogicalChannelNumber)
                {
 
@@ -2114,6 +2122,11 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
    }
 
    ph245msg->msgType = OOOpenLogicalChannel;
+
+   ph245msg->logicalChannelNo =  call->logicalChanNoCur++;
+   if(call->logicalChanNoCur > call->logicalChanNoMax)
+      call->logicalChanNoCur = call->logicalChanNoBase;
+
    request = ph245msg->h245Msg.u.request;
    pctxt = &gH323ep.msgctxt;
    memset(request, 0, sizeof(H245RequestMessage));
@@ -2123,9 +2136,8 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
                      ASN1MALLOC(pctxt, sizeof(H245OpenLogicalChannel));
    memset(request->u.openLogicalChannel, 0,
                                      sizeof(H245OpenLogicalChannel));
-   request->u.openLogicalChannel->forwardLogicalChannelNumber = call->logicalChanNoCur++;
-   if(call->logicalChanNoCur > call->logicalChanNoMax)
-      call->logicalChanNoCur = call->logicalChanNoBase;
+   request->u.openLogicalChannel->forwardLogicalChannelNumber = ph245msg->logicalChannelNo;
+
   
    pLogicalChannel = ooAddNewLogicalChannel(call,
                    request->u.openLogicalChannel->forwardLogicalChannelNumber,
@@ -2473,7 +2485,7 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
    pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
-                                               cbData->sequenceNumber);
+                                               cbData->channelNumber);
    if(pChannel)
       ooSendCloseLogicalChannel(call, pChannel);
   
@@ -2494,7 +2506,7 @@ int ooCloseLogicalChannelTimerExpired(void *pdata)
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
    pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
-                                               cbData->sequenceNumber);
+                                               cbData->channelNumber);
    if(pChannel)
       ooClearLogicalChannel(call, pChannel->channelNo);
   
