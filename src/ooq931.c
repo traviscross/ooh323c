@@ -1399,7 +1399,7 @@ int ooAcceptCall(ooCallData *call)
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:Failed to enqueue Connect message to outbound queue.(%s, %s)\n", call->callType, call->callToken);
-      memRest(&gH323ep.msgctxt);
+      memReset(&gH323ep.msgctxt);
       return OO_FAILED;
    }
    memReset(&gH323ep.msgctxt);
