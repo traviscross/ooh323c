@@ -103,7 +103,7 @@ int ooCreateH245Connection(ooCallData *call)
          OOTRACEINFO3("H245 connection creation succesful (%s, %s)\n",
                       call->callType, call->callToken);
 
-         /* Start terminal capability exchange and master slave determination */
+         /*Start terminal capability exchange and master slave determination */
          ret = ooSendTermCapMsg(call);
          if(ret != OO_OK)
          {
@@ -152,7 +152,19 @@ int ooSendH245Msg(ooCallData *call, H245Message *msg)
       memFreePtr (call->pctxt, encodebuf);
       return OO_FAILED;
    }
-
+   if(!call->pH245Channel)
+   {
+      call->pH245Channel = 
+              (OOH323Channel*) memAllocZ (call->pctxt, sizeof(OOH323Channel));
+      if(!call->pH245Channel)
+      {
+         OOTRACEERR3("Error:Failed to allocate memory for H245Channel "
+                     "structure. (%s, %s)\n", call->callType, call->callToken);
+         memFreePtr (call->pctxt, encodebuf);
+         return OO_FAILED;
+      }
+   }
+          
    dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
 
    OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
@@ -263,7 +275,8 @@ int ooCloseH225Connection (ooCallData *call)
 {
    if (0 != call->pH225Channel)
    {
-      ooSocketClose (call->pH225Channel->sock);
+      if(call->pH225Channel->sock != 0)
+         ooSocketClose (call->pH225Channel->sock);
       if (call->pH225Channel->outQueue.count > 0)
       {
          dListFreeAll (call->pctxt, &(call->pH225Channel->outQueue));
@@ -279,14 +292,6 @@ int ooCreateH323Listener()
    int ret=0;
    OOSOCKET channelSocket=0;
    OOIPADDR ipaddrs;
-   /*char localip[20];
-   ret = ooGetLocalIPAddress(localip);
-   if(ret != ASN_OK)
-   {
-      OOTRACEERR1("ERROR:Failed to retrieve local ip address for creating "
-                  "listener\n");
-      return OO_FAILED;
-   }*/
 
     /* Create socket */
    if((ret=ooSocketCreate (&channelSocket))!=ASN_OK)
@@ -328,22 +333,7 @@ int ooAcceptH225Connection()
       return OO_FAILED;
    }
    ooGenerateCallToken(callToken, sizeof(callToken));
-   /*
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
-   sprintf(callToken, "ooh323c_%d", gCurCallToken++);
-   // Reset calltoken
-  if(gCurCallToken >= gCallTokenMax)
-      gCurCallToken = gCallTokenBase;
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
-   */
+
    call = ooCreateCall("incoming", callToken);
    if(!call)
    {
@@ -442,14 +432,14 @@ int ooMonitorChannels()
             {
                FD_SET (call->pH225Channel->sock, &readfds);
                if (call->pH225Channel->outQueue.count > 0 ||
-                  (call->isTunnelingActive &&
+                  (call->isTunnelingActive && call->pH245Channel &&
                    call->pH245Channel->outQueue.count > 0))
                   FD_SET (call->pH225Channel->sock, &writefds);
                if(nfds < (int)call->pH225Channel->sock)
                   nfds = call->pH225Channel->sock;
             }
            
-            if (0 != call->pH245Channel)
+            if (0 != call->pH245Channel &&  call->pH245Channel->sock != 0)
             {
                FD_SET(call->pH245Channel->sock, &readfds);
                if (call->pH245Channel->outQueue.count>0)
@@ -618,7 +608,7 @@ int ooMonitorChannels()
          call = gH323ep.callList;
          while(call)
          {
-            if (0 != call->pH225Channel)
+            if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
             {
                if(FD_ISSET(call->pH225Channel->sock, &readfds))
                {
@@ -634,10 +624,7 @@ int ooMonitorChannels()
                       }
                   }
                }
-            }
-
-            if (0 != call->pH225Channel)
-            {
+           
                if(FD_ISSET(call->pH225Channel->sock, &writefds))
                {
                   if(call->pH225Channel->outQueue.count>0)
@@ -646,7 +633,8 @@ int ooMonitorChannels()
                                  call->callType, call->callToken);
                      ooSendMsg(call, OOQ931MSG);
                   }
-                  if(call->pH245Channel->outQueue.count>0 &&
+                  if(call->pH245Channel &&
+                     call->pH245Channel->outQueue.count>0 &&
                      call->isTunnelingActive)
                   {
                      OOTRACEDBGC3("Tunneling H245 message (%s, %s)\n",
@@ -656,16 +644,13 @@ int ooMonitorChannels()
                }                               
             }
 
-            if (0 != call->pH245Channel)
+            if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
             {
                if(FD_ISSET(call->pH245Channel->sock, &readfds))
                {                          
                   ooH245Receive(call);
                }
-            }
 
-            if (0 != call->pH245Channel)
-            {
                if(FD_ISSET(call->pH245Channel->sock, &writefds))
                {                          
                   if(call->pH245Channel->outQueue.count>0)
@@ -988,7 +973,7 @@ int ooSendMsg(ooCallData *call, int type)
       if(ret == ASN_OK)
       {
          memFreePtr (call->pctxt, msgptr);
-         OOTRACEDBGC3("H2250Q931 Message sent successfully (%s, %s)\n",
+         OOTRACEDBGC3("H2250/Q931 Message sent successfully (%s, %s)\n",
                       call->callType, call->callToken);
          ooOnSendMsg(call, msgType);
          return OO_OK;
@@ -1095,11 +1080,10 @@ int ooCloseH245Connection(ooCallData *call)
 
    if (0 != call->pH245Channel)
    {
-      /*
-       * TODO: what if unsent messages on outQueue?  These need to be
-       * freed else memory leak..
-       */
-      ooSocketClose (call->pH245Channel->sock);
+      if(0 != call->pH245Channel->sock)
+         ooSocketClose (call->pH245Channel->sock);
+      if (call->pH245Channel->outQueue.count > 0)
+         dListFreeAll(call->pctxt, &(call->pH245Channel->outQueue));
       memFreePtr (call->pctxt, call->pH245Channel);
       call->pH245Channel = NULL;
    }
@@ -1109,10 +1093,9 @@ int ooCloseH245Connection(ooCallData *call)
       memFreePtr(call->pctxt, call->h245listener);
       call->h245listener = NULL;
    }
-  
-   dListFreeAll(call->pctxt, &(call->pH245Channel->outQueue));
-
    call->h245SessionState = OO_H245SESSION_INACTIVE;
+   OOTRACEDBGC3("Closed H245 connection. (%s, %s)\n", call->callType,
+                                                       call->callToken);
    return OO_OK;
 }
 

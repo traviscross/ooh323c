@@ -1482,7 +1482,10 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
    H245RequestMessage *request;
    H245ResponseMessage *response;
    H245CommandMessage *command;
-
+  
+   OOTRACEDBGC3("Handling H245 message. (%s, %s)\n", call->callType,
+                 call->callToken);
+  
    switch(pH245->h245Msg.t)
    {
      /* H.245 Request message is received */
@@ -1573,7 +1576,8 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
       default:
         ;
    }
-
+   OOTRACEDBGC3("Finished handling H245 message. (%s, %s)\n",
+                 call->callType, call->callToken);
    return OO_OK;
 }
 
