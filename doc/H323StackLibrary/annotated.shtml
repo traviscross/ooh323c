@@ -118,6 +118,7 @@
   <tr><td class="indexkey"><a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a></td><td class="indexvalue">Structure to store information related to end point capability </td></tr>
   <tr><td class="indexkey"><a class="el" href="structooH323Ports.shtml">ooH323Ports</a></td><td class="indexvalue">This structure is used to define the port ranges to be used by the application </td></tr>
   <tr><td class="indexkey"><a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a></td><td class="indexvalue">Structure to store information of logical channels for call </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structooRasMessage.shtml">ooRasMessage</a></td><td class="indexvalue">Defines the RAS message structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structQ931Message.shtml">Q931Message</a></td><td class="indexvalue">Defines the Q931 message structure </td></tr>
 </table>
 <!--END DOXYGEN -->
@@ -125,6 +126,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

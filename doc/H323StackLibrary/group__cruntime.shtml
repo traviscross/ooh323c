@@ -166,510 +166,548 @@
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>OOCTXT</b></td></tr>
 
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>_OOMsgBuf</b></td></tr>
+
 <tr><td colspan=2><br><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga37" doxytag="cruntime::TV_UNIV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga47" doxytag="cruntime::TV_UNIV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_UNIV</b>&nbsp;&nbsp;&nbsp;0       /* universal                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga38" doxytag="cruntime::TV_APPL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga48" doxytag="cruntime::TV_APPL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_APPL</b>&nbsp;&nbsp;&nbsp;1       /* application-wide             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga39" doxytag="cruntime::TV_CTXT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga49" doxytag="cruntime::TV_CTXT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_CTXT</b>&nbsp;&nbsp;&nbsp;2       /* context-specific             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga40" doxytag="cruntime::TV_PRIV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga50" doxytag="cruntime::TV_PRIV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_PRIV</b>&nbsp;&nbsp;&nbsp;3       /* private-use                  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga41" doxytag="cruntime::TV_PRIM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga51" doxytag="cruntime::TV_PRIM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_PRIM</b>&nbsp;&nbsp;&nbsp;0       /* primitive                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga42" doxytag="cruntime::TV_CONS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga52" doxytag="cruntime::TV_CONS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TV_CONS</b>&nbsp;&nbsp;&nbsp;1       /* constructor                  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga43" doxytag="cruntime::TM_UNIV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga53" doxytag="cruntime::TM_UNIV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_UNIV</b>&nbsp;&nbsp;&nbsp;0x00000000  /* universal class          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga44" doxytag="cruntime::TM_APPL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga54" doxytag="cruntime::TM_APPL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_APPL</b>&nbsp;&nbsp;&nbsp;0x40000000  /* application-wide class   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga45" doxytag="cruntime::TM_CTXT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga55" doxytag="cruntime::TM_CTXT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CTXT</b>&nbsp;&nbsp;&nbsp;0x80000000  /* context-specific class   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga46" doxytag="cruntime::TM_PRIV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga56" doxytag="cruntime::TM_PRIV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_PRIV</b>&nbsp;&nbsp;&nbsp;0xC0000000  /* private-use class        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga47" doxytag="cruntime::TM_PRIM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga57" doxytag="cruntime::TM_PRIM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_PRIM</b>&nbsp;&nbsp;&nbsp;0x00000000  /* primitive form           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga48" doxytag="cruntime::TM_CONS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga58" doxytag="cruntime::TM_CONS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CONS</b>&nbsp;&nbsp;&nbsp;0x20000000  /* constructor form         */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga49" doxytag="cruntime::TM_IDCODE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga59" doxytag="cruntime::TM_IDCODE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_IDCODE</b>&nbsp;&nbsp;&nbsp;0x1FFFFFFF  /* ID code mask             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga50" doxytag="cruntime::ASN_K_BADTAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga60" doxytag="cruntime::ASN_K_BADTAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_BADTAG</b>&nbsp;&nbsp;&nbsp;0xFFFFFFFF  /* invalid tag code         */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga51" doxytag="cruntime::ASN_K_NOTAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga61" doxytag="cruntime::ASN_K_NOTAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_NOTAG</b>&nbsp;&nbsp;&nbsp;0xFFFFFFFF  /* no tag input parameter   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga52" doxytag="cruntime::TM_CLASS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga62" doxytag="cruntime::TM_CLASS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CLASS</b>&nbsp;&nbsp;&nbsp;0xC0    /* class mask                   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga53" doxytag="cruntime::TM_FORM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga63" doxytag="cruntime::TM_FORM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_FORM</b>&nbsp;&nbsp;&nbsp;0x20    /* form mask                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga54" doxytag="cruntime::TM_CLASS_FORM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga64" doxytag="cruntime::TM_CLASS_FORM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_CLASS_FORM</b>&nbsp;&nbsp;&nbsp;0xE0    /* class/form mask              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga55" doxytag="cruntime::TM_B_IDCODE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga65" doxytag="cruntime::TM_B_IDCODE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TM_B_IDCODE</b>&nbsp;&nbsp;&nbsp;0x1F    /* id code mask (byte)          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga56" doxytag="cruntime::MINMSGLEN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga66" doxytag="cruntime::MINMSGLEN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>MINMSGLEN</b>&nbsp;&nbsp;&nbsp;8       /* minimum message length               */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga57" doxytag="cruntime::ASN_OK" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga67" doxytag="cruntime::ASN_OK" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_OK</b>&nbsp;&nbsp;&nbsp;0      /* normal completion status             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga58" doxytag="cruntime::ASN_OK_FRAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga68" doxytag="cruntime::ASN_OK_FRAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_OK_FRAG</b>&nbsp;&nbsp;&nbsp;2      /* message fragment detected            */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga59" doxytag="cruntime::ASN_E_BUFOVFLW" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga69" doxytag="cruntime::ASN_E_BUFOVFLW" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BUFOVFLW</b>&nbsp;&nbsp;&nbsp;-1      /* encode buffer overflow               */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga60" doxytag="cruntime::ASN_E_ENDOFBUF" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga70" doxytag="cruntime::ASN_E_ENDOFBUF" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ENDOFBUF</b>&nbsp;&nbsp;&nbsp;-2      /* unexpected end of buffer on decode   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga61" doxytag="cruntime::ASN_E_IDNOTFOU" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga71" doxytag="cruntime::ASN_E_IDNOTFOU" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_IDNOTFOU</b>&nbsp;&nbsp;&nbsp;-3      /* identifer not found                  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga62" doxytag="cruntime::ASN_E_INVOBJID" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga72" doxytag="cruntime::ASN_E_INVOBJID" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVOBJID</b>&nbsp;&nbsp;&nbsp;-4      /* invalid object identifier            */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga63" doxytag="cruntime::ASN_E_INVLEN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga73" doxytag="cruntime::ASN_E_INVLEN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVLEN</b>&nbsp;&nbsp;&nbsp;-5      /* invalid field length                 */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga64" doxytag="cruntime::ASN_E_INVENUM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga74" doxytag="cruntime::ASN_E_INVENUM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVENUM</b>&nbsp;&nbsp;&nbsp;-6      /* enumerated value not in defined set  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga65" doxytag="cruntime::ASN_E_SETDUPL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga75" doxytag="cruntime::ASN_E_SETDUPL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SETDUPL</b>&nbsp;&nbsp;&nbsp;-7      /* duplicate element in set             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga66" doxytag="cruntime::ASN_E_SETMISRQ" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga76" doxytag="cruntime::ASN_E_SETMISRQ" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SETMISRQ</b>&nbsp;&nbsp;&nbsp;-8      /* missing required element in set      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga67" doxytag="cruntime::ASN_E_NOTINSET" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="cruntime::ASN_E_NOTINSET" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTINSET</b>&nbsp;&nbsp;&nbsp;-9      /* element not part of set              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga68" doxytag="cruntime::ASN_E_SEQOVFLW" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="cruntime::ASN_E_SEQOVFLW" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SEQOVFLW</b>&nbsp;&nbsp;&nbsp;-10     /* sequence of field overflow           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga69" doxytag="cruntime::ASN_E_INVOPT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga79" doxytag="cruntime::ASN_E_INVOPT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVOPT</b>&nbsp;&nbsp;&nbsp;-11     /* invalid option encountered in choice */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga70" doxytag="cruntime::ASN_E_NOMEM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga80" doxytag="cruntime::ASN_E_NOMEM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOMEM</b>&nbsp;&nbsp;&nbsp;-12     /* no dynamic memory available          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga71" doxytag="cruntime::ASN_E_INVHEXS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga81" doxytag="cruntime::ASN_E_INVHEXS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVHEXS</b>&nbsp;&nbsp;&nbsp;-14     /* invalid hex string                   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga72" doxytag="cruntime::ASN_E_INVBINS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga82" doxytag="cruntime::ASN_E_INVBINS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVBINS</b>&nbsp;&nbsp;&nbsp;-15     /* invalid binary string                */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga73" doxytag="cruntime::ASN_E_INVREAL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga83" doxytag="cruntime::ASN_E_INVREAL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVREAL</b>&nbsp;&nbsp;&nbsp;-16     /* invalid real value                   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga74" doxytag="cruntime::ASN_E_STROVFLW" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga84" doxytag="cruntime::ASN_E_STROVFLW" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_STROVFLW</b>&nbsp;&nbsp;&nbsp;-17     /* octet or bit string field overflow   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga75" doxytag="cruntime::ASN_E_BADVALUE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga85" doxytag="cruntime::ASN_E_BADVALUE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BADVALUE</b>&nbsp;&nbsp;&nbsp;-18     /* invalid value specification          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga76" doxytag="cruntime::ASN_E_UNDEFVAL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga86" doxytag="cruntime::ASN_E_UNDEFVAL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_UNDEFVAL</b>&nbsp;&nbsp;&nbsp;-19     /* no def found for ref'd defined value */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="cruntime::ASN_E_UNDEFTYP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga87" doxytag="cruntime::ASN_E_UNDEFTYP" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_UNDEFTYP</b>&nbsp;&nbsp;&nbsp;-20     /* no def found for ref'd defined type  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="cruntime::ASN_E_BADTAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga88" doxytag="cruntime::ASN_E_BADTAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_BADTAG</b>&nbsp;&nbsp;&nbsp;-21     /* invalid tag value                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga79" doxytag="cruntime::ASN_E_TOODEEP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga89" doxytag="cruntime::ASN_E_TOODEEP" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_TOODEEP</b>&nbsp;&nbsp;&nbsp;-22     /* nesting level is too deep            */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga80" doxytag="cruntime::ASN_E_CONSVIO" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga90" doxytag="cruntime::ASN_E_CONSVIO" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_CONSVIO</b>&nbsp;&nbsp;&nbsp;-23     /* value constraint violation           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga81" doxytag="cruntime::ASN_E_RANGERR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga91" doxytag="cruntime::ASN_E_RANGERR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_RANGERR</b>&nbsp;&nbsp;&nbsp;-24     /* invalid range (lower &gt; upper)        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga82" doxytag="cruntime::ASN_E_ENDOFFILE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga92" doxytag="cruntime::ASN_E_ENDOFFILE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ENDOFFILE</b>&nbsp;&nbsp;&nbsp;-25     /* end of file on file decode           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga83" doxytag="cruntime::ASN_E_INVUTF8" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga93" doxytag="cruntime::ASN_E_INVUTF8" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVUTF8</b>&nbsp;&nbsp;&nbsp;-26     /* invalid UTF-8 encoding               */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga84" doxytag="cruntime::ASN_E_CONCMODF" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga94" doxytag="cruntime::ASN_E_CONCMODF" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_CONCMODF</b>&nbsp;&nbsp;&nbsp;-27     /* Concurrent list modification         */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga85" doxytag="cruntime::ASN_E_ILLSTATE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga95" doxytag="cruntime::ASN_E_ILLSTATE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_ILLSTATE</b>&nbsp;&nbsp;&nbsp;-28     /* Illegal state error                  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga86" doxytag="cruntime::ASN_E_OUTOFBND" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga96" doxytag="cruntime::ASN_E_OUTOFBND" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_OUTOFBND</b>&nbsp;&nbsp;&nbsp;-29     /* out of bounds (of array, etc)        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga87" doxytag="cruntime::ASN_E_INVPARAM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga97" doxytag="cruntime::ASN_E_INVPARAM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVPARAM</b>&nbsp;&nbsp;&nbsp;-30     /* invalid parameter                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga88" doxytag="cruntime::ASN_E_INVFORMAT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga98" doxytag="cruntime::ASN_E_INVFORMAT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVFORMAT</b>&nbsp;&nbsp;&nbsp;-31     /* invalid time string format           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga89" doxytag="cruntime::ASN_E_NOTINIT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga99" doxytag="cruntime::ASN_E_NOTINIT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTINIT</b>&nbsp;&nbsp;&nbsp;-32     /* not initialized                      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga90" doxytag="cruntime::ASN_E_TOOBIG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga100" doxytag="cruntime::ASN_E_TOOBIG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_TOOBIG</b>&nbsp;&nbsp;&nbsp;-33     /* value is too big for given data type */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga91" doxytag="cruntime::ASN_E_INVCHAR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga101" doxytag="cruntime::ASN_E_INVCHAR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVCHAR</b>&nbsp;&nbsp;&nbsp;-34     /* invalid character (not in char set)  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga92" doxytag="cruntime::ASN_E_XMLSTATE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga102" doxytag="cruntime::ASN_E_XMLSTATE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLSTATE</b>&nbsp;&nbsp;&nbsp;-35     /* XML state error                      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga93" doxytag="cruntime::ASN_E_XMLPARSE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga103" doxytag="cruntime::ASN_E_XMLPARSE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLPARSE</b>&nbsp;&nbsp;&nbsp;-36     /* XML parse error                      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga94" doxytag="cruntime::ASN_E_SEQORDER" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga104" doxytag="cruntime::ASN_E_SEQORDER" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_SEQORDER</b>&nbsp;&nbsp;&nbsp;-37     /* SEQUENCE elements not in order       */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga95" doxytag="cruntime::ASN_E_INVINDEX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga105" doxytag="cruntime::ASN_E_INVINDEX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVINDEX</b>&nbsp;&nbsp;&nbsp;-38     /* invalid index for TC id              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga96" doxytag="cruntime::ASN_E_INVTCVAL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga106" doxytag="cruntime::ASN_E_INVTCVAL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVTCVAL</b>&nbsp;&nbsp;&nbsp;-39     /* invalid value for TC field           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga97" doxytag="cruntime::ASN_E_FILNOTFOU" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga107" doxytag="cruntime::ASN_E_FILNOTFOU" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILNOTFOU</b>&nbsp;&nbsp;&nbsp;-40     /* file not found                       */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga98" doxytag="cruntime::ASN_E_FILEREAD" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga108" doxytag="cruntime::ASN_E_FILEREAD" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILEREAD</b>&nbsp;&nbsp;&nbsp;-41     /* error occurred reading file          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga99" doxytag="cruntime::ASN_E_FILEWRITE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga109" doxytag="cruntime::ASN_E_FILEWRITE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_FILEWRITE</b>&nbsp;&nbsp;&nbsp;-42     /* error occurred writing file          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga100" doxytag="cruntime::ASN_E_INVBASE64" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga110" doxytag="cruntime::ASN_E_INVBASE64" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVBASE64</b>&nbsp;&nbsp;&nbsp;-43     /* invalid base64 encoding              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga101" doxytag="cruntime::ASN_E_INVSOCKET" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga111" doxytag="cruntime::ASN_E_INVSOCKET" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_INVSOCKET</b>&nbsp;&nbsp;&nbsp;-44     /* invalid socket operation             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga102" doxytag="cruntime::ASN_E_XMLLIBNFOU" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga112" doxytag="cruntime::ASN_E_XMLLIBNFOU" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLLIBNFOU</b>&nbsp;&nbsp;&nbsp;-45     /* XML library is not found             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga103" doxytag="cruntime::ASN_E_XMLLIBINV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga113" doxytag="cruntime::ASN_E_XMLLIBINV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_XMLLIBINV</b>&nbsp;&nbsp;&nbsp;-46     /* XML library is invalid               */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga104" doxytag="cruntime::ASN_E_NOTSUPP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga114" doxytag="cruntime::ASN_E_NOTSUPP" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_E_NOTSUPP</b>&nbsp;&nbsp;&nbsp;-99     /* non-supported ASN construct          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga105" doxytag="cruntime::ASN_K_INDEFLEN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga115" doxytag="cruntime::ASN_K_INDEFLEN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_INDEFLEN</b>&nbsp;&nbsp;&nbsp;-9999   /* indefinite length message indicator  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga106" doxytag="cruntime::ASN_ID_EOC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga116" doxytag="cruntime::ASN_ID_EOC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EOC</b>&nbsp;&nbsp;&nbsp;0       /* end of contents              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga107" doxytag="cruntime::ASN_ID_BOOL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga117" doxytag="cruntime::ASN_ID_BOOL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BOOL</b>&nbsp;&nbsp;&nbsp;1       /* boolean                      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga108" doxytag="cruntime::ASN_ID_INT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga118" doxytag="cruntime::ASN_ID_INT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_INT</b>&nbsp;&nbsp;&nbsp;2       /* integer                      */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga109" doxytag="cruntime::ASN_ID_BITSTR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga119" doxytag="cruntime::ASN_ID_BITSTR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BITSTR</b>&nbsp;&nbsp;&nbsp;3       /* bit string                   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga110" doxytag="cruntime::ASN_ID_OCTSTR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga120" doxytag="cruntime::ASN_ID_OCTSTR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OCTSTR</b>&nbsp;&nbsp;&nbsp;4       /* byte (octet) string          */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga111" doxytag="cruntime::ASN_ID_NULL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga121" doxytag="cruntime::ASN_ID_NULL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_NULL</b>&nbsp;&nbsp;&nbsp;5       /* null                         */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga112" doxytag="cruntime::ASN_ID_OBJID" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga122" doxytag="cruntime::ASN_ID_OBJID" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OBJID</b>&nbsp;&nbsp;&nbsp;6       /* object ID                    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga113" doxytag="cruntime::ASN_ID_OBJDSC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga123" doxytag="cruntime::ASN_ID_OBJDSC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_OBJDSC</b>&nbsp;&nbsp;&nbsp;7       /* object descriptor            */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga114" doxytag="cruntime::ASN_ID_EXTERN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga124" doxytag="cruntime::ASN_ID_EXTERN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EXTERN</b>&nbsp;&nbsp;&nbsp;8       /* external type                */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga115" doxytag="cruntime::ASN_ID_REAL" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga125" doxytag="cruntime::ASN_ID_REAL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_REAL</b>&nbsp;&nbsp;&nbsp;9       /* real                         */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga116" doxytag="cruntime::ASN_ID_ENUM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga126" doxytag="cruntime::ASN_ID_ENUM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_ENUM</b>&nbsp;&nbsp;&nbsp;10      /* enumerated value             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga117" doxytag="cruntime::ASN_ID_EPDV" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga127" doxytag="cruntime::ASN_ID_EPDV" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_EPDV</b>&nbsp;&nbsp;&nbsp;11      /* EmbeddedPDV type             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga118" doxytag="cruntime::ASN_ID_RELOID" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga128" doxytag="cruntime::ASN_ID_RELOID" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_RELOID</b>&nbsp;&nbsp;&nbsp;13      /* relative object ID           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga119" doxytag="cruntime::ASN_ID_SEQ" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga129" doxytag="cruntime::ASN_ID_SEQ" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_SEQ</b>&nbsp;&nbsp;&nbsp;16      /* sequence, sequence of        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga120" doxytag="cruntime::ASN_ID_SET" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga130" doxytag="cruntime::ASN_ID_SET" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_SET</b>&nbsp;&nbsp;&nbsp;17      /* set, set of                  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga121" doxytag="cruntime::ASN_SEQ_TAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga131" doxytag="cruntime::ASN_SEQ_TAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_SEQ_TAG</b>&nbsp;&nbsp;&nbsp;0x30    /* SEQUENCE universal tag byte  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga122" doxytag="cruntime::ASN_SET_TAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga132" doxytag="cruntime::ASN_SET_TAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_SET_TAG</b>&nbsp;&nbsp;&nbsp;0x31    /* SET universal tag byte       */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga123" doxytag="cruntime::ASN_ID_NumericString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga133" doxytag="cruntime::ASN_ID_NumericString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_NumericString</b>&nbsp;&nbsp;&nbsp;18</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga124" doxytag="cruntime::ASN_ID_PrintableString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga134" doxytag="cruntime::ASN_ID_PrintableString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_PrintableString</b>&nbsp;&nbsp;&nbsp;19</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga125" doxytag="cruntime::ASN_ID_TeletexString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga135" doxytag="cruntime::ASN_ID_TeletexString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_TeletexString</b>&nbsp;&nbsp;&nbsp;20</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga126" doxytag="cruntime::ASN_ID_T61String" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga136" doxytag="cruntime::ASN_ID_T61String" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_T61String</b>&nbsp;&nbsp;&nbsp;ASN_ID_TeletexString</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga127" doxytag="cruntime::ASN_ID_VideotexString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga137" doxytag="cruntime::ASN_ID_VideotexString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_VideotexString</b>&nbsp;&nbsp;&nbsp;21</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga128" doxytag="cruntime::ASN_ID_IA5String" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga138" doxytag="cruntime::ASN_ID_IA5String" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_IA5String</b>&nbsp;&nbsp;&nbsp;22</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga129" doxytag="cruntime::ASN_ID_UTCTime" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga139" doxytag="cruntime::ASN_ID_UTCTime" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_UTCTime</b>&nbsp;&nbsp;&nbsp;23</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga130" doxytag="cruntime::ASN_ID_GeneralTime" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga140" doxytag="cruntime::ASN_ID_GeneralTime" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GeneralTime</b>&nbsp;&nbsp;&nbsp;24</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga131" doxytag="cruntime::ASN_ID_GraphicString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga141" doxytag="cruntime::ASN_ID_GraphicString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GraphicString</b>&nbsp;&nbsp;&nbsp;25</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga132" doxytag="cruntime::ASN_ID_VisibleString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga142" doxytag="cruntime::ASN_ID_VisibleString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_VisibleString</b>&nbsp;&nbsp;&nbsp;26</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga133" doxytag="cruntime::ASN_ID_GeneralString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga143" doxytag="cruntime::ASN_ID_GeneralString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_GeneralString</b>&nbsp;&nbsp;&nbsp;27</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga134" doxytag="cruntime::ASN_ID_UniversalString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga144" doxytag="cruntime::ASN_ID_UniversalString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_UniversalString</b>&nbsp;&nbsp;&nbsp;28</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga135" doxytag="cruntime::ASN_ID_BMPString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga145" doxytag="cruntime::ASN_ID_BMPString" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_ID_BMPString</b>&nbsp;&nbsp;&nbsp;30</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga136" doxytag="cruntime::XM_SEEK" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga146" doxytag="cruntime::XM_SEEK" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_SEEK</b>&nbsp;&nbsp;&nbsp;0x01    /* seek match until found or end-of-buf */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga137" doxytag="cruntime::XM_ADVANCE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga147" doxytag="cruntime::XM_ADVANCE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_ADVANCE</b>&nbsp;&nbsp;&nbsp;0x02    /* advance pointer to contents on match */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga138" doxytag="cruntime::XM_DYNAMIC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga148" doxytag="cruntime::XM_DYNAMIC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_DYNAMIC</b>&nbsp;&nbsp;&nbsp;0x04    /* alloc dyn mem for decoded variable   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga139" doxytag="cruntime::XM_SKIP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga149" doxytag="cruntime::XM_SKIP" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_SKIP</b>&nbsp;&nbsp;&nbsp;0x08    /* skip to next field after parsing tag */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga140" doxytag="cruntime::ASN_K_MAXDEPTH" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga150" doxytag="cruntime::ASN_K_MAXDEPTH" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXDEPTH</b>&nbsp;&nbsp;&nbsp;32      /* maximum nesting depth for messages   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga141" doxytag="cruntime::ASN_K_MAXSUBIDS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga151" doxytag="cruntime::ASN_K_MAXSUBIDS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXSUBIDS</b>&nbsp;&nbsp;&nbsp;128     /* maximum sub-id's in an object ID     */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga142" doxytag="cruntime::ASN_K_MAXENUM" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga152" doxytag="cruntime::ASN_K_MAXENUM" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXENUM</b>&nbsp;&nbsp;&nbsp;100     /* maximum enum values in an enum type  */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga143" doxytag="cruntime::ASN_K_MAXERRP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga153" doxytag="cruntime::ASN_K_MAXERRP" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXERRP</b>&nbsp;&nbsp;&nbsp;5       /* maximum error parameters             */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga144" doxytag="cruntime::ASN_K_MAXERRSTK" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga154" doxytag="cruntime::ASN_K_MAXERRSTK" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MAXERRSTK</b>&nbsp;&nbsp;&nbsp;8       /* maximum levels on error ctxt stack   */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga145" doxytag="cruntime::ASN_K_ENCBUFSIZ" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga155" doxytag="cruntime::ASN_K_ENCBUFSIZ" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_ENCBUFSIZ</b>&nbsp;&nbsp;&nbsp;16*1024 /* dynamic encode buffer extent size    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga146" doxytag="cruntime::ASN_K_MEMBUFSEG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga156" doxytag="cruntime::ASN_K_MEMBUFSEG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN_K_MEMBUFSEG</b>&nbsp;&nbsp;&nbsp;1024    /* memory buffer extent size            */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga147" doxytag="cruntime::NUM_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga157" doxytag="cruntime::NUM_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_ABITS</b>&nbsp;&nbsp;&nbsp;4</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga148" doxytag="cruntime::NUM_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga158" doxytag="cruntime::NUM_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_UBITS</b>&nbsp;&nbsp;&nbsp;4</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga149" doxytag="cruntime::NUM_CANSET" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga159" doxytag="cruntime::NUM_CANSET" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>NUM_CANSET</b>&nbsp;&nbsp;&nbsp;" 0123456789"</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga150" doxytag="cruntime::PRN_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga160" doxytag="cruntime::PRN_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga151" doxytag="cruntime::PRN_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga161" doxytag="cruntime::PRN_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga152" doxytag="cruntime::PRN_CANSET" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga162" doxytag="cruntime::PRN_CANSET" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>PRN_CANSET</b>&nbsp;&nbsp;&nbsp;" '()+,-./0123456789:=?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga153" doxytag="cruntime::VIS_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga163" doxytag="cruntime::VIS_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga154" doxytag="cruntime::VIS_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga164" doxytag="cruntime::VIS_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>VIS_CANSET</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga156" doxytag="cruntime::T61_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga166" doxytag="cruntime::T61_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga157" doxytag="cruntime::T61_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga167" doxytag="cruntime::T61_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>T61_CANSET</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga159" doxytag="cruntime::IA5_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga169" doxytag="cruntime::IA5_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga160" doxytag="cruntime::IA5_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga170" doxytag="cruntime::IA5_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_CANSET</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga162" doxytag="cruntime::IA5_RANGE1_LOWER" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga172" doxytag="cruntime::IA5_RANGE1_LOWER" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_RANGE1_LOWER</b>&nbsp;&nbsp;&nbsp;0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga163" doxytag="cruntime::IA5_RANGE2_LOWER" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga173" doxytag="cruntime::IA5_RANGE2_LOWER" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>IA5_RANGE2_LOWER</b>&nbsp;&nbsp;&nbsp;0x5f</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga164" doxytag="cruntime::GEN_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga174" doxytag="cruntime::GEN_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_ABITS</b>&nbsp;&nbsp;&nbsp;8</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga165" doxytag="cruntime::GEN_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga175" doxytag="cruntime::GEN_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_UBITS</b>&nbsp;&nbsp;&nbsp;7</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>GEN_CANSET</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga167" doxytag="cruntime::BMP_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga177" doxytag="cruntime::BMP_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_ABITS</b>&nbsp;&nbsp;&nbsp;16</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga168" doxytag="cruntime::BMP_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga178" doxytag="cruntime::BMP_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_UBITS</b>&nbsp;&nbsp;&nbsp;16</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga169" doxytag="cruntime::BMP_FIRST" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga179" doxytag="cruntime::BMP_FIRST" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_FIRST</b>&nbsp;&nbsp;&nbsp;0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga170" doxytag="cruntime::BMP_LAST" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga180" doxytag="cruntime::BMP_LAST" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>BMP_LAST</b>&nbsp;&nbsp;&nbsp;0xffff</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga171" doxytag="cruntime::UCS_ABITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga181" doxytag="cruntime::UCS_ABITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_ABITS</b>&nbsp;&nbsp;&nbsp;32</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga172" doxytag="cruntime::UCS_UBITS" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga182" doxytag="cruntime::UCS_UBITS" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_UBITS</b>&nbsp;&nbsp;&nbsp;32</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga173" doxytag="cruntime::UCS_FIRST" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga183" doxytag="cruntime::UCS_FIRST" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_FIRST</b>&nbsp;&nbsp;&nbsp;0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga174" doxytag="cruntime::UCS_LAST" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga184" doxytag="cruntime::UCS_LAST" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>UCS_LAST</b>&nbsp;&nbsp;&nbsp;0xfffffffful</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga175" doxytag="cruntime::ASN1TAG_LSHIFT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga185" doxytag="cruntime::ASN1TAG_LSHIFT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TAG_LSHIFT</b>&nbsp;&nbsp;&nbsp;24</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga176" doxytag="cruntime::ASN1UINT_MAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga186" doxytag="cruntime::ASN1UINT_MAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1UINT_MAX</b>&nbsp;&nbsp;&nbsp;4294967295U</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga177" doxytag="cruntime::ASN1INT_MAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga187" doxytag="cruntime::ASN1INT_MAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT_MAX</b>&nbsp;&nbsp;&nbsp;((ASN1INT)2147483647L)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga178" doxytag="cruntime::ASN1INT_MIN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga188" doxytag="cruntime::ASN1INT_MIN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT_MIN</b>&nbsp;&nbsp;&nbsp;((ASN1INT)(-ASN1INT_MAX-1))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga179" doxytag="cruntime::ASN1INT64" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga189" doxytag="cruntime::ASN1INT64" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INT64</b>&nbsp;&nbsp;&nbsp;long</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga180" doxytag="cruntime::FALSE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga190" doxytag="cruntime::FALSE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>FALSE</b>&nbsp;&nbsp;&nbsp;0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga181" doxytag="cruntime::TRUE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga191" doxytag="cruntime::TRUE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>TRUE</b>&nbsp;&nbsp;&nbsp;1</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga182" doxytag="cruntime::XM_K_MEMBLKSIZ" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga192" doxytag="cruntime::XM_K_MEMBLKSIZ" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>XM_K_MEMBLKSIZ</b>&nbsp;&nbsp;&nbsp;(4*1024)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga183" doxytag="cruntime::ASN1DYNCTXT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga193" doxytag="cruntime::ASN1DYNCTXT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1DYNCTXT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga184" doxytag="cruntime::ASN1INDEFLEN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga194" doxytag="cruntime::ASN1INDEFLEN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1INDEFLEN</b>&nbsp;&nbsp;&nbsp;0x4000</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga185" doxytag="cruntime::ASN1TRACE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga195" doxytag="cruntime::ASN1TRACE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1TRACE</b>&nbsp;&nbsp;&nbsp;0x2000</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga186" doxytag="cruntime::ASN1LASTEOC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga196" doxytag="cruntime::ASN1LASTEOC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1LASTEOC</b>&nbsp;&nbsp;&nbsp;0x1000</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga187" doxytag="cruntime::ASN1FASTCOPY" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga197" doxytag="cruntime::ASN1FASTCOPY" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1FASTCOPY</b>&nbsp;&nbsp;&nbsp;0x0800  /* turns on the "fast copy" mode        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga188" doxytag="cruntime::ASN1CONSTAG" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga198" doxytag="cruntime::ASN1CONSTAG" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CONSTAG</b>&nbsp;&nbsp;&nbsp;0x0400  /* form of last parsed tag              */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga189" doxytag="cruntime::ASN1CANXER" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga199" doxytag="cruntime::ASN1CANXER" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CANXER</b>&nbsp;&nbsp;&nbsp;0x0200  /* canonical XER                        */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga190" doxytag="cruntime::ASN1SAVEBUF" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga200" doxytag="cruntime::ASN1SAVEBUF" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1SAVEBUF</b>&nbsp;&nbsp;&nbsp;0x0100  /* do not free dynamic encode buffer    */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga191" doxytag="cruntime::ASN1OPENTYPE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga201" doxytag="cruntime::ASN1OPENTYPE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1OPENTYPE</b>&nbsp;&nbsp;&nbsp;0x0080  /* item is an open type field           */</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga192" doxytag="cruntime::ASN1MAX" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga202" doxytag="cruntime::ASN1MAX" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1MAX</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&gt;(b))?(a):(b))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga193" doxytag="cruntime::ASN1MIN" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga203" doxytag="cruntime::ASN1MIN" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1MIN</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&lt;(b))?(a):(b))</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga194" doxytag="cruntime::ASN1BUFCUR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga204" doxytag="cruntime::ASN1BUFCUR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFCUR</b>(cp)&nbsp;&nbsp;&nbsp;(cp)-&gt;buffer.data[(cp)-&gt;buffer.byteIndex]</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga195" doxytag="cruntime::ASN1BUFPTR" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga205" doxytag="cruntime::ASN1BUFPTR" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1BUFPTR</b>(cp)&nbsp;&nbsp;&nbsp;&amp;(cp)-&gt;buffer.data[(cp)-&gt;buffer.byteIndex]</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga196" doxytag="cruntime::EXTERN" ></a>
-#define&nbsp;</td><td class="memItemRight" valign=bottom><b>EXTERN</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga197" doxytag="cruntime::ASN1CRTMALLOC0" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga206" doxytag="cruntime::ASN1CRTMALLOC0" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTMALLOC0</b>(nbytes)&nbsp;&nbsp;&nbsp;malloc(nbytes)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga198" doxytag="cruntime::ASN1CRTFREE0" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga207" doxytag="cruntime::ASN1CRTFREE0" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTFREE0</b>(ptr)&nbsp;&nbsp;&nbsp;free(ptr)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga199" doxytag="cruntime::ASN1CRTMALLOC" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga208" doxytag="cruntime::ASN1CRTMALLOC" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTMALLOC</b>&nbsp;&nbsp;&nbsp;memHeapAlloc</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga200" doxytag="cruntime::ASN1CRTFREE" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga209" doxytag="cruntime::ASN1CRTFREE" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>ASN1CRTFREE</b>&nbsp;&nbsp;&nbsp;ASN1MEMFREEPTR</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DE_INCRBITIDX</b>(pctxt)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DE_BIT</b>(pctxt, pvalue)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga203" doxytag="cruntime::encodeIA5String" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga212" doxytag="cruntime::encodeIA5String" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeIA5String</b>(pctxt, value, permCharSet)&nbsp;&nbsp;&nbsp;encodeConstrainedStringEx (pctxt, value, permCharSet, 8, 7, 7)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga204" doxytag="cruntime::encodeGeneralizedTime" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga213" doxytag="cruntime::encodeGeneralizedTime" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>encodeGeneralizedTime</b>&nbsp;&nbsp;&nbsp;encodeIA5String</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga205" doxytag="cruntime::decodeIA5String" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga214" doxytag="cruntime::decodeIA5String" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>decodeIA5String</b>(pctxt, pvalue, permCharSet)&nbsp;&nbsp;&nbsp;decodeConstrainedStringEx (pctxt, pvalue, permCharSet, 8, 7, 7)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga206" doxytag="cruntime::decodeGeneralizedTime" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga215" doxytag="cruntime::decodeGeneralizedTime" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>decodeGeneralizedTime</b>&nbsp;&nbsp;&nbsp;decodeIA5String</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga216" doxytag="cruntime::OOUINT32_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT32_MAX</b>&nbsp;&nbsp;&nbsp;4294967295U</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga217" doxytag="cruntime::OOINT32_MAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32_MAX</b>&nbsp;&nbsp;&nbsp;((OOINT32)2147483647L)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga218" doxytag="cruntime::OOINT32_MIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32_MIN</b>&nbsp;&nbsp;&nbsp;((OOINT32)(-OOINT32_MAX-1))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga219" doxytag="cruntime::FALSE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>FALSE</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga220" doxytag="cruntime::TRUE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>TRUE</b>&nbsp;&nbsp;&nbsp;1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga221" doxytag="cruntime::OOERRINVPARAM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRINVPARAM</b>&nbsp;&nbsp;&nbsp;(-50)   /* Invalid parameter    */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga222" doxytag="cruntime::OOERRBUFOVFLW" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRBUFOVFLW</b>&nbsp;&nbsp;&nbsp;(-51)   /* Buffer overflow      */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga223" doxytag="cruntime::OOERRNOMEM" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOERRNOMEM</b>&nbsp;&nbsp;&nbsp;(-52)   /* No dynamic memory available */</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga224" doxytag="cruntime::OOMEMALLOC" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMEMALLOC</b>&nbsp;&nbsp;&nbsp;malloc</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga225" doxytag="cruntime::OOMEMFREE" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMEMFREE</b>&nbsp;&nbsp;&nbsp;free</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga226" doxytag="cruntime::OOMAX" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMAX</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&gt;(b))?(a):(b))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga227" doxytag="cruntime::OOMIN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMIN</b>(a, b)&nbsp;&nbsp;&nbsp;(((a)&lt;(b))?(a):(b))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga228" doxytag="cruntime::EXTERN" ></a>
+#define&nbsp;</td><td class="memItemRight" valign=bottom><b>EXTERN</b></td></tr>
 
 <tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="cruntime::ASN1CHAR" ></a>
@@ -783,9 +821,39 @@ typedef _Asn1SizeCnst&nbsp;</td><td class="memItemRight" valign=bottom><b>Asn1Si
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga36" doxytag="cruntime::OOCTXT" ></a>
 typedef OOCTXT&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCTXT</b></td></tr>
 
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga37" doxytag="cruntime::OOCHAR" ></a>
+typedef char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCHAR</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga38" doxytag="cruntime::OOUCHAR" ></a>
+typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUCHAR</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga39" doxytag="cruntime::OOINT8" ></a>
+typedef signed char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT8</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga40" doxytag="cruntime::OOUINT8" ></a>
+typedef unsigned char&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT8</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga41" doxytag="cruntime::OOINT16" ></a>
+typedef short&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT16</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga42" doxytag="cruntime::OOUINT16" ></a>
+typedef unsigned short&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT16</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga43" doxytag="cruntime::OOINT32" ></a>
+typedef int&nbsp;</td><td class="memItemRight" valign=bottom><b>OOINT32</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga44" doxytag="cruntime::OOUINT32" ></a>
+typedef unsigned int&nbsp;</td><td class="memItemRight" valign=bottom><b>OOUINT32</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga45" doxytag="cruntime::OOBOOL" ></a>
+typedef OOUINT8&nbsp;</td><td class="memItemRight" valign=bottom><b>OOBOOL</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga46" doxytag="cruntime::OOMsgBuf" ></a>
+typedef _OOMsgBuf&nbsp;</td><td class="memItemRight" valign=bottom><b>OOMsgBuf</b></td></tr>
+
 </table>
 <hr><h2>Define Documentation</h2>
-<a class="anchor" name="ga202" doxytag="ooasn1.h::DE_BIT" ></a><p>
+<a class="anchor" name="ga211" doxytag="ooasn1.h::DE_BIT" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -821,7 +889,7 @@ typedef OOCTXT&nbsp;</td><td class="memItemRight" valign=bottom><b>OOCTXT</b></t
 Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00603">603</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga201" doxytag="ooasn1.h::DE_INCRBITIDX" ></a><p>
+<a class="anchor" name="ga210" doxytag="ooasn1.h::DE_INCRBITIDX" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -854,7 +922,7 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00603">603</a> of
 Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00597">597</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga166" doxytag="ooasn1.h::GEN_CANSET" ></a><p>
+<a class="anchor" name="ga176" doxytag="ooasn1.h::GEN_CANSET" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -890,7 +958,7 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00597">597</a> of
 Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00212">212</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga161" doxytag="ooasn1.h::IA5_CANSET" ></a><p>
+<a class="anchor" name="ga171" doxytag="ooasn1.h::IA5_CANSET" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -919,7 +987,7 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00212">212</a> of
 Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00201">201</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga158" doxytag="ooasn1.h::T61_CANSET" ></a><p>
+<a class="anchor" name="ga168" doxytag="ooasn1.h::T61_CANSET" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -946,7 +1014,7 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00201">201</a> of
 Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00195">195</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga155" doxytag="ooasn1.h::VIS_CANSET" ></a><p>
+<a class="anchor" name="ga165" doxytag="ooasn1.h::VIS_CANSET" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -978,6 +1046,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00189">189</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

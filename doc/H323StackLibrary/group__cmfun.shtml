@@ -128,7 +128,7 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga2">freeContext</a> (OOCTXT *pctxt)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function frees all dynamic memory associated with a context.  <a href="#ga2"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN OOCTXT *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga3">newContext</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN OOCTXT *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__cmfun.shtml#ga3">newContext</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function allocates a new OOCTXT block and initializes it.  <a href="#ga3"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga4" doxytag="cmfun::copyContext" ></a>
@@ -291,6 +291,7 @@ The block should have been previously initialized by initContext.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN OOCTXT* newContext           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -319,6 +320,6 @@ Although the block is allocated from the standard heap, it should not be freed u
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -119,7 +119,7 @@
 <a href="ooCapability_8h-source.shtml">Go to the source code of this file.</a><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddAudioCapability</a> (H245AudioCapability audioCap, int dir, <a class="el" href="ootypes_8h.shtml#a127">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a128">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a129">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a130">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddAudioCapability</a> (H245AudioCapability audioCap, int dir, <a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to add audio capabilities to the endpoint.  <a href="group__capmgmt.shtml#ga0"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN H245AudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga1">ooCreateDupAudioCap</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioCap, OOCTXT *pctxt)</td></tr>
@@ -178,6 +178,6 @@ Definition in file <a class="el" href="ooCapability_8h-source.shtml">ooCapabilit
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

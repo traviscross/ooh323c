@@ -168,43 +168,55 @@ char *&nbsp;</td><td class="memItemRight" valign=bottom><b>callername</b></td></
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o15" doxytag="ooEndPoint::stackSocket" ></a>
 <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>stackSocket</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o16" doxytag="ooEndPoint::callType" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o16" doxytag="ooEndPoint::aliases" ></a>
+ooAliases *&nbsp;</td><td class="memItemRight" valign=bottom><b>aliases</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o17" doxytag="ooEndPoint::callType" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>callType</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o17" doxytag="ooEndPoint::audioCaps" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o18" doxytag="ooEndPoint::audioCaps" ></a>
 DList&nbsp;</td><td class="memItemRight" valign=bottom><b>audioCaps</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o18" doxytag="ooEndPoint::dataApplicationCaps" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o19" doxytag="ooEndPoint::dataApplicationCaps" ></a>
 DList&nbsp;</td><td class="memItemRight" valign=bottom><b>dataApplicationCaps</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o19" doxytag="ooEndPoint::videoCaps" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o20" doxytag="ooEndPoint::videoCaps" ></a>
 DList&nbsp;</td><td class="memItemRight" valign=bottom><b>videoCaps</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o20" doxytag="ooEndPoint::onIncomingCall" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o21" doxytag="ooEndPoint::onAlerting" ></a>
+cb_OnAlerting&nbsp;</td><td class="memItemRight" valign=bottom><b>onAlerting</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o22" doxytag="ooEndPoint::onIncomingCall" ></a>
 cb_OnIncomingCall&nbsp;</td><td class="memItemRight" valign=bottom><b>onIncomingCall</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o21" doxytag="ooEndPoint::onOutgoingCall" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o23" doxytag="ooEndPoint::onOutgoingCall" ></a>
 cb_OnOutgoingCall&nbsp;</td><td class="memItemRight" valign=bottom><b>onOutgoingCall</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o22" doxytag="ooEndPoint::onCallEstablished" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o24" doxytag="ooEndPoint::onCallEstablished" ></a>
 cb_OnCallEstablished&nbsp;</td><td class="memItemRight" valign=bottom><b>onCallEstablished</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o23" doxytag="ooEndPoint::onCallCleared" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o25" doxytag="ooEndPoint::onCallCleared" ></a>
 cb_OnCallCleared&nbsp;</td><td class="memItemRight" valign=bottom><b>onCallCleared</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o24" doxytag="ooEndPoint::onStartLogicalChannel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o26" doxytag="ooEndPoint::onStartLogicalChannel" ></a>
 cb_OnStartLogicalChannel&nbsp;</td><td class="memItemRight" valign=bottom><b>onStartLogicalChannel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o25" doxytag="ooEndPoint::listenPort" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o27" doxytag="ooEndPoint::signallingIP" ></a>
+char&nbsp;</td><td class="memItemRight" valign=bottom><b>signallingIP</b> [20]</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o28" doxytag="ooEndPoint::listenPort" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>listenPort</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o26" doxytag="ooEndPoint::listener" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o29" doxytag="ooEndPoint::listener" ></a>
 <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>listener</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o27" doxytag="ooEndPoint::callList" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o30" doxytag="ooEndPoint::callList" ></a>
 <a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>callList</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o28" doxytag="ooEndPoint::callMode" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o31" doxytag="ooEndPoint::autoAnswer" ></a>
+int&nbsp;</td><td class="memItemRight" valign=bottom><b>autoAnswer</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o32" doxytag="ooEndPoint::callMode" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>callMode</b></td></tr>
 
 </table>
@@ -213,13 +225,13 @@ Structure to store all the config information related to the endpoint created by
 <p>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00480">480</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00430">430</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ootypes_8h-source.shtml">ootypes.h</a></ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

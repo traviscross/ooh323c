@@ -127,6 +127,7 @@
 <li><a class="el" href="group__h245.shtml">H245 Message Handling</a>
 <li><a class="el" href="group__h323ep.shtml">H323 Endpoint management functions</a>
 <li><a class="el" href="group__q931.shtml">Q931/H.2250 Message Handling</a>
+<li><a class="el" href="group__ras.shtml">RAS Channel and Message handling</a>
 <li><a class="el" href="group__pluginInterface.shtml">Media plug-in Interface definitions</a>
 <li><a class="el" href="group__media.shtml">Media plugin support functions</a>
 <li><a class="el" href="group__sockets.shtml">Socket Layer</a>
@@ -137,6 +138,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

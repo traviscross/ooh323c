@@ -115,13 +115,13 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>Q931InformationElement</b></td></tr>
 
 <tr><td colspan=2><br><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga27" doxytag="q931::Q931_E_TOOSHORT" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga29" doxytag="q931::Q931_E_TOOSHORT" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>Q931_E_TOOSHORT</b>&nbsp;&nbsp;&nbsp;(-1001)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga28" doxytag="q931::Q931_E_INVCALLREF" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga30" doxytag="q931::Q931_E_INVCALLREF" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>Q931_E_INVCALLREF</b>&nbsp;&nbsp;&nbsp;(-1002)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga29" doxytag="q931::Q931_E_INVLENGTH" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga31" doxytag="q931::Q931_E_INVLENGTH" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>Q931_E_INVLENGTH</b>&nbsp;&nbsp;&nbsp;(-1003)</td></tr>
 
 <tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
@@ -363,7 +363,7 @@ typedef Q931InformationElement&nbsp;</td><td class="memItemRight" valign=bottom>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga6">ooHandleStartH245FacilityMessage</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225Facility_UUIE *facility)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This is a helper function used to handle an startH245 Facility message.  <a href="#ga6"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga7">ooRetrieveAliases</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225_SeqOfH225AliasAddress *pAddresses, int remote)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga7">ooRetrieveAliases</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225_SeqOfH225AliasAddress *pAddresses)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to retrieve the aliases from Sequence of alias addresses.  <a href="#ga7"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga8">ooQ931Decode</a> (<a class="el" href="structQ931Message.shtml">Q931Message</a> *msg, int length, ASN1OCTET *data)</td></tr>
@@ -411,21 +411,27 @@ typedef Q931InformationElement&nbsp;</td><td class="memItemRight" valign=bottom>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga22">ooSendConnect</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to send a Connect message in response to received setup message.  <a href="#ga22"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga23">ooH323MakeCall</a> (char *destip, int port, char *callToken)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga23">ooH323MakeCall</a> (char *dest, char *callToken)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to send a SETUP message for outgoing call.  <a href="#ga23"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga24">ooH323HangCall</a> (char *callToken)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga24">ooH323CallAdmitted</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handup a currently active call.  <a href="#ga24"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga25">ooAcceptCall</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper function used to make a call once it is approved by the Gk.  <a href="#ga24"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga25">ooH323HangCall</a> (char *callToken)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to accept a call by sending connect.  <a href="#ga25"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga26">ooH323MakeCall_helper</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handup a currently active call.  <a href="#ga25"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga26">ooAcceptCall</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An helper function to ooMakeCall.  <a href="#ga26"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to accept a call by sending connect.  <a href="#ga26"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga27">ooH323MakeCall_helper</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An helper function to ooMakeCall.  <a href="#ga27"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga28">ooParseDestination</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, char *dest)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to parse the destination.  <a href="#ga28"></a><br><br></td></tr>
 </table>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="ga25" doxytag="ooq931.h::ooAcceptCall" ></a><p>
+<a class="anchor" name="ga26" doxytag="ooq931.h::ooAcceptCall" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -746,7 +752,43 @@ This function is invoked to retrive the outgoing message buffer for Q931 message
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga24" doxytag="ooq931.h::ooH323HangCall" ></a><p>
+<a class="anchor" name="ga24" doxytag="ooq931.h::ooH323CallAdmitted" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> int ooH323CallAdmitted           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>call</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Helper function used to make a call once it is approved by the Gk.
+<p>
+In case of no gk, this function is directly called to make a call. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the new call.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga25" doxytag="ooq931.h::ooH323HangCall" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -791,13 +833,7 @@ It sets the call state to CLEARING and initiates closing of all logical channels
           <td class="md" nowrap valign="top"> EXTERN int ooH323MakeCall           </td>
           <td class="md" valign="top">(&nbsp;</td>
           <td class="md" nowrap valign="top">char *&nbsp;</td>
-          <td class="mdname" nowrap> <em>destip</em>, </td>
-        </tr>
-        <tr>
-          <td class="md" nowrap align="right"></td>
-          <td></td>
-          <td class="md" nowrap>int&nbsp;</td>
-          <td class="mdname" nowrap> <em>port</em>, </td>
+          <td class="mdname" nowrap> <em>dest</em>, </td>
         </tr>
         <tr>
           <td class="md" nowrap align="right"></td>
@@ -826,8 +862,7 @@ This function is used to send a SETUP message for outgoing call.
 <p>
 It first creates an H.225 TCP connection with the remote end point and then sends SETUP message over this connection. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign=top><em>destip</em>&nbsp;</td><td>Dotted IP address of the remote end point. </td></tr>
-    <tr><td valign=top><em>port</em>&nbsp;</td><td>Port at which remote endpoint is listening for calls. </td></tr>
+    <tr><td valign=top><em>dest</em>&nbsp;</td><td>Destination - IP:Port/alias. </td></tr>
     <tr><td valign=top><em>callToken</em>&nbsp;</td><td>Unique token for the new call.</td></tr>
   </table>
 </dl>
@@ -835,7 +870,7 @@ It first creates an H.225 TCP connection with the remote end point and then send
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga26" doxytag="ooq931.h::ooH323MakeCall_helper" ></a><p>
+<a class="anchor" name="ga27" doxytag="ooq931.h::ooH323MakeCall_helper" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -1146,6 +1181,52 @@ It creates H.245 negotiation channel, and starts TCS and MSD procedures. <dl com
     </td>
   </tr>
 </table>
+<a class="anchor" name="ga28" doxytag="ooq931.h::ooParseDestination" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> int ooParseDestination           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>dest</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to parse the destination.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call </td></tr>
+    <tr><td valign=top><em>dest</em>&nbsp;</td><td>Destination string to be parsed.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
 <a class="anchor" name="ga8" doxytag="ooq931.h::ooQ931Decode" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -1296,13 +1377,7 @@ This function is invoked to print a Q931 message.
           <td class="md" nowrap align="right"></td>
           <td></td>
           <td class="md" nowrap>H225_SeqOfH225AliasAddress *&nbsp;</td>
-          <td class="mdname" nowrap> <em>pAddresses</em>, </td>
-        </tr>
-        <tr>
-          <td class="md" nowrap align="right"></td>
-          <td></td>
-          <td class="md" nowrap>int&nbsp;</td>
-          <td class="mdname" nowrap> <em>remote</em></td>
+          <td class="mdname" nowrap> <em>pAddresses</em></td>
         </tr>
         <tr>
           <td></td>
@@ -1326,8 +1401,7 @@ This function is used to retrieve the aliases from Sequence of alias addresses.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call. </td></tr>
-    <tr><td valign=top><em>pAddresses</em>&nbsp;</td><td>Pointer to the sequence of alias addresses. </td></tr>
-    <tr><td valign=top><em>remote</em>&nbsp;</td><td>Indicates whether aliases are for remote host.</td></tr>
+    <tr><td valign=top><em>pAddresses</em>&nbsp;</td><td>Pointer to the sequence of alias addresses.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
@@ -1519,6 +1593,6 @@ This function is invoked to send a ReleaseComplete message for the currently act
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

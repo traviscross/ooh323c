@@ -112,63 +112,63 @@
 <h1>Media plugin support functions</h1><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga12">ooLoadSndRTPPlugin</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga1">ooLoadSndRTPPlugin</a> (char *name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads the media plugin into the process space.  <a href="#ga12"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga13">ooReleaseSndRTPPlugin</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads the media plugin into the process space.  <a href="#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga2">ooReleaseSndRTPPlugin</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unloads the plug-in from process space.  <a href="#ga13"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga14">ooCreateTransmitRTPChannel</a> (char *destip, int port)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unloads the plug-in from process space.  <a href="#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga3">ooCreateTransmitRTPChannel</a> (char *destip, int port)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a transmit RTP channel.  <a href="#ga14"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga15">ooCloseTransmitRTPChannel</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a transmit RTP channel.  <a href="#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga4">ooCloseTransmitRTPChannel</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a transmit RTP channel.  <a href="#ga15"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga16">ooCreateReceiveRTPChannel</a> (char *localip, int localport)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a transmit RTP channel.  <a href="#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga5">ooCreateReceiveRTPChannel</a> (char *localip, int localport)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a receive RTP channel.  <a href="#ga16"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga17">ooCloseReceiveRTPChannel</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a receive RTP channel.  <a href="#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga6">ooCloseReceiveRTPChannel</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a receive RTP channel.  <a href="#ga17"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga18">ooStartTransmitWaveFile</a> (char *filename)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a receive RTP channel.  <a href="#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga7">ooStartTransmitWaveFile</a> (char *filename)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Start transmitting a audio file.  <a href="#ga18"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga19">ooStopTransmitWaveFile</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Start transmitting a audio file.  <a href="#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga8">ooStopTransmitWaveFile</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of a audio file.  <a href="#ga19"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga20">ooStartTransmitMic</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of a audio file.  <a href="#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga9">ooStartTransmitMic</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts capturing audio data from mic and transmits it as rtp stream.  <a href="#ga20"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga21">ooStopTransmitMic</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts capturing audio data from mic and transmits it as rtp stream.  <a href="#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga10">ooStopTransmitMic</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of mic audio data.  <a href="#ga21"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga22">ooStartReceiveAudioAndPlayback</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of mic audio data.  <a href="#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga11">ooStartReceiveAudioAndPlayback</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts receiving rtp stream data and play it on the speakers.  <a href="#ga22"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga23">ooStopReceiveAudioAndPlayback</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts receiving rtp stream data and play it on the speakers.  <a href="#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga12">ooStopReceiveAudioAndPlayback</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop receiving rtp stream data.This calls corresponding interface function of the plug-in library.  <a href="#ga23"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga24" doxytag="media::ooStartReceiveAudioAndRecord" ></a>
-EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga24">ooStartReceiveAudioAndRecord</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop receiving rtp stream data.This calls corresponding interface function of the plug-in library.  <a href="#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga13" doxytag="media::ooStartReceiveAudioAndRecord" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga13">ooStartReceiveAudioAndRecord</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Not suuported currently. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga25" doxytag="media::ooStopReceiveAudioAndRecord" ></a>
-EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga25">ooStopReceiveAudioAndRecord</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga14" doxytag="media::ooStopReceiveAudioAndRecord" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga14">ooStopReceiveAudioAndRecord</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Not supported currently. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga26">ooSetLocalRTPAndRTCPAddrs</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga15">ooSetLocalRTPAndRTCPAddrs</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set local RTP and RTCP addresses for the session.  <a href="#ga26"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga27">ooRTPShutDown</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set local RTP and RTCP addresses for the session.  <a href="#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga16">ooRTPShutDown</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes transmit and receive RTP channels, if open.  <a href="#ga27"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes transmit and receive RTP channels, if open.  <a href="#ga16"></a><br><br></td></tr>
 <tr><td colspan=2><br><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="media::media" ></a>
 void *&nbsp;</td><td class="memItemRight" valign=bottom><b>media</b></td></tr>
 
 </table>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="ga17" doxytag="oosndrtp.h::ooCloseReceiveRTPChannel" ></a><p>
+<a class="anchor" name="ga6" doxytag="oosndrtp.h::ooCloseReceiveRTPChannel" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -176,6 +176,7 @@ void *&nbsp;</td><td class="memItemRight" valign=bottom><b>media</b></td></tr>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooCloseReceiveRTPChannel           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -199,7 +200,7 @@ Basically calls the corresponding function of the plug-in library.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga15" doxytag="oosndrtp.h::ooCloseTransmitRTPChannel" ></a><p>
+<a class="anchor" name="ga4" doxytag="oosndrtp.h::ooCloseTransmitRTPChannel" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -207,6 +208,7 @@ Basically calls the corresponding function of the plug-in library.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooCloseTransmitRTPChannel           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -230,7 +232,7 @@ Basically calls the corresponding function of the plug-in library.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga16" doxytag="oosndrtp.h::ooCreateReceiveRTPChannel" ></a><p>
+<a class="anchor" name="ga5" doxytag="oosndrtp.h::ooCreateReceiveRTPChannel" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -276,7 +278,7 @@ Basically calls the corresponding function of the plug-in library. <dl compact><
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga14" doxytag="oosndrtp.h::ooCreateTransmitRTPChannel" ></a><p>
+<a class="anchor" name="ga3" doxytag="oosndrtp.h::ooCreateTransmitRTPChannel" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -322,7 +324,7 @@ Basically calls the corresponding function of the plug-in library. <dl compact><
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga12" doxytag="oosndrtp.h::ooLoadSndRTPPlugin" ></a><p>
+<a class="anchor" name="ga1" doxytag="oosndrtp.h::ooLoadSndRTPPlugin" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -358,7 +360,7 @@ Loads the media plugin into the process space.
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga13" doxytag="oosndrtp.h::ooReleaseSndRTPPlugin" ></a><p>
+<a class="anchor" name="ga2" doxytag="oosndrtp.h::ooReleaseSndRTPPlugin" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -366,6 +368,7 @@ Loads the media plugin into the process space.
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooReleaseSndRTPPlugin           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -388,7 +391,7 @@ Unloads the plug-in from process space.
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga27" doxytag="oosndrtp.h::ooRTPShutDown" ></a><p>
+<a class="anchor" name="ga16" doxytag="oosndrtp.h::ooRTPShutDown" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -396,6 +399,7 @@ Unloads the plug-in from process space.
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooRTPShutDown           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -419,7 +423,7 @@ This calls corresponding interface functions to close the channels.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga26" doxytag="oosndrtp.h::ooSetLocalRTPAndRTCPAddrs" ></a><p>
+<a class="anchor" name="ga15" doxytag="oosndrtp.h::ooSetLocalRTPAndRTCPAddrs" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -427,6 +431,7 @@ This calls corresponding interface functions to close the channels.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooSetLocalRTPAndRTCPAddrs           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -450,7 +455,7 @@ This function gets next available ports for RTP and RTCP communication.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga22" doxytag="oosndrtp.h::ooStartReceiveAudioAndPlayback" ></a><p>
+<a class="anchor" name="ga11" doxytag="oosndrtp.h::ooStartReceiveAudioAndPlayback" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -458,6 +463,7 @@ This function gets next available ports for RTP and RTCP communication.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStartReceiveAudioAndPlayback           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -481,7 +487,7 @@ This calls corresponding interface function of the plug-in library.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga20" doxytag="oosndrtp.h::ooStartTransmitMic" ></a><p>
+<a class="anchor" name="ga9" doxytag="oosndrtp.h::ooStartTransmitMic" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -489,6 +495,7 @@ This calls corresponding interface function of the plug-in library.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStartTransmitMic           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -512,7 +519,7 @@ This calls corresponding interface function of the plug-in library.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga18" doxytag="oosndrtp.h::ooStartTransmitWaveFile" ></a><p>
+<a class="anchor" name="ga7" doxytag="oosndrtp.h::ooStartTransmitWaveFile" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -548,7 +555,7 @@ This calls corresponding function of the plug-in library. <dl compact><dt><b>Par
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga23" doxytag="oosndrtp.h::ooStopReceiveAudioAndPlayback" ></a><p>
+<a class="anchor" name="ga12" doxytag="oosndrtp.h::ooStopReceiveAudioAndPlayback" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -556,6 +563,7 @@ This calls corresponding function of the plug-in library. <dl compact><dt><b>Par
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStopReceiveAudioAndPlayback           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -578,7 +586,7 @@ Stop receiving rtp stream data.This calls corresponding interface function of th
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga21" doxytag="oosndrtp.h::ooStopTransmitMic" ></a><p>
+<a class="anchor" name="ga10" doxytag="oosndrtp.h::ooStopTransmitMic" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -586,6 +594,7 @@ Stop receiving rtp stream data.This calls corresponding interface function of th
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStopTransmitMic           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -609,7 +618,7 @@ This calls corresponding interface function of the plug-in library.<p>
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga19" doxytag="oosndrtp.h::ooStopTransmitWaveFile" ></a><p>
+<a class="anchor" name="ga8" doxytag="oosndrtp.h::ooStopTransmitWaveFile" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -617,6 +626,7 @@ This calls corresponding interface function of the plug-in library.<p>
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStopTransmitWaveFile           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -645,6 +655,6 @@ This calls corresponding function of the plug-in library.<p>
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -122,12 +122,54 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga0">ooInitializeH323Ep</a> (const char *tracefile, int h245Tunneling, int fastStart, int termType, int t35CountryCode, int t35Extension, int manufacturer, char *productID, char *versionID, int callType, int listenport, char *callerid, char *callername, int callMode)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the first function to be invoked before using stack.  <a href="group__h323ep.shtml#ga0"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga1">ooH323EpRegisterCallbacks</a> (cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga1">ooSetLocalCallSignallingAddress</a> (char *localip, int listenport)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="group__h323ep.shtml#ga1"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga2">ooDestroyH323Ep</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to assign a local ip address to be used for call signalling.  <a href="group__h323ep.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga2">ooSetAliasH323ID</a> (char *h323id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the last function to be invoked after done using the stack.  <a href="group__h323ep.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the h323id alias for the endpoint.  <a href="group__h323ep.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga3">ooSetAliasDialedDigits</a> (char *dialedDigits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the dialed digits alias for the endpoint.  <a href="group__h323ep.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga4">ooSetAliasURLID</a> (char *url)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the url alias for the endpoint.  <a href="group__h323ep.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga5">ooSetAliasEmailID</a> (char *email)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set an email id as an alias for the endpoint.  <a href="group__h323ep.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga6">ooSetAliasTransportID</a> (char *ipaddress)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set an ip address as an alias.  <a href="group__h323ep.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga7">ooH323EpRegisterCallbacks</a> (cb_OnAlerting onAlerting, cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="group__h323ep.shtml#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga8">ooDestroyH323Ep</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the last function to be invoked after done using the stack.  <a href="group__h323ep.shtml#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga9">ooEnableAutoAnswer</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable the auto answer feature for incoming calls.  <a href="group__h323ep.shtml#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga10">ooDisableAutoAnswer</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to disable the auto answer feature for incoming calls.  <a href="group__h323ep.shtml#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga11">ooSetFastStart</a> (int fastStart)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable/disable faststart.  <a href="group__h323ep.shtml#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga12">ooSetH245Tunneling</a> (int tunneling)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable/disable tunneling.  <a href="group__h323ep.shtml#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga13">ooSetProductID</a> (char *productID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the product ID.  <a href="group__h323ep.shtml#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga14">ooSetVersionID</a> (char *versionID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set version id.  <a href="group__h323ep.shtml#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga15">ooSetCallerID</a> (char *callerID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set callerid to be used for outbound calls.  <a href="group__h323ep.shtml#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga16">ooSetCallerName</a> (char *callerName)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the caller name, which is used for display purposes.  <a href="group__h323ep.shtml#ga16"></a><br><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This file contains H323 endpoint related functions.
@@ -139,6 +181,6 @@ Definition in file <a class="el" href="ooh323ep_8h-source.shtml">ooh323ep.h</a>.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

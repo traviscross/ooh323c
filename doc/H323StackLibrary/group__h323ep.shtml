@@ -115,15 +115,57 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga0">ooInitializeH323Ep</a> (const char *tracefile, int h245Tunneling, int fastStart, int termType, int t35CountryCode, int t35Extension, int manufacturer, char *productID, char *versionID, int callType, int listenport, char *callerid, char *callername, int callMode)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the first function to be invoked before using stack.  <a href="#ga0"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga1">ooH323EpRegisterCallbacks</a> (cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga1">ooSetLocalCallSignallingAddress</a> (char *localip, int listenport)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="#ga1"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga2">ooDestroyH323Ep</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to assign a local ip address to be used for call signalling.  <a href="#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga2">ooSetAliasH323ID</a> (char *h323id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the last function to be invoked after done using the stack.  <a href="#ga2"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the h323id alias for the endpoint.  <a href="#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga3">ooSetAliasDialedDigits</a> (char *dialedDigits)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the dialed digits alias for the endpoint.  <a href="#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga4">ooSetAliasURLID</a> (char *url)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the url alias for the endpoint.  <a href="#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga5">ooSetAliasEmailID</a> (char *email)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set an email id as an alias for the endpoint.  <a href="#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga6">ooSetAliasTransportID</a> (char *ipaddress)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set an ip address as an alias.  <a href="#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga7">ooH323EpRegisterCallbacks</a> (cb_OnAlerting onAlerting, cb_OnIncomingCall onIncomingCall, cb_OnOutgoingCall onOutgoingCall, cb_OnCallEstablished onCallEstablished, cb_OnCallCleared onCallCleared, cb_OnStartLogicalChannel onStartLogicalChannel)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to register the H323 Endpoint callback functions.  <a href="#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga8">ooDestroyH323Ep</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is the last function to be invoked after done using the stack.  <a href="#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga9">ooEnableAutoAnswer</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable the auto answer feature for incoming calls.  <a href="#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga10">ooDisableAutoAnswer</a> (void)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to disable the auto answer feature for incoming calls.  <a href="#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga11">ooSetFastStart</a> (int fastStart)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable/disable faststart.  <a href="#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga12">ooSetH245Tunneling</a> (int tunneling)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to enable/disable tunneling.  <a href="#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga13">ooSetProductID</a> (char *productID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the product ID.  <a href="#ga13"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga14">ooSetVersionID</a> (char *versionID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set version id.  <a href="#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga15">ooSetCallerID</a> (char *callerID)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set callerid to be used for outbound calls.  <a href="#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__h323ep.shtml#ga16">ooSetCallerName</a> (char *callerName)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the caller name, which is used for display purposes.  <a href="#ga16"></a><br><br></td></tr>
 </table>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="ga2" doxytag="ooh323ep.h::ooDestroyH323Ep" ></a><p>
+<a class="anchor" name="ga8" doxytag="ooh323ep.h::ooDestroyH323Ep" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -131,6 +173,7 @@
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooDestroyH323Ep           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -159,7 +202,69 @@ It closes the H323 Endpoint for an application, releasing all the associated mem
     </td>
   </tr>
 </table>
-<a class="anchor" name="ga1" doxytag="ooh323ep.h::ooH323EpRegisterCallbacks" ></a><p>
+<a class="anchor" name="ga10" doxytag="ooh323ep.h::ooDisableAutoAnswer" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooDisableAutoAnswer           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to disable the auto answer feature for incoming calls.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga9" doxytag="ooh323ep.h::ooEnableAutoAnswer" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooEnableAutoAnswer           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to enable the auto answer feature for incoming calls.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga7" doxytag="ooh323ep.h::ooH323EpRegisterCallbacks" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -167,7 +272,13 @@ It closes the H323 Endpoint for an application, releasing all the associated mem
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooH323EpRegisterCallbacks           </td>
           <td class="md" valign="top">(&nbsp;</td>
-          <td class="md" nowrap valign="top">cb_OnIncomingCall&nbsp;</td>
+          <td class="md" nowrap valign="top">cb_OnAlerting&nbsp;</td>
+          <td class="mdname" nowrap> <em>onAlerting</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>cb_OnIncomingCall&nbsp;</td>
           <td class="mdname" nowrap> <em>onIncomingCall</em>, </td>
         </tr>
         <tr>
@@ -215,7 +326,8 @@ This function is used to register the H323 Endpoint callback functions.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign=top><em>onIncomingCall</em>&nbsp;</td><td>Callback function to be called when a new incoming call is detected. </td></tr>
+    <tr><td valign=top><em>onAlerting</em>&nbsp;</td><td>Callback function to be called when alerting message is sent. </td></tr>
+    <tr><td valign=top><em>onIncomingCall</em>&nbsp;</td><td>Callback function to be called when a new incoming call is accepted. </td></tr>
     <tr><td valign=top><em>onOutgoingCall</em>&nbsp;</td><td>Callback function to be called when an outgoing call is placed on behalf of the application. </td></tr>
     <tr><td valign=top><em>onCallEstablished</em>&nbsp;</td><td>Callback function to be called when a call is established with the remote end point. </td></tr>
     <tr><td valign=top><em>onCallCleared</em>&nbsp;</td><td>Callback function to be called when a call is cleared. </td></tr>
@@ -357,11 +469,453 @@ It initializes the H323 Endpoint.<p>
     </td>
   </tr>
 </table>
+<a class="anchor" name="ga3" doxytag="ooh323ep.h::ooSetAliasDialedDigits" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetAliasDialedDigits           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>dialedDigits</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set the dialed digits alias for the endpoint.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>dialedDigits</em>&nbsp;</td><td>Dialed-Digits to be set as alias.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga5" doxytag="ooh323ep.h::ooSetAliasEmailID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetAliasEmailID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>email</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set an email id as an alias for the endpoint.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>email</em>&nbsp;</td><td>Email id to be set as an alias.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga2" doxytag="ooh323ep.h::ooSetAliasH323ID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetAliasH323ID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>h323id</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set the h323id alias for the endpoint.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>h323id</em>&nbsp;</td><td>H323-ID to be set as alias.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga6" doxytag="ooh323ep.h::ooSetAliasTransportID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetAliasTransportID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>ipaddress</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set an ip address as an alias.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>ipaddress</em>&nbsp;</td><td>IP address to be set as an alias.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga4" doxytag="ooh323ep.h::ooSetAliasURLID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetAliasURLID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>url</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set the url alias for the endpoint.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>url</em>&nbsp;</td><td>URL to be set as an alias.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga15" doxytag="ooh323ep.h::ooSetCallerID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetCallerID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>callerID</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set callerid to be used for outbound calls.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>callerID</em>&nbsp;</td><td>New value for the caller id.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga16" doxytag="ooh323ep.h::ooSetCallerName" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetCallerName           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>callerName</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set the caller name, which is used for display purposes.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>callerName</em>&nbsp;</td><td>New value for the caller name.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga11" doxytag="ooh323ep.h::ooSetFastStart" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetFastStart           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>fastStart</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to enable/disable faststart.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>fastStart</em>&nbsp;</td><td>1, to enable and 0, to disable faststart</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga12" doxytag="ooh323ep.h::ooSetH245Tunneling" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetH245Tunneling           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">int&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>tunneling</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to enable/disable tunneling.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>tunneling</em>&nbsp;</td><td>1, to enable and 0, to disable tunneling.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga1" doxytag="ooh323ep.h::ooSetLocalCallSignallingAddress" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetLocalCallSignallingAddress           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>localip</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>listenport</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to assign a local ip address to be used for call signalling.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>localip</em>&nbsp;</td><td>Dotted IP address to be used for call signalling. </td></tr>
+    <tr><td valign=top><em>listenport</em>&nbsp;</td><td>Port to be used for listening for incoming calls.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga13" doxytag="ooh323ep.h::ooSetProductID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetProductID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>productID</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set the product ID.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>productID</em>&nbsp;</td><td>New value for the product id.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga14" doxytag="ooh323ep.h::ooSetVersionID" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooSetVersionID           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">char *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>versionID</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to set version id.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>versionID</em>&nbsp;</td><td>New value for the version id.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

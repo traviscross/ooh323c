@@ -163,6 +163,12 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga14">ooAddMediaInfo</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, ooMediaInfo mediaInfo)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function can be used by an application to specify media endpoint information for different types of media.  <a href="group__callmgmt.shtml#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga15">ooFindLogicalChannelByOLC</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannel *olc)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a logical channel from a received olc.  <a href="group__callmgmt.shtml#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga16">ooFindLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int sessionID, char *dir, H245DataType *dataType)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a logical channel based on session Id, direction of channel and datatype.  <a href="group__callmgmt.shtml#ga16"></a><br><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 This file contains Call management functions.
@@ -174,6 +180,6 @@ Definition in file <a class="el" href="ooCalls_8h-source.shtml">ooCalls.h</a>.<!
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

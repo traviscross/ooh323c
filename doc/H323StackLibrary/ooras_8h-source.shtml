@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>ooras.h Source File</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>ooras.h</h1><a href="ooras_8h.shtml">Go to the documentation of this file.</a><pre class="fragment"><div>00001 <span class="comment">/*</span>
+00002 <span class="comment"> * Copyright (C) 2005 by Page Iberica, S.A.</span>
+00003 <span class="comment"> * Copyright (C) 2004 by Objective Systems, Inc.</span>
+00004 <span class="comment"> *</span>
+00005 <span class="comment"> * This software is furnished under an open source license and may be </span>
+00006 <span class="comment"> * used and copied only in accordance with the terms of this license. </span>
+00007 <span class="comment"> * The text of the license may generally be found in the root </span>
+00008 <span class="comment"> * directory of this installation in the COPYING file.  It </span>
+00009 <span class="comment"> * can also be viewed online at the following URL:</span>
+00010 <span class="comment"> *</span>
+00011 <span class="comment"> *   http://www.obj-sys.com/open/license.html</span>
+00012 <span class="comment"> *</span>
+00013 <span class="comment"> * Any redistributions of this file including modified versions must </span>
+00014 <span class="comment"> * maintain this copyright notice.</span>
+00015 <span class="comment"> *</span>
+00016 <span class="comment"> *****************************************************************************/</span>
+00017
+00026 <span class="preprocessor">#ifndef _OORASHDR_H_</span>
+00027 <span class="preprocessor"></span><span class="preprocessor">#define _OORASHDR_H_</span>
+00028 <span class="preprocessor"></span>
+00029 <span class="preprocessor">#include "<a class="code" href="ooasn1_8h.shtml">ooasn1.h</a>"</span>
+00030 <span class="preprocessor">#include "<a class="code" href="ootypes_8h.shtml">ootypes.h</a>"</span>
+00031 <span class="preprocessor">#include "H323-MESSAGES.h"</span>
+00032
+00033
+00034
+00035 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00036 <span class="comment">/*  This constant is used to tell the toolchain whether to copile or */</span>
+00037 <span class="comment">/*  not the RAS functionality. Define this constant to compile and   */</span>
+00038 <span class="comment">/*  link RAS code. Undefine it to save memory by not linking RAS     */</span>
+00039 <span class="comment">/*  functionality.                                                   */</span>
+00040 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00041
+00042 <span class="preprocessor">#define __USING_RAS</span>
+00043 <span class="preprocessor"></span>
+00044
+00045 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00046 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00047
+00048 <span class="preprocessor">#ifdef __USING_RAS</span>
+00049 <span class="preprocessor"></span>
+00050 <span class="preprocessor">#ifdef __cplusplus</span>
+00051 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
+00052 <span class="preprocessor">#endif</span>
+00053 <span class="preprocessor"></span>
+00054 <span class="preprocessor">#ifndef EXTERN</span>
+00055 <span class="preprocessor"></span><span class="preprocessor">#ifdef _WIN32</span>
+00056 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN __declspec(dllexport)</span>
+00057 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+00058 <span class="preprocessor"></span><span class="preprocessor">#define EXTERN</span>
+00059 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span>
+00060 <span class="preprocessor">#endif </span><span class="comment">/* EXTERN */</span>
+00061
+00062
+00063 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00064 <span class="comment">/*  Public definitions                                               */</span>
+00065 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00066
+00067
+00068 <span class="preprocessor">#define OORAS_DEFAULT_REMOTE_PORT   1719</span>
+00069 <span class="preprocessor"></span>
+00070 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00071 <span class="comment">/*  Public data types                                                */</span>
+00072 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00073
+00074
+00080 <span class="keyword">enum</span> RasGatekeeperMode {
+00081    RasNoGatekeeper = 0,
+00082    RasDiscoverGatekeeper = 1,
+00083    RasUseSpecificGatekeeper = 2,
+00084 };
+00085
+00086 <span class="keyword">enum</span> RasCallModel {
+00087    RasDirect = 0,
+00088    RasGkRouted,
+00089 };
+00090
+00091 <span class="keyword">enum</span> RasCallType{
+00092    RasPointToPoint =0,
+00093    RasOneToN,
+00094    RasnToOne,
+00095    RasnToN,
+00096 };
+<a name="l00103"></a><a class="code" href="structooRasMessage.shtml">00103</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structooRasMessage.shtml">ooRasMessage</a>
+00104 {
+00105    OOCTXT* psContext; <span class="comment">/*context is used to allocate memory for different parts of the message */</span>
+00106    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> ucBuilt;
+00107    H225RasMessage sMessage;
+00108 } <a class="code" href="structooRasMessage.shtml">ooRasMessage</a>;
+00109
+00110
+00111
+00112 <span class="comment">/*</span>
+00113 <span class="comment">  Structure containing RAS parameters.</span>
+00114 <span class="comment">  All timing parameters in milliseconds.</span>
+00115 <span class="comment">*/</span>
+00116
+00117
+00118 <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+00119    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> uiGRQTimeout;   <span class="comment">/* Timeout to resend GRQ's. 5 secs. minimun */</span>
+00120    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> uiRRQTimeout;   <span class="comment">/* Timeout to resend RRQ's. 5 secs. minimun */</span>
+00121    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> uiRRQRetries;   <span class="comment">/* Max RRQ retries with no answer before go back to send RRQs.*/</span>
+00122    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> uiAddRegPeriod; <span class="comment">/* Additive registration period. 0 if additive registrations */</span>
+00123                                 <span class="comment">/*are not desired.*/</span>
+00124 } ooRasParams;
+00125
+00126
+00127
+00128
+00129 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00130 <span class="comment">/*  Functions exported by this module                                 */</span>
+00131 <span class="comment">/*-------------------------------------------------------------------*/</span>
+00132
+00133
+00138 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga1">ooInitRas</a>(<span class="keywordtype">int</span> localRasPort, <span class="keyword">enum</span> RasGatekeeperMode eGkMode,
+00139                      <span class="keywordtype">char</span> *szGkAddr, <span class="keywordtype">int</span> iGkPort );
+00140
+00141
+00146 EXTERN <span class="keywordtype">void</span> <a class="code" href="group__ras.shtml#ga2">ooRasExplorer</a>();
+00147
+00148
+00159 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga3">ooRasFillAlias</a>( OOCTXT *psContext, ooAliases *psAliases,
+00160                            H225_SeqOfH225AliasAddress *psAliasList );
+00161
+00162
+00168 EXTERN <a class="code" href="group__sockets.shtml#ga0">OOSOCKET</a> <a class="code" href="group__ras.shtml#ga4">ooRasGetSocket</a>();
+00169
+00170
+00176 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga5">ooRasReceive</a>();
+00177
+00191 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga6">ooRasSetGatekeeperMode</a>( <span class="keyword">enum</span> RasGatekeeperMode eGkMode,
+00192                                    <span class="keywordtype">char</span> *szGkAddr,
+00193                                    <span class="keywordtype">int</span> iGkPort );
+00194
+00195
+00205 EXTERN <span class="keyword">enum</span> RasGatekeeperMode <a class="code" href="group__ras.shtml#ga7">ooRasGetGatekeeperMode</a>();
+00206
+00207
+00214 EXTERN ASN1BOOL <a class="code" href="group__ras.shtml#ga8">ooRasIsRegistered</a>();
+00215
+00216
+00229 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga9">ooRasSendAdmissionRequest</a>
+00230    (<a class="code" href="structooCallData.shtml">ooCallData</a> * call, <span class="keyword">enum</span> RasCallModel eModel, ooAliases *psSrcAliases,
+00231     ooAliases *psDestAliases);
+00232
+00240 EXTERN <span class="keywordtype">int</span> <a class="code" href="group__ras.shtml#ga10">ooRasSendDisengageRequest</a>(<a class="code" href="structooCallData.shtml">ooCallData</a> *call);
+00241
+00242
+00247 <span class="preprocessor">#ifdef __cplusplus</span>
+00248 <span class="preprocessor"></span>}
+00249 <span class="preprocessor">#endif</span>
+00250 <span class="preprocessor"></span>
+00251
+00252 <span class="preprocessor">#else </span><span class="comment">/* __USING_RAS */</span>
+00253 <span class="preprocessor">#define ooInitRas( iLocalPort, mode, ip, port )</span>
+00254 <span class="preprocessor"></span><span class="preprocessor">#define ooRasExplorer()</span>
+00255 <span class="preprocessor"></span><span class="preprocessor">#define ooRasGetSocket() 0</span>
+00256 <span class="preprocessor"></span><span class="preprocessor">#define ooRasReceive()</span>
+00257 <span class="preprocessor"></span><span class="preprocessor">#define ooRasSetGatekeeperMode( eGkMode, szGkAddr, usGkPort )</span>
+00258 <span class="preprocessor"></span><span class="preprocessor">#define ooRasGetGatekeeperMode( peGkMode, szGkAddr, usGkPort )</span>
+00259 <span class="preprocessor"></span><span class="preprocessor">#define ooRasGetGatekeeperStatus( szGatekeeperId, psGkAddr )</span>
+00260 <span class="preprocessor"></span><span class="preprocessor">#define ooRasSetParams( psParams )</span>
+00261 <span class="preprocessor"></span><span class="preprocessor">#define ooRasAdmissionRequest( szCallToken, uiBandwith )</span>
+00262 <span class="preprocessor"></span><span class="preprocessor">#define ooRasDisengageRequest( szCallToken )</span>
+00263 <span class="preprocessor"></span>
+00264 <span class="preprocessor">#endif </span><span class="comment">/* __USING_RAS */</span>
+00265
+00266 <span class="preprocessor">#endif </span><span class="comment">/* __RASHDR_H */</span>
+</div></pre><!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

@@ -140,7 +140,7 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga6">ooHandleStartH245FacilityMessage</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225Facility_UUIE *facility)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This is a helper function used to handle an startH245 Facility message.  <a href="group__q931.shtml#ga6"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga7">ooRetrieveAliases</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225_SeqOfH225AliasAddress *pAddresses, int remote)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__q931.shtml#ga7">ooRetrieveAliases</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H225_SeqOfH225AliasAddress *pAddresses)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to retrieve the aliases from Sequence of alias addresses.  <a href="group__q931.shtml#ga7"></a><br><br></td></tr>
 </table>
@@ -154,6 +154,6 @@ Definition in file <a class="el" href="ooh323_8h-source.shtml">ooh323.h</a>.<!--
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

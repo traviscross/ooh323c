@@ -112,7 +112,7 @@
 <h1>Capability Management</h1><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddAudioCapability</a> (H245AudioCapability audioCap, int dir, <a class="el" href="ootypes_8h.shtml#a127">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a128">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a129">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a130">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga0">ooAddAudioCapability</a> (H245AudioCapability audioCap, int dir, <a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a> startReceiveChannel, <a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a> startTransmitChannel, <a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a> stopReceiveChannel, <a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a> stopTransmitChannel)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to add audio capabilities to the endpoint.  <a href="#ga0"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN H245AudioCapability *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__capmgmt.shtml#ga1">ooCreateDupAudioCap</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245AudioCapability *audioCap, OOCTXT *pctxt)</td></tr>
@@ -182,25 +182,25 @@ EXTERN <a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a
         <tr>
           <td class="md" nowrap align="right"></td>
           <td></td>
-          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a127">cb_StartReceiveChannel</a>&nbsp;</td>
+          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a104">cb_StartReceiveChannel</a>&nbsp;</td>
           <td class="mdname" nowrap> <em>startReceiveChannel</em>, </td>
         </tr>
         <tr>
           <td class="md" nowrap align="right"></td>
           <td></td>
-          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a128">cb_StartTransmitChannel</a>&nbsp;</td>
+          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a105">cb_StartTransmitChannel</a>&nbsp;</td>
           <td class="mdname" nowrap> <em>startTransmitChannel</em>, </td>
         </tr>
         <tr>
           <td class="md" nowrap align="right"></td>
           <td></td>
-          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a129">cb_StopReceiveChannel</a>&nbsp;</td>
+          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a106">cb_StopReceiveChannel</a>&nbsp;</td>
           <td class="mdname" nowrap> <em>stopReceiveChannel</em>, </td>
         </tr>
         <tr>
           <td class="md" nowrap align="right"></td>
           <td></td>
-          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a130">cb_StopTransmitChannel</a>&nbsp;</td>
+          <td class="md" nowrap><a class="el" href="ootypes_8h.shtml#a107">cb_StopTransmitChannel</a>&nbsp;</td>
           <td class="mdname" nowrap> <em>stopTransmitChannel</em></td>
         </tr>
         <tr>
@@ -651,6 +651,6 @@ Checks whether a particular datatype is supported by the end point.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

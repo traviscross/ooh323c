@@ -112,13 +112,13 @@
 <h1>Channel Management</h1><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga0">ooCreateH323Listener</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga0">ooCreateH323Listener</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a listener for incoming calls.  <a href="#ga0"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga1">ooCreateH245Listener</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a listener for incoming H.245 connections.  <a href="#ga1"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga2">ooAcceptH225Connection</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga2">ooAcceptH225Connection</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to accept incoming H.225 connections.  <a href="#ga2"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga3">ooAcceptH245Connection</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
@@ -136,10 +136,10 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga7">ooCloseH245Connection</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to close an H.245 connection for a call.  <a href="#ga7"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga8">ooMonitorChannels</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga8">ooMonitorChannels</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to start monitoring channels for the calls.  <a href="#ga8"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga9">ooStopMonitorCalls</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga9">ooStopMonitorCalls</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called to stop the monitor channels thread.  <a href="#ga9"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__channels.shtml#ga10">ooH2250Receive</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
@@ -170,6 +170,7 @@
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooAcceptH225Connection           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -421,6 +422,7 @@ This function is used to create a listener for incoming H.245 connections.
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooCreateH323Listener           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -528,6 +530,7 @@ It receives the message, decodes it and calls 'ooHandleH245Message' to process i
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooMonitorChannels           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -746,6 +749,7 @@ This function is used to Send a message on the channel, when channel is availabl
         <tr>
           <td class="md" nowrap valign="top"> EXTERN int ooStopMonitorCalls           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -778,6 +782,6 @@ It cleans up all the active calls, before stopping monitor thread. <dl compact><
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

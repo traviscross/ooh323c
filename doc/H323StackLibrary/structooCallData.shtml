@@ -132,74 +132,74 @@ ASN1USINT&nbsp;</td><td class="memItemRight" valign=bottom><b>callReference</b><
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o4" doxytag="ooCallData::callIdentifier" ></a>
 H225CallIdentifier&nbsp;</td><td class="memItemRight" valign=bottom><b>callIdentifier</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o5" doxytag="ooCallData::callState" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o5" doxytag="ooCallData::confIdentifier" ></a>
+H225ConferenceIdentifier&nbsp;</td><td class="memItemRight" valign=bottom><b>confIdentifier</b></td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o6" doxytag="ooCallData::callState" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>callState</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o6" doxytag="ooCallData::callEndReason" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o7" doxytag="ooCallData::callEndReason" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>callEndReason</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o7" doxytag="ooCallData::h245SessionState" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o8" doxytag="ooCallData::h245SessionState" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>h245SessionState</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o8" doxytag="ooCallData::isTunnelingActive" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o9" doxytag="ooCallData::isTunnelingActive" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>isTunnelingActive</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o9" doxytag="ooCallData::isFastStartActive" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o10" doxytag="ooCallData::isFastStartActive" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>isFastStartActive</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o10" doxytag="ooCallData::mediaInfo" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o11" doxytag="ooCallData::mediaInfo" ></a>
 ooMediaInfo *&nbsp;</td><td class="memItemRight" valign=bottom><b>mediaInfo</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o11" doxytag="ooCallData::localIP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o12" doxytag="ooCallData::localIP" ></a>
 char&nbsp;</td><td class="memItemRight" valign=bottom><b>localIP</b> [20]</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o12" doxytag="ooCallData::h225Channel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o13" doxytag="ooCallData::h225Channel" ></a>
 <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>h225Channel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o13" doxytag="ooCallData::h225ChanPort" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o14" doxytag="ooCallData::h225ChanPort" ></a>
 int *&nbsp;</td><td class="memItemRight" valign=bottom><b>h225ChanPort</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o14" doxytag="ooCallData::h245Channel" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o15" doxytag="ooCallData::h245Channel" ></a>
 <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>h245Channel</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o15" doxytag="ooCallData::h245ChanPort" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o16" doxytag="ooCallData::h245ChanPort" ></a>
 int *&nbsp;</td><td class="memItemRight" valign=bottom><b>h245ChanPort</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o16" doxytag="ooCallData::h245listener" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o17" doxytag="ooCallData::h245listener" ></a>
 <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> *&nbsp;</td><td class="memItemRight" valign=bottom><b>h245listener</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o17" doxytag="ooCallData::h245listenport" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o18" doxytag="ooCallData::h245listenport" ></a>
 int *&nbsp;</td><td class="memItemRight" valign=bottom><b>h245listenport</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o18" doxytag="ooCallData::remoteIP" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o19" doxytag="ooCallData::remoteIP" ></a>
 char&nbsp;</td><td class="memItemRight" valign=bottom><b>remoteIP</b> [20]</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o19" doxytag="ooCallData::remotePort" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o20" doxytag="ooCallData::remotePort" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>remotePort</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o20" doxytag="ooCallData::remoteH245Port" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o21" doxytag="ooCallData::remoteH245Port" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>remoteH245Port</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o21" doxytag="ooCallData::sendH225" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o22" doxytag="ooCallData::sendH225" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>sendH225</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o22" doxytag="ooCallData::sendH245" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o23" doxytag="ooCallData::sendH245" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>sendH245</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o23" doxytag="ooCallData::outH225Queue" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o24" doxytag="ooCallData::outH225Queue" ></a>
 DList&nbsp;</td><td class="memItemRight" valign=bottom><b>outH225Queue</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o24" doxytag="ooCallData::outH245Queue" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o25" doxytag="ooCallData::outH245Queue" ></a>
 DList&nbsp;</td><td class="memItemRight" valign=bottom><b>outH245Queue</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o25" doxytag="ooCallData::remoteDisplayName" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o26" doxytag="ooCallData::remoteDisplayName" ></a>
 ASN1OCTET *&nbsp;</td><td class="memItemRight" valign=bottom><b>remoteDisplayName</b></td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o26" doxytag="ooCallData::remoteAliases" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o27" doxytag="ooCallData::remoteAliases" ></a>
 ooAliases *&nbsp;</td><td class="memItemRight" valign=bottom><b>remoteAliases</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o27" doxytag="ooCallData::localAliases" ></a>
-ooAliases *&nbsp;</td><td class="memItemRight" valign=bottom><b>localAliases</b></td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="o28" doxytag="ooCallData::masterSlaveState" ></a>
 int&nbsp;</td><td class="memItemRight" valign=bottom><b>masterSlaveState</b></td></tr>
@@ -255,13 +255,13 @@ Structure to store all the information related to a particular call.
 <p>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00389">389</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00338">338</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ootypes_8h-source.shtml">ootypes.h</a></ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

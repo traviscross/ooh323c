@@ -167,7 +167,7 @@ EXTERN DListNode *&nbsp;</td><td class="memItemRight" valign=bottom><b>dListFind
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga9">sListFree</a> (SList *pList)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to free-up all the nodes in the singly-linked list.  <a href="#ga9"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SList *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga10">sListCreate</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SList *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga10">sListCreate</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to create a new singly-linked list.  <a href="#ga10"></a><br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN SList *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__llfuns.shtml#ga11">sListCreateEx</a> (OOCTXT *pctxt)</td></tr>
@@ -470,6 +470,7 @@ This function is used to append a new data member to the list.
         <tr>
           <td class="md" nowrap valign="top"> EXTERN SList* sListCreate           </td>
           <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">void&nbsp;</td>
           <td class="mdname1" valign="top" nowrap>          </td>
           <td class="md" valign="top">&nbsp;)&nbsp;</td>
           <td class="md" nowrap></td>
@@ -748,6 +749,6 @@ This function is used to remove a particular data member from the list.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

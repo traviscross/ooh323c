@@ -161,60 +161,60 @@ typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" hre
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Signature for function to stop receiving rtp data. <br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="oosndrtp.h::MediaAPI_InitializePlugin" ></a>
-typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a> )()</td></tr>
+typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a> )(void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Signature for function to Initialize the media plug-in. <br><br></td></tr>
 <tr><td colspan=2><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga12">ooLoadSndRTPPlugin</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga1">ooLoadSndRTPPlugin</a> (char *name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads the media plugin into the process space.  <a href="group__media.shtml#ga12"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga13">ooReleaseSndRTPPlugin</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Loads the media plugin into the process space.  <a href="group__media.shtml#ga1"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga2">ooReleaseSndRTPPlugin</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unloads the plug-in from process space.  <a href="group__media.shtml#ga13"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga14">ooCreateTransmitRTPChannel</a> (char *destip, int port)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unloads the plug-in from process space.  <a href="group__media.shtml#ga2"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga3">ooCreateTransmitRTPChannel</a> (char *destip, int port)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a transmit RTP channel.  <a href="group__media.shtml#ga14"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga15">ooCloseTransmitRTPChannel</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a transmit RTP channel.  <a href="group__media.shtml#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga4">ooCloseTransmitRTPChannel</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a transmit RTP channel.  <a href="group__media.shtml#ga15"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga16">ooCreateReceiveRTPChannel</a> (char *localip, int localport)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a transmit RTP channel.  <a href="group__media.shtml#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga5">ooCreateReceiveRTPChannel</a> (char *localip, int localport)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a receive RTP channel.  <a href="group__media.shtml#ga16"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga17">ooCloseReceiveRTPChannel</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a receive RTP channel.  <a href="group__media.shtml#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga6">ooCloseReceiveRTPChannel</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a receive RTP channel.  <a href="group__media.shtml#ga17"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga18">ooStartTransmitWaveFile</a> (char *filename)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes a receive RTP channel.  <a href="group__media.shtml#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga7">ooStartTransmitWaveFile</a> (char *filename)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Start transmitting a audio file.  <a href="group__media.shtml#ga18"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga19">ooStopTransmitWaveFile</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Start transmitting a audio file.  <a href="group__media.shtml#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga8">ooStopTransmitWaveFile</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of a audio file.  <a href="group__media.shtml#ga19"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga20">ooStartTransmitMic</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of a audio file.  <a href="group__media.shtml#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga9">ooStartTransmitMic</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts capturing audio data from mic and transmits it as rtp stream.  <a href="group__media.shtml#ga20"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga21">ooStopTransmitMic</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts capturing audio data from mic and transmits it as rtp stream.  <a href="group__media.shtml#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga10">ooStopTransmitMic</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of mic audio data.  <a href="group__media.shtml#ga21"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga22">ooStartReceiveAudioAndPlayback</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop transmission of mic audio data.  <a href="group__media.shtml#ga10"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga11">ooStartReceiveAudioAndPlayback</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts receiving rtp stream data and play it on the speakers.  <a href="group__media.shtml#ga22"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga23">ooStopReceiveAudioAndPlayback</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Starts receiving rtp stream data and play it on the speakers.  <a href="group__media.shtml#ga11"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga12">ooStopReceiveAudioAndPlayback</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop receiving rtp stream data.This calls corresponding interface function of the plug-in library.  <a href="group__media.shtml#ga23"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga24" doxytag="oosndrtp.h::ooStartReceiveAudioAndRecord" ></a>
-EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga24">ooStartReceiveAudioAndRecord</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stop receiving rtp stream data.This calls corresponding interface function of the plug-in library.  <a href="group__media.shtml#ga12"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga13" doxytag="oosndrtp.h::ooStartReceiveAudioAndRecord" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga13">ooStartReceiveAudioAndRecord</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Not suuported currently. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga25" doxytag="oosndrtp.h::ooStopReceiveAudioAndRecord" ></a>
-EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga25">ooStopReceiveAudioAndRecord</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga14" doxytag="oosndrtp.h::ooStopReceiveAudioAndRecord" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga14">ooStopReceiveAudioAndRecord</a> (void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Not supported currently. <br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga26">ooSetLocalRTPAndRTCPAddrs</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga15">ooSetLocalRTPAndRTCPAddrs</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set local RTP and RTCP addresses for the session.  <a href="group__media.shtml#ga26"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga27">ooRTPShutDown</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set local RTP and RTCP addresses for the session.  <a href="group__media.shtml#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__media.shtml#ga16">ooRTPShutDown</a> (void)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes transmit and receive RTP channels, if open.  <a href="group__media.shtml#ga27"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Closes transmit and receive RTP channels, if open.  <a href="group__media.shtml#ga16"></a><br><br></td></tr>
 <tr><td colspan=2><br><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="oosndrtp.h::media" ></a>
 void *&nbsp;</td><td class="memItemRight" valign=bottom><b>media</b></td></tr>
@@ -230,6 +230,6 @@ Definition in file <a class="el" href="oosndrtp_8h-source.shtml">oosndrtp.h</a>.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -115,40 +115,40 @@
 </h1><table border=0 cellpadding=0 cellspacing=0>
 <tr><td></td></tr>
 <tr><td colspan=2><br><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga80">memAlloc</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAlloc(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga79">memAlloc</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAlloc(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate memory.  <a href="#ga80"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga81">memAllocZ</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAllocZ(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate memory.  <a href="#ga79"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga80">memAllocZ</a>(pctxt, nbytes)&nbsp;&nbsp;&nbsp;memHeapAllocZ(&amp;(pctxt)-&gt;pTypeMemHeap,nbytes)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate and zero memory.  <a href="#ga81"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga82">memRealloc</a>(pctxt, mem_p, nbytes)&nbsp;&nbsp;&nbsp;memHeapRealloc(&amp;(pctxt)-&gt;pTypeMemHeap, (void*)mem_p, nbytes)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate and zero memory.  <a href="#ga80"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga81">memRealloc</a>(pctxt, mem_p, nbytes)&nbsp;&nbsp;&nbsp;memHeapRealloc(&amp;(pctxt)-&gt;pTypeMemHeap, (void*)mem_p, nbytes)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reallocate memory.  <a href="#ga82"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga83">memFreePtr</a>(pctxt, mem_p)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reallocate memory.  <a href="#ga81"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga82">memFreePtr</a>(pctxt, mem_p)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory pointer.  <a href="#ga83"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga84">memFree</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapFreeAll(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory pointer.  <a href="#ga82"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga83">memFree</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapFreeAll(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory associated with a context.  <a href="#ga84"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga85">memReset</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapReset(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Free memory associated with a context.  <a href="#ga83"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga84">memReset</a>(pctxt)&nbsp;&nbsp;&nbsp;memHeapReset(&amp;(pctxt)-&gt;pTypeMemHeap)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset memory associated with a context.  <a href="#ga85"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga86" doxytag="Rtmem::OSCDECL" ></a>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset memory associated with a context.  <a href="#ga84"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga85" doxytag="Rtmem::OSCDECL" ></a>
 #define&nbsp;</td><td class="memItemRight" valign=bottom><b>OSCDECL</b></td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>INCRBITIDX</b>(pctxt)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><b>DECODEBIT</b>(pctxt, pvalue)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga89">decodeUnconsInteger</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsInteger(pctxt, pvalue, ASN1INT_MIN)</td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga88">decodeUnconsInteger</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsInteger(pctxt, pvalue, ASN1INT_MIN)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained integer.  <a href="#ga89"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga90">decodeUnconsUnsigned</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsUnsigned(pctxt, pvalue, 0U)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained integer.  <a href="#ga88"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga89">decodeUnconsUnsigned</a>(pctxt, pvalue)&nbsp;&nbsp;&nbsp;decodeSemiConsUnsigned(pctxt, pvalue, 0U)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained unsigned integer.  <a href="#ga90"></a><br><br></td></tr>
-<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga91">encodeUnconsInteger</a>(pctxt, value)&nbsp;&nbsp;&nbsp;encodeSemiConsInteger(pctxt,value,ASN1INT_MIN)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function will decode an unconstrained unsigned integer.  <a href="#ga89"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>#define&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__rtmem.shtml#ga90">encodeUnconsInteger</a>(pctxt, value)&nbsp;&nbsp;&nbsp;encodeSemiConsInteger(pctxt,value,ASN1INT_MIN)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an unconstrained integer.  <a href="#ga91"></a><br><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function encodes an unconstrained integer.  <a href="#ga90"></a><br><br></td></tr>
 <tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga0" doxytag="Rtmem::OSMallocFunc" ></a>
 typedef void *OSCDECL *&nbsp;</td><td class="memItemRight" valign=bottom><b>OSMallocFunc</b> (size_t size)</td></tr>
@@ -378,18 +378,18 @@ EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>init16BitCharSet
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga75" doxytag="Rtmem::isExtendableSize" ></a>
 EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><b>isExtendableSize</b> (Asn1SizeCnst *pSizeList)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="Rtmem::set16BitCharSet" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga76" doxytag="Rtmem::set16BitCharSet" ></a>
 EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><b>set16BitCharSet</b> (OOCTXT *pctxt, Asn116BitCharSet *pCharSet, Asn116BitCharSet *pAlphabet)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="Rtmem::rtBitStrToString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga77" doxytag="Rtmem::rtBitStrToString" ></a>
 EXTERN const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>rtBitStrToString</b> (ASN1UINT numbits, const ASN1OCTET *data, char *buffer, size_t bufsiz)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga79" doxytag="Rtmem::rtOctStrToString" ></a>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga78" doxytag="Rtmem::rtOctStrToString" ></a>
 EXTERN const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>rtOctStrToString</b> (ASN1UINT numocts, const ASN1OCTET *data, char *buffer, size_t bufsiz)</td></tr>
 
 </table>
 <hr><h2>Define Documentation</h2>
-<a class="anchor" name="ga88" doxytag="ooasn1.h::DECODEBIT" ></a><p>
+<a class="anchor" name="ga87" doxytag="ooasn1.h::DECODEBIT" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -422,10 +422,10 @@ EXTERN const char *&nbsp;</td><td class="memItemRight" valign=bottom><b>rtOctStr
 (1 &lt;&lt; (pctxt)-&gt;buffer.bitOffset)) != 0), ASN_OK) : ASN_OK ))
 </div></pre>
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01230">1230</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01232">1232</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga89" doxytag="ooasn1.h::decodeUnconsInteger" ></a><p>
+<a class="anchor" name="ga88" doxytag="ooasn1.h::decodeUnconsInteger" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -466,10 +466,10 @@ This function will decode an unconstrained integer.
 </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01612">1612</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01614">1614</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga90" doxytag="ooasn1.h::decodeUnconsUnsigned" ></a><p>
+<a class="anchor" name="ga89" doxytag="ooasn1.h::decodeUnconsUnsigned" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -510,10 +510,10 @@ This function will decode an unconstrained unsigned integer.
 </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01625">1625</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01627">1627</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga91" doxytag="ooasn1.h::encodeUnconsInteger" ></a><p>
+<a class="anchor" name="ga90" doxytag="ooasn1.h::encodeUnconsInteger" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -554,10 +554,10 @@ This function encodes an unconstrained integer.
 </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01999">1999</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l02001">2001</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga87" doxytag="ooasn1.h::INCRBITIDX" ></a><p>
+<a class="anchor" name="ga86" doxytag="ooasn1.h::INCRBITIDX" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -587,10 +587,10 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01999">1999</a> o
 ((pctxt)-&gt;buffer.bitOffset = 7, ASN_OK)) : ASN_OK)
 </div></pre>
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01225">1225</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01227">1227</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga80" doxytag="ooasn1.h::memAlloc" ></a><p>
+<a class="anchor" name="ga79" doxytag="ooasn1.h::memAlloc" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -630,10 +630,10 @@ This macro allocates the given number of bytes. It is similar to the C <code>mal
 <dl compact><dt><b>Returns:</b></dt><dd>- Void pointer to allocated memory or NULL if insufficient memory was available to fulfill the request. </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01044">1044</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01046">1046</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga81" doxytag="ooasn1.h::memAllocZ" ></a><p>
+<a class="anchor" name="ga80" doxytag="ooasn1.h::memAllocZ" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -673,10 +673,10 @@ This macro allocates the given number of bytes and then initializes the memory b
 <dl compact><dt><b>Returns:</b></dt><dd>- Void pointer to allocated memory or NULL if insufficient memory was available to fulfill the request. </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01056">1056</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01058">1058</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga84" doxytag="ooasn1.h::memFree" ></a><p>
+<a class="anchor" name="ga83" doxytag="ooasn1.h::memFree" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -711,10 +711,10 @@ This macro frees all memory held within a context. This is all memory allocated 
 </dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01099">1099</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01101">1101</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga83" doxytag="ooasn1.h::memFreePtr" ></a><p>
+<a class="anchor" name="ga82" doxytag="ooasn1.h::memFreePtr" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -755,10 +755,10 @@ This macro frees memory at the given pointer. The memory must have been allocate
 </dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01087">1087</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01089">1089</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga82" doxytag="ooasn1.h::memRealloc" ></a><p>
+<a class="anchor" name="ga81" doxytag="ooasn1.h::memRealloc" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -802,10 +802,10 @@ This macro reallocates a memory block (either expands or contracts) to the given
 <dl compact><dt><b>Returns:</b></dt><dd>- Void pointer to allocated memory or NULL if insufficient memory was available to fulfill the request. This may be the same as the pmem pointer that was passed in if the block did not need to be relocated. </dd></dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01073">1073</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01075">1075</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
-<a class="anchor" name="ga85" doxytag="ooasn1.h::memReset" ></a><p>
+<a class="anchor" name="ga84" doxytag="ooasn1.h::memReset" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
     <td class="mdRow">
@@ -841,7 +841,7 @@ The difference between this and the ASN1MEMFREE macro is that the memory blocks 
 </dl>
 
 <p>
-Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01116">1116</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
+Definition at line <a class="el" href="ooasn1_8h-source.shtml#l01118">1118</a> of file <a class="el" href="ooasn1_8h-source.shtml">ooasn1.h</a>.    </td>
   </tr>
 </table>
 <hr><h2>Function Documentation</h2>
@@ -3268,6 +3268,6 @@ These functions are used to allocate/reallocate/free the memory blocks. By defau
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

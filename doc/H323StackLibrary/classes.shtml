@@ -114,13 +114,13 @@
 <tr><td><a name="letter_A"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;A&nbsp;&nbsp;</div></td></tr></table>
 </td><td><a class="el" href="structooEndPoint.shtml">ooEndPoint</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a class="el" href="structAsn1NamedCEventHandler.shtml">Asn1NamedCEventHandler</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="structooH323EpCapability.shtml">ooH323EpCapability</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a name="letter_H"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;H&nbsp;&nbsp;</div></td></tr></table>
 </td><td><a class="el" href="structooH323Ports.shtml">ooH323Ports</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a class="el" href="structH245Message.shtml">H245Message</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a name="letter_O"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;O&nbsp;&nbsp;</div></td></tr></table>
-</td><td><a name="letter_Q"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;Q&nbsp;&nbsp;</div></td></tr></table>
-</td></tr><tr><td><a class="el" href="structooCallData.shtml">ooCallData</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="structQ931Message.shtml">Q931Message</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a class="el" href="structooCommand.shtml">ooCommand</a>&nbsp;&nbsp;&nbsp;</td></tr></table><p><div class="qindex"><a class="qindex" href="#letter_A">A</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_H">H</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_O">O</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_Q">Q</a></div><p>
+</td><td><a class="el" href="structooRasMessage.shtml">ooRasMessage</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a class="el" href="structooCallData.shtml">ooCallData</a>&nbsp;&nbsp;&nbsp;</td><td><a name="letter_Q"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;Q&nbsp;&nbsp;</div></td></tr></table>
+</td></tr><tr><td><a class="el" href="structooCommand.shtml">ooCommand</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="structQ931Message.shtml">Q931Message</a>&nbsp;&nbsp;&nbsp;</td></tr></table><p><div class="qindex"><a class="qindex" href="#letter_A">A</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_H">H</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_O">O</a>&nbsp;|&nbsp;<a class="qindex" href="#letter_Q">Q</a></div><p>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -157,6 +157,12 @@
 <tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga14">ooAddMediaInfo</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, ooMediaInfo mediaInfo)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function can be used by an application to specify media endpoint information for different types of media.  <a href="#ga14"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga15">ooFindLogicalChannelByOLC</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, H245OpenLogicalChannel *olc)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a logical channel from a received olc.  <a href="#ga15"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a> *&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__callmgmt.shtml#ga16">ooFindLogicalChannel</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, int sessionID, char *dir, H245DataType *dataType)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to find a logical channel based on session Id, direction of channel and datatype.  <a href="#ga16"></a><br><br></td></tr>
 </table>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="ga1" doxytag="ooCalls.h::ooAddCallToList" ></a><p>
@@ -561,6 +567,66 @@ This function is used to find a call by using the unique token for the call.
     </td>
   </tr>
 </table>
+<a class="anchor" name="ga16" doxytag="ooCalls.h::ooFindLogicalChannel" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* ooFindLogicalChannel           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>sessionID</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>H245DataType *&nbsp;</td>
+          <td class="mdname" nowrap> <em>dataType</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to find a logical channel based on session Id, direction of channel and datatype.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call </td></tr>
+    <tr><td valign=top><em>sessionID</em>&nbsp;</td><td>Session ID for the channel to be searched. </td></tr>
+    <tr><td valign=top><em>dir</em>&nbsp;</td><td>Direction of the channel wrt local endpoint. (transmit/receive) </td></tr>
+    <tr><td valign=top><em>dataType</em>&nbsp;</td><td>Handle to the data type for the channel.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Logical channel, if found, NULL otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
 <a class="anchor" name="ga7" doxytag="ooCalls.h::ooFindLogicalChannelByLogicalChannelNo" ></a><p>
 <table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
   <tr>
@@ -604,6 +670,52 @@ This function is used to find a logical channel by logical channel number.
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>Pointer to the logical channel if found, NULL otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga15" doxytag="ooCalls.h::ooFindLogicalChannelByOLC" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="structooLogicalChannel.shtml">ooLogicalChannel</a>* ooFindLogicalChannelByOLC           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>H245OpenLogicalChannel *&nbsp;</td>
+          <td class="mdname" nowrap> <em>olc</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to find a logical channel from a received olc.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the related call. </td></tr>
+    <tr><td valign=top><em>olc</em>&nbsp;</td><td>Handle to the received OLC.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Returns the corresponding logical channel if found, else returns NULL. </dd></dl>
     </td>
   </tr>
 </table>
@@ -848,6 +960,6 @@ This function is used to remove a logical channel from the list of logical chann
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

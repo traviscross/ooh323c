@@ -1,0 +1,547 @@
+<!DOCTYPE HTML PUBLIC "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//EN" "hmpro6.dtd">
+<HTML>
+  <HEAD>
+         <TITLE>RAS Channel and Message handling</TITLE>
+         <LINK REL="stylesheet" HREF="http://www.obj-sys.com/stylesheet.css"
+          TYPE="text/css">
+  </HEAD>
+  <BODY TOPMARGIN="0" LEFTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0">
+         <CENTER>
+                <TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD BORDERCOLOR="#D9E4F1"><IMG BORDER="0"
+                                SRC="http://www.obj-sys.com/images/Head1.jpg" WIDTH="725" HEIGHT="90"
+                                ALT="Objective Systems, Inc."></TD>
+                         <TD WIDTH="100%"
+                          BACKGROUND="http://www.obj-sys.com/images/Head2.jpg">&nbsp;</TD>
+                  </TR>
+                </TABLE>
+<TABLE BORDER="0" WIDTH="760" CELLSPACING="0" CELLPADDING="0">
+                <TR VALIGN="TOP">
+                  <TD VALIGN="top" BACKGROUND="http://www.obj-sys.com/images/LeftBkd.jpg"
+                        WIDTH="129">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0"
+                          BACKGROUND="http://www.obj-sys.com/images/NetscapeCorrection.gif">
+                                <TR VALIGN="TOP">
+                                  <TD BGCOLOR="#D9E4F1" VALIGN="top" ROWSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="96" HEIGHT="1">
+                                         <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+                                                
+                                                <TR>
+                                                  <TD></TD>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">
+                                                         <A HREF="http://www.obj-sys.com/index.shtml" CLASS="nav">Home</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutasn1.shtml" CLASS="nav">About
+                                                         ASN.1</A><BR> <A HREF="http://www.obj-sys.com/products.shtml"
+                                                         CLASS="nav">Products</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/freesoftware.shtml" CLASS="nav">Free
+                                                         Software</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/docs/acv55docs.shtml" CLASS="nav">Documents</A>
+                                                         <BR> <A HREF="http://www.obj-sys.com/services.shtml"
+                                                         CLASS="nav">Services</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resources.shtml" CLASS="nav">Resources</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/resellers.shtml" CLASS="nav">Resellers</A><BR>
+<!--      <a href="http://www.obj-sys.com/ordering.shtml" class="nav">Ordering</a><br>  -->
+                                                         <A HREF="http://www.obj-sys.com/customers.shtml"
+                                                          CLASS="nav">Customers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/careers.shtml" CLASS="nav">Careers</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/aboutus.shtml" CLASS="nav">About Us</A><BR>
+                                                         <A HREF="http://www.obj-sys.com/contactus.shtml" CLASS="nav">Contact Us</A><BR>
+                                                         </TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD NOWRAP="NOWRAP" WIDTH="100%">&nbsp;</TD>
+                                                </TR>
+                                                <TR>
+                                                  <TD> </TD>
+                                                  <TD>
+                        <!--Google search -->
+                                                         <FORM METHOD="GET" ACTION="http://www.google.com/custom">
+                                                                
+                                                                <P><A HREF="http://www.google.com/search"></A>
+                                                                  <IMG SRC="http://www.obj-sys.com/images/google.gif" BORDER="0" ALT="Google"
+                                                                        ALIGN="middle"><BR>
+                                                                  <INPUT TYPE="text" NAME="q" SIZE="10" MAXLENGTH="255" VALUE=""><BR>
+                                                                  <INPUT TYPE="submit" NAME="sa" VALUE="Search">
+                                                                  <INPUT TYPE="hidden" NAME="cof"
+                                                                        VALUE="AH:center;GL:0;S:http://www.obj-sys.com;AWFID:b38a0de10d0a7b9b;">
+                                                                  <INPUT TYPE="hidden" NAME="domains" VALUE="obj-sys.com">
+                                                                  <INPUT TYPE="hidden" NAME="sitesearch" VALUE="obj-sys.com"><BR> </P> </FORM>
+                        <!--End Google search -->
+                                                  </TD>
+                                                  <TD><IMG BORDER="0"
+                                                         SRC="http://www.obj-sys.com/images/spacer.gif" WIDTH="10" HEIGHT="1"></TD>
+                                                </TR>
+                                                
+                                         </TABLE> </TD>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="top"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftTop.jpg"
+                                         WIDTH="33" HEIGHT="114"></TD>
+                                </TR>
+                                <TR>
+                                  <TD BACKGROUND="http://www.obj-sys.com/images/LeftTopbkd.jpg"
+                                        VALIGN="bottom"><IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftC.jpg"
+                                         WIDTH="33" HEIGHT="16"></TD>
+                                </TR>
+                                <TR>
+                                  <TD WIDTH="100%" COLSPAN="2"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftD.jpg" WIDTH="129" HEIGHT="37"
+                                         ALT="Objective Systems, Inc."><BR><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/LeftBottom.jpg" WIDTH="129"><BR>
+                                         <IMG BORDER="0" SRC="http://www.obj-sys.com/images/LeftBottombkd.jpg"></TD>
+                                </TR>
+                         </TABLE> </TD>
+                  <TD VALIGN="top" WIDTH="100%">
+                         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                                <TR>
+                                  <TD WIDTH="100%"
+                                        BACKGROUND="http://www.obj-sys.com/images/Top2bkd.jpg"><IMG BORDER="0"
+                                         SRC="http://www.obj-sys.com/images/Top2.jpg" WIDTH="568" HEIGHT="20"></TD>
+                                </TR>
+                         </TABLE>
+                <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0">
+                  <TR>
+                         <TD><IMG BORDER="0" SRC="http://www.obj-sys.com/images/Top3.jpg"
+                                WIDTH="58" HEIGHT="34"></TD>
+                         <TD ALIGN="center" WIDTH="100%"> </TD>
+                  </TR>
+                  <TR>
+                         <TD VALIGN="top" WIDTH="95%">
+<!-- Generated by Doxygen 1.3.6-20040413 -->
+<div class="qindex"><a class="qindex" href="index.shtml">Main&nbsp;Page</a> | <a class="qindex" href="modules.shtml">Modules</a> | <a class="qindex" href="classes.shtml">Alphabetical&nbsp;List</a> | <a class="qindex" href="annotated.shtml">Data&nbsp;Structures</a> | <a class="qindex" href="files.shtml">File&nbsp;List</a> | <a class="qindex" href="functions.shtml">Data&nbsp;Fields</a> | <a class="qindex" href="globals.shtml">Globals</a></div>
+<h1>RAS Channel and Message handling</h1><table border=0 cellpadding=0 cellspacing=0>
+<tr><td></td></tr>
+<tr><td colspan=2><br><h2>Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="structooRasMessage.shtml">ooRasMessage</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Defines the RAS message structure.  <a href="structooRasMessage.shtml#_details">More...</a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>struct &nbsp;</td><td class="memItemRight" valign=bottom><b>ooRasParams</b></td></tr>
+
+<tr><td colspan=2><br><h2>Typedefs</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>typedef <a class="el" href="structooRasMessage.shtml">ooRasMessage</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga0">ooRasMessage</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Defines the RAS message structure.  <a href="#ga0"></a><br><br></td></tr>
+<tr><td colspan=2><br><h2>Enumerations</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>enum &nbsp;</td><td class="memItemRight" valign=bottom><b>RasGatekeeperMode</b> { <br>
+&nbsp;&nbsp;<b>RasNoGatekeeper</b> =  0,
+<br>
+&nbsp;&nbsp;<b>RasDiscoverGatekeeper</b> =  1,
+<br>
+&nbsp;&nbsp;<b>RasUseSpecificGatekeeper</b> =  2
+<br>
+ }</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>enum &nbsp;</td><td class="memItemRight" valign=bottom><b>RasCallModel</b> { <br>
+&nbsp;&nbsp;<b>RasDirect</b> =  0,
+<br>
+&nbsp;&nbsp;<b>RasGkRouted</b>
+<br>
+ }</td></tr>
+
+<tr><td class="memItemLeft" nowrap align=right valign=top>enum &nbsp;</td><td class="memItemRight" valign=bottom><b>RasCallType</b> { <br>
+&nbsp;&nbsp;<b>RasPointToPoint</b> = 0,
+<br>
+&nbsp;&nbsp;<b>RasOneToN</b>,
+<br>
+&nbsp;&nbsp;<b>RasnToOne</b>,
+<br>
+&nbsp;&nbsp;<b>RasnToN</b>
+<br>
+ }</td></tr>
+
+<tr><td colspan=2><br><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga1" doxytag="ras::ooInitRas" ></a>
+EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga1">ooInitRas</a> (int localRasPort, enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to initialize the Ras module by setting gatekeeper mode and Creating Ras Channel. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga2" doxytag="ras::ooRasExplorer" ></a>
+EXTERN void&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga2">ooRasExplorer</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called periodically to monitor the process the RAS channel. <br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga3">ooRasFillAlias</a> (OOCTXT *psContext, ooAliases *psAliases, H225_SeqOfH225AliasAddress *psAliasList)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Populate Alias list.  <a href="#ga3"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a>&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga4">ooRasGetSocket</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current RAS socket.  <a href="#ga4"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga5">ooRasReceive</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked receive data from RAS port.  <a href="#ga5"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga6">ooRasSetGatekeeperMode</a> (enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to set a gatekeeper mode.  <a href="#ga6"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN enum RasGatekeeperMode&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga7">ooRasGetGatekeeperMode</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to get current gatekeeper mode.  <a href="#ga7"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN ASN1BOOL&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga8">ooRasIsRegistered</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to determine the registration status of the endpoint with the gatekeeper.  <a href="#ga8"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga9">ooRasSendAdmissionRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call, enum RasCallModel eModel, ooAliases *psSrcAliases, ooAliases *psDestAliases)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request bandwith admission for a call.  <a href="#ga9"></a><br><br></td></tr>
+<tr><td class="memItemLeft" nowrap align=right valign=top>EXTERN int&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__ras.shtml#ga10">ooRasSendDisengageRequest</a> (<a class="el" href="structooCallData.shtml">ooCallData</a> *call)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is invoked to request call disengage to gatekeeper.  <a href="#ga10"></a><br><br></td></tr>
+</table>
+<hr><h2>Typedef Documentation</h2>
+<a class="anchor" name="ga0" doxytag="ooras.h::ooRasMessage" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> typedef struct <a class="el" href="structooRasMessage.shtml">ooRasMessage</a>  <a class="el" href="structooRasMessage.shtml">ooRasMessage</a>          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Defines the RAS message structure.
+<p>
+Contains context for memory allocation, protocol Discriminator, call reference, meesage type and list of user user IEs.     </td>
+  </tr>
+</table>
+<hr><h2>Function Documentation</h2>
+<a class="anchor" name="ga3" doxytag="ooras.h::ooRasFillAlias" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRasFillAlias           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">OOCTXT *&nbsp;</td>
+          <td class="mdname" nowrap> <em>psContext</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>ooAliases *&nbsp;</td>
+          <td class="mdname" nowrap> <em>psAliases</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>H225_SeqOfH225AliasAddress *&nbsp;</td>
+          <td class="mdname" nowrap> <em>psAliasList</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+Populate Alias list.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>psContext</em>&nbsp;</td><td>Context to be used for allocating memory for alias list. </td></tr>
+    <tr><td valign=top><em>psAliases</em>&nbsp;</td><td>List of aliases from which alias list structure has to be populated. </td></tr>
+    <tr><td valign=top><em>psAliasList</em>&nbsp;</td><td>Alias list structure which has to be populated.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga7" doxytag="ooras.h::ooRasGetGatekeeperMode" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN enum RasGatekeeperMode ooRasGetGatekeeperMode           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked to get current gatekeeper mode.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Gatekeeper mode selected. One of the following:<ul>
+<li>RasNoGatekeeper (DEFAULT), No Gatekeeper.</li><li>RasDiscoverGatekeeper, to discover a gatekeeper automatically.</li><li>RasUseSpecificGatekeeper, to use a specific gatekeeper. </li></ul>
+</dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga4" doxytag="ooras.h::ooRasGetSocket" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN <a class="el" href="group__sockets.shtml#ga0">OOSOCKET</a> ooRasGetSocket           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked to get current RAS socket.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>RAS socket. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga8" doxytag="ooras.h::ooRasIsRegistered" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN ASN1BOOL ooRasIsRegistered           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is used to determine the registration status of the endpoint with the gatekeeper.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>TRUE, if registered, FALSE otherwise. </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga5" doxytag="ooras.h::ooRasReceive" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRasReceive           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked receive data from RAS port.
+<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga9" doxytag="ooras.h::ooRasSendAdmissionRequest" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRasSendAdmissionRequest           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname" nowrap> <em>call</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>enum RasCallModel&nbsp;</td>
+          <td class="mdname" nowrap> <em>eModel</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>ooAliases *&nbsp;</td>
+          <td class="mdname" nowrap> <em>psSrcAliases</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>ooAliases *&nbsp;</td>
+          <td class="mdname" nowrap> <em>psDestAliases</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked to request bandwith admission for a call.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Handle to the call. </td></tr>
+    <tr><td valign=top><em>eModel</em>&nbsp;</td><td>Call Model (RasDirect/RasGkRouted) </td></tr>
+    <tr><td valign=top><em>psSrcAliases</em>&nbsp;</td><td>Pointer to the calling party's aliases. </td></tr>
+    <tr><td valign=top><em>psDestAliases</em>&nbsp;</td><td>Pointer to the called party's aliases.</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>OO_OK, on success. OO_FAILED, on failure. <p>
+Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga10" doxytag="ooras.h::ooRasSendDisengageRequest" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRasSendDisengageRequest           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top"><a class="el" href="structooCallData.shtml">ooCallData</a> *&nbsp;</td>
+          <td class="mdname1" valign="top" nowrap> <em>call</em>          </td>
+          <td class="md" valign="top">&nbsp;)&nbsp;</td>
+          <td class="md" nowrap></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked to request call disengage to gatekeeper.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>call</em>&nbsp;</td><td>Call Handle</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<a class="anchor" name="ga6" doxytag="ooras.h::ooRasSetGatekeeperMode" ></a><p>
+<table class="mdTable" width="100%" cellpadding="2" cellspacing="0">
+  <tr>
+    <td class="mdRow">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="md" nowrap valign="top"> EXTERN int ooRasSetGatekeeperMode           </td>
+          <td class="md" valign="top">(&nbsp;</td>
+          <td class="md" nowrap valign="top">enum RasGatekeeperMode&nbsp;</td>
+          <td class="mdname" nowrap> <em>eGkMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>char *&nbsp;</td>
+          <td class="mdname" nowrap> <em>szGkAddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="md" nowrap align="right"></td>
+          <td></td>
+          <td class="md" nowrap>int&nbsp;</td>
+          <td class="mdname" nowrap> <em>iGkPort</em></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="md">)&nbsp;</td>
+          <td class="md" colspan="2"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table cellspacing=5 cellpadding=0 border=0>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+
+<p>
+This function is invoked to set a gatekeeper mode.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign=top><em>eGkMode</em>&nbsp;</td><td>Gatekeeper mode selected. One of the following:<ul>
+<li>RasNoGatekeeper (DEFAULT), No Gatekeeper.</li><li>RasDiscoverGatekeeper, to discover a gatekeeper automatically.</li><li>RasUseSpecificGatekeeper, to use a specific gatekeeper. </li></ul>
+</td></tr>
+    <tr><td valign=top><em>szGkAddr</em>&nbsp;</td><td>Gatekeeper address (only when using specific gatekeeper). </td></tr>
+    <tr><td valign=top><em>iGkPort</em>&nbsp;</td><td>Gatekeeper RAS port</td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Returns:</b></dt><dd>Completion status - 0 on success, -1 on failure </dd></dl>
+    </td>
+  </tr>
+</table>
+<!--END DOXYGEN -->
+
+</td></tr></table>
+<HR WIDTH="80%" COLOR="#080A9A">
+         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
+</tr> </table></center></BODY>
+</HTML>

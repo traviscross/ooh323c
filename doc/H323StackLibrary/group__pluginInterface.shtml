@@ -153,7 +153,7 @@ typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" hre
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Signature for function to stop receiving rtp data. <br><br></td></tr>
 <tr><td class="memItemLeft" nowrap align=right valign=top><a class="anchor" name="ga10" doxytag="pluginInterface::MediaAPI_InitializePlugin" ></a>
-typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a> )()</td></tr>
+typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" href="group__pluginInterface.shtml#ga10">MediaAPI_InitializePlugin</a> )(void)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Signature for function to Initialize the media plug-in. <br><br></td></tr>
 </table>
@@ -162,6 +162,6 @@ typedef int(*&nbsp;</td><td class="memItemRight" valign=bottom><a class="el" hre
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

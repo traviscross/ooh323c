@@ -134,13 +134,13 @@ All request/response and command messages are represented using this structure.
 <p>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00340">340</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00289">289</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="ootypes_8h-source.shtml">ootypes.h</a></ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
          <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                21 Jan 2005.<BR> H323FrameworkStack, Version 0.4 </FONT></CENTER></td>
+                16 Feb 2005.<BR> H323FrameworkStack, Version 0.5 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>
