@@ -1222,6 +1222,9 @@ int ooSendEndSessionCommand(ooCallData *call)
 int ooHandleH245Command(ooCallData *call,
                         H245CommandMessage *command)
 {
+   int i;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer = NULL;
    OOTRACEDBGC3("Handling H.245 command message. (%s, %s)\n", call->callType,
                  call->callToken);
    switch(command->t)
@@ -1229,8 +1232,35 @@ int ooHandleH245Command(ooCallData *call,
       case T_H245CommandMessage_endSessionCommand:
          OOTRACEINFO3("Received EndSession command (%s, %s)\n",
                        call->callType, call->callToken);
-         ooCloseH245Connection(call);
-         call->callState = OO_CALL_CLEAR_ENDSESSION;
+         if(call->h245SessionState == OO_H245SESSION_ENDSENT)
+         {
+            /* Disable Session timer */
+            for(i = 0; i<call->timerList.count; i++)
+            {
+               pNode = dListFindByIndex(&call->timerList, i);
+               pTimer = (OOTimer*)pNode->data;
+               if(((ooTimerCallback*)pTimer->cbData)->timerType &
+                                                            OO_SESSION_TIMER)
+               {
+                  ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+                  ooTimerDelete(call->pctxt, &call->timerList, pTimer);
+                  OOTRACEDBGC3("Deleted Session Timer. (%s, %s)\n",
+                                call->callType, call->callToken);
+                  break;
+               }
+            }
+            ooCloseH245Connection(call);
+         }else{
+
+            call->h245SessionState = OO_H245SESSION_ENDRECVD;
+            if(call->callState < OO_CALL_CLEAR_ENDSESSION)
+            {
+               ooSendEndSessionCommand(call);
+               call->callState = OO_CALL_CLEAR_ENDSESSION;
+            }
+         }
+           
+           
          break;
       case T_H245CommandMessage_sendTerminalCapabilitySet:
          OOTRACEWARN3("Warning: Received command Send terminal capability set "
@@ -1672,9 +1702,7 @@ int ooOnReceivedCloseChannelAck(ooCallData* call,
    int ret = OO_OK;
    return OO_OK;
 }
-/* TODO: TerminalCapabilityReject/TerminalCapabilityRelease
-         OpenLogicalChannelReject/OpenLogicalChannelRelease
-         OpenLogicalChannelConfirm/*/
+
 int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
 {
    int i;
@@ -2699,3 +2727,25 @@ int ooRequestChannelCloseTimerExpired(void *pdata)
    ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;
 }
+
+int ooSessionTimerExpired(void *pdata)
+{
+   int ret = 0;
+   ooTimerCallback *cbData = (ooTimerCallback*)pdata;
+   ooCallData *call = cbData->call;
+
+   OOTRACEINFO3("SessionTimer expired. (%s, %s)\n", call->callType,
+                 call->callToken);
+ 
+   ret = ooCloseH245Connection(call);
+  
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to close H.245 connection (%s, %s)\n",
+                  call->callType, call->callToken);
+   }
+
+   ASN1MEMFREEPTR(call->pctxt, cbData);
+   return OO_OK;
+}
+

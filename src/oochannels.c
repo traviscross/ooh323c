@@ -1409,6 +1409,32 @@ int ooOnSendMsg
          OOTRACEINFO1("Tunneled Message - EndSessionCommand\n");
       else
          OOTRACEINFO1("Sent Message - EndSessionCommand\n");
+      if(call->h245SessionState == OO_H245SESSION_ACTIVE)
+      {
+         /* Start EndSession timer */
+         call->h245SessionState = OO_H245SESSION_ENDSENT;
+         cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                  sizeof(ooTimerCallback));
+         if(!cbData)
+         {
+            OOTRACEERR3("Error:Unable to allocate memory for timer callback "
+                        "data.(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+         cbData->call = call;
+         cbData->timerType = OO_SESSION_TIMER;
+         cbData->channelNumber = 0;
+         if(!ooTimerCreate(call->pctxt, &call->timerList,
+             &ooSessionTimerExpired, gH323ep.sessionTimeout, cbData, FALSE))
+         {
+            OOTRACEERR3("Error:Unable to create CloseLogicalChannel timer. "
+                        "(%s, %s)\n", call->callType, call->callToken);
+            ASN1MEMFREEPTR(call->pctxt, cbData);
+            return OO_FAILED;
+         }
+      }else{
+         ooCloseH245Connection(call);
+      }
       break;
    case OOCloseLogicalChannel:
       if(call->isTunnelingActive)

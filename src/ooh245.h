@@ -487,6 +487,15 @@ int ooCloseLogicalChannelTimerExpired(void *pdata);
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
  */
 int ooRequestChannelCloseTimerExpired(void *pdata);
+
+/**
+ * This is a callback function for handling an expired EndSession timer.
+ * @param data             Callback data registered at the time of creation of
+ *                         the timer.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooSessionTimerExpired(void *pdata);
 /**
  * @}
  */

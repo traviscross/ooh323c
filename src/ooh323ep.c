@@ -190,6 +190,8 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gH323ep.logicalChannelTimeout = 30;
    OOTRACEINFO2("\tLogicalChannel  Timeout - %d seconds\n",
                    gH323ep.logicalChannelTimeout);
+   gH323ep.sessionTimeout = 15;
+   OOTRACEINFO2("\tSession Timeout - %d seconds\n", gH323ep.sessionTimeout);
    OOTRACEINFO1("H323 endpoint initialize - successful\n");
    return OO_OK;
 }

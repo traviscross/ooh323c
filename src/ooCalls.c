@@ -92,7 +92,7 @@ int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call)
    return OO_OK;
 }
 
-#if 0
+
 int ooEndCall(ooCallData *call)
 {
    OOTRACEDBGA4("In ooEndCall call state is - %s (%s, %s)\n",
@@ -104,10 +104,10 @@ int ooEndCall(ooCallData *call)
       if(call->callState < OO_CALL_CLEAR_CLOSEH245)
          call->callState = OO_CALL_CLEAR_CLOSEH245;
    }else{
-  
-      if(call->logicalChans)
+
+      if(call->callState == OO_CALL_CLEAR)  
       {
-         if(call->callState == OO_CALL_CLEAR)
+         if(call->logicalChans)
          {
             if(call->isTunnelingActive || call->pH245Channel->sock != 0)
             {
@@ -121,50 +121,51 @@ int ooEndCall(ooCallData *call)
                           call->callType, call->callToken);
                ooClearAllLogicalChannels(call);
                call->callState = OO_CALL_CLEAR_CLELCS;
-               return OO_OK;
             }
-         }
-         return OO_OK;
+         }else
+            call->callState = OO_CALL_CLEAR_CLELCS;
       }
   
-      if(call->callState < OO_CALL_CLEAR_CLELCS)
-         call->callState = OO_CALL_CLEAR_CLELCS;
-
-  
-      if(call->h245SessionState == OO_H245SESSION_ACTIVE)
+      if(call->callState == OO_CALL_CLEAR_CLOLCS)
       {
-         if(call->callState == OO_CALL_CLEAR_CLELCS)
+         if(call->logicalChans){
+            OOTRACEDBGC3("Call Clearing - Waiting for logical channels to be closed.(%s, %s)\n", call->callType, call->callToken);
+            return OO_OK;
+         }else{
+            call->callState = OO_CALL_CLEAR_CLELCS;
+         }
+      }
+      
+
+      if(call->callState == OO_CALL_CLEAR_CLELCS)
+      {
+  
+         if(call->h245SessionState == OO_H245SESSION_ACTIVE)
          {
             OOTRACEINFO3("Call Clearing - sendEndSessionCommand. (%s, %s)\n",
                           call->callType, call->callToken);
             ooSendEndSessionCommand(call);
             call->callState = OO_CALL_CLEAR_ENDSESSION;
             return OO_OK;
-         }
-         if(call->callState >= OO_CALL_CLEAR_ENDSESSION)
-         {
-            /* Wait till all the queued H245 messages are sent */
-            if(call->pH245Channel != 0 && call->pH245Channel->outQueue.count > 0)
-            {
-               OOTRACEDBGC4("ooEndCall - Still %d H.245 messages have to be sent"
-                         "(%s, %s)\n", call->pH245Channel->outQueue.count,
-                            call->callType, call->callToken);
-               return OO_OK;
-            }
-            OOTRACEINFO3("Call Clearing - CloseH245Connection. (%s, %s)\n",
-                          call->callType, call->callToken);
-            ooCloseH245Connection(call);
-        
-            if(call->callState < OO_CALL_CLEAR_CLOSEH245)
-               call->callState = OO_CALL_CLEAR_CLOSEH245;
-         }
-      }
-      else{
-         if(call->callState < OO_CALL_CLEAR_CLOSEH245)
+         }else{
             call->callState = OO_CALL_CLEAR_CLOSEH245;
+         }
       }
-  
+
+      if(call->callState == OO_CALL_CLEAR_ENDSESSION)
+      {
+         if(call->logicalChans)
+            ooClearAllLogicalChannels(call);
+
+         if(call->h245SessionState == OO_H245SESSION_ACTIVE)
+         {
+            OOTRACEDBGC3("Waiting for H.245 connection to be closed.(%s, %s)\n", call->callType, call->callToken);
+            return OO_OK;
+         }
+         call->callState = OO_CALL_CLEAR_CLOSEH245;
+      }
    }
+
 
    if(call->callState == OO_CALL_CLEAR_CLOSEH245)
    {
@@ -179,6 +180,7 @@ int ooEndCall(ooCallData *call)
       else
          call->callState = OO_CALL_CLEAR_RELEASE;
    }
+
    if(call->callState == OO_CALL_CLEAR_RELEASE)
    {
       /* Wait till all the queued H.2250 messages are sent */
@@ -193,7 +195,7 @@ int ooEndCall(ooCallData *call)
    }
    return OO_OK;
 }
-#endif
+#if 0
 int ooEndCall(ooCallData *call)
 {
    OOTRACEDBGA5("In ooEndCall call state is - %d(%s) (%s, %s)\n",
@@ -301,7 +303,7 @@ int ooEndCall(ooCallData *call)
    }
    return OO_OK;
 }
-
+#endif
 
 int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
 {
@@ -332,11 +334,11 @@ int ooCleanCall(ooCallData *call)
    OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
               call->callType, call->callToken, ooGetText(call->callEndReason));
 
-   /* First close all the logical channels. */
+   /* First clean all the logical channels, if not already cleaned. */
    if(call->logicalChans)
       ooClearAllLogicalChannels(call);
   
-   /* Close H.245 connection */
+   /* Close H.245 connection, if not already closed */
    if(call->h245SessionState != OO_H245SESSION_INACTIVE)
       ooCloseH245Connection(call);
    else{
@@ -346,16 +348,23 @@ int ooCleanCall(ooCallData *call)
          memFreePtr(call->pctxt, call->pH245Channel);
       }
    }
-
+  
+   /* Close H225 connection, if not already closed. */
    if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
    {
       ooCloseH225Connection(call);
    }
+
+   /* Clean timers */
+   if(call->timerList.count > 0)
+   {
+      dListFreeAll(call->pctxt, &(call->timerList));
+   }
+
    ooRemoveCallFromList(&gH323ep, call);
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
  
-   /*   gH323ep.onCallCleared(call);*/
    pctxt = call->pctxt;
    freeContext(pctxt);
    ASN1CRTFREE0(pctxt);

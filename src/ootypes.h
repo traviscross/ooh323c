@@ -90,7 +90,9 @@
 
 /** H245 Session state */
 #define OO_H245SESSION_INACTIVE 61
-#define OO_H245SESSION_ACTIVE 62
+#define OO_H245SESSION_ACTIVE   62
+#define OO_H245SESSION_ENDSENT  63
+#define OO_H245SESSION_ENDRECVD 64
 
 /** Logical Channel states */
 #define OO_LOGICALCHAN_IDLE        70
@@ -144,7 +146,7 @@
 #define OO_OLC_TIMER       (1<<3)
 #define OO_CLC_TIMER       (1<<4)
 #define OO_RCC_TIMER       (1<<5)
-
+#define OO_SESSION_TIMER   (1<<6)
 /**
   Default port ranges used
 */
@@ -486,6 +488,7 @@ typedef struct ooEndPoint{
    ASN1UINT msdTimeout;
    ASN1UINT tcsTimeout;
    ASN1UINT logicalChannelTimeout;
+   ASN1UINT sessionTimeout;
 } ooEndPoint;
 
 #endif
