@@ -173,6 +173,10 @@ SOURCE=.\oochannels.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooDateTime.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ooh245.c
 # End Source File
 # Begin Source File
@@ -274,6 +278,14 @@ SOURCE=.\ooasn1.h
 # Begin Source File
 
 SOURCE=.\oochannels.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooCommon.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooDateTime.h
 # End Source File
 # Begin Source File
 
