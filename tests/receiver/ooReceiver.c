@@ -55,7 +55,7 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize the H323 endpoint */
-   ret = ooInitializeH323Ep("receiver.log", 1, 1, 28, 9, 0, 61, "obj-sys",
+   ret = ooInitializeH323Ep("receiver.log", 0, 0, 28, 9, 0, 61, "obj-sys",
                       "Version 0.3", T_H225CallType_pointToPoint, 1720,
                       "objsyscall", "receiver", OO_CALLMODE_AUDIORX);
    if(ret != OO_OK)
@@ -63,10 +63,10 @@ int main(int argc, char ** argv)
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+   ooSetTraceThreshold(OOTRCLVLINFO);
    /* Add audio capability */
-   ooAddCapability(OO_CAP_ULAW_64k_180,T_H245Capability_receiveAudioCapability,
-                   &osEpStartReceiveChannel, NULL, &osEpStopReceiveChannel,
-                   NULL);
+   ooAddG711Capability(OO_G711ULAW64K,0, 240, OORX, &osEpStartReceiveChannel,
+                       NULL, &osEpStopReceiveChannel, NULL);
 
    ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
                              NULL, NULL, &osEpOnCallCleared);
@@ -158,6 +158,12 @@ void* osEpHandleCommand(void* dummy)
 
 int osEpOnAlerting(ooCallData* call )
 {
+   return OO_OK;
+}
+
+/* Callback to handle incoming call */
+int osEpOnIncomingCall(ooCallData* call )
+{
    ooMediaInfo mediaInfo;
    char localip[20];
    strcpy(callToken, call->callToken);
@@ -169,18 +175,10 @@ int osEpOnAlerting(ooCallData* call )
    ooGetLocalIPAddress(localip);
    mediaInfo.lMediaCntrlPort = 5001;
    mediaInfo.lMediaPort = 5000;
-   mediaInfo.cap = OO_CAP_ULAW_64k_180;
+   mediaInfo.cap = OO_G711ULAW64K;
    strcpy(mediaInfo.lMediaIP, localip);
    strcpy(mediaInfo.dir, "receive");
    ooAddMediaInfo(call, mediaInfo);
-  
-   return OO_OK;
-}
-
-/* Callback to handle incoming call */
-int osEpOnIncomingCall(ooCallData* call )
-{
-  
    return OO_OK;
 }
 

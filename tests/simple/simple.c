@@ -123,13 +123,10 @@ int main(int argc, char ** argv)
    ooSetLocalCallSignallingAddress(ourip, ourport);
 
    /* Add audio capability */
-   ooAddCapability(OO_CAP_ULAW_64k_30,T_H245Capability_transmitAudioCapability,
-                   NULL, &osEpStartTransmitChannel, NULL,
-                        &osEpStopTransmitChannel);
+   ooAddG711Capability(OO_G711ULAW64K, 30, 240, OORXANDTX,
+                       &osEpStartReceiveChannel, &osEpStartTransmitChannel,
+                       &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-  ooAddCapability(OO_CAP_ULAW_64k_180, T_H245Capability_receiveAudioCapability,
-                  &osEpStartReceiveChannel, NULL,
-                  &osEpStopReceiveChannel, NULL);
    ooSetTraceThreshold(OOTRCLVLINFO);
    /* Register callbacks */
    ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
@@ -240,7 +237,7 @@ int osEpOnIncomingCall(ooCallData* call )
    ooGetLocalIPAddress(localip);
    mediaInfo1.lMediaCntrlPort = 5001;
    mediaInfo1.lMediaPort = 5000;
-   mediaInfo1.cap = OO_CAP_ULAW_64k_30;
+   mediaInfo1.cap = OO_G711ULAW64K;
    strcpy(mediaInfo1.lMediaIP, localip);
    strcpy(mediaInfo1.dir, "transmit");
    ooAddMediaInfo(call, mediaInfo1);
@@ -248,7 +245,7 @@ int osEpOnIncomingCall(ooCallData* call )
    /* Configure mediainfo for receive media channel of type G711 */
    mediaInfo2.lMediaCntrlPort = 5001;
    mediaInfo2.lMediaPort = 5000;
-   mediaInfo2.cap =    OO_CAP_ULAW_64k_180;
+   mediaInfo2.cap =  OO_G711ULAW64K;
    strcpy(mediaInfo2.lMediaIP, localip);
    strcpy(mediaInfo2.dir, "receive");
    ooAddMediaInfo(call, mediaInfo2);
@@ -272,7 +269,7 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    mediaInfo1.lMediaPort = 5000;
    strcpy(mediaInfo1.lMediaIP, localip);
    strcpy(mediaInfo1.dir, "transmit");
-   mediaInfo1.cap = OO_CAP_ULAW_64k_30;
+   mediaInfo1.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo1);
   
    /* Configure mediainfo for receive media channel of type G711 */
@@ -280,7 +277,7 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    mediaInfo2.lMediaPort = 5000;
    strcpy(mediaInfo2.lMediaIP, localip);
    strcpy(mediaInfo2.dir, "receive");
-   mediaInfo2.cap = OO_CAP_ULAW_64k_180;
+   mediaInfo2.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo2);
     
    strcpy(callToken, call->callToken);

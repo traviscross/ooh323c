@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize H323 endpoint */
-   ret = ooInitializeH323Ep("player.log", 1, 1, 30, 9, 0, 71, "obj-sys",
+   ret = ooInitializeH323Ep("player.log", 0, 0, 30, 9, 0, 71, "obj-sys",
                       "Version 0.4", T_H225CallType_pointToPoint, 1720,
                       "objsyscall", "player", OO_CALLMODE_AUDIOTX);
    if(ret != OO_OK)
@@ -65,14 +65,15 @@ int main(int argc, char ** argv)
       return -1;
    }
    /* Register callbacks */
-   ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCallAdmitted, NULL, NULL, &osEpOnCallCleared);
+   ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCallAdmitted, NULL,
+                             NULL, &osEpOnCallCleared);
    ooSetTCPPorts(16050, 16250);
    ooSetUDPPorts(17050, 17250);
    ooSetRTPPorts(18050, 18250);
+   ooSetTraceThreshold(OOTRCLVLINFO);
    /* Add transmit audio capability of type G711 ULaw */
 
-   ooAddCapability(OO_CAP_ULAW_64k_180,
-                   T_H245Capability_transmitAudioCapability, NULL,
+   ooAddG711Capability(OO_G711ULAW64K, 240, 0, OOTX, NULL,
                    &osEpStartTransmitChannel, NULL, &osEpStopTransmitChannel);
    /* Load media plug-in*/
 #ifdef _WIN32
@@ -190,7 +191,7 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    mediaInfo.lMediaPort = 5000;
    strcpy(mediaInfo.lMediaIP, localip);
    strcpy(mediaInfo.dir, "transmit");
-   mediaInfo.cap = OO_CAP_ULAW_64k_180;
+   mediaInfo.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo);
     
    strcpy(callToken, call->callToken);
