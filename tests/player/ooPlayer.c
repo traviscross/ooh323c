@@ -118,6 +118,7 @@ int main(int argc, char ** argv)
    /*Monitor channels for incoming messages*/
 
    ooMonitorChannels();
+   ooDestroyH323ep();
    return ASN_OK;
 }
 
