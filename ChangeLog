@@ -1,3 +1,21 @@
+Release 0.5:
+1. Added RAS channel support. This release supports
+   GatekeeperRequest, RegistrationRequest, AdmissionRequest,
+   DisengageRequest and corresponding response messages.
+2. Added aliases support and parsing capability. The endpoint
+   will now be able to register an e-mail id, h323-id, url,
+   and dialedDigits aliases and will be able to call other
+   endpoints using these types of aliases with the help of
+   gatekeeper.
+3. Added capability to configure local call signalling address.
+   This was done to avoid problems with logic to retrieve local
+   IP address which can fail on some systems, which do not have
+   host name setup. This logic is still used as backup, in case
+   user does not configure IP.
+4. Added auto answer feature.This was done to allow user make a
+   dicision to answer/reject call.
+5. Fixed bugs reported in 0.4 release.
+
 Release 0.4:
 1. Added support for FastStart and Tunneling.
 2. Added support for external configuration of RTP ip:port. This
