@@ -55,6 +55,7 @@
 #define OO_CAP_SPEEX        15
 #define OO_CAP_G723_1       16
 #define OO_AUCAPS_MAX       16
+#define OO_CAP_DTMF_RFC2833 17
 
 #ifdef __cplusplus
 extern "C" {

@@ -282,21 +282,23 @@ int ooAcceptH225Connection()
       OOTRACEERR1("Error:Accepting h225 connection\n");
       return OO_FAILED;
    }
+   ooGenerateCallToken(callToken, sizeof(callToken));
+   /*
 #ifdef _WIN32
    EnterCriticalSection(&gCmdMutex);
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
    sprintf(callToken, "ooh323c_%d", gCurCallToken++);
-   /* Reset calltoken */
-   if(gCurCallToken >= gCallTokenMax)
+   // Reset calltoken
+  if(gCurCallToken >= gCallTokenMax)
       gCurCallToken = gCallTokenBase;
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
 #else
    pthread_mutex_unlock(&gCmdMutex);
 #endif
-
+   */
    call = ooCreateCall("incoming", callToken);
    if(!call)
    {
@@ -472,6 +474,21 @@ int ooMonitorChannels()
                OOTRACEINFO2("Processing MakeCall command %s\n",
                              (char*)cmd->param2);
                ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2);
+               break;
+            case OO_CMD_MAKECALL_3:
+#ifdef __USING_RAS
+               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
+                  !ooRasIsRegistered())
+               {
+                  OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
+                              "gatekeeper registration.\n");
+                  continue;
+               }
+#endif
+               OOTRACEINFO2("Processing MakeCall_3 command %s\n",
+                            (char*)cmd->param2);
+               ooH323MakeCall_3((char*)cmd->param1, (char*)cmd->param2,
+                                                   *((ASN1USINT*)cmd->param3));
                break;
             case OO_CMD_ANSCALL:
 #ifdef __USING_RAS

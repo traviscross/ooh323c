@@ -74,6 +74,70 @@ int ooMakeCall(char * dest, char*callToken)
    return OO_OK;
 }
 
+int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef)
+{
+  ooCommand *cmd;
+#ifdef _WIN32
+   EnterCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_lock(&gCmdMutex);
+#endif
+   cmd = (ooCommand*)ASN1MALLOC(&gCtxt, sizeof(ooCommand));
+   if(!cmd)
+   {
+      OOTRACEERR1("Error:Allocating memory for command structure - "
+                  "MakeCall\n");
+      return OO_FAILED;
+   }
+   cmd->type = OO_CMD_MAKECALL_3;
+   cmd->param1 = (void*) ASN1MALLOC(&gCtxt, strlen(dest)+1);
+   if(!cmd->param1)
+   {
+      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
+      return OO_FAILED;
+   }
+   memset(cmd->param1, 0, strlen(dest)+1);
+   strcpy((char*)cmd->param1, dest);
+   /* Generate call token*/
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
+      return OO_FAILED;
+   }
+
+   sprintf(callToken, "ooh323c_%d", gCurCallToken++);
+  
+   if(gCurCallToken > gCallTokenMax)
+      gCurCallToken = gCallTokenBase;
+
+   cmd->param2 = (void*) ASN1MALLOC(&gCtxt, strlen(callToken)+1);
+   if(!cmd->param2)
+   {
+      OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
+      return OO_FAILED;
+   }
+  
+   strcpy((char*)cmd->param2, callToken);
+
+   *callRef = ooGenerateCallReference();
+   cmd->param3 = (void*) ASN1MALLOC(&gCtxt, sizeof(ASN1USINT));
+   if(!cmd->param3)
+   {
+      OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
+      return OO_FAILED;
+   }
+   *((ASN1USINT*)cmd->param3) = *callRef;
+   dListAppend(&gCtxt, &gCmdList, cmd);
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
+   return OO_OK;
+}
+
 int ooAnswerCall(char *callToken)
 {
    ooCommand *cmd;

@@ -279,6 +279,34 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
    }
 }
 
+
+int ooGenerateCallToken(char *callToken, int size)
+{
+  char aCallToken[200];
+#ifdef _WIN32
+   EnterCriticalSection(&gCallTokenMutex);
+#else
+   pthread_mutex_lock(&gCallTokenMutex);
+#endif
+   sprintf(aCallToken, "ooh323c_%d", gCurCallToken++);
+   if(gCurCallToken >= gCallTokenMax)
+     gCurCallToken = gCallTokenBase;
+   if(strlen(aCallToken)<size)
+      strcpy(callToken, aCallToken);
+   else{
+      OOTRACEERR1("Error: Insufficient buffer size to generate call token");
+      return OO_FAILED;
+   }
+#ifdef _WIN32
+   LeaveCriticalSection(&gCallTokenMutex);
+#else
+   pthread_mutex_unlock(&gCallTokenMutex);
+#endif
+
+   return OO_OK;
+
+}
+
 /* CallReference is a two octet field, thus max value can be 0xffff
    or 65535 decimal. We restrict max value to 32760, however, this should
    not cause any problems as there won't be those many simultaneous calls
@@ -287,6 +315,12 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
 ASN1USINT ooGenerateCallReference()
 {
    static ASN1USINT lastCallRef=0;
+   ASN1USINT newCallRef=0;
+#ifdef _WIN32
+   EnterCriticalSection(&gCallRefMutex);
+#else
+   pthread_mutex_lock(&gCallRefMutex);
+#endif
   
    if(lastCallRef == 0)
    {
@@ -299,8 +333,14 @@ ASN1USINT ooGenerateCallReference()
 
    if(lastCallRef>=32760)
       lastCallRef=0;
-
-   return lastCallRef;
+   newCallRef = lastCallRef;
+#ifdef _WIN32
+   LeaveCriticalSection(&gCallRefMutex);
+#else
+   pthread_mutex_unlock(&gCallRefMutex);
+#endif
+   OOTRACEINFO2("Generated callRef %d\n", newCallRef);
+   return newCallRef;
 }
 
 
@@ -1229,6 +1269,57 @@ int ooH323MakeCall(char *dest, char *callToken)
       call->confIdentifier.data[i] = i+1;
      
 
+#ifdef __USING_RAS
+   if(RasNoGatekeeper != ooRasGetGatekeeperMode())
+   {
+      if(ooRasIsRegistered()) 
+      {
+         ret = ooRasSendAdmissionRequest(call, RasDirect, gH323ep.aliases,
+                                         call->remoteAliases);
+         call->callState = OO_CALL_WAITING_ADMISSION;
+      }
+   }
+   else
+      ret = ooH323CallAdmitted (call);
+#else
+   ret = ooH323CallAdmitted (call);
+#endif
+   return OO_OK;
+}
+
+int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
+{
+   OOCTXT *pctxt;
+   ooCallData *call;
+   int ret=0, i=0;
+   if(!dest)
+   {
+      OOTRACEERR1("ERROR:Invalid destination for new call\n");
+      return OO_FAILED;
+   }
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken parameter to make call\n");
+      return OO_FAILED;
+   }
+   OOTRACEINFO3("New Outgoing call callToken %s:callRef %d\n", callToken,
+                 callRef);
+   call = ooCreateCall("outgoing", callToken);
+   pctxt = call->pctxt;
+   ret = ooParseDestination(call, dest);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR2("Error: Failed to parse the destination string %s for "
+                  "new call\n", dest);
+      ooCleanCall(call);
+      return OO_FAILED;
+   }
+   strcpy(callToken, call->callToken);
+   call->callReference = callRef;
+   ooGenerateCallIdentifier(&call->callIdentifier);
+   call->confIdentifier.numocts = 16;
+   for (i = 0; i < 16; i++)
+      call->confIdentifier.data[i] = i+1;
 #ifdef __USING_RAS
    if(RasNoGatekeeper != ooRasGetGatekeeperMode())
    {

@@ -153,8 +153,12 @@ int ooInitializeH323Ep( const char * tracefile, int h245Tunneling,
    gH323ep.callMode = callMode;
 #ifdef _WIN32
    InitializeCriticalSection(&gCmdMutex);
+   InitializeCriticalSection(&gCallTokenMutex);
+   InitializeCriticalSection(&gCallRefMutex);
 #else
    pthread_mutex_init(&gCmdMutex, 0);
+   pthread_mutex_init(&gCallTokenMutex, 0);
+   pthread_mutex_init(&gCallRefMutex, 0);
 #endif
    dListInit(&gCmdList);
    initContext(&gCtxt);
@@ -358,6 +362,8 @@ int ooDestroyH323Ep(void)
    ooDestroyRas();  
 #ifdef _WIN32
    DeleteCriticalSection(&gCmdMutex);
+   DeleteCriticalSection(&gCallTokenMutex);
+   DeleteCriticalSection(&gCallRefMutex);
 #endif
    dListFreeAll(&gCtxt, &gCmdList);
    freeContext(&gCtxt);

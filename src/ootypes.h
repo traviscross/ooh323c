@@ -150,10 +150,11 @@
 #define MAXMSGLEN 4096
 
 #define OO_CMD_MAKECALL    201
-#define OO_CMD_ANSCALL     202
-#define OO_CMD_REJECTCALL  203
-#define OO_CMD_HANGCALL    204
-#define OO_CMD_STOPMONITOR 205
+#define OO_CMD_MAKECALL_3  202
+#define OO_CMD_ANSCALL     203
+#define OO_CMD_REJECTCALL  204
+#define OO_CMD_HANGCALL    205
+#define OO_CMD_STOPMONITOR 206
 
 
 /**
@@ -177,6 +178,29 @@ typedef int (*ChannelCallback)(void*);
  * for handling commands
  */
 typedef int (*CommandCallback)(void);
+
+
+/**
+ * Mutex to protect ooGenerateCallReference function.
+ * This is required as this function will be called by
+ * multiple threads trying to place calls using stack commands
+ */
+#ifdef _WIN32
+CRITICAL_SECTION gCallRefMutex;
+#else
+pthread_mutex_t gCallRefMutex;
+#endif
+
+/**
+ * Mutex to protect access to global call token variables.
+ * This is required as these variables will be used by
+ * multiple threads trying to place calls using stack commands
+ */
+#ifdef _WIN32
+CRITICAL_SECTION gCallTokenMutex;
+#else
+pthread_mutex_t gCallTokenMutex;
+#endif
 
 /** Stores base value for generating new call token */
 int gCallTokenBase;
@@ -326,8 +350,6 @@ typedef struct ooCallData {
    DList                outH245Queue;/* Outgoing H245 message queue */
    ASN1OCTET            *remoteDisplayName;
    ooAliases            *remoteAliases;
-  /*   ooAliases            *localAliases;*/
-  
    int                  masterSlaveState;   /* Master-Slave state */
    ASN1UINT             statusDeterminationNumber;
    int                  localTermCapState;
@@ -407,9 +429,7 @@ typedef struct ooEndPoint{
    OOSOCKET *stackSocket;
    ooAliases *aliases;
    int callType;
-  //   DList audioCaps;
-  //  DList dataApplicationCaps;
-  //  DList videoCaps;
+
    ooH323EpCapability *myCaps;
    int noOfCaps;
    cb_OnAlerting onAlerting;

@@ -48,6 +48,15 @@ extern "C" {
  */
 EXTERN int ooMakeCall(char * dest, char *callToken);
 
+/**
+ * This function is used by an application to place a call.
+ * @param dest        Call Destination - IP:port / alias
+ * @param callToken   Pointer to a buffer in which callToken will be returned
+ * @param callRef     An integer reference which will be populated with the
+ *                    callRef for new call.
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef);
 
 /**
  * This function is used to answer a call

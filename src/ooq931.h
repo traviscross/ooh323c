@@ -363,6 +363,18 @@ EXTERN int ooSendConnect(ooCallData *call);
 EXTERN int ooH323MakeCall(char *dest, char *callToken);
 
 /**
+ * This function is used to make an outgoing call.It initiates the call
+ * admission procedure with the Gatekeeper. In case of no gk is being used,
+ * it proceeds to make a call.
+ * @param dest      Destination - IP:Port/alias.
+ * @param callToken Unique token for the new call.
+ * @param callRef   Call Reference for the new call.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooH323MakeCall_3(char *dest, char* callToken, int callRef);
+
+/**
  * Helper function used to make a call once it is approved by the Gk.
  * In case of no gk, this function is directly called to make a call.
  * @param call        Handle to the new call.
@@ -406,6 +418,16 @@ EXTERN int ooH323MakeCall_helper(ooCallData *call);
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 int ooParseDestination(ooCallData *call, char *dest);
+
+/**
+ * This function is used to generate a new call token
+ * @param call      Handle to the buffer in which new call token will be
+ *                  returned
+ * @param dest      size of the buffer
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooGenerateCallToken(char *callToken, int size);
 /**
  * @}
  */
