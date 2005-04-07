@@ -74,7 +74,7 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    /* Create default parameter set */
    pGkClient->grqTimeout = DEFAULT_GRQ_TIMEOUT;
    pGkClient->rrqTimeout = DEFAULT_RRQ_TIMEOUT;
-   pGkClient->regTimeout = 0;
+   pGkClient->regTimeout = DEFAULT_REG_TTL;
    pGkClient->arqTimeout = DEFAULT_ARQ_TIMEOUT;
    pGkClient->drqTimeout = DEFAULT_DRQ_TIMEOUT;
    dListInit(&pGkClient->callsPendingList);
@@ -273,7 +273,8 @@ int ooGkClientReceive(ooGkClient *pGkClient)
    OOCTXT *pctxt=NULL;
    H225RasMessage *pRasMsg=NULL;
    int iRet=OO_OK;
-
+  
+   pctxt = &pGkClient->msgCtxt;
 
    recvLen = ooSocketRecvFrom(pGkClient->rasSocket, recvBuf, 1024, remoteHost,
                               32, &iFromPort);
@@ -433,8 +434,22 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
 void ooGkClientPrintMessage
    (ooGkClient *pGkClient, ASN1OCTET *msg, ASN1UINT len)
 {
+   OOCTXT ctxt;
+   H225RasMessage rasMsg;
+   int ret;
 
+   initContext(&ctxt);
+   setPERBuffer(&ctxt, msg, len, TRUE);
+   initializePrintHandler(&printHandler, "Sending RAS Message");
+   setEventHandler(&ctxt, &printHandler);
 
+   ret = asn1PD_H225RasMessage(&ctxt, &rasMsg);
+   if(ret != ASN_OK)
+   {
+      OOTRACEERR1("Error: Failed to decode RAS message\n");
+   }
+   finishPrint();
+   freeContext(&ctxt);
 }
 #endif
 /**
@@ -606,7 +621,7 @@ int ooGkClientHandleGatekeeperReject
       pTimer = (OOTimer*)pNode->data;
       if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
       {
-         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
          ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
          OOTRACEDBGA1("Deleted GRQ Timer.\n");
          break;
@@ -719,7 +734,7 @@ int ooGkClientHandleGatekeeperConfirm
       pTimer = (OOTimer*)pNode->data;
       if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
       {
-         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
          ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
          OOTRACEDBGA1("Deleted GRQ Timer.\n");
          break;
@@ -787,8 +802,8 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   memset(pTransportAddress, 0, sizeof(H225TransportAddress));
-   memset(pIpAddress, 0, sizeof(H225TransportAddress_ipAddress));
+   //   memset(pTransportAddress, 0, sizeof(H225TransportAddress));
+   //   memset(pIpAddress, 0, sizeof(H225TransportAddress_ipAddress));
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
    ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
@@ -832,7 +847,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    ooGkClientFillVendor(pGkClient, &pRegReq->terminalType.vendor );
  
    pRegReq->m.terminalAliasPresent=TRUE;
-   if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, gH323ep.aliases,
+   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
                                       &pRegReq->terminalAlias))
    {
       OOTRACEERR1("Error filling alias for RRQ\n");
@@ -867,7 +882,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
   
    pRegReq->discoveryComplete= pGkClient->discoveryComplete;
    pRegReq->m.keepAlivePresent=TRUE;
-   pRegReq->keepAlive=keepAlive;
+   pRegReq->keepAlive= keepAlive;
    pRegReq->m.timeToLivePresent = TRUE;
    pRegReq->timeToLive = pGkClient->regTimeout;
 
@@ -1011,7 +1026,7 @@ int ooGkClientHandleRegistrationConfirm
       pTimer = (OOTimer*)pNode->data;
       if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_RRQ_TIMER)
       {
-         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
          ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
          OOTRACEDBGA1("Deleted RRQ Timer.\n");
          break;
@@ -1035,7 +1050,7 @@ int ooGkClientHandleRegistrationReject
       pTimer = (OOTimer*)pNode->data;
       if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_RRQ_TIMER)
       {
-         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
          ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
          OOTRACEDBGA1("Deleted RRQ Timer.\n");
          break;
@@ -1412,12 +1427,13 @@ int ooGkClientHandleAdmissionConfirm
    OOTimer *pTimer = NULL;
 
    /* Search call in pending calls list */
-   pNode=(DListNode*)pGkClient->callsPendingList.head;
    for(x=0 ; x<pGkClient->callsPendingList.count; x++)
    {
+      pNode = dListFindByIndex(&pGkClient->callsPendingList, x);
       pCallAdmInfo = (RasCallAdmissionInfo*) pNode->data;
       if(pCallAdmInfo->requestSeqNum == pAdmissionConfirm->requestSeqNum)
       {
+        OOTRACEDBGC1("Found Pending call\n");
          /* Populate Remote IP */
          if(pAdmissionConfirm->destCallSignalAddress.t !=
                                       T_H225TransportAddress_ipAddress)
@@ -1439,15 +1455,18 @@ int ooGkClientHandleAdmissionConfirm
          for(y=0; y<pGkClient->timerList.count; y++)
          {
             pNode1 =  dListFindByIndex(&pGkClient->timerList, y);
-            pTimer = (OOTimer*)pNode->data;
-            if((((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_ARQ_TIMER)
-                                       &&
-              (((ooGkClientTimerCb*)pTimer->cbData)->pAdmInfo == pCallAdmInfo))
+            pTimer = (OOTimer*)pNode1->data;
+            if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_ARQ_TIMER)
             {
-               ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
-               ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
-               OOTRACEDBGA1("Deleted ARQ Timer.\n");
-               break;
+               if(((ooGkClientTimerCb*)pTimer->cbData)->pAdmInfo ==
+                                                                 pCallAdmInfo)
+               {
+                  memFreePtr(&pGkClient->ctxt, pTimer->cbData);
+                  ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList,
+                                                                       pTimer);
+                  OOTRACEDBGA1("Deleted ARQ Timer.\n");
+                  break;
+               }
             }
          }        
          ooH323CallAdmitted( pCallAdmInfo->call);
@@ -1709,4 +1728,56 @@ int ooGkClientARQTimerExpired(void* pdata)
    OOTRACEERR1("Error:Gatekeeper not responding to ARQ\n");
    pGkClient->state = GkClientGkErr;
    return OO_FAILED;
+}
+
+ooGkClientClearCall(ooGkClient *pGkClient, ooCallData *call)
+{
+   unsigned int x=0;
+   DListNode *pNode=NULL;
+   OOTimer *pTimer;
+   ooGkClientTimerCb *cbData=NULL;
+   RasCallAdmissionInfo *pAdmInfo = NULL;
+
+   for(x=0; x<pGkClient->timerList.count; x++)
+   {
+      pNode = dListFindByIndex(&pGkClient->timerList, x);
+      pTimer = (OOTimer*)pNode->data;
+      cbData = (ooGkClientTimerCb*)pTimer->cbData;
+      if(cbData->timerType & OO_ARQ_TIMER &&
+         cbData->pAdmInfo->call->callReference == call->callReference)
+      {
+        
+         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
+         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+         break;
+      }
+   }
+
+   for(x=0; x<pGkClient->callsPendingList.count; x++)
+   {
+      pNode = dListFindByIndex(&pGkClient->callsPendingList, x);
+      pAdmInfo = (RasCallAdmissionInfo*)pNode->data;
+      if(pAdmInfo->call->callReference == call->callReference)
+      {
+         dListRemove(&pGkClient->callsPendingList, pNode);
+         memFreePtr(&pGkClient->ctxt, pAdmInfo);
+         memFreePtr(&pGkClient->ctxt, pNode);
+         return OO_OK;
+      }
+   }
+
+   for(x=0; x<pGkClient->callsAdmittedList.count; x++)
+   {
+      pNode = dListFindByIndex(&pGkClient->callsAdmittedList, x);
+      pAdmInfo = (RasCallAdmissionInfo*)pNode->data;
+      if(pAdmInfo->call->callReference == call->callReference)
+      {
+         dListRemove(&pGkClient->callsAdmittedList, pNode);
+         memFreePtr(&pGkClient->ctxt, pAdmInfo);
+         memFreePtr(&pGkClient->ctxt, pNode);
+         return OO_OK;
+      }
+   }
+
+   return OO_OK;
 }

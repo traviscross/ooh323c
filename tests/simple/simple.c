@@ -118,9 +118,9 @@ int main(int argc, char ** argv)
       return -1;
    }
 
-   //   ooH323EpDisableFastStart();
-   // ooH323EpDisableH245Tunneling();
+
    ooH323EpSetTraceLevel(OOTRCLVLDBGC);
+  
    ooH323EpSetLocalAddress(ourip, ourport);
    ooH323EpSetAliasH323ID("objsys");
    ooH323EpSetAliasDialedDigits("5087556929");
@@ -135,7 +135,7 @@ int main(int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-   //   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
+   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
 
 

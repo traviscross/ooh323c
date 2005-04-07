@@ -84,7 +84,7 @@ struct ooGkClient;
   struct RasCallAdmissionInfo;
 
 typedef struct ooGkClientTimerCb{
-   ASN1UINT timerType;
+   int timerType;
    struct ooGkClient *pGkClient;
    struct RasCallAdmissionInfo *pAdmInfo;
 }ooGkClientTimerCb;

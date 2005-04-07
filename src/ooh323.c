@@ -565,11 +565,16 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
                call->callEndReason = OO_REMOTE_CLEARED;
             call->callState = OO_CALL_CLEARED;
          }
+        
+         if(gH323ep.gkClient)
+         {
+           if(gH323ep.gkClient->state == GkClientRegistered)
+               ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+         }
+
          if(gH323ep.onCallCleared)
             gH323ep.onCallCleared(call);        
-#ifdef __USING_RAS
-         ooRasSendDisengageRequest(call);
-#endif
+      
          ooFreeQ931Message(q931Msg);
          break;
       case Q931FacilityMsg:
