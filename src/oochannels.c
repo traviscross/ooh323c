@@ -30,8 +30,11 @@
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
+extern OO_MUTEX gCmdMutex;
+
 extern DList g_TimerList;
 
+static OOBOOL gMonitor = FALSE;
 
 int ooCreateH245Listener(ooCallData *call)
 {
@@ -410,7 +413,7 @@ int ooMonitorChannels()
    ooCommand *cmd;
    int i=0;  
 
-   gMonitor = 1;
+   gMonitor = TRUE;
 
    toMin.tv_sec = 3;
    toMin.tv_usec = 0;
@@ -1574,10 +1577,7 @@ int ooStopMonitorCalls()
       memFreePtr(&gH323ep.ctxt, gH323ep.listener);
    }
 
-   gMonitor = 0;
+   gMonitor = FALSE;
    OOTRACEINFO1("Returning form ooStopMonitorCalls\n");
    return OO_OK;
 }
-     
-
-

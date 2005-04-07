@@ -167,7 +167,7 @@ int main(int argc, char ** argv)
    {
       printf("Calling %s\n", dest);
       memset(callToken, 0, 20);
-      ooMakeCall(dest, callToken); /* Make call */
+      ooMakeCall(dest, callToken, sizeof(callToken)); /* Make call */
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,

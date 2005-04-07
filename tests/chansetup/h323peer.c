@@ -179,8 +179,7 @@ int main (int argc, char** argv)
 
    if(dest_found)
    {
-      memset(callToken, 0, sizeof(callToken));
-      ooMakeCall(gDest, callToken); /* Make call */
+      ooMakeCall (gDest, callToken, sizeof(callToken)); /* Make call */
       gCallCounter++;
       if(gInterval != 0)
       {
@@ -306,7 +305,7 @@ static int onCallCleared (ooCallData* call)
   char callToken[20];
    printf ("onCallCleared - %s\n", call->callToken);
    if(gInterval == 0 && gCallCounter <gCalls){
-      ooMakeCall(gDest, callToken);
+      ooMakeCall (gDest, callToken, sizeof(callToken));
       gCallCounter++;
    }
 
@@ -332,9 +331,9 @@ static int callIntervalTimerExpired(void *pdata)
    OOTimer* pTimer = NULL;
    printf("callIntervalTimerExpired\n");
    memset(callToken, 0, sizeof(callToken));
-   if(gCallCounter < gCalls)
+   if (gCallCounter < gCalls)
    {
-      ooMakeCall(gDest, callToken); /* Make call */
+      ooMakeCall (gDest, callToken, sizeof(callToken)); /* Make call */
       token = (char*)malloc(strlen(callToken)+1);
       strcpy(token, callToken);
       pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,

@@ -22,8 +22,26 @@
 /** Global endpoint structure */
 ooEndPoint gH323ep;
 
-extern DList g_TimerList;
+/**
+ * Mutex to protect ooGenerateCallReference function.
+ * This is required as this function will be called by
+ * multiple threads trying to place calls using stack commands
+ */
+OO_MUTEX gCallRefMutex;
 
+/**
+ * Mutex to protect access to global call token variables.
+ * This is required as these variables will be used by
+ * multiple threads trying to place calls using stack commands
+ */
+OO_MUTEX gCallTokenMutex;
+
+/**
+ * Mutex to protect access to stack commands list
+ */
+OO_MUTEX gCmdMutex;
+
+extern DList g_TimerList;
 
 int ooH323EpInitialize
    (const char *callerid, int callMode, const char* tracefile)
@@ -126,11 +144,6 @@ int ooH323EpInitialize
    pthread_mutex_init(&gCallRefMutex, 0);
 #endif
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
-
-   gCallTokenBase = 1;
-   gCallTokenMax = 1000;
-   gCurCallToken = 1;
-
 
    gH323ep.callEstablishmentTimeout = DEFAULT_CALLESTB_TIMEOUT;
 

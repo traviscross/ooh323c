@@ -203,50 +203,12 @@ typedef int (*ChannelCallback)(void*);
  */
 typedef int (*CommandCallback)(void);
 
-
-/**
- * Mutex to protect ooGenerateCallReference function.
- * This is required as this function will be called by
- * multiple threads trying to place calls using stack commands
- */
+/* Define common mutex type */
 #ifdef _WIN32
-CRITICAL_SECTION gCallRefMutex;
+#define OO_MUTEX CRITICAL_SECTION
 #else
-pthread_mutex_t gCallRefMutex;
+#define OO_MUTEX pthread_mutex_t
 #endif
-
-/**
- * Mutex to protect access to global call token variables.
- * This is required as these variables will be used by
- * multiple threads trying to place calls using stack commands
- */
-#ifdef _WIN32
-CRITICAL_SECTION gCallTokenMutex;
-#else
-pthread_mutex_t gCallTokenMutex;
-#endif
-
-/** Stores base value for generating new call token */
-int gCallTokenBase;
-/** Stores Max value for call token, at which token is reset */
-int gCallTokenMax;
-/** Stores current value for call token generation */
-int gCurCallToken;
-
-int gMonitor;
-/** List of stack commands issued by application which have to
- *  be processed.
- */
-DList gCmdList;
-
-/**
- * Mutex to protect access to stack commands list */
-#ifdef _WIN32
-CRITICAL_SECTION gCmdMutex;
-#else
-pthread_mutex_t gCmdMutex;
-#endif
-
 
 /**
  * Structure for stack commands */
@@ -256,6 +218,7 @@ typedef struct ooCommand {
    void * param2;
    void * param3;
 } ooCommand;
+
 /**
  * This structure is used to define the port ranges to be used
  * by the application.
@@ -443,9 +406,12 @@ typedef int (*cb_OnCallEstablished)(ooCallData* call );
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 
 struct ooGkClient;
-/** Structure to store all the config information related to the
- * endpoint created by an application */
-typedef struct ooEndPoint{
+
+/**
+ * Structure to store all configuration information related to the
+ * endpoint created by an application
+ */
+typedef struct ooEndPoint {
    /**
     * This context should be used for allocation of memory for
     * items within the endpoint structure.
@@ -457,12 +423,16 @@ typedef struct ooEndPoint{
     * message structures.
     */
    OOCTXT msgctxt;
+
    char   traceFile[MAXFILENAME];
-   FILE *               fptraceFile;
+   FILE * fptraceFile;
+
    /** Range of port numbers to be used for TCP connections */
    struct ooH323Ports tcpPorts;
+
    /** Range of port numbers to be used for UDP connections */
    struct ooH323Ports udpPorts;
+
    /** Range of port numbers to be used for RTP connections */
    struct ooH323Ports rtpPorts;
  

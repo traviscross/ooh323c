@@ -30,6 +30,9 @@
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
+extern OO_MUTEX gCallRefMutex;
+extern OO_MUTEX gCallTokenMutex;
+
 static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };
@@ -276,22 +279,28 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
 }
 
 
-int ooGenerateCallToken(char *callToken, int size)
+int ooGenerateCallToken (char *callToken, size_t size)
 {
-  char aCallToken[200];
+   static int counter = 1;
+   char aCallToken[200];
+   int  ret = 0;
+
 #ifdef _WIN32
-   EnterCriticalSection(&gCallTokenMutex);
+   EnterCriticalSection (&gCallTokenMutex);
 #else
-   pthread_mutex_lock(&gCallTokenMutex);
+   pthread_mutex_lock (&gCallTokenMutex);
 #endif
-   sprintf(aCallToken, "ooh323c_%d", gCurCallToken++);
-   if(gCurCallToken >= gCallTokenMax)
-     gCurCallToken = gCallTokenBase;
-   if((int)strlen(aCallToken)<size)
-      strcpy(callToken, aCallToken);
-   else{
-      OOTRACEERR1("Error: Insufficient buffer size to generate call token");
-      return OO_FAILED;
+
+   sprintf (aCallToken, "ooh323c_%d", counter++);
+
+   if (counter > OO_MAX_CALL_TOKEN)
+      counter = 1;
+
+   if (strlen (aCallToken) < size)
+      strcpy (callToken, aCallToken);
+   else {
+      OOTRACEERR1 ("Error: Insufficient buffer size to generate call token");
+      ret = OO_FAILED;
    }
 #ifdef _WIN32
    LeaveCriticalSection(&gCallTokenMutex);
@@ -299,8 +308,7 @@ int ooGenerateCallToken(char *callToken, int size)
    pthread_mutex_unlock(&gCallTokenMutex);
 #endif
 
-   return OO_OK;
-
+   return ret;
 }
 
 /* CallReference is a two octet field, thus max value can be 0xffff

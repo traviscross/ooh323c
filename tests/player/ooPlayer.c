@@ -97,7 +97,7 @@ int main(int argc, char ** argv)
       strcpy(ooPlayFile, argv[1]);
       memset(localip, 0, sizeof(localip));
       ooGetLocalIPAddress(localip);
-      ooMakeCall(localip, callToken); /* make call */  
+      ooMakeCall (localip, callToken, sizeof(callToken)); /* make call */  
       isCallActive = 1;
    }
    else

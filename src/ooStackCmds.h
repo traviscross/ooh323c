@@ -46,7 +46,7 @@ extern "C" {
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooMakeCall(char * dest, char *callToken);
+EXTERN int ooMakeCall (const char* dest, char *callToken, size_t bufsiz);
 
 /**
  * This function is used by an application to place a call.
@@ -56,7 +56,8 @@ EXTERN int ooMakeCall(char * dest, char *callToken);
  *                    callRef for new call.
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooMakeCall_3(char *dest, char*callToken, ASN1USINT * callRef);
+EXTERN int ooMakeCall_3 (char* dest, char* callToken, size_t bufsiz,
+                         ASN1USINT* callRef);
 
 /**
  * This function is used to answer a call

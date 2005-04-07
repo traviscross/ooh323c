@@ -221,6 +221,7 @@ EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC
  */
 EXTERN ooLogicalChannel * ooFindLogicalChannel
    (ooCallData *call, int sessionID, char *dir, H245DataType * dataType);
+
 /**
  * @}
  */

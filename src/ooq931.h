@@ -43,6 +43,9 @@ extern "C" {
  * @{
  */
 
+/* Maximum value for a call token identifier */
+#define OO_MAX_CALL_TOKEN 9999
+
 /* Q.931 packet must be at least 5 bytes long */
 #define Q931_E_TOOSHORT         (-1001) 
 /* callReference field must be 2 bytes long */
@@ -421,13 +424,13 @@ int ooParseDestination(ooCallData *call, char *dest);
 
 /**
  * This function is used to generate a new call token
- * @param call      Handle to the buffer in which new call token will be
+ * @param callToken Handle to the buffer in which new call token will be
  *                  returned
- * @param dest      size of the buffer
+ * @param size      size of the buffer
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-int ooGenerateCallToken(char *callToken, int size);
+int ooGenerateCallToken (char *callToken, size_t size);
 
 
 /**
