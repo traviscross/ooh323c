@@ -454,7 +454,8 @@ int ooMonitorChannels()
                FD_SET (call->pH225Channel->sock, &readfds);
                if (call->pH225Channel->outQueue.count > 0 ||
                   (OO_TESTFLAG (call->flags, OO_M_TUNNELING) &&
-                   0 != call->pH245Channel))
+                   0 != call->pH245Channel &&
+                  call->pH245Channel->outQueue.count>0))
                   FD_SET (call->pH225Channel->sock, &writefds);
                if(nfds < (int)call->pH225Channel->sock)
                   nfds = call->pH225Channel->sock;
