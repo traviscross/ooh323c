@@ -56,13 +56,13 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize H323 endpoint */
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOTX);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOTX, "player.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
-   ooH323EpSetTraceInfo("player.log", OOTRCLVLINFO);
+
    /* Register callbacks */
    ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCallAdmitted, NULL,
                              NULL, &osEpOnCallCleared);

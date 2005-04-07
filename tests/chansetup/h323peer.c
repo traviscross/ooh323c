@@ -139,13 +139,13 @@ int main (int argc, char** argv)
            gCalls, gDuration, gInterval, localIPAddr, localPort,
            gDest, logFileName);
 
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, logFileName);
 
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");
       return -1;
    }
-   ooH323EpSetTraceInfo(logFileName, OOTRCLVLDBGA);
+
    ooH323EpSetLocalAddress(localIPAddr, localPort);
    ooH323EpSetAliasH323ID ("objsys");
    ooH323EpSetAliasDialedDigits ("5087556929");

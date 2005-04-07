@@ -59,9 +59,12 @@ extern "C" {
  * @param callerid       ID to be used for outgoing calls.
  * @param callMode       Type of calls to be made(audio/video/fax).
  *                       (OO_CALLMODE_AUDIO, OO_CALLMODE_VIDEO)
+ * @param tracefile      Trace file name.
+ *
  * @return               OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooH323EpInitialize(const char *callerid, int callMode);
+EXTERN int ooH323EpInitialize
+   (const char *callerid, int callMode, const char* tracefile);
 
 
 /**
@@ -75,13 +78,12 @@ EXTERN int ooH323EpInitialize(const char *callerid, int callMode);
 EXTERN int ooH323EpSetLocalAddress(char * localip, int listenport);
 
 /**
- * This function is used to set the trace information for the H.323 endpoint.
- * @param tracefile      Name of the tracefile.
+ * This function is used to set the trace level for the H.323 endpoint.
  * @param traceLevel     Level of tracing.
  *
  * @return               OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooH323EpSetTraceInfo(const char * tracefile, int traceLevel);
+EXTERN int ooH323EpSetTraceLevel(int traceLevel);
 
 /**
  * This function is used to set the h323id alias for the endpoint.

@@ -111,13 +111,15 @@ int main(int argc, char ** argv)
       
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, "simple.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
-   ooH323EpSetTraceInfo("simple.log", OOTRCLVLINFO);
+
+   //   ooH323EpDisableFastStart();
+   // ooH323EpDisableH245Tunneling();
    ooH323EpSetLocalAddress(ourip, ourport);
    ooH323EpSetAliasH323ID("objsys");
    ooH323EpSetAliasDialedDigits("5087556929");

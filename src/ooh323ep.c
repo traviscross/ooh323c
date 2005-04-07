@@ -25,16 +25,29 @@ ooEndPoint gH323ep;
 extern DList g_TimerList;
 
 
-int ooH323EpInitialize(const char *callerid, int callMode)
+int ooH323EpInitialize
+   (const char *callerid, int callMode, const char* tracefile)
 {
   
    memset(&gH323ep, 0, sizeof(ooEndPoint));
 
    initContext(&(gH323ep.ctxt));
    initContext(&(gH323ep.msgctxt));
-  
-   strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);
-   gH323ep.fptraceFile = fopen(DEFAULT_TRACEFILE, "w");
+
+   if(tracefile)
+   {
+      if(strlen(tracefile)>= MAXFILENAME)
+      {
+         printf("Error:File name longer than allowed maximum %d\n",
+                 MAXFILENAME-1);
+         return OO_FAILED;
+      }
+      strcpy(gH323ep.traceFile, tracefile);
+   }else{
+      strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);     
+   }
+
+   gH323ep.fptraceFile = fopen(gH323ep.traceFile, "w");
    if(gH323ep.fptraceFile == NULL)
    {
       printf("Error:Failed to open trace file %s for write.\n",
@@ -129,7 +142,7 @@ int ooH323EpInitialize(const char *callerid, int callMode)
 
    gH323ep.sessionTimeout = DEFAULT_ENDSESSION_TIMEOUT;
 
-
+   ooSetTraceThreshold(OOTRCLVLINFO);
    return OO_OK;
 }
 
@@ -409,29 +422,8 @@ int ooH323EpSetCallerName(char * callerName)
    return OO_OK;
 }
 
-int ooH323EpSetTraceInfo(const char * tracefile, int traceLevel)
+int ooH323EpSetTraceLevel(int traceLevel)
 {
-   if(strlen(tracefile)>= MAXFILENAME)
-   {
-      printf("Error:File name longer than allowed maximum %d\n",
-              MAXFILENAME-1);
-      return OO_FAILED;
-   }
-   if(gH323ep.fptraceFile)
-   {
-      fclose(gH323ep.fptraceFile);
-      gH323ep.fptraceFile = NULL;
-   }
-
-   strcpy(gH323ep.traceFile, tracefile);
-   gH323ep.fptraceFile = fopen(tracefile, "w");
-   if(gH323ep.fptraceFile == NULL)
-   {
-      printf("Error:Failed to open trace file %s for write.\n",
-                  gH323ep.traceFile);
-      return OO_FAILED;
-   }  
-
    ooSetTraceThreshold(traceLevel);
    return OO_OK;
 }

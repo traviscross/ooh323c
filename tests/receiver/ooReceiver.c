@@ -55,13 +55,13 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
    /* Initialize the H323 endpoint */
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIORX);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIORX, "receiver.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
-   ooH323EpSetTraceInfo("receiver.log", OOTRCLVLINFO);
+
    ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
                              NULL, NULL, &osEpOnCallCleared);
 
