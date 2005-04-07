@@ -685,7 +685,7 @@ static int ooTransmitMicThreadFuncLnx()
 static int ooReceiveSpeakerThreadFuncLnx()
 {
    int ret = 0, i, j;
-   char * pcSndBuf;
+   char pcSndBuf[2048];
    struct timeval timeout;
    short c;
    fd_set readfds;
@@ -709,30 +709,22 @@ static int ooReceiveSpeakerThreadFuncLnx()
 
       if(FD_ISSET(gRecvChannel.sock, &readfds))
       {
-         pcSndBuf = (char*) malloc(1024);
-         if(pcSndBuf == 0)
-         {
-            OOLOG2(1, "ERROR: Memalloc for playback buffer failed");
-         }
-         else{
-            ret = ooSocketRecvFrom (gRecvChannel.sock, buffer,
-                                    1024, 0, 0);
+         ret = ooSocketRecvFrom (gRecvChannel.sock, buffer,
+                                 1024, 0, 0);
                        
-            /* We have a RTP packet in buffer. Assume that data always begins
-               from 12th octet, since standard RTP header length is 12.
-               Convert G711 data to 16 bit PCM.
-            */
-            j = 0;
-            for( i =12; i < ret; i++)
-            {                          
-               c = (short)ulaw2linear((unsigned char)(buffer[i]));
-               pcSndBuf[j++]= (unsigned char) ((c>>8) & 0xff);
-               pcSndBuf[j++] = (unsigned char) (c & 0xff);
-            }
-            /* Play the data buffer onto the speaker device*/
-            ooPlayAudioBuffer(pcSndBuf, j);
-            pcSndBuf =0;
+         /* We have a RTP packet in buffer. Assume that data always begins
+            from 12th octet, since standard RTP header length is 12.
+            Convert G711 data to 16 bit PCM.
+         */
+         j = 0;
+         for( i =12; i < ret; i++)
+         {                          
+            c = (short)ulaw2linear((unsigned char)(buffer[i]));
+            pcSndBuf[j++]= (unsigned char) ((c>>8) & 0xff);
+            pcSndBuf[j++] = (unsigned char) (c & 0xff);
          }
+         /* Play the data buffer onto the speaker device*/
+         ooPlayAudioBuffer(pcSndBuf, j);
       }
    }
   
