@@ -41,15 +41,15 @@ static int callDurationTimerExpired (void *pdata);
 static int callIntervalTimerExpired(void *pdata);
 
 static char USAGE[]={
-   "h323peer [--use-ip ip] [--use-port port] [-n noofcalls]\n"
+   "h323peer [--help] [--use-ip ip] [--use-port port] [-n noofcalls]\n"
    "[-duration call_duration] [-interval call_interval] [remote]\n"
+   "--help     -  To display usage information\n"
    "--use-ip   -  local ip to use\n"
    "--use-port -  local port to use\n"
    "-n         -  Number of outgoing calls\n"
    "-duration  -  Duration of each call in seconds\n"
    "-interval  -  Interval between successive calls in seconds\n"
-   "remote     -  Remote endpoint to call(optional)\n"
-   "              Can be ip:[port] or aliases\n"
+   "remote     -  Remote endpoint to call  ip:[port]\n"
 };
 
 static int gCalls=0;

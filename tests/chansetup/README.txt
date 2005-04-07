@@ -1,13 +1,18 @@
 This sample program demonstrates basic H.323 channel setup and teardown.
+
+To see all available options to run the program, from the command prompt
+   ./h323peer --help  
+
+
+
 It should be run using two instances:
+1. Instance 1 will be listening for incoming calls. It should be run as follows:
+   ./h323peer [--user-ip ip] [--user-port port]
 
-1. Instance 1 with no parameters will go into listen mode and wait for a
-   connection request.
+2. Instance 2 will initiate outgoing calls. It should be run as follows:
+   ./h323peer [--user-ip ip] [--user-port port] -n <# of calls>
+              -duration <call duration(sec)>
+              -interval <interval between successive calls(sec)> destination
 
-2. Instance 2 with "-makeCall [ip:port]" will initiate an outgoing call.
-   If [ip:port] is not specified, call will be made to listener on
-   the local machine.
 
-Once the channel is setup and established, the receiver will delay for
-a short period of time and then hang up the call.
 
