@@ -25,6 +25,7 @@
 #include "ooGkClient.h"
 #include "stdio.h"
 #include "ooTimer.h"
+#include "ooh323ep.h"
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
@@ -448,7 +449,7 @@ int ooMonitorChannels()
          call = gH323ep.callList;
          while(call)
          {
-            if (0 != call->pH225Channel & 0 != call->pH225Channel->sock)
+            if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
             {
                FD_SET (call->pH225Channel->sock, &readfds);
                if (call->pH225Channel->outQueue.count > 0 ||
