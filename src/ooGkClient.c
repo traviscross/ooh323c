@@ -64,7 +64,13 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    initContext(&(pGkClient->msgCtxt));
    pGkClient->rrqRetries = 0;
    pGkClient->grqRetries = 0;
-   ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort);
+  
+   if(OO_OK != ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort))
+   {
+      OOTRACEERR1("Error:Failed to set Gk mode\n");
+      memReset(&gH323ep.ctxt);
+      return OO_FAILED;
+   }
  
    /* Create default parameter set */
    pGkClient->grqTimeout = DEFAULT_GRQ_TIMEOUT;
@@ -258,104 +264,6 @@ void ooGkClientFillVendor
    }
 }  
 
-/**
- * Fill alias data in RAS message structure.
- */
-
-int ooGkClientFillAlias(ooGkClient *pGkClient, ooAliases *pAliases,
-                           H225_SeqOfH225AliasAddress *pAliasList )
-{
-   H225AliasAddress *pAliasEntry=NULL;
-   ooAliases * pAlias=NULL;
-   ASN1BOOL bValid=FALSE;
-   int i = 0;
-   OOCTXT *pctxt = &pGkClient->msgCtxt;
-
-   dListInit(pAliasList);
-   if(pAliases)
-   {
-      pAlias = pAliases;
-      while(pAlias)
-      {
-         pAliasEntry = (H225AliasAddress*)memAlloc(pctxt,
-                                                     sizeof(H225AliasAddress));
-         if(!pAliasEntry)
-         {
-            OOTRACEERR1("ERROR: Failed to allocate memory for alias entry\n");
-            return OO_FAILED;
-         }
-         switch(pAlias->type)
-         {
-         case T_H225AliasAddress_dialedDigits:
-            pAliasEntry->t = T_H225AliasAddress_dialedDigits;
-            pAliasEntry->u.dialedDigits = (ASN1IA5String)memAlloc(pctxt,
-                                                     strlen(pAlias->value)+1);
-            if(!pAliasEntry->u.dialedDigits)
-            {
-               OOTRACEERR1("ERROR:Failed to allocated memory for dialedDigits"
-                           " alias entry\n");
-               return OO_FAILED;
-            }
-            strcpy((char*)pAliasEntry->u.dialedDigits, pAlias->value);
-            bValid = TRUE;
-            break;
-         case T_H225AliasAddress_h323_ID:
-            pAliasEntry->t = T_H225AliasAddress_h323_ID;
-            pAliasEntry->u.h323_ID.nchars = strlen(pAlias->value);
-            pAliasEntry->u.h323_ID.data = (ASN116BITCHAR*)memAlloc
-                     (pctxt, strlen(pAlias->value)*sizeof(ASN116BITCHAR));
-            if(!pAliasEntry->u.h323_ID.data)
-            {
-               OOTRACEERR1("Error: Failed to allocate memory for h323id"
-                           " data alias entry\n");
-               return OO_FAILED;
-            }
-            for(i=0; i<(int)strlen(pAlias->value); i++)
-               pAliasEntry->u.h323_ID.data[i] =(ASN116BITCHAR)pAlias->value[i];
-            bValid = TRUE;
-            break;
-         case T_H225AliasAddress_url_ID:
-            pAliasEntry->t = T_H225AliasAddress_url_ID;
-            pAliasEntry->u.url_ID = (ASN1IA5String)memAlloc(pctxt,
-                                                     strlen(pAlias->value)+1);
-            if(!pAliasEntry->u.url_ID)
-            {
-               OOTRACEERR1("ERROR: Failed to allocate memory for urlID alias "
-                           "entry \n");
-               return OO_FAILED;
-            }
-            strcpy((char*)pAliasEntry->u.url_ID, pAlias->value);
-            bValid = TRUE;
-            break;
-         case T_H225AliasAddress_email_ID:
-            pAliasEntry->t = T_H225AliasAddress_email_ID;
-            pAliasEntry->u.email_ID = (ASN1IA5String)memAlloc(pctxt,
-                                                     strlen(pAlias->value)+1);
-            if(!pAliasEntry->u.email_ID)
-            {
-               OOTRACEERR1("ERROR: Failed to allocate memory for EmailID "
-                           "alias entry \n");
-               return OO_FAILED;
-            }
-            strcpy((char*)pAliasEntry->u.email_ID, pAlias->value);
-            bValid = TRUE;
-            break;
-         default:
-            OOTRACEERR1("ERROR: Unhandled alias type\n");
-            bValid = FALSE;                 
-         }
-        
-         if(bValid)
-            dListAppend( pctxt, pAliasList, (void*)pAliasEntry );
-         else
-            memFreePtr(pctxt, pAliasEntry);
-        
-         pAlias = pAlias->next;
-      }
-   }
-   return OO_OK;
-}
-
 
 int ooGkClientReceive(ooGkClient *pGkClient)
 {
@@ -516,7 +424,7 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
    case T_H225RasMessage_admissionConfirmSequence:
    default:
       /* Unhandled RAS message */
-      iRet= OO_FAILED;
+      iRet= OO_OK;
    }
 
    return iRet;

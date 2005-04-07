@@ -417,7 +417,11 @@ int ooMonitorChannels()
    if(gH323ep.gkClient)
    {
       ooGkClientPrintConfig(gH323ep.gkClient);
-      ooGkClientStart(gH323ep.gkClient);
+      if(OO_OK != ooGkClientStart(gH323ep.gkClient))
+      {
+         OOTRACEERR1("Error:Failed to start Gatekeeper client\n");
+         ooGkClientDestory();
+      }
    }
   
    while(1)
@@ -519,7 +523,23 @@ int ooMonitorChannels()
             toMin.tv_usec = toNext.tv_usec;
          }
       }
-  
+
+
+      if(gH323ep.gkClient)
+      {  
+         ooTimerFireExpired(&gH323ep.gkClient->ctxt,
+                                           &gH323ep.gkClient->timerList);
+         if(ooTimerNextTimeout(&gH323ep.gkClient->timerList, &toNext))
+         {
+            if(ooCompreTimeouts(&toMin, &toNext)>0)
+            {
+               toMin.tv_sec = toNext.tv_sec;
+               toMin.tv_usec = toNext.tv_usec;
+            }
+         }
+      }
+     
+
      
 
 #ifdef _WIN32
@@ -615,6 +635,11 @@ int ooMonitorChannels()
          if(FD_ISSET( gH323ep.gkClient->rasSocket, &readfds) )
          {
             ooGkClientReceive(gH323ep.gkClient);
+            if(gH323ep.gkClient->state == GkClientFailed)
+            {
+               OOTRACEERR1("Error: GkClient failed due to internal error.\n");
+               ooGkClientDestroy();/* This shifts endpoint into NoGkMode */
+            }
          }
       }
 

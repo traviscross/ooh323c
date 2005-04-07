@@ -242,18 +242,6 @@ EXTERN int ooGkClientCreateChannel(ooGkClient *pGkClient);
 EXTERN int ooGkClientCloseChannel(ooGkClient *pGkClient);
 
 
-/**
- * This function is used to populate Alias list
- * @param pGkClient     Pointer to the Gatekeeper client.
- * @param pAliases      List of aliases from which alias list structure has
- *                      to be populated.
- * @param pAliasList    Alias list structure which has to be populated.
- *
- * @return              OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooGkClientFillAlias(ooGkClient *pGkClient, ooAliases *pAliases,
-                           H225_SeqOfH225AliasAddress *pAliasList );
-
 
 EXTERN void ooGkClientRasFillVendor
    (ooGkClient *pGkClient, H225VendorIdentifier *psVendor);
