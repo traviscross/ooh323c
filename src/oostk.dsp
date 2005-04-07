@@ -85,10 +85,6 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\asn1CEvtHndlr.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\context.c
 # End Source File
 # Begin Source File
@@ -106,6 +102,10 @@ SOURCE=.\encode.c
 # Begin Source File
 
 SOURCE=.\errmgmt.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\eventHandler.c
 # End Source File
 # Begin Source File
 
@@ -161,6 +161,10 @@ SOURCE=.\ooDateTime.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooGkClient.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ooh245.c
 # End Source File
 # Begin Source File
@@ -178,10 +182,6 @@ SOURCE=.\ooports.c
 # Begin Source File
 
 SOURCE=.\ooq931.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\ooras.c
 # End Source File
 # Begin Source File
 
@@ -209,15 +209,7 @@ SOURCE=.\printHandler.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\rtconv.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\rtctype.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\SList.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -225,7 +217,7 @@ SOURCE=.\SList.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\asn1CEvtHndlr.h
+SOURCE=.\eventHandler.h
 # End Source File
 # Begin Source File
 
@@ -266,6 +258,10 @@ SOURCE=.\ooCommon.h
 # Begin Source File
 
 SOURCE=.\ooDateTime.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooGkClient.h
 # End Source File
 # Begin Source File
 
