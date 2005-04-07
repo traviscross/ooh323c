@@ -18,7 +18,6 @@
 #include "ooCapability.h"
 #include "ooStackCmds.h"
 #include "ooTimer.h"
-#include "ooras.h"
 
 #ifndef _WIN32
 #include <pthread.h>
@@ -163,9 +162,6 @@ int main (int argc, char** argv)
       (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
-   /* Init RAS module */
-
-   ooInitRas (0, RasNoGatekeeper, 0, 0);
 
    /* Create H.323 Listener */
 
@@ -197,7 +193,6 @@ int main (int argc, char** argv)
 
    /* Application terminated - clean-up */
 
-   ooDestroyRas();
    ooH323EpDestroy();
 
    return 0;

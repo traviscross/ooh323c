@@ -22,7 +22,7 @@
 #include "ooh323.h"
 #include "ooCalls.h"
 #include "printHandler.h"
-#include "ooras.h"
+#include "ooGkClient.h"
 #include "stdio.h"
 #include "ooTimer.h"
 
@@ -407,7 +407,6 @@ int ooMonitorChannels()
    ooCallData *call, *prev=NULL;
    DListNode *curNode;
    ooCommand *cmd;
-   OOSOCKET tRasSocket=0;
    int i=0;  
 
    gMonitor = 1;
@@ -415,19 +414,23 @@ int ooMonitorChannels()
    toMin.tv_sec = 3;
    toMin.tv_usec = 0;
    ooH323EpPrintConfig();
+   if(gH323ep.gkClient)
+   {
+      ooGkClientPrintConfig(gH323ep.gkClient);
+      ooGkClientStart(gH323ep.gkClient);
+   }
+  
    while(1)
    {
       FD_ZERO(&readfds);
       FD_ZERO(&writefds);
       nfds = 0;
-      ooRasExplorer();
-      tRasSocket = ooRasGetSocket();
      
-      if(tRasSocket)
+      if(gH323ep.gkClient && gH323ep.gkClient->rasSocket != 0)
       {
-         FD_SET( tRasSocket, &readfds );
-         if ( nfds < (int)tRasSocket )
-            nfds = (int)tRasSocket;
+         FD_SET(gH323ep.gkClient->rasSocket, &readfds );
+         if ( nfds < (int)gH323ep.gkClient->rasSocket)
+            nfds = (int)gH323ep.gkClient->rasSocket;
       }
       if(gH323ep.listener)
       {
@@ -441,7 +444,7 @@ int ooMonitorChannels()
          call = gH323ep.callList;
          while(call)
          {
-            if (0 != call->pH225Channel)
+            if (0 != call->pH225Channel & 0 != call->pH225Channel->sock)
             {
                FD_SET (call->pH225Channel->sock, &readfds);
                if (call->pH225Channel->outQueue.count > 0 ||
@@ -536,50 +539,45 @@ int ooMonitorChannels()
             switch(cmd->type)
             {
             case OO_CMD_MAKECALL:
-#ifdef __USING_RAS
-               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
-                  !ooRasIsRegistered())
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
                {
                   OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
                                "gatekeeper registration.\n");
                   continue;
                }
-#endif
+
                OOTRACEINFO2("Processing MakeCall command %s\n",
                              (char*)cmd->param2);
                ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2);
                break;
             case OO_CMD_MAKECALL_3:
-#ifdef __USING_RAS
-               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
-                  !ooRasIsRegistered())
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
                {
                   OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
                               "gatekeeper registration.\n");
                   continue;
                }
-#endif
                OOTRACEINFO2("Processing MakeCall_3 command %s\n",
                             (char*)cmd->param2);
                ooH323MakeCall_3((char*)cmd->param1, (char*)cmd->param2,
                                                    *((ASN1USINT*)cmd->param3));
                break;
             case OO_CMD_ANSCALL:
-#ifdef __USING_RAS
-               if(RasNoGatekeeper != ooRasGetGatekeeperMode() &&
-                  !ooRasIsRegistered())
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
                {
                   OOTRACEWARN1("New answer call cmd is waiting for "
                                "gatekeeper registration.\n");
                   continue;
                }
-#endif
                OOTRACEINFO2("Processing Answer Call command for %s\n",
                             (char*)cmd->param1);
                ooSendConnect(ooFindCallByToken((char*)cmd->param1));
                break;
             case OO_CMD_REJECTCALL:
-                   OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
+               OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
                ooEndCall(ooFindCallByToken((char*)cmd->param1));
                break;
             case OO_CMD_HANGCALL:
@@ -608,15 +606,15 @@ int ooMonitorChannels()
 #endif
       /* Manage ready descriptors after select */
 
-      if(tRasSocket)
+      if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)
       {
          /* TODO: This is always true on win32. It is ok for now
             as recvFrom returns <=0 bytes and hence the function
             ooRasReceive just returns without doing anything.
             Need to investigate*/
-         if(FD_ISSET( tRasSocket, &readfds) )
+         if(FD_ISSET( gH323ep.gkClient->rasSocket, &readfds) )
          {
-            ooRasReceive();
+            ooGkClientReceive(gH323ep.gkClient);
          }
       }
 
@@ -1246,10 +1244,10 @@ int ooOnSendMsg
                     call->callToken);
       if(gH323ep.onCallCleared)
          gH323ep.onCallCleared(call);
-#ifdef __USING_RAS
-      if(RasNoGatekeeper != ooRasGetGatekeeperMode())
-         ooRasSendDisengageRequest(call);
-#endif
+
+      if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered)
+         ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+
       break;
    case OOFacility:
       if(tunneledMsgType == OOFacility)

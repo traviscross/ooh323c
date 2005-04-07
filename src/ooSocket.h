@@ -241,15 +241,16 @@ EXTERN int ooSocketRecv (OOSOCKET socket, ASN1OCTET* pbuf,
  * @param bufsize      Length of the buffer.
  * @param remotehost   Pointer to a buffer in which remote ip address
  *                     will be returned.
+ * @param hostBufLen   Length of the buffer passed for remote ip address.
  * @param remoteport   Pointer to an int in which remote port number
  *                     will be returned.
  *
  * @return             If no error occurs, returns the number of bytes
- *                     received. Otherwise, the negative value is error code.
+ *                     received. Otherwise, negative value.
  */
 EXTERN int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf,
-                               ASN1UINT bufsize, char * remotehost,
-                               int * remoteport);
+                             ASN1UINT bufsize, char * remotehost,
+                             ASN1UINT hostBufLen, int * remoteport);
 /**
  * This function sends data on a connected socket. It is used to write outgoing
  * data on a connected socket. See description of 'send' socket function for

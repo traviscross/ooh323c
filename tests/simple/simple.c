@@ -22,7 +22,7 @@
 #include "ooCapability.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"
-#include "ooras.h"
+#include "ooGkClient.h"
 #ifndef _WIN32
 #include <pthread.h>
 #endif
@@ -132,13 +132,11 @@ int main(int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-
+   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
 
 
 
   
-   /* Init RAS module */
-   ooInitRas(0, RasNoGatekeeper, 0, 0);
    /* Load media plug-in*/
 #ifdef _WIN32
    ret = ooLoadSndRTPPlugin("oomedia.dll");
@@ -175,7 +173,6 @@ int main(int argc, char ** argv)
    pthread_create(&threadHdl, NULL, osEpHandleCommand, NULL);
 #endif
    ooMonitorChannels();
-   ooDestroyRas();
    ooH323EpDestroy();
    return 0;
 }

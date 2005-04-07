@@ -109,6 +109,10 @@ EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
  */
 EXTERN int ooRetrieveAliases(ooCallData *call,
                              H225_SeqOfH225AliasAddress *pAddresses);
+
+
+EXTERN int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
+                               H225_SeqOfH225AliasAddress *pAliasList);
 /**
  * @}
  */

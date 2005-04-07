@@ -17,7 +17,7 @@
 #include "ootrace.h"
 #include "ooCalls.h"
 #include "ooCapability.h"
-#include "ooras.h"
+#include "ooGkClient.h"
 
 /** Global endpoint structure */
 ooEndPoint gH323ep;
@@ -321,7 +321,7 @@ int ooH323EpDestroy(void)
    }
   
    freeContext(&(gH323ep.ctxt));
-   ooDestroyRas();  
+   ooGkClientDestroy();  
    if(gH323ep.fptraceFile)
    {
       fclose(gH323ep.fptraceFile);

@@ -23,7 +23,7 @@
 #include "ooh245.h"
 #include "ooh323ep.h"
 #include "ooCapability.h"
-#include "ooras.h"
+#include "ooGkClient.h"
 #include <time.h>
 
 /** Global endpoint structure */
@@ -593,12 +593,12 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    msgbuf[i++] = pq931Msg->messageType; /* type of q931 message */
   
    /*Add display ie. We use callername as display name as well as alias */
-   if(strlen(gH323ep.callername)>0)
+   if(strlen(gH323ep.callerid)>0)
    {
       msgbuf[i++] = Q931DisplayIE;
-      ieLen = strlen(gH323ep.callername)+1;
+      ieLen = strlen(gH323ep.callerid)+1;
       msgbuf[i++] = ieLen;
-      memcpy(msgbuf+i, gH323ep.callername, ieLen-1);
+      memcpy(msgbuf+i, gH323ep.callerid, ieLen-1);
       i += ieLen-1;
       msgbuf[i++] = '\0';
    }
@@ -800,6 +800,23 @@ int ooSendAlerting(ooCallData *call)
    alerting->m.maintainConnectionPresent = 1;
    alerting->multipleCalls = FALSE;
    alerting->maintainConnection = FALSE;
+
+   /*Populate aliases */
+   alerting->m.alertingAddressPresent = TRUE;
+   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                   &alerting->alertingAddress))
+   {
+      OOTRACEERR1("Error:Failed to populate alias list in Alert message\n");
+      memReset(pctxt);
+      return OO_FAILED;
+   }
+   alerting->m.presentationIndicatorPresent = TRUE;
+   alerting->presentationIndicator.t =
+                             T_H225PresentationIndicator_presentationAllowed;
+   alerting->m.screeningIndicatorPresent = TRUE;
+   alerting->screeningIndicator = userProvidedNotScreened;
+
+
 
    alerting->m.callIdentifierPresent = 1;
    alerting->callIdentifier.guid.numocts =
@@ -1123,6 +1140,20 @@ int ooAcceptCall(ooCallData *call)
    connect->conferenceID.numocts = call->confIdentifier.numocts;
    memcpy(connect->conferenceID.data, call->confIdentifier.data,
           call->confIdentifier.numocts);
+   /* Populate alias addresses */
+   connect->m.connectedAddressPresent = TRUE;
+   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                   &connect->connectedAddress))
+   {
+      OOTRACEERR1("Error:Failed to populate alias list in Connect message\n");
+      memReset(pctxt);
+      return OO_FAILED;
+   }
+   connect->m.presentationIndicatorPresent = TRUE;
+   connect->presentationIndicator.t =
+                             T_H225PresentationIndicator_presentationAllowed;
+   connect->m.screeningIndicatorPresent = TRUE;
+   connect->screeningIndicator = userProvidedNotScreened;
 
    connect->protocolIdentifier = gProtocolID; 
 
@@ -1367,21 +1398,17 @@ int ooH323MakeCall(char *dest, char *callToken)
       call->confIdentifier.data[i] = i+1;
      
 
-#ifdef __USING_RAS
-   if(RasNoGatekeeper != ooRasGetGatekeeperMode())
+   if(gH323ep.gkClient)
    {
-      if(ooRasIsRegistered()) 
-      {
-         ret = ooRasSendAdmissionRequest(call, RasDirect, gH323ep.aliases,
-                                         call->remoteAliases);
-         call->callState = OO_CALL_WAITING_ADMISSION;
-      }
+     /* No need to check registration status here as it is already checked for
+        MakeCall command */
+      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, RasDirect,
+                                          gH323ep.aliases,call->remoteAliases);
+      call->callState = OO_CALL_WAITING_ADMISSION;
    }
    else
       ret = ooH323CallAdmitted (call);
-#else
-   ret = ooH323CallAdmitted (call);
-#endif
+
    return OO_OK;
 }
 
@@ -1418,21 +1445,18 @@ int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
    call->confIdentifier.numocts = 16;
    for (i = 0; i < 16; i++)
       call->confIdentifier.data[i] = i+1;
-#ifdef __USING_RAS
-   if(RasNoGatekeeper != ooRasGetGatekeeperMode())
+
+   if(gH323ep.gkClient)
    {
-      if(ooRasIsRegistered()) 
-      {
-         ret = ooRasSendAdmissionRequest(call, RasDirect, gH323ep.aliases,
-                                         call->remoteAliases);
-         call->callState = OO_CALL_WAITING_ADMISSION;
-      }
+     /* No need to check registration status here as it is already checked for
+        MakeCall command */
+      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, RasDirect,
+                                         gH323ep.aliases,call->remoteAliases);
+      call->callState = OO_CALL_WAITING_ADMISSION;
    }
    else
       ret = ooH323CallAdmitted (call);
-#else
-   ret = ooH323CallAdmitted (call);
-#endif
+
    return OO_OK;
 }
 
@@ -1518,9 +1542,23 @@ int ooH323MakeCall_helper(ooCallData *call)
   
    /* Populate Alias Address. Note we use callername as alias as well as
       display name*/
+   setup->m.sourceAddressPresent = TRUE;
+   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                   &setup->sourceAddress))
+   {
+      OOTRACEERR1("Error:Failed to populate alias list in SETUP message\n");
+      memReset(pctxt);
+      return OO_FAILED;
+   }
+   setup->m.presentationIndicatorPresent = TRUE;
+   setup->presentationIndicator.t =
+                             T_H225PresentationIndicator_presentationAllowed;
+   setup->m.screeningIndicatorPresent = TRUE;
+   setup->screeningIndicator = userProvidedNotScreened;
+#if 0
    if(strlen(gH323ep.callername)>0)
    {
-      setup->m.sourceAddressPresent = TRUE;
+  
       pAliasAddress = (H225AliasAddress*)ASN1MALLOC(pctxt,
                                                     sizeof(H225AliasAddress));
       memset(pAliasAddress, 0, sizeof(H225AliasAddress));
@@ -1533,6 +1571,7 @@ int ooH323MakeCall_helper(ooCallData *call)
       dListInit(&setup->sourceAddress);
       dListAppend(pctxt, &setup->sourceAddress, pAliasAddress);
    }
+#endif
 
    /* Populate the vendor information */
    setup->sourceInfo.m.vendorPresent=TRUE;

@@ -105,7 +105,7 @@
    Terminal type of the endpoint. Default is 60.
 */
 #define OOTERMTYPE 60
-
+#define MAX_IP_LENGTH 15
 #define MAXLOGMSGLEN 2048
 /**
    Various message types for H225 and H245 messages
@@ -356,6 +356,7 @@ typedef struct ooTimerCallback{
 } ooTimerCallback;
 
 /* Flag mask values */
+#define OO_M_GKROUTED           0x02000000
 #define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
 #define OO_M_FASTSTART          0x40000000
@@ -441,6 +442,7 @@ typedef int (*cb_OnCallCleared)(ooCallData* call );
 typedef int (*cb_OnCallEstablished)(ooCallData* call );
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 
+struct ooGkClient;
 /** Structure to store all the config information related to the
  * endpoint created by an application */
 typedef struct ooEndPoint{
@@ -501,6 +503,8 @@ typedef struct ooEndPoint{
    ASN1UINT tcsTimeout;
    ASN1UINT logicalChannelTimeout;
    ASN1UINT sessionTimeout;
+
+   struct ooGkClient *gkClient;
    DList stkCmdList;    /* stack command list */
 } ooEndPoint;
 

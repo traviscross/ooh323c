@@ -22,7 +22,7 @@
 #include "ooCalls.h"
 #include "printHandler.h"
 #include "ooh323.h"
-#include "ooras.h"
+#include "ooGkClient.h"
 #include "ooTimer.h"
 
 /** Global endpoint structure */
@@ -494,12 +494,12 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          ooFreeQ931Message(q931Msg);
         
          ooSendCallProceeding(call);/* Send call proceeding message*/
-#ifdef __USING_RAS
-         if(RasNoGatekeeper != ooRasGetGatekeeperMode())
+         if(gH323ep.gkClient)
          {
-            if(ooRasIsRegistered()) 
+            if(gH323ep.gkClient->state == GkClientRegistered)
             {
-               ret = ooRasSendAdmissionRequest(call, RasDirect,
+               ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call,
+                                       RasDirect,
                                        gH323ep.aliases, call->remoteAliases);
                call->callState = OO_CALL_WAITING_ADMISSION;
             }else{
@@ -510,9 +510,6 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          }
          else
             ret = ooH323CallAdmitted (call);
-#else
-         ret = ooH323CallAdmitted (call);
-#endif
          break;
       case Q931CallProceedingMsg:/* Call proceeding message is received */
          OOTRACEINFO3("H.225 Call Proceeding message received (%s, %s)\n",
@@ -887,3 +884,97 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses)
    }
    return OO_OK;
 }
+
+int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
+                           H225_SeqOfH225AliasAddress *pAliasList )
+{
+   H225AliasAddress *pAliasEntry=NULL;
+   ooAliases * pAlias=NULL;
+   ASN1BOOL bValid=FALSE;
+   int i = 0;
+
+   dListInit(pAliasList);
+   if(pAliases)
+   {
+      pAlias = pAliases;
+      while(pAlias)
+      {
+         pAliasEntry = (H225AliasAddress*)memAlloc(pctxt,
+                                                     sizeof(H225AliasAddress));
+         if(!pAliasEntry)
+         {
+            OOTRACEERR1("ERROR: Failed to allocate memory for alias entry\n");
+            return OO_FAILED;
+         }
+         switch(pAlias->type)
+         {
+         case T_H225AliasAddress_dialedDigits:
+            pAliasEntry->t = T_H225AliasAddress_dialedDigits;
+            pAliasEntry->u.dialedDigits = (ASN1IA5String)memAlloc(pctxt,
+                                                     strlen(pAlias->value)+1);
+            if(!pAliasEntry->u.dialedDigits)
+            {
+               OOTRACEERR1("ERROR:Failed to allocated memory for dialedDigits"
+                           " alias entry\n");
+               return OO_FAILED;
+            }
+            strcpy((char*)pAliasEntry->u.dialedDigits, pAlias->value);
+            bValid = TRUE;
+            break;
+         case T_H225AliasAddress_h323_ID:
+            pAliasEntry->t = T_H225AliasAddress_h323_ID;
+            pAliasEntry->u.h323_ID.nchars = strlen(pAlias->value);
+            pAliasEntry->u.h323_ID.data = (ASN116BITCHAR*)memAlloc
+                     (pctxt, strlen(pAlias->value)*sizeof(ASN116BITCHAR));
+            if(!pAliasEntry->u.h323_ID.data)
+            {
+               OOTRACEERR1("Error: Failed to allocate memory for h323id"
+                           " data alias entry\n");
+               return OO_FAILED;
+            }
+            for(i=0; i<(int)strlen(pAlias->value); i++)
+               pAliasEntry->u.h323_ID.data[i] =(ASN116BITCHAR)pAlias->value[i];
+            bValid = TRUE;
+            break;
+         case T_H225AliasAddress_url_ID:
+            pAliasEntry->t = T_H225AliasAddress_url_ID;
+            pAliasEntry->u.url_ID = (ASN1IA5String)memAlloc(pctxt,
+                                                     strlen(pAlias->value)+1);
+            if(!pAliasEntry->u.url_ID)
+            {
+               OOTRACEERR1("ERROR: Failed to allocate memory for urlID alias "
+                           "entry \n");
+               return OO_FAILED;
+            }
+            strcpy((char*)pAliasEntry->u.url_ID, pAlias->value);
+            bValid = TRUE;
+            break;
+         case T_H225AliasAddress_email_ID:
+            pAliasEntry->t = T_H225AliasAddress_email_ID;
+            pAliasEntry->u.email_ID = (ASN1IA5String)memAlloc(pctxt,
+                                                     strlen(pAlias->value)+1);
+            if(!pAliasEntry->u.email_ID)
+            {
+               OOTRACEERR1("ERROR: Failed to allocate memory for EmailID "
+                           "alias entry \n");
+               return OO_FAILED;
+            }
+            strcpy((char*)pAliasEntry->u.email_ID, pAlias->value);
+            bValid = TRUE;
+            break;
+         default:
+            OOTRACEERR1("ERROR: Unhandled alias type\n");
+            bValid = FALSE;                 
+         }
+        
+         if(bValid)
+            dListAppend( pctxt, pAliasList, (void*)pAliasEntry );
+         else
+            memFreePtr(pctxt, pAliasEntry);
+        
+         pAlias = pAlias->next;
+      }
+   }
+   return OO_OK;
+}
+

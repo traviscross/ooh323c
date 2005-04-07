@@ -39,6 +39,15 @@ extern "C" {
  */
 EXTERN int ooGetTimeOfDay (struct timeval *tv, struct timezone *tz);
 
+/**
+ * This function subtracts first timeval parameter from second and provides
+ * the difference in milliseconds.
+ * @param tv1          Pointer to timeval value.
+ * @param tv2          Pointer to timeval value.
+ *
+ * @return             Difference between two timevals in milliseconds.
+ */
+EXTERN long ooGetTimeDiff(struct timeval *tv1, struct timeval *tv2);
 #ifdef __cplusplus
 }
 #endif

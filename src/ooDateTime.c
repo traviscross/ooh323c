@@ -35,3 +35,10 @@ int ooGetTimeOfDay (struct timeval *tv, struct timezone *tz)
    return gettimeofday (tv, tz);
 }
 
+
+long ooGetTimeDiff(struct timeval *tv1, struct timeval *tv2)
+{
+   return ( ((tv2->tv_sec-tv1->tv_sec)*1000) +
+            ((tv2->tv_usec-tv1->tv_usec)/1000) );
+}
+
