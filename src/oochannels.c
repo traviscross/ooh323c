@@ -420,7 +420,7 @@ int ooMonitorChannels()
       if(OO_OK != ooGkClientStart(gH323ep.gkClient))
       {
          OOTRACEERR1("Error:Failed to start Gatekeeper client\n");
-         ooGkClientDestory();
+         ooGkClientDestroy();
       }
    }
   
@@ -531,7 +531,7 @@ int ooMonitorChannels()
                                            &gH323ep.gkClient->timerList);
          if(ooTimerNextTimeout(&gH323ep.gkClient->timerList, &toNext))
          {
-            if(ooCompreTimeouts(&toMin, &toNext)>0)
+            if(ooCompareTimeouts(&toMin, &toNext)>0)
             {
                toMin.tv_sec = toNext.tv_sec;
                toMin.tv_usec = toNext.tv_usec;

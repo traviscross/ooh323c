@@ -53,30 +53,35 @@ extern "C" {
 #define DEFAULT_GKPORT 1719
 #define MULTICAST_GKADDRESS "224.0.1.41"
 #define MULTICAST_GKPORT 1718
-#define DEFAULT_REG_TTL 300 /* 300 sec */
+#define DEFAULT_BW_REQUEST  100000
+
+/* Various timeouts in seconds */
+#define DEFAULT_REG_TTL 300
 #define DEFAULT_TTL_OFFSET 20
-#define DEFAULT_ARQ_TIMEOUT 5 /* 5 sec */
+#define DEFAULT_ARQ_TIMEOUT 5
 #define DEFAULT_DRQ_TIMEOUT 5
 #define DEFAULT_GRQ_TIMEOUT 15
 #define DEFAULT_RRQ_TIMEOUT 10
 
+/* Number of retries before giving up */
 #define OO_MAX_GRQ_RETRIES 3
 #define OO_MAX_RRQ_RETRIES 3
+#define OO_MAX_ARQ_RETRIES 3
 
 /* Gk Client timers */
 #define OO_GRQ_TIMER (1<<0)
 #define OO_RRQ_TIMER (1<<1)
 #define OO_REG_TIMER (1<<2)
+#define OO_ARQ_TIMER (1<<3)
+#define OO_DRQ_TIMER (1<<4)
 
-/*-------------------------------------------------------------------*/
-/*  Public data types                                                */
-/*-------------------------------------------------------------------*/
 /**
  * @defgroup ras RAS Channel and Message handling
  * @{
  */
 
 struct ooGkClient;
+
 typedef struct ooGkClientTimerCb{
    ASN1UINT timerType;
    struct ooGkClient *pGkClient;
@@ -133,7 +138,6 @@ typedef struct RasGatekeeperInfo
 typedef struct RasCallAdmissionInfo
 {
    ooCallData *call;
-   struct timeval sLastTime; /* Last time the ARQ/DRQ message was sent */
    unsigned int retries;
    unsigned short requestSeqNum;
    enum RasCallModel eCallModel;
@@ -172,9 +176,6 @@ typedef struct ooGkClient{
    enum OOGkClientState  state;
 } ooGkClient;
 
-/*-------------------------------------------------------------------*/
-/*  Functions exported by this module                                 */
-/*-------------------------------------------------------------------*/
 
 
 /**
@@ -295,8 +296,7 @@ EXTERN int ooGkClientHandleUnregistrationRequest
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
-    ooAliases *psSrcAliases, ooAliases *psDestAliases);
+   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel);
 
 EXTERN int ooGkClientHandleAdmissionConfirm
    (ooGkClient *pGkClient, H225AdmissionConfirm *psAdmissionConfirm);

@@ -32,7 +32,7 @@
 #include "ooDateTime.h"
 #include "ooq931.h"
 #include "ooh323.h"
-
+#include "ooTimer.h"
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
@@ -507,6 +507,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    if(!pRasMsg)
    {
       OOTRACEERR1("Error: Memory allocation for GRQ RAS message failed\n");
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
 
@@ -516,6 +517,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    {
       OOTRACEERR1("Error:Memory allocation for GRQ failed\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    memset(pGkReq, 0, sizeof(H225GatekeeperRequest));
@@ -537,6 +539,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
       OOTRACEERR1("Error: Memory allocation for Ras Address of GRQ message "
                   "failed\n");
       memReset(&pGkClient->msgCtxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
 
@@ -558,6 +561,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    {
       OOTRACEERR1("Error Failed to fill alias information for GRQ message\n");
       memReset(&pGkClient->msgCtxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
@@ -565,6 +569,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    {
       OOTRACEERR1("Error: Failed to send GRQ message\n");
       memReset(&pGkClient->msgCtxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    OOTRACEINFO1("Sent GRQ message\n");
@@ -573,6 +578,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    if(!cbData)
    {
       OOTRACEERR1("Error:Failed to allocate memory to GRQ timer callback\n");
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    cbData->timerType = OO_GRQ_TIMER;
@@ -582,6 +588,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    {
       OOTRACEERR1("Error:Unable to create GRQ timer.\n ");
       memFreePtr(&pGkClient->ctxt, cbData);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    return OO_OK;
@@ -590,6 +597,22 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
 int ooGkClientHandleGatekeeperReject
    (ooGkClient *pGkClient, H225GatekeeperReject *pGatekeeperReject)
 {
+   unsigned int x=0;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer = NULL;
+   /* First delete the corresponding GRQ timer */
+   for(x=0; x<pGkClient->timerList.count; x++)
+   {
+      pNode =  dListFindByIndex(&pGkClient->timerList, x);
+      pTimer = (OOTimer*)pNode->data;
+      if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
+      {
+         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+         OOTRACEDBGA1("Deleted GRQ Timer.\n");
+         break;
+      }
+   }
 
    if(pGkClient->gkMode == RasUseSpecificGatekeeper)
    {
@@ -636,13 +659,16 @@ int ooGkClientHandleGatekeeperConfirm
    (ooGkClient *pGkClient, H225GatekeeperConfirm *pGatekeeperConfirm)
 {
    int iRet=0;
+   unsigned int x=0;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer = NULL;
    H225TransportAddress_ipAddress *pRasAddress;
+
    if(pGkClient->discoveryComplete)
    {
       OOTRACEDBGB1("Ignoring GKConfirm as Gatekeeper has been discovered\n");
       return OO_OK;
    }
-
 
    if(pGatekeeperConfirm->m.gatekeeperIdentifierPresent)
    {
@@ -652,6 +678,7 @@ int ooGkClientHandleGatekeeperConfirm
       if(!pGkClient->gkId.data)
       {
          OOTRACEERR1("Error:Failed to allocate memory for GK ID data\n");
+         pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
 
@@ -662,6 +689,7 @@ int ooGkClientHandleGatekeeperConfirm
    else{
       OOTRACEERR1("ERROR:No Gatekeeper ID present in received GKConfirmed "
                   "message\n");
+      OOTRACEINFO1("Ignoring message and will retransmit GRQ after timeout\n");
       return OO_FAILED;
    }
   
@@ -670,6 +698,7 @@ int ooGkClientHandleGatekeeperConfirm
    {
       OOTRACEERR1("ERROR:Unsupported RAS address type in received Gk Confirm"
                   " message.\n");
+      pGkClient->state = GkClientGkErr;
       return OO_FAILED;
    }
    pRasAddress =   pGatekeeperConfirm->rasAddress.u.ipAddress;
@@ -682,6 +711,22 @@ int ooGkClientHandleGatekeeperConfirm
    pGkClient->discoveryComplete = TRUE;
    pGkClient->state = GkClientDiscovered;
    OOTRACEINFO1("Gatekeeper Confirmed\n");
+
+
+   /* Delete the corresponding GRQ timer */
+   for(x=0; x<pGkClient->timerList.count; x++)
+   {
+      pNode =  dListFindByIndex(&pGkClient->timerList, x);
+      pTimer = (OOTimer*)pNode->data;
+      if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
+      {
+         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+         OOTRACEDBGA1("Deleted GRQ Timer.\n");
+         break;
+      }
+   }
+
    iRet = ooGkClientSendRRQ(pGkClient, FALSE);
    if(iRet != OO_OK)
    {
@@ -711,6 +756,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    if(!pRasMsg)
    {
       OOTRACEERR1("Error: Memory allocation for RRQ RAS message failed\n");
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
 
@@ -720,6 +766,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    {
       OOTRACEERR1("Error:Memory allocation for RRQ failed\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    memset(pRegReq, 0, sizeof(H225RegistrationRequest));
@@ -738,6 +785,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       OOTRACEERR1("Error:Failed to allocate memory for signalling address of "
                   "RRQ message\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    memset(pTransportAddress, 0, sizeof(H225TransportAddress));
@@ -764,6 +812,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       OOTRACEERR1("Error:Failed to allocate memory for RAS address of "
                   "RRQ message\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    /*   memset(pTransportAddress, 0, sizeof(H225TransportAddress));
@@ -789,6 +838,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    {
       OOTRACEERR1("Error filling alias for RRQ\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
   
@@ -801,6 +851,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       OOTRACEERR1("Error: Failed to allocate memory for GKIdentifier in RRQ "
                    "message.\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    memcpy(pRegReq->gatekeeperIdentifier.data, pGkClient->gkId.data,
@@ -826,6 +877,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    {
       OOTRACEERR1("Error: Failed to send RRQ message\n");
       memReset(pctxt);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    OOTRACEINFO1("Sent RRQ message \n");
@@ -835,6 +887,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    if(!cbData)
    {
       OOTRACEERR1("Error:Failed to allocate memory to RRQ timer callback\n");
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    cbData->timerType = OO_RRQ_TIMER;
@@ -845,6 +898,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    {
       OOTRACEERR1("Error:Unable to create GRQ timer.\n ");
       memFreePtr(&pGkClient->ctxt, cbData);
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
   
@@ -861,6 +915,8 @@ int ooGkClientHandleRegistrationConfirm
    (ooGkClient *pGkClient, H225RegistrationConfirm *pRegistrationConfirm)
 {
    int i=0;
+   unsigned int x=0;
+   OOTimer *pTimer = NULL;
    DListNode *pNode = NULL;
    H225TransportAddress *pCallSigAddr=NULL;
    ooGkClientTimerCb *cbData;
@@ -873,6 +929,7 @@ int ooGkClientHandleRegistrationConfirm
    if(!pGkClient->endpointId.data)
    {
       OOTRACEERR1("Error:Failed to allocate memory for endpoint Id.\n");
+      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
   
@@ -887,6 +944,7 @@ int ooGkClientHandleRegistrationConfirm
       if(!pNode)
       {
          OOTRACEERR1("Error:Invalid Registration confirmed message\n");
+         OOTRACEINFO1("Ignoring RCF, will retransmit RRQ after timeout\n");
          return OO_FAILED;
       }
       pCallSigAddr = (H225TransportAddress*)pNode->data;
@@ -918,6 +976,7 @@ int ooGkClientHandleRegistrationConfirm
       {
          OOTRACEERR1("Error:Failed to allocate memory for Regisration timer."
                      "\n");
+         pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
       cbData->timerType = OO_REG_TIMER;
@@ -928,6 +987,7 @@ int ooGkClientHandleRegistrationConfirm
       {
          OOTRACEERR1("Error:Unable to create REG timer.\n ");
          memFreePtr(&pGkClient->ctxt, cbData);
+         pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }   
      
@@ -943,6 +1003,21 @@ int ooGkClientHandleRegistrationConfirm
              sizeof(H225RegistrationConfirm_preGrantedARQ));
    }
 
+
+   /* First delete the corresponding RRQ timer */
+   pNode = NULL;
+   for(x=0; x<pGkClient->timerList.count; x++)
+   {
+      pNode =  dListFindByIndex(&pGkClient->timerList, x);
+      pTimer = (OOTimer*)pNode->data;
+      if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_RRQ_TIMER)
+      {
+         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+         OOTRACEDBGA1("Deleted RRQ Timer.\n");
+         break;
+      }
+   }
    pGkClient->state = GkClientRegistered;
    return OO_OK;
 }
@@ -951,6 +1026,23 @@ int ooGkClientHandleRegistrationReject
    (ooGkClient *pGkClient, H225RegistrationReject *pRegistrationReject)
 {
    int iRet=0;
+  unsigned int x=0;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer = NULL;
+   /* First delete the corresponding RRQ timer */
+   for(x=0; x<pGkClient->timerList.count; x++)
+   {
+      pNode =  dListFindByIndex(&pGkClient->timerList, x);
+      pTimer = (OOTimer*)pNode->data;
+      if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_RRQ_TIMER)
+      {
+         ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+         OOTRACEDBGA1("Deleted RRQ Timer.\n");
+         break;
+      }
+   }
+
    switch(pRegistrationReject->rejectReason.t)
    {
    case T_H225RegistrationRejectReason_discoveryRequired:
@@ -1059,8 +1151,7 @@ int ooGkClientHandleUnregistrationRequest
 
 
 int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
-                     ooAliases *pSrcAliases, ooAliases *pDestAliases)
+   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel)
 {
    int iRet = 0;
    H225RasMessage *pRasMsg=NULL;
@@ -1172,11 +1263,11 @@ int ooGkClientSendAdmissionRequest
           sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
 
    /* Populate Destination Info -  */
-   if(pDestAliases)
+   if(call->remoteAliases)
    {
       pAdmReq->m.destinationInfoPresent = 1;
-      if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, pDestAliases,
-                                         &pAdmReq->destinationInfo))
+      if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, call->remoteAliases,
+                                      &pAdmReq->destinationInfo))
       {
         OOTRACEERR1("Error:Failed to populate destination aliases - "
                     "ARQ message\n");
@@ -1186,7 +1277,7 @@ int ooGkClientSendAdmissionRequest
       }
    }
    /* Populate Source Info */
-   if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt,pSrcAliases,
+   if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, gH323ep.aliases,
                                    &pAdmReq->srcInfo))
    {
       OOTRACEERR1("Error:Failed to populate source aliases - ARQ message\n");
@@ -1195,7 +1286,7 @@ int ooGkClientSendAdmissionRequest
       return OO_FAILED;
    }  
    /* Populate bandwidth*/
-   pAdmReq->bandWidth = 100000;
+   pAdmReq->bandWidth = DEFAULT_BW_REQUEST;
    /* Populate call Reference */
    pAdmReq->callReferenceValue = call->callReference;
   
@@ -1224,7 +1315,7 @@ int ooGkClientSendAdmissionRequest
                                  sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);
    if(!pAdmReq->gatekeeperIdentifier.data)
    {
-      OOTRACEERR1("Error:Failed to allocate memory for GK ID of ARQ message\n");
+      OOTRACEERR1("Error:Failed to allocate memory for GKID of ARQ message\n");
       memReset(pctxt);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
@@ -1263,7 +1354,29 @@ int ooGkClientSendAdmissionRequest
       return OO_FAILED;
    }
    memReset(pctxt);
-  
+   
+  /* Add ARQ timer */
+   /* cbData = (ooGkClientTimerCb*) memAlloc
+                              (&pGkClient->ctxt, sizeof(ooGkClientTimerCb));
+  if(!cbData)
+  {
+     OOTRACEERR1("Error:Failed to allocate memory for Regisration timer."
+                 "\n");
+     pGkClient->state = GkClientFailed;
+     return OO_FAILED;
+  }
+  cbData->timerType = OO_REG_TIMER;
+  cbData->pGkClient = pGkClient;
+  if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
+                 &ooGkClientREGTimerExpired, regTTL,
+                 cbData, FALSE))
+  {
+     OOTRACEERR1("Error:Unable to create REG timer.\n ");
+      memFreePtr(&pGkClient->ctxt, cbData);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }   
+   */
    return OO_OK;
 }
 
@@ -1280,7 +1393,7 @@ int ooGkClientHandleAdmissionConfirm
    H225TransportAddress_ipAddress * ipAddress=NULL;
    /* Search call in pending calls list */
    pNode=(DListNode*)pGkClient->callsPendingList.head;
-   for(x=0 ; x<pGkClient->callsPendingList.count ; x++)
+   for(x=0 ; x<pGkClient->callsPendingList.count; x++)
    {
       pCallAdmInfo = (RasCallAdmissionInfo*) pNode->data;
       if(pCallAdmInfo->requestSeqNum == pAdmissionConfirm->requestSeqNum)
@@ -1291,6 +1404,8 @@ int ooGkClientHandleAdmissionConfirm
          {
             OOTRACEERR1("Error:Destination Call Signal Address provided by"
                         "Gatekeeper is not an IPv4 address\n");
+            OOTRACEINFO1("Ignoring ACF, will wait for timeout and retransmit "
+                         "ARQ\n");
             return OO_FAILED;
          }
          ipAddress = pAdmissionConfirm->destCallSignalAddress.u.ipAddress;
@@ -1315,7 +1430,7 @@ int ooGkClientHandleAdmissionConfirm
    }
    OOTRACEERR1("Error: Failed to process ACF as there is no corresponding "
                "pending call\n");
-   return OO_FAILED;
+   return OO_OK;
 }
 
 
@@ -1434,6 +1549,7 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, ooCallData *call)
    if(iRet != OO_OK)
    {
       OOTRACEERR1("Error: Failed to send DRQ message\n");
+      pGkClient->state = GkClientFailed;
    }
   
 
@@ -1483,7 +1599,7 @@ int ooGkClientRRQTimerExpired(void*pdata)
    }
    memFreePtr(&pGkClient->ctxt, cbData);
    OOTRACEERR1("Error:Failed to register with gatekeeper\n");
-   pGkClient->state = GkClientFailed;
+   pGkClient->state = GkClientGkErr;
    return OO_FAILED;
 }
 
@@ -1529,4 +1645,31 @@ int ooGkClientREGTimerExpired(void *pdata)
       return OO_FAILED;
    }
    return OO_OK;
+}
+
+int ooGkClientARQTimerExpired(void* pdata)
+{
+   int ret=0;
+   ooGkClientTimerCb *cbData = (ooGkClientTimerCb*)pdata;
+   ooGkClient *pGkClient = cbData->pGkClient;
+
+   OOTRACEDBGA1("Gatekeeper client GRQ timer expired.\n");
+   memFreePtr(&pGkClient->ctxt, cbData);  
+
+   if(pGkClient->grqRetries < OO_MAX_GRQ_RETRIES)
+   {
+      ret = ooGkClientSendGRQ(pGkClient);     
+      if(ret != OO_OK)
+      {
+         OOTRACEERR1("Error:Failed to send GRQ message\n");
+         pGkClient->state = GkClientFailed;
+         return OO_FAILED;
+      }
+      pGkClient->grqRetries++;
+      return OO_OK;
+   }
+
+   OOTRACEERR1("Error:Gatekeeper could not be found\n");
+   pGkClient->state = GkClientGkErr;
+   return OO_FAILED;
 }
