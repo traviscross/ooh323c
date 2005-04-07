@@ -20,6 +20,7 @@
 #include "oochannels.h"
 #include "printHandler.h"
 #include "ooCalls.h"
+#include "ooh323.h"
 #include "ooh245.h"
 #include "ooh323ep.h"
 #include "ooCapability.h"

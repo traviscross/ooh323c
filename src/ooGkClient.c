@@ -48,7 +48,6 @@ static ASN1OBJID gProtocolID = {
 int ooGkClientInit(enum RasGatekeeperMode eGkMode,
               char *szGkAddr, int iGkPort )
 {
-   int iRet;
    ooGkClient *pGkClient=NULL;
    pGkClient = (ooGkClient*)
                          memAlloc(&gH323ep.ctxt, sizeof(ooGkClient));
@@ -82,7 +81,7 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    dListInit(&pGkClient->callsAdmittedList);
    dListInit(&pGkClient->timerList);
    pGkClient->state = GkClientIdle;
-   return iRet;
+   return OO_OK;
 }
 
 void ooGkClientPrintConfig(ooGkClient *pGkClient)
