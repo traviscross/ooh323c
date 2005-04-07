@@ -120,6 +120,7 @@ int main(int argc, char ** argv)
 
    //   ooH323EpDisableFastStart();
    // ooH323EpDisableH245Tunneling();
+   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
    ooH323EpSetLocalAddress(ourip, ourport);
    ooH323EpSetAliasH323ID("objsys");
    ooH323EpSetAliasDialedDigits("5087556929");

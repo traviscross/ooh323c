@@ -81,7 +81,11 @@ int main (int argc, char** argv)
    /* parse args */
 
    for (x = 1; x < argc; x++) {
-      if (!strcmp(argv[x], "--use-ip")) {
+      if(!strcmp(argv[x], "--help")) {
+         printf("USAGE:\n%s", USAGE);
+         return 0;
+      }
+      else if (!strcmp(argv[x], "--use-ip")) {
          x++;
          strncpy (localIPAddr, argv[x], sizeof(localIPAddr)-1);
       }
@@ -164,12 +168,13 @@ int main (int argc, char** argv)
 
 
    /* Create H.323 Listener */
+   if(!dest_found){
+      ret = ooCreateH323Listener();
 
-   ret = ooCreateH323Listener();
-
-   if (ret != OO_OK) {
-      OOTRACEERR1 ("Failed to Create H.323 Listener");
-      return -1;
+      if (ret != OO_OK) {
+         OOTRACEERR1 ("Failed to Create H.323 Listener");
+         return -1;
+      }
    }
 
    if(dest_found)

@@ -315,13 +315,13 @@ int ooGkClientReceive(ooGkClient *pGkClient)
 #ifndef _COMPACT
    initializePrintHandler(&printHandler, "Received RAS Message");
    /* Add event handler to list */
-   rtAddEventHandler (pctxt, &printHandler);
+   setEventHandler (pctxt, &printHandler);
 #endif
    if ( ASN_OK== asn1PD_H225RasMessage( pctxt, pRasMsg ) )
    {
 #ifndef _COMPACT
       finishPrint();
-      rtRemoveEventHandler(pctxt, &printHandler);
+      removeEventHandler(pctxt);
 #endif
       iRet=ooGkClientHandleRASMessage( pGkClient, pRasMsg );
       if(iRet != OO_OK)
@@ -334,7 +334,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
    else{
       OOTRACEERR1("ERROR:Failed to decode receive RAS message\n");
 #ifndef _COMPACT
-      rtRemoveEventHandler(pctxt, &printHandler);
+      removeEventHandler(pctxt);
 #endif
       memReset(pctxt);
       pGkClient->state = GkClientFailed;
