@@ -81,10 +81,12 @@ extern "C" {
  */
 
 struct ooGkClient;
+  struct RasCallAdmissionInfo;
 
 typedef struct ooGkClientTimerCb{
    ASN1UINT timerType;
    struct ooGkClient *pGkClient;
+   struct RasCallAdmissionInfo *pAdmInfo;
 }ooGkClientTimerCb;
 
 enum RasGatekeeperMode {
@@ -290,13 +292,14 @@ EXTERN int ooGkClientHandleUnregistrationRequest
  * @param pGkClient     Gatekeeper client to be used
  * @param call          Handle to the call.
  * @param eModel        Call Model (RasDirect/RasGkRouted)
- * @param psSrcAliases  Pointer to the calling party's aliases.    
- * @param psDestAliases Pointer to the called party's aliases.
+ * @param retransmit    Indicates whether new call or retransmitting for
+ *                      existing call.
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel);
+   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
+    ASN1BOOL retransmit);
 
 EXTERN int ooGkClientHandleAdmissionConfirm
    (ooGkClient *pGkClient, H225AdmissionConfirm *psAdmissionConfirm);
@@ -319,6 +322,8 @@ EXTERN int ooGkClientRRQTimerExpired(void*pdata);
 EXTERN int ooGkClientGRQTimerExpired(void* pdata);
 
 EXTERN int ooGkClientREGTimerExpired(void *pdata);
+
+EXTERN int ooGkClientARQTimerExpired(void* pdata);
 /**
  * @}
  */

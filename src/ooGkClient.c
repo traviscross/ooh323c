@@ -1026,7 +1026,7 @@ int ooGkClientHandleRegistrationReject
    (ooGkClient *pGkClient, H225RegistrationReject *pRegistrationReject)
 {
    int iRet=0;
-  unsigned int x=0;
+   unsigned int x=0;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
    /* First delete the corresponding RRQ timer */
@@ -1151,9 +1151,13 @@ int ooGkClientHandleUnregistrationRequest
 
 
 int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel)
+   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
+    ASN1BOOL retransmit)
 {
    int iRet = 0;
+   unsigned int x;
+   DListNode *pNode;
+   ooGkClientTimerCb *cbData=NULL;
    H225RasMessage *pRasMsg=NULL;
    OOCTXT* pctxt;
    H225AdmissionRequest *pAdmReq=NULL;
@@ -1328,22 +1332,36 @@ int ooGkClientSendAdmissionRequest
    pAdmReq->willSupplyUUIEs = FALSE;
 
    /* Create RasCallAdmissionInfo */
-   pCallAdmInfo = (RasCallAdmissionInfo*)memAlloc(&pGkClient->ctxt,
-                                                 sizeof(RasCallAdmissionInfo));
-   if(!pCallAdmInfo)
+   if(!retransmit)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for new CallAdmission"
+      pCallAdmInfo = (RasCallAdmissionInfo*)memAlloc(&pGkClient->ctxt,
+                                                sizeof(RasCallAdmissionInfo));
+      if(!pCallAdmInfo)
+      {
+         OOTRACEERR1("Error: Failed to allocate memory for new CallAdmission"
                   " Info entry\n");
-      memReset(pctxt);
-      pGkClient->state = GkClientFailed;
-      return OO_FAILED;
-   }
+         memReset(pctxt);
+         pGkClient->state = GkClientFailed;
+         return OO_FAILED;
+      }
 
-   pCallAdmInfo->call = call;
-   pCallAdmInfo->retries = 0;
-   pCallAdmInfo->requestSeqNum = pAdmReq->requestSeqNum;
-   pCallAdmInfo->eCallModel = eModel;
-   dListAppend(&pGkClient->ctxt, &pGkClient->callsPendingList, pCallAdmInfo);
+      pCallAdmInfo->call = call;
+      pCallAdmInfo->retries = 0;
+      pCallAdmInfo->requestSeqNum = pAdmReq->requestSeqNum;
+      pCallAdmInfo->eCallModel = eModel;
+      dListAppend(&pGkClient->ctxt, &pGkClient->callsPendingList,pCallAdmInfo);
+   }else{
+      for(x=0; x<pGkClient->callsPendingList.count; x++)
+      {
+         pNode = dListFindByIndex(&pGkClient->callsPendingList, x);
+         pCallAdmInfo = (RasCallAdmissionInfo*)pNode->data;
+         if(pCallAdmInfo->call->callReference == call->callReference)
+         {
+            pCallAdmInfo->requestSeqNum = pAdmReq->requestSeqNum;
+            break;
+         }
+      }
+   }
   
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
    if(iRet != OO_OK)
@@ -1355,28 +1373,29 @@ int ooGkClientSendAdmissionRequest
    }
    memReset(pctxt);
    
-  /* Add ARQ timer */
-   /* cbData = (ooGkClientTimerCb*) memAlloc
-                              (&pGkClient->ctxt, sizeof(ooGkClientTimerCb));
-  if(!cbData)
-  {
-     OOTRACEERR1("Error:Failed to allocate memory for Regisration timer."
-                 "\n");
-     pGkClient->state = GkClientFailed;
-     return OO_FAILED;
-  }
-  cbData->timerType = OO_REG_TIMER;
-  cbData->pGkClient = pGkClient;
-  if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
-                 &ooGkClientREGTimerExpired, regTTL,
-                 cbData, FALSE))
-  {
-     OOTRACEERR1("Error:Unable to create REG timer.\n ");
+   /* Add ARQ timer */
+   cbData = (ooGkClientTimerCb*) memAlloc
+                               (&pGkClient->ctxt, sizeof(ooGkClientTimerCb));
+   if(!cbData)
+   {
+      OOTRACEERR1("Error:Failed to allocate memory for Regisration timer."
+                  "\n");
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   cbData->timerType = OO_ARQ_TIMER;
+   cbData->pGkClient = pGkClient;
+   cbData->pAdmInfo =  pCallAdmInfo;
+   if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
+                  &ooGkClientARQTimerExpired, pGkClient->arqTimeout,
+                  cbData, FALSE))
+   {
+      OOTRACEERR1("Error:Unable to create ARQ timer.\n ");
       memFreePtr(&pGkClient->ctxt, cbData);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }   
-   */
+  
    return OO_OK;
 }
 
@@ -1388,9 +1407,11 @@ int ooGkClientHandleAdmissionConfirm
    (ooGkClient *pGkClient, H225AdmissionConfirm *pAdmissionConfirm)
 {
    RasCallAdmissionInfo* pCallAdmInfo=NULL;
-   unsigned int x;
-   DListNode *pNode;
+   unsigned int x, y;
+   DListNode *pNode, *pNode1=NULL;
    H225TransportAddress_ipAddress * ipAddress=NULL;
+   OOTimer *pTimer = NULL;
+
    /* Search call in pending calls list */
    pNode=(DListNode*)pGkClient->callsPendingList.head;
    for(x=0 ; x<pGkClient->callsPendingList.count; x++)
@@ -1415,6 +1436,21 @@ int ooGkClientHandleAdmissionConfirm
                                                 ipAddress->ip.data[2],
                                                 ipAddress->ip.data[3]);
          pCallAdmInfo->call->remotePort = ipAddress->port;
+         /* Delete ARQ timer */
+         for(y=0; y<pGkClient->timerList.count; y++)
+         {
+            pNode1 =  dListFindByIndex(&pGkClient->timerList, y);
+            pTimer = (OOTimer*)pNode->data;
+            if((((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_ARQ_TIMER)
+                                       &&
+              (((ooGkClientTimerCb*)pTimer->cbData)->pAdmInfo == pCallAdmInfo))
+            {
+               ASN1MEMFREEPTR(&pGkClient->ctxt, pTimer->cbData);
+               ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+               OOTRACEDBGA1("Deleted ARQ Timer.\n");
+               break;
+            }
+         }        
          ooH323CallAdmitted( pCallAdmInfo->call);
          dListRemove(&pGkClient->callsPendingList, pNode);
          dListAppend(&pGkClient->ctxt, &pGkClient->callsAdmittedList,
@@ -1555,13 +1591,13 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, ooCallData *call)
 
 
    /* Search call in admitted calls list */
-   pNode=(DListNode*)pGkClient->callsAdmittedList.head;
-   for(x=0 ; x<pGkClient->callsPendingList.count ; x++)
+   for(x=0 ; x<pGkClient->callsAdmittedList.count ; x++)
    {
+      pNode = (DListNode*)dListFindByIndex(&pGkClient->callsAdmittedList, x);
       pCallAdmInfo = (RasCallAdmissionInfo*) pNode->data;
       if(pCallAdmInfo->call->callReference == call->callReference)
       {
-         dListRemove( &pGkClient->callsPendingList, pNode);
+         dListRemove( &pGkClient->callsAdmittedList, pNode);
          memFreePtr(&pGkClient->ctxt, pNode->data);
          memFreePtr(&pGkClient->ctxt, pNode);
          break;
@@ -1652,24 +1688,26 @@ int ooGkClientARQTimerExpired(void* pdata)
    int ret=0;
    ooGkClientTimerCb *cbData = (ooGkClientTimerCb*)pdata;
    ooGkClient *pGkClient = cbData->pGkClient;
+   RasCallAdmissionInfo *pAdmInfo = cbData->pAdmInfo;
 
-   OOTRACEDBGA1("Gatekeeper client GRQ timer expired.\n");
+   OOTRACEDBGA1("Gatekeeper client ARQ timer expired.\n");
    memFreePtr(&pGkClient->ctxt, cbData);  
 
-   if(pGkClient->grqRetries < OO_MAX_GRQ_RETRIES)
+   if(pAdmInfo->retries < OO_MAX_ARQ_RETRIES)
    {
-      ret = ooGkClientSendGRQ(pGkClient);     
+      ret = ooGkClientSendAdmissionRequest(pGkClient, pAdmInfo->call,
+                                           pAdmInfo->eCallModel, TRUE);     
       if(ret != OO_OK)
       {
-         OOTRACEERR1("Error:Failed to send GRQ message\n");
+         OOTRACEERR1("Error:Failed to send ARQ message\n");
          pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
-      pGkClient->grqRetries++;
+      pAdmInfo->retries++;
       return OO_OK;
    }
 
-   OOTRACEERR1("Error:Gatekeeper could not be found\n");
+   OOTRACEERR1("Error:Gatekeeper not responding to ARQ\n");
    pGkClient->state = GkClientGkErr;
    return OO_FAILED;
 }
