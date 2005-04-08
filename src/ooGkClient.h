@@ -76,7 +76,7 @@ extern "C" {
 #define OO_DRQ_TIMER (1<<4)
 
 /**
- * @defgroup ras RAS Channel and Message handling
+ * @defgroup gkclient Gatekeeper client
  * @{
  */
 
@@ -177,8 +177,13 @@ typedef struct ooGkClient{
 EXTERN int ooGkClientInit
    (enum RasGatekeeperMode eGkMode, char *szGkAddr, int iGkPort );
 
-
+/**
+ * This function is used to print the gatekeeper client configuration
+ * information.
+ * @param pGkClient        Handle to gatekeeper client.
+ */
 EXTERN void ooGkClientPrintConfig(ooGkClient *pGkClient);
+
 /**
  * This function is used to destroy Gatekeeper client. It releases all the
  * associated memory.
@@ -230,47 +235,121 @@ EXTERN int ooGkClientCreateChannel(ooGkClient *pGkClient);
 EXTERN int ooGkClientCloseChannel(ooGkClient *pGkClient);
 
 
-
+/**
+ * This function is used to fill endpoint's vendor information into vendor
+ * identifier.
+ * @param pGkClient    Pointer to gatekeeper client.
+ * @param psVendor     Pointer to vendor identifier to be filled.
+ *
+ */
 EXTERN void ooGkClientRasFillVendor
    (ooGkClient *pGkClient, H225VendorIdentifier *psVendor);
 
 
 /**
  * This function is invoked to receive data on Gatekeeper client's RAS channel.
+ * @param pGkClient    Handle to Gatekeeper client for which message has to be
+ *                     received.
  *
- * @return         Completion status - OO_OK on success, OO_FAILED on failure
+ * @return             Completion status - OO_OK on success, OO_FAILED on
+ *                     failure
  */
 EXTERN int ooGkClientReceive(ooGkClient *pGkClient);
 
 
+/**
+ * This function is used to handle a received RAS message by a gatekeeper
+ * client.
+ * @param pGkClient   Handle to gatekeeper client.
+ * @param pRasMsg     Handle to received Ras message.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientHandleRASMessage
    (ooGkClient *pGkClient, H225RasMessage *pRasMsg);
 
 
+/**
+ * This function is used to send a message on Gatekeeper clien't RAS channel.
+ * @param pGkClient   Handle to the gatekeeper client.
+ * @param pRasMsg     Handle to Ras message to be sent.
+ *
+ * @return            OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientSendMsg(ooGkClient *pGkClient, H225RasMessage *pRasMsg);
 
 
-
+/**
+ * This function is used to sent Gatekeeper request message.
+ * @param pGkClient  Handle to gatekeeper client for which GRQ message has to
+ *                   be sent.
+ *
+ * @return           OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientSendGRQ(ooGkClient *pGkClient);
 
 
-
+/**
+ * This function is used to handle a received gatekeeper reject message.
+ * @param pGkClient          Handle to gatekeeper client.
+ * @param pGatekeeperReject  Handle to received reject message.
+ *
+ * @return                   OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleGatekeeperReject
    (ooGkClient *pGkClient, H225GatekeeperReject *pGatekeeperReject);
 
+/**
+ * This function is used to handle a received gatekeeper confirm message.
+ * @param pGkClient          Handle to gatekeeper client.
+ * @param pGatekeeperConfirm Handle to received confirmed message.
+ *
+ * @return                   OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleGatekeeperConfirm
    (ooGkClient *pGkClient, H225GatekeeperConfirm *pGatekeeperConfirm);
 
+
+/**
+ * This function is used to sent Registration request message.
+ * @param pGkClient  Handle to gatekeeper client for which RRQ message has to
+ *                   be sent.
+ * @param keepAlive  Indicates whether keepalive lightweight registration has
+ *                   to be sent.
+ *
+ * @return           OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive);
 
+/**
+ * This function is used to handle a received registration confirm message.
+ * @param pGkClient            Handle to gatekeeper client.
+ * @param pRegistrationConfirm Handle to received confirmed message.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleRegistrationConfirm
    (ooGkClient *pGkClient, H225RegistrationConfirm *pRegistrationConfirm);
 
+/**
+ * This function is used to handle a received registration reject message.
+ * @param pGkClient           Handle to gatekeeper client.
+ * @param pRegistrationReject Handle to received reject message.
+ *
+ * @return                    OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleRegistrationReject
    (ooGkClient *pGkClient, H225RegistrationReject *pRegistrationReject);
 
+/**
+ * This function is used to handle a received Unregistration request message.
+ * @param pGkClient              Handle to gatekeeper client.
+ * @param punregistrationRequest Handle to received unregistration request.
+ *
+ * @return                   OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleUnregistrationRequest
-   (ooGkClient *pGkClient, H225UnregistrationRequest *psunregistrationRequest);
+   (ooGkClient *pGkClient, H225UnregistrationRequest *punregistrationRequest);
 
 /**
  * This function is invoked to request bandwith admission for a call.
@@ -284,8 +363,15 @@ EXTERN int ooGkClientHandleUnregistrationRequest
 EXTERN int ooGkClientSendAdmissionRequest
    (ooGkClient *pGkClient, ooCallData *call, ASN1BOOL retransmit);
 
+/**
+ * This function is used to handle a received Admission confirm message.
+ * @param pGkClient         Handle to gatekeeper client.
+ * @param pAdmissionConfirm Handle to received confirmed message.
+ *
+ * @return                  OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleAdmissionConfirm
-   (ooGkClient *pGkClient, H225AdmissionConfirm *psAdmissionConfirm);
+   (ooGkClient *pGkClient, H225AdmissionConfirm *pAdmissionConfirm);
 
 /**
  * This function is invoked to request call disengage to gatekeeper.
@@ -297,18 +383,64 @@ EXTERN int ooGkClientHandleAdmissionConfirm
 EXTERN int ooGkClientSendDisengageRequest
    (ooGkClient *pGkClient, ooCallData *call);
 
+/**
+ * This function is used to handle a received disengage confirm message.
+ * @param pGkClient            Handle to gatekeeper client.
+ * @param pDCF                 Handle to received confirmed message.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooGkClientHandleDisengageConfirm
-   (ooGkClient *pGkClient, H225DisengageConfirm *psDCF);
+   (ooGkClient *pGkClient, H225DisengageConfirm *pDCF);
 
+/**
+ * This function is used to handle an expired registration request timer.
+ * @param pdata     Handle to callback data
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientRRQTimerExpired(void*pdata);
 
+/**
+ * This function is used to handle an expired gatekeeper request timer.
+ * @param pdata     Handle to callback data
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientGRQTimerExpired(void* pdata);
 
+/**
+ * This function is used to handle an expired registration time-to-live timer.
+ * @param pdata     Handle to callback data
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientREGTimerExpired(void *pdata);
 
+/**
+ * This function is used to handle an expired admission request timer.
+ * @param pdata     Handle to callback data
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientARQTimerExpired(void* pdata);
 
+/**
+ * This function is used to clean call related data from gatekeeper client.
+ * @param pGkClient  Handle to the gatekeeper client.
+ * @param call       Handle to the call to be cleaned.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call);
+
+/**
+ * This function is used to handle gatekeeper client failure or gatekeeper
+ * failure which can be detected by unresponsiveness of gk.
+ * @param pGkClient  Handle to gatekeeper client.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient);
 /**
  * @}

@@ -111,6 +111,15 @@ EXTERN int ooRetrieveAliases(ooCallData *call,
                              H225_SeqOfH225AliasAddress *pAddresses);
 
 
+/**
+ * This is a helper function used to populate alias list using aliases.
+ * @param pctxt      Pointer to OOCTXT structure which will be used for memory
+ *                   allocations.
+ * @param pAliases   Pointer to aliases to be used for populating list.
+ * @param pAliasList Pointer to alias list to be populated.
+ *
+ * @return           OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                                H225_SeqOfH225AliasAddress *pAliasList);
 /**

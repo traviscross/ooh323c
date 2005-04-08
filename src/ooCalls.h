@@ -121,10 +121,10 @@ EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
                                   (ooCallData *call,int channelNo);
 
 /**
- * This function is called when a new logical channel is established. It is particularly
- * useful in case of faststart. When the remote endpoint selects one of the proposed
- * alternatives, other channels for the same session type need to be closed. This function
- * is used for that.
+ * This function is called when a new logical channel is established. It is
+ * particularly useful in case of faststart. When the remote endpoint selects
+ * one of the proposed alternatives, other channels for the same session type
+ * need to be closed. This function is used for that.
  * @param call      Handle to the call which owns the logical channel.
  * @param pChannel  Handle to the newly established logical channel.
  *
@@ -134,8 +134,8 @@ EXTERN int ooOnLogicalChannelEstablished
                               (ooCallData *call, ooLogicalChannel * pChannel);
 
 /**
- * This fuction is used to check whether a specified session in specified direction
- * is active for the call.
+ * This fuction is used to check whether a specified session in specified
+ * direction is active for the call.
  * @param call       Handle to call for which session has to be queried.
  * @param sessionID  Session id to identify the type of session(1 for audio,
  *                   2 for voice and 3 for data)
@@ -147,13 +147,15 @@ EXTERN ASN1BOOL ooIsSessionEstablished
                                   (ooCallData *call, int sessionID, char* dir);
 
 /**
- * This function is used to retrieve a logical channel with particular sessionID. Note
- * that there can be two entries of logical channel, one in each direction. This function
- * will return the first channel which has the same session ID.
+ * This function is used to retrieve a logical channel with particular
+ * sessionID. Note that there can be two entries of logical channel, one in
+ * each direction. This function will return the first channel which has the
+ * same session ID.
  * @param call      Handle to the call which owns the channels to be searched.
  * @param sessionID Session id of the session which is to be searched for.
  *
- * @return          Returns a pointer to the logical channel if found, NULL otherwise.
+ * @return          Returns a pointer to the logical channel if found, NULL
+ *                  otherwise.
  */
 EXTERN ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID);
 
@@ -168,9 +170,9 @@ EXTERN ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID);
 EXTERN int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo);
 
 /**
- * This function is used to cleanup a logical channel. It first stops media, if it
- * is still active and then removes the channel from the list, freeing up all the
- * associated memory.
+ * This function is used to cleanup a logical channel. It first stops media, if
+ * it is still active and then removes the channel from the list, freeing up
+ * all the associated memory.
  * @param call       Handle to the call which owns the logical channel.
  * @param channelNo  Channel number identifying the channel.
  *
@@ -179,7 +181,8 @@ EXTERN int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo);
 EXTERN int ooClearLogicalChannel(ooCallData *call, int channelNo);
 
 /**
- * This function is used to cleanup all the logical channels associated with the call.
+ * This function is used to cleanup all the logical channels associated with
+ * the call.
  * @param call      Handle to the call which owns the channels.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
@@ -187,11 +190,13 @@ EXTERN int ooClearLogicalChannel(ooCallData *call, int channelNo);
 EXTERN int ooClearAllLogicalChannels(ooCallData *call);
 
 /**
- * This function can be used by an application to specify media endpoint information
- * for different types of media. The stack by default uses local IP and port for media.
- * An application can provide mediainfo if it wants to override default.
+ * This function can be used by an application to specify media endpoint
+ * information for different types of media. The stack by default uses local IP
+ * and port for media. An application can provide mediainfo if it wants to
+ * override default.
  * @param call      Handle to the call
- * @param mediaInfo mediainfo structure which defines the media endpoint to be used.
+ * @param mediaInfo mediainfo structure which defines the media endpoint to be
+ *                  used.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */

@@ -452,6 +452,16 @@ EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
                          int h245Len, int h245MsgType, int associatedChan);
 
 
+/**
+ * This function is used to encode an H.225 message.
+ * @param call            Handle to the call.
+ * @param pq931Msg        Pointer to the message to be encoded.
+ * @param msgbuf          Pointer to the buffer in which encoded message will
+ *                        be returned.
+ * @param size            Size of the buffer passed.
+ *
+ * @return                OO_OK, on success. OO_FAILED, on failure.
+ */
 int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
                         char *msgbuf, int size);
 

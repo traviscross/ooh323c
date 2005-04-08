@@ -56,10 +56,6 @@
 #define OO_CAP_DTMF_H245    (1<<2)
 
 
-
-
-
-
 typedef struct ooG711CapParams{
    int txframes;
    int rxframes;
@@ -106,12 +102,46 @@ EXTERN int ooEnableDTMFRFC2833(int dynamicRTPPayloadType);
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooDisableDTMFRFC2833(void);
+
+
+/**
+ * This function is used to add a new G711 capability to the endpoint.
+ * @param cap                  Type of G711 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooAddG711Capability(int cap, int txframes, int rxframes, int dir,
                                cb_StartReceiveChannel startReceiveChannel,
                                cb_StartTransmitChannel startTransmitChannel,
                                cb_StopReceiveChannel stopReceiveChannel,
                                cb_StopTransmitChannel stopTransmitChannel);
 
+/**
+ * This is an internal helper function which is used to add a G711 capability
+ * to local endpoints capability list or to remote endpoints capability list.
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param cap                  Type of G711 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ *
+ */
 int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
                                  int rxframes, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
@@ -119,6 +149,21 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
                                  cb_StopReceiveChannel stopReceiveChannel,
                                  cb_StopTransmitChannel stopTransmitChannel);
 
+
+/**
+ * This function is used to add a new GSM capability to the endpoint.
+ * @param cap                  Type of GSM capability to be added.
+ * @param audioUnitSize        Audio unit size spec for the capability.
+ * @param comfortNoise         Comfort noise spec for the capability.
+ * @param scrambled            Scrambled enabled/disabled for the capability.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
                              ASN1BOOL comfortNoise,ASN1BOOL scrambled,int dir,
                              cb_StartReceiveChannel startReceiveChannel,
@@ -126,6 +171,25 @@ EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
                              cb_StopReceiveChannel stopReceiveChannel,
                              cb_StopTransmitChannel stopTransmitChannel);
 
+/**
+ * This is an internal helper function which is used to add a GSM capability
+ * to local endpoints capability list or to remote endpoints capability list.
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param cap                  Type of GSM capability to be added.
+ * @param audioUnitSize        Audio unit size spec for the capability.
+ * @param comfortNoise         Comfort noise spec for the capability.
+ * @param scrambled            Scrambled enabled/disabled for the capability.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
 int ooAddGSMCapability_internal(ooCallData *call, int cap,
                                 ASN1USINT audioUnitSize, ASN1BOOL comfortNoise,
                                 ASN1BOOL scrambled, int dir,
@@ -134,39 +198,69 @@ int ooAddGSMCapability_internal(ooCallData *call, int cap,
                                 cb_StopReceiveChannel stopReceiveChannel,
                                 cb_StopTransmitChannel stopTransmitChannel);
 
+
+/**
+ * This function is used to add a audio capability to calls remote 
+ * capability list.
+ * @param call                Handle to the call.
+ * @param audioCap            Handle to the remote endpoint's audio capability.
+ * @param dir                 Direction in which capability is supported by
+ *                            remote endpoint.
+ *
+ * @return                    OO_OK, on success. OO_FAILED, otherwise.
+ */
 int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
                                int dir);
+
+
+/**
+ * This function is used to add a capability to call's remote  capability list.
+ * The capabilities to be added are extracted from received TCS message.
+ * @param call                Handle to the call.
+ * @param audioCap            Handle to the remote endpoint's H245 capability.
+ *
+ * @return                    OO_OK, on success. OO_FAILED, otherwise.
+ */
 int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
 
+/**
+ * This function is used to test the compatibility of the two capabilities.
+ * It checks whether tx capability can be received by rx capability.
+ * @param call                Handle to the call.
+ * @param txCap               Transmit capability to be tested for
+ *                            compatibility.
+ * @param rxCap               Receive capability to be tested for compatibility
+ *
+ * @return                    TRUE, if compatible, FALSE otherwise.
+ */
 ASN1BOOL ooCheckCompatibility
 (ooCallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap);
 
-ASN1BOOL ooCheckCompatibility_1(ooCallData *call, ooH323EpCapability *epCap, H245AudioCapability * audioCap, int dir);
 /**
- * This function is used to add a new capability to the endpoint.
- * @param cap                  Type of capability to be added.
- * @param dir                  Direction - Indicates whether endpoint has
- *                             receive capability, or transmit capability or
- *                             both.ex T_H245Capability_receiveAudioCapability.
- * @param startReceiveChannel  Callback function to start receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * This function is used to test whether the endpoint capability in the
+ * specified direction can be supported by the audio capability.
+ * @param call               Handle to the call.
+ * @param epCap              Endpoint capability.
+ * @param audioCap           Audio capability with which compatibility has to
+ *                           be tested.
+ * @param dir                Direction indicating whether endpoint capability
+ *                           will be used for transmission or reception.
  *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
+ * @return                   TRUE, if compatible. FALSE, otherwise.
  */
-EXTERN int ooAddCapability(int cap, int dir,
-                    cb_StartReceiveChannel startReceiveChannel,
-                    cb_StartTransmitChannel startTransmitChannel,
-                    cb_StopReceiveChannel stopReceiveChannel,
-                    cb_StopTransmitChannel stopTransmitChannel);
+
+ASN1BOOL ooCheckCompatibility_1(ooCallData *call, ooH323EpCapability *epCap,
+                                     H245AudioCapability * audioCap, int dir);
+
 
 /**
  * This function is used to create a audio capability structure using the
  * capability type.
- * @param cap         Capability.
+ * @param epCap       Capability.
  * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
+ * @patam dir         Direction in which the newly created capability will be
+ *                    used.
  *
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
@@ -175,14 +269,21 @@ struct H245AudioCapability* ooCreateAudioCapability
 (ooH323EpCapability* epCap, OOCTXT *pctxt, int dir);
 
 /**
+ * This function is used to create a dtmf capability which can be added to
+ * a TCS message.
+ * @param cap         Type of dtmf capability to be created.
+ * @param pctxt       Pointer to OOCTXT structure to be used for memory
+ *                    allocation.
  *
+ * @return            Pointer to the created DTMF capability, NULL in case of
+ *                    failure.
  */
 void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
 
 /**
  * This function is used to create a g711 audio capability structure.
- * @param cap        Capability
- * @param pctxt      Handle to OOCTXT which will be used to allocate memory
+ * @param epCap       Handle to the endpoint capability
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
  *
  * @return            Newly created audio capability on success, NULL on
@@ -206,49 +307,27 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
                 (ooCallData *call, H245AudioCapability* audioCap, int dir);
 
 
-/**
- * This function is used to determine a capability match
- * @param cap       Local capability to be matched.
- * @param audioCap  Remote capability to be matched.
- * @param dir       Direction for local capability.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-int ooCompareAudioCaps(int cap, H245AudioCapability * audioCap, int dir);
 
 /**
- * This function is used to determine a ulaw capability match
- * @param cap       Local capability to be matched.
- * @param audioCap  Remote capability to be matched.
- * @param dir       Direction for local capability.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-int ooCompareUlawCaps(int cap, H245AudioCapability* audioCap, int dir);
-
-/**
- * This function is used to determine a Alaw capability match
- * @param cap       Local capability to be matched.
- * @param audioCap  Remote capability to be matched.
- * @param dir       Direction for local capability.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-int ooCompareAlawCaps(int cap, H245AudioCapability* audioCap, int dir);
-
-/**
- * This function is used to determine whether a particular datatype
+ * This function is used to determine whether a particular capability type
  * can be supported by the endpoint.
  * @param call       Handle to the call.
- * @param data       Handle to the data type.
+ * @param audioCap   Handle to the capability type.
  * @param dir        Direction in which support is desired.
  *
- * @return          Handle to the capability which supports 'data', Null
- *                  if none found
+ * @return          Handle to the capability which supports specified
+ *                  capability type, Null if none found
  */
 ooH323EpCapability* ooIsDataTypeSupported
                            (ooCallData *call, H245DataType *data, int dir);
-int ooAppendCapToCapPrefs(ooCallData *call, int cap);
+
+/**
+ *
+ */
+EXTERN  int ooResetCapPrefs(ooCallData *call);
+EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
+EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
+EXTERN int ooPreppendCapToCapPrefs(ooCallData *call, int cap)
 /**
  * @}
  */

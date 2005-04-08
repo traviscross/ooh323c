@@ -228,15 +228,6 @@ EXTERN int ooH323EpSetVersionID(char * versionID);
 EXTERN int ooH323EpSetCallerID(char * callerID);
 
 /**
- * This function is used to set the caller name, which is used
- * for display purposes.
- * @param callerName New value for the caller name.
- *
- * @return           OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooH323EpSetCallerName(char * callerName);
-
-/**
  * This function is used to print the current configuration information of
  * the H323 endpoint to log file.
  */

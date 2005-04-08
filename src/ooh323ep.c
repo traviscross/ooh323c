@@ -440,13 +440,6 @@ int ooH323EpSetCallerID(char * callerID)
    return OO_OK;
 }
 
-int ooH323EpSetCallerName(char * callerName)
-{
-   gH323ep.callername = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerName)+1);
-   memset(gH323ep.callername, 0, strlen(callerName)+1);
-   strcpy(gH323ep.callername, callerName);
-   return OO_OK;
-}
 
 int ooH323EpSetTraceLevel(int traceLevel)
 {
