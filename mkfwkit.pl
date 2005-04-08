@@ -56,10 +56,12 @@ mkdir ("ooh323c-${version}/doc/H323StackLibrary", 0777);
 mkdir ("ooh323c-${version}/doc/MediaLibrary", 0777);
 print `cp -f -r ./doc/H323Introduction.PDF ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/MediaLibRef0.2.PDF ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/H323StkUsersGuidev${version}.PDF ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/H323StkAPIRefMan.PDF ./ooh323c-${version}/doc/.`;
+print `cp -f -r ./doc/ooH323cUsersGuide.pdf ./ooh323c-${version}/doc/.`;
+print `cp -f -r ./doc/ooH323cAPIRefMan.pdf ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/H323StackLibrary/* ./ooh323c-${version}/doc/H323StackLibrary`;
+print `rm -rf ./ooh323c-${version}/doc/H323StackLibrary/CVS`;
 print `cp -f -r ./doc/MediaLibrary/* ./ooh323c-${version}/doc/MediaLibrary`;
+print `rm -rf ./ooh323c-${version}/doc/MediaLibrary/CVS`;
    
 mkdir ("ooh323c-${version}/specs", 0777);
 print `cp -f ./specs/*.asn ./ooh323c-${version}/specs`;
@@ -113,6 +115,11 @@ print `cp -f ./tests/receiver/Makefile.am ./ooh323c-${version}/tests/receiver/Ma
 print `cp -f ./tests/receiver/Makefile.in ./ooh323c-${version}/tests/receiver/Makefile.in`;
 print `cp -f ./tests/receiver/ooReceiver.dsp ./ooh323c-${version}/tests/receiver/ooReceiver.dsp`;
   
+mkdir ("ooh323c-${version}/tests/chansetup", 0777);
+print `cp -f ./tests/chansetup/*.c ./ooh323c-${version}/tests/chansetup`;
+print `cp -f ./tests/chansetup/Makefile.am ./ooh323c-${version}/tests/chansetup/Makefile.am`;
+print `cp -f ./tests/chansetup/Makefile.in ./ooh323c-${version}/tests/chansetup/Makefile.in`;
+print `cp -f ./tests/chansetup/chansetup.dsp ./ooh323c-${version}/tests/chansetup/chansetup.dsp`;
 
 mkdir ("ooh323c-${version}/media", 0777);
 print `cp -r -f ./media/*.c ./ooh323c-${version}/media`;
