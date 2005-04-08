@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 by Page Iberica, S.A.
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -80,6 +80,26 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    dListInit(&pGkClient->callsPendingList);
    dListInit(&pGkClient->callsAdmittedList);
    dListInit(&pGkClient->timerList);
+   pGkClient->state = GkClientIdle;
+   return OO_OK;
+}
+
+
+int ooGkClientReInit(ooGkClient *pGkClient)
+{
+
+   ooGkClientCloseChannel(pGkClient);
+   pGkClient->gkRasIP[0]='\0';
+   pGkClient->gkCallSignallingIP[0]='\0';
+   pGkClient->gkRasPort = 0;
+   pGkClient->gkCallSignallingPort = 0;
+   pGkClient->rrqRetries = 0;
+   pGkClient->grqRetries = 0;
+   pGkClient->requestSeqNum = 0;
+  
+   dListFreeAll(&pGkClient->ctxt, &pGkClient->callsPendingList);
+   dListFreeAll(&pGkClient->ctxt, &pGkClient->callsAdmittedList);
+   dListFreeAll(&pGkClient->ctxt, &pGkClient->timerList);
    pGkClient->state = GkClientIdle;
    return OO_OK;
 }
@@ -225,6 +245,7 @@ int ooGkClientCloseChannel(ooGkClient *pGkClient)
       if(ret != ASN_OK)
       {
          OOTRACEERR1("Error: failed to close RAS channel\n");
+         pGkClient->rasSocket = 0;
          return OO_FAILED;
       }
       pGkClient->rasSocket = 0;
@@ -317,7 +338,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
    /* Add event handler to list */
    setEventHandler (pctxt, &printHandler);
 #endif
-   if ( ASN_OK== asn1PD_H225RasMessage( pctxt, pRasMsg ) )
+   if(ASN_OK == asn1PD_H225RasMessage(pctxt, pRasMsg))
    {
 #ifndef _COMPACT
       finishPrint();
@@ -327,17 +348,17 @@ int ooGkClientReceive(ooGkClient *pGkClient)
       if(iRet != OO_OK)
       {
          OOTRACEERR1("Error: Failed to handle received RAS message\n");
-         pGkClient->state = GkClientFailed;
+         //pGkClient->state = GkClientFailed;
       }
       memReset(pctxt);
    }
    else{
-      OOTRACEERR1("ERROR:Failed to decode receive RAS message\n");
+      OOTRACEERR1("ERROR:Failed to decode received RAS message- ignoring"
+                  "received message.\n");
 #ifndef _COMPACT
       removeEventHandler(pctxt);
 #endif
       memReset(pctxt);
-      pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
    return iRet;
@@ -372,7 +393,7 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
       break;
    case T_H225RasMessage_registrationReject:
       OOTRACEINFO1("Registration Reject (RRJ) message received.\n");
-      iRet = ooGkClientHandleRegistrationReject( pGkClient,
+      iRet = ooGkClientHandleRegistrationReject(pGkClient,
                                                 pRasMsg->u.registrationReject);
       break;
    case T_H225RasMessage_infoRequest: 
@@ -380,10 +401,9 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
       break;
    case T_H225RasMessage_admissionConfirm:
       OOTRACEINFO1("Admission Confirm (ACF) message received\n");
-      iRet = ooGkClientHandleAdmissionConfirm(pGkClient, pRasMsg->u.admissionConfirm);
+      iRet = ooGkClientHandleAdmissionConfirm(pGkClient,
+                                              pRasMsg->u.admissionConfirm);
       break;
-   case T_H225RasMessage_gatekeeperRequest:
-   case T_H225RasMessage_registrationRequest:
    case T_H225RasMessage_unregistrationRequest:
       OOTRACEINFO1("UnRegistration Request (URQ) message received.\n");
       iRet = ooGkClientHandleUnregistrationRequest(pGkClient,
@@ -395,19 +415,16 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
    case T_H225RasMessage_unregistrationReject:
       OOTRACEINFO1("UnRegistration Reject (URJ) message received.\n");
       break;
-   case T_H225RasMessage_admissionRequest:
    case T_H225RasMessage_admissionReject:
       OOTRACEINFO1("Admission Reject (ARJ) message received.\n");
       break;
-   case T_H225RasMessage_bandwidthRequest:
-   case T_H225RasMessage_bandwidthConfirm:
-   case T_H225RasMessage_bandwidthReject:
-   case T_H225RasMessage_disengageRequest:
    case T_H225RasMessage_disengageConfirm:
       iRet = ooGkClientHandleDisengageConfirm(pGkClient,
                                               pRasMsg->u.disengageConfirm);
       break;
    case T_H225RasMessage_disengageReject:
+   case T_H225RasMessage_bandwidthConfirm:
+   case T_H225RasMessage_bandwidthReject:
    case T_H225RasMessage_locationRequest:
    case T_H225RasMessage_locationConfirm:
    case T_H225RasMessage_locationReject:
@@ -614,22 +631,23 @@ int ooGkClientHandleGatekeeperReject
    unsigned int x=0;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
-   /* First delete the corresponding GRQ timer */
-   for(x=0; x<pGkClient->timerList.count; x++)
-   {
-      pNode =  dListFindByIndex(&pGkClient->timerList, x);
-      pTimer = (OOTimer*)pNode->data;
-      if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
-      {
-         memFreePtr(&pGkClient->ctxt, pTimer->cbData);
-         ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
-         OOTRACEDBGA1("Deleted GRQ Timer.\n");
-         break;
-      }
-   }
 
    if(pGkClient->gkMode == RasUseSpecificGatekeeper)
    {
+      /* delete the corresponding GRQ timer */
+      for(x=0; x<pGkClient->timerList.count; x++)
+      {
+         pNode =  dListFindByIndex(&pGkClient->timerList, x);
+         pTimer = (OOTimer*)pNode->data;
+         if(((ooGkClientTimerCb*)pTimer->cbData)->timerType & OO_GRQ_TIMER)
+         {
+            memFreePtr(&pGkClient->ctxt, pTimer->cbData);
+            ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
+            OOTRACEDBGA1("Deleted GRQ Timer.\n");
+            break;
+         }
+      }
+
       pGkClient->state = GkClientGkErr;
       switch(pGatekeeperReject->rejectReason.t)
       {
@@ -802,8 +820,6 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   //   memset(pTransportAddress, 0, sizeof(H225TransportAddress));
-   //   memset(pIpAddress, 0, sizeof(H225TransportAddress_ipAddress));
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
    ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
@@ -829,8 +845,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   /*   memset(pTransportAddress, 0, sizeof(H225TransportAddress));
-   memset(pIpAddress, 0, sizeof(H225TransportAddress_ipAddress));*/
+
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
   
@@ -1114,7 +1129,7 @@ int ooGkClientHandleRegistrationReject
          OOTRACEERR1("\nError: Full Registration transmission failed\n");
          return OO_FAILED;
       }
-      break;
+      return OO_OK;
    case T_H225RegistrationRejectReason_additiveRegistrationNotSupported:
       OOTRACEERR1("RRQ Rejected - Additive Registration Not Supported\n");
       break;
@@ -1133,7 +1148,7 @@ int ooGkClientHandleRegistrationReject
    default:
       OOTRACEINFO1("RRQ Rejected - Invalid Reason\n");
    }
-
+   pGkClient->state = GkClientGkErr;
    return OO_OK;
 }
 
@@ -1746,7 +1761,6 @@ int ooGkClientARQTimerExpired(void* pdata)
       if(ret != OO_OK)
       {
          OOTRACEERR1("Error:Failed to send ARQ message\n");
-         pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
       pAdmInfo->retries++;
@@ -1805,6 +1819,36 @@ int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call)
          memFreePtr(&pGkClient->ctxt, pAdmInfo);
          memFreePtr(&pGkClient->ctxt, pNode);
          return OO_OK;
+      }
+   }
+
+   return OO_OK;
+}
+
+/*
+ * TODO: In case of GkErr, if GkMode is DiscoverGatekeeper,
+ *       need to cleanup gkrouted calls, and discover another
+ *       gatekeeper.
+ */
+int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
+{
+   if(pGkClient->state == GkClientFailed)
+   {
+      OOTRACEERR1("Error: Internal Failure in GkClient. Closing "
+                  "GkClient\n");
+      ooGkClientDestroy();
+   }else if(pGkClient->state == GkClientGkErr)
+   {
+      OOTRACEERR1("Error: Gatekeeper error. Either Gk not responding or "
+                  "Gk sending invalid messages\n");
+      if(pGkClient->gkMode == RasUseSpecificGatekeeper)
+      {
+         OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient as "
+                     "Gk mode is UseSpecifcGatekeeper\n");
+         ooGkClientDestroy();
+      }else{
+        OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient");
+        ooGkClientDestroy();
       }
    }
 

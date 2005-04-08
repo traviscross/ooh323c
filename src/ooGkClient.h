@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 by Page Iberica, S.A.
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2005 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -81,7 +81,7 @@ extern "C" {
  */
 
 struct ooGkClient;
-  struct RasCallAdmissionInfo;
+struct RasCallAdmissionInfo;
 
 typedef struct ooGkClientTimerCb{
    int timerType;
@@ -112,16 +112,6 @@ enum OOGkClientState {
 };
   
 
-enum RasCallStatus {
-   RasCallIdle = 0,
-   RasCallARQSent,
-   RasCallACFRecv,
-   RasCallARQRej,
-   RasCallDRQSent,
-   RasCallDCFRecv,
-   RasCallDRQRej
-};
-
 typedef struct RasGatekeeperInfo
 {
    ASN1BOOL willRespondToIRR;
@@ -129,6 +119,7 @@ typedef struct RasGatekeeperInfo
    H225BandWidth bw;
    H225RegistrationConfirm_preGrantedARQ preGrantedARQ;
 }RasGatekeeperInfo;
+
 /**
  *  Call Admission Information
  */
@@ -318,6 +309,7 @@ EXTERN int ooGkClientREGTimerExpired(void *pdata);
 EXTERN int ooGkClientARQTimerExpired(void* pdata);
 
 EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call);
+EXTERN int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient);
 /**
  * @}
  */

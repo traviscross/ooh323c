@@ -542,11 +542,11 @@ int ooMonitorChannels()
                toMin.tv_usec = toNext.tv_usec;
             }
          }
+         if(gH323ep.gkClient->state == GkClientFailed ||
+            gH323ep.gkClient->state == GkClientGkErr)
+           ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
       }
      
-
-     
-
 #ifdef _WIN32
       EnterCriticalSection(&gCmdMutex);
 #else
@@ -633,18 +633,12 @@ int ooMonitorChannels()
 
       if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)
       {
-         /* TODO: This is always true on win32. It is ok for now
-            as recvFrom returns <=0 bytes and hence the function
-            ooRasReceive just returns without doing anything.
-            Need to investigate*/
          if(FD_ISSET( gH323ep.gkClient->rasSocket, &readfds) )
          {
             ooGkClientReceive(gH323ep.gkClient);
-            if(gH323ep.gkClient->state == GkClientFailed)
-            {
-               OOTRACEERR1("Error: GkClient failed due to internal error.\n");
-               ooGkClientDestroy();/* This shifts endpoint into NoGkMode */
-            }
+            if(gH323ep.gkClient->state == GkClientFailed ||
+               gH323ep.gkClient->state == GkClientGkErr)
+              ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
          }
       }
 
