@@ -82,6 +82,7 @@ enum Q931MsgTypes {
    Q931StatusEnquiryMsg   = 0x75,
    Q931FacilityMsg        = 0x62
 };
+
 enum Q931IECodes {
    Q931BearerCapabilityIE   = 0x04,
    Q931CauseIE              = 0x08,
