@@ -135,10 +135,9 @@ int main(int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
+   /* To use a gatekeeper */
 
-   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
-
-
+   /* ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
   
    /* Load media plug-in*/
