@@ -1165,8 +1165,7 @@ int ooGkClientHandleUnregistrationRequest
 
 
 int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
-    ASN1BOOL retransmit)
+   (ooGkClient *pGkClient, ooCallData *call, ASN1BOOL retransmit)
 {
    int iRet = 0;
    unsigned int x;
@@ -1259,7 +1258,7 @@ int ooGkClientSendAdmissionRequest
   
    /* Add call model to message*/
    pAdmReq->m.callModelPresent = 1;
-   if(eModel == RasGkRouted)
+   if(OO_TESTFLAG(call->flags, OO_M_GKROUTED))
       pAdmReq->callModel.t = T_H225CallModel_gatekeeperRouted;
    else
       pAdmReq->callModel.t = T_H225CallModel_direct;
@@ -1362,7 +1361,6 @@ int ooGkClientSendAdmissionRequest
       pCallAdmInfo->call = call;
       pCallAdmInfo->retries = 0;
       pCallAdmInfo->requestSeqNum = pAdmReq->requestSeqNum;
-      pCallAdmInfo->eCallModel = eModel;
       dListAppend(&pGkClient->ctxt, &pGkClient->callsPendingList,pCallAdmInfo);
    }else{
       for(x=0; x<pGkClient->callsPendingList.count; x++)
@@ -1385,6 +1383,8 @@ int ooGkClientSendAdmissionRequest
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
+   OOTRACEINFO3("Admission Request message sent for (%s, %s)\n",
+                 call->callType, call->callToken);
    memReset(pctxt);
    
    /* Add ARQ timer */
@@ -1433,7 +1433,9 @@ int ooGkClientHandleAdmissionConfirm
       pCallAdmInfo = (RasCallAdmissionInfo*) pNode->data;
       if(pCallAdmInfo->requestSeqNum == pAdmissionConfirm->requestSeqNum)
       {
-        OOTRACEDBGC1("Found Pending call\n");
+         OOTRACEDBGC3("Found Pending call(%s, %s)\n",
+                      pCallAdmInfo->call->callType,
+                      pCallAdmInfo->call->callToken);
          /* Populate Remote IP */
          if(pAdmissionConfirm->destCallSignalAddress.t !=
                                       T_H225TransportAddress_ipAddress)
@@ -1451,6 +1453,30 @@ int ooGkClientHandleAdmissionConfirm
                                                 ipAddress->ip.data[2],
                                                 ipAddress->ip.data[3]);
          pCallAdmInfo->call->remotePort = ipAddress->port;
+         /* Update call model */
+         if(pAdmissionConfirm->callModel.t == T_H225CallModel_direct)
+         {
+            if(OO_TESTFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED))
+            {
+               OOTRACEINFO3("Gatekeeper changed call model from GkRouted to "
+                            "direct. (%s, %s)\n", pCallAdmInfo->call->callType,
+                            pCallAdmInfo->call->callToken);
+               OO_CLRFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED);
+            }
+         }
+        
+         if(pAdmissionConfirm->callModel.t == T_H225CallModel_gatekeeperRouted)
+         {
+            if(!OO_TESTFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED))
+            {
+               OOTRACEINFO3("Gatekeeper changed call model from direct to "
+                            "GkRouted. (%s, %s)\n",
+                            pCallAdmInfo->call->callType,
+                            pCallAdmInfo->call->callToken);
+               OO_SETFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED);
+            }
+         }
+
          /* Delete ARQ timer */
          for(y=0; y<pGkClient->timerList.count; y++)
          {
@@ -1468,7 +1494,10 @@ int ooGkClientHandleAdmissionConfirm
                   break;
                }
             }
-         }        
+         }      
+         OOTRACEINFO3("Admission Confirm message received for (%s, %s)\n",
+                       pCallAdmInfo->call->callType,
+                       pCallAdmInfo->call->callToken); 
          ooH323CallAdmitted( pCallAdmInfo->call);
          dListRemove(&pGkClient->callsPendingList, pNode);
          dListAppend(&pGkClient->ctxt, &pGkClient->callsAdmittedList,
@@ -1713,8 +1742,7 @@ int ooGkClientARQTimerExpired(void* pdata)
 
    if(pAdmInfo->retries < OO_MAX_ARQ_RETRIES)
    {
-      ret = ooGkClientSendAdmissionRequest(pGkClient, pAdmInfo->call,
-                                           pAdmInfo->eCallModel, TRUE);     
+      ret = ooGkClientSendAdmissionRequest(pGkClient, pAdmInfo->call, TRUE);     
       if(ret != OO_OK)
       {
          OOTRACEERR1("Error:Failed to send ARQ message\n");
@@ -1730,13 +1758,28 @@ int ooGkClientARQTimerExpired(void* pdata)
    return OO_FAILED;
 }
 
-ooGkClientClearCall(ooGkClient *pGkClient, ooCallData *call)
+int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call)
 {
    unsigned int x=0;
    DListNode *pNode=NULL;
    OOTimer *pTimer;
    ooGkClientTimerCb *cbData=NULL;
    RasCallAdmissionInfo *pAdmInfo = NULL;
+
+
+   for(x=0; x<pGkClient->callsAdmittedList.count; x++)
+   {
+      pNode = dListFindByIndex(&pGkClient->callsAdmittedList, x);
+      pAdmInfo = (RasCallAdmissionInfo*)pNode->data;
+      if(pAdmInfo->call->callReference == call->callReference)
+      {
+         dListRemove(&pGkClient->callsAdmittedList, pNode);
+         memFreePtr(&pGkClient->ctxt, pAdmInfo);
+         memFreePtr(&pGkClient->ctxt, pNode);
+         return OO_OK;
+      }
+   }
+
 
    for(x=0; x<pGkClient->timerList.count; x++)
    {
@@ -1746,7 +1789,6 @@ ooGkClientClearCall(ooGkClient *pGkClient, ooCallData *call)
       if(cbData->timerType & OO_ARQ_TIMER &&
          cbData->pAdmInfo->call->callReference == call->callReference)
       {
-        
          memFreePtr(&pGkClient->ctxt, pTimer->cbData);
          ooTimerDelete(&pGkClient->ctxt, &pGkClient->timerList, pTimer);
          break;
@@ -1760,19 +1802,6 @@ ooGkClientClearCall(ooGkClient *pGkClient, ooCallData *call)
       if(pAdmInfo->call->callReference == call->callReference)
       {
          dListRemove(&pGkClient->callsPendingList, pNode);
-         memFreePtr(&pGkClient->ctxt, pAdmInfo);
-         memFreePtr(&pGkClient->ctxt, pNode);
-         return OO_OK;
-      }
-   }
-
-   for(x=0; x<pGkClient->callsAdmittedList.count; x++)
-   {
-      pNode = dListFindByIndex(&pGkClient->callsAdmittedList, x);
-      pAdmInfo = (RasCallAdmissionInfo*)pNode->data;
-      if(pAdmInfo->call->callReference == call->callReference)
-      {
-         dListRemove(&pGkClient->callsAdmittedList, pNode);
          memFreePtr(&pGkClient->ctxt, pAdmInfo);
          memFreePtr(&pGkClient->ctxt, pNode);
          return OO_OK;

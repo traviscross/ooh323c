@@ -1411,8 +1411,7 @@ int ooH323MakeCall(char *dest, char *callToken)
    {
      /* No need to check registration status here as it is already checked for
         MakeCall command */
-      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, RasDirect,
-                                           FALSE);
+      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, FALSE);
       call->callState = OO_CALL_WAITING_ADMISSION;
    }
    else
@@ -1459,8 +1458,7 @@ int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
    {
      /* No need to check registration status here as it is already checked for
         MakeCall command */
-      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, RasDirect,
-                                           FALSE);
+      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, FALSE);
       call->callState = OO_CALL_WAITING_ADMISSION;
    }
    else

@@ -199,6 +199,9 @@ EXTERN int ooH323EpDisableFastStart(void);
 EXTERN int ooH323EpEnableH245Tunneling(void);
 EXTERN int ooH323EpDisableH245Tunneling(void);
 
+EXTERN int ooH323EpEnableGkRouted(void);
+EXTERN int ooH323EpDisableGkRouted(void);
+
 /**
  * This function is used to set the product ID.
  * @param productID  New value for the product id.

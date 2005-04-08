@@ -1272,11 +1272,13 @@ int ooOnSendMsg
    case OOReleaseComplete:
       OOTRACEINFO3("Sent Message - ReleaseComplete (%s, %s)\n", call->callType,
                     call->callToken);
+      if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered)
+         ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+
       if(gH323ep.onCallCleared)
          gH323ep.onCallCleared(call);
 
-      if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered)
-         ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+
 
       break;
    case OOFacility:

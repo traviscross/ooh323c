@@ -95,11 +95,6 @@ enum RasGatekeeperMode {
    RasUseSpecificGatekeeper = 2,
 };
 
-enum RasCallModel {
-   RasDirect = 0,
-   RasGkRouted,
-};
-
 enum RasCallType{
    RasPointToPoint =0,
    RasOneToN,
@@ -142,7 +137,6 @@ typedef struct RasCallAdmissionInfo
    ooCallData *call;
    unsigned int retries;
    unsigned short requestSeqNum;
-   enum RasCallModel eCallModel;
    ASN1USINT irrFrequency;
 } RasCallAdmissionInfo;
 
@@ -291,15 +285,13 @@ EXTERN int ooGkClientHandleUnregistrationRequest
  * This function is invoked to request bandwith admission for a call.
  * @param pGkClient     Gatekeeper client to be used
  * @param call          Handle to the call.
- * @param eModel        Call Model (RasDirect/RasGkRouted)
  * @param retransmit    Indicates whether new call or retransmitting for
  *                      existing call.
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, enum RasCallModel eModel,
-    ASN1BOOL retransmit);
+   (ooGkClient *pGkClient, ooCallData *call, ASN1BOOL retransmit);
 
 EXTERN int ooGkClientHandleAdmissionConfirm
    (ooGkClient *pGkClient, H225AdmissionConfirm *psAdmissionConfirm);
@@ -324,6 +316,8 @@ EXTERN int ooGkClientGRQTimerExpired(void* pdata);
 EXTERN int ooGkClientREGTimerExpired(void *pdata);
 
 EXTERN int ooGkClientARQTimerExpired(void* pdata);
+
+EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call);
 /**
  * @}
  */

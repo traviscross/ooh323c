@@ -92,6 +92,7 @@ int ooH323EpInitialize
    OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);
    OO_SETFLAG(gH323ep.flags, OO_M_TUNNELING);
    OO_SETFLAG(gH323ep.flags, OO_M_AUTOANSWER);
+   OO_CLRFLAG(gH323ep.flags, OO_M_GKROUTED);
   
    gH323ep.aliases = NULL;
   
@@ -358,6 +359,18 @@ int ooH323EpDestroy(void)
    DeleteCriticalSection(&gCallTokenMutex);
    DeleteCriticalSection(&gCallRefMutex);
 #endif
+   return OO_OK;
+}
+
+int ooH323EpEnableGkRouted(void)
+{
+   OO_SETFLAG(gH323ep.flags, OO_M_GKROUTED);
+   return OO_OK;
+}
+
+int ooH323EpDisableGkRouted(void)
+{
+   OO_CLRFLAG(gH323ep.flags, OO_M_GKROUTED);
    return OO_OK;
 }
 

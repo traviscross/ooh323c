@@ -499,7 +499,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
             if(gH323ep.gkClient->state == GkClientRegistered)
             {
                ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call,
-                                       RasDirect, FALSE);
+                                                    FALSE);
                call->callState = OO_CALL_WAITING_ADMISSION;
             }else{
                /* TODO: Should send Release complete with reject reason */

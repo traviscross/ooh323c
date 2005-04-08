@@ -64,6 +64,11 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    if (OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
       OO_SETFLAG (call->flags, OO_M_TUNNELING);
 
+   if(gH323ep.gkClient && OO_TESTFLAG(gH323ep.flags, OO_M_GKROUTED))
+   {
+      OO_SETFLAG(call->flags, OO_M_GKROUTED);
+   }
+
    call->mediaInfo = NULL;
 
    if (OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
@@ -117,14 +122,14 @@ int ooEndCall(ooCallData *call)
             if (OO_TESTFLAG (call->flags, OO_M_TUNNELING) ||
                 call->pH245Channel->sock != 0)
             {
-               OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels. (%s, %s)\n",
-                       call->callType, call->callToken);
+               OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels."
+                            "(%s, %s)\n", call->callType, call->callToken);
                ooCloseAllLogicalChannels(call);
                call->callState = OO_CALL_CLEAR_CLOLCS;
                return OO_OK;
             }else{
-               OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. (%s, %s)\n",
-                          call->callType, call->callToken);
+               OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. "
+                            "(%s, %s)\n", call->callType, call->callToken);
                ooClearAllLogicalChannels(call);
                call->callState = OO_CALL_CLEAR_CLELCS;
             }
@@ -135,7 +140,8 @@ int ooEndCall(ooCallData *call)
       if(call->callState == OO_CALL_CLEAR_CLOLCS)
       {
          if(call->logicalChans){
-            OOTRACEDBGC3("Call Clearing - Waiting for logical channels to be closed.(%s, %s)\n", call->callType, call->callToken);
+            OOTRACEDBGC3("Call Clearing - Waiting for logical channels to be "
+                         "closed.(%s, %s)\n", call->callType, call->callToken);
             return OO_OK;
          }else{
             call->callState = OO_CALL_CLEAR_CLELCS;
@@ -190,7 +196,8 @@ int ooEndCall(ooCallData *call)
    if(call->callState == OO_CALL_CLEAR_RELEASE)
    {
       /* Wait till all the queued H.2250 messages are sent */
-      if (call->pH225Channel != 0 && call->pH225Channel->sock != 0 && call->pH225Channel->outQueue.count > 0)
+      if (call->pH225Channel != 0 && call->pH225Channel->sock != 0 &&
+          call->pH225Channel->outQueue.count > 0)
          return OO_OK;
       call->callState = OO_CALL_CLEARED;
      
@@ -366,6 +373,11 @@ int ooCleanCall(ooCallData *call)
    if(call->timerList.count > 0)
    {
       dListFreeAll(call->pctxt, &(call->timerList));
+   }
+
+   if(gH323ep.gkClient)
+   {
+     ooGkClientCleanCall(gH323ep.gkClient, call);
    }
 
    ooRemoveCallFromList(&gH323ep, call);

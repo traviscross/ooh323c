@@ -104,7 +104,6 @@ void ooTimerFireExpired (OOCTXT* pctxt, DList *pList)
       pTimer = (OOTimer*) pList->head->data;
 
       if (ooTimerExpired (pTimer)) {
-         OOTRACEINFO1("TEST -Found expired timer\n");
          /*
           * Re-register before calling callback function in case it is
           * a long duration callback.                                  

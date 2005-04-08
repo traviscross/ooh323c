@@ -135,6 +135,7 @@ int main(int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
+
    /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
 
