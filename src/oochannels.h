@@ -196,7 +196,7 @@ EXTERN int ooSendMsg(ooCallData *call, int type);
  * @return                OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooOnSendMsg
-   (ooCallData *call, int msgType, int tunneledMsgType, int associateChan);
+   (ooCallData *call, int msgType, int tunneledMsgType, int associatedChan);
 
 
 

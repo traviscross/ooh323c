@@ -50,7 +50,9 @@ EXTERN void ooTimerComputeExpireTime (OOTimer* pTimer);
 
 /**
  * This function creates and initializes a new timer object.
- *
+ * @param pctxt        OOCTXT structure used for timer memory allocation.
+ * @param pList        Pointer to timer list in which newly created timer will
+ *                     be inserted.
  * @param cb           Timer callback function.
  * @param deltaSecs    Time in seconds to timer expiration.
  * @param data         Callback user data argument.
@@ -63,9 +65,9 @@ EXTERN OOTimer* ooTimerCreate
 
 /**
  * This function deletes the given timer object.
- *
- * @param pTimer       Pointer to timer object.
+ * @param pctxt        Handle to OOCTXT structure used for timer memory.
  * @param pList        timer list to operate on
+ * @param pTimer       Pointer to timer object.
  */
 EXTERN void ooTimerDelete (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 
@@ -86,7 +88,8 @@ EXTERN void ooTimerFireExpired (OOCTXT* pctxt, DList* pList);
 /**
  * This function inserts the given timer object into the correct
  * chronological position in the global timer list.
- *
+ * @param pctxt        Pointer to OOCTXT structure used for memory allocation.
+ * @param pList        List in which timer has to be inserted.
  * @param pTimer       Pointer to timer object.
  * @return             Index to position where inserted in list.
  */
@@ -95,7 +98,7 @@ EXTERN int ooTimerInsertEntry (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);
 /**
  * This function calculates the relative time from the current time
  * that the first timer in global timer list will expire.
- *
+ * @param pList         Handle to timer list
  * @param ptimeout      timeval structure to receive timeout value.
  * @return              ptimeout
  */
@@ -104,7 +107,8 @@ EXTERN struct timeval* ooTimerNextTimeout (DList* pList, struct timeval* ptimeou
 /**
  * This function resets the given timer object if its reregister flag
  * is set.  Otherwise, it is deleted.
- *
+ * @param pctxt        Pointer to OOCTXT structre used for memory allocation.
+ * @param pList        Pointer to timer list.
  * @param pTimer       Pointer to timer object.
  */
 EXTERN void ooTimerReset (OOCTXT* pctxt, DList* pList, OOTimer* pTimer);

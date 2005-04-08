@@ -403,9 +403,11 @@ int ooOnReceivedRequestChannelCloseAck
  * Builds an OLC with an audio capability passed as parameter.
  * @param call             Handle to call for which OLC has to be built.
  * @param olc              Pointer to an OLC structure which will be populated.
- * @param epCap            Pointer to the capability which will be used to build OLC.
- * @param pctxt            Pointer to an OOCTXT structure which will be used to allocate
- *                         additional memory for OLC.
+ * @param epCap            Pointer to the capability which will be used to
+ *                         build OLC.
+ * @param pctxt            Pointer to an OOCTXT structure which will be used
+ *                         to allocate additional memory for OLC.
+ * @param dir              Direction of OLC
  *
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
@@ -472,7 +474,7 @@ int ooTCSTimerExpired(void *data);
 /**
  * This is a callback function for handling an expired OpenLogicalChannel
  * timer.
- * @param data             Callback data registered at the time of creation of
+ * @param pdata            Callback data registered at the time of creation of
  *                         the timer.
  *
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
@@ -482,7 +484,7 @@ int ooOpenLogicalChannelTimerExpired(void *pdata);
 /**
  * This is a callback function for handling an expired CloseLogicalChannel
  * timer.
- * @param data             Callback data registered at the time of creation of
+ * @param pdata            Callback data registered at the time of creation of
  *                         the timer.
  *
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
@@ -492,7 +494,7 @@ int ooCloseLogicalChannelTimerExpired(void *pdata);
 /**
  * This is a callback function for handling an expired RequestChannelClose
  * timer.
- * @param data             Callback data registered at the time of creation of
+ * @param pdata            Callback data registered at the time of creation of
  *                         the timer.
  *
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
@@ -501,7 +503,7 @@ int ooRequestChannelCloseTimerExpired(void *pdata);
 
 /**
  * This is a callback function for handling an expired EndSession timer.
- * @param data             Callback data registered at the time of creation of
+ * @param pdata            Callback data registered at the time of creation of
  *                         the timer.
  *
  * @return                 OO_OK, on success. OO_FAILED, otherwise.

@@ -19,7 +19,7 @@
  * callbacks for use by the generated code.
  */
 /**
- * @defgroup EventHandler
+ * @defgroup EventHandler event handler
  * Event handler structures and callback function definitions.
  * @{
  */

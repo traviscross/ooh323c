@@ -217,7 +217,7 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
  * This function is used to add a capability to call's remote  capability list.
  * The capabilities to be added are extracted from received TCS message.
  * @param call                Handle to the call.
- * @param audioCap            Handle to the remote endpoint's H245 capability.
+ * @param cap            Handle to the remote endpoint's H245 capability.
  *
  * @return                    OO_OK, on success. OO_FAILED, otherwise.
  */
@@ -259,7 +259,7 @@ ASN1BOOL ooCheckCompatibility_1(ooCallData *call, ooH323EpCapability *epCap,
  * @param epCap       Capability.
  * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
- * @patam dir         Direction in which the newly created capability will be
+ * @param dir         Direction in which the newly created capability will be
  *                    used.
  *
  * @return            Newly created audio capability on success, NULL on
@@ -285,6 +285,8 @@ void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
  * @param epCap       Handle to the endpoint capability
  * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
+ * @param dir         Direction in which the newly created capability will be
+ *                    used.
  *
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
@@ -306,13 +308,11 @@ struct H245AudioCapability* ooCreateG711Capability
 ooH323EpCapability* ooIsAudioDataTypeSupported
                 (ooCallData *call, H245AudioCapability* audioCap, int dir);
 
-
-
 /**
  * This function is used to determine whether a particular capability type
  * can be supported by the endpoint.
  * @param call       Handle to the call.
- * @param audioCap   Handle to the capability type.
+ * @param data       Handle to the capability type.
  * @param dir        Direction in which support is desired.
  *
  * @return          Handle to the capability which supports specified

@@ -182,24 +182,45 @@ EXTERN int ooH323EpEnableAutoAnswer(void);
 EXTERN int ooH323EpDisableAutoAnswer(void);
 
 /**
- * This function is used to enable/disable faststart.
- * @param fastStart   1, to enable and 0, to disable faststart
+ * This function is used to enable faststart.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpEnableFastStart(void);
+
+/**
+ * This function is used to disable faststart.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooH323EpDisableFastStart(void);
 
 /**
- * This function is used to enable/disable tunneling.
- * @param tunneling   1, to enable and 0, to disable tunneling.
+ * This function is used to enable tunneling.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpEnableH245Tunneling(void);
+
+/**
+ * This function is used to disable tunneling.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooH323EpDisableH245Tunneling(void);
 
+/**
+ * This function is used to enable GkRouted calls.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooH323EpEnableGkRouted(void);
+
+/**
+ * This function is used to disable Gkrouted calls.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooH323EpDisableGkRouted(void);
 
 /**
