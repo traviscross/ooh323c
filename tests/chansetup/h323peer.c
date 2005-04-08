@@ -21,8 +21,6 @@
 
 #ifndef _WIN32
 #include <pthread.h>
-#else
-#define getpid _getpid
 #endif
 
 /** Global endpoint structure */
@@ -61,7 +59,6 @@ static int gCallCounter=0;
 
 int main (int argc, char** argv)
 {
-   char logFileName[64];
    char callToken[20], *token=NULL;
    char localIPAddr[20];
    int  localPort = 0;
@@ -130,20 +127,17 @@ int main (int argc, char** argv)
       
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled */
-
-   sprintf (logFileName, "h323peer%d.log", getpid());
-
    printf ("Using:\n"
            "\tCalls to make: %d\n"
            "\tCall Duration: %d\n"
            "\tInterval: %d\n"
            "\tlocal Address: %s:%d\n"
-           "\tRemote Address: %s\n"
-           "\tLogFile: %s\n",
+           "\tRemote Address: %s\n",
            gCalls, gDuration, gInterval, localIPAddr, localPort,
-           gDest, logFileName);
+           gDest);
 
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, logFileName);
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL,
+                            "h323peer.log");
 
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");

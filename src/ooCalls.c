@@ -21,6 +21,7 @@
 #include "oochannels.h"
 #include "ooh245.h"
 #include "ooCapability.h"
+#include "ooGkClient.h"
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
