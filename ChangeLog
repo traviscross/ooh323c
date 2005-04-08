@@ -1,9 +1,19 @@
-Added dtmf rfc2833 support
-Reduced dynamic encode buffer extension size from 16*1024 to 2*1024, as large size causes problems in some embedded systems like uclinux.
-Added support for logging outgoing messages.
-Fixed indentation bug in message logging.
-Added better way to convert internet address to network address.
-Updated simple.c for ip address problem
+Release 0.6
+1. Added support for timers for various messages.
+2. Added support for various Reject/Release messages.
+3. RAS layer functionality changed to create a more modular gatekeeper client.
+4. Code refactoring for better design and performance.
+5. Improved capability creation and management code.
+6. Added alias addresses to connect/setup/alerting messages.
+        
+Release 0.5.2
+1. Added dtmf rfc2833 support
+2. Reduced dynamic encode buffer extension size from 16*1024 to 2*1024, as
+   large size causes problems in some embedded systems like uclinux.
+3. Added support for logging outgoing messages.
+4. Fixed indentation bug in message logging.
+5. Added better way to convert internet address to network address.
+6. Updated simple.c for ip address problem
 
 
 Release 0.5.1
