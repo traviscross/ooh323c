@@ -171,6 +171,40 @@ enum Q931TypeOfNumberCodes {
    Q931ReservedType         = 0x07
 };
 
+enum Q931CodingStandard{
+  Q931CCITTStd = 0,
+  Q931ReservedInternationalStd,
+  Q931NationalStd,
+  Q931NetworkStd
+};
+
+
+enum Q931TransferMode {
+  Q931TransferCircuitMode,   /* 00 */
+  Q931TransferPacketMode     /* 10 */
+};
+
+enum Q931TransferRate{
+  Q931TransferRatePacketMode = 0x00,  /* 00000 */
+  Q931TransferRate64Kbps     = 0x10,  /* 10000 */
+  Q931TransferRate128kbps    = 0x11,  /* 10001 */
+  Q931TransferRate384kbps    = 0x13,  /* 10011 */
+  Q931TransferRate1536kbps   = 0x15,  /* 10101 */
+  Q931TransferRate1920kbps   = 0x17   /* 10111 */
+};
+
+enum Q931UserInfoLayer1Protocol{
+  Q931UserInfoLayer1CCITTStdRate = 1,
+  Q931UserInfoLayer1G711ULaw,
+  Q931UserInfoLayer1G711ALaw,
+  Q931UserInfoLayer1G721ADPCM,
+  Q931UserInfoLayer1G722G725,
+  Q931UserInfoLayer1H261,
+  Q931UserInfoLayer1NonCCITTStdRate,
+  Q931UserInfoLayer1CCITTStdRateV120,
+  Q931UserInfoLayer1X31
+};
+
 /*
   Structure to build store outgoing encoded UUIE
   The different fields in the structure have octet lengths
@@ -476,6 +510,26 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
 int ooCallEstbTimerExpired(void *data);
+
+/**
+ * This function is used to add a bearer capability IE to a Q931 message.
+ * @param pmsg            Q931 message to which bearer capability ie has to be
+ *                        added.
+ * @param codingStandard  Coding standard to be used.
+ * @param capability      Information transfer capability
+ * @param transferMode    Information transfer mode.(circuit/packet modes).
+ * @param transferRate    Information transfer rate.
+ * @param userInfoLayer1  User information layer 1 protocol.
+ *
+ * @return                OO_OK on success, OO_FAILED, on failure.
+ */
+int ooSetBearerCapabilityIE
+   (Q931Message *pmsg, enum Q931CodingStandard codingStandard,
+    enum Q931InformationTransferCapability capability,
+    enum Q931TransferMode transferMode, enum Q931TransferRate transferRate,
+    enum Q931UserInfoLayer1Protocol userInfoLayer1);
+
+
 /**
  * @}
  */

@@ -406,8 +406,8 @@ int ooSendTermCapMsg(ooCallData *call)
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue TCS message to outbound queue. (%s, %s)\n",
-                   call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue TCS message to outbound queue. "
+                  "(%s, %s)\n", call->callType, call->callToken);
    }else
       call->localTermCapState = OO_LocalTermCapSetSent;
   
@@ -2115,6 +2115,18 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
    call->remoteTermCapState = OO_RemoteTermCapSetRecvd;
 
    ooH245AcknowledgeTerminalCapabilitySet(call);  
+
+   /* If we haven't yet send tcs then send it now */
+   if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
+   {
+      ret = ooSendTermCapMsg(call);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
+                      call->callType, call->callToken);
+         return ret;
+      }
+   }
 
    if(call->remoteTermCapState != OO_RemoteTermCapSetAckSent ||
       call->localTermCapState  != OO_LocalTermCapSetAckRecvd)

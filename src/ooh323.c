@@ -455,6 +455,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       ret = ooHandleTunneledH245Messages
          (call, &q931Msg->userInfo->h323_uu_pdu);
 
+#if 0
       /* Start terminal capability exchange and master slave determination */
       ret = ooSendTermCapMsg(call);
       if(ret != OO_OK)
@@ -470,7 +471,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
                   "(%s, %s)\n", call->callType, call->callToken);
          return ret;
       }  
-        /*     }*/
+#endif
    }
    return OO_OK; 
 }
@@ -723,7 +724,8 @@ int ooHandleStartH245FacilityMessage(ooCallData *call, H225Facility_UUIE *facili
    return OO_OK;
 }
 
-int ooHandleTunneledH245Messages(ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
+int ooHandleTunneledH245Messages
+   (ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
 {
    H245Message *pmsg;
    OOCTXT *pctxt = &gH323ep.msgctxt;

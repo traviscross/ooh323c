@@ -600,8 +600,18 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    msgbuf[i++] = (pq931Msg->callReference >> 8); /* populate 1st octet */
    msgbuf[i++] = pq931Msg->callReference; /* populate 2nd octet */
    msgbuf[i++] = pq931Msg->messageType; /* type of q931 message */
-  
-   /*Add display ie. We use callername as display name as well as alias */
+
+   /* Add bearer IE */
+   if(pq931Msg->bearerCapabilityIE)
+   {  
+      msgbuf[i++] = Q931BearerCapabilityIE; /* ie discriminator */
+      msgbuf[i++] = pq931Msg->bearerCapabilityIE->length;
+      memcpy(msgbuf+i, pq931Msg->bearerCapabilityIE->data,
+                       pq931Msg->bearerCapabilityIE->length);
+      i += pq931Msg->bearerCapabilityIE->length;
+   }  
+     
+   /*Add display ie. */
    if(strlen(gH323ep.callerid)>0)
    {
       msgbuf[i++] = Q931DisplayIE;
@@ -1084,6 +1094,16 @@ int ooAcceptCall(ooCallData *call)
       return OO_FAILED;
    }
 
+   /* Set bearer capability */
+   if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
+                          Q931TransferSpeech, Q931TransferCircuitMode,
+                          Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
+   {
+      OOTRACEERR3("Error: Failed to set bearer capability ie. (%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
    q931msg->userInfo = (H225H323_UserInformation*)
       memAllocZ (pctxt,sizeof(H225H323_UserInformation));
 
@@ -1189,7 +1209,8 @@ int ooAcceptCall(ooCallData *call)
                                                    vendor->versionId.numocts);
    }
    /* If fast start supported and remote endpoint has sent faststart element */
-   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) && call->remoteFastStartOLCs.count>0)
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) &&
+      call->remoteFastStartOLCs.count>0)
    {
       pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt,
                         call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
@@ -1202,7 +1223,8 @@ int ooAcceptCall(ooCallData *call)
          pNode = dListFindByIndex(&call->remoteFastStartOLCs, i);
          olc = (H245OpenLogicalChannel*)pNode->data;
          /* Forward Channel */
-         if(olc->forwardLogicalChannelParameters.dataType.t != T_H245DataType_nullData)
+         if(olc->forwardLogicalChannelParameters.dataType.t !=
+                                                   T_H245DataType_nullData)
          {
             OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
@@ -1349,6 +1371,7 @@ int ooAcceptCall(ooCallData *call)
    }
    memReset(&gH323ep.msgctxt);
 
+#if 0
    if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       /* Start terminal capability exchange and master slave determination */
@@ -1366,9 +1389,8 @@ int ooAcceptCall(ooCallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
          return ret;
       }  
-        /*     }*/
    }
-
+#endif
    return OO_OK;
 }
 
@@ -1528,10 +1550,18 @@ int ooH323MakeCall_helper(ooCallData *call)
       OOTRACEERR1("ERROR:Failed to Create Q931 SETUP Message\n ");
       return OO_FAILED;
    }
-   /* If setup message then generate new call ref, otherwise use
-      existing call ref.
-   */
+
    q931msg->callReference = call->callReference;
+
+   /* Set bearer capability */
+   if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
+                          Q931TransferSpeech, Q931TransferCircuitMode,
+                          Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
+   {
+      OOTRACEERR3("Error: Failed to set bearer capability ie.(%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
 
    q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
                              sizeof(H225H323_UserInformation));
@@ -1824,6 +1854,39 @@ int ooH323HangCall(char * callToken)
       call->callEndReason = OO_HOST_CLEARED;
       call->callState = OO_CALL_CLEAR;
    }
+   return OO_OK;
+}
+
+int ooSetBearerCapabilityIE
+   (Q931Message *pmsg, enum Q931CodingStandard codingStandard,
+    enum Q931InformationTransferCapability capability,
+    enum Q931TransferMode transferMode, enum Q931TransferRate transferRate,
+    enum Q931UserInfoLayer1Protocol userInfoLayer1)
+{
+   Q931InformationElement *ie=NULL;
+   ASN1OCTET data[4];
+   unsigned size = 1;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   data[0] = (ASN1OCTET)(0x80 | ((codingStandard&3) << 5) | (capability&31));
+
+   data[1] = (0x80 | ((transferMode & 3) << 5) | (transferRate & 31));
+  
+   data[2] = (0x80 | (1<<5) | userInfoLayer1);
+
+   size = 3;
+
+   ie = (Q931InformationElement*)
+                      memAlloc(pctxt, sizeof(Q931InformationElement)+size-1);
+   if(!ie)
+   {
+      OOTRACEERR1("Error:Failed to allocate memory for BearerCapability ie\n");
+      return OO_FAILED;
+   }
+   ie->discriminator = Q931BearerCapabilityIE;
+   ie->length = size;
+   memcpy(ie->data, data, size);
+   pmsg->bearerCapabilityIE = ie;
    return OO_OK;
 }
 

@@ -230,6 +230,7 @@ struct ooH323Ports
    int current;
 };
 
+struct Q931InformationElement;
 /**
  Defines the Q931 message structure. Contains
  context for memory allocation, protocol Discriminator,
@@ -243,7 +244,8 @@ typedef struct Q931Message {
    unsigned tunneledMsgType;  /* The H245 message this message is tunneling*/
    int      logicalChannelNo; /* channel number associated with tunneled */
                               /*message, 0 if no channel */
-   DList ies;
+   DList ies;   
+   struct Q931InformationElement *bearerCapabilityIE;
    H225H323_UserInformation *userInfo;
 } Q931Message;
 
