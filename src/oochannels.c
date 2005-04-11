@@ -1292,7 +1292,7 @@ int ooOnSendMsg
       break;
    case OOMasterSlaveDetermination:
      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
-        OOTRACEINFO3("Tinneled Message - MasterSlaveDetermination (%s, %s)\n",
+        OOTRACEINFO3("Tunneled Message - MasterSlaveDetermination (%s, %s)\n",
                       call->callType, call->callToken);
       else
          OOTRACEINFO3("Sent Message - MasterSlaveDetermination (%s, %s)\n",

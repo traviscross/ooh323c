@@ -97,7 +97,7 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
 
             /*Check for successful mem allocation, and if successful initialize
               mem to zero*/
-            if(!(*pph245msg)->h245Msg.u.indication == 0)
+            if(!(*pph245msg)->h245Msg.u.indication)
             {
                OOTRACEERR1("ERROR:Memory allocation for H.245 indication"
                                      " message failed\n");
