@@ -26,6 +26,7 @@
 #define DEFAULT_TRACEFILE "trace.log"
 #define DEFAULT_TERMTYPE 50
 #define DEFAULT_PRODUCTID  "objsys"
+#define DEFAULT_CALLERID   "objsyscall"
 #define DEFAULT_T35COUNTRYCODE 1
 #define DEFAULT_T35EXTENSION 0
 #define DEFAULT_MANUFACTURERCODE 71
@@ -229,7 +230,7 @@ EXTERN int ooH323EpDisableGkRouted(void);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetProductID(char * productID);
+EXTERN int ooH323EpSetProductID (const char * productID);
 
 /**
  * This function is used to set version id.
@@ -237,7 +238,7 @@ EXTERN int ooH323EpSetProductID(char * productID);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetVersionID(char * versionID);
+EXTERN int ooH323EpSetVersionID (const char * versionID);
 
 /**
  * This function is used to set callerid to be used for outbound
@@ -246,7 +247,7 @@ EXTERN int ooH323EpSetVersionID(char * versionID);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetCallerID(char * callerID);
+EXTERN int ooH323EpSetCallerID (const char * callerID);
 
 /**
  * This function is used to print the current configuration information of

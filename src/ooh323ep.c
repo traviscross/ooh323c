@@ -104,12 +104,9 @@ int ooH323EpInitialize
 
    gH323ep.manufacturerCode = DEFAULT_MANUFACTURERCODE;
 
-   gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt,
-                                                strlen(DEFAULT_PRODUCTID)+1);
-   strcpy(gH323ep.productID, DEFAULT_PRODUCTID);
+   gH323ep.productID = DEFAULT_PRODUCTID;
 
-   gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(OO_VERSION)+1);
-   strcpy(gH323ep.versionID, OO_VERSION);
+   gH323ep.versionID = OOH323C_VERSION;
 
    gH323ep.callType = T_H225CallType_pointToPoint;
    ooGetLocalIPAddress(gH323ep.signallingIP);
@@ -117,16 +114,11 @@ int ooH323EpInitialize
 
    gH323ep.listener = NULL;
 
-   if (0 != callerid)
-   {
-      gH323ep.callerid = (char*) memAlloc (&gH323ep.ctxt, strlen(callerid)+1);
-      strcpy(gH323ep.callerid, callerid);
+   if (0 != callerid) {
+      ooH323EpSetCallerID (callerid);
    }
    else {
-      gH323ep.callerid = (char*)
-         memAlloc (&gH323ep.ctxt, strlen("objsyscall")+1);
-
-      strcpy(gH323ep.callerid, "objsyscall");
+      gH323ep.callerid = DEFAULT_CALLERID;
    }
 
    gH323ep.myCaps = NULL;
@@ -416,28 +408,37 @@ int ooH323EpSetTermType(int value)
    return OO_OK;
 }
 
-int ooH323EpSetProductID(char * productID)
+int ooH323EpSetProductID (const char* productID)
 {
-   gH323ep.productID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(productID)+1);
-   memset(gH323ep.productID, 0, strlen(productID)+1);
-   strcpy(gH323ep.productID, productID);
-   return OO_OK;
+   if (0 != productID) {
+      char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(productID)+1);
+      strcpy (pstr, productID);
+      gH323ep.productID = pstr;
+      return OO_OK;
+   }
+   else return OO_FAILED;
 }
 
-int ooH323EpSetVersionID(char * versionID)
+int ooH323EpSetVersionID (const char* versionID)
 {
-   gH323ep.versionID = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(versionID)+1);
-   memset(gH323ep.versionID, 0, strlen(versionID)+1);
-   strcpy(gH323ep.versionID, versionID);
-   return OO_OK;
+   if (0 != versionID) {
+      char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(versionID)+1);
+      strcpy (pstr, versionID);
+      gH323ep.versionID = pstr;
+      return OO_OK;
+   }
+   else return OO_FAILED;
 }
 
-int ooH323EpSetCallerID(char * callerID)
+int ooH323EpSetCallerID (const char* callerID)
 {
-   gH323ep.callerid = (char*) ASN1MALLOC(&gH323ep.ctxt, strlen(callerID)+1);
-   memset(gH323ep.callerid, 0, strlen(callerID)+1);
-   strcpy(gH323ep.callerid, callerID);
-   return OO_OK;
+   if (0 != callerID) {
+      char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(callerID)+1);
+      strcpy (pstr, callerID);
+      gH323ep.callerid = pstr;
+      return OO_OK;
+   }
+   else return OO_FAILED;
 }
 
 

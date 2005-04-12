@@ -28,7 +28,7 @@
 #include "ooasn1.h"
 
 
-#define OO_VERSION "v0.6"
+#define OOH323C_VERSION "v0.6"
 
 
 /*  types */
@@ -446,9 +446,9 @@ typedef struct ooEndPoint {
    int t35CountryCode;
    int t35Extension;
    int manufacturerCode;
-   char *productID;
-   char *versionID;
-   char *callerid;
+   const char *productID;
+   const char *versionID;
+   const char *callerid;
    OOSOCKET *stackSocket;
    ooAliases *aliases;
    int callType;
