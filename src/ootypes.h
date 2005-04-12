@@ -30,7 +30,6 @@
 
 #define OOH323C_VERSION "v0.6"
 
-
 /*  types */
 #define OO_FAILED -1
 #define OO_OK 1
@@ -40,25 +39,23 @@
 */
 /*TODO: States for both local and remote initiation should be maintained
    separately */
-#define OO_MasterSlave_Idle          2
-#define OO_MasterSlave_DetermineSent 3
-#define OO_MasterSlave_AckReceived   4
-#define OO_MasterSlave_Master        5
-#define OO_MasterSlave_Slave         6
+typedef enum {
+   OO_MasterSlave_Idle,
+   OO_MasterSlave_DetermineSent,
+   OO_MasterSlave_AckReceived,
+   OO_MasterSlave_Master,
+   OO_MasterSlave_Slave
+} OOMasterSlaveState;
 
 /** States for Capability Exchange Procedure */
-#define OO_LocalTermCapExchange_Idle  9
-#define OO_LocalTermCapSetSent        10
-#define OO_LocalTermCapSetAckRecvd    11
-#define OO_RemoteTermCapExchange_Idle 12
-#define OO_RemoteTermCapSetRecvd      13
-#define OO_RemoteTermCapSetAckSent    14
-
-
-#define OO_FASTSTART_SENT            15
-#define OO_FASTSTART_RECEIVED        16
-#define OO_FASTSTART_ACCEPTED        17
-#define OO_FASTSTART_REFUSED         18
+typedef enum {
+   OO_LocalTermCapExchange_Idle,
+   OO_LocalTermCapSetSent,
+   OO_LocalTermCapSetAckRecvd,
+   OO_RemoteTermCapExchange_Idle,
+   OO_RemoteTermCapSetRecvd,
+   OO_RemoteTermCapSetAckSent
+} OOCapExchangeState;
 
 /** Call Clear Reasons */
 #define OO_CALL_ENDREASON_MIN            20
@@ -69,9 +66,6 @@
 #define OO_HOST_CLEARED                  24
 #define OO_NORMAL                        25
 #define OO_CALL_ENDREASON_MAX            25
-
-
-
 
 /** call states */
 #define OO_CALL_STATE_MIN         50
@@ -87,8 +81,6 @@
 #define OO_CALL_CLEAR_RELEASE     59 /* Release Sent */
 #define OO_CALL_CLEARED           60 /* Call Cleared */
 #define OO_CALL_STATE_MAX         60
-
-
 
 /** H245 Session state */
 #define OO_H245SESSION_INACTIVE 61
@@ -237,13 +229,13 @@ struct Q931InformationElement;
  call reference, meesage type and list of user user IEs.
 */
 typedef struct Q931Message {
-   unsigned protocolDiscriminator;
-   unsigned callReference;
+   ASN1UINT protocolDiscriminator;
+   ASN1UINT callReference;
    ASN1BOOL fromDestination;
-   unsigned messageType; /* Q931MsgTypes  */
-   unsigned tunneledMsgType;  /* The H245 message this message is tunneling*/
-   int      logicalChannelNo; /* channel number associated with tunneled */
-                              /*message, 0 if no channel */
+   ASN1UINT messageType;      /* Q931MsgTypes */
+   ASN1UINT tunneledMsgType;  /* The H245 message this message is tunneling*/
+   ASN1INT  logicalChannelNo; /* channel number associated with tunneled */
+                              /* message, 0 if no channel */
    DList ies;   
    struct Q931InformationElement *bearerCapabilityIE;
    H225H323_UserInformation *userInfo;
@@ -278,22 +270,21 @@ typedef struct ooMediaInfo{
 /**
  * Structure to store information of logical channels for call.
  */
-
-typedef struct ooLogicalChannel{
-   int channelNo;
-   int sessionID;
+typedef struct ooLogicalChannel {
+   int  channelNo;
+   int  sessionID;
    char type[10]; /* audio/video/data */
-   char dir[10]; /* receive/transmit */
-   char                 remoteIP[20];
-   int                  remoteRtpPort; /* TODO: Should be renamed mediaPort */
-   int                  remoteRtcpPort; /* TODO: Should be renamed mediaControlPort */
-   int                  localRtpPort;
-   int                  localRtcpPort;
-   char                 localIP[20];
-   int                  state;        
+   char dir[10];  /* receive/transmit */
+   char remoteIP[20];
+   int  mediaPort;
+   int  mediaControlPort;
+   int  localRtpPort;
+   int  localRtcpPort;
+   char localIP[20];
+   int  state;        
    struct ooH323EpCapability *chanCap;
    struct ooLogicalChannel *next;
-}ooLogicalChannel;
+} ooLogicalChannel;
 
 typedef struct ooAliases{
    int type;
@@ -353,10 +344,10 @@ typedef struct ooCallData {
    int                  remoteH245Port;
    ASN1OCTET            *remoteDisplayName;
    ooAliases            *remoteAliases;
-   int                  masterSlaveState;   /* Master-Slave state */
+   OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
    ASN1UINT             statusDeterminationNumber;
-   int                  localTermCapState;
-   int                  remoteTermCapState;
+   OOCapExchangeState   localTermCapState;
+   OOCapExchangeState   remoteTermCapState;
    struct ooH323EpCapability * remoteCaps;
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;

@@ -126,10 +126,10 @@ int main(int argc, char ** argv)
 /* Callback to start transmit media channel */
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting transmit channel %s:%d\n", call->remoteIP,
-                                          pChannel->remoteRtpPort);
-   ooCreateTransmitRTPChannel(call->remoteIP,
-                              pChannel->remoteRtpPort);
+   printf ("Starting transmit channel %s:%d\n",
+           call->remoteIP, pChannel->mediaPort);
+
+   ooCreateTransmitRTPChannel(call->remoteIP, pChannel->mediaPort);
    ooStartTransmitWaveFile(ooPlayFile);
    return OO_OK;
 }

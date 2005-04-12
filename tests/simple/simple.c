@@ -195,11 +195,10 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 /* Callback to start transmit media channel */
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting transmit channel to %s:%d\n", call->remoteIP,
-                                               pChannel->remoteRtpPort);
+   printf("Starting transmit channel to %s:%d\n",
+          call->remoteIP, pChannel->mediaPort);
    isActive = 1;
-   ooCreateTransmitRTPChannel(call->remoteIP,
-                              pChannel->remoteRtpPort);
+   ooCreateTransmitRTPChannel (call->remoteIP, pChannel->mediaPort);
    ooStartTransmitMic();
    return OO_OK;
 }

@@ -1143,8 +1143,8 @@ int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
       return OO_FAILED;
    }
    /* Populate ports for channel */
-   pLogicalChannel->remoteRtpPort = iPAddress->tsapIdentifier;
-   pLogicalChannel->remoteRtcpPort = iPAddress1->tsapIdentifier;
+   pLogicalChannel->mediaPort = iPAddress->tsapIdentifier;
+   pLogicalChannel->mediaControlPort = iPAddress1->tsapIdentifier;
 
    if(pLogicalChannel->chanCap->startTransmitChannel)
    {

@@ -47,15 +47,15 @@ static char USAGE[]={
    "-n         -  Number of outgoing calls\n"
    "-duration  -  Duration of each call in seconds\n"
    "-interval  -  Interval between successive calls in seconds\n"
+   "-logfile   -  Name of log file for trace messages\n"
    "remote     -  Remote endpoint to call  ip:[port]\n"
 };
 
-static int gCalls=0;
+static int gCalls = 0;
 static int gDuration = 5; /*sec*/
 static int gInterval = 0; /* 0 interval means let previous call finish */
 static char gDest[256];
 static int gCallCounter=0;
-
 
 int main (int argc, char** argv)
 {
@@ -66,7 +66,7 @@ int main (int argc, char** argv)
    int ret=0, x;
    ASN1BOOL isActive = FALSE;
    ASN1BOOL dest_found=FALSE;
-
+   const char* logfile = "h323peer.log";
 
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
@@ -102,9 +102,13 @@ int main (int argc, char** argv)
          x++;
          gInterval = atoi(argv[x]);
       }
+      else if(!strcmp(argv[x], "-logfile")) {
+         logfile = argv[++x];
+      }
       else if (!dest_found) {
          strncpy (gDest, argv[x], sizeof(gDest)-1);
          dest_found = TRUE;
+         if (0 == gCalls) gCalls++;
       }
       else {
          printf("USAGE:\n%s",USAGE);
@@ -136,8 +140,7 @@ int main (int argc, char** argv)
            gCalls, gDuration, gInterval, localIPAddr, localPort,
            gDest);
 
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL,
-                            "h323peer.log");
+   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, logfile);
 
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");
@@ -159,7 +162,6 @@ int main (int argc, char** argv)
    ooAddG711Capability
       (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
-
 
    /* Create H.323 Listener */
    if(!dest_found){
@@ -216,7 +218,7 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    OOTimer* timer = NULL;
    char *token=NULL;
    printf ("Starting transmit channel to %s:%d - %s\n",
-           call->remoteIP, pChannel->remoteRtpPort, call->callToken);
+           call->remoteIP, pChannel->mediaPort, call->callToken);
    if(gCalls != 0)
    {
       token = (char*)malloc(strlen(call->callToken)+1);
@@ -298,17 +300,12 @@ static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
    printf ("onCallCleared - %s\n", call->callToken);
-   if(gInterval == 0 && gCallCounter <gCalls){
+   if (gInterval == 0 && gCallCounter < gCalls && strlen(gDest) > 0) {
       ooMakeCall (gDest, callToken, sizeof(callToken));
       gCallCounter++;
    }
-
-   /* TODO: user would add application specific logic here to handle    */
-   /* call cleared..                                                    */
-
    return OO_OK;
 }
-
 
 static int callDurationTimerExpired (void *pdata)
 {

@@ -1071,7 +1071,7 @@ int ooSendConnect(ooCallData *call)
 
 int ooAcceptCall(ooCallData *call)
 {
-  int ret = 0, i=0, j=0, remoteRtpPort=0, dir=0;
+  int ret = 0, i=0, j=0, mediaPort=0, dir=0;
 
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
@@ -1303,7 +1303,7 @@ int ooAcceptCall(ooCallData *call)
                            "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
-            remoteRtpPort = unicastAddress->u.iPAddress->tsapIdentifier; 
+            mediaPort = unicastAddress->u.iPAddress->tsapIdentifier; 
          }
          respOlc = (H245OpenLogicalChannel*) ASN1MALLOC(pctxt,
                                                sizeof(H245OpenLogicalChannel));
@@ -1313,13 +1313,13 @@ int ooAcceptCall(ooCallData *call)
         
          ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, pctxt, dir);
         
-         pChannel = ooFindLogicalChannelByLogicalChannelNo(call,
-                                         respOlc->forwardLogicalChannelNumber);
+         pChannel = ooFindLogicalChannelByLogicalChannelNo
+            (call, respOlc->forwardLogicalChannelNumber);
   
          if(olc->forwardLogicalChannelParameters.dataType.t ==
                                                       T_H245DataType_nullData)
          {
-            pChannel->remoteRtpPort = remoteRtpPort;
+            pChannel->mediaPort = mediaPort;
             if(epCap->startTransmitChannel)
             {  
                epCap->startTransmitChannel(call, pChannel);     
