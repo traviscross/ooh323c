@@ -338,9 +338,10 @@ int ooH323EpDestroy(void)
    {
       ooSocketClose(*(gH323ep.listener));
    }
-  
+
+   ooGkClientDestroy();     
    freeContext(&(gH323ep.ctxt));
-   ooGkClientDestroy();  
+
    if(gH323ep.fptraceFile)
    {
       fclose(gH323ep.fptraceFile);
