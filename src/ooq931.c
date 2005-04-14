@@ -274,6 +274,7 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
       (*q931msg)->messageType = msgType;
       (*q931msg)->tunneledMsgType = msgType;
       (*q931msg)->logicalChannelNo = 0;
+      (*q931msg)->bearerCapabilityIE = NULL;
       return OO_OK;
    }
 }
