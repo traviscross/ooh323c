@@ -300,9 +300,14 @@ static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
    printf ("onCallCleared - %s\n", call->callToken);
-   if (gInterval == 0 && gCallCounter < gCalls && strlen(gDest) > 0) {
-      ooMakeCall (gDest, callToken, sizeof(callToken));
-      gCallCounter++;
+   if (gInterval == 0) {
+      if (gCallCounter < gCalls) {
+         ooMakeCall (gDest, callToken, sizeof(callToken));
+         gCallCounter++;
+      }
+      else {
+         ooStopMonitor();
+      }
    }
    return OO_OK;
 }
