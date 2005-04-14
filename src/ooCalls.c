@@ -108,7 +108,7 @@ int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call)
 int ooEndCall(ooCallData *call)
 {
    OOTRACEDBGA4("In ooEndCall call state is - %s (%s, %s)\n",
-                 ooGetText(call->callState), call->callType,
+                 ooGetCallStateText(call->callState), call->callType,
                  call->callToken);
 
    if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
@@ -238,8 +238,9 @@ int ooCleanCall(ooCallData *call)
 {
    OOCTXT *pctxt;
 
-   OOTRACEWARN4("Cleaning Call (%s, %s)- reason:%s\n",
-              call->callType, call->callToken, ooGetText(call->callEndReason));
+   OOTRACEWARN4 ("Cleaning Call (%s, %s)- reason:%s\n",
+                 call->callType, call->callToken,
+                 ooGetReasonText (call->callEndReason));
 
    /* First clean all the logical channels, if not already cleaned. */
    if(call->logicalChans)

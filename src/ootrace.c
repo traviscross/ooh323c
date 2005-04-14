@@ -28,10 +28,13 @@
 extern ooEndPoint gH323ep;
 
 static OOUINT32 gs_traceLevel = TRACELVL;
+
+#define OONUMBEROF(items) (sizeof(items)/sizeof(items[0]))
+
 /**
  * Reasons for ending call
  */
-static char * messages[] = {
+static const char* reasonCodeText[] = {
    "Reason unknown",
    "Remote endpoint closed H.225 TCP connection",
    "Remote endpoint closed H.245 TCP connection",
@@ -40,7 +43,7 @@ static char * messages[] = {
    "Normal End of Call"
 };
 
-static char* callStates[] = {
+static const char* callStateText[] = {
    "OO_CALL_CREATED",
    "OO_CALL_WAITING_ADMISSION",
    "OO_CALL_CONNECTING",
@@ -54,7 +57,7 @@ static char* callStates[] = {
    "OO_CALL_CLEARED"
 };
 
-static char *msgTypes[]={
+static const char *msgTypeText[]={
    "OOQ931MSG",
    "OOH245MSG",
    "OOSetup",
@@ -81,7 +84,7 @@ static char *msgTypes[]={
    "OORequestChannelCloseAck"
 };
 
-static char *capTypes[]={
+static const char *capTypes[]={
    "OO_G711ULAW64K",
    "OO_G711ULAW56K",
    "OO_G711ALAW64K",
@@ -92,48 +95,38 @@ static char *capTypes[]={
 };
 
 /*DTMF capabilities*/
-static char* dtmfCaps []={
+static const char* dtmfCaps []={
    "OO_CAP_DTMF_RFC2833",
    "OO_CAP_DTMF_Q931",
    "OO_CAP_DTMF_H245"
 };
 
-/*
-char *ooGetCapText(int code)
+static const char* ooGetText (int idx, const char** table, size_t tabsiz)
 {
-   if(code >= OO_AUCAPS_MIN && code <= OO_AUCAPS_MAX)
-      return capTypes[code - OO_AUCAPS_MIN];
-   else
-     return "Unknown";
+   return (idx < tabsiz) ? table[idx] : "?";
 }
 
-char *ooDescribeDtmfCaps(int dtmfmode)
+const char* ooGetReasonText (int code)
 {
-  
-}
-*/   
-char * ooGetText(int code)
-{
-   if(code >= OO_CALL_ENDREASON_MIN &&
-      code <= OO_CALL_ENDREASON_MAX )
-      return messages[code-OO_CALL_ENDREASON_MIN];
-
-   if(code >= OO_CALL_STATE_MIN &&
-      code <= OO_CALL_STATE_MAX)
-      return callStates[code-OO_CALL_STATE_MIN];
-
-   if(code >= OO_MSGTYPE_MIN &&
-      code <= OO_MSGTYPE_MAX)
-      return msgTypes[code-OO_MSGTYPE_MIN];
-
-   return "unknown";
+   return ooGetText (code, reasonCodeText, OONUMBEROF(reasonCodeText));
 }
 
+const char* ooGetCallStateText (int callState)
+{
+   return ooGetText (callState, callStateText, OONUMBEROF(callStateText));
+}
+
+const char* ooGetMsgTypeText (int msgType)
+{
+   int idx = msgType - OO_MSGTYPE_MIN;
+   return ooGetText (idx, msgTypeText, OONUMBEROF(msgTypeText));
+}
 
 void ooSetTraceThreshold(OOUINT32 traceLevel)
 {
    gs_traceLevel = traceLevel;
 }
+
 void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...)
 {
    va_list arglist;

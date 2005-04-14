@@ -39,7 +39,7 @@
 */
 /*TODO: States for both local and remote initiation should be maintained
    separately */
-typedef enum {
+typedef enum OOMasterSlaveState {
    OO_MasterSlave_Idle,
    OO_MasterSlave_DetermineSent,
    OO_MasterSlave_AckReceived,
@@ -58,40 +58,45 @@ typedef enum {
 } OOCapExchangeState;
 
 /** Call Clear Reasons */
-#define OO_CALL_ENDREASON_MIN            20
-#define OO_UNKNOWN                       20
-#define OO_REMOTE_CLOSED_CONNECTION      21
-#define OO_REMOTE_CLOSED_H245_CONNECTION 22
-#define OO_REMOTE_CLEARED                23
-#define OO_HOST_CLEARED                  24
-#define OO_NORMAL                        25
-#define OO_CALL_ENDREASON_MAX            25
+typedef enum OOCallClearReason {
+   OO_UNKNOWN,
+   OO_REMOTE_CLOSED_CONNECTION,
+   OO_REMOTE_CLOSED_H245_CONNECTION,
+   OO_REMOTE_CLEARED,
+   OO_HOST_CLEARED,
+   OO_NORMAL
+} OOCallClearReason;
 
 /** call states */
-#define OO_CALL_STATE_MIN         50
-#define OO_CALL_CREATED           50
-#define OO_CALL_WAITING_ADMISSION 51    
-#define OO_CALL_CONNECTING        52
-#define OO_CALL_CONNECTED         53
-#define OO_CALL_CLEAR             54 /* call marked for clearing */
-#define OO_CALL_CLEAR_CLOLCS      55 /* Logical Channels closed*/
-#define OO_CALL_CLEAR_CLELCS      56 /* Logical Channels cleared*/
-#define OO_CALL_CLEAR_ENDSESSION  57 /* EndSession command sent*/
-#define OO_CALL_CLEAR_CLOSEH245   58 /* H245 sockets closed*/
-#define OO_CALL_CLEAR_RELEASE     59 /* Release Sent */
-#define OO_CALL_CLEARED           60 /* Call Cleared */
-#define OO_CALL_STATE_MAX         60
+typedef enum {
+   OO_CALL_CREATED,
+   OO_CALL_WAITING_ADMISSION,
+   OO_CALL_CONNECTING,
+   OO_CALL_CONNECTED,
+   OO_CALL_CLEAR,             /* call marked for clearing */
+   OO_CALL_CLEAR_CLOLCS,      /* Logical Channels closed*/
+   OO_CALL_CLEAR_CLELCS,      /* Logical Channels cleared*/
+   OO_CALL_CLEAR_ENDSESSION,  /* EndSession command sent*/
+   OO_CALL_CLEAR_CLOSEH245,   /* H245 sockets closed*/
+   OO_CALL_CLEAR_RELEASE,     /* Release Sent */
+   OO_CALL_CLEARED            /* Call Cleared */
+} OOCallState;
 
 /** H245 Session state */
-#define OO_H245SESSION_INACTIVE 61
-#define OO_H245SESSION_ACTIVE   62
-#define OO_H245SESSION_ENDSENT  63
-#define OO_H245SESSION_ENDRECVD 64
+typedef enum {
+   OO_H245SESSION_INACTIVE,
+   OO_H245SESSION_ACTIVE,
+   OO_H245SESSION_ENDSENT,
+   OO_H245SESSION_ENDRECVD
+} OOH245SessionState;
 
 /** Logical Channel states */
-#define OO_LOGICALCHAN_IDLE        70
-#define OO_LOGICALCHAN_PROPOSED    71
-#define OO_LOGICALCHAN_ESTABLISHED 72
+typedef enum {
+   OO_LOGICAL_CHAN_UNKNOWN,
+   OO_LOGICALCHAN_IDLE,
+   OO_LOGICALCHAN_PROPOSED,
+   OO_LOGICALCHAN_ESTABLISHED
+} OOLogicalChannelState;
 
 /**
    Terminal type of the endpoint. Default is 60.
@@ -281,7 +286,7 @@ typedef struct ooLogicalChannel {
    int  localRtpPort;
    int  localRtcpPort;
    char localIP[20];
-   int  state;        
+   OOLogicalChannelState state;        
    struct ooH323EpCapability *chanCap;
    struct ooLogicalChannel *next;
 } ooLogicalChannel;
@@ -329,9 +334,9 @@ typedef struct ooCallData {
                                           call. */
    H225ConferenceIdentifier confIdentifier;
    ASN1UINT             flags;
-   int                  callState;
-   int                  callEndReason;
-   int                  h245SessionState;
+   OOCallState          callState;
+   OOCallClearReason    callEndReason;
+   OOH245SessionState   h245SessionState;
    int                  dtmfmode;
    ooMediaInfo          *mediaInfo;
    char                 localIP[20];/* Local IP address */

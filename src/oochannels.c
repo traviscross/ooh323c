@@ -1137,8 +1137,8 @@ int ooSendMsg(ooCallData *call, int type)
       if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
       {
          OOTRACEDBGC4("Sending %s H245 message over H.245 channel. "
-                      "(%s, %s)\n", ooGetText(msgType), call->callType,
-                      call->callToken);
+                      "(%s, %s, %s)\n", ooGetMsgTypeText(msgType),
+                      call->callType, call->callToken);
          
          ret = ooSocketSend(call->pH245Channel->sock, msgptr+5, len);
          if(ret == ASN_OK)
@@ -1162,11 +1162,12 @@ int ooSendMsg(ooCallData *call, int type)
          }
       }else if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
          OOTRACEDBGC4("Sending %s H245 message as a tunneled message."
-                      "(%s, %s)\n", ooGetText(msgType), call->callType,
-                      call->callToken);
+                      "(%s, %s, %s)\n", ooGetMsgTypeText(msgType),
+                      call->callType, call->callToken);
          
-         ret = ooSendAsTunneledMessage(call, msgptr+5,len,msgType,
-                                                          logicalChannelNo);
+         ret = ooSendAsTunneledMessage
+            (call, msgptr+5,len,msgType, logicalChannelNo);
+
          if(ret != OO_OK)
          {
             memFreePtr (call->pctxt, msgptr);
@@ -1283,8 +1284,9 @@ int ooOnSendMsg
       }
       else{
          OOTRACEINFO4("Sent Message - Facility(%s) (%s, %s)\n",
-                      ooGetText(tunneledMsgType), call->callType,
-                      call->callToken);
+                      ooGetMsgTypeText(tunneledMsgType),
+                      call->callType, call->callToken);
+
          ooOnSendMsg(call, tunneledMsgType, 0, associatedChan);
       }
 

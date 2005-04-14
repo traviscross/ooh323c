@@ -18,7 +18,6 @@
  * @file ootrace.h
  * This file defines the trace functionality
  */
-
 #include "ooCommon.h"
 #ifndef _OOTRACE_H_
 #define _OOTRACE_H_
@@ -111,21 +110,31 @@ extern "C" {
 #endif /* EXTERN */
 
 /**
- * This function is used to retireve the description text for a capability
+ * This function is used to retrieve the description text for a reason
  * code.
- * @param code     Capability code for which description is required.
  *
+ * @param code     Reason code.
  * @return         The text description string.
  */
-char *ooGetCapText(int code);
+const char* ooGetReasonCodeText (int code);
 
 /**
- * This function is used to retireve the description text for a code.
- * @param code     Code for which description is required.
+ * This function is used to retrieve the description text for a call
+ * state.
  *
+ * @param callState Call state.
  * @return         The text description string.
  */
-EXTERN char * ooGetText(int code);
+const char* ooGetCallStateText (int callState);
+
+/**
+ * This function is used to retrieve the description text for a
+ * message type.
+ *
+ * @param msgType  Message type.
+ * @return         The text description string.
+ */
+const char* ooGetMsgTypeText (int msgType);
 
 /**
  * This function is used to set the trace level.
