@@ -1270,8 +1270,8 @@ int ooOnSendMsg
       if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered)
          ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
 
-      if(gH323ep.onCallCleared)
-         gH323ep.onCallCleared(call);
+      /*      if(gH323ep.onCallCleared)
+              gH323ep.onCallCleared(call);*/
 
 
 

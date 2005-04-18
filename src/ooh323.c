@@ -573,8 +573,8 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
                ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
          }
 
-         if(gH323ep.onCallCleared)
-            gH323ep.onCallCleared(call);        
+         /*         if(gH323ep.onCallCleared)
+                    gH323ep.onCallCleared(call);         */
       
          ooFreeQ931Message(q931Msg);
          break;

@@ -103,8 +103,8 @@ liboostk_a_SOURCES = ooGkClient.h ooGkClient.c context.c ooCommon.h ooDateTime.h
 
 INCLUDES = -Ih323
 
+include_HEADERS = memheap.h ooCommon.h ooDateTime.h ooGkClient.h ooasn1.h oochannels.h ootrace.h ooh245.h ooports.h ooq931.h oohdr.h ooper.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCapability.h ooCalls.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h
 
-#include_HEADERS = memheap.h ooasn1.h oochannels.h oo.h ooh245.h oohdr.h ooper.h ooports.h ooq931.h oosndrtp.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCalls.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h h450/Addressing-Data-Elements.h h450/Call-Completion-Operations.h h450/Call-Diversion-Operations.h h450/Call-Hold-Operations.h h450/Call-Intrusion-Operations.h h450/Call-Offer-Operations.h h450/Call-Park-Pickup-Operations.h h450/Call-Transfer-Operations.h h450/Call-Waiting-Operations.h h450/H225-generic-parameters-definition.h h450/H4501-General-Error-List.h h450/H4501-Supplementary-ServiceAPDU-Structure.h h450/Manufacturer-specific-service-extension-definition.h h450/Message-Waiting-Indication-Operations.h h450/Name-Operations.h h450/Remote-Operations-Apdus.h h450/Remote-Operations-Generic-ROS-PDUs.h h450/Remote-Operations-Information-Objects.h h450/Remote-Operations-Useful-Definitions.h
 EXTRA_DIST = oostk.dsp
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -166,7 +166,9 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
         $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES = $(liboostk_a_SOURCES)
-DIST_COMMON = Makefile.am Makefile.in
+HEADERS = $(include_HEADERS)
+
+DIST_COMMON = $(include_HEADERS) Makefile.am Makefile.in
 SOURCES = $(liboostk_a_SOURCES)
 
 all: all-am
@@ -437,6 +439,24 @@ clean-libtool:
 distclean-libtool:
         -rm -f libtool
 uninstall-info-am:
+includeHEADERS_INSTALL = $(INSTALL_HEADER)
+install-includeHEADERS: $(include_HEADERS)
+        @$(NORMAL_INSTALL)
+        $(mkinstalldirs) $(DESTDIR)$(includedir)
+        @list='$(include_HEADERS)'; for p in $$list; do \
+          if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+          f="`echo $$p | sed -e 's|^.*/||'`"; \
+          echo " $(includeHEADERS_INSTALL) $$d$$p $(DESTDIR)$(includedir)/$$f"; \
+          $(includeHEADERS_INSTALL) $$d$$p $(DESTDIR)$(includedir)/$$f; \
+        done
+
+uninstall-includeHEADERS:
+        @$(NORMAL_UNINSTALL)
+        @list='$(include_HEADERS)'; for p in $$list; do \
+          f="`echo $$p | sed -e 's|^.*/||'`"; \
+          echo " rm -f $(DESTDIR)$(includedir)/$$f"; \
+          rm -f $(DESTDIR)$(includedir)/$$f; \
+        done
 
 ETAGS = etags
 ETAGSFLAGS =
@@ -479,6 +499,7 @@ top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
+        $(mkinstalldirs) $(distdir)/h323
         @list='$(DISTFILES)'; for file in $$list; do \
           if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
           dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
@@ -501,10 +522,10 @@ distdir: $(DISTFILES)
         done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LIBRARIES) $(HEADERS)
 
 installdirs:
-        $(mkinstalldirs) $(DESTDIR)$(libdir)
+        $(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(includedir)
 
 install: install-am
 install-exec: install-exec-am
@@ -547,7 +568,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-includeHEADERS
 
 install-exec-am: install-libLIBRARIES
 
@@ -566,19 +587,21 @@ mostlyclean: mostlyclean-am
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
         mostlyclean-libtool
 
-uninstall-am: uninstall-info-am uninstall-libLIBRARIES
+uninstall-am: uninstall-includeHEADERS uninstall-info-am \
+        uninstall-libLIBRARIES
 
 .PHONY: GTAGS all all-am check check-am clean clean-generic \
         clean-libLIBRARIES clean-libtool distclean distclean-compile \
         distclean-depend distclean-generic distclean-libtool \
         distclean-tags distdir dvi dvi-am info info-am install \
         install-am install-data install-data-am install-exec \
-        install-exec-am install-info install-info-am \
-        install-libLIBRARIES install-man install-strip installcheck \
-        installcheck-am installdirs maintainer-clean \
+        install-exec-am install-includeHEADERS install-info \
+        install-info-am install-libLIBRARIES install-man install-strip \
+        installcheck installcheck-am installdirs maintainer-clean \
         maintainer-clean-generic mostlyclean mostlyclean-compile \
         mostlyclean-generic mostlyclean-libtool tags uninstall \
-        uninstall-am uninstall-info-am uninstall-libLIBRARIES
+        uninstall-am uninstall-includeHEADERS uninstall-info-am \
+        uninstall-libLIBRARIES
 
 
 opt:

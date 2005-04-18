@@ -277,7 +277,10 @@ int ooCleanCall(ooCallData *call)
    ooRemoveCallFromList(&gH323ep, call);
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
- 
+
+   if(gH323ep.onCallCleared)
+     gH323ep.onCallCleared(call);
+
    pctxt = call->pctxt;
    freeContext(pctxt);
    ASN1CRTFREE0(pctxt);

@@ -399,10 +399,9 @@ typedef int (*cb_OnAlerting)(ooCallData * call);
 typedef int (*cb_OnIncomingCall)(ooCallData* call );
 typedef int (*cb_OnOutgoingCall)(ooCallData* call );
 typedef int (*cb_OnCallAnswered)(ooCallData* call);
-typedef int (*cb_OnCallCleared)(ooCallData* call );
 typedef int (*cb_OnCallEstablished)(ooCallData* call );
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
-
+typedef int (*cb_OnCallCleared)(ooCallData* call );
 struct ooGkClient;
 
 /**

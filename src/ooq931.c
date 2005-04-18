@@ -2044,7 +2044,7 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
    OOTRACEDBGA4("Building Facility message for tunneling %s (%s, %s)\n",
-                 ooGetText(h245MsgType), call->callType, call->callToken);
+                 ooGetMsgTypeText(h245MsgType), call->callType, call->callToken);
 
    ret = ooCreateQ931Message(&pQ931Msg, Q931FacilityMsg);
    if(ret != OO_OK)
