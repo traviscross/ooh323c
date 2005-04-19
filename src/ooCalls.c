@@ -52,6 +52,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    sprintf(call->callType, "%s", type);
    memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
    call->remoteAliases = NULL;
+   call->ourAliases = NULL;
    call->dtmfmode = gH323ep.dtmfmode;
    call->masterSlaveState = OO_MasterSlave_Idle;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;

@@ -77,10 +77,18 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       if(setup->sourceAddress.count>0)
       {
-         ooRetrieveAliases(call, &setup->sourceAddress);
+         ooRetrieveAliases(call, &setup->sourceAddress, TRUE);
       }
    }
-        
+   /* Extract, aliases used for us, if present */     
+   if(setup->m.destinationAddressPresent)
+   {
+      if(setup->destinationAddress.count>0)
+      {
+         ooRetrieveAliases(call, &setup->destinationAddress, FALSE);
+      }
+   }
+
    /* Check for tunneling */
    if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent)
    {
@@ -145,7 +153,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       {
          OOTRACEINFO3("Local endpoint does not support fastStart. Ignoring "
-                      "fastStart. (%s, %s)\n", call->callType, call->callToken);
+                     "fastStart. (%s, %s)\n", call->callType, call->callToken);
          OO_CLRFLAG (call->flags, OO_M_FASTSTART);
       }
       else if(setup->fastStart.n == 0)
@@ -774,7 +782,8 @@ int ooHandleTunneledH245Messages
    return OO_OK;
 }
 
-int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses)
+int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+                      ASN1BOOL remote)
 {
    int i=0,j=0,k=0;
    DListNode* pNode=NULL;
@@ -878,9 +887,16 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses)
                   OOTRACEERR3("Error:Unhandled Alias type (%s, %s)\n",
                                call->callType, call->callToken);
                   ASN1MEMFREEPTR(call->pctxt, newAlias);
+                  continue;
                }
-               newAlias->next = call->remoteAliases;
-               call->remoteAliases = newAlias;
+               if(remote)
+               {
+                  newAlias->next = call->remoteAliases;
+                  call->remoteAliases = newAlias;
+               }else{
+                  newAlias->next = call->ourAliases;
+                  call->ourAliases = newAlias;
+               }
                newAlias = NULL;
             }/* endof: if(pAliasAddress) */
             pAliasAddress = NULL;

@@ -349,6 +349,7 @@ typedef struct ooCallData {
    int                  remoteH245Port;
    ASN1OCTET            *remoteDisplayName;
    ooAliases            *remoteAliases;
+   ooAliases            *ourAliases; /*aliases used in the call for us */
    OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
    ASN1UINT             statusDeterminationNumber;
    OOCapExchangeState   localTermCapState;
