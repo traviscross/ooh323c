@@ -141,7 +141,7 @@ int ooOpenSpeaker(HWAVEOUT * phWaveOut, WAVEFORMATEX waveFormat)
                         CALLBACK_FUNCTION);
    if (result != MMSYSERR_NOERROR)
    {
-      OOLOG2(1, "ERROR: Opening waveOutDevice");
+      OOLOG3(1, "ERROR: Opening waveOutDevice: %d", result);
       return -1;
    }
    OOLOG2(1, "EndOf:OpenSpeaker");
@@ -234,6 +234,7 @@ int ooCloseSpeaker(HWAVEOUT hWaveOut)
 /* Open microphone device for data capture.*/
 int ooOpenMic()
 {
+   MMRESULT result;
    WAVEHDR * pWaveHdr=0;
    int i=0;
    WAVEFORMATEX waveFormat;
@@ -249,11 +250,11 @@ int ooOpenMic()
    waveFormat.cbSize = 0;
    gQueuedBufCount = 0; /* No buffers are yet queued into the waveIn device*/
    /* Open mic device*/
-   if(waveInOpen(&ghWaveIn, WAVE_MAPPER, &waveFormat, (DWORD)ooMICCallback,
-                 (DWORD)&gQueuedBufCount, CALLBACK_FUNCTION) !=
+   if((result=waveInOpen(&ghWaveIn, WAVE_MAPPER, &waveFormat,
+       (DWORD)ooMICCallback, (DWORD)&gQueuedBufCount, CALLBACK_FUNCTION)) !=
                  MMSYSERR_NOERROR)
    {
-      OOLOG2(1, "ERROR: In opening Wave-in device");
+      OOLOG3(1, "ERROR: In opening Wave-in device: %d", result);
       return -1;
    }
   
