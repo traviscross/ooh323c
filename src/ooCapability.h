@@ -327,6 +327,7 @@ ooH323EpCapability* ooIsDataTypeSupported
 EXTERN  int ooResetCapPrefs(ooCallData *call);
 EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
 EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
+EXTERN int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos);
 EXTERN int ooPreppendCapToCapPrefs(ooCallData *call, int cap);
 /**
  * @}

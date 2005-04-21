@@ -329,7 +329,7 @@ typedef struct ooCallData {
    char                 callToken[20]; /* ex: ooh323c_call_1 */
    char                 callType[10]; /* incoming/outgoing */
    ASN1USINT            callReference;
-  
+   char                 ourCallerId[256];
    H225CallIdentifier   callIdentifier;/* The call identifier for the active
                                           call. */
    H225ConferenceIdentifier confIdentifier;

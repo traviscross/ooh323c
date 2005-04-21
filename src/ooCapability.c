@@ -116,7 +116,6 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
       }
    }
         
-
    return OO_OK;
 }
 
@@ -579,6 +578,48 @@ int ooAppendCapToCapPrefs(ooCallData *call, int cap)
    return OO_OK;
 }
 
+int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos)
+{
+   int i=0, j=0;
+   ooCapPrefs *capPrefs = NULL;
+
+   /* Whether to change prefs for call or for endpoint as a whole */
+   if(call)
+      capPrefs = &call->capPrefs;
+   else
+      capPrefs = &gH323ep.capPrefs;
+
+   /* check whether cap exists, cap must exist */
+   for(i=0; i<capPrefs->index; i++)
+   {
+      if(capPrefs->order[i] == cap)
+         break;
+   }
+   if(i == capPrefs->index) return OO_FAILED;
+
+   if(i==pos) return OO_OK; /* No need to change */
+
+   /* Decrease Pref order */
+   if(i < pos)
+   {
+      for(i; i<pos; i++)
+         capPrefs->order[i] = capPrefs->order[i+1];
+      capPrefs->order[i]=cap;
+      return OO_OK;
+   }
+   /* Increase Pref order */
+   if(i>pos)
+   {
+     for(j=i; j>pos; j--)
+       capPrefs->order[j] = capPrefs->order[j-1];
+     capPrefs->order[j] = cap;
+     return OO_OK;
+   }
+
+   return OO_FAILED;
+
+}
+
 int ooPreppendCapToCapPrefs(ooCallData *call, int cap)
 {
    int i=0, j=0;
@@ -589,7 +630,7 @@ int ooPreppendCapToCapPrefs(ooCallData *call, int cap)
       capPrefs = &gH323ep.capPrefs;
 
    memcpy(&oldPrefs, capPrefs, sizeof(ooCapPrefs));
-   memset(capPrefs, 0, sizeof(ooCapPrefs));
+
 
    capPrefs->order[j++] = cap;
 

@@ -57,6 +57,15 @@ EXTERN ooCallData* ooCreateCall(char *type, char *callToken);
 EXTERN int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call);
 
 /**
+ * This function is used to set callerid for the call.
+ * @param call          Handle to the call
+ * @param callerid      caller id value
+ *
+ * @return              OO_OK, on success. OO_FAILED, otherwise.
+ */
+EXTERN int ooCallSetCallerId(ooCallData* call, const char* callerid);
+
+/**
  * This function is used to find a call by using the unique token for the call.
  * @param callToken      The unique token for the call.
  *

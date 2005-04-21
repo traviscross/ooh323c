@@ -44,26 +44,22 @@ ooCallData* ooCreateCall(char* type, char*callToken)
       OOTRACEERR1("ERROR: Failed to allocate memory for new call data\n");
       return NULL;
    }
-   memset(call, 0, sizeof(ooCallData));
+   /*   memset(call, 0, sizeof(ooCallData));*/
    call->pctxt = pctxt;
   
    sprintf(call->callToken, "%s", callToken);
-  
    sprintf(call->callType, "%s", type);
-   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
-   call->remoteAliases = NULL;
-   call->ourAliases = NULL;
-   call->dtmfmode = gH323ep.dtmfmode;
-   call->masterSlaveState = OO_MasterSlave_Idle;
-   call->localTermCapState = OO_LocalTermCapExchange_Idle;
-   call->remoteCaps = NULL;
-   call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
-   strcpy(call->localIP, gH323ep.signallingIP);
-   call->noOfLogicalChannels = 0;
-   call->logicalChanNoBase = 1001;
-   call->logicalChanNoMax = 1100;
-   call->logicalChanNoCur = 1001;
+   call->callReference = 0;
+   if(gH323ep.callerid){
+     strncpy(call->ourCallerId, gH323ep.callerid, sizeof(call->ourCallerId)-1);
+     call->ourCallerId[sizeof(call->ourCallerId)-1] = '\0';
+   }else
+      call->ourCallerId[0] = '\0';
+  
+   memset(&call->callIdentifier, 0, sizeof(H225CallIdentifier));
+   memset(&call->confIdentifier, 0, sizeof(H225ConferenceIdentifier));
 
+   call->flags = 0;
    if (OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
       OO_SETFLAG (call->flags, OO_M_TUNNELING);
 
@@ -71,16 +67,42 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    {
       OO_SETFLAG(call->flags, OO_M_GKROUTED);
    }
-
-   call->mediaInfo = NULL;
-
    if (OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       OO_SETFLAG (call->flags, OO_M_FASTSTART);
 
-   dListInit(&call->remoteFastStartOLCs);
-   dListInit(&call->timerList);
    call->callState = OO_CALL_CREATED;
+   call->callEndReason = 0;
    call->h245SessionState = OO_H245SESSION_INACTIVE;
+   call->dtmfmode = gH323ep.dtmfmode;
+   call->mediaInfo = NULL;
+   strcpy(call->localIP, gH323ep.signallingIP);
+   call->pH225Channel = NULL;
+   call->pH245Channel = NULL;
+   call->h245listener = NULL;
+   call->h245listenport = NULL;
+   call->remoteIP[0] = '\0';
+   call->remotePort = 0;
+   call->remoteH245Port = 0;
+   call->remoteDisplayName = NULL;
+   call->remoteAliases = NULL;
+   call->ourAliases = NULL;
+   call->masterSlaveState = OO_MasterSlave_Idle;
+   call->statusDeterminationNumber = 0;
+   call->localTermCapState = OO_LocalTermCapExchange_Idle;
+   call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
+   call->remoteCaps = NULL;
+   dListInit(&call->remoteFastStartOLCs);
+   call->remoteTermCapSeqNo =0;
+   call->localTermCapSeqNo = 0;
+   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
+   call->logicalChans = NULL;
+   call->noOfLogicalChannels = 0;
+   call->logicalChanNoBase = 1001;
+   call->logicalChanNoMax = 1100;
+   call->logicalChanNoCur = 1001;
+   dListInit(&call->timerList);
+   call->msdRetries = 0;
+
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,
                  call->callToken);
    /* Add new call to calllist */
@@ -289,6 +311,14 @@ int ooCleanCall(ooCallData *call)
 }
 
 
+int ooCallSetCallerId(ooCallData* call, const char* callerid)
+{
+   if(!call || !callerid) return OO_FAILED;
+   strncpy(call->ourCallerId, callerid, sizeof(call->ourCallerId)-1);
+   call->ourCallerId[sizeof(call->ourCallerId)-1]='\0';
+   return OO_OK;
+}
+  
 ooCallData* ooFindCallByToken(char *callToken)
 {
    ooCallData *call;

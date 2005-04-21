@@ -613,12 +613,12 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    }  
      
    /*Add display ie. */
-   if(strlen(gH323ep.callerid)>0)
+   if(strlen(call->ourCallerId)>0)
    {
       msgbuf[i++] = Q931DisplayIE;
-      ieLen = strlen(gH323ep.callerid)+1;
+      ieLen = strlen(call->ourCallerId)+1;
       msgbuf[i++] = ieLen;
-      memcpy(msgbuf+i, gH323ep.callerid, ieLen-1);
+      memcpy(msgbuf+i, call->ourCallerId, ieLen-1);
       i += ieLen-1;
       msgbuf[i++] = '\0';
    }
