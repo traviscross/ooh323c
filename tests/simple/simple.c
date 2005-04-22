@@ -122,9 +122,11 @@ int main(int argc, char ** argv)
    ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
-   ooH323EpSetAliasH323ID("objsys");
-   ooH323EpSetAliasDialedDigits("5087556929");
-   ooH323EpSetAliasURLID("http://www.obj-sys.com");
+   ooH323EpAddAliasH323ID("objsys1");
+   ooH323EpAddAliasH323ID("objsys2");
+   ooH323EpAddAliasH323ID("objsys3");
+   ooH323EpAddAliasDialedDigits("5087556929");
+   ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Register callbacks */
    ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
@@ -137,7 +139,7 @@ int main(int argc, char ** argv)
 
    /* To use a gatekeeper */
 
-   /* ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
+   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
 
   
    /* Load media plug-in*/

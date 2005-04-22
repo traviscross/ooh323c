@@ -1891,6 +1891,14 @@ int ooSetBearerCapabilityIE
    return OO_OK;
 }
 
+int ooQ931SetCallingPartyNumber
+   (ooCallData *call, const char *number, unsigned plan, unsigned type,
+    int presentation, int screening)
+{
+
+  return OO_OK;
+}
+
 int ooParseDestination(ooCallData *call, char *dest)
 {
    int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;

@@ -87,45 +87,45 @@ EXTERN int ooH323EpSetLocalAddress(char * localip, int listenport);
 EXTERN int ooH323EpSetTraceLevel(int traceLevel);
 
 /**
- * This function is used to set the h323id alias for the endpoint.
+ * This function is used to add the h323id alias for the endpoint.
  * @param h323id         H323-ID to be set as alias.
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetAliasH323ID(char * h323id);
+EXTERN int ooH323EpAddAliasH323ID(char * h323id);
 
 /**
- * This function is used to set the dialed digits alias for the
+ * This function is used to add the dialed digits alias for the
  * endpoint.
  * @param dialedDigits   Dialed-Digits to be set as alias.
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetAliasDialedDigits(char * dialedDigits);
+EXTERN int ooH323EpAddAliasDialedDigits(char * dialedDigits);
 
 /**
- * This function is used to set the url alias for the endpoint.
+ * This function is used to add the url alias for the endpoint.
  * @param url            URL to be set as an alias.
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetAliasURLID(char * url);
+EXTERN int ooH323EpAddAliasURLID(char * url);
 
 /**
- * This function is used to set an email id as an alias for the endpoint.
+ * This function is used to add an email id as an alias for the endpoint.
  * @param email          Email id to be set as an alias.
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetAliasEmailID(char * email);
+EXTERN int ooH323EpAddAliasEmailID(char * email);
 
 /**
- * This function is used to set an ip address as an alias.
+ * This function is used to add an ip address as an alias.
  * @param ipaddress      IP address to be set as an alias.
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetAliasTransportID(char * ipaddress);
+EXTERN int ooH323EpAddAliasTransportID(char * ipaddress);
 
 /**
  * This function is used to register the H323 Endpoint callback functions.

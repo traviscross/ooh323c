@@ -148,9 +148,9 @@ int main (int argc, char** argv)
    }
 
    ooH323EpSetLocalAddress(localIPAddr, localPort);
-   ooH323EpSetAliasH323ID ("objsys");
-   ooH323EpSetAliasDialedDigits ("5087556929");
-   ooH323EpSetAliasURLID ("http://www.obj-sys.com");
+   ooH323EpAddAliasH323ID ("objsys");
+   ooH323EpAddAliasDialedDigits ("5087556929");
+   ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
    ooH323EpRegisterCallbacks
