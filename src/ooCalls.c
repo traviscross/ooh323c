@@ -318,7 +318,70 @@ int ooCallSetCallerId(ooCallData* call, const char* callerid)
    call->ourCallerId[sizeof(call->ourCallerId)-1]='\0';
    return OO_OK;
 }
+
+int ooCallSetCallingPartyNumber(ooCallData *call, const char *number)
+{
+   if(call->callingPartyNumber)
+      memFreePtr(call->pctxt, call->callingPartyNumber);
+
+   call->callingPartyNumber = (char*) memAlloc(call->pctxt, strlen(number)+1);
+   if(call->callingPartyNumber)
+   {
+     strcpy(call->callingPartyNumber, number);
+   }else{
+      OOTRACEERR3("Error:Failed to allocate memory for calling party number."
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   return OO_OK;
+}
+
+int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len)
+{
+   if(call->callingPartyNumber)
+   {
+      if(len>strlen(call->callingPartyNumber))
+      {
+         strcpy(buffer, call->callingPartyNumber);
+         return OO_OK;
+      }
+   }
   
+   return OO_FAILED;
+}
+
+
+int ooCallSetCalledPartyNumber(ooCallData *call, const char *number)
+{
+   if(call->calledPartyNumber)
+      memFreePtr(call->pctxt, call->calledPartyNumber);
+
+   call->calledPartyNumber = (char*) memAlloc(call->pctxt, strlen(number)+1);
+   if(call->calledPartyNumber)
+   {
+     strcpy(call->calledPartyNumber, number);
+   }else{
+      OOTRACEERR3("Error:Failed to allocate memory for calling party number."
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   return OO_OK;
+}
+
+int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len)
+{
+   if(call->calledPartyNumber)
+   {
+      if(len>strlen(call->calledPartyNumber))
+      {
+         strcpy(buffer, call->calledPartyNumber);
+         return OO_OK;
+      }
+   }
+  
+   return OO_FAILED;
+}
+
 ooCallData* ooFindCallByToken(char *callToken)
 {
    ooCallData *call;

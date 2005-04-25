@@ -42,6 +42,8 @@ extern "C" {
  * @defgroup q931 Q931/H.2250 Message Handling
  * @{
  */
+/* Maximum length of the Calling/Called party number number */
+#define OO_MAX_NUMBER_LENGTH 50
 
 /* Maximum value for a call token identifier */
 #define OO_MAX_CALL_TOKEN 9999
@@ -223,13 +225,15 @@ typedef struct Q931InformationElement {
 /**
  * This function is invoked to decode a Q931 message.
  *
+ * @param call     Handle to call which owns the message.
  * @param msg      Pointer to the Q931 message
  * @param length   Length of the encoded data
  * @param data     Pointer to the data to be decoded
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooQ931Decode (Q931Message* msg, int length, ASN1OCTET *data);
+EXTERN int ooQ931Decode
+   (ooCallData *call, Q931Message* msg, int length, ASN1OCTET *data);
 
 /**
  * This function is used to decode the UUIE of the message from the list of
@@ -530,6 +534,12 @@ int ooSetBearerCapabilityIE
     enum Q931UserInfoLayer1Protocol userInfoLayer1);
 
 
+int ooQ931SetCalledPartyNumberIE
+   (Q931Message *pmsg, const char *number, unsigned plan, unsigned type);
+
+int ooQ931SetCallingPartyNumberIE
+   (Q931Message *pmsg, const char *number, unsigned plan, unsigned type,
+    unsigned presentation, unsigned screening);
 /**
  * @}
  */

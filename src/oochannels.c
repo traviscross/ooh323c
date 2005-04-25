@@ -861,7 +861,7 @@ int ooH2250Receive(ooCallData *call)
    /* Set event handler */
    setEventHandler (pctxt, &printHandler);
 
-   ret = ooQ931Decode (pmsg, len, message);
+   ret = ooQ931Decode (call, pmsg, len, message);
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:Failed to decode received H.2250 message. (%s, %s)\n",

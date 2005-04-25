@@ -37,10 +37,12 @@ static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };
 
-EXTERN int ooQ931Decode (Q931Message* msg, int length, ASN1OCTET *data)
+EXTERN int ooQ931Decode
+   (ooCallData *call, Q931Message* msg, int length, ASN1OCTET *data)
 {
    int offset;
    int rv = ASN_OK;
+   char number[128];
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
    dListInit (&msg->ies); /* clear information elements list */
@@ -115,7 +117,38 @@ EXTERN int ooQ931Decode (Q931Message* msg, int length, ASN1OCTET *data)
          ie->offset = offset;
          ie->length = 0;
       }
+     
+      /* Extract calling party number */
+      if(ie->discriminator == Q931CallingPartyNumberIE &&
+         !call->callingPartyNumber)
+      {
+         if(ie->length < OO_MAX_NUMBER_LENGTH)
+         {
+            memcpy(number, ie->data+2,ie->length-2);
+            number[ie->length-2]='\0';
+            ooCallSetCallingPartyNumber(call, number);
+         }else{
+            OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
+                           call->callType, call->callToken);
+         }
+      }
 
+      /* Extract called party number */
+      if(ie->discriminator == Q931CalledPartyNumberIE &&
+         !call->calledPartyNumber)
+      {
+         if(ie->length < OO_MAX_NUMBER_LENGTH)
+         {
+            memcpy(number, ie->data+2,ie->length-2);
+            number[ie->length-2]='\0';
+            ooCallSetCalledPartyNumber(call, number);
+         }else{
+            OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
+                           call->callType, call->callToken);
+         }
+      }
+
+      /* TODO: Get rid of ie list.*/
       dListAppend (pctxt, &msg->ies, ie);
       if (rv != ASN_OK)
          return rv;
@@ -275,6 +308,8 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
       (*q931msg)->tunneledMsgType = msgType;
       (*q931msg)->logicalChannelNo = 0;
       (*q931msg)->bearerCapabilityIE = NULL;
+      (*q931msg)->callingPartyNumberIE = NULL;
+      (*q931msg)->calledPartyNumberIE = NULL;
       return OO_OK;
    }
 }
@@ -527,7 +562,7 @@ static void ooPrintQ931Message
 
    setPERBuffer (pctxt, msgbuf, msglen, TRUE);
 
-   ret = ooQ931Decode (&q931Msg, msglen, msgbuf);
+   ret = ooQ931Decode (call, &q931Msg, msglen, msgbuf);
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n",
@@ -622,7 +657,27 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
       i += ieLen-1;
       msgbuf[i++] = '\0';
    }
-  
+   printf("11111\n");
+   /* Add calling Party ie */
+   if(pq931Msg->callingPartyNumberIE)
+   {
+      msgbuf[i++] = Q931CallingPartyNumberIE;
+      msgbuf[i++] = pq931Msg->callingPartyNumberIE->length;
+      memcpy(msgbuf+i, pq931Msg->callingPartyNumberIE->data,
+                       pq931Msg->callingPartyNumberIE->length);
+      i += pq931Msg->callingPartyNumberIE->length;
+   }
+   printf("22222\n");
+    /* Add called Party ie */
+   if(pq931Msg->calledPartyNumberIE)
+   {
+      msgbuf[i++] = Q931CalledPartyNumberIE;
+      msgbuf[i++] = pq931Msg->calledPartyNumberIE->length;
+      memcpy(msgbuf+i, pq931Msg->calledPartyNumberIE->data,
+                       pq931Msg->calledPartyNumberIE->length);
+      i += pq931Msg->calledPartyNumberIE->length;
+   }
+   printf("Reached here \n");
    for(j = 0, curNode = pq931Msg->ies.head; j < (int)pq931Msg->ies.count; j++)
    {
       Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
@@ -1564,6 +1619,16 @@ int ooH323MakeCall_helper(ooCallData *call)
       return OO_FAILED;
    }
 
+   /* Set calling party number  Q931 IE */
+   if(call->callingPartyNumber)
+     ooQ931SetCallingPartyNumberIE(q931msg,
+                            (const char*)call->callingPartyNumber, 1, 0, 1, 1);
+
+   /* Set called party number Q931 ie */
+   if(call->calledPartyNumber)
+      ooQ931SetCalledPartyNumberIE(q931msg,
+                            (const char*)call->calledPartyNumber, 1, 0);
+
    q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
@@ -1891,12 +1956,54 @@ int ooSetBearerCapabilityIE
    return OO_OK;
 }
 
-int ooQ931SetCallingPartyNumber
-   (ooCallData *call, const char *number, unsigned plan, unsigned type,
-    int presentation, int screening)
+int ooQ931SetCallingPartyNumberIE
+   (Q931Message *pmsg, const char *number, unsigned plan, unsigned type,
+    unsigned presentation, unsigned screening)
 {
+   Q931InformationElement *ie=NULL;
+   ASN1OCTET data[4];
+   unsigned len = 0;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
 
-  return OO_OK;
+   len = strlen(number);
+   ie = (Q931InformationElement*)
+                      memAlloc(pctxt, sizeof(Q931InformationElement)+len+2-1);
+   if(!ie)
+   {
+     OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
+      return OO_FAILED;
+   }
+   ie->discriminator = Q931CallingPartyNumberIE;
+   ie->length = len+2;
+   ie->data[0] =  (((type&7)<<4)|(plan&15));
+   ie->data[1] =  (0x80|((presentation&3)<<5)|(screening&3));
+   memcpy(ie->data+2, number, len);
+   pmsg->callingPartyNumberIE = ie;
+   return OO_OK;
+}
+
+int ooQ931SetCalledPartyNumberIE
+   (Q931Message *pmsg, const char *number, unsigned plan, unsigned type)
+{
+   Q931InformationElement *ie=NULL;
+   ASN1OCTET data[4];
+   unsigned len = 0;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   len = strlen(number);
+   ie = (Q931InformationElement*)
+                      memAlloc(pctxt, sizeof(Q931InformationElement)+len+1-1);
+   if(!ie)
+   {
+     OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
+      return OO_FAILED;
+   }
+   ie->discriminator = Q931CalledPartyNumberIE;
+   ie->length = len+1;
+   ie->data[0] = (0x80|((type&7)<<4)|(plan&15));
+   memcpy(ie->data+1, number, len);
+   pmsg->calledPartyNumberIE = ie;
+   return OO_OK;
 }
 
 int ooParseDestination(ooCallData *call, char *dest)

@@ -65,6 +65,13 @@ EXTERN int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call);
  */
 EXTERN int ooCallSetCallerId(ooCallData* call, const char* callerid);
 
+
+EXTERN int ooCallSetCallingPartyNumber(ooCallData *call, const char *number);
+
+EXTERN int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len);
+EXTERN int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len);
+
+EXTERN int ooCallSetCalledPartyNumber(ooCallData *call, const char *number);
 /**
  * This function is used to find a call by using the unique token for the call.
  * @param callToken      The unique token for the call.

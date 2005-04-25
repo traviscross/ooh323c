@@ -243,6 +243,8 @@ typedef struct Q931Message {
                               /* message, 0 if no channel */
    DList ies;   
    struct Q931InformationElement *bearerCapabilityIE;
+   struct Q931InformationElement *callingPartyNumberIE;
+   struct Q931InformationElement *calledPartyNumberIE;
    H225H323_UserInformation *userInfo;
 } Q931Message;
 
@@ -332,6 +334,8 @@ typedef struct ooCallData {
    char                 ourCallerId[256];
    H225CallIdentifier   callIdentifier;/* The call identifier for the active
                                           call. */
+   char                 *callingPartyNumber;
+   char                 *calledPartyNumber;
    H225ConferenceIdentifier confIdentifier;
    ASN1UINT             flags;
    OOCallState          callState;
