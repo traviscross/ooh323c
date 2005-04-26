@@ -72,6 +72,20 @@ EXTERN int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len);
 EXTERN int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len);
 
 EXTERN int ooCallSetCalledPartyNumber(ooCallData *call, const char *number);
+
+EXTERN int ooCallClearAliases(ooCallData *call);
+
+EXTERN int ooCallAddAliasH323ID(ooCallData *call, const char* h323id);
+
+EXTERN int ooCallAddAliasDialedDigits
+                             (ooCallData *call, const char* dialedDigits);
+
+EXTERN int ooCallAddAliasEmailID(ooCallData *call, const char* email);
+
+EXTERN int ooCallAddAliasURLID(ooCallData *call, const char* url);
+
+
+
 /**
  * This function is used to find a call by using the unique token for the call.
  * @param callToken      The unique token for the call.

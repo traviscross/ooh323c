@@ -657,7 +657,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
       i += ieLen-1;
       msgbuf[i++] = '\0';
    }
-   printf("11111\n");
+
    /* Add calling Party ie */
    if(pq931Msg->callingPartyNumberIE)
    {
@@ -667,7 +667,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
                        pq931Msg->callingPartyNumberIE->length);
       i += pq931Msg->callingPartyNumberIE->length;
    }
-   printf("22222\n");
+
     /* Add called Party ie */
    if(pq931Msg->calledPartyNumberIE)
    {
@@ -677,7 +677,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
                        pq931Msg->calledPartyNumberIE->length);
       i += pq931Msg->calledPartyNumberIE->length;
    }
-   printf("Reached here \n");
+
    for(j = 0, curNode = pq931Msg->ies.head; j < (int)pq931Msg->ies.count; j++)
    {
       Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
@@ -878,8 +878,13 @@ int ooSendAlerting(ooCallData *call)
 
    /*Populate aliases */
    alerting->m.alertingAddressPresent = TRUE;
-   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
-                                   &alerting->alertingAddress))
+   if(call->ourAliases)
+      ret = ooPopulateAliasList(pctxt, call->ourAliases,
+                                       &alerting->alertingAddress);
+   else
+      ret = ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                       &alerting->alertingAddress);
+   if(OO_OK != ret)
    {
       OOTRACEERR1("Error:Failed to populate alias list in Alert message\n");
       memReset(pctxt);
@@ -1227,8 +1232,13 @@ int ooAcceptCall(ooCallData *call)
           call->confIdentifier.numocts);
    /* Populate alias addresses */
    connect->m.connectedAddressPresent = TRUE;
-   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
-                                   &connect->connectedAddress))
+   if(call->ourAliases)
+      ret = ooPopulateAliasList(pctxt, call->ourAliases,
+                                      &connect->connectedAddress);
+   else
+      ret =  ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                        &connect->connectedAddress);
+   if(OO_OK != ret)
    {
       OOTRACEERR1("Error:Failed to populate alias list in Connect message\n");
       memReset(pctxt);
@@ -1583,7 +1593,7 @@ int ooH323CallAdmitted(ooCallData *call)
 
 int ooH323MakeCall_helper(ooCallData *call)
 {
-  int ret=0,i=0, k;
+   int ret=0,i=0, k;
    Q931Message *q931msg = NULL;
    H225Setup_UUIE *setup;
 
@@ -1646,8 +1656,12 @@ int ooH323MakeCall_helper(ooCallData *call)
    /* Populate Alias Address. Note we use callername as alias as well as
       display name*/
    setup->m.sourceAddressPresent = TRUE;
-   if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
-                                   &setup->sourceAddress))
+  
+   if(call->ourAliases)
+     ret = ooPopulateAliasList(pctxt, call->ourAliases, &setup->sourceAddress);
+   else
+     ret =  ooPopulateAliasList(pctxt, gH323ep.aliases, &setup->sourceAddress);
+   if(OO_OK != ret)
    {
       OOTRACEERR1("Error:Failed to populate alias list in SETUP message\n");
       memReset(pctxt);

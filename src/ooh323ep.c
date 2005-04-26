@@ -187,7 +187,6 @@ int ooH323EpAddAliasH323ID(char *h323id)
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
-   memset(psNewAlias->value, 0, strlen(h323id)+1);
    strcpy(psNewAlias->value, h323id);
    psNewAlias->next = gH323ep.aliases;
    gH323ep.aliases = psNewAlias;
@@ -212,7 +211,6 @@ int ooH323EpAddAliasDialedDigits(char * dialedDigits)
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
-   memset(psNewAlias->value, 0, strlen(dialedDigits)+1);
    strcpy(psNewAlias->value, dialedDigits);
    psNewAlias->next = gH323ep.aliases;
    gH323ep.aliases = psNewAlias;
@@ -237,7 +235,6 @@ int ooH323EpAddAliasURLID(char * url)
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
-   memset(psNewAlias->value, 0, strlen(url)+1);
    strcpy(psNewAlias->value, url);
    psNewAlias->next = gH323ep.aliases;
    gH323ep.aliases = psNewAlias;
@@ -263,7 +260,6 @@ int ooH323EpAddAliasEmailID(char * email)
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
-   memset(psNewAlias->value, 0, strlen(email)+1);
    strcpy(psNewAlias->value, email);
    psNewAlias->next = gH323ep.aliases;
    gH323ep.aliases = psNewAlias;
@@ -289,7 +285,6 @@ int ooH323EpAddAliasTransportID(char * ipaddress)
       ASN1MEMFREEPTR(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
-   memset(psNewAlias->value, 0, strlen(ipaddress)+1);
    strcpy(psNewAlias->value, ipaddress);
    psNewAlias->next = gH323ep.aliases;
    gH323ep.aliases = psNewAlias;

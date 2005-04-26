@@ -22,6 +22,7 @@ extern ooEndPoint gH323ep;
 
 static int giDynamicRTPPayloadType = 101;
 
+
 int ooEnableDTMFRFC2833(int dynamicRTPPayloadType)
 {
    gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
@@ -31,6 +32,8 @@ int ooEnableDTMFRFC2833(int dynamicRTPPayloadType)
    OOTRACEINFO1("Enabled RFC2833 DTMF capability \n");
    return OO_OK;
 }
+
+
 
 int ooDisableDTMFRFC2833()
 {

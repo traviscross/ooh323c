@@ -72,6 +72,8 @@ ooCallData* ooCreateCall(char* type, char*callToken)
 
    call->callState = OO_CALL_CREATED;
    call->callEndReason = 0;
+   call->callingPartyNumber = NULL;
+   call->calledPartyNumber = NULL;
    call->h245SessionState = OO_H245SESSION_INACTIVE;
    call->dtmfmode = gH323ep.dtmfmode;
    call->mediaInfo = NULL;
@@ -333,6 +335,11 @@ int ooCallSetCallingPartyNumber(ooCallData *call, const char *number)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
+   /* Set dialed digits alias */
+   if(!strcmp(call->callType, "outgoing"))
+   {
+      ooCallAddAliasDialedDigits(call, number);
+   }
    return OO_OK;
 }
 
@@ -381,6 +388,134 @@ int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len)
   
    return OO_FAILED;
 }
+
+int ooCallClearAliases(ooCallData *call)
+{
+   if(call->ourAliases)
+      memFreePtr(call->pctxt, call->ourAliases);
+   call->ourAliases = NULL;
+   return OO_OK;
+}
+
+int ooCallAddAliasH323ID(ooCallData *call, const char* h323id)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for new H323-ID alias for"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_h323_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(h323id)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for the new H323-ID alias "
+                  "value. (%s, %s)\n", call->callType, call->callToken);
+      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, h323id);
+   psNewAlias->next = call->ourAliases;
+   call->ourAliases = psNewAlias;
+   OOTRACEDBGC4("Added alias H323ID %s to call. (%s, %s)\n", h323id,
+                call->callType, call->callToken);
+   return OO_OK;
+}
+
+
+int ooCallAddAliasDialedDigits(ooCallData *call, const char* dialedDigits)
+{
+
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for new DialedDigits alias"
+                  " for (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_dialedDigits;
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dialedDigits)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for the new DialedDigits "
+                  "alias value. (%s, %s)\n", call->callType, call->callToken);
+      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, dialedDigits);
+   psNewAlias->next = call->ourAliases;
+   call->ourAliases = psNewAlias;
+   OOTRACEDBGC4("Added alias dialedDigits %s to call. (%s, %s)\n",dialedDigits,
+                call->callType, call->callToken);
+
+   return OO_OK;
+}
+
+
+int ooCallAddAliasEmailID(ooCallData *call, const char* email)
+{
+
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for new email id alias"
+                  " for (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_email_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(email)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for the new email-id "
+                  "alias value. (%s, %s)\n", call->callType, call->callToken);
+      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, email);
+   psNewAlias->next = call->ourAliases;
+   call->ourAliases = psNewAlias;
+   OOTRACEDBGC4("Added alias Email-id %s to call. (%s, %s)\n", email,
+                call->callType, call->callToken);
+
+   return OO_OK;
+}
+
+
+int ooCallAddAliasURLID(ooCallData *call, const char* url)
+{
+
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for new url id alias"
+                  " for (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_url_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(url)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for the new url-id "
+                  "alias value. (%s, %s)\n", call->callType, call->callToken);
+      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, url);
+   psNewAlias->next = call->ourAliases;
+   call->ourAliases = psNewAlias;
+   OOTRACEDBGC4("Added alias Url-id %s to call. (%s, %s)\n", url,
+                call->callType, call->callToken);
+
+   return OO_OK;
+}
+
+
+
 
 ooCallData* ooFindCallByToken(char *callToken)
 {

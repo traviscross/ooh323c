@@ -300,7 +300,7 @@ EXTERN int ooAddBearerCapabilityIE(struct ooAppContext *);
  *
  * @return         - call reference number
  */
-EXTERN ASN1USINT ooGenerateCallReference();
+EXTERN ASN1USINT ooGenerateCallReference(void);
 
 
 /**

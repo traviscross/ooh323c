@@ -1309,8 +1309,13 @@ int ooGkClientSendAdmissionRequest
       }
    }
    /* Populate Source Info */
-   if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, gH323ep.aliases,
-                                   &pAdmReq->srcInfo))
+   if(call->ourAliases)
+      iRet = ooPopulateAliasList(&pGkClient->msgCtxt, call->ourAliases,
+                                                          &pAdmReq->srcInfo);
+   else
+      iRet = ooPopulateAliasList(&pGkClient->msgCtxt, gH323ep.aliases,
+                                                          &pAdmReq->srcInfo);
+   if(OO_OK != iRet)
    {
       OOTRACEERR1("Error:Failed to populate source aliases - ARQ message\n");
       memReset(pctxt);
@@ -1440,6 +1445,7 @@ int ooGkClientHandleAdmissionConfirm
    DListNode *pNode, *pNode1=NULL;
    H225TransportAddress_ipAddress * ipAddress=NULL;
    OOTimer *pTimer = NULL;
+   char ip[20];
 
    /* Search call in pending calls list */
    for(x=0 ; x<pGkClient->callsPendingList.count; x++)
@@ -1462,11 +1468,13 @@ int ooGkClientHandleAdmissionConfirm
             return OO_FAILED;
          }
          ipAddress = pAdmissionConfirm->destCallSignalAddress.u.ipAddress;
-         sprintf(pCallAdmInfo->call->remoteIP, "%d.%d.%d.%d",
-                                                ipAddress->ip.data[0],
-                                                ipAddress->ip.data[1],
-                                                ipAddress->ip.data[2],
-                                                ipAddress->ip.data[3]);
+        
+         sprintf(ip, "%d.%d.%d.%d", ipAddress->ip.data[0],
+                                    ipAddress->ip.data[1],
+                                    ipAddress->ip.data[2],
+                                    ipAddress->ip.data[3]);
+         if(strcmp(ip, "0.0.0.0"))
+            strcpy(pCallAdmInfo->call->remoteIP, ip);
          pCallAdmInfo->call->remotePort = ipAddress->port;
          /* Update call model */
          if(pAdmissionConfirm->callModel.t == T_H225CallModel_direct)
