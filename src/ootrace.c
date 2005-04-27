@@ -103,7 +103,7 @@ static const char* dtmfCaps []={
 
 static const char* ooGetText (int idx, const char** table, size_t tabsiz)
 {
-   return (idx < tabsiz) ? table[idx] : "?";
+   return (idx < (int)tabsiz) ? table[idx] : "?";
 }
 
 const char* ooGetReasonCodeText (int code)
