@@ -828,7 +828,7 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                   memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
                            strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
 
-                  if(remote && !strcasecmp(call->callType, "incoming") &&
+                  if(remote && !strcmp(call->callType, "incoming") &&
                      !call->callingPartyNumber)
                   {
                      call->callingPartyNumber = (char*)memAlloc(call->pctxt,
@@ -843,7 +843,20 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                      }
                   }
 
-                 
+                  if(!remote && !strcmp(call->callType, "incoming") &&
+                     !call->calledPartyNumber)  
+                  {
+                     call->calledPartyNumber = (char*)memAlloc(call->pctxt,
+                                     strlen(pAliasAddress->u.dialedDigits)*
+                                      sizeof(char)+1);
+                     if(call->calledPartyNumber)
+                     {
+                        memcpy(call->calledPartyNumber,
+                               pAliasAddress->u.dialedDigits,
+                        strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
+                        call->calledPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
+                     }
+                  }
                   break;
                case T_H225AliasAddress_h323_ID:
                   newAlias->type = T_H225AliasAddress_h323_ID;

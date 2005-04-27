@@ -265,7 +265,7 @@ int ooCleanCall(ooCallData *call)
 
    OOTRACEWARN4 ("Cleaning Call (%s, %s)- reason:%s\n",
                  call->callType, call->callToken,
-                 ooGetReasonText (call->callEndReason));
+                 ooGetReasonCodeText (call->callEndReason));
 
    /* First clean all the logical channels, if not already cleaned. */
    if(call->logicalChans)

@@ -139,8 +139,8 @@ EXTERN int ooQ931Decode
       {
          if(ie->length < OO_MAX_NUMBER_LENGTH)
          {
-            memcpy(number, ie->data+2,ie->length-2);
-            number[ie->length-2]='\0';
+            memcpy(number, ie->data+1,ie->length-1);
+            number[ie->length-1]='\0';
             ooCallSetCalledPartyNumber(call, number);
          }else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",

@@ -106,7 +106,7 @@ static const char* ooGetText (int idx, const char** table, size_t tabsiz)
    return (idx < tabsiz) ? table[idx] : "?";
 }
 
-const char* ooGetReasonText (int code)
+const char* ooGetReasonCodeText (int code)
 {
    return ooGetText (code, reasonCodeText, OONUMBEROF(reasonCodeText));
 }
