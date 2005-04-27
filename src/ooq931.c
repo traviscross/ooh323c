@@ -1975,7 +1975,6 @@ int ooQ931SetCallingPartyNumberIE
     unsigned presentation, unsigned screening)
 {
    Q931InformationElement *ie=NULL;
-   ASN1OCTET data[4];
    unsigned len = 0;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
@@ -2000,7 +1999,6 @@ int ooQ931SetCalledPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type)
 {
    Q931InformationElement *ie=NULL;
-   ASN1OCTET data[4];
    unsigned len = 0;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
