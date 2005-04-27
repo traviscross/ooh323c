@@ -347,7 +347,7 @@ int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len)
 {
    if(call->callingPartyNumber)
    {
-      if(len>strlen(call->callingPartyNumber))
+      if(len>(int)strlen(call->callingPartyNumber))
       {
          strcpy(buffer, call->callingPartyNumber);
          return OO_OK;
@@ -379,7 +379,7 @@ int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len)
 {
    if(call->calledPartyNumber)
    {
-      if(len>strlen(call->calledPartyNumber))
+      if(len>(int)strlen(call->calledPartyNumber))
       {
          strcpy(buffer, call->calledPartyNumber);
          return OO_OK;
