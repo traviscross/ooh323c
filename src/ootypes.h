@@ -449,6 +449,7 @@ typedef struct ooEndPoint {
    const char *productID;
    const char *versionID;
    const char *callerid;
+   char callingPartyNumber[50];
    OOSOCKET *stackSocket;
    ooAliases *aliases;
    int callType;

@@ -72,7 +72,29 @@ ooCallData* ooCreateCall(char* type, char*callToken)
 
    call->callState = OO_CALL_CREATED;
    call->callEndReason = 0;
-   call->callingPartyNumber = NULL;
+
+   if(!strcmp(call->callType, "incoming"))
+   {
+      call->callingPartyNumber = NULL;
+   }else{     
+      if(ooUtilsIsStrEmpty(gH323ep.callingPartyNumber))
+      {
+         call->callingPartyNumber = NULL;
+      }else{
+         call->callingPartyNumber = (char*) memAlloc(call->pctxt,
+                                         strlen(gH323ep.callingPartyNumber)+1);
+         if(call->callingPartyNumber)
+         {
+            strcpy(call->callingPartyNumber, gH323ep.callingPartyNumber);
+         }else{
+            OOTRACEERR3("Error:Failed to allocate memory for calling party "
+                        "number.(%s, %s)\n", call->callType, call->callToken);
+            freeContext(pctxt);
+            return NULL;
+         }
+      }
+   }
+
    call->calledPartyNumber = NULL;
    call->h245SessionState = OO_H245SESSION_INACTIVE;
    call->dtmfmode = gH323ep.dtmfmode;

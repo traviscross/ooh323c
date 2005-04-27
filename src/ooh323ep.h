@@ -242,12 +242,22 @@ EXTERN int ooH323EpSetVersionID (const char * versionID);
 
 /**
  * This function is used to set callerid to be used for outbound
- * calls
+ * calls.
  * @param callerID  New value for the caller id.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetCallerID (const char * callerID);
+
+/**
+ * This function is used to set calling party number to be used for outbound
+ * calls.Note, you can override it for a specific call by using
+ * ooCallSetCallingPartyNumber function.
+ * @param number   e164 number to be used as calling party number.
+ *
+ * @return         OO_OK, on success; OO_FAILED, otherwise.
+ */
+EXTERN int ooH323EpSetCallingPartyNumber(const char * number);
 
 /**
  * This function is used to print the current configuration information of

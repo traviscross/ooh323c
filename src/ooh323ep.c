@@ -125,7 +125,7 @@ int ooH323EpInitialize
    gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
    gH323ep.dtmfmode = 0;
-    
+   gH323ep.callingPartyNumber[0]='\0';    
    gH323ep.callMode = callMode;
 #ifdef _WIN32
    InitializeCriticalSection(&gCmdMutex);
@@ -437,6 +437,18 @@ int ooH323EpSetCallerID (const char* callerID)
    else return OO_FAILED;
 }
 
+int ooH323EpSetCallingPartyNumber(const char* number)
+{
+   int ret=OO_OK;
+   if(number)
+   {
+      strncpy(gH323ep.callingPartyNumber, number,
+                                        sizeof(gH323ep.callingPartyNumber)-1);
+      ret = ooH323EpAddAliasDialedDigits((char*)number);
+      return ret;
+   }
+   else return OO_FAILED;
+}
 
 int ooH323EpSetTraceLevel(int traceLevel)
 {
