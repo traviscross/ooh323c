@@ -17,6 +17,7 @@
 #include "ootrace.h"
 #include "ootypes.h"
 #include "ooCalls.h"
+#include "ooUtils.h"
 #include "ooports.h"
 #include "oochannels.h"
 #include "ooh245.h"
