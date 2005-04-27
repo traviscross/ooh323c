@@ -163,7 +163,6 @@ int main(int argc, char ** argv)
    }
   
   
-
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Register callbacks */
@@ -302,6 +301,7 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    char localip[20];
    memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
    memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
+
    /* Configure mediainfo for transmit media channel of type G711 */
    memset(localip, 0, 20);
    ooGetLocalIPAddress(localip);
