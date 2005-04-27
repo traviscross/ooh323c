@@ -201,6 +201,10 @@ SOURCE=.\ootrace.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooUtils.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\perutil.c
 # End Source File
 # Begin Source File
@@ -293,10 +297,6 @@ SOURCE=.\ooq931.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ooras.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ooSocket.h
 # End Source File
 # Begin Source File
@@ -314,6 +314,10 @@ SOURCE=.\ootrace.h
 # Begin Source File
 
 SOURCE=.\ootypes.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooUtils.h
 # End Source File
 # Begin Source File
 

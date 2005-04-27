@@ -44,16 +44,27 @@ static int ourport;
 static char dest[256];
 
 static char USAGE[]={
-   "simple [--use-ip ip] [--use-port port] [remote]\n"
-   "--use-ip   -  local ip to use\n"
-   "--use-port -  local port to use\n"
-   "remote     -  Remote endpoint to call(optional)\n"
-   "              Can be ip:[port] or aliases\n"
+   "\tsimple [options]\n"
+   "\tsimple [options] <remote>\n"
+   "\t                 remote => Remote endpoint to call\n"
+   "\t                           Can be ip:[port] or aliases\n"
+
+   "options:\n"
+   "--user     -  Name of the user. This will be used as display\n"
+   "           -  name for outbound calls\n"
+   "--h323id   -  H323ID to be used\n"
+   "--e164     -  our e164 number used for callerid\n"
+   "--use-ip   -  local ip to use(default - uses gethostbyname)\n"
+   "--use-port -  local port to use(default - 1720)\n"
+   "--help     -  Prints this usage message\n"
 };
 
 int main(int argc, char ** argv)
 {
-    int ret=0, x, dest_found=0;
+   int ret=0, x, dest_found=0;
+   char h323id[50];
+   char e164[50];
+   char user[50];
   
 #ifdef _WIN32
    HANDLE threadHdl;
@@ -64,20 +75,38 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-   if(argc>6)
+   if(argc>12)
    {
       printf("USAGE:\n%s", USAGE);
       return -1;
    }
-  
-   memset(ourip, 0, sizeof(ourip));
+   h323id[0]='\0';
+   e164[0]='\0';
+   ourip[0]='\0';
    ourport=0;
-   memset(dest,0, sizeof(dest));
-  
+   dest[0]='\0';
+   user[0]='\0';
+
    /* parse args */
    for(x=1; x<argc; x++)
    {
-      if(!strcmp(argv[x], "--use-ip"))
+      if(!strcmp(argv[x], "--help"))
+      {
+         printf("USAGE:\n%s",USAGE);
+         return 0;
+      }else if(!strcmp(argv[x], "--user"))
+      {
+         x++;
+         strncpy(user, argv[x], sizeof(user)-1);
+      }else if(!strcmp(argv[x], "--h323id"))
+      {
+         x++;
+         strncpy(h323id, argv[x], sizeof(h323id)-1);
+      }if(!strcmp(argv[x], "--e164"))
+      {
+         x++;
+         strncpy(e164, argv[x], sizeof(e164)-1);
+      }else if(!strcmp(argv[x], "--use-ip"))
       {
          x++;
          strncpy(ourip, argv[x], sizeof(ourip)-1);
@@ -122,10 +151,19 @@ int main(int argc, char ** argv)
    ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
-   ooH323EpAddAliasH323ID("objsys1");
-   ooH323EpAddAliasH323ID("objsys2");
-   ooH323EpAddAliasH323ID("objsys3");
-   ooH323EpAddAliasDialedDigits("5087556929");
+  
+   if(strlen(user))
+      ooH323EpSetCallerID(user);
+
+   if(strlen(h323id))
+      ooH323EpAddAliasH323ID(h323id);
+
+   if(strlen(e164)){
+      ooH323EpSetCallingPartyNumber(e164);
+   }
+  
+  
+
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Register callbacks */
@@ -139,7 +177,7 @@ int main(int argc, char ** argv)
 
    /* To use a gatekeeper */
 
-   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
+   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
   
    /* Load media plug-in*/
