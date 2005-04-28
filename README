@@ -166,7 +166,7 @@ programs are available:
 *  simple - an H.323 endpoint sample program.  This is a sample H.323
    VoIP phone application which opens g711ulaw64k channels and transmits
    and receives voice. It has been tested successfully against ohPhone,
-   a widely used open source H.323 phone application.
+   a widely used open source H.323 phone application and NetMeeting.
 
 *  chansetup - This is a sample program developed for testing multiple calls.
    This program allows stack testing by placing multiple calls. The number of
@@ -199,27 +199,26 @@ To run the H.323 endpoint sample application:
 1. Set working directory to the simple test directory:
 
         cd tests/simple
-        
-2. To make a call:
 
-        ./simple [--use-ip ip] [--use-port port] <dest-ip:port>
+2. To see the usage information including various options:
+        ./simple OR ./simple --help
+
+3. To make a call:
+
+        ./simple [options]  <remote>
 
    where,
-   --use-ip   - used to specify the local ip address to be used. If not
-                specified application tries to determine address on it's own
-   --use-port - used to spcify local port to be used for listening for incoming
-                calls. If not specified, standard H.323 port 1720 is used.
- <dest-ip>    - is the dotted representation of the destinations IP address. In
+ <remote>    -  is the dotted representation of the destinations IP address. In
                 case of gatekeeper, aliases can also be used.
      
-3. To receive a call:
+4. To receive a call:
 
-        ./simple [--use-ip ip] [--use-port port]
+        ./simple [options] --listen
 
    You will find simple.log and media.log in the current directory.
      
 
-4. For testing against ohphone, make sure the -n option for ohphone
+5. For testing against ohphone, make sure the -n option for ohphone
    is enabled. If you want to use a gatekeeper, you will have to enable
    the gatekeeper mode in simple.c
 
