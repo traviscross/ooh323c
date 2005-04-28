@@ -44,28 +44,28 @@ static int ourport;
 static char dest[256];
 static OOBOOL gCmdThrd;
 static char USAGE[]={
-   "\tsimple [options]\n"
+   "\tsimple [options] --listen\n"
    "\tsimple [options] <remote>\n"
    "\t                 remote => Remote endpoint to call\n"
    "\t                           Can be ip:[port] or aliases\n"
 
    "options:\n"
    "--user     -  Name of the user. This will be used as display\n"
-   "           -  name for outbound calls\n"
-   "--h323id   -  H323ID to be used\n"
-   "--e164     -  our e164 number used for callerid\n"
-   "--use-ip   -  local ip to use(default - uses gethostbyname)\n"
-   "--use-port -  local port to use(default - 1720)\n"
+   "              name for outbound calls\n"
+   "--h323id   -  H323ID to be used for this endpoint\n"
+   "--e164     -  E164 number used as callerid for this endpoint\n"
+   "--use-ip   -  Ip address for the endpoint(default - uses gethostbyname)\n"
+   "--use-port -  Port number to use for listening to incoming calls.(default-1720)\n"
    "--help     -  Prints this usage message\n"
 };
 
 int main(int argc, char ** argv)
 {
-   int ret=0, x, dest_found=0;
+   int ret=0, x;
    char h323id[50];
    char e164[50];
    char user[50];
-  
+   OOBOOL isListen=FALSE, dest_found=FALSE;
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -75,7 +75,8 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-   if(argc>12)
+    
+   if(argc>12 || argc==1)
    {
       printf("USAGE:\n%s", USAGE);
       return -1;
@@ -90,7 +91,15 @@ int main(int argc, char ** argv)
    /* parse args */
    for(x=1; x<argc; x++)
    {
-      if(!strcmp(argv[x], "--help"))
+      if(!strcmp(argv[x], "--listen"))
+      {
+         if(!dest_found)
+            isListen=TRUE;
+         else{
+            printf("USAGE:\n%s",USAGE);
+            return -1;
+         }
+      }else if(!strcmp(argv[x], "--help"))
       {
          printf("USAGE:\n%s",USAGE);
          return 0;
@@ -102,7 +111,7 @@ int main(int argc, char ** argv)
       {
          x++;
          strncpy(h323id, argv[x], sizeof(h323id)-1);
-      }if(!strcmp(argv[x], "--e164"))
+      }else if(!strcmp(argv[x], "--e164"))
       {
          x++;
          strncpy(e164, argv[x], sizeof(e164)-1);
@@ -114,16 +123,21 @@ int main(int argc, char ** argv)
       {
          x++;
          ourport = atoi(argv[x]);
-      }else if(!dest_found)
+      }else if(!dest_found && !isListen)
       {
          strncpy(dest, argv[x], sizeof(dest)-1);
-         dest_found=1;
+         dest_found=TRUE;
       }else {
          printf("USAGE:\n%s",USAGE);
          return -1;
       }
    }
   
+   if(!isListen && !dest_found)
+   {
+      printf("USAGE:\n%s",USAGE);
+      return -1;
+   }
    /* Determine ourip if not specified by user */
    if(!strlen(ourip))
    {
@@ -176,7 +190,7 @@ int main(int argc, char ** argv)
 
    /* To use a gatekeeper */
 
-   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
+   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
   
    /* Load media plug-in*/
