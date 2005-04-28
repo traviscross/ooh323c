@@ -50,13 +50,17 @@ static char USAGE[]={
    "\t                           Can be ip:[port] or aliases\n"
 
    "options:\n"
-   "--user     -  Name of the user. This will be used as display\n"
-   "              name for outbound calls\n"
-   "--h323id   -  H323ID to be used for this endpoint\n"
-   "--e164     -  E164 number used as callerid for this endpoint\n"
-   "--use-ip   -  Ip address for the endpoint(default - uses gethostbyname)\n"
-   "--use-port -  Port number to use for listening to incoming calls.(default-1720)\n"
-   "--help     -  Prints this usage message\n"
+   "--user <username> - Name of the user. This will be used as\n"
+   "                  - display name for outbound calls\n"
+   "--h323id <h323id> - H323ID to be used for this endpoint\n"
+   "--e164 <number>   - E164 number used as callerid for this endpoint\n"
+   "--use-ip <ip>     - Ip address for the endpoint\n"
+   "                    (default - uses gethostbyname)\n"
+   "--use-port <port> - Port number to use for listening to incoming\n"
+   "                    calls.(default-1720)\n"
+   "--no-faststart    - Disable fast start(default - enabled)\n"
+   "--no-tunneling    - Disable H245 Tunneling\n" 
+   "--help            -  Prints this usage message\n"
 };
 
 int main(int argc, char ** argv)
@@ -65,7 +69,7 @@ int main(int argc, char ** argv)
    char h323id[50];
    char e164[50];
    char user[50];
-   OOBOOL isListen=FALSE, dest_found=FALSE;
+   OOBOOL bListen=FALSE, bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -76,7 +80,7 @@ int main(int argc, char ** argv)
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
     
-   if(argc>12 || argc==1)
+   if(argc>14 || argc==1)
    {
       printf("USAGE:\n%s", USAGE);
       return -1;
@@ -93,12 +97,18 @@ int main(int argc, char ** argv)
    {
       if(!strcmp(argv[x], "--listen"))
       {
-         if(!dest_found)
-            isListen=TRUE;
+         if(!bDestFound)
+            bListen=TRUE;
          else{
             printf("USAGE:\n%s",USAGE);
             return -1;
          }
+      }else if(!strcmp(argv[x], "--no-faststart"))
+      {
+         bFastStart = FALSE;
+      }else if(!strcmp(argv[x], "--no-tunneling"))
+      {
+         bTunneling = FALSE;
       }else if(!strcmp(argv[x], "--help"))
       {
          printf("USAGE:\n%s",USAGE);
@@ -123,17 +133,17 @@ int main(int argc, char ** argv)
       {
          x++;
          ourport = atoi(argv[x]);
-      }else if(!dest_found && !isListen)
+      }else if(!bDestFound && !bListen)
       {
          strncpy(dest, argv[x], sizeof(dest)-1);
-         dest_found=TRUE;
+         bDestFound=TRUE;
       }else {
          printf("USAGE:\n%s",USAGE);
          return -1;
       }
    }
   
-   if(!isListen && !dest_found)
+   if(!bListen && !bDestFound)
    {
       printf("USAGE:\n%s",USAGE);
       return -1;
@@ -161,6 +171,12 @@ int main(int argc, char ** argv)
       return -1;
    }
 
+
+   if(!bFastStart)
+      ooH323EpDisableFastStart();
+
+   if(!bTunneling)
+      ooH323EpDisableH245Tunneling();
 
    ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
@@ -216,7 +232,7 @@ int main(int argc, char ** argv)
       OOTRACEERR1("Failed to Create H.323 Listener");
       return -1;
    }
-   if(dest_found)
+   if(bDestFound)
    {
       printf("Calling %s\n", dest);
       memset(callToken, 0, 20);
