@@ -280,6 +280,20 @@ struct H245AudioCapability* ooCreateAudioCapability
  */
 void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
 
+
+/**
+ * This function is used to create a GSM Full Rate capability structure.
+ * @param epCap       Handle to the endpoint capability.
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
+ *                    for new audio capability.
+ * @param dir         Direction for the newly created capability.
+ *
+ * @return            Newly created audio capability on success, NULL on
+ *                    failure.
+ */
+struct H245AudioCapability* ooCreateGSMFullRateCapability
+   (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
+
 /**
  * This function is used to create a g711 audio capability structure.
  * @param epCap       Handle to the endpoint capability

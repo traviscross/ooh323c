@@ -242,6 +242,7 @@ struct H245AudioCapability* ooCreateAudioCapability
    case T_H245AudioCapability_g729AnnexAwAnnexB:
    case T_H245AudioCapability_g7231AnnexCCapability:
    case T_H245AudioCapability_gsmFullRate:
+      return ooCreateGSMFullRateCapability(epCap, pctxt, dir);
    case T_H245AudioCapability_gsmHalfRate:
    case T_H245AudioCapability_gsmEnhancedFullRate:
    case T_H245AudioCapability_genericAudioCapability:
@@ -290,6 +291,37 @@ void* ooCreateDTMFCapability(int cap, OOCTXT *pctxt)
      OOTRACEERR1("Error:unknown dtmf capability type\n");
    }
    return NULL;
+}
+
+struct H245AudioCapability* ooCreateGSMFullRateCapability
+   (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir)
+{
+   H245AudioCapability *pAudio=NULL;
+   H245GSMAudioCapability *pGSMCap=NULL;
+   if(!epCap || !epCap->params)
+   {
+     OOTRACEERR1("Error:Invalid capability parameters to "
+                 "ooCreateGSMFullRateCapability.\n");
+     return NULL;
+   }
+
+   pAudio = (H245AudioCapability*)memAlloc(pctxt,
+                                                sizeof(H245AudioCapability));
+   pGSMCap = (H245GSMAudioCapability*)memAlloc(pctxt,
+                                              sizeof(H245GSMAudioCapability));
+   if(!pAudio || !pGSMCap)
+   {
+      OOTRACEERR1("ERROR:Failed to allocate mem for GSMFullRate capability\n");
+      return NULL;
+   }
+  
+   pAudio->t = T_H245AudioCapability_gsmFullRate;
+   pAudio->u.gsmFullRate = pGSMCap;
+   pGSMCap->audioUnitSize = ((H245GSMAudioCapability*)epCap->params)->audioUnitSize;
+   pGSMCap->comfortNoise = ((H245GSMAudioCapability*)epCap->params)->comfortNoise;
+   pGSMCap->scrambled = ((H245GSMAudioCapability*)epCap->params)->scrambled;
+
+   return pAudio;
 }
 
 struct H245AudioCapability* ooCreateG711Capability
@@ -574,8 +606,6 @@ int ooAppendCapToCapPrefs(ooCallData *call, int cap)
       capPrefs = &call->capPrefs;
    else
       capPrefs = &gH323ep.capPrefs;
-
-   ooRemoveCapFromCapPrefs(call, cap);
 
    capPrefs->order[capPrefs->index++] = cap;
    return OO_OK;

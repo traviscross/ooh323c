@@ -515,8 +515,8 @@ int ooMonitorChannels()
          exit(-1);
       }
 
-      toMin.tv_sec = 3;
-      toMin.tv_usec = 0;
+      toMin.tv_sec = 0;
+      toMin.tv_usec = 100000; /* 100ms*/
       /*This is for test application. Not part of actual stack */
  
       ooTimerFireExpired(&gH323ep.ctxt, &g_TimerList);
