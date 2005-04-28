@@ -47,7 +47,7 @@ static char USAGE[]={
    "\tsimple [options] --listen\n"
    "\tsimple [options] <remote>\n"
    "\t                 remote => Remote endpoint to call\n"
-   "\t                           Can be ip:[port] or aliases\n"
+   "\t                           Can be ip:[port] or aliases(needs gk)\n"
 
    "options:\n"
    "--user <username> - Name of the user. This will be used as\n"
