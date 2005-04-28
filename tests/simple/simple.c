@@ -42,7 +42,7 @@ static char callToken[20];
 static char ourip[20];
 static int ourport;
 static char dest[256];
-
+static OOBOOL gCmdThrd;
 static char USAGE[]={
    "\tsimple [options]\n"
    "\tsimple [options] <remote>\n"
@@ -86,7 +86,7 @@ int main(int argc, char ** argv)
    ourport=0;
    dest[0]='\0';
    user[0]='\0';
-
+   gCmdThrd = FALSE;
    /* parse args */
    for(x=1; x<argc; x++)
    {
@@ -176,7 +176,7 @@ int main(int argc, char ** argv)
 
    /* To use a gatekeeper */
 
-   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
+   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);
 
   
    /* Load media plug-in*/
@@ -215,6 +215,14 @@ int main(int argc, char ** argv)
    pthread_create(&threadHdl, NULL, osEpHandleCommand, NULL);
 #endif
    ooMonitorChannels();
+
+   if(gCmdThrd)
+#ifdef _WIN32
+      TerminateThread(threadHdl, 0);
+#else
+      pthread_cancel(threadHdl);
+      pthread_join(threadHdl, NULL);
+#endif
    ooH323EpDestroy();
    return 0;
 }
@@ -338,6 +346,10 @@ void* osEpHandleCommand(void* dummy)
 {
    int ret;
    char command[20];
+   gCmdThrd = TRUE;
+#ifndef _WIN32
+   pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+#endif
    memset(command, 0, sizeof(command));
    printf("Hit <ENTER> to Hang call\n");
    fgets(command, 20, stdin);
@@ -353,5 +365,6 @@ void* osEpHandleCommand(void* dummy)
    fgets(command, 20, stdin);
    printf("Closing down stack\n");
    ooStopMonitor();
+   gCmdThrd=FALSE;
    return dummy;
 }

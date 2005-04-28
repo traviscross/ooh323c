@@ -327,21 +327,22 @@ int ooH323EpDestroy(void)
          temp->callEndReason = OO_HOST_CLEARED;
          ooCleanCall(temp);
       }
-          
    }
    if(gH323ep.listener)
    {
       ooSocketClose(*(gH323ep.listener));
    }
 
-   ooGkClientDestroy();     
-   freeContext(&(gH323ep.ctxt));
+   ooGkClientDestroy(); 
 
    if(gH323ep.fptraceFile)
    {
       fclose(gH323ep.fptraceFile);
       gH323ep.fptraceFile = NULL;
    }
+
+   freeContext(&(gH323ep.ctxt));
+
 #ifdef _WIN32
    DeleteCriticalSection(&gCmdMutex);
    DeleteCriticalSection(&gCallTokenMutex);

@@ -544,7 +544,13 @@ int ooMonitorChannels()
          }
          if(gH323ep.gkClient->state == GkClientFailed ||
             gH323ep.gkClient->state == GkClientGkErr)
-           ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
+         {
+            if(ooGkClientHandleClientOrGkFailure(gH323ep.gkClient)!=OO_OK)
+            {
+               ooStopMonitorCalls();
+               continue;
+            }
+         }
       }
      
 #ifdef _WIN32
@@ -1553,29 +1559,35 @@ int ooOnSendMsg
 int ooStopMonitorCalls()
 {
    ooCallData * call;
-   OOTRACEINFO1("Doing ooStopMonitorCalls\n");
-   if(gH323ep.callList)
+   if(gMonitor)
    {
-      OOTRACEWARN1("Warn:Abruptly ending calls as stack going down\n");
-      call = gH323ep.callList;
-      while(call)
-      {
-         OOTRACEWARN3("Clearing call (%s, %s)\n", call->callType,
-                       call->callToken);
-         call->callEndReason = OO_HOST_CLEARED;
-         ooCleanCall(call);
-         call = NULL;
-         call = gH323ep.callList;
-      }
-   }
-   OOTRACEINFO1("Stopping listener for incoming calls\n");  
-   if(gH323ep.listener)
-   {
-      ooSocketClose(*(gH323ep.listener));
-      memFreePtr(&gH323ep.ctxt, gH323ep.listener);
-   }
+      OOTRACEINFO1("Doing ooStopMonitorCalls\n");
 
-   gMonitor = FALSE;
-   OOTRACEINFO1("Returning form ooStopMonitorCalls\n");
+      if(gH323ep.callList)
+      {
+         OOTRACEWARN1("Warn:Abruptly ending calls as stack going down\n");
+         call = gH323ep.callList;
+         while(call)
+         {
+            OOTRACEWARN3("Clearing call (%s, %s)\n", call->callType,
+                          call->callToken);
+            call->callEndReason = OO_HOST_CLEARED;
+            ooCleanCall(call);
+            call = NULL;
+            call = gH323ep.callList;
+         }
+         gH323ep.callList = NULL;
+      }
+      OOTRACEINFO1("Stopping listener for incoming calls\n");  
+      if(gH323ep.listener)
+      {
+         ooSocketClose(*(gH323ep.listener));
+         memFreePtr(&gH323ep.ctxt, gH323ep.listener);
+         gH323ep.listener = NULL;
+      }
+
+      gMonitor = FALSE;
+      OOTRACEINFO1("Done ooStopMonitorCalls\n");
+   }
    return OO_OK;
 }

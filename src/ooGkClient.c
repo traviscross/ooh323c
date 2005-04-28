@@ -124,10 +124,12 @@ int ooGkClientDestroy(void)
 {
    if(gH323ep.gkClient)
    {
+      OOTRACEINFO1("Destroying Gatekeeper Client\n");
       ooGkClientCloseChannel(gH323ep.gkClient);
       freeContext(&gH323ep.gkClient->msgCtxt);
       freeContext(&gH323ep.gkClient->ctxt);
       memFreePtr(&gH323ep.ctxt, gH323ep.gkClient);
+      gH323ep.gkClient = NULL;
    }
    return OO_OK;
 }
@@ -613,6 +615,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
       return OO_FAILED;
    }
    cbData->timerType = OO_GRQ_TIMER;
+   cbData->pGkClient = pGkClient;
    if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
                      &ooGkClientGRQTimerExpired, pGkClient->grqTimeout,
                      cbData, FALSE))     
@@ -1716,6 +1719,7 @@ int ooGkClientGRQTimerExpired(void* pdata)
    ooGkClient *pGkClient = cbData->pGkClient;
 
    OOTRACEDBGA1("Gatekeeper client GRQ timer expired.\n");
+
    memFreePtr(&pGkClient->ctxt, cbData);  
 
    if(pGkClient->grqRetries < OO_MAX_GRQ_RETRIES)
@@ -1837,6 +1841,8 @@ int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call)
  * TODO: In case of GkErr, if GkMode is DiscoverGatekeeper,
  *       need to cleanup gkrouted calls, and discover another
  *       gatekeeper.
+ * Note: This function returns OO_FAILED, when we can not recover from
+ *       the failure.
  */
 int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
 {
@@ -1845,6 +1851,7 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
       OOTRACEERR1("Error: Internal Failure in GkClient. Closing "
                   "GkClient\n");
       ooGkClientDestroy();
+      return OO_FAILED;
    }else if(pGkClient->state == GkClientGkErr)
    {
       OOTRACEERR1("Error: Gatekeeper error. Either Gk not responding or "
@@ -1854,11 +1861,15 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
          OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient as "
                      "Gk mode is UseSpecifcGatekeeper\n");
          ooGkClientDestroy();
+         return OO_FAILED;
       }else{
-        OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient");
+        OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient. NEED"
+                    " to implement recovery by rediscovering another gk\n");
         ooGkClientDestroy();
+        return OO_FAILED;
       }
    }
 
-   return OO_OK;
+   return OO_FAILED;
 }
+
