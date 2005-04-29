@@ -310,6 +310,7 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
       (*q931msg)->bearerCapabilityIE = NULL;
       (*q931msg)->callingPartyNumberIE = NULL;
       (*q931msg)->calledPartyNumberIE = NULL;
+      (*q931msg)->causeIE = NULL;
       return OO_OK;
    }
 }
@@ -637,6 +638,9 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
    msgbuf[i++] = pq931Msg->callReference; /* populate 2nd octet */
    msgbuf[i++] = pq931Msg->messageType; /* type of q931 message */
 
+   /* Note: the order in which ies are added is important. It is in the
+      ascending order of ie codes.
+   */
    /* Add bearer IE */
    if(pq931Msg->bearerCapabilityIE)
    {  
@@ -646,6 +650,15 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
                        pq931Msg->bearerCapabilityIE->length);
       i += pq931Msg->bearerCapabilityIE->length;
    }  
+
+   /* Add cause IE */
+   if(pq931Msg->causeIE)
+   {
+      msgbuf[i++] = Q931CauseIE;
+      msgbuf[i++] = pq931Msg->causeIE->length;
+      memcpy(msgbuf+i, pq931Msg->causeIE->data, pq931Msg->causeIE->length);
+      i += pq931Msg->causeIE->length;
+   }
      
    /*Add display ie. */
    if(strlen(call->ourCallerId)>0)
@@ -678,6 +691,10 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
       i += pq931Msg->calledPartyNumberIE->length;
    }
 
+   /* Note: Have to fix this, though it works. Need to get rid of ie list.
+      Right now we only put UUIE in ie list. Can be easily removed.
+   */
+
    for(j = 0, curNode = pq931Msg->ies.head; j < (int)pq931Msg->ies.count; j++)
    {
       Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
@@ -696,17 +713,9 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
          ieLen--;
          msgbuf[i++] = 5; /* protocol discriminator */
          memcpy((msgbuf + i), ie->data, ieLen);
-         //         i += ieLen-1;
+
          i += ieLen;
         
-      }
-      else if(ie->discriminator == Q931CauseIE)
-      {
-         msgbuf[i++] = (ieLen>>8);
-         msgbuf[i++] = ieLen;
-         memcpy((msgbuf+i), ie->data, ieLen);
-         //         i += ieLen -1;
-         i += ieLen;
       }else
       {
          OOTRACEWARN1("Warning: Only UUIE is supported currently\n");
@@ -1053,47 +1062,9 @@ int ooSendReleaseComplete(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_releaseComplete;
   
-   /* Add cause ie */
-   ieLen = 2;
-   dataBuf[0] = (0x80 | ((standard&3)<<5) | (location&15));
-   dataBuf[1] = (0x80 | Q931NormalCallClearing);  
-      
-   /* Allocate memory to hold complete Cause IE Information */
-   ie = (Q931InformationElement*)ASN1MALLOC (pctxt,
-                                     sizeof(*ie) - sizeof(ie->data) + ieLen);
-   if(ie == NULL)
-   {
-      OOTRACEERR3("Error: Allocation of Q931Information Element Failed "
-                  "for Release Complete(%s, %s)\n", call->callType,
-                  call->callToken);
-      if(call->callState < OO_CALL_CLEAR)
-      {
-         call->callEndReason = OO_HOST_CLEARED;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
-   }
-   ie->discriminator = Q931CauseIE;
-   ie->length = ieLen;
-   memcpy(ie->data, dataBuf, ieLen);
-
-   /* NOTE: ALL IEs SHOULD BE IN ASCENDING ORDER OF
-      THEIR DISCRIMINATOR AS PER SPEC. WE NEED TO TAKE CARE OF THIS.
-   */
-   dListInit (&(q931msg->ies));
-   if((dListAppend (pctxt,
-                    &(q931msg->ies), ie)) == NULL)
-   {
-      OOTRACEERR3("Error: Failed to add UUIE in ReleaseComplete message "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      if(call->callState < OO_CALL_CLEAR)
-      {
-         call->callEndReason = OO_HOST_CLEARED;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
-   }
-
+   /* Set Cause IE */
+   ooQ931SetCauseIE(q931msg, Q931NormalCallClearing, 0, 0);
+  
    /* Add user-user ie */
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
    q931msg->userInfo->h323_uu_pdu.h245Tunneling = FALSE;
@@ -1116,7 +1087,8 @@ int ooSendReleaseComplete(ooCallData *call)
    ret = ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
-     OOTRACEERR3("Error:Failed to enqueue ReleaseComplete message to outbound queue.(%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue ReleaseComplete message to outbound"
+                  " queue.(%s, %s)\n", call->callType, call->callToken);
    }
    memReset(&gH323ep.msgctxt);
 
@@ -1943,30 +1915,31 @@ int ooSetBearerCapabilityIE
     enum Q931TransferMode transferMode, enum Q931TransferRate transferRate,
     enum Q931UserInfoLayer1Protocol userInfoLayer1)
 {
-   Q931InformationElement *ie=NULL;
-   ASN1OCTET data[4];
-   unsigned size = 1;
+   unsigned size = 3;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
-   data[0] = (ASN1OCTET)(0x80 | ((codingStandard&3) << 5) | (capability&31));
+   if(pmsg->bearerCapabilityIE)
+   {
+      memFreePtr(pctxt, pmsg->bearerCapabilityIE);
+      pmsg->bearerCapabilityIE = NULL;
+   }
 
-   data[1] = (0x80 | ((transferMode & 3) << 5) | (transferRate & 31));
-  
-   data[2] = (0x80 | (1<<5) | userInfoLayer1);
-
-   size = 3;
-
-   ie = (Q931InformationElement*)
+   pmsg->bearerCapabilityIE = (Q931InformationElement*)
                       memAlloc(pctxt, sizeof(Q931InformationElement)+size-1);
-   if(!ie)
+   if(!pmsg->bearerCapabilityIE)
    {
       OOTRACEERR1("Error:Failed to allocate memory for BearerCapability ie\n");
       return OO_FAILED;
    }
-   ie->discriminator = Q931BearerCapabilityIE;
-   ie->length = size;
-   memcpy(ie->data, data, size);
-   pmsg->bearerCapabilityIE = ie;
+
+   pmsg->bearerCapabilityIE->discriminator = Q931BearerCapabilityIE;
+   pmsg->bearerCapabilityIE->length = size;
+   pmsg->bearerCapabilityIE->data[0] = (ASN1OCTET)(0x80 | ((codingStandard&3) << 5) | (capability&31));
+
+   pmsg->bearerCapabilityIE->data[1] = (0x80 | ((transferMode & 3) << 5) | (transferRate & 31));
+  
+   pmsg->bearerCapabilityIE->data[2] = (0x80 | (1<<5) | userInfoLayer1);
+
    return OO_OK;
 }
 
@@ -1974,47 +1947,84 @@ int ooQ931SetCallingPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type,
     unsigned presentation, unsigned screening)
 {
-   Q931InformationElement *ie=NULL;
    unsigned len = 0;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
+   if(pmsg->callingPartyNumberIE)
+   {
+      memFreePtr(pctxt, pmsg->callingPartyNumberIE);
+      pmsg->callingPartyNumberIE = NULL;
+   }
+
    len = strlen(number);
-   ie = (Q931InformationElement*)
+   pmsg->callingPartyNumberIE = (Q931InformationElement*)
                       memAlloc(pctxt, sizeof(Q931InformationElement)+len+2-1);
-   if(!ie)
+   if(!pmsg->callingPartyNumberIE)
    {
      OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
       return OO_FAILED;
    }
-   ie->discriminator = Q931CallingPartyNumberIE;
-   ie->length = len+2;
-   ie->data[0] =  (((type&7)<<4)|(plan&15));
-   ie->data[1] =  (0x80|((presentation&3)<<5)|(screening&3));
-   memcpy(ie->data+2, number, len);
-   pmsg->callingPartyNumberIE = ie;
+   pmsg->callingPartyNumberIE->discriminator = Q931CallingPartyNumberIE;
+   pmsg->callingPartyNumberIE->length = len+2;
+   pmsg->callingPartyNumberIE->data[0] = (((type&7)<<4)|(plan&15));
+   pmsg->callingPartyNumberIE->data[1] = (0x80|((presentation&3)<<5)|(screening&3));
+   memcpy(pmsg->callingPartyNumberIE->data+2, number, len);
+
    return OO_OK;
 }
 
 int ooQ931SetCalledPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type)
 {
-   Q931InformationElement *ie=NULL;
    unsigned len = 0;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
+   if(pmsg->calledPartyNumberIE)
+   {
+      memFreePtr(pctxt, pmsg->calledPartyNumberIE);
+      pmsg->calledPartyNumberIE = NULL;
+   }
+
    len = strlen(number);
-   ie = (Q931InformationElement*)
+   pmsg->calledPartyNumberIE = (Q931InformationElement*)
                       memAlloc(pctxt, sizeof(Q931InformationElement)+len+1-1);
-   if(!ie)
+   if(!pmsg->calledPartyNumberIE)
    {
      OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
       return OO_FAILED;
    }
-   ie->discriminator = Q931CalledPartyNumberIE;
-   ie->length = len+1;
-   ie->data[0] = (0x80|((type&7)<<4)|(plan&15));
-   memcpy(ie->data+1, number, len);
-   pmsg->calledPartyNumberIE = ie;
+   pmsg->calledPartyNumberIE->discriminator = Q931CalledPartyNumberIE;
+   pmsg->calledPartyNumberIE->length = len+1;
+   pmsg->calledPartyNumberIE->data[0] = (0x80|((type&7)<<4)|(plan&15));
+   memcpy(pmsg->calledPartyNumberIE->data+1, number, len);
+
+   return OO_OK;
+}
+
+int ooQ931SetCauseIE
+   (Q931Message *pmsg, enum Q931CauseValues cause, unsigned coding,
+    unsigned location)
+{
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   if(pmsg->causeIE){
+      memFreePtr(pctxt, pmsg->causeIE);
+      pmsg->causeIE = NULL;
+   }
+
+   pmsg->causeIE = (Q931InformationElement*)
+                      memAlloc(pctxt, sizeof(Q931InformationElement)+1);
+   if(!pmsg->causeIE)
+   {
+     OOTRACEERR1("Error:Failed to allocate memory for CauseIE\n");
+      return OO_FAILED;
+   }
+   pmsg->causeIE->discriminator = Q931CauseIE;
+   pmsg->causeIE->length = 2;
+   pmsg->causeIE->data[0] = (0x80 | ((coding & 0x03) <<5) | (location & 0x0F));
+
+   pmsg->causeIE->data[1] = (0x80 | cause);
+ 
    return OO_OK;
 }
 

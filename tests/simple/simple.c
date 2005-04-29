@@ -44,7 +44,9 @@ static int ourport;
 static char dest[256];
 static OOBOOL gCmdThrd;
 static char USAGE[]={
+   "Listen to incoming calls\n"
    "\tsimple [options] --listen\n"
+   "Make a call and then go in listen mode\n"
    "\tsimple [options] <remote>\n"
    "\t                 remote => Remote endpoint to call\n"
    "\t                           Can be ip:[port] or aliases(needs gk)\n"

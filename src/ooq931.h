@@ -527,19 +527,55 @@ int ooCallEstbTimerExpired(void *data);
  *
  * @return                OO_OK on success, OO_FAILED, on failure.
  */
-int ooSetBearerCapabilityIE
+EXTERN int ooSetBearerCapabilityIE
    (Q931Message *pmsg, enum Q931CodingStandard codingStandard,
     enum Q931InformationTransferCapability capability,
     enum Q931TransferMode transferMode, enum Q931TransferRate transferRate,
     enum Q931UserInfoLayer1Protocol userInfoLayer1);
 
-
-int ooQ931SetCalledPartyNumberIE
+/**
+ * This function is used to add a called party number ie to a q931 message.
+ * @param pmsg            Q931 message to which CalledPartyNumber IE has to be
+ *                        added.
+ * @param number          Number for called party.
+ * @param plan            Numbering Plan used
+ * @param type            Type of number
+ *
+ * @return                OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooQ931SetCalledPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type);
 
-int ooQ931SetCallingPartyNumberIE
+
+/**
+ * This function is used to add a CallingPartyNumber ie to a q931 message.
+ * @param pmsg            Q931 message to which CallingPartyNumber IE has to be
+ *                        added.
+ * @param number          Number for calling party.
+ * @param plan            Numbering Plan used
+ * @param type            Type of number
+ * @param presentation    Presentation of the address is allowed or restricted.
+ * @param screening       Whether address was provided by endpoint or screened
+ *                        by gatekeeper.
+ *
+ * @return                OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooQ931SetCallingPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type,
     unsigned presentation, unsigned screening);
+
+/**
+ * This function is used to set a cause ie for a q931 message.
+ * @param pmsg        Valid Q931 Message
+ * @param cause       Q931 Cause Value
+ * @param coding      coding standard used. 0 for ITU-T standard coding
+ * @param location    location. 0 for user.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooQ931SetCauseIE
+   (Q931Message *pmsg,enum Q931CauseValues cause, unsigned coding,
+    unsigned location);
 /**
  * @}
  */

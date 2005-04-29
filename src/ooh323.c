@@ -28,6 +28,44 @@
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
+int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
+{
+   int ret = OO_OK;
+   H225ReleaseComplete_UUIE * releaseComplete = NULL;
+  
+    if(!q931Msg->userInfo)
+   {
+      OOTRACEERR3("ERROR:No User-User IE in received ReleaseComplete message "
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   releaseComplete = q931Msg->userInfo->h323_uu_pdu.h323_message_body.u.releaseComplete;
+   if(!releaseComplete)
+   {
+      OOTRACEERR3("Error: ReleaseComplete UUIE not found in received "
+                  "ReleaseComplete message - %s "
+                  "%s\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   if(releaseComplete->m.reasonPresent)
+   {
+      OOTRACEINFO4("Release complete reason code %d. (%s, %s)\n",
+                  releaseComplete->reason.t, call->callType, call->callToken);
+   }
+
+
+   if (q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
+       q931Msg->userInfo->h323_uu_pdu.h245Tunneling          &&
+       OO_TESTFLAG (call->flags, OO_M_TUNNELING) )
+   {
+      ret = ooHandleTunneledH245Messages
+         (call, &q931Msg->userInfo->h323_uu_pdu);
+   }
+   return ret;
+}
+
 int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
 {
    H225Setup_UUIE *setup=NULL;
@@ -567,6 +605,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931ReleaseCompleteMsg:/* Release complete message received */
          OOTRACEINFO3("H.225 Release Complete message received (%s, %s)\n",
                       call->callType, call->callToken);
+         ooOnReceivedReleaseComplete(call, q931Msg);
          ooCloseH225Connection(call);
          if(call->callState < OO_CALL_CLEARED)
          {

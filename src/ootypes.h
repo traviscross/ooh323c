@@ -245,6 +245,7 @@ typedef struct Q931Message {
    struct Q931InformationElement *bearerCapabilityIE;
    struct Q931InformationElement *callingPartyNumberIE;
    struct Q931InformationElement *calledPartyNumberIE;
+   struct Q931InformationElement *causeIE;
    H225H323_UserInformation *userInfo;
 } Q931Message;
 

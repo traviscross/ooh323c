@@ -1168,7 +1168,7 @@ int ooSendMsg(ooCallData *call, int type)
          }
       }else if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
          OOTRACEDBGC4("Sending %s H245 message as a tunneled message."
-                      "(%s, %s, %s)\n", ooGetMsgTypeText(msgType),
+                      "(%s, %s)\n", ooGetMsgTypeText(msgType),
                       call->callType, call->callToken);
          
          ret = ooSendAsTunneledMessage
