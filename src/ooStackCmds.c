@@ -70,6 +70,12 @@ int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
    cmd->param3 = 0;
 
    dListAppend (&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
 
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
@@ -134,6 +140,12 @@ int ooMakeCall_3 (char *dest, char* callToken, size_t bufsiz,
    *((ASN1USINT*)cmd->param3) = *callRef;
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
 
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
 #else
@@ -170,6 +182,12 @@ int ooAnswerCall(char *callToken)
   
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
 
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
@@ -207,7 +225,12 @@ int ooRejectCall(char* callToken, int cause)
   
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
-
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
 #else
@@ -245,7 +268,12 @@ int ooHangCall(char * callToken)
   
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
-
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);
 #else
@@ -273,6 +301,13 @@ int ooStopMonitor()
    cmd->type = OO_CMD_STOPMONITOR;
   
    dListAppend (&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
+
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
   
 #ifdef _WIN32
    LeaveCriticalSection(&gCmdMutex);

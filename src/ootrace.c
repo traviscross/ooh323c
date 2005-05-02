@@ -134,7 +134,7 @@ void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...)
    char logMessage[MAXLOGMSGLEN];
    if(traceLevel > gs_traceLevel) return;
    va_start (arglist, fmtspec);
-   memset(logMessage, 0, MAXLOGMSGLEN);
+   /*   memset(logMessage, 0, MAXLOGMSGLEN);*/
    vsprintf(logMessage, fmtspec, arglist);  
    va_end(arglist);
    ooTraceLogMessage(logMessage);

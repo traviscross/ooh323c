@@ -445,7 +445,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
    ASN1BOOL aligned = TRUE, trace = FALSE;
    Q931InformationElement* ie=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
-   memset(msgbuf, 0, sizeof(msgbuf));
+   /*   memset(msgbuf, 0, sizeof(msgbuf));*/
    if(!q931msg)
    {
       OOTRACEERR1("ERROR: Invalid Q931 message in add user-user IE\n");
@@ -1399,6 +1399,7 @@ int ooAcceptCall(ooCallData *call)
 
    OOTRACEDBGA3("Built H.225 Connect message (%s, %s)\n", call->callType,
                  call->callToken);
+
    ret=ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
@@ -1663,8 +1664,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    memset (setup, 0, sizeof(H225Setup_UUIE));
    setup->protocolIdentifier = gProtocolID;
   
-   /* Populate Alias Address. Note we use callername as alias as well as
-      display name*/
+   /* Populate Alias Address.*/
    setup->m.sourceAddressPresent = TRUE;
   
    if(call->ourAliases)
@@ -1682,23 +1682,21 @@ int ooH323MakeCall_helper(ooCallData *call)
                              T_H225PresentationIndicator_presentationAllowed;
    setup->m.screeningIndicatorPresent = TRUE;
    setup->screeningIndicator = userProvidedNotScreened;
-#if 0
-   if(strlen(gH323ep.callername)>0)
+
+   /* Populate Destination aliases */
+   if(call->remoteAliases)
    {
-  
-      pAliasAddress = (H225AliasAddress*)ASN1MALLOC(pctxt,
-                                                    sizeof(H225AliasAddress));
-      memset(pAliasAddress, 0, sizeof(H225AliasAddress));
-      pAliasAddress->t = T_H225AliasAddress_h323_ID;
-      pAliasAddress->u.h323_ID.nchars = strlen(gH323ep.callername);
-      pAliasAddress->u.h323_ID.data = (ASN116BITCHAR*)ASN1MALLOC(pctxt,
-                            strlen(gH323ep.callername)*sizeof(ASN116BITCHAR));
-      for(i=0;i<(int)strlen(gH323ep.callername); i++)
-        pAliasAddress->u.h323_ID.data[i] = (ASN116BITCHAR)gH323ep.callername[i];
-      dListInit(&setup->sourceAddress);
-      dListAppend(pctxt, &setup->sourceAddress, pAliasAddress);
+      setup->m.destinationAddressPresent = TRUE;
+      ret = ooPopulateAliasList(pctxt, call->remoteAliases,
+                                                 &setup->destinationAddress);
+      if(OO_OK != ret)
+      {
+         OOTRACEERR1("Error:Failed to populate destination alias list in SETUP"
+                     "message\n");
+         memReset(pctxt);
+         return OO_FAILED;
+      }
    }
-#endif
 
    /* Populate the vendor information */
    setup->sourceInfo.m.vendorPresent=TRUE;
@@ -1750,7 +1748,7 @@ int ooH323MakeCall_helper(ooCallData *call)
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
    srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
-    ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
+   ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
 
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= call->pH225Channel->port;
@@ -2081,7 +2079,7 @@ int ooParseDestination(ooCallData *call, char *dest)
       (iChaar >= 0        && iChaar <= 255) &&
       (!strchr(dest, ':') || iPort != -1))
    {
-      memset(call->remoteIP, 0, sizeof(call->remoteIP));
+     /*      memset(call->remoteIP, 0, sizeof(call->remoteIP));*/
       sprintf(call->remoteIP, "%d.%d.%d.%d", iEk, iDon, iTeen, iChaar);
       if(strchr(dest, ':'))
          call->remotePort = iPort;
@@ -2101,7 +2099,7 @@ int ooParseDestination(ooCallData *call, char *dest)
          OOTRACEERR1("Error: Failed to allocate memory for new url alias\n");
          return OO_FAILED;
       }
-      memset(psNewAlias, 0, sizeof(ooAliases));
+      /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_url_ID;
       psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
       if(!psNewAlias->value)
@@ -2129,7 +2127,7 @@ int ooParseDestination(ooCallData *call, char *dest)
             OOTRACEERR1("Error: Failed to allocate memory for new email alias\n");
             return OO_FAILED;
          }
-         memset(psNewAlias, 0, sizeof(ooAliases));
+         /*         memset(psNewAlias, 0, sizeof(ooAliases));*/
          psNewAlias->type = T_H225AliasAddress_email_ID;
          psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
          if(!psNewAlias->value)
@@ -2164,7 +2162,7 @@ int ooParseDestination(ooCallData *call, char *dest)
          OOTRACEERR1("Error: Failed to allocate memory for new dialedDigits alias\n");
          return OO_FAILED;
       }
-      memset(psNewAlias, 0, sizeof(ooAliases));
+      /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_dialedDigits;
       psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
       if(!psNewAlias->value)
@@ -2187,7 +2185,7 @@ int ooParseDestination(ooCallData *call, char *dest)
       OOTRACEERR1("Error: Failed to allocate memory for new h323-id alias\n");
       return OO_FAILED;
    }
-   memset(psNewAlias, 0, sizeof(ooAliases));
+   /*   memset(psNewAlias, 0, sizeof(ooAliases));*/
    psNewAlias->type = T_H225AliasAddress_h323_ID;
    psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
    if(!psNewAlias->value)
@@ -2204,73 +2202,6 @@ int ooParseDestination(ooCallData *call, char *dest)
    return OO_OK;
 }
 
-/* Uses an existing Q931 message for tunneling */
-/*
-int ooAddH245MessagesToQ931MsgForTunneling(ooCallData *call, Q931Message *pmsg)
-{
-   int len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
-   DListNode * p_msgNode=NULL;
-   H225H323_UU_PDU *pH323UUPDU = NULL;
-   H225H323_UU_PDU_h245Control *pH245Control = NULL;
-   ASN1DynOctStr * elem;
-   ASN1OCTET *msgptr=NULL;
-   OOCTXT *pctxt = &gH323ep.msgctxt;
-
-
-   if(OO_TESTFLAG (call->flags, OO_M_TUNNELING) && call->pH245Channel &&
-      call->pH245Channel->outQueue.count > 0)
-   {
-      OOTRACEDBGA3("Adding H245 message for tunneling(%s, %s)\n",
-                    call->callType,  call->callToken);
-      pH323UUPDU = (H225H323_UU_PDU*) &pmsg->userInfo->h323_uu_pdu;
-      pH323UUPDU->m.h245TunnelingPresent = TRUE;
-      pH323UUPDU->m.h245ControlPresent = TRUE;
-      pH323UUPDU->h245Tunneling = TRUE;
-      pH245Control = (H225H323_UU_PDU_h245Control*) &pH323UUPDU->h245Control;
-
-      pH245Control->elem = NULL;
-
-      pH245Control->elem = (ASN1DynOctStr*) memAlloc(pctxt,
-                        sizeof(ASN1DynOctStr));
-      if(!pH245Control->elem)
-      {
-         OOTRACEERR3("ERROR:Failed to allocate memory for H245 control "
-                     "element (%s, %s)\n", call->callType, call->callToken);
-         return OO_FAILED;
-      }
-
-      p_msgNode = call->pH245Channel->outQueue.head;
-
-      msgptr = (ASN1OCTET*) p_msgNode->data;
-      msgType = msgptr[0];
-
-      logicalChannelNo = msgptr[1];
-      logicalChannelNo = logicalChannelNo << 8;
-      logicalChannelNo = (logicalChannelNo | msgptr[2]);
-
-      len = msgptr[3];
-      len = len<<8;
-      len = (len | msgptr[4]);
-
-      dListRemove(&(call->pH245Channel->outQueue), p_msgNode);
-      if(p_msgNode)
-         memFreePtr(call->pctxt, p_msgNode);
-
-      pH245Control->elem->data = memAlloc(pctxt, len*sizeof(ASN1OCTET));
-      if(!pH245Control->elem->data)
-      {
-      OOTRACEERR3("Failed to allocate memory for tunneled
-
-      pH245Control->elem->data = msgptr+5;
-      pH245Control->elem->numocts = len;
-      pH245Control->n = 1;
-      pmsg->tunneledMsgType = msgType;
-      pmsg->logicalChannelNo = logicalChannelNo;
-
-   }
-
-}
-*/
 
 /* Build a Facility message and tunnel H.245 message through it */
 int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
@@ -2358,6 +2289,8 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    pH245Control->n = 1;
    pQ931Msg->tunneledMsgType = h245MsgType;
    pQ931Msg->logicalChannelNo = associatedChan;
+
+  
    ret = ooSendH225Msg(call, pQ931Msg);
    if(ret != OO_OK)
    {

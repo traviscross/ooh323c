@@ -143,9 +143,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       call->remoteDisplayName = (ASN1OCTET*) ASN1MALLOC(call->pctxt,
                                  pDisplayIE->length*sizeof(ASN1OCTET)+1);
-      memset(call->remoteDisplayName, 0,
-                                       pDisplayIE->length*sizeof(ASN1OCTET)+1);
-      memcpy(call->remoteDisplayName, pDisplayIE->data, pDisplayIE->length);
+      strcpy(call->remoteDisplayName, pDisplayIE->data);
    }
    /*Extract Remote Aliases, if present*/
    if(setup->m.sourceAddressPresent)
@@ -256,7 +254,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       for(i=0; i<(int)setup->fastStart.n; i++)
       {
          olc = NULL;
-         memset(msgbuf, 0, sizeof(msgbuf));
+         /*         memset(msgbuf, 0, sizeof(msgbuf));*/
          olc = (H245OpenLogicalChannel*)ASN1MALLOC(call->pctxt,
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
@@ -364,7 +362,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       for(i=0; i<(int)connect->fastStart.n; i++)
       {
          olc = NULL;
-         memset(msgbuf, 0, sizeof(msgbuf));
+         /*         memset(msgbuf, 0, sizeof(msgbuf));*/
          olc = (H245OpenLogicalChannel*)ASN1MALLOC(call->pctxt,
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
@@ -601,18 +599,21 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931CallProceedingMsg:/* Call proceeding message is received */
          OOTRACEINFO3("H.225 Call Proceeding message received (%s, %s)\n",
                       call->callType, call->callToken);
+
          ooFreeQ931Message(q931Msg);
          break;
       case Q931AlertingMsg:/* Alerting message received */
          OOTRACEINFO3("H.225 Alerting message received (%s, %s)\n",
                       call->callType, call->callToken);
+
          if(gH323ep.onAlerting)
             gH323ep.onAlerting(call);
          ooFreeQ931Message(q931Msg);
          break;
       case Q931ConnectMsg:/* Connect message received */
          OOTRACEINFO3("H.225 Connect message received (%s, %s)\n",
-                      call->callType, call->callToken);        
+                      call->callType, call->callToken);
+
          /* Disable call establishment timer */
          for(i = 0; i<call->timerList.count; i++)
          {
@@ -646,6 +647,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931ReleaseCompleteMsg:/* Release complete message received */
          OOTRACEINFO3("H.225 Release Complete message received (%s, %s)\n",
                       call->callType, call->callToken);
+
          ooOnReceivedReleaseComplete(call, q931Msg);
         
          /*         if(gH323ep.onCallCleared)
@@ -656,6 +658,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
       case Q931FacilityMsg:
          OOTRACEINFO3("H.225 Facility message Received (%s, %s)\n",
                        call->callType, call->callToken);
+
          ooOnReceivedFacility(call, q931Msg);
          ooFreeQ931Message(q931Msg);
          break;
@@ -890,10 +893,11 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                   newAlias->type = T_H225AliasAddress_dialedDigits;
                   newAlias->value = (char*) ASN1MALLOC(call->pctxt,
                          strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
-                  memset(newAlias->value, 0,
-                         strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
+                  /*                  memset(newAlias->value, 0,
+                      strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);*/
                   memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
                            strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
+                  newAlias->value[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]='\0';
 
                   if(remote && !strcmp(call->callType, "incoming") &&
                      !call->callingPartyNumber)
@@ -929,8 +933,8 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                   newAlias->type = T_H225AliasAddress_h323_ID;
                   newAlias->value = (char*)ASN1MALLOC(call->pctxt,
                            (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
-                  memset(newAlias->value, 0,
-                           (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
+                  /*   memset(newAlias->value, 0,
+                        (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);*/
                   for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars; j++)
                   {
                      if(pAliasAddress->u.h323_ID.data[j] < 256)
@@ -944,10 +948,11 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                   newAlias->type = T_H225AliasAddress_url_ID;
                   newAlias->value = (char*)ASN1MALLOC(call->pctxt,
                                strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
-                  memset(newAlias->value, 0,
-                               strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
+                  /*memset(newAlias->value, 0,
+                    strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);*/
                   memcpy(newAlias->value, pAliasAddress->u.url_ID,
                                  strlen(pAliasAddress->u.url_ID)*sizeof(char));
+                  newAlias->value[strlen(pAliasAddress->u.url_ID)*sizeof(char)]='\0';
                   break;
                case T_H225AliasAddress_transportID:
                   newAlias->type = T_H225AliasAddress_transportID;
@@ -963,7 +968,7 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                      characters */
                   newAlias->value = (char*)ASN1MALLOC(call->pctxt,
                                                              30*sizeof(char));
-                  memset(newAlias->value, 0, 30*sizeof(char));
+                  /*memset(newAlias->value, 0, 30*sizeof(char));*/
                   sprintf(newAlias->value, "%d.%d.%d.%d:%d",
                                      pTransportAddrss->u.ipAddress->ip.data[0],
                                      pTransportAddrss->u.ipAddress->ip.data[1],
@@ -975,10 +980,11 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                   newAlias->type = T_H225AliasAddress_email_ID;
                   newAlias->value = (char*)ASN1MALLOC(call->pctxt,
                              strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
-                  memset(newAlias->value, 0,
-                             strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
+                  /*memset(newAlias->value, 0,
+                    strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);*/
                   memcpy(newAlias->value, pAliasAddress->u.email_ID,
                                strlen(pAliasAddress->u.email_ID)*sizeof(char));
+                  newAlias->value[strlen(pAliasAddress->u.email_ID)*sizeof(char)]='\0';
                   break;
                default:
                   OOTRACEERR3("Error:Unhandled Alias type (%s, %s)\n",

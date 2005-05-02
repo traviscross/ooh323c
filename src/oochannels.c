@@ -446,6 +446,7 @@ int ooMonitorChannels()
    DListNode *curNode;
    ooCommand *cmd;
    int i=0;  
+   char buf[2];
 
    gMonitor = TRUE;
 
@@ -480,6 +481,12 @@ int ooMonitorChannels()
          if(nfds < (int)*(gH323ep.listener))
             nfds = *((int*)gH323ep.listener);
       }
+
+#ifdef HAVE_PIPE
+      FD_SET(gH323ep.cmdPipe[0], &readfds);
+      if ( nfds < (int)gH323ep.cmdPipe[0])
+         nfds = (int)gH323ep.cmdPipe[0];
+#endif
      
       if(gH323ep.callList)
       {
@@ -595,6 +602,12 @@ int ooMonitorChannels()
       /* If gatekeeper is present, then we should not be processing
          any call related command till we are registered with the gk.
       */
+#ifdef HAVE_PIPE
+      if(FD_ISSET(gH323ep.cmdPipe[0], &readfds))
+      {
+        read(gH323ep.cmdPipe[0], buf, 1);
+      }
+#endif
       if (gH323ep.stkCmdList.count > 0)
       {
          for(i=0; i< (int)gH323ep.stkCmdList.count; i++)

@@ -181,6 +181,12 @@ typedef enum {
 #define OO_CALLMODE_VIDEOCALL 304
 #define OO_CALLMODE_FAX       305
 
+
+
+
+
+
+
 /*
  * Flag macros - these operate on bit mask flags using mask values
  */
@@ -374,6 +380,7 @@ typedef struct ooCallData {
    int                  logicalChanNoCur;
    DList                timerList;
    ASN1UINT             msdRetries;
+   void                 *usrData;
    struct ooCallData*   next;
    struct ooCallData*   prev;
 } ooCallData;
@@ -412,6 +419,12 @@ typedef int (*cb_OnCallEstablished)(ooCallData* call );
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 typedef int (*cb_OnCallCleared)(ooCallData* call );
 struct ooGkClient;
+
+
+
+
+
+
 
 /**
  * Structure to store all configuration information related to the
@@ -479,7 +492,7 @@ typedef struct ooEndPoint {
    ASN1UINT tcsTimeout;
    ASN1UINT logicalChannelTimeout;
    ASN1UINT sessionTimeout;
-
+   int cmdPipe[2];
    struct ooGkClient *gkClient;
    DList stkCmdList;    /* stack command list */
 } ooEndPoint;

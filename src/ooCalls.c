@@ -590,6 +590,32 @@ int ooCallAddAliasURLID(ooCallData *call, const char* url)
 }
 
 
+int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id)
+{
+   ooAliases * psNewAlias=NULL;
+   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for remote H323-ID alias "
+                  "for (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_h323_ID;
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(h323id)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR3("Error: Failed to allocate memory for the remote H323-ID "
+                  "alias value. (%s, %s)\n", call->callType, call->callToken);
+      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, h323id);
+   psNewAlias->next = call->remoteAliases;
+   call->remoteAliases = psNewAlias;
+   OOTRACEDBGC4("Added remote alias H323ID %s to call. (%s, %s)\n", h323id,
+                call->callType, call->callToken);
+   return OO_OK;
+}
 
 
 ooCallData* ooFindCallByToken(char *callToken)

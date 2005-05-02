@@ -65,26 +65,103 @@ EXTERN int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call);
  */
 EXTERN int ooCallSetCallerId(ooCallData* call, const char* callerid);
 
-
+/**
+ * This function is used to set calling party number for a particular call.
+ * @param call          Handle to the call.
+ * @param number        Calling Party number value.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallSetCallingPartyNumber(ooCallData *call, const char *number);
 
+/**
+ * This function is used to retrieve calling party number of a particular call.
+ * @param call          Handle to the call.
+ * @param buffer        Handle to the buffer in which value will be returned.
+ * @param len           Length of the supplied buffer.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len);
+
+/**
+ * This function is used to retrieve called party number of a particular call.
+ * @param call          Handle to the call.
+ * @param buffer        Handle to the buffer in which value will be returned.
+ * @param len           Length of the supplied buffer.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len);
 
+/**
+ * This function is used to set called party number for a particular call.
+ * @param call          Handle to the call.
+ * @param number        Called Party number value.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallSetCalledPartyNumber(ooCallData *call, const char *number);
 
+/**
+ * This function is used to clear the local aliases used by this call.
+ * @param call          Handle to the call.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallClearAliases(ooCallData *call);
 
+/**
+ * This function is used to add an H323ID alias to be used by local endpoint
+ * for a particular call.
+ * @param call          Handle to the call
+ * @param h323id        H323ID to add for the local endpoint for the call.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallAddAliasH323ID(ooCallData *call, const char* h323id);
 
+/**
+ * This function is used to add an dialedDigits alias to be used by local
+ * endpoint for a particular call.
+ * @param call          Handle to the call
+ * @param dialedDigits  DialedDigits to add for the local endpoint for call.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallAddAliasDialedDigits
                              (ooCallData *call, const char* dialedDigits);
 
+/**
+ * This function is used to add an email-id alias to be used by local
+ * endpoint for a particular call.
+ * @param call          Handle to the call
+ * @param email         Email-id to add for the local endpoint for call.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallAddAliasEmailID(ooCallData *call, const char* email);
 
+
+/**
+ * This function is used to add an email-id alias to be used by local
+ * endpoint for a particular call.
+ * @param call          Handle to the call
+ * @param url           URL-id to add for the local endpoint for call.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCallAddAliasURLID(ooCallData *call, const char* url);
 
-
+/**
+ * This function is used to add an H323ID alias for the remote endpoint
+ * involved in a particular call.
+ * @param call          Handle to the call
+ * @param h323id        H323ID to add for the remote endpoint.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id);
 
 /**
  * This function is used to find a call by using the unique token for the call.

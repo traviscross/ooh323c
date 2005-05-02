@@ -1156,6 +1156,50 @@ int ooGkClientHandleRegistrationReject
 }
 
 
+/*
+
+int ooGkClientSendURQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
+{
+   int iRet;
+   H225RasMessage *pRasMsg=NULL;
+   H225UnregistrationRequest *pUnregReq=NULL;
+   OOCTXT *pctxt=NULL;
+   H225TransportAddress *pTransportAddress=NULL;
+   H225TransportAddress_ipAddress *pIpAddress=NULL;
+   ooGkClientTimerCb *cbData =NULL;
+
+   pctxt = &pGkClient->msgCtxt;
+
+   pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
+   if(!pRasMsg)
+   {
+      OOTRACEERR1("Error: Memory allocation for URQ RAS message failed\n");
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+
+   pUnregReq = (H225UnregistrationRequest*)memAlloc(pctxt,
+                                          sizeof(H225UnregistrationRequest));
+   if(!pUnregReq)
+   {
+      OOTRACEERR1("Error:Memory allocation for URQ failed\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   memset(pUnregReq, 0, sizeof(H225UnregistrationRequest));
+   pRasMsg->t = T_H225RasMessage_unregistrationRequest;
+   pRasMsg->u.unregistrationRequest = pUnregReq;
+  
+   pUnregReq->protocolIdentifier = gProtocolID;
+
+   pRegReq->m.nonStandardDataPresent=0;
+
+   pTransportAddress = (H225TransportAddress*) memAlloc(pctxt,
+              
+*/
+
+
 /*TODO: If the unregister request has list of aliases,
         only those aliases are unregistered. Right now we assume
         complete unregistration and start again.
@@ -1197,6 +1241,8 @@ int ooGkClientSendAdmissionRequest
    RasCallAdmissionInfo *pCallAdmInfo=NULL;
    pctxt = &pGkClient->msgCtxt;
 
+   OOTRACEDBGA3("Building Admission Request for call (%s, %s)\n",
+                 call->callType, call->callToken);  
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
    {
