@@ -49,11 +49,8 @@ static const char* callStateText[] = {
    "OO_CALL_CONNECTING",
    "OO_CALL_CONNECTED",
    "OO_CALL_CLEAR",
-   "OO_CALL_CLEAR_CLOLCS",
-   "OO_CALL_CLEAR_CLELCS",
-   "OO_CALL_CLEAR_ENDSESSION",
-   "OO_CALL_CLEAR_CLOSEH245",
-   "OO_CALL_CLEAR_RELEASE",
+   "OO_CALL_CLEAR_RELEASERECVD",
+   "OO_CALL_CLEAR_RELEASESENT",
    "OO_CALL_CLEARED"
 };
 
@@ -73,15 +70,19 @@ static const char *msgTypeText[]={
    "OOTerminalCapabilitySet",
    "OOTerminalCapabilitySetAck",
    "OOTerminalCapabilitySetReject",
+   "OOTerminalCapabilitySetRelease",
    "OOOpenLogicalChannel",
    "OOOpenLogicalChannelAck",
    "OOOpenLogicalChannelReject",
    "OOOpenLogicalChannelRelease",
-   "OOEndSessionCommand",
+   "OOOpenLogicalChannelConfirm",
    "OOCloseLogicalChannel",
    "OOCloseLogicalChannelAck",
    "OORequestChannelClose",
-   "OORequestChannelCloseAck"
+   "OORequestChannelCloseAck",
+   "OORequestChannelCloseReject",
+   "OORequestChannelCloseRelease",
+   "OOEndSessionCommand"
 };
 
 static const char *capTypes[]={

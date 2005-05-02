@@ -32,8 +32,45 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
 {
    int ret = OO_OK;
    H225ReleaseComplete_UUIE * releaseComplete = NULL;
-  
-    if(!q931Msg->userInfo)
+   ASN1UINT i;
+   DListNode *pNode = NULL;
+   OOTimer *pTimer = NULL;
+   /* Remove session timer, if active*/
+   for(i = 0; i<call->timerList.count; i++)
+   {
+      pNode = dListFindByIndex(&call->timerList, i);
+      pTimer = (OOTimer*)pNode->data;
+      if(((ooTimerCallback*)pTimer->cbData)->timerType &
+                                                   OO_SESSION_TIMER)
+      {
+         ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+         ooTimerDelete(call->pctxt, &call->timerList, pTimer);
+         OOTRACEDBGC3("Deleted Session Timer. (%s, %s)\n",
+                       call->callType, call->callToken);
+         break;
+      }
+   }
+
+   if(call->h245SessionState != OO_H245SESSION_IDLE &&
+      call->h245SessionState != OO_H245SESSION_CLOSED)
+      ooCloseH245Connection(call);  
+
+   if(call->callState == OO_CALL_CLEAR_RELEASESENT)
+      call->callState = OO_CALL_CLEARED;
+   else{
+      call->callState = OO_CALL_CLEAR_RELEASERECVD;
+
+      if(gH323ep.gkClient)
+      {
+         if(gH323ep.gkClient->state == GkClientRegistered){
+            OOTRACEDBGA3("Sending DRQ after received ReleaseComplete."
+                         "(%s, %s)\n", call->callType, call->callToken);
+            ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+         }
+      }
+   }
+
+   if(!q931Msg->userInfo)
    {
       OOTRACEERR3("ERROR:No User-User IE in received ReleaseComplete message "
                   "(%s, %s)\n", call->callType, call->callToken);
@@ -61,7 +98,7 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
        OO_TESTFLAG (call->flags, OO_M_TUNNELING) )
    {
       ret = ooHandleTunneledH245Messages
-         (call, &q931Msg->userInfo->h323_uu_pdu);
+                    (call, &q931Msg->userInfo->h323_uu_pdu);
    }
    return ret;
 }
@@ -183,6 +220,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    ip = &setup->sourceCallSignalAddress.u.ipAddress->ip;
    sprintf(call->remoteIP, "%d.%d.%d.%d", ip->data[0], ip->data[1],
                                           ip->data[2], ip->data[3]);
+   call->remotePort =  setup->sourceCallSignalAddress.u.ipAddress->port;
   
    /* check for fast start */
   
@@ -502,6 +540,8 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          (call, &q931Msg->userInfo->h323_uu_pdu);
 
 #if 0
+      if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
+      {
       /* Start terminal capability exchange and master slave determination */
       ret = ooSendTermCapMsg(call);
       if(ret != OO_OK)
@@ -517,6 +557,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
                   "(%s, %s)\n", call->callType, call->callToken);
          return ret;
       }  
+      }
 #endif
    }
    return OO_OK; 
@@ -606,20 +647,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          OOTRACEINFO3("H.225 Release Complete message received (%s, %s)\n",
                       call->callType, call->callToken);
          ooOnReceivedReleaseComplete(call, q931Msg);
-         ooCloseH225Connection(call);
-         if(call->callState < OO_CALL_CLEARED)
-         {
-            if(call->callState < OO_CALL_CLEAR)
-               call->callEndReason = OO_REMOTE_CLEARED;
-            call->callState = OO_CALL_CLEARED;
-         }
         
-         if(gH323ep.gkClient)
-         {
-           if(gH323ep.gkClient->state == GkClientRegistered)
-               ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
-         }
-
          /*         if(gH323ep.onCallCleared)
                     gH323ep.onCallCleared(call);         */
       

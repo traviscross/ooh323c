@@ -416,6 +416,21 @@ EXTERN int ooH323MakeCall(char *dest, char *callToken);
  */
 EXTERN int ooH323MakeCall_3(char *dest, char* callToken, int callRef);
 
+
+/**
+ * This function is used to make an outgoing call. Even if gatekeeper
+ * is enabled, this function can be used to make a call directly using
+ * IP address and avoiding going through gk. One use of such a functionality
+ * is when the H323 stack is part of pbx, you can avoid going to gatekeeper
+ * when making a call to local user, whose IP address is already known.
+ * @param dest      Destination - IP:Port. This can't be an alias as we are not
+ *                  using gk.
+ * @param callToken Unique token for the new call.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooH323MakeCallNoGk(char *dest, char* callToken);
+
 /**
  * Helper function used to make a call once it is approved by the Gk.
  * In case of no gk, this function is directly called to make a call.

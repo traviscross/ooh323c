@@ -1023,9 +1023,8 @@ int ooSendFacility(ooCallData *call)
 
 int ooSendReleaseComplete(ooCallData *call)
 {
-   int ret, ieLen, standard = 0, location = 0;  
+   int ret;  
    Q931InformationElement* ie=NULL;
-   ASN1OCTET dataBuf[1024];
    Q931Message *q931msg=NULL;
    H225ReleaseComplete_UUIE *releaseComplete;
    OOCTXT *pctxt = &gH323ep.msgctxt;  
@@ -1066,8 +1065,8 @@ int ooSendReleaseComplete(ooCallData *call)
    ooQ931SetCauseIE(q931msg, Q931NormalCallClearing, 0, 0);
   
    /* Add user-user ie */
-   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = FALSE;
+   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=TRUE;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG (call->flags, OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
            T_H225H323_UU_PDU_h323_message_body_releaseComplete;
   
@@ -1080,7 +1079,7 @@ int ooSendReleaseComplete(ooCallData *call)
    memcpy(releaseComplete->callIdentifier.guid.data,
                                   call->callIdentifier.guid.data,
                                   call->callIdentifier.guid.numocts);
-     
+
    OOTRACEDBGA3("Built Release Complete message (%s, %s)\n",
                 call->callType, call->callToken);
    /* Send H225 message */  
@@ -1147,7 +1146,7 @@ int ooAcceptCall(ooCallData *call)
       return OO_FAILED;
    }  
 
-   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
+   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=TRUE;
 
    q931msg->userInfo->h323_uu_pdu.h245Tunneling =
       OO_TESTFLAG (call->flags, OO_M_TUNNELING);
@@ -1527,6 +1526,46 @@ int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
    return OO_OK;
 }
 
+int ooH323MakeCallNoGk(char *dest, char* callToken)
+{
+   OOCTXT *pctxt;
+   ooCallData *call;
+   int ret=0, i=0;
+
+   if(!dest)
+   {
+      OOTRACEERR1("ERROR:Invalid destination for new call\n");
+      return OO_FAILED;
+   }
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken parameter to make call\n");
+      return OO_FAILED;
+   }
+
+   call = ooCreateCall("outgoing", callToken);
+   pctxt = call->pctxt;
+   ret = ooParseDestination(call, dest);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR2("Error: Failed to parse the destination string %s for "
+                  "new call\n", dest);
+      ooCleanCall(call);
+      return OO_FAILED;
+   }
+
+   strcpy(callToken, call->callToken);
+   call->callReference = ooGenerateCallReference();
+   ooGenerateCallIdentifier(&call->callIdentifier);
+   call->confIdentifier.numocts = 16;
+   for (i = 0; i < 16; i++)
+      call->confIdentifier.data[i] = i+1;
+
+   ret = ooH323CallAdmitted (call);
+
+   return OO_OK;
+}
+
 int ooH323CallAdmitted(ooCallData *call)
 {
    int ret=0;
@@ -1571,8 +1610,7 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    ASN1DynOctStr *pFS=NULL;
    H225TransportAddress_ipAddress *destCallSignalIpAddress;
-   /*   int addr_part1, addr_part2, addr_part3, addr_part4;
-        char hexip[20];*/
+
    H225TransportAddress_ipAddress *srcCallSignalIpAddress;
    ooH323EpCapability *epCap=NULL;
    DListNode *curNode = NULL;
@@ -2166,6 +2204,73 @@ int ooParseDestination(ooCallData *call, char *dest)
    return OO_OK;
 }
 
+/* Uses an existing Q931 message for tunneling */
+/*
+int ooAddH245MessagesToQ931MsgForTunneling(ooCallData *call, Q931Message *pmsg)
+{
+   int len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
+   DListNode * p_msgNode=NULL;
+   H225H323_UU_PDU *pH323UUPDU = NULL;
+   H225H323_UU_PDU_h245Control *pH245Control = NULL;
+   ASN1DynOctStr * elem;
+   ASN1OCTET *msgptr=NULL;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+
+   if(OO_TESTFLAG (call->flags, OO_M_TUNNELING) && call->pH245Channel &&
+      call->pH245Channel->outQueue.count > 0)
+   {
+      OOTRACEDBGA3("Adding H245 message for tunneling(%s, %s)\n",
+                    call->callType,  call->callToken);
+      pH323UUPDU = (H225H323_UU_PDU*) &pmsg->userInfo->h323_uu_pdu;
+      pH323UUPDU->m.h245TunnelingPresent = TRUE;
+      pH323UUPDU->m.h245ControlPresent = TRUE;
+      pH323UUPDU->h245Tunneling = TRUE;
+      pH245Control = (H225H323_UU_PDU_h245Control*) &pH323UUPDU->h245Control;
+
+      pH245Control->elem = NULL;
+
+      pH245Control->elem = (ASN1DynOctStr*) memAlloc(pctxt,
+                        sizeof(ASN1DynOctStr));
+      if(!pH245Control->elem)
+      {
+         OOTRACEERR3("ERROR:Failed to allocate memory for H245 control "
+                     "element (%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+
+      p_msgNode = call->pH245Channel->outQueue.head;
+
+      msgptr = (ASN1OCTET*) p_msgNode->data;
+      msgType = msgptr[0];
+
+      logicalChannelNo = msgptr[1];
+      logicalChannelNo = logicalChannelNo << 8;
+      logicalChannelNo = (logicalChannelNo | msgptr[2]);
+
+      len = msgptr[3];
+      len = len<<8;
+      len = (len | msgptr[4]);
+
+      dListRemove(&(call->pH245Channel->outQueue), p_msgNode);
+      if(p_msgNode)
+         memFreePtr(call->pctxt, p_msgNode);
+
+      pH245Control->elem->data = memAlloc(pctxt, len*sizeof(ASN1OCTET));
+      if(!pH245Control->elem->data)
+      {
+      OOTRACEERR3("Failed to allocate memory for tunneled
+
+      pH245Control->elem->data = msgptr+5;
+      pH245Control->elem->numocts = len;
+      pH245Control->n = 1;
+      pmsg->tunneledMsgType = msgType;
+      pmsg->logicalChannelNo = logicalChannelNo;
+
+   }
+
+}
+*/
 
 /* Build a Facility message and tunnel H.245 message through it */
 int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,

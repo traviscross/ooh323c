@@ -97,7 +97,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    }
 
    call->calledPartyNumber = NULL;
-   call->h245SessionState = OO_H245SESSION_INACTIVE;
+   call->h245SessionState = OO_H245SESSION_IDLE;
    call->dtmfmode = gH323ep.dtmfmode;
    call->mediaInfo = NULL;
    strcpy(call->localIP, gH323ep.signallingIP);
@@ -159,10 +159,61 @@ int ooEndCall(ooCallData *call)
                  ooGetCallStateText(call->callState), call->callType,
                  call->callToken);
 
+   if(call->callState == OO_CALL_CLEARED)
+   {
+      ooCleanCall(call);
+      return OO_OK;
+   }
+
+   if(call->logicalChans)
+   {
+      OOTRACEINFO3("Clearing all logical channels. (%s, %s)\n", call->callType,
+                    call->callToken);
+      ooClearAllLogicalChannels(call);
+   }
+
+   if(!OO_TESTFLAG(call->flags, OO_M_ENDSESSION_BUILT))
+   {
+      if(call->h245SessionState == OO_H245SESSION_ACTIVE ||
+         call->h245SessionState == OO_H245SESSION_ENDRECVD)
+      {
+         ooSendEndSessionCommand(call);
+         OO_SETFLAG(call->flags, OO_M_ENDSESSION_BUILT);
+      }
+   }
+
+
+   if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))  
+   {
+      if(call->callState == OO_CALL_CLEAR ||
+         call->callState == OO_CALL_CLEAR_RELEASERECVD)
+      {
+         ooSendReleaseComplete(call);
+         OO_SETFLAG(call->flags, OO_M_RELEASE_BUILT);
+      }
+   }
+     
+   return OO_OK;
+}
+
+
+#if 0
+int ooEndCall(ooCallData *call)
+{
+   OOTRACEDBGA4("In ooEndCall call state is - %s (%s, %s)\n",
+                 ooGetCallStateText(call->callState), call->callType,
+                 call->callToken);
+
    if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
    {
-      if(call->callState < OO_CALL_CLEAR_CLOSEH245)
-         call->callState = OO_CALL_CLEAR_CLOSEH245;
+     /*      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+      {
+         ooSendEndSessionCommand(call);
+         call->callState = OO_CALL_CLEAR_ENDSESSION;
+         }else{*/
+          if(call->callState < OO_CALL_CLEAR_CLOSEH245)
+             call->callState = OO_CALL_CLEAR_CLOSEH245;
+          // }
    }
    else {
       if(call->callState == OO_CALL_CLEAR)  
@@ -259,6 +310,7 @@ int ooEndCall(ooCallData *call)
    }
    return OO_OK;
 }
+#endif
 
 int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
 {
@@ -295,7 +347,7 @@ int ooCleanCall(ooCallData *call)
       ooClearAllLogicalChannels(call);
   
    /* Close H.245 connection, if not already closed */
-   if(call->h245SessionState != OO_H245SESSION_INACTIVE)
+   if(call->h245SessionState != OO_H245SESSION_CLOSED)
       ooCloseH245Connection(call);
    else{
       if(call->pH245Channel && call->pH245Channel->outQueue.count > 0)

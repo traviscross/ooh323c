@@ -145,8 +145,10 @@ int ooCreateH245Connection(ooCallData *call)
 
 int ooSendH245Msg(ooCallData *call, H245Message *msg)
 {
-   int iRet=0;
+   int iRet=0,  len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
    ASN1OCTET * encodebuf;
+   ASN1OCTET *msgptr=NULL;
+
    if(!call)
       return OO_FAILED;
 
@@ -179,11 +181,41 @@ int ooSendH245Msg(ooCallData *call, H245Message *msg)
       }
    }
           
-   dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
-
-   OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
+   if(!OO_TESTFLAG(call->flags, OO_M_TUNNELING)){
+      dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
+      OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
                 call->pH245Channel->outQueue.count,
                 call->callType, call->callToken);  
+   }
+   else{
+      msgType = encodebuf[0];
+
+      logicalChannelNo = encodebuf[1];
+      logicalChannelNo = logicalChannelNo << 8;
+      logicalChannelNo = (logicalChannelNo | encodebuf[2]);
+
+      len = encodebuf[3];
+      len = len<<8;
+      len = (len | encodebuf[4]);
+
+      iRet = ooSendAsTunneledMessage
+            (call, encodebuf+5,len,msgType, logicalChannelNo);
+
+      if(iRet != OO_OK)
+      {
+         memFreePtr (call->pctxt, encodebuf);
+         OOTRACEERR3("ERROR:Failed to tunnel H.245 message (%s, %s)\n",
+                      call->callType, call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callEndReason = OO_HOST_CLEARED;
+            call->callState = OO_CALL_CLEAR;
+         }
+         return OO_FAILED;
+      }
+      memFreePtr (call->pctxt, encodebuf);
+      return OO_OK;
+   }
 
    return OO_OK;
 }
@@ -382,8 +414,10 @@ int ooAcceptH245Connection(ooCallData *call)
    call->pH245Channel->sock = h245Channel;
    call->h245SessionState = OO_H245SESSION_ACTIVE;
 
+
    OOTRACEINFO3("H.245 connection established (%s, %s)\n",
                 call->callType, call->callToken);
+
 
    /* Start terminal capability exchange and master slave determination */
    ret = ooSendTermCapMsg(call);
@@ -682,28 +716,7 @@ int ooMonitorChannels()
                }
             }
            
-            if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
-            {
-               if(FD_ISSET(call->pH225Channel->sock, &writefds))
-               {
-                  if(call->pH225Channel->outQueue.count>0)
-                  {
-                     OOTRACEDBGC3("Sending H225 message (%s, %s)\n",
-                                 call->callType, call->callToken);
-                     ooSendMsg(call, OOQ931MSG);
-                  }
-                  if(call->pH245Channel &&
-                     call->pH245Channel->outQueue.count>0 &&
-                     OO_TESTFLAG (call->flags, OO_M_TUNNELING))
-                  {
-                     OOTRACEDBGC3("H245 message needs to be tunneled. "
-                                  "(%s, %s)\n", call->callType,
-                                  call->callToken);
-                     ooSendMsg(call, OOH245MSG);
-                  }
-               }                               
-            }
-
+       
             if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
             {
                if(FD_ISSET(call->pH245Channel->sock, &readfds))
@@ -729,6 +742,29 @@ int ooMonitorChannels()
                   ooAcceptH245Connection(call);
                }                          
             }
+
+            if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
+            {
+               if(FD_ISSET(call->pH225Channel->sock, &writefds))
+               {
+                  if(call->pH225Channel->outQueue.count>0)
+                  {
+                     OOTRACEDBGC3("Sending H225 message (%s, %s)\n",
+                                 call->callType, call->callToken);
+                     ooSendMsg(call, OOQ931MSG);
+                  }
+                  if(call->pH245Channel &&
+                     call->pH245Channel->outQueue.count>0 &&
+                     OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+                  {
+                     OOTRACEDBGC3("H245 message needs to be tunneled. "
+                                  "(%s, %s)\n", call->callType,
+                                  call->callToken);
+                     ooSendMsg(call, OOH245MSG);
+                  }
+               }                               
+            }
+
             if(ooTimerNextTimeout(&call->timerList, &toNext))
             {
                if(ooCompareTimeouts(&toMin, &toNext) > 0)
@@ -773,6 +809,7 @@ int ooH2250Receive(ooCallData *call)
    {
       OOTRACEWARN3("Warn:RemoteEndpoint closed connection (%s, %s)\n",
                    call->callType, call->callToken);
+      ooCloseH225Connection(call);
       if(call->callState < OO_CALL_CLEARED)
       {
          call->callEndReason = OO_REMOTE_CLOSED_CONNECTION;
@@ -910,10 +947,10 @@ int ooH245Receive(ooCallData *call)
                    " connection (%s, %s)\n", call->callType, call->callToken);
       ooCloseH245Connection(call);
       ooFreeH245Message(call, pmsg);
-      if(call->callState < OO_CALL_CLEAR_ENDSESSION)
+      if(call->callState < OO_CALL_CLEAR)
       {
          call->callEndReason = OO_REMOTE_CLOSED_H245_CONNECTION;
-         call->callState = OO_CALL_CLEAR_ENDSESSION;
+         call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
    }
@@ -1042,6 +1079,12 @@ int ooSendMsg(ooCallData *call, int type)
    DListNode * p_msgNode=NULL;
    ASN1OCTET *msgptr, *msgToSend=NULL;
 
+   if(call->callState == OO_CALL_CLEARED)
+   {
+      OOTRACEDBGA3("Warning:Call marked for cleanup. Can not send message."
+                   "(%s, %s)\n", call->callType, call->callState);
+      return OO_OK;
+   }
    if(type == OOQ931MSG)
    {
       if(call->pH225Channel->outQueue.count == 0)
@@ -1143,7 +1186,7 @@ int ooSendMsg(ooCallData *call, int type)
       if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
       {
          OOTRACEDBGC4("Sending %s H245 message over H.245 channel. "
-                      "(%s, %s, %s)\n", ooGetMsgTypeText(msgType),
+                      "(%s, %s)\n", ooGetMsgTypeText(msgType),
                       call->callType, call->callToken);
          
          ret = ooSocketSend(call->pH245Channel->sock, msgptr+5, len);
@@ -1209,6 +1252,8 @@ int ooCloseH245Connection(ooCallData *call)
          dListFreeAll(call->pctxt, &(call->pH245Channel->outQueue));
       memFreePtr (call->pctxt, call->pH245Channel);
       call->pH245Channel = NULL;
+      OOTRACEDBGC3("Closed H245 connection. (%s, %s)\n", call->callType,
+                                                       call->callToken);
    }
    if(call->h245listener)
    {
@@ -1216,9 +1261,8 @@ int ooCloseH245Connection(ooCallData *call)
       memFreePtr(call->pctxt, call->h245listener);
       call->h245listener = NULL;
    }
-   call->h245SessionState = OO_H245SESSION_INACTIVE;
-   OOTRACEDBGC3("Closed H245 connection. (%s, %s)\n", call->callType,
-                                                       call->callToken);
+   call->h245SessionState = OO_H245SESSION_CLOSED;
+
    return OO_OK;
 }
 
@@ -1273,13 +1317,47 @@ int ooOnSendMsg
    case OOReleaseComplete:
       OOTRACEINFO3("Sent Message - ReleaseComplete (%s, %s)\n", call->callType,
                     call->callToken);
-      if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered)
-         ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
 
-      /*      if(gH323ep.onCallCleared)
-              gH323ep.onCallCleared(call);*/
+      if(call->callState == OO_CALL_CLEAR_RELEASERECVD)
+         call->callState = OO_CALL_CLEARED;
+      else{
+         call->callState = OO_CALL_CLEAR_RELEASESENT;
+         if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered){
+            OOTRACEDBGA3("Sending DRQ after sending ReleaseComplete."
+                         "(%s, %s)\n",   call->callType, call->callToken);
+            ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+         }
+      }
 
+      if(call->callState == OO_CALL_CLEAR_RELEASESENT &&
+         call->h245SessionState == OO_H245SESSION_IDLE)
+      {
+         cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+                                                  sizeof(ooTimerCallback));
+         if(!cbData)
+         {
+            OOTRACEERR3("Error:Unable to allocate memory for timer callback "
+                        "data.(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+         cbData->call = call;
+         cbData->timerType = OO_SESSION_TIMER;
+         cbData->channelNumber = 0;
+         if(!ooTimerCreate(call->pctxt, &call->timerList,
+             &ooSessionTimerExpired, gH323ep.sessionTimeout, cbData, FALSE))
+         {
+            OOTRACEERR3("Error:Unable to create EndSession timer- "
+                        "ReleaseComplete.(%s, %s)\n", call->callType,
+                        call->callToken);
+            ASN1MEMFREEPTR(call->pctxt, cbData);
+            return OO_FAILED;
+         }
+      }
 
+      if(call->h245SessionState == OO_H245SESSION_CLOSED)
+      {
+         call->callState = OO_CALL_CLEARED;
+      }
 
       break;
    case OOFacility:
@@ -1351,9 +1429,14 @@ int ooOnSendMsg
                       "(%s, %s)\n", call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySet:
-      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
+         /* If session isn't marked active yet, do it. possible in case of
+            tunneling */
+         if(call->h245SessionState == OO_H245SESSION_IDLE)
+            call->h245SessionState = OO_H245SESSION_ACTIVE;
          OOTRACEINFO3("Tunneled Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
+      }
       else
          OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
@@ -1443,10 +1526,14 @@ int ooOnSendMsg
       break;
    case OOEndSessionCommand:
       if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
-         OOTRACEINFO1("Tunneled Message - EndSessionCommand\n");
+         OOTRACEINFO3("Tunneled Message - EndSessionCommand(%s, %s)\n",
+                                             call->callType, call->callToken);
       else
-         OOTRACEINFO1("Sent Message - EndSessionCommand\n");
-      if(call->h245SessionState == OO_H245SESSION_ACTIVE)
+         OOTRACEINFO3("Sent Message - EndSessionCommand (%s, %s)\n",
+                                           call->callType, call->callToken);
+      if((call->h245SessionState == OO_H245SESSION_ACTIVE))/* ||
+         (call->h245SessionState == OO_H245SESSION_INACTIVE &&
+         OO_TESTFLAG(call->flags, OO_M_TUNNELING)))*/
       {
          /* Start EndSession timer */
          call->h245SessionState = OO_H245SESSION_ENDSENT;
@@ -1464,7 +1551,7 @@ int ooOnSendMsg
          if(!ooTimerCreate(call->pctxt, &call->timerList,
              &ooSessionTimerExpired, gH323ep.sessionTimeout, cbData, FALSE))
          {
-            OOTRACEERR3("Error:Unable to create CloseLogicalChannel timer. "
+            OOTRACEERR3("Error:Unable to create EndSession timer. "
                         "(%s, %s)\n", call->callType, call->callToken);
             ASN1MEMFREEPTR(call->pctxt, cbData);
             return OO_FAILED;

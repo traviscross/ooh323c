@@ -1193,6 +1193,7 @@ int ooGkClientSendAdmissionRequest
    OOCTXT* pctxt;
    H225AdmissionRequest *pAdmReq=NULL;
    H225TransportAddress_ipAddress *pIpAddressLocal =NULL, *pIpAddressRemote=NULL;
+   ooAliases *destAliases = NULL, *srcAliases=NULL;
    RasCallAdmissionInfo *pCallAdmInfo=NULL;
    pctxt = &pGkClient->msgCtxt;
 
@@ -1297,11 +1298,29 @@ int ooGkClientSendAdmissionRequest
           (void*)pGkClient->endpointId.data,
           sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
 
-   /* Populate Destination Info -  */
-   if(call->remoteAliases)
+   /* Get Destination And source aliases for call -  */
+   if(!strcmp(call->callType, "incoming"))
+   {
+      if(call->ourAliases)
+         destAliases = call->ourAliases;
+      else
+         destAliases = gH323ep.aliases;
+
+      srcAliases = call->remoteAliases;
+   }else {
+      if(call->ourAliases)
+         srcAliases = call->ourAliases;
+      else
+         srcAliases = gH323ep.aliases;
+
+      destAliases = call->remoteAliases;
+   }
+
+   /* Populate destination info */
+   if(destAliases)
    {
       pAdmReq->m.destinationInfoPresent = 1;
-      if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, call->remoteAliases,
+      if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, destAliases,
                                       &pAdmReq->destinationInfo))
       {
         OOTRACEERR1("Error:Failed to populate destination aliases - "
@@ -1311,20 +1330,21 @@ int ooGkClientSendAdmissionRequest
          return OO_FAILED;
       }
    }
+
    /* Populate Source Info */
-   if(call->ourAliases)
-      iRet = ooPopulateAliasList(&pGkClient->msgCtxt, call->ourAliases,
-                                                          &pAdmReq->srcInfo);
-   else
-      iRet = ooPopulateAliasList(&pGkClient->msgCtxt, gH323ep.aliases,
-                                                          &pAdmReq->srcInfo);
-   if(OO_OK != iRet)
+   if(srcAliases)
    {
-      OOTRACEERR1("Error:Failed to populate source aliases - ARQ message\n");
-      memReset(pctxt);
-      pGkClient->state = GkClientFailed;     
-      return OO_FAILED;
-   }  
+      iRet = ooPopulateAliasList(&pGkClient->msgCtxt, srcAliases,
+                                                          &pAdmReq->srcInfo);
+      if(OO_OK != iRet)
+      {
+         OOTRACEERR1("Error:Failed to populate source aliases -ARQ message\n");
+         memReset(pctxt);
+         pGkClient->state = GkClientFailed;     
+         return OO_FAILED;
+      }
+   }
+  
    /* Populate bandwidth*/
    pAdmReq->bandWidth = DEFAULT_BW_REQUEST;
    /* Populate call Reference */

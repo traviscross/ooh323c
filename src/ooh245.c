@@ -629,8 +629,9 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDeterminationAck message to outbound queue."
-                  " (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDeterminationAck message"
+                  " to outbound queue. (%s, %s)\n", call->callType,
+                  call->callToken);
    }
   
    ooFreeH245Message(call, ph245msg);
@@ -1291,8 +1292,8 @@ int ooSendEndSessionCommand(ooCallData *call)
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue EndSession message to outbound queue.(%s, %s)\n",
-                   call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue EndSession message to outbound "
+                  "queue.(%s, %s)\n", call->callType, call->callToken);
    }
    ooFreeH245Message(call, ph245msg);
    return ret;
@@ -1330,14 +1331,16 @@ int ooHandleH245Command(ooCallData *call,
                }
             }
             ooCloseH245Connection(call);
-         }else{
+      }else{
 
-            call->h245SessionState = OO_H245SESSION_ENDRECVD;
-            if(call->callState < OO_CALL_CLEAR_ENDSESSION)
+         call->h245SessionState = OO_H245SESSION_ENDRECVD;
+         if(call->callState < OO_CALL_CLEAR)
+            call->callState = OO_CALL_CLEAR;
+                      /*   if(call->callState < OO_CALL_CLEAR_ENDSESSION)
             {
                ooSendEndSessionCommand(call);
                call->callState = OO_CALL_CLEAR_ENDSESSION;
-            }
+               }*/
          }
            
            
@@ -1808,7 +1811,11 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
          switch(request->t)
          {
          case T_H245RequestMessage_terminalCapabilitySet:
-           
+            /* If session isn't marked active yet, do it. possible in case of
+               tunneling */
+            if(call->h245SessionState == OO_H245SESSION_IDLE)
+               call->h245SessionState = OO_H245SESSION_ACTIVE;
+
             ooOnReceivedTerminalCapabilitySet(call, pH245);
             if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
                ooSendTermCapMsg(call);
@@ -2084,7 +2091,8 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
  
    if(!tcs->m.capabilityTablePresent)
    {
-     OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",                   call->callType, call->callToken);
+     OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",
+                   call->callType, call->callToken);
      ooSendTerminalCapabilitySetReject(call, tcs->sequenceNumber,
                          T_H245TerminalCapabilitySetReject_cause_unspecified);
      return OO_OK;
@@ -2827,16 +2835,24 @@ int ooSessionTimerExpired(void *pdata)
 
    OOTRACEINFO3("SessionTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
- 
-   ret = ooCloseH245Connection(call);
-  
-   if(ret != OO_OK)
+
+   if(call->h245SessionState != OO_H245SESSION_IDLE &&
+      call->h245SessionState != OO_H245SESSION_CLOSED) 
    {
-      OOTRACEERR3("Error:Failed to close H.245 connection (%s, %s)\n",
-                  call->callType, call->callToken);
+      ret = ooCloseH245Connection(call);
+  
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("Error:Failed to close H.245 connection (%s, %s)\n",
+                     call->callType, call->callToken);
+      }
    }
 
    ASN1MEMFREEPTR(call->pctxt, cbData);
+
+   if(call->callState == OO_CALL_CLEAR_RELEASESENT)
+      call->callState = OO_CALL_CLEARED;
+  
    return OO_OK;
 }
 

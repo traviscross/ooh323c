@@ -74,20 +74,18 @@ typedef enum {
    OO_CALL_CONNECTING,
    OO_CALL_CONNECTED,
    OO_CALL_CLEAR,             /* call marked for clearing */
-   OO_CALL_CLEAR_CLOLCS,      /* Logical Channels closed*/
-   OO_CALL_CLEAR_CLELCS,      /* Logical Channels cleared*/
-   OO_CALL_CLEAR_ENDSESSION,  /* EndSession command sent*/
-   OO_CALL_CLEAR_CLOSEH245,   /* H245 sockets closed*/
-   OO_CALL_CLEAR_RELEASE,     /* Release Sent */
+   OO_CALL_CLEAR_RELEASERECVD,
+   OO_CALL_CLEAR_RELEASESENT,     /* Release Sent */
    OO_CALL_CLEARED            /* Call Cleared */
 } OOCallState;
 
 /** H245 Session state */
 typedef enum {
-   OO_H245SESSION_INACTIVE,
+   OO_H245SESSION_IDLE,
    OO_H245SESSION_ACTIVE,
    OO_H245SESSION_ENDSENT,
-   OO_H245SESSION_ENDRECVD
+   OO_H245SESSION_ENDRECVD,
+   OO_H245SESSION_CLOSED
 } OOH245SessionState;
 
 /** Logical Channel states */
@@ -127,15 +125,16 @@ typedef enum {
 #define OOOpenLogicalChannel           117
 #define OOOpenLogicalChannelAck        118
 #define OOOpenLogicalChannelReject     119
-#define OOOpenLogicalChannelConfirm    120
-#define OOCloseLogicalChannel          121
-#define OOCloseLogicalChannelAck       122
-#define OORequestChannelClose          123
-#define OORequestChannelCloseAck       124
-#define OORequestChannelCloseReject    125
-#define OORequestChannelCloseRelease   126
-#define OOEndSessionCommand            127
-#define OO_MSGTYPE_MAX                 127
+#define OOOpenLogicalChannelRelease    120
+#define OOOpenLogicalChannelConfirm    121
+#define OOCloseLogicalChannel          122
+#define OOCloseLogicalChannelAck       123
+#define OORequestChannelClose          124
+#define OORequestChannelCloseAck       125
+#define OORequestChannelCloseReject    126
+#define OORequestChannelCloseRelease   127
+#define OOEndSessionCommand            128
+#define OO_MSGTYPE_MAX                 128
 
 
 /* Timer types */
@@ -146,6 +145,7 @@ typedef enum {
 #define OO_CLC_TIMER       (1<<4)
 #define OO_RCC_TIMER       (1<<5)
 #define OO_SESSION_TIMER   (1<<6)
+
 /**
   Default port ranges used
 */
@@ -300,6 +300,7 @@ typedef struct ooAliases{
    struct ooAliases *next;
 }ooAliases;
 
+
 /**
  * Structure to store all the information related to a particular
  * call.
@@ -320,6 +321,8 @@ typedef struct ooTimerCallback{
 } ooTimerCallback;
 
 /* Flag mask values */
+#define OO_M_ENDSESSION_BUILT   0x08000000
+#define OO_M_RELEASE_BUILT       0x04000000
 #define OO_M_GKROUTED           0x02000000
 #define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
