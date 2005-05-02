@@ -64,13 +64,19 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    if (OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
       OO_SETFLAG (call->flags, OO_M_TUNNELING);
 
-   if(gH323ep.gkClient && OO_TESTFLAG(gH323ep.flags, OO_M_GKROUTED))
+   if(gH323ep.gkClient)
    {
-      OO_SETFLAG(call->flags, OO_M_GKROUTED);
+      OO_SETFLAG(call->flags, OO_M_USEGK);
+      if(OO_TESTFLAG(gH323ep.flags, OO_M_GKROUTED))
+      {
+         OO_SETFLAG(call->flags, OO_M_GKROUTED);
+      }
    }
+
    if (OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       OO_SETFLAG (call->flags, OO_M_FASTSTART);
 
+  
    call->callState = OO_CALL_CREATED;
    call->callEndReason = 0;
 

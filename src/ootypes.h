@@ -162,12 +162,13 @@ typedef enum {
 #define MAXMSGLEN 4096
 #define MAXFILENAME 256
 
-#define OO_CMD_MAKECALL    201
-#define OO_CMD_MAKECALL_3  202
-#define OO_CMD_ANSCALL     203
-#define OO_CMD_REJECTCALL  204
-#define OO_CMD_HANGCALL    205
-#define OO_CMD_STOPMONITOR 206
+#define OO_CMD_MAKECALL      201
+#define OO_CMD_MAKECALL_NOGK 202
+#define OO_CMD_MAKECALL_3    203
+#define OO_CMD_ANSCALL       204
+#define OO_CMD_REJECTCALL    205
+#define OO_CMD_HANGCALL      206
+#define OO_CMD_STOPMONITOR   207
 
 
 /**
@@ -333,7 +334,7 @@ typedef struct ooTimerCallback{
 #define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
 #define OO_M_FASTSTART          0x40000000
-#define OO_M_GKENGAGED          0x20000000
+#define OO_M_USEGK          0x20000000
 #define OO_M_AUDIO              0x10000000
 
 typedef struct ooCallData {

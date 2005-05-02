@@ -1432,6 +1432,7 @@ int ooAcceptCall(ooCallData *call)
    return OO_OK;
 }
 
+
 int ooH323MakeCall(char *dest, char *callToken)
 {
    OOCTXT *pctxt;
@@ -1546,6 +1547,10 @@ int ooH323MakeCallNoGk(char *dest, char* callToken)
 
    call = ooCreateCall("outgoing", callToken);
    pctxt = call->pctxt;
+
+   /* Clear gk use flag */
+   OO_CLRFLAG(call->flags, OO_M_USEGK);
+
    ret = ooParseDestination(call, dest);
    if(ret != OO_OK)
    {

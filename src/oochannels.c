@@ -445,8 +445,10 @@ int ooMonitorChannels()
    ooCallData *call, *prev=NULL;
    DListNode *curNode;
    ooCommand *cmd;
-   int i=0;  
+   int i=0;
+#ifdef HAVE_PIPE  
    char buf[2];
+#endif
 
    gMonitor = TRUE;
 
@@ -628,6 +630,11 @@ int ooMonitorChannels()
                OOTRACEINFO2("Processing MakeCall command %s\n",
                              (char*)cmd->param2);
                ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2);
+               break;
+            case OO_CMD_MAKECALL_NOGK:
+               OOTRACEINFO2("Processing MakeCall_NoGk command %s\n",
+                             (char*)cmd->param2);
+               ooH323MakeCallNoGk((char*)cmd->param1, (char*)cmd->param2);
                break;
             case OO_CMD_MAKECALL_3:
                if(gH323ep.gkClient &&
