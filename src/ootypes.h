@@ -328,13 +328,14 @@ typedef struct ooTimerCallback{
 } ooTimerCallback;
 
 /* Flag mask values */
+#define OO_M_ENDPOINTCREATED    0x00100000
 #define OO_M_ENDSESSION_BUILT   0x08000000
-#define OO_M_RELEASE_BUILT       0x04000000
+#define OO_M_RELEASE_BUILT      0x04000000
 #define OO_M_GKROUTED           0x02000000
 #define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
 #define OO_M_FASTSTART          0x40000000
-#define OO_M_USEGK          0x20000000
+#define OO_M_USEGK              0x20000000
 #define OO_M_AUDIO              0x10000000
 
 typedef struct ooCallData {

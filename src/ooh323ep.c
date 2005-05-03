@@ -154,6 +154,7 @@ int ooH323EpInitialize
    }
 #endif
    ooSetTraceThreshold(OOTRCLVLINFO);
+   OO_SETFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
    return OO_OK;
 }
 
@@ -321,42 +322,46 @@ int ooH323EpDestroy(void)
       close trace file free context structure
    */
    ooCallData * cur, *temp;
-   OOTRACEINFO1("Destroying H323 Endpoint\n");
-   if(gH323ep.callList)
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED))
    {
-      cur = gH323ep.callList;
-      while(cur)
+      OOTRACEINFO1("Destroying H323 Endpoint\n");
+      if(gH323ep.callList)
       {
-         temp = cur;
-         cur = cur->next;
-         temp->callEndReason = OO_HOST_CLEARED;
-         ooCleanCall(temp);
+         cur = gH323ep.callList;
+         while(cur)
+         {
+            temp = cur;
+            cur = cur->next;
+            temp->callEndReason = OO_HOST_CLEARED;
+            ooCleanCall(temp);
+         }
+         gH323ep.callList = NULL;
       }
-      gH323ep.callList = NULL;
-   }
 
 
-   if(gH323ep.listener)
-   {
-      ooSocketClose(*(gH323ep.listener));
-      gH323ep.listener = NULL;  
-   }
+      if(gH323ep.listener)
+      {
+         ooSocketClose(*(gH323ep.listener));
+         gH323ep.listener = NULL;  
+      }
 
-   ooGkClientDestroy(); 
+      ooGkClientDestroy(); 
 
-   if(gH323ep.fptraceFile)
-   {
-      fclose(gH323ep.fptraceFile);
-      gH323ep.fptraceFile = NULL;
-   }
+      if(gH323ep.fptraceFile)
+      {
+         fclose(gH323ep.fptraceFile);
+         gH323ep.fptraceFile = NULL;
+      }
 
-   freeContext(&(gH323ep.ctxt));
+      freeContext(&(gH323ep.ctxt));
 
 #ifdef _WIN32
-   DeleteCriticalSection(&gCmdMutex);
-   DeleteCriticalSection(&gCallTokenMutex);
-   DeleteCriticalSection(&gCallRefMutex);
+      DeleteCriticalSection(&gCmdMutex);
+      DeleteCriticalSection(&gCallTokenMutex);
+      DeleteCriticalSection(&gCallRefMutex);
 #endif
+      OO_CLRFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
+   }
    return OO_OK;
 }
 
