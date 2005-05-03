@@ -107,6 +107,7 @@ enum OOGkClientState {
    GkClientIdle = 0,
    GkClientDiscovered, /* Gk Discovery is complete */
    GkClientRegistered, /* registered with gk */
+   GkClientUnregistered,
    GkClientGkErr,/*Gk is not responding, in discover mode can look for new GK*/
    GkClientFailed
 };
@@ -280,7 +281,7 @@ EXTERN int ooGkClientSendMsg(ooGkClient *pGkClient, H225RasMessage *pRasMsg);
 
 
 /**
- * This function is used to sent Gatekeeper request message.
+ * This function is used to send Gatekeeper request message.
  * @param pGkClient  Handle to gatekeeper client for which GRQ message has to
  *                   be sent.
  *
@@ -311,7 +312,7 @@ EXTERN int ooGkClientHandleGatekeeperConfirm
 
 
 /**
- * This function is used to sent Registration request message.
+ * This function is used to send Registration request message.
  * @param pGkClient  Handle to gatekeeper client for which RRQ message has to
  *                   be sent.
  * @param keepAlive  Indicates whether keepalive lightweight registration has
@@ -340,6 +341,16 @@ EXTERN int ooGkClientHandleRegistrationConfirm
  */
 EXTERN int ooGkClientHandleRegistrationReject
    (ooGkClient *pGkClient, H225RegistrationReject *pRegistrationReject);
+
+
+/**
+ * This function is used to send UnRegistration request message.
+ * @param pGkClient  Handle to gatekeeper client for which URQ message has to
+ *                   be sent.
+ *
+ * @return           OO_OK, on success. OO_FAILED, otherwise.
+ */
+EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient);
 
 /**
  * This function is used to handle a received Unregistration request message.

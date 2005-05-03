@@ -124,6 +124,12 @@ int ooGkClientDestroy(void)
 {
    if(gH323ep.gkClient)
    {
+      if(gH323ep.gkClient->state == GkClientRegistered)
+      {
+         OOTRACEINFO1("Unregistering from Gatekeeper\n");
+         if(ooGkClientSendURQ(gH323ep.gkClient)!=OO_OK)
+            OOTRACEERR1("Error:Failed to send URQ to gatekeeper\n");
+      }
       OOTRACEINFO1("Destroying Gatekeeper Client\n");
       ooGkClientCloseChannel(gH323ep.gkClient);
       freeContext(&gH323ep.gkClient->msgCtxt);
@@ -1156,9 +1162,7 @@ int ooGkClientHandleRegistrationReject
 }
 
 
-/*
-
-int ooGkClientSendURQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
+int ooGkClientSendURQ(ooGkClient *pGkClient)
 {
    int iRet;
    H225RasMessage *pRasMsg=NULL;
@@ -1166,9 +1170,10 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    OOCTXT *pctxt=NULL;
    H225TransportAddress *pTransportAddress=NULL;
    H225TransportAddress_ipAddress *pIpAddress=NULL;
-   ooGkClientTimerCb *cbData =NULL;
 
    pctxt = &pGkClient->msgCtxt;
+
+   OOTRACEDBGA1("Building Unregistration Request message\n");
 
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
@@ -1190,14 +1195,85 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    memset(pUnregReq, 0, sizeof(H225UnregistrationRequest));
    pRasMsg->t = T_H225RasMessage_unregistrationRequest;
    pRasMsg->u.unregistrationRequest = pUnregReq;
+
+   pUnregReq->requestSeqNum = pGkClient->requestSeqNum++;
+   if(!pUnregReq->requestSeqNum)
+      pUnregReq->requestSeqNum = pGkClient->requestSeqNum++;
+
   
-   pUnregReq->protocolIdentifier = gProtocolID;
 
-   pRegReq->m.nonStandardDataPresent=0;
-
+ /* Populate CallSignal Address List*/
    pTransportAddress = (H225TransportAddress*) memAlloc(pctxt,
-              
-*/
+                                                 sizeof(H225TransportAddress));
+   pIpAddress = (H225TransportAddress_ipAddress*) memAlloc(pctxt,
+                                       sizeof(H225TransportAddress_ipAddress));
+   if(!pTransportAddress || !pIpAddress)
+   {
+      OOTRACEERR1("Error:Failed to allocate memory for signalling address of "
+                  "RRQ message\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   pTransportAddress->t = T_H225TransportAddress_ipAddress;
+   pTransportAddress->u.ipAddress = pIpAddress;
+   ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   pIpAddress->ip.numocts = 4;
+   pIpAddress->port = gH323ep.listenPort;
+  
+   dListInit(&pUnregReq->callSignalAddress);
+   dListAppend(pctxt, &pUnregReq->callSignalAddress,
+                                       (void*)pTransportAddress);
+
+   /* Populate Endpoint Identifier */
+   pUnregReq->m.endpointIdentifierPresent = TRUE;
+   pUnregReq->endpointIdentifier.nchars = pGkClient->endpointId.nchars;
+   pUnregReq->endpointIdentifier.data = (ASN116BITCHAR*)memAlloc(pctxt,
+                           sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
+   if(!pUnregReq->endpointIdentifier.data)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for EndPoint Id in URQ "
+                  "message.\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   memcpy((void*)pUnregReq->endpointIdentifier.data,
+          (void*)pGkClient->endpointId.data,
+          sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
+
+   /* Populate gatekeeper identifier */
+   pUnregReq->m.gatekeeperIdentifierPresent = TRUE;
+   pUnregReq->gatekeeperIdentifier.nchars = pGkClient->gkId.nchars;
+   pUnregReq->gatekeeperIdentifier.data = (ASN116BITCHAR*)memAlloc(pctxt,
+                                 sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);
+   if(!pUnregReq->gatekeeperIdentifier.data)
+   {
+      OOTRACEERR1("Error:Failed to allocate memory for GKID of URQ message\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   memcpy((void*)pUnregReq->gatekeeperIdentifier.data,
+          (void*)pGkClient->gkId.data,
+          sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);  
+
+
+ 
+   iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
+   if(iRet != OO_OK)
+   {
+      OOTRACEERR1("Error:Failed to send UnregistrationRequest message\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   pGkClient->state = GkClientUnregistered;
+   OOTRACEINFO1("Unregistration Request message sent.\n");
+
+   return OO_OK;
+}              
+
 
 
 /*TODO: If the unregister request has list of aliases,
