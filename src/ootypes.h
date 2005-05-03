@@ -28,7 +28,7 @@
 #include "ooasn1.h"
 
 
-#define OOH323C_VERSION "v0.6"
+#define OOH323C_VERSION "v0.6.1"
 
 /*  types */
 #define OO_FAILED -1

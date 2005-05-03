@@ -332,10 +332,14 @@ int ooH323EpDestroy(void)
          temp->callEndReason = OO_HOST_CLEARED;
          ooCleanCall(temp);
       }
+      gH323ep.callList = NULL;
    }
+
+
    if(gH323ep.listener)
    {
       ooSocketClose(*(gH323ep.listener));
+      gH323ep.listener = NULL;  
    }
 
    ooGkClientDestroy(); 
