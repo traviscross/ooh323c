@@ -180,7 +180,7 @@ int main(int argc, char ** argv)
    if(!bTunneling)
       ooH323EpDisableH245Tunneling();
 
-   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
+   ooH323EpSetTraceLevel(OOTRCLVLINFO);
   
    ooH323EpSetLocalAddress(ourip, ourport);
   
