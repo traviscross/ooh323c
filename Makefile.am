@@ -7,5 +7,8 @@ opt:
 debug:
         $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT" all
 
+profile:
+        $(MAKE) "CFLAGS = -g -pg -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+
 SUBDIRS = . src media tests
 EXTRA_DIST = doc ooh323c.dsw

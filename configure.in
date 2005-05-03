@@ -1,7 +1,7 @@
 AC_PREREQ(2.57)
-AC_INIT([OOH323C],[0.5.1],[Objective Systems <support@obj-sys.com>],[ooh323c])
+AC_INIT([OOH323C],[0.6],[Objective Systems <support@obj-sys.com>],[ooh323c])
 PACKAGE=ooh323c
-VERSION=0.5.1
+VERSION=0.6
 
 AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
@@ -46,7 +46,7 @@ AC_FUNC_MALLOC
 AC_FUNC_SELECT_ARGTYPES
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname gethostname])
+AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname gethostname pipe])
 
 
 dnl AC_CONFIG_FILES([src/Makefile media/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile])
