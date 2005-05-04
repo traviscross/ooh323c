@@ -297,6 +297,26 @@ int ooH323EpAddAliasTransportID(char * ipaddress)
    OOTRACEDBGA2("Added alias: Transport-ID - %s\n", ipaddress);
    return OO_OK;
 }
+
+int ooH323EpClearAllAliases(void)
+{
+   if(gH323ep.aliases)
+   {
+      memFreePtr(&gH323ep.ctxt, gH323ep.aliases);
+      gH323ep.aliases = NULL;
+   }
+   return OO_OK;
+}
+
+int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks)
+{
+   gH323ep.h225Callbacks.onReceivedSetup = h225Callbacks.onReceivedSetup;
+   gH323ep.h225Callbacks.onReceivedConnect = h225Callbacks.onReceivedConnect;
+   gH323ep.h225Callbacks.onBuiltSetup = h225Callbacks.onBuiltSetup;
+   gH323ep.h225Callbacks.onBuiltConnect = h225Callbacks.onBuiltConnect;
+
+   return OO_OK;
+}
    
 int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
                               cb_OnIncomingCall onIncomingCall,

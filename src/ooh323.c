@@ -60,7 +60,7 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
    else{
       call->callState = OO_CALL_CLEAR_RELEASERECVD;
 
-      if(gH323ep.gkClient)
+      if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
       {
          if(gH323ep.gkClient->state == GkClientRegistered){
             OOTRACEDBGA3("Sending DRQ after received ReleaseComplete."
@@ -574,13 +574,24 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          OOTRACEINFO3("Received SETUP message (%s, %s)\n", call->callType,
                        call->callToken);
          ooOnReceivedSetup(call, q931Msg);
+
+         /* H225 message callback */
+         if(gH323ep.h225Callbacks.onReceivedSetup)
+            gH323ep.h225Callbacks.onReceivedSetup(call, q931Msg);
+
          /* Free up the mem used by the received message, as it's processing
             is done.
          */
          ooFreeQ931Message(q931Msg);
         
          ooSendCallProceeding(call);/* Send call proceeding message*/
-         if(gH323ep.gkClient)
+        
+         /* DISABLEGK is used to selectively disable gatekeeper use. For
+            incoming calls DISABLEGK can be set in onReceivedSetup callback by
+            application. Very useful in pbx applications where gk is used only
+            when call is to or from outside pbx domian
+         */
+         if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
          {
             if(gH323ep.gkClient->state == GkClientRegistered)
             {
@@ -634,6 +645,10 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
             OOTRACEERR3("Error:Invalid Connect message received. (%s, %s)\n",
                         call->callType, call->callToken);
          else{
+             /* H225 message callback */
+            if(gH323ep.h225Callbacks.onReceivedConnect)
+               gH323ep.h225Callbacks.onReceivedConnect(call, q931Msg);
+
             if(gH323ep.onCallEstablished)
                gH323ep.onCallEstablished(call);
          }

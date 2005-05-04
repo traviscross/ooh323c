@@ -629,12 +629,12 @@ int ooMonitorChannels()
 
                OOTRACEINFO2("Processing MakeCall command %s\n",
                              (char*)cmd->param2);
-               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2);
+               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2, FALSE);
                break;
             case OO_CMD_MAKECALL_NOGK:
                OOTRACEINFO2("Processing MakeCall_NoGk command %s\n",
                              (char*)cmd->param2);
-               ooH323MakeCallNoGk((char*)cmd->param1, (char*)cmd->param2);
+               ooH323MakeCall((char*)cmd->param1,(char*)cmd->param2, TRUE);
                break;
             case OO_CMD_MAKECALL_3:
                if(gH323ep.gkClient &&
@@ -1342,7 +1342,8 @@ int ooOnSendMsg
          call->callState = OO_CALL_CLEARED;
       else{
          call->callState = OO_CALL_CLEAR_RELEASESENT;
-         if(gH323ep.gkClient && gH323ep.gkClient->state == GkClientRegistered){
+         if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK) &&
+            gH323ep.gkClient->state == GkClientRegistered){
             OOTRACEDBGA3("Sending DRQ after sending ReleaseComplete."
                          "(%s, %s)\n",   call->callType, call->callToken);
             ooGkClientSendDisengageRequest(gH323ep.gkClient, call);

@@ -66,7 +66,6 @@ ooCallData* ooCreateCall(char* type, char*callToken)
 
    if(gH323ep.gkClient)
    {
-      OO_SETFLAG(call->flags, OO_M_USEGK);
       if(OO_TESTFLAG(gH323ep.flags, OO_M_GKROUTED))
       {
          OO_SETFLAG(call->flags, OO_M_GKROUTED);
@@ -133,7 +132,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->logicalChanNoCur = 1001;
    dListInit(&call->timerList);
    call->msdRetries = 0;
-
+   call->usrData = NULL;
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,
                  call->callToken);
    /* Add new call to calllist */
@@ -375,9 +374,9 @@ int ooCleanCall(ooCallData *call)
       dListFreeAll(call->pctxt, &(call->timerList));
    }
 
-   if(gH323ep.gkClient)
+   if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
    {
-     ooGkClientCleanCall(gH323ep.gkClient, call);
+      ooGkClientCleanCall(gH323ep.gkClient, call);
    }
 
    ooRemoveCallFromList(&gH323ep, call);

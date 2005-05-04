@@ -1400,6 +1400,10 @@ int ooAcceptCall(ooCallData *call)
    OOTRACEDBGA3("Built H.225 Connect message (%s, %s)\n", call->callType,
                  call->callToken);
 
+   /* H225 message callback */
+   if(gH323ep.h225Callbacks.onBuiltConnect)
+      gH323ep.h225Callbacks.onBuiltConnect(call, q931msg);
+
    ret=ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
@@ -1433,7 +1437,7 @@ int ooAcceptCall(ooCallData *call)
 }
 
 
-int ooH323MakeCall(char *dest, char *callToken)
+int ooH323MakeCall(char *dest, char *callToken, OOBOOL disableGk)
 {
    OOCTXT *pctxt;
    ooCallData *call;
@@ -1452,6 +1456,10 @@ int ooH323MakeCall(char *dest, char *callToken)
 
    call = ooCreateCall("outgoing", callToken);
    pctxt = call->pctxt;
+
+   if(disableGk)
+      OO_SETFLAG(call->flags, OO_M_DISABLEGK);
+
    ret = ooParseDestination(call, dest);
    if(ret != OO_OK)
    {
@@ -1468,7 +1476,7 @@ int ooH323MakeCall(char *dest, char *callToken)
       call->confIdentifier.data[i] = i+1;
      
 
-   if(gH323ep.gkClient)
+   if(gH323ep.gkClient && !disableGk)
    {
      /* No need to check registration status here as it is already checked for
         MakeCall command */
@@ -1528,49 +1536,6 @@ int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
    return OO_OK;
 }
 
-int ooH323MakeCallNoGk(char *dest, char* callToken)
-{
-   OOCTXT *pctxt;
-   ooCallData *call;
-   int ret=0, i=0;
-
-   if(!dest)
-   {
-      OOTRACEERR1("ERROR:Invalid destination for new call\n");
-      return OO_FAILED;
-   }
-   if(!callToken)
-   {
-      OOTRACEERR1("ERROR: Invalid callToken parameter to make call\n");
-      return OO_FAILED;
-   }
-
-   call = ooCreateCall("outgoing", callToken);
-   pctxt = call->pctxt;
-
-   /* Clear gk use flag */
-   OO_CLRFLAG(call->flags, OO_M_USEGK);
-
-   ret = ooParseDestination(call, dest);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR2("Error: Failed to parse the destination string %s for "
-                  "new call\n", dest);
-      ooCleanCall(call);
-      return OO_FAILED;
-   }
-
-   strcpy(callToken, call->callToken);
-   call->callReference = ooGenerateCallReference();
-   ooGenerateCallIdentifier(&call->callIdentifier);
-   call->confIdentifier.numocts = 16;
-   for (i = 0; i < 16; i++)
-      call->confIdentifier.data[i] = i+1;
-
-   ret = ooH323CallAdmitted (call);
-
-   return OO_OK;
-}
 
 int ooH323CallAdmitted(ooCallData *call)
 {
@@ -1916,6 +1881,10 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    OOTRACEDBGA3("Built SETUP message (%s, %s)\n", call->callType,
                  call->callToken);
+  
+   /* H225 message callback */
+   if(gH323ep.h225Callbacks.onBuiltSetup)
+      gH323ep.h225Callbacks.onBuiltSetup(call, q931msg);
 
    ret=ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)

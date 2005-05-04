@@ -128,6 +128,23 @@ EXTERN int ooH323EpAddAliasEmailID(char * email);
 EXTERN int ooH323EpAddAliasTransportID(char * ipaddress);
 
 /**
+ * This function is used to clear all the aliases used by the
+ * H323 endpoint.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpClearAllAliases(void);
+
+/**
+ * This function is used to set the H225 message callbacks for the
+ * endpoint.
+ * @param h225Callbacks  Callback structure containing various callbacks.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks);
+
+/**
  * This function is used to register the H323 Endpoint callback functions.
  * @param onAlerting            Callback function to be called when alerting
  *                              message is sent.

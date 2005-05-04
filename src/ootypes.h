@@ -183,11 +183,6 @@ typedef enum {
 #define OO_CALLMODE_FAX       305
 
 
-
-
-
-
-
 /*
  * Flag macros - these operate on bit mask flags using mask values
  */
@@ -328,6 +323,12 @@ typedef struct ooTimerCallback{
 } ooTimerCallback;
 
 /* Flag mask values */
+/* DISABLEGK is used to selectively disable gatekeeper use. For incoming calls
+   DISABLEGK can be set in onReceivedSetup callback by application.
+   Very useful in pbx applications where gk is used only when call is
+   to or from outside pbx domian. For outgoing calls, ooMakeCallNoGk
+   disables use of gk for specific call.
+*/
 #define OO_M_ENDPOINTCREATED    0x00100000
 #define OO_M_ENDSESSION_BUILT   0x08000000
 #define OO_M_RELEASE_BUILT      0x04000000
@@ -335,7 +336,7 @@ typedef struct ooTimerCallback{
 #define OO_M_AUTOANSWER         0x01000000
 #define OO_M_TUNNELING          0x80000000
 #define OO_M_FASTSTART          0x40000000
-#define OO_M_USEGK              0x20000000
+#define OO_M_DISABLEGK          0x20000000
 #define OO_M_AUDIO              0x10000000
 
 typedef struct ooCallData {
@@ -382,10 +383,12 @@ typedef struct ooCallData {
    int                  logicalChanNoCur;
    DList                timerList;
    ASN1UINT             msdRetries;
-   void                 *usrData;
+   void                 *usrData; /* User can set this to user specific data */
    struct ooCallData*   next;
    struct ooCallData*   prev;
 } ooCallData;
+
+
 
 
 /** Call back for starting media receive channel */
@@ -412,6 +415,29 @@ typedef struct ooH323EpCapability{
    cb_StopTransmitChannel stopTransmitChannel;
    struct ooH323EpCapability *next;
 }ooH323EpCapability;
+
+
+
+/**
+ * These are message callbacks which can be used by user applications
+ * to perform application specific things on receiving a particular
+ * message or before sending a particular message. For ex. user application
+ * can change values of some parameters of setup message before it is actually
+ * sent out.
+ */
+typedef int (*cb_OnReceivedSetup)(ooCallData *call, Q931Message *pmsg);
+typedef int (*cb_OnReceivedConnect)(ooCallData *call, Q931Message *pmsg);
+typedef int (*cb_OnBuiltSetup)(ooCallData *call, Q931Message *pmsg);
+typedef int (*cb_OnBuiltConnect)(ooCallData *call, Q931Message *pmsg);
+
+typedef struct OOH225MsgCallbacks{
+   cb_OnReceivedSetup onReceivedSetup;
+   cb_OnReceivedConnect onReceivedConnect;
+   cb_OnBuiltSetup onBuiltSetup;
+   cb_OnBuiltConnect onBuiltConnect;
+}OOH225MsgCallbacks;
+
+
 
 typedef int (*cb_OnAlerting)(ooCallData * call);
 typedef int (*cb_OnIncomingCall)(ooCallData* call );
@@ -476,6 +502,7 @@ typedef struct ooEndPoint {
    ooH323EpCapability *myCaps;
    ooCapPrefs     capPrefs;
    int noOfCaps;
+   OOH225MsgCallbacks h225Callbacks;
    cb_OnAlerting onAlerting;
    cb_OnIncomingCall onIncomingCall;
    cb_OnOutgoingCall onOutgoingCall;
