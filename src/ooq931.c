@@ -2272,7 +2272,12 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
                  "outbound queue.(%s, %s)\n", call->callType, call->callToken);
    }
 
-   memReset(&gH323ep.msgctxt);
+   /* can't do memReset here because if we are sending H.245 message as a
+      response to received tunneled h.245 message, we can't reset unless the \
+      main received H225 message processing is finished. Rule. No reset when
+      tunneling
+   */
+   memFreePtr(&gH323ep.msgctxt, pQ931Msg);
    return ret;
 }
 

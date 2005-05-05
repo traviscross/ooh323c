@@ -123,21 +123,21 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
 }
 
 
-int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize, ASN1BOOL comfortNoise,
+int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                        ASN1BOOL scrambled, int dir,
                        cb_StartReceiveChannel startReceiveChannel,
                        cb_StartTransmitChannel startTransmitChannel,
                        cb_StopReceiveChannel stopReceiveChannel,
                        cb_StopTransmitChannel stopTransmitChannel)
 {
-  return ooAddGSMCapability_internal(NULL, cap, audioUnitSize, comfortNoise,
+  return ooAddGSMCapability_internal(NULL, cap, framesPerPkt, comfortNoise,
                                      scrambled, dir, startReceiveChannel,
                                      startTransmitChannel, stopReceiveChannel,
                                      stopTransmitChannel);
 }
 
 int ooAddGSMCapability_internal(ooCallData *call, int cap,
-                                ASN1USINT audioUnitSize, ASN1BOOL comfortNoise,
+                                ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                                 ASN1BOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,
@@ -146,7 +146,7 @@ int ooAddGSMCapability_internal(ooCallData *call, int cap,
 {
   int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL;
-   H245GSMAudioCapability *params=NULL;  
+   ooGSMCapParams *params=NULL;  
    OOCTXT *pctxt = NULL;
 
    if(!call) pctxt = &gH323ep.ctxt;
@@ -154,8 +154,8 @@ int ooAddGSMCapability_internal(ooCallData *call, int cap,
 
    epCap = (ooH323EpCapability*)ASN1MALLOC(pctxt,
                                             sizeof(ooH323EpCapability));
-   params = (H245GSMAudioCapability*) ASN1MALLOC(pctxt,
-                                               sizeof(H245GSMAudioCapability));
+   params = (ooGSMCapParams*) ASN1MALLOC(pctxt,
+                                               sizeof(ooGSMCapParams));
    if(!epCap || !params)
    {
       OOTRACEERR1("Error: Failed to allocate memory for adding new end point "
@@ -164,7 +164,8 @@ int ooAddGSMCapability_internal(ooCallData *call, int cap,
    }
 
 
-   params->audioUnitSize = audioUnitSize;
+   params->rxframes = framesPerPkt;
+   params->txframes = framesPerPkt;
    params->comfortNoise = comfortNoise;
    params->scrambled = scrambled;
    epCap->dir = dir;
@@ -317,9 +318,13 @@ struct H245AudioCapability* ooCreateGSMFullRateCapability
   
    pAudio->t = T_H245AudioCapability_gsmFullRate;
    pAudio->u.gsmFullRate = pGSMCap;
-   pGSMCap->audioUnitSize = ((H245GSMAudioCapability*)epCap->params)->audioUnitSize;
-   pGSMCap->comfortNoise = ((H245GSMAudioCapability*)epCap->params)->comfortNoise;
-   pGSMCap->scrambled = ((H245GSMAudioCapability*)epCap->params)->scrambled;
+   if(dir & OORX)
+      pGSMCap->audioUnitSize = ((ooGSMCapParams*)epCap->params)->rxframes*OO_GSMFRAMESIZE;
+   else
+      pGSMCap->audioUnitSize = ((ooGSMCapParams*)epCap->params)->txframes*OO_GSMFRAMESIZE;
+
+   pGSMCap->comfortNoise = ((ooGSMCapParams*)epCap->params)->comfortNoise;
+   pGSMCap->scrambled = ((ooGSMCapParams*)epCap->params)->scrambled;
 
    return pAudio;
 }
@@ -383,12 +388,11 @@ struct H245AudioCapability* ooCreateG711Capability
 }
 
 
-
-ASN1BOOL ooCheckCompatibility_1
+ASN1BOOL ooCapabilityCheckCompatibility_G711
    (ooCallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
 {
-  int noofframes=0, cap;
+   int noofframes=0, cap;
    switch(audioCap->t)
    {
    case T_H245AudioCapability_g711Ulaw56k:
@@ -424,6 +428,75 @@ ASN1BOOL ooCheckCompatibility_1
       if(((ooG711CapParams*)epCap->params)->txframes <= noofframes)
          return TRUE;
    }
+   return FALSE;
+
+}
+
+
+OOBOOL ooCapabilityCheckCompatibility_GSM
+   (ooCallData *call, ooH323EpCapability* epCap,
+    H245AudioCapability* audioCap, int dir)
+{
+   int noofframes=0, cap;
+   switch(audioCap->t)
+   {
+   case T_H245AudioCapability_gsmFullRate:
+      cap = OO_GSMFULLRATE;
+      noofframes = (audioCap->u.gsmFullRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      break;
+   case T_H245AudioCapability_gsmHalfRate:
+      cap = OO_GSMHALFRATE;
+      noofframes = (audioCap->u.gsmHalfRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      break;
+   case T_H245AudioCapability_gsmEnhancedFullRate:
+      cap = OO_GSMENHANCEDFULLRATE;
+      noofframes = (audioCap->u.gsmEnhancedFullRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      break;
+   default:
+      return FALSE;
+   }
+
+   /* can we receive this capability */
+   if(dir & OORX)
+   {
+      if(((ooGSMCapParams*)epCap->params)->rxframes >= noofframes)
+         return TRUE;
+   }
+
+   /* Make sure we transmit compatible stream */
+   if(dir & OOTX)
+   {
+      if(((ooGSMCapParams*)epCap->params)->txframes > noofframes){
+         OOTRACEDBGA5("Reducing txframes for GSM from %d to %d to match "
+                      "receive capability of remote end.(%s, %s)\n",
+                     ((ooGSMCapParams*)epCap->params)->txframes, noofframes,
+                     call->callType, call->callToken);
+         ((ooGSMCapParams*)epCap->params)->txframes = noofframes;
+      }
+      return TRUE;
+   }
+   return FALSE;
+
+}
+
+OOBOOL ooCheckCompatibility_1
+   (ooCallData *call, ooH323EpCapability* epCap,
+    H245AudioCapability* audioCap, int dir)
+{
+
+   switch(audioCap->t)
+   {
+   case T_H245AudioCapability_g711Ulaw56k:
+   case T_H245AudioCapability_g711Ulaw64k:
+   case T_H245AudioCapability_g711Alaw64k:
+   case T_H245AudioCapability_g711Alaw56k:
+      return ooCapabilityCheckCompatibility_G711(call, epCap, audioCap, dir);
+   case T_H245AudioCapability_gsmFullRate:
+      return ooCapabilityCheckCompatibility_GSM(call, epCap, audioCap, dir);
+   default:
+      return FALSE;
+   }
+
    return FALSE; 
 }
 

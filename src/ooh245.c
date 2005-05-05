@@ -116,10 +116,15 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
 int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
 {
   /* In case of tunneling, memory is freed when corresponding Q931 message is freed.*/
+   OOTRACEDBGC1("msgCtxt Reset?");
    if (0 != pmsg) {
-     if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+     if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
          memReset (&gH323ep.msgctxt);
+         OOTRACEDBGC3(" Done (%s, %s)\n", call->callType, call->callToken);
+         return OO_OK;
+     }
    }
+   OOTRACEDBGC3("Not Done (%s, %s)\n", call->callType, call->callToken);
    return OO_OK;
 }
 

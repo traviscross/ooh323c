@@ -22,6 +22,7 @@
 #include "ootypes.h"
 #include "ooasn1.h"
 
+#define OO_GSMFRAMESIZE 33 /* standard frame size for gsm is 33 bytes */
 
 #define OO_CAP_TYPE_AUDIO 1
 #define OO_CAP_TYPE_VIDEO 2
@@ -61,6 +62,12 @@ typedef struct ooG711CapParams{
    int rxframes;
 }ooG711CapParams;
 
+typedef struct ooGSMCapParams{
+   unsigned txframes;
+   unsigned rxframes;
+   OOBOOL scrambled;
+   OOBOOL comfortNoise;
+}ooGSMCapParams;
 
 int caps_supported[10];
 /* Bit macros to work with caps_supported*/
@@ -153,7 +160,7 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
 /**
  * This function is used to add a new GSM capability to the endpoint.
  * @param cap                  Type of GSM capability to be added.
- * @param audioUnitSize        Audio unit size spec for the capability.
+ * @param framesPerPkt         Number of GSM frames pre packet.
  * @param comfortNoise         Comfort noise spec for the capability.
  * @param scrambled            Scrambled enabled/disabled for the capability.
  * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
@@ -164,7 +171,7 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
+EXTERN int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                              ASN1BOOL comfortNoise,ASN1BOOL scrambled,int dir,
                              cb_StartReceiveChannel startReceiveChannel,
                              cb_StartTransmitChannel startTransmitChannel,
@@ -179,7 +186,7 @@ EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
  *                             capability list, else it is added to local H323
  *                             endpoint list.
  * @param cap                  Type of GSM capability to be added.
- * @param audioUnitSize        Audio unit size spec for the capability.
+ * @param framesPerPkt         Number of GSM frames per packet.
  * @param comfortNoise         Comfort noise spec for the capability.
  * @param scrambled            Scrambled enabled/disabled for the capability.
  * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
@@ -191,7 +198,7 @@ EXTERN int ooAddGSMCapability(int cap, ASN1USINT audioUnitSize,
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 int ooAddGSMCapability_internal(ooCallData *call, int cap,
-                                ASN1USINT audioUnitSize, ASN1BOOL comfortNoise,
+                                ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                                 ASN1BOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,

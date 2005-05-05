@@ -814,7 +814,7 @@ int ooH2250Receive(ooCallData *call)
    fd_set readfds;
 
   
-   pmsg = (Q931Message*)ASN1MALLOC(pctxt, sizeof(Q931Message));
+   pmsg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
    if(!pmsg)
    {
       OOTRACEERR3("ERROR:Failed to allocate memory for incoming H.2250 message"
@@ -822,7 +822,7 @@ int ooH2250Receive(ooCallData *call)
       memReset(&gH323ep.msgctxt);
       return OO_FAILED;
    }
-  
+   memset(pmsg, 0, sizeof(Q931Message));
    /* First read just TPKT header which is four bytes */
    recvLen = ooSocketRecv (call->pH225Channel->sock, message, 4);
    if(recvLen == 0)
