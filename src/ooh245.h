@@ -331,15 +331,15 @@ EXTERN int ooOpenLogicalChannels(ooCallData *call);
 EXTERN int ooOpenLogicalAudioChannel(ooCallData *call);
 
 /**
- * This function is used to build a OpenLogicalChannel message using
- * G711ULaw64K capability
- * @param call            Pointer to call for which OpenLogicalChannel message have
- *                        to be built.
- * @param epCap           Pointer to G711ULaw capability
+ * This function is used to build aand send OpenLogicalChannel message using
+ * audio capability passed as parameter.
+ * @param call            Pointer to call for which OpenLogicalChannel message
+ *                        has to be built.
+ * @param epCap           Pointer to audio capability
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap);
+EXTERN int ooOpenAudioChannel(ooCallData* call, ooH323EpCapability *epCap);
 
 /**
  * This function is used to request a remote end point to close a logical

@@ -45,7 +45,17 @@ int main(int argc, char ** argv)
    int ret=0;
    char localip[20];
   
-
+   OOH323CALLBACKS h323Callbacks ={
+     .onNewCallCreated = NULL,
+     .onAlerting = NULL,
+     .onIncomingCall = NULL,
+     .onOutgoingCall = NULL,
+     .onCallAnswered = NULL,
+     .onCallEstablished = NULL,
+     .onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted,
+     .onCallCleared = osEpOnCallCleared,
+     .openLogicalChannels=NULL
+  };
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -64,15 +74,14 @@ int main(int argc, char ** argv)
    }
 
    /* Register callbacks */
-   ooH323EpRegisterCallbacks(NULL, NULL, &osEpOnOutgoingCallAdmitted, NULL,
-                             NULL, &osEpOnCallCleared);
+   ooH323EpSetH323Callbacks(h323Callbacks);
    ooSetTCPPorts(16050, 16250);
    ooSetUDPPorts(17050, 17250);
    ooSetRTPPorts(18050, 18250);
 
    /* Add transmit audio capability of type G711 ULaw */
 
-   ooAddG711Capability(OO_G711ULAW64K, 240, 0, OOTX, NULL,
+   ooH323EpAddG711Capability(OO_G711ULAW64K, 240, 0, OOTX, NULL,
                    &osEpStartTransmitChannel, NULL, &osEpStopTransmitChannel);
    /* Load media plug-in*/
 #ifdef _WIN32
@@ -97,7 +106,7 @@ int main(int argc, char ** argv)
       strcpy(ooPlayFile, argv[1]);
       memset(localip, 0, sizeof(localip));
       ooGetLocalIPAddress(localip);
-      ooMakeCall (localip, callToken, sizeof(callToken)); /* make call */  
+      ooMakeCall (localip, callToken, sizeof(callToken), NULL); /* make call*/  
       isCallActive = 1;
    }
    else

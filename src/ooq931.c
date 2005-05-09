@@ -1101,6 +1101,7 @@ int ooSendConnect(ooCallData *call)
    return OO_OK;
 }
 
+/*TODO: Need to clean logical channel in case of failure after creating one */
 int ooAcceptCall(ooCallData *call)
 {
   int ret = 0, i=0, j=0, mediaPort=0, dir=0;
@@ -1280,10 +1281,16 @@ int ooAcceptCall(ooCallData *call)
                            "channel %d (%s, %s)\n",
                            olc->forwardLogicalChannelNumber,
                            call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                continue;
             }
             if(ooIsSessionEstablished(call, olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "receive"))
+            {
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                continue;
+            }
          }
          else if(olc->m.reverseLogicalChannelParametersPresent)
          {
@@ -1304,11 +1311,16 @@ int ooAcceptCall(ooCallData *call)
                            "channel %d (%s, %s)\n",
                            olc->forwardLogicalChannelNumber,
                            call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                continue;
             }
             if(ooIsSessionEstablished(call, olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "transmit"))
+            {
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                continue;
-           
+            }
              /* Extract the remote media endpoint address */
             h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
             if(!h2250lcp)
@@ -1316,6 +1328,8 @@ int ooAcceptCall(ooCallData *call)
                OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
                            "reverse Logical Channel Parameters found. "
                            "(%s, %s)\n", call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                return OO_FAILED;
             }
             if(!h2250lcp->m.mediaChannelPresent)
@@ -1323,6 +1337,8 @@ int ooAcceptCall(ooCallData *call)
                OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
                            "reverse media channel information found. "
                            "(%s, %s)\n", call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                return OO_FAILED;
             }
             if(h2250lcp->mediaChannel.t !=
@@ -1330,6 +1346,8 @@ int ooAcceptCall(ooCallData *call)
             {
                OOTRACEERR3("ERROR:Unsupported media channel address type "
                            "(%s, %s)\n", call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                return OO_FAILED;
             }
      
@@ -1338,6 +1356,8 @@ int ooAcceptCall(ooCallData *call)
             {
                OOTRACEERR3("ERROR:media channel address type is not IP"
                            "(%s, %s)\n", call->callType, call->callToken);
+               memFreePtr(call->pctxt, epCap);
+               epCap = NULL;
                return OO_FAILED;
             }
             mediaPort = unicastAddress->u.iPAddress->tsapIdentifier; 
@@ -1437,7 +1457,7 @@ int ooAcceptCall(ooCallData *call)
 }
 
 
-int ooH323MakeCall(char *dest, char *callToken, OOBOOL disableGk)
+int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 {
    OOCTXT *pctxt;
    ooCallData *call;
@@ -1456,9 +1476,24 @@ int ooH323MakeCall(char *dest, char *callToken, OOBOOL disableGk)
 
    call = ooCreateCall("outgoing", callToken);
    pctxt = call->pctxt;
+   if(opts)
+   {
+      if(opts->fastStart)
+         OO_SETFLAG(call->flags, OO_M_FASTSTART);
+      else
+         OO_CLRFLAG(call->flags, OO_M_FASTSTART);
 
-   if(disableGk)
-      OO_SETFLAG(call->flags, OO_M_DISABLEGK);
+      if(opts->tunneling)
+         OO_SETFLAG(call->flags, OO_M_TUNNELING);
+      else
+         OO_CLRFLAG(call->flags, OO_M_TUNNELING);
+
+      if(opts->disableGk)
+         OO_SETFLAG(call->flags, OO_M_DISABLEGK);
+      else
+         OO_CLRFLAG(call->flags, OO_M_DISABLEGK);
+   }
+
 
    ret = ooParseDestination(call, dest);
    if(ret != OO_OK)
@@ -1476,7 +1511,7 @@ int ooH323MakeCall(char *dest, char *callToken, OOBOOL disableGk)
       call->confIdentifier.data[i] = i+1;
      
 
-   if(gH323ep.gkClient && !disableGk)
+   if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
    {
      /* No need to check registration status here as it is already checked for
         MakeCall command */
@@ -1550,8 +1585,8 @@ int ooH323CallAdmitted(ooCallData *call)
 
    if(!strcmp(call->callType, "outgoing"))
    {
-      if(gH323ep.onOutgoingCallAdmitted)
-         gH323ep.onOutgoingCallAdmitted(call);
+      if(gH323ep.h323Callbacks.onOutgoingCallAdmitted)
+         gH323ep.h323Callbacks.onOutgoingCallAdmitted(call);
       ret = ooCreateH225Connection(call);
       if(ret != OO_OK)
       {
@@ -1563,8 +1598,8 @@ int ooH323CallAdmitted(ooCallData *call)
      
       ret = ooH323MakeCall_helper(call);
    } else { /* An incoming call */
-      if(gH323ep.onIncomingCall)
-         gH323ep.onIncomingCall(call);
+      if(gH323ep.h323Callbacks.onIncomingCall)
+         gH323ep.h323Callbacks.onIncomingCall(call);
       ooSendAlerting(call); /* Send alerting message */
       if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
          ooSendConnect(call); /* Send connect message - call accepted */
@@ -1738,7 +1773,11 @@ int ooH323MakeCall_helper(ooCallData *call)
       i=0;
       for(k=0; k< call->capPrefs.index; k++)
       {
-         epCap = gH323ep.myCaps;
+         if(call->ourCaps)
+            epCap = call->ourCaps;
+         else
+            epCap = gH323ep.myCaps;
+
          while(epCap){
             if(epCap->cap == call->capPrefs.order[k]) break;
             else epCap = epCap->next;

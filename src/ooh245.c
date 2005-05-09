@@ -276,7 +276,10 @@ int ooSendTermCapMsg(ooCallData *call)
    dListInit(&(termCap->capabilityTable));
    for(k=0; k<(int)call->capPrefs.index; k++)
    {
-      epCap = gH323ep.myCaps;
+      if(call->ourCaps)
+         epCap = call->ourCaps;
+      else
+         epCap = gH323ep.myCaps;
       while(epCap) {
           if(epCap->cap == call->capPrefs.order[k])
             break;
@@ -530,11 +533,16 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
             call->remoteTermCapState == OO_RemoteTermCapSetAckSent)
          {
             /*Since Cap exchange and MasterSlave Procedures are done */
-            if(!call->logicalChans)
-               ooOpenLogicalChannels(call);
+            if(!call->logicalChans){
+               if(!gH323ep.h323Callbacks.openLogicalChannels)
+                  ooOpenLogicalChannels(call);
+               else
+                  gH323ep.h323Callbacks.openLogicalChannels(call);
+            }
          }
          else
-            OOTRACEDBGC1("Not opening logical channels as Cap exchange remaining\n");
+            OOTRACEDBGC1("Not opening logical channels as Cap exchange "
+                         "remaining\n");
          break;
        default:
           OOTRACEWARN3("Warn:Unhandled Master Slave message received - %s - "
@@ -766,8 +774,11 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
     &(olc->forwardLogicalChannelParameters);
   
+#if 0
    if(!call->logicalChans)
       ooOpenLogicalChannels(call);
+#endif
+
    /* Check whether channel type is supported. Only supported channel
       type for now is g711ulaw audio channel.
    */
@@ -862,7 +873,7 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
    return OO_OK;
 }      
 
-
+/*TODO: Need to clean logical channel in case of failure after creating one */
 int ooHandleOpenLogicalAudioChannel(ooCallData *call,
                                     H245OpenLogicalChannel*olc)
 {
@@ -897,6 +908,8 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
       OOTRACEERR3("Error: H245 message creation failed for - "
                   "OpenLogicalChannel Ack (%s, %s)\n", call->callType,
                   call->callToken);
+      memFreePtr(call->pctxt, epCap);
+      epCap = NULL;
       return OO_FAILED;
    }
 
@@ -1378,8 +1391,12 @@ int ooOnReceivedTerminalCapabilitySetAck(ooCallData* call)
    if(call->masterSlaveState == OO_MasterSlave_Master ||
        call->masterSlaveState == OO_MasterSlave_Slave)
    {
-      if(!call->logicalChans)
-         ooOpenLogicalChannels(call);
+      if(!call->logicalChans){
+         if(!gH323ep.h323Callbacks.openLogicalChannels)
+            ooOpenLogicalChannels(call);
+         else
+            gH323ep.h323Callbacks.openLogicalChannels(call);
+      }
    }
      
    return OO_OK;
@@ -2118,12 +2135,14 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
                            "capability table at index %d. (%s, %s)\n",
                             k, call->callType, call->callToken);
             }
+            ooCapabilityUpdateJointCapabilities(call, &capEntry->capability);
          }
       }
       pNode = NULL;
       capEntry=NULL;
    }
 
+  
    /* Update remoteTermCapSetState */
    call->remoteTermCapState = OO_RemoteTermCapSetRecvd;
 
@@ -2152,9 +2171,13 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
 
    /* As both MasterSlave and TerminalCapabilitySet procedures have finished,
       OpenLogicalChannels*/
-   if(!call->logicalChans)
-      ret = ooOpenLogicalChannels(call);
-  
+
+   if(!call->logicalChans){
+      if(!gH323ep.h323Callbacks.openLogicalChannels)
+         ret = ooOpenLogicalChannels(call);
+      else
+         gH323ep.h323Callbacks.openLogicalChannels(call);
+   }
    return OO_OK;
 }
 
@@ -2317,7 +2340,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    int k=0;
 
    /* Check whether local endpoint has audio capability */
-   if(gH323ep.myCaps == 0)
+   if(gH323ep.myCaps == 0 && call->ourCaps == 0)
    {
       OOTRACEERR3("ERROR:Local endpoint does not have any audio capabilities"
                   " (%s, %s)\n", call->callType, call->callToken);
@@ -2328,13 +2351,19 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
       first one which has a match in the remote endpoints receive capabilities.
       TODO: Capability matching should find first preffered capability of
       master that slave supports.
+      TODO: Should use joint capabilities, instead of going through remoteCaps
+            and finding a match again
    */
    OOTRACEINFO3("Looking for matching audio capabilities. (%s, %s)\n",
                  call->callType, call->callToken);
 
    for(k=0; k<call->capPrefs.index; k++)
    {
-      epCap = gH323ep.myCaps;
+      if(call->ourCaps)
+         epCap = call->ourCaps;
+      else
+         epCap = gH323ep.myCaps;
+
       while(epCap){
          if(epCap->cap == call->capPrefs.order[k] &&
             ((epCap->dir & OOTX)))
@@ -2371,7 +2400,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    case OO_G711ALAW56K:
    case OO_G711ULAW64K:
    case OO_G711ULAW56K:
-      ooOpenG711Channel(call, epCap);
+      ooOpenAudioChannel(call, epCap);
       break;
    case OO_GSMFULLRATE:
    case OO_GSMHALFRATE:
@@ -2383,7 +2412,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    return OO_OK;
 }
 
-int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
+int ooOpenAudioChannel(ooCallData* call, ooH323EpCapability *epCap)
 {
    int ret;
    H245Message *ph245msg = NULL;
@@ -2395,17 +2424,20 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
    H245H2250LogicalChannelParameters *h2250lcp;
    H245UnicastAddress *unicastAddrs;
    H245UnicastAddress_iPAddress *iPAddress;
-   /*   char hexip[20];
-        int addr_part1, addr_part2, addr_part3, addr_part4;*/
+
    ooLogicalChannel *pLogicalChannel = NULL;
   
-  
+   OOTRACEDBGC4("Doing OpenAudio Channel for %s. (%s, %s)\n",
+                 ooGetAudioCapTypeText(epCap->cap), call->callType,
+                 call->callToken);
+
    ret = ooCreateH245Message(&ph245msg,
                       T_H245MultimediaSystemControlMessage_request);
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error: H245 message creation failed for - Open G711 ulaw "
-                  "channel (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR4("Error: H245 message creation failed for - Open %s"
+                  "channel (%s, %s)\n", ooGetAudioCapTypeText(epCap->cap),
+                  call->callType, call->callToken);
       return OO_FAILED;
    }
 
@@ -2451,8 +2483,9 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
    audioCap = ooCreateAudioCapability(epCap,pctxt, OOTX);
    if(!audioCap)
    {
-      OOTRACEERR3("Error:Failed to create duplicate audio capability in "
-                  "ooOpenG711Channel. (%s, %s)\n", call->callType,
+      OOTRACEERR4("Error:Failed to create duplicate audio capability in "
+                  "ooOpenAudioChannel- %s (%s, %s)\n",
+                  ooGetAudioCapTypeText(epCap->cap), call->callType,
                   call->callToken);
       ooFreeH245Message(call, ph245msg);
       return OO_FAILED;
@@ -2468,7 +2501,16 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
    h2250lcp = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
    memset(h2250lcp, 0, sizeof(H245H2250LogicalChannelParameters));
 
-   h2250lcp->sessionID = 1;
+   if(!OO_TESTFLAG(call->flags, OO_M_AUDIOSESSION)){
+      h2250lcp->sessionID = 1;
+      OO_SETFLAG(call->flags, OO_M_AUDIOSESSION);
+   }
+   else{
+      if(call->masterSlaveState == OO_MasterSlave_Master)
+         h2250lcp->sessionID = call->nextSessionID++;
+      else
+         h2250lcp->sessionID = 0;/*assigned by remote. He is master :-( */
+   }
    h2250lcp->mediaGuaranteedDelivery = 0;
    h2250lcp->silenceSuppression = 0;
    h2250lcp->m.mediaControlChannelPresent = 1;
@@ -2491,12 +2533,14 @@ int ooOpenG711Channel(ooCallData* call, ooH323EpCapability *epCap)
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
    pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
-   OOTRACEDBGA3("Built OpenLogicalChannel (%s, %s)\n", call->callType,
-                call->callToken);
+   OOTRACEDBGA4("Built OpenLogicalChannel-%s (%s, %s)\n",
+                 ooGetAudioCapTypeText(epCap->cap), call->callType,
+                 call->callToken);
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
    {
-     OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannel to outbound queue. (%s, %s)\n", call->callType,
+     OOTRACEERR3("Error:Failed to enqueue OpenLogicalChannel to outbound "
+                 "queue. (%s, %s)\n", call->callType,
                  call->callToken);
    }
    ooFreeH245Message(call, ph245msg);
@@ -2510,7 +2554,8 @@ int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
 }
 /* Used to build Audio OLCs for fast connect. Keep in mind that forward and
    reverse
-   are always with respect to the endpoint which proposes channels */
+   are always with respect to the endpoint which proposes channels
+   TODO: Need to clean logical channel in case of failure.    */
 int ooBuildOpenLogicalChannelAudio
    (ooCallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap,
     OOCTXT*pctxt, int dir)

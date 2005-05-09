@@ -137,6 +137,14 @@ const char* ooGetCallStateText (int callState);
 const char* ooGetMsgTypeText (int msgType);
 
 /**
+ * This function is used to retrieve the description for audio capability
+ * type.
+ * @param cap     Audio cap type
+ * @return        The text description string.
+ */
+const char* ooGetAudioCapTypeText(int cap);
+
+/**
  * This function is used to set the trace level.
  * @param traceLevel  New trace level. Various values are: OOTRCLVLERR,
  *                    OOTRCLVLWARN, OOTRCLVLINFO, OOTRCLVLDBGA, OOTRCLVLDBGB,

@@ -145,6 +145,16 @@ EXTERN int ooH323EpClearAllAliases(void);
 EXTERN int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks);
 
 /**
+ * This function is used to set high level H323 call backs for the endpoint.
+ * Make sure all unused callbacks in the structure are set to NULL before
+ * calling this function.
+ * @param h323Callbacks    Callback structure containing various high level
+ *                         callbacks.
+ * @return                 OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks);
+
+/**
  * This function is used to register the H323 Endpoint callback functions.
  * @param onAlerting            Callback function to be called when alerting
  *                              message is sent.
@@ -163,13 +173,13 @@ EXTERN int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks);
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
+/*EXTERN int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
                               cb_OnIncomingCall onIncomingCall,
                               cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted,
                               cb_OnOutgoingCall onOutgoingCall,
                               cb_OnCallEstablished onCallEstablished,
                               cb_OnCallCleared onCallCleared);
-
+*/
 
 /**
  * This function is the last function to be invoked after done using the
@@ -283,6 +293,48 @@ EXTERN int ooH323EpSetCallingPartyNumber(const char * number);
  */
 void ooH323EpPrintConfig(void);
 
+
+/**
+ * This function is used to add G711 capability to the H323 endpoint.
+ * @param cap                  Type of G711 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddG711Capability
+   (int cap, int txframes, int rxframes, int dir,
+    cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel);
+
+
+/**
+ * This function is used to add a new GSM capability to the endpoint.
+ * @param cap                  Type of GSM capability to be added.
+ * @param framesPerPkt         Number of GSM frames pre packet.
+ * @param comfortNoise         Comfort noise spec for the capability.
+ * @param scrambled            Scrambled enabled/disabled for the capability.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
+                             OOBOOL comfortNoise,OOBOOL scrambled,int dir,
+                             cb_StartReceiveChannel startReceiveChannel,
+                             cb_StartTransmitChannel startTransmitChannel,
+                             cb_StopReceiveChannel stopReceiveChannel,
+                             cb_StopTransmitChannel stopTransmitChannel);
 /**
  * @}
  */

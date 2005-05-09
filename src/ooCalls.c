@@ -120,7 +120,9 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->statusDeterminationNumber = 0;
    call->localTermCapState = OO_LocalTermCapExchange_Idle;
    call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
+   call->ourCaps = NULL;
    call->remoteCaps = NULL;
+   call->jointCaps = NULL;
    dListInit(&call->remoteFastStartOLCs);
    call->remoteTermCapSeqNo =0;
    call->localTermCapSeqNo = 0;
@@ -130,6 +132,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    call->logicalChanNoBase = 1001;
    call->logicalChanNoMax = 1100;
    call->logicalChanNoCur = 1001;
+   call->nextSessionID = 4; /* 1,2,3 are reserved for audio, video and data */
    dListInit(&call->timerList);
    call->msdRetries = 0;
    call->usrData = NULL;
@@ -137,6 +140,8 @@ ooCallData* ooCreateCall(char* type, char*callToken)
                  call->callToken);
    /* Add new call to calllist */
    ooAddCallToList(&gH323ep, call);
+   if(gH323ep.h323Callbacks.onNewCallCreated)
+     gH323ep.h323Callbacks.onNewCallCreated(call);
    return call;
 }
 
@@ -202,120 +207,6 @@ int ooEndCall(ooCallData *call)
 }
 
 
-#if 0
-int ooEndCall(ooCallData *call)
-{
-   OOTRACEDBGA4("In ooEndCall call state is - %s (%s, %s)\n",
-                 ooGetCallStateText(call->callState), call->callType,
-                 call->callToken);
-
-   if (OO_TESTFLAG (call->flags, OO_M_FASTSTART))
-   {
-     /*      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
-      {
-         ooSendEndSessionCommand(call);
-         call->callState = OO_CALL_CLEAR_ENDSESSION;
-         }else{*/
-          if(call->callState < OO_CALL_CLEAR_CLOSEH245)
-             call->callState = OO_CALL_CLEAR_CLOSEH245;
-          // }
-   }
-   else {
-      if(call->callState == OO_CALL_CLEAR)  
-      {
-         if(call->logicalChans)
-         {
-            if (OO_TESTFLAG (call->flags, OO_M_TUNNELING) ||
-                call->pH245Channel->sock != 0)
-            {
-               OOTRACEINFO3("Call Clearing - CloseAllLogicalChannels."
-                            "(%s, %s)\n", call->callType, call->callToken);
-               ooCloseAllLogicalChannels(call);
-               call->callState = OO_CALL_CLEAR_CLOLCS;
-               return OO_OK;
-            }else{
-               OOTRACEINFO3("Call Clearing - ClearAllLogicalChannels. "
-                            "(%s, %s)\n", call->callType, call->callToken);
-               ooClearAllLogicalChannels(call);
-               call->callState = OO_CALL_CLEAR_CLELCS;
-            }
-         }else
-            call->callState = OO_CALL_CLEAR_CLELCS;
-      }
-  
-      if(call->callState == OO_CALL_CLEAR_CLOLCS)
-      {
-         if(call->logicalChans){
-            OOTRACEDBGC3("Call Clearing - Waiting for logical channels to be "
-                         "closed.(%s, %s)\n", call->callType, call->callToken);
-            return OO_OK;
-         }else{
-            call->callState = OO_CALL_CLEAR_CLELCS;
-         }
-      }
-      
-
-      if(call->callState == OO_CALL_CLEAR_CLELCS)
-      {
-  
-         if(call->h245SessionState == OO_H245SESSION_ACTIVE)
-         {
-            OOTRACEINFO3("Call Clearing - sendEndSessionCommand. (%s, %s)\n",
-                          call->callType, call->callToken);
-            ooSendEndSessionCommand(call);
-            call->callState = OO_CALL_CLEAR_ENDSESSION;
-            return OO_OK;
-         }else{
-            call->callState = OO_CALL_CLEAR_CLOSEH245;
-         }
-      }
-
-      if(call->callState == OO_CALL_CLEAR_ENDSESSION)
-      {
-         if(call->logicalChans)
-            ooClearAllLogicalChannels(call);
-
-         if(call->h245SessionState == OO_H245SESSION_ACTIVE)
-         {
-            OOTRACEDBGC3("Waiting for H.245 connection to be closed."
-                         "(%s, %s)\n", call->callType, call->callToken);
-            return OO_OK;
-         }
-         call->callState = OO_CALL_CLEAR_CLOSEH245;
-      }
-   }
-
-
-   if(call->callState == OO_CALL_CLEAR_CLOSEH245)
-   {
-      if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
-      {
-         OOTRACEINFO3("Call Clearing - sendReleaseComplete. (%s, %s)\n",
-                       call->callType, call->callToken);
-         ooSendReleaseComplete(call);
-         call->callState = OO_CALL_CLEAR_RELEASE;
-         return OO_OK;
-      }
-      else
-         call->callState = OO_CALL_CLEAR_RELEASE;
-   }
-
-   if(call->callState == OO_CALL_CLEAR_RELEASE)
-   {
-      /* Wait till all the queued H.2250 messages are sent */
-      if (call->pH225Channel != 0 && call->pH225Channel->sock != 0 &&
-          call->pH225Channel->outQueue.count > 0)
-         return OO_OK;
-      call->callState = OO_CALL_CLEARED;
-     
-   }
-   if(call->callState == OO_CALL_CLEARED)
-   {
-      ooCleanCall(call);
-   }
-   return OO_OK;
-}
-#endif
 
 int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
 {
@@ -383,8 +274,8 @@ int ooCleanCall(ooCallData *call)
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
 
-   if(gH323ep.onCallCleared)
-     gH323ep.onCallCleared(call);
+   if(gH323ep.h323Callbacks.onCallCleared)
+     gH323ep.h323Callbacks.onCallCleared(call);
 
    pctxt = call->pctxt;
    freeContext(pctxt);
@@ -623,6 +514,35 @@ int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id)
 }
 
 
+/* Used to override global end point capabilities and add call specific
+   capabilities */
+int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
+                            int rxframes, int dir,
+                            cb_StartReceiveChannel startReceiveChannel,
+                            cb_StartTransmitChannel startTransmitChannel,
+                            cb_StopReceiveChannel stopReceiveChannel,
+                            cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddG711Capability(call, cap, txframes, rxframes, dir,
+         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
+         stopTransmitChannel, FALSE);
+}
+
+int ooCallAddGSMCapability(ooCallData* call, int cap, ASN1USINT framesPerPkt,
+                             OOBOOL comfortNoise, OOBOOL scrambled, int dir,
+                             cb_StartReceiveChannel startReceiveChannel,
+                             cb_StartTransmitChannel startTransmitChannel,
+                             cb_StopReceiveChannel stopReceiveChannel,
+                             cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddGSMCapability(call, cap, framesPerPkt, comfortNoise,
+                                     scrambled, dir, startReceiveChannel,
+                                     startTransmitChannel, stopReceiveChannel,
+                                     stopTransmitChannel, FALSE);
+}
+
+
+
 ooCallData* ooFindCallByToken(char *callToken)
 {
    ooCallData *call;
@@ -679,28 +599,8 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    pNewChannel->state = OO_LOGICALCHAN_IDLE;
    strcpy(pNewChannel->type, type);
    strcpy(pNewChannel->dir, dir);
-   /* Create h323ep capability */
-   pNewChannel->chanCap = (ooH323EpCapability*)ASN1MALLOC(call->pctxt,
-                                                   sizeof(ooH323EpCapability));
-   if(!pNewChannel->chanCap)
-   {
-      OOTRACEERR3("ERROR:Memory allocation for new logical channels chanCap "
-                  "failed (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, pNewChannel);
-      return NULL;
-   }
-  
-   memset(pNewChannel->chanCap, 0, sizeof(ooH323EpCapability));
-  
-   pNewChannel->chanCap->dir = epCap->dir;
-  
-   pNewChannel->chanCap->startReceiveChannel = epCap->startReceiveChannel;
-   pNewChannel->chanCap->startTransmitChannel = epCap->startTransmitChannel;
-   pNewChannel->chanCap->stopReceiveChannel = epCap->stopReceiveChannel;
-   pNewChannel->chanCap->stopTransmitChannel = epCap->stopTransmitChannel;
-   pNewChannel->chanCap->cap = epCap->cap;
-   pNewChannel->chanCap->capType = epCap->capType;
-   pNewChannel->chanCap->params = epCap->params;
+
+   pNewChannel->chanCap = epCap;
    OOTRACEDBGC4("Adding new channel with cap %d (%s, %s)\n", epCap->cap,
                 call->callType, call->callToken);
    /* As per standards, media control port should be same for all

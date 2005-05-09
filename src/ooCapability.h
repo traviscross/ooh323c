@@ -69,15 +69,6 @@ typedef struct ooGSMCapParams{
    OOBOOL comfortNoise;
 }ooGSMCapParams;
 
-int caps_supported[10];
-/* Bit macros to work with caps_supported*/
-
-#define BINTSIZE (sizeof(int)*8)
-#define BWORD(i) ((int)((i)/BINTSIZE))
-#define BMASK(i) (1<< ((i)% BINTSIZE))
-#define BISSET(caps,i) (caps[BWORD(i)] & BMASK(i))
-#define BSET(caps,i) (caps[BWORD(i)] |= BMASK(i))
-#define BRESET(caps,i) (caps[BWORD(i)] &= ~BMASK(i))
 
 
 #ifdef __cplusplus
@@ -112,25 +103,6 @@ EXTERN int ooDisableDTMFRFC2833(void);
 
 
 /**
- * This function is used to add a new G711 capability to the endpoint.
- * @param cap                  Type of G711 capability to be added.
- * @param txframes             Number of frames per packet for transmission.
- * @param rxframes             Number of frames per packet for reception.
- * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
- * @param startReceiveChannel  Callback function to start receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooAddG711Capability(int cap, int txframes, int rxframes, int dir,
-                               cb_StartReceiveChannel startReceiveChannel,
-                               cb_StartTransmitChannel startTransmitChannel,
-                               cb_StopReceiveChannel stopReceiveChannel,
-                               cb_StopTransmitChannel stopTransmitChannel);
-
-/**
  * This is an internal helper function which is used to add a G711 capability
  * to local endpoints capability list or to remote endpoints capability list.
  * @param call                 Handle to a call. If this is not Null, then
@@ -145,38 +117,20 @@ EXTERN int ooAddG711Capability(int cap, int txframes, int rxframes, int dir,
  * @param startTransmitChannel Callback function to start transmit channel.
  * @param stopReceiveChannel   Callback function to stop receive channel.
  * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capability.
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  *
  */
-int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
+int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
                                  int rxframes, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel);
+                                 cb_StopTransmitChannel stopTransmitChannel,
+                                 OOBOOL remote);
 
 
-/**
- * This function is used to add a new GSM capability to the endpoint.
- * @param cap                  Type of GSM capability to be added.
- * @param framesPerPkt         Number of GSM frames pre packet.
- * @param comfortNoise         Comfort noise spec for the capability.
- * @param scrambled            Scrambled enabled/disabled for the capability.
- * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
- * @param startReceiveChannel  Callback function to start receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt,
-                             ASN1BOOL comfortNoise,ASN1BOOL scrambled,int dir,
-                             cb_StartReceiveChannel startReceiveChannel,
-                             cb_StartTransmitChannel startTransmitChannel,
-                             cb_StopReceiveChannel stopReceiveChannel,
-                             cb_StopTransmitChannel stopTransmitChannel);
 
 /**
  * This is an internal helper function which is used to add a GSM capability
@@ -194,16 +148,18 @@ EXTERN int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt,
  * @param startTransmitChannel Callback function to start transmit channel.
  * @param stopReceiveChannel   Callback function to stop receive channel.
  * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capabilities.
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-int ooAddGSMCapability_internal(ooCallData *call, int cap,
+int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
                                 ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                                 ASN1BOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,
                                 cb_StopReceiveChannel stopReceiveChannel,
-                                cb_StopTransmitChannel stopTransmitChannel);
+                                cb_StopTransmitChannel stopTransmitChannel,
+                                OOBOOL remote);
 
 
 /**
@@ -223,12 +179,25 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
 /**
  * This function is used to add a capability to call's remote  capability list.
  * The capabilities to be added are extracted from received TCS message.
- * @param call                Handle to the call.
+ * @param call           Handle to the call.
  * @param cap            Handle to the remote endpoint's H245 capability.
  *
- * @return                    OO_OK, on success. OO_FAILED, otherwise.
+ * @return               OO_OK, on success. OO_FAILED, otherwise.
  */
 int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
+
+/**
+ * This function is used to update joint capabilities for call. It checks
+ * whether remote capability can be supported by local capabilities for the
+ * call and if supported makes entry into the joint capability list for the
+ * call.
+ * @param call           Handle to the call
+ * @param remoteCap      Remote cap which will be tested for compatibility.
+ *
+ * @return               returns OO_OK, if updated else OO_FAILED; 
+ */
+EXTERN int ooCapabilityUpdateJointCapabilities
+                                       (ooCallData* call, H245Capability *cap);
 
 /**
  * This function is used to test the compatibility of the two capabilities.
@@ -323,8 +292,8 @@ struct H245AudioCapability* ooCreateG711Capability
  * @param audioCap   Handle to the audio capability.
  * @param dir        Direction in which support is desired.
  *
- * @return          Handle to the capability which supports audioCap, Null
- *                  if none found
+ * @return          Handle to the copyof capability which supports audioCap,
+ *                  Null if none found
  */
 ooH323EpCapability* ooIsAudioDataTypeSupported
                 (ooCallData *call, H245AudioCapability* audioCap, int dir);
@@ -336,7 +305,7 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
  * @param data       Handle to the capability type.
  * @param dir        Direction in which support is desired.
  *
- * @return          Handle to the capability which supports specified
+ * @return          Handle to the copy of capability which supports specified
  *                  capability type, Null if none found
  */
 ooH323EpCapability* ooIsDataTypeSupported
@@ -350,6 +319,8 @@ EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
 EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
 EXTERN int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos);
 EXTERN int ooPreppendCapToCapPrefs(ooCallData *call, int cap);
+
+
 /**
  * @}
  */

@@ -23,7 +23,8 @@ extern ooEndPoint gH323ep;
 
 extern OO_MUTEX gCmdMutex;
 
-int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
+int ooMakeCall
+   (const char* dest, char* callToken, size_t bufsiz, ooCallOptions *opts)
 {
    ooCommand *cmd;
    int ret;
@@ -44,6 +45,7 @@ int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
+      memFreePtr(&gH323ep.ctxt, cmd);
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, dest);
@@ -52,6 +54,8 @@ int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
    if(!callToken)
    {
       OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
+      memFreePtr(&gH323ep.ctxt, cmd->param1);
+      memFreePtr(&gH323ep.ctxt, cmd);
       return OO_FAILED;
    }
 
@@ -62,12 +66,29 @@ int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
    if(!cmd->param2)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
+      memFreePtr(&gH323ep.ctxt, cmd->param1);
+      memFreePtr(&gH323ep.ctxt, cmd);
       return OO_FAILED;
    }
   
    strcpy((char*)cmd->param2, callToken);
 
-   cmd->param3 = 0;
+   if(!opts)
+   {
+      cmd->param3 = 0;
+   }else {
+      cmd->param3 = (void*) memAlloc(&gH323ep.ctxt, sizeof(ooCallOptions));
+      if(!cmd->param3)
+      {
+         OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
+         memFreePtr(&gH323ep.ctxt, cmd->param1);
+         memFreePtr(&gH323ep.ctxt, cmd->param2);
+         memFreePtr(&gH323ep.ctxt, cmd);
+         return OO_FAILED;
+      }
+      memcpy((void*)cmd->param3, opts, sizeof(ooCallOptions));
+   }
+
 
    dListAppend (&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
 #ifdef HAVE_PIPE
@@ -85,76 +106,6 @@ int ooMakeCall (const char* dest, char* callToken, size_t bufsiz)
 
    return OO_OK;
 }
-
-/*
-  This function can be used when gatekeeper is enabled for the stack, but
-  application doesn't want to use gk for some selected calls.Ex. When the
-  stack is used in a pbx, the pbx application might want to call local phones
-  directly, while use gatkeeper services for calling outside phones.
- */
-int ooMakeCallNoGk (const char* dest, char* callToken, size_t bufsiz)
-{
-   ooCommand *cmd;
-   int ret;
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
-   cmd = (ooCommand*) memAlloc (&gH323ep.ctxt, sizeof(ooCommand));
-   if(!cmd)
-   {
-      OOTRACEERR1("Error:Allocating memory for command structure - "
-                  "MakeCall\n");
-      return OO_FAILED;
-   }
-   cmd->type = OO_CMD_MAKECALL_NOGK;
-   cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(dest)+1);
-   if(!cmd->param1)
-   {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
-      return OO_FAILED;
-   }
-   strcpy((char*)cmd->param1, dest);
-
-   /* Generate call token*/
-   if(!callToken)
-   {
-      OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
-      return OO_FAILED;
-   }
-
-   if ((ret = ooGenerateCallToken (callToken, bufsiz)) != 0)
-      return ret;
-
-   cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
-   if(!cmd->param2)
-   {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
-      return OO_FAILED;
-   }
-  
-   strcpy((char*)cmd->param2, callToken);
-
-   cmd->param3 = 0;
-
-   dListAppend (&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
-#ifdef HAVE_PIPE
-   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
-   {
-      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
-   }
-#endif
-
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
-
-   return OO_OK;
-}
-
 
 int ooMakeCall_3 (char *dest, char* callToken, size_t bufsiz,
                   ASN1USINT* callRef)

@@ -44,24 +44,13 @@ extern "C" {
  * @param dest        Call Destination - IP:port / alias
  * @param callToken   Pointer to a buffer in which callToken will be returned
  * @param bufsiz      Size of the callToken buffer passed.
+ * @param opts        These are call specific options and if passed a non-null
+ *                    value, will override global endpoint options.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooMakeCall (const char* dest, char *callToken, size_t bufsiz);
-
-
-/**
- * This function can be used when gatekeeper is enabled for the stack, but
- * application doesn't want to use gk for some selected calls.Ex. When the
- * stack is used in a pbx, the pbx application might want to call local phones
- * directly, while use gatkeeper services for calling outside phones.
- * @param dest        Call Destination - IP:port / alias
- * @param callToken   Pointer to a buffer in which callToken will be returned
- * @param bufsiz      Size of the callToken buffer passed.
- *
- * @return            OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooMakeCallNoGk (const char* dest, char* callToken, size_t bufsiz);
+EXTERN int ooMakeCall
+   (const char* dest, char *callToken, size_t bufsiz, ooCallOptions *opts);
 
 
 /**

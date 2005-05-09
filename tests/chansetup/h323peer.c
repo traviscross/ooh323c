@@ -23,6 +23,10 @@
 #include <pthread.h>
 #endif
 
+#ifdef _WIN32
+#include <process.h>
+#define getpid _getpid
+#endif
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
@@ -38,17 +42,23 @@ static void* runtest (void*);
 static int callDurationTimerExpired (void *pdata);
 static int callIntervalTimerExpired(void *pdata);
 
+
 static char USAGE[]={
-   "h323peer [--help] [--use-ip ip] [--use-port port] [-n noofcalls]\n"
-   "[-duration call_duration] [-interval call_interval] [remote]\n"
-   "--help     -  To display usage information\n"
-   "--use-ip   -  local ip to use\n"
-   "--use-port -  local port to use\n"
-   "-n         -  Number of outgoing calls\n"
-   "-duration  -  Duration of each call in seconds\n"
-   "-interval  -  Interval between successive calls in seconds\n"
-   "-logfile   -  Name of log file for trace messages\n"
-   "remote     -  Remote endpoint to call  ip:[port]\n"
+   "Listen to incoming calls\n"
+   "\th323peer [options] --listen\n"
+   "Make test calls\n"
+   "\th323peer [options] <remote>\n"
+   "\t                    remote => Remote endpoint to callip:[port]\n"
+   "\n\n"
+   "options:\n"
+   "Common Options for listen and Make call modes\n"
+   "\t--help                    -  To display usage information\n"
+   "\t--use-ip <ip>             -  local ip to use\n"
+   "\t--use-port <port>         -  local port to use\n"
+   "Options specific to make call mode\n"
+   "\t-n <NoOfCalls>            -  Number of outgoing calls\n"
+   "\t-duration <call duration> -  Duration of each call in seconds\n"
+   "\t-interval <interval>      -  Interval between successive calls in seconds\n"
 };
 
 static int gCalls = 0;
@@ -64,10 +74,22 @@ int main (int argc, char** argv)
    int  localPort = 0;
    OOTimer *pTimer = NULL;
    int ret=0, x;
-   ASN1BOOL isActive = FALSE;
-   ASN1BOOL dest_found=FALSE;
-   const char* logfile = "h323peer.log";
+   OOBOOL isActive = FALSE;
+   OOBOOL bDestFound=FALSE;
+   OOBOOL bListen = FALSE;
+   char logfile[50];
 
+   OOH323CALLBACKS h323Callbacks ={
+     .onNewCallCreated = NULL,
+     .onAlerting = onAlerting,
+     .onIncomingCall = onIncomingCall,
+     .onOutgoingCall = NULL,
+     .onCallAnswered = NULL,
+     .onCallEstablished = NULL,
+     .onOutgoingCallAdmitted = onOutgoingCallAdmitted,
+     .onCallCleared = onCallCleared,
+     .openLogicalChannels=NULL
+  };
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
 #endif
@@ -77,10 +99,24 @@ int main (int argc, char** argv)
   
    /* parse args */
 
+   if(argc > 12 || argc ==1)
+   {
+      printf("USAGE:\n%s", USAGE);
+      return -1;
+   }
    for (x = 1; x < argc; x++) {
       if(!strcmp(argv[x], "--help")) {
          printf("USAGE:\n%s", USAGE);
          return 0;
+      }
+      else if(!strcmp(argv[x], "--listen"))
+      {
+         if(!bDestFound)
+            bListen=TRUE;
+         else{
+            printf("USAGE:\n%s",USAGE);
+            return -1;
+         }
       }
       else if (!strcmp(argv[x], "--use-ip")) {
          x++;
@@ -102,12 +138,9 @@ int main (int argc, char** argv)
          x++;
          gInterval = atoi(argv[x]);
       }
-      else if(!strcmp(argv[x], "-logfile")) {
-         logfile = argv[++x];
-      }
-      else if (!dest_found) {
+      else if (!bDestFound && !bListen) {
          strncpy (gDest, argv[x], sizeof(gDest)-1);
-         dest_found = TRUE;
+         bDestFound = TRUE;
          if (0 == gCalls) gCalls++;
       }
       else {
@@ -116,6 +149,11 @@ int main (int argc, char** argv)
       }
    }
   
+    if(!bListen && !bDestFound)
+   {
+      printf("USAGE:\n%s",USAGE);
+      return -1;
+   }
    /* Determine local IP address if not specified by user */
 
    if (0 == strlen(localIPAddr)) {
@@ -128,17 +166,19 @@ int main (int argc, char** argv)
       printf ("USAGE:\n%s", USAGE);
       return -1;
    }
-      
+
+   sprintf(logfile, "h323peer_%d", getpid());      
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled */
    printf ("Using:\n"
-           "\tCalls to make: %d\n"
-           "\tCall Duration: %d\n"
-           "\tInterval: %d\n"
-           "\tlocal Address: %s:%d\n"
-           "\tRemote Address: %s\n",
+           "\tCalls to make : %d\n"
+           "\tCall Duration : %d\n"
+           "\tInterval      : %d\n"
+           "\tlocal Address : %s:%d\n"
+           "\tRemote Address: %s\n"
+           "\tLog File      : %s\n",
            gCalls, gDuration, gInterval, localIPAddr, localPort,
-           gDest);
+           gDest, logfile);
 
    ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, logfile);
 
@@ -153,18 +193,17 @@ int main (int argc, char** argv)
    ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
-   ooH323EpRegisterCallbacks
-      (&onAlerting, &onIncomingCall, &onOutgoingCallAdmitted,
-       NULL, NULL, &onCallCleared);
+   ooH323EpSetH323Callbacks(h323Callbacks);
+
 
    /* Add audio capability */
 
-   ooAddG711Capability
+   ooH323EpAddG711Capability
       (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
    /* Create H.323 Listener */
-   if(!dest_found){
+   if(bListen){
       ret = ooCreateH323Listener();
 
       if (ret != OO_OK) {
@@ -173,9 +212,9 @@ int main (int argc, char** argv)
       }
    }
 
-   if(dest_found)
+   if(bDestFound)
    {
-      ooMakeCall (gDest, callToken, sizeof(callToken)); /* Make call */
+      ooMakeCall (gDest, callToken, sizeof(callToken), NULL); /* Make call */
       gCallCounter++;
       if(gInterval != 0)
       {
@@ -302,7 +341,7 @@ static int onCallCleared (ooCallData* call)
    printf ("onCallCleared - %s\n", call->callToken);
    if (gInterval == 0) {
       if (gCallCounter < gCalls) {
-         ooMakeCall (gDest, callToken, sizeof(callToken));
+         ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
          gCallCounter++;
       }
       else {
@@ -329,7 +368,7 @@ static int callIntervalTimerExpired(void *pdata)
    memset(callToken, 0, sizeof(callToken));
    if (gCallCounter < gCalls)
    {
-      ooMakeCall (gDest, callToken, sizeof(callToken)); /* Make call */
+      ooMakeCall (gDest, callToken, sizeof(callToken), NULL); /* Make call */
       token = (char*)malloc(strlen(callToken)+1);
       strcpy(token, callToken);
       pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,

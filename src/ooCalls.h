@@ -163,6 +163,55 @@ EXTERN int ooCallAddAliasURLID(ooCallData *call, const char* url);
  */
 EXTERN int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id);
 
+
+/**
+ * This function is used to add G711 capability for the call. The
+ * "ooCallAdd...Capability" functions allow to override the global endpoint
+ * capabilities and use specific capabilities for specific calls.
+ * @param call           Call for which capability has to be added.
+ * @param cap            Capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
+                            int rxframes, int dir,
+                            cb_StartReceiveChannel startReceiveChannel,
+                            cb_StartTransmitChannel startTransmitChannel,
+                            cb_StopReceiveChannel stopReceiveChannel,
+                            cb_StopTransmitChannel stopTransmitChannel);
+
+
+/**
+ * This function is used to add GSM capability for the call. The
+ * "ooCallAdd...Capability" functions allow to override the global endpoint
+ * capabilities and use specific capabilities for specific calls.
+ * @param cap                  Type of GSM capability to be added.
+ * @param framesPerPkt         Number of GSM frames pre packet.
+ * @param comfortNoise         Comfort noise spec for the capability.
+ * @param scrambled            Scrambled enabled/disabled for the capability.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCallAddGSMCapability(ooCallData* call, int cap,
+                                  ASN1USINT framesPerPkt, OOBOOL comfortNoise,
+                                  OOBOOL scrambled, int dir,
+                                  cb_StartReceiveChannel startReceiveChannel,
+                                  cb_StartTransmitChannel startTransmitChannel,
+                                  cb_StopReceiveChannel stopReceiveChannel,
+                                  cb_StopTransmitChannel stopTransmitChannel);
+
 /**
  * This function is used to find a call by using the unique token for the call.
  * @param callToken      The unique token for the call.

@@ -45,6 +45,17 @@ int main(int argc, char ** argv)
 {
   int ret=0;
 
+  OOH323CALLBACKS h323Callbacks ={
+     .onNewCallCreated = NULL,
+     .onAlerting = osEpOnAlerting,
+     .onIncomingCall = osEpOnIncomingCall,
+     .onOutgoingCall = NULL,
+     .onCallAnswered = NULL,
+     .onCallEstablished = NULL,
+     .onOutgoingCallAdmitted = NULL,
+     .onCallCleared = osEpOnCallCleared,
+     .openLogicalChannels=NULL
+  };
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -62,12 +73,12 @@ int main(int argc, char ** argv)
       return -1;
    }
 
-   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall, NULL,
-                             NULL, NULL, &osEpOnCallCleared);
+   ooH323EpSetH323Callbacks(h323Callbacks);
 
    /* Add audio capability */
-   ooAddG711Capability(OO_G711ULAW64K,0, 240, OORX, &osEpStartReceiveChannel,
-                       NULL, &osEpStopReceiveChannel, NULL);
+   ooH323EpAddG711Capability(OO_G711ULAW64K,0, 240, OORX,
+                             &osEpStartReceiveChannel, NULL,
+                             &osEpStopReceiveChannel, NULL);
 
 
    /* Load media plug-in*/

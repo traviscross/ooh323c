@@ -399,11 +399,12 @@ EXTERN int ooSendConnect(ooCallData *call);
  * SETUP message over this connection.
  * @param dest      Destination - IP:Port/alias.
  * @param callToken Unique token for the new call.
- * @param disableGK Whether gatekeeper use have to be disabled for this call.
+ * @param opts      Call specific options. If passed a non-null value, these
+ *                  options will override global endpoint settings.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooH323MakeCall(char *dest, char *callToken, OOBOOL disableGK);
+EXTERN int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts);
 
 /**
  * This function is used to make an outgoing call.It initiates the call

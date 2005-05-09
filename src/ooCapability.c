@@ -41,7 +41,8 @@ int ooDisableDTMFRFC2833()
    OOTRACEINFO1("Disabled RFC2833 DTMF capability\n");
    return OO_OK;
 }
-  
+
+#if 0  
 int ooAddG711Capability(int cap, int txframes,
                         int rxframes, int dir,
                         cb_StartReceiveChannel startReceiveChannel,
@@ -49,17 +50,19 @@ int ooAddG711Capability(int cap, int txframes,
                         cb_StopReceiveChannel stopReceiveChannel,
                         cb_StopTransmitChannel stopTransmitChannel)
 {
-  return ooAddG711Capability_internal(NULL, cap, txframes, rxframes, dir,
+   return ooAddG711Capability_internal(NULL, cap, txframes, rxframes, dir,
          startReceiveChannel, startTransmitChannel, stopReceiveChannel,
          stopTransmitChannel);
 }
+#endif
 
-int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
+int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
                                  int rxframes, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel)
+                                 cb_StopTransmitChannel stopTransmitChannel,
+                                 OOBOOL remote)
 {
    int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL, *lHead=NULL;
@@ -109,20 +112,33 @@ int ooAddG711Capability_internal(ooCallData *call, int cap, int txframes,
       }
       ooAppendCapToCapPrefs(NULL, cap);
       gH323ep.noOfCaps++;
-     }else{/*Add as remote capability */
-      if(!call->remoteCaps)
-        call->remoteCaps = epCap;
-      else{
-         cur = call->remoteCaps;
-         while(cur->next) cur = cur->next;
-         cur->next = epCap;
-      }
+     }else{
+        if(remote)
+        {
+           /*Add as remote capability */
+           if(!call->remoteCaps)
+              call->remoteCaps = epCap;
+           else{
+              cur = call->remoteCaps;
+              while(cur->next) cur = cur->next;
+              cur->next = epCap;
+           }
+        }else{
+            /*Add as our capability */
+           if(!call->ourCaps)
+              call->ourCaps = epCap;
+           else{
+              cur = call->ourCaps;
+              while(cur->next) cur = cur->next;
+              cur->next = epCap;
+           }
+       }
    }
         
    return OO_OK;
 }
 
-
+#if 0
 int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                        ASN1BOOL scrambled, int dir,
                        cb_StartReceiveChannel startReceiveChannel,
@@ -135,16 +151,18 @@ int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                                      startTransmitChannel, stopReceiveChannel,
                                      stopTransmitChannel);
 }
+#endif
 
-int ooAddGSMCapability_internal(ooCallData *call, int cap,
+int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
                                 ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
                                 ASN1BOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,
                                 cb_StopReceiveChannel stopReceiveChannel,
-                                cb_StopTransmitChannel stopTransmitChannel)
+                                cb_StopTransmitChannel stopTransmitChannel,
+                                OOBOOL remote)
 {
-  int iRet=0;
+   int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL;
    ooGSMCapParams *params=NULL;  
    OOCTXT *pctxt = NULL;
@@ -190,13 +208,26 @@ int ooAddGSMCapability_internal(ooCallData *call, int cap,
       }
       ooAppendCapToCapPrefs(NULL, cap);
       gH323ep.noOfCaps++;
-   }else{/* Add as remote capability */
-      if(!call->remoteCaps)
-         call->remoteCaps = epCap;
-      else{
-         cur = call->remoteCaps;
-         while(cur->next) cur = cur->next;
-         cur->next = epCap;
+   }else{
+      if(remote)
+      {
+         /*Add as remote capability */
+         if(!call->remoteCaps)
+            call->remoteCaps = epCap;
+         else{
+            cur = call->remoteCaps;
+            while(cur->next) cur = cur->next;
+            cur->next = epCap;
+         }
+      }else{
+         /*Add as our capability */
+         if(!call->ourCaps)
+            call->ourCaps = epCap;
+         else{
+            cur = call->ourCaps;
+            while(cur->next) cur = cur->next;
+            cur->next = epCap;
+         }
       }
    }
 
@@ -500,6 +531,12 @@ OOBOOL ooCheckCompatibility_1
    return FALSE; 
 }
 
+/**
+  TODO: If txCap is local and number of txframes is greater than remote can
+  receive, we should automatically decrease it. And logical channel cap should
+  be the one where it should be decreased. The start logical channel will
+  indicate the application that it is supposed to tx and a reduced rate.
+ */
 ASN1BOOL ooCheckCompatibility
    (ooCallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap)
 {
@@ -527,6 +564,14 @@ ASN1BOOL ooCheckCompatibility
    case OO_GSMFULLRATE:
    case OO_GSMHALFRATE:
    case OO_GSMENHANCEDFULLRATE:
+     if(((ooGSMCapParams*)txCap->params)->txframes <=
+                                ((ooGSMCapParams*)rxCap->params)->rxframes)
+       return TRUE;
+     else{
+       OOTRACEDBGA3("GSM caps are not compatible. (%s, %s)\n", call->callType,
+                     call->callToken);
+       return FALSE;
+     } 
    default:
      OOTRACEWARN3("WARN: Unsupported capabilities being compared. (%s, %s)\n",
                    call->callType, call->callToken);
@@ -534,6 +579,288 @@ ASN1BOOL ooCheckCompatibility
    return FALSE;
 
 }
+
+
+
+ooH323EpCapability* ooIsAudioDataTypeGSMSupported
+   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+{
+   int cap=0, framesPerPkt=0;
+   ooH323EpCapability *cur = NULL, *epCap=NULL;
+   ooGSMCapParams *params = NULL;
+
+   switch(audioCap->t)
+   {
+   case T_H245AudioCapability_gsmFullRate:
+      framesPerPkt = (audioCap->u.gsmFullRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      cap = OO_GSMFULLRATE;
+      break;
+   case T_H245AudioCapability_gsmHalfRate:
+      framesPerPkt = (audioCap->u.gsmHalfRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      cap = OO_GSMHALFRATE;
+      break;
+   case T_H245AudioCapability_gsmEnhancedFullRate:
+      framesPerPkt = (audioCap->u.gsmEnhancedFullRate->audioUnitSize)/OO_GSMFRAMESIZE;
+      cap = OO_GSMENHANCEDFULLRATE;
+      break;
+   default:
+      OOTRACEERR3("Error:Invalid GSM capability type.(%s, %s)\n",
+                                           call->callType, call->callToken);
+     return NULL;
+   }
+
+   OOTRACEDBGC4("Determined audio data type to be of type %d. Searching"
+                " for matching capability.(%s, %s)\n", cap, call->callType,
+                call->callToken);
+
+   /* If we have call specific caps then we use them, otherwise we use
+      general endpoint caps*/
+   if(call->ourCaps)  
+      cur = call->ourCaps;
+   else
+      cur = gH323ep.myCaps;
+
+   while(cur)
+   {
+      OOTRACEDBGC4("Local cap being compared %d. (%s, %s)\n", cur->cap,
+                     call->callType, call->callToken);
+     
+      if(cur->cap == cap && (cur->dir & dir))
+         break;
+      cur = cur->next;
+   }
+  
+   if(!cur) return NULL;
+  
+   OOTRACEDBGC4("Found matching audio capability type %d. Comparing"
+                " other parameters. (%s, %s)\n", cap, call->callType,
+                call->callToken);
+  
+   /* can we receive this capability */
+   if(dir & OORX)
+   {
+      if(((ooGSMCapParams*)cur->params)->rxframes < framesPerPkt)
+         return NULL;
+      else{
+         epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                 sizeof(ooH323EpCapability));
+         params =(ooGSMCapParams*)memAlloc(call->pctxt,sizeof(ooGSMCapParams));
+         if(!epCap || !params)
+         {
+            OOTRACEERR3("Error:Failed to allocate memory for matching GSM cap."
+                       "(%s, %s)\n", call->callType, call->callToken);
+            return NULL;
+         }
+         epCap->params = params;
+         epCap->cap = cur->cap;
+         epCap->dir = cur->dir;
+         epCap->capType = cur->capType;
+         epCap->startReceiveChannel = cur->startReceiveChannel;
+         epCap->startTransmitChannel= cur->startTransmitChannel;
+         epCap->stopReceiveChannel = cur->stopReceiveChannel;
+         epCap->stopTransmitChannel = cur->stopTransmitChannel;
+         epCap->next = NULL;
+         memcpy(epCap->params, cur->params, sizeof(ooGSMCapParams));
+         return epCap;
+      }
+   }
+
+   /* Can we transmit compatible stream */
+   if(dir & OOTX)
+   {
+      epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                sizeof(ooH323EpCapability));
+      params =(ooGSMCapParams*)memAlloc(call->pctxt,sizeof(ooGSMCapParams));
+      if(!epCap || !params)
+      {
+         OOTRACEERR3("Error:Failed to allocate memory for matching GSM cap."
+                    "(%s, %s)\n", call->callType, call->callToken);
+         return NULL;
+      }
+      epCap->params = params;
+      epCap->cap = cur->cap;
+      epCap->dir = cur->dir;
+      epCap->capType = cur->capType;
+      epCap->startReceiveChannel = cur->startReceiveChannel;
+      epCap->startTransmitChannel= cur->startTransmitChannel;
+      epCap->stopReceiveChannel = cur->stopReceiveChannel;
+      epCap->stopTransmitChannel = cur->stopTransmitChannel;
+      epCap->next = NULL;
+      memcpy(epCap->params, cur->params, sizeof(ooGSMCapParams));
+      if(params->txframes > framesPerPkt)
+      {
+         OOTRACEINFO5("Reducing framesPerPkt for transmission of GSM "
+                      "capability from %d to %d to match receive capability of"
+                      " remote endpoint.(%s, %s)\n", params->txframes,
+                      framesPerPkt, call->callType, call->callToken);
+         params->txframes = framesPerPkt;
+      }
+
+      return epCap;
+
+   }
+   return NULL;
+
+}
+
+ooH323EpCapability* ooIsAudioDataTypeG711Supported
+   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+{
+   int cap, framesPerPkt=0;
+   ooH323EpCapability *cur=NULL, *epCap=NULL;
+   ooG711CapParams * params= NULL;
+
+   /* Find similar capability */
+   switch(audioCap->t)
+   {
+      case T_H245AudioCapability_g711Alaw64k:
+         framesPerPkt = audioCap->u.g711Alaw64k;
+         cap = OO_G711ALAW64K;
+         break;
+      case T_H245AudioCapability_g711Alaw56k:
+         framesPerPkt = audioCap->u.g711Alaw56k;
+         cap = OO_G711ALAW56K;
+         break;
+      case T_H245AudioCapability_g711Ulaw56k:
+         framesPerPkt = audioCap->u.g711Ulaw56k;
+         cap = OO_G711ULAW56K;
+         break;
+      case T_H245AudioCapability_g711Ulaw64k:
+         framesPerPkt = audioCap->u.g711Ulaw64k;
+         cap = OO_G711ULAW64K;
+         break;
+      default:
+        return NULL;
+   }
+
+   OOTRACEDBGC4("Determined G711 audio data type to be of type %d. Searching"
+                " for matching capability.(%s, %s)\n", cap, call->callType,
+                call->callToken);
+
+   /* If we have call specific caps, we use them; otherwise use general
+      endpoint caps
+   */  
+   if(call->ourCaps)
+     cur = call->ourCaps;
+   else
+     cur = gH323ep.myCaps;
+
+   while(cur)
+   {
+      OOTRACEDBGC4("Local cap being compared %d. (%s, %s)\n", cur->cap,
+                     call->callType, call->callToken);
+     
+      if(cur->cap == cap && (cur->dir & dir))
+         break;
+      cur = cur->next;
+   }
+  
+   if(!cur) return NULL;
+  
+   OOTRACEDBGC4("Found matching G711 audio capability type %d. Comparing"
+                " other parameters. (%s, %s)\n", cap, call->callType,
+                call->callToken);
+  
+   /* can we receive this capability */
+   if(dir & OORX)
+   {
+     if(((ooG711CapParams*)cur->params)->rxframes < framesPerPkt)
+         return NULL;
+     else{
+        OOTRACEDBGC4("We can receive G711 capability %s. (%s, %s)\n",
+                      ooGetAudioCapTypeText(cur->cap), call->callType,
+                      call->callToken);
+        epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                 sizeof(ooH323EpCapability));
+        params=(ooG711CapParams*)memAlloc(call->pctxt,sizeof(ooG711CapParams));
+        if(!epCap || !params)
+        {
+           OOTRACEERR3("Error:Failed to allocate memory for matching G711 cap."
+                      "(%s, %s)\n", call->callType, call->callToken);
+           return NULL;
+        }
+        epCap->params = params;
+        epCap->cap = cur->cap;
+        epCap->dir = cur->dir;
+        epCap->capType = cur->capType;
+        epCap->startReceiveChannel = cur->startReceiveChannel;
+        epCap->startTransmitChannel= cur->startTransmitChannel;
+        epCap->stopReceiveChannel = cur->stopReceiveChannel;
+        epCap->stopTransmitChannel = cur->stopTransmitChannel;
+        epCap->next = NULL;
+        memcpy(epCap->params, cur->params, sizeof(ooG711CapParams));
+        OOTRACEDBGC4("Returning copy of matched receive capability %s. "
+                     "(%s, %s)\n",
+                     ooGetAudioCapTypeText(cur->cap), call->callType,
+                     call->callToken);
+        return epCap;
+     }
+   }
+
+   /* Can we transmit compatible stream */
+   if(dir & OOTX)
+   {
+      OOTRACEDBGC4("We can transmit G711 capability %s. (%s, %s)\n",
+                   ooGetAudioCapTypeText(cur->cap), call->callType,
+                   call->callToken);
+      epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                sizeof(ooH323EpCapability));
+      params =(ooG711CapParams*)memAlloc(call->pctxt,sizeof(ooG711CapParams));
+      if(!epCap || !params)
+      {
+         OOTRACEERR3("Error:Failed to allocate memory for matching G711 cap."
+                    "(%s, %s)\n", call->callType, call->callToken);
+         return NULL;
+      }
+      epCap->params = params;
+      epCap->cap = cur->cap;
+      epCap->dir = cur->dir;
+      epCap->capType = cur->capType;
+      epCap->startReceiveChannel = cur->startReceiveChannel;
+      epCap->startTransmitChannel= cur->startTransmitChannel;
+      epCap->stopReceiveChannel = cur->stopReceiveChannel;
+      epCap->stopTransmitChannel = cur->stopTransmitChannel;
+      epCap->next = NULL;
+      memcpy(epCap->params, cur->params, sizeof(ooG711CapParams));
+      if(params->txframes > framesPerPkt)
+      {
+         OOTRACEINFO5("Reducing framesPerPkt for transmission of G711 "
+                      "capability from %d to %d to match receive capability of"
+                      " remote endpoint.(%s, %s)\n", params->txframes,
+                      framesPerPkt, call->callType, call->callToken);
+         params->txframes = framesPerPkt;
+      }
+      OOTRACEDBGC4("Returning copy of matched transmit capability %s."
+                   "(%s, %s)\n",
+                   ooGetAudioCapTypeText(cur->cap), call->callType,
+                   call->callToken);
+      return epCap;
+   }
+   return NULL;
+}
+
+
+
+ooH323EpCapability* ooIsAudioDataTypeSupported
+   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+{
+   /* Find similar capability */
+   switch(audioCap->t)
+   {
+      case T_H245AudioCapability_g711Alaw64k:
+      case T_H245AudioCapability_g711Alaw56k:
+      case T_H245AudioCapability_g711Ulaw56k:
+      case T_H245AudioCapability_g711Ulaw64k:
+         return ooIsAudioDataTypeG711Supported(call, audioCap, dir);
+      case T_H245AudioCapability_gsmFullRate:
+      case T_H245AudioCapability_gsmHalfRate:
+      case T_H245AudioCapability_gsmEnhancedFullRate:
+         return ooIsAudioDataTypeGSMSupported(call, audioCap, dir);  
+      default:
+         return NULL;
+   }  
+}
+
 
 ooH323EpCapability* ooIsDataTypeSupported
                    (ooCallData *call, H245DataType *data, int dir)
@@ -566,76 +893,6 @@ ooH323EpCapability* ooIsDataTypeSupported
    default:
       OOTRACEINFO3("Unknown data type (%s, %s)\n", call->callType,
                     call->callToken);
-   }
-   return NULL;
-}
-
-ooH323EpCapability* ooIsAudioDataTypeSupported
-   (ooCallData *call, H245AudioCapability* audioCap, int dir)
-{
-   int cap, noofframes=0;
-   ooH323EpCapability *epCap=NULL;
-
-   /* Find similar capability */
-   switch(audioCap->t)
-   {
-      case T_H245AudioCapability_g711Alaw64k:
-         noofframes = audioCap->u.g711Alaw64k;
-         cap = OO_G711ALAW64K;
-         break;
-      case T_H245AudioCapability_g711Alaw56k:
-         noofframes = audioCap->u.g711Alaw56k;
-         cap = OO_G711ALAW56K;
-         break;
-      case T_H245AudioCapability_g711Ulaw56k:
-         noofframes = audioCap->u.g711Ulaw56k;
-         cap = OO_G711ULAW56K;
-         break;
-      case T_H245AudioCapability_g711Ulaw64k:
-         noofframes = audioCap->u.g711Ulaw64k;
-         cap = OO_G711ULAW64K;
-         break;
-      default:
-        return NULL;
-   }
-
-   OOTRACEDBGC4("Determined audio data type to be of type %d. Searching"
-                " for matching capability.(%s, %s)\n", cap, call->callType,
-                call->callToken);
-  
-   epCap = gH323ep.myCaps;
-   while(epCap)
-   {
-      OOTRACEDBGC4("Local cap being compared %d. (%s, %s)\n", epCap->cap,
-                     call->callType, call->callToken);
-     
-      if(epCap->cap == cap)
-         break;
-      epCap = epCap->next;
-   }
-  
-   if(!epCap) return NULL;
-  
-   OOTRACEDBGC4("Found matching audio capability type %d. Comparing"
-                " other parameters. (%s, %s)\n", cap, call->callType,
-                call->callToken);
-  
-   /* can we receive this capability */
-   if(dir & OORX)
-   {
-      if(((ooG711CapParams*)epCap->params)->rxframes >= noofframes)
-         return epCap;
-      else
-         return NULL;
-   }
-
-   /* Can we transmit compatible stream */
-   if(dir & OOTX)
-   {
-      if(((ooG711CapParams*)epCap->params)->txframes <= noofframes)
-         return epCap;
-      else
-         return NULL;
    }
    return NULL;
 }
@@ -786,8 +1043,8 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
          txframes = audioCap->u.g711Alaw64k;
          rxframes = audioCap->u.g711Alaw64k;
       }
-      return ooAddG711Capability_internal(call, OO_G711ALAW64K, txframes,
-                                        rxframes, dir, NULL, NULL, NULL, NULL);
+      return ooCapabilityAddG711Capability(call, OO_G711ALAW64K, txframes,
+                                   rxframes, dir, NULL, NULL, NULL, NULL,TRUE);
    case T_H245AudioCapability_g711Alaw56k:
       if(dir&OOTX) txframes = audioCap->u.g711Alaw56k;
       else if(dir&OORX) rxframes = audioCap->u.g711Alaw56k;
@@ -795,8 +1052,8 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
          txframes = audioCap->u.g711Alaw56k;
          rxframes = audioCap->u.g711Alaw56k;
       }
-      return ooAddG711Capability_internal(call, OO_G711ALAW56K, txframes,
-                                        rxframes, dir, NULL, NULL, NULL, NULL);
+      return ooCapabilityAddG711Capability(call, OO_G711ALAW56K, txframes,
+                                  rxframes, dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_g711Ulaw64k:
       if(dir&OOTX) txframes = audioCap->u.g711Ulaw64k;
       else if(dir&OORX) rxframes = audioCap->u.g711Ulaw64k;
@@ -804,8 +1061,8 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
          txframes = audioCap->u.g711Ulaw64k;
          rxframes = audioCap->u.g711Ulaw64k;
       }
-      return ooAddG711Capability_internal(call, OO_G711ULAW64K, txframes,
-                                        rxframes, dir, NULL, NULL, NULL, NULL);
+      return ooCapabilityAddG711Capability(call, OO_G711ULAW64K, txframes,
+                                  rxframes, dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_g711Ulaw56k:
       if(dir&OOTX) txframes = audioCap->u.g711Ulaw56k;
       else if(dir&OORX) rxframes = audioCap->u.g711Ulaw56k;
@@ -813,26 +1070,26 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
          txframes = audioCap->u.g711Ulaw56k;
          rxframes = audioCap->u.g711Ulaw56k;
       }
-      return ooAddG711Capability_internal(call, OO_G711ULAW56K, txframes,
-                                        rxframes, dir, NULL, NULL, NULL, NULL);
+      return ooCapabilityAddG711Capability(call, OO_G711ULAW56K, txframes,
+                                  rxframes, dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmFullRate:
-      return ooAddGSMCapability_internal(call, OO_GSMFULLRATE,
-                                        audioCap->u.gsmFullRate->audioUnitSize,
+      return ooCapabilityAddGSMCapability(call, OO_GSMFULLRATE,
+                      (audioCap->u.gsmFullRate->audioUnitSize/OO_GSMFRAMESIZE),
                                         audioCap->u.gsmFullRate->comfortNoise,
                                         audioCap->u.gsmFullRate->scrambled,
-                                        dir, NULL, NULL, NULL, NULL);
+                                        dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmHalfRate:
-      return ooAddGSMCapability_internal(call, OO_GSMHALFRATE,
-                                        audioCap->u.gsmHalfRate->audioUnitSize,
+      return ooCapabilityAddGSMCapability(call, OO_GSMHALFRATE,
+                      (audioCap->u.gsmHalfRate->audioUnitSize/OO_GSMFRAMESIZE),
                                         audioCap->u.gsmHalfRate->comfortNoise,
                                         audioCap->u.gsmHalfRate->scrambled,
-                                        dir, NULL, NULL, NULL, NULL);
+                                        dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmEnhancedFullRate:
-      return ooAddGSMCapability_internal(call, OO_GSMENHANCEDFULLRATE,
-                                audioCap->u.gsmEnhancedFullRate->audioUnitSize,
+      return ooCapabilityAddGSMCapability(call, OO_GSMENHANCEDFULLRATE,
+              (audioCap->u.gsmEnhancedFullRate->audioUnitSize/OO_GSMFRAMESIZE),
                                 audioCap->u.gsmEnhancedFullRate->comfortNoise,
                                 audioCap->u.gsmEnhancedFullRate->scrambled,
-                                dir, NULL, NULL, NULL, NULL);
+                                dir, NULL, NULL, NULL, NULL, TRUE);
 
    default:
      OOTRACEDBGA1("Unsupported audio capability type\n");
@@ -841,3 +1098,53 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
 
    return OO_OK;
 }
+
+
+
+
+
+int ooCapabilityUpdateJointCapabilities(ooCallData* call, H245Capability *cap)
+{
+   ooH323EpCapability * epCap = NULL, *cur = NULL;
+   OOTRACEDBGC3("checking whether we need to add cap to joint capabilities"
+                "(%s, %s)\n", call->callType, call->callToken);
+           
+   switch(cap->t)
+   {
+   case T_H245Capability_receiveAudioCapability:
+      epCap= ooIsAudioDataTypeSupported(call, cap->u.receiveAudioCapability,
+                                        OOTX);
+      break;
+   case T_H245Capability_transmitAudioCapability:
+      epCap = ooIsAudioDataTypeSupported(call, cap->u.transmitAudioCapability,
+                                        OOTX);
+      break;
+   case T_H245Capability_receiveAndTransmitAudioCapability:
+      epCap = NULL;
+   default:
+     OOTRACEDBGA3("Unsupported cap type encountered. Ignoring. (%s, %s)\n",
+                   call->callType, call->callToken);
+   }
+
+   if(epCap)
+   {
+      OOTRACEDBGC3("Adding cap to joint capabilities(%s, %s)\n",call->callType,
+                   call->callToken);
+      /* Note:we add jointCaps in remote endpoints preference order.*/
+      if(call->jointCaps)
+      {
+         cur = call->jointCaps;
+         while(cur->next) cur = cur->next;
+         cur->next = epCap;
+      }
+      call->jointCaps = epCap;
+      return OO_OK;
+   }
+
+   OOTRACEDBGC3("Not adding to joint capabilities. (%s, %s)\n", call->callType,
+                call->callToken);
+   return OO_FAILED;
+}
+
+
+

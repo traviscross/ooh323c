@@ -629,7 +629,8 @@ int ooMonitorChannels()
 
                OOTRACEINFO2("Processing MakeCall command %s\n",
                              (char*)cmd->param2);
-               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2, FALSE);
+               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2,
+                                                 (ooCallOptions*)cmd->param3);
                break;
             case OO_CMD_MAKECALL_NOGK:
                OOTRACEINFO2("Processing MakeCall_NoGk command %s\n",
@@ -1315,8 +1316,8 @@ int ooOnSendMsg
          return OO_FAILED;
       }
 
-      if(gH323ep.onOutgoingCall)
-         gH323ep.onOutgoingCall(call);
+      if(gH323ep.h323Callbacks.onOutgoingCall)
+         gH323ep.h323Callbacks.onOutgoingCall(call);
       break;
    case OOCallProceeding:
       OOTRACEINFO3("Sent Message - CallProceeding (%s, %s)\n", call->callType,
@@ -1325,14 +1326,14 @@ int ooOnSendMsg
    case OOAlert:
       OOTRACEINFO3("Sent Message - Alerting (%s, %s)\n", call->callType,
                     call->callToken);
-      if(gH323ep.onAlerting)
-         gH323ep.onAlerting(call);
+      if(gH323ep.h323Callbacks.onAlerting)
+         gH323ep.h323Callbacks.onAlerting(call);
       break;
    case OOConnect:
       OOTRACEINFO3("Sent Message - Connect (%s, %s)\n", call->callType,
                     call->callToken);
-      if(gH323ep.onCallEstablished)
-         gH323ep.onCallEstablished(call);
+      if(gH323ep.h323Callbacks.onCallEstablished)
+         gH323ep.h323Callbacks.onCallEstablished(call);
       break;
    case OOReleaseComplete:
       OOTRACEINFO3("Sent Message - ReleaseComplete (%s, %s)\n", call->callType,
@@ -1552,9 +1553,7 @@ int ooOnSendMsg
       else
          OOTRACEINFO3("Sent Message - EndSessionCommand (%s, %s)\n",
                                            call->callType, call->callToken);
-      if((call->h245SessionState == OO_H245SESSION_ACTIVE))/* ||
-         (call->h245SessionState == OO_H245SESSION_INACTIVE &&
-         OO_TESTFLAG(call->flags, OO_M_TUNNELING)))*/
+      if((call->h245SessionState == OO_H245SESSION_ACTIVE))
       {
          /* Start EndSession timer */
          call->h245SessionState = OO_H245SESSION_ENDSENT;

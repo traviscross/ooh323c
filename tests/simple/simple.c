@@ -35,6 +35,7 @@ int osEpOnIncomingCall(ooCallData* call );
 int osEpOnOutgoingCallAdmitted(ooCallData* call );
 int osEpOnCallCleared(ooCallData* call );
 int osEpOnAlerting(ooCallData* call);
+int osEpOpenLogicalChannels(ooCallData *call);
 void * osEpHandleCommand(void*);
 
 static int isActive;
@@ -72,6 +73,19 @@ int main(int argc, char ** argv)
    char e164[50];
    char user[50];
    OOBOOL bListen=FALSE, bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
+
+   OOH323CALLBACKS h323Callbacks ={
+     .onNewCallCreated = NULL,
+     .onAlerting = osEpOnAlerting,
+     .onIncomingCall = osEpOnIncomingCall,
+     .onOutgoingCall = NULL,
+     .onCallAnswered = NULL,
+     .onCallEstablished = NULL,
+     .onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted,
+     .onCallCleared = osEpOnCallCleared,
+     .openLogicalChannels=NULL
+  };
+
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -180,7 +194,7 @@ int main(int argc, char ** argv)
    if(!bTunneling)
       ooH323EpDisableH245Tunneling();
 
-   ooH323EpSetTraceLevel(OOTRCLVLINFO);
+   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
   
@@ -198,17 +212,16 @@ int main(int argc, char ** argv)
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Register callbacks */
-   ooH323EpRegisterCallbacks(&osEpOnAlerting, &osEpOnIncomingCall,
-                             &osEpOnOutgoingCallAdmitted, NULL,NULL,
-                             osEpOnCallCleared);  
+   ooH323EpSetH323Callbacks(h323Callbacks);
+
    /* Add audio capability */
-   ooAddG711Capability(OO_G711ULAW64K, 30, 240, OORXANDTX,
+   ooH323EpAddG711Capability(OO_G711ULAW64K, 30, 240, OORXANDTX,
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
    /* To use a gatekeeper */
 
-   /*   ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
+   /*ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
 
   
    /* Load media plug-in*/
@@ -238,7 +251,7 @@ int main(int argc, char ** argv)
    {
       printf("Calling %s\n", dest);
       memset(callToken, 0, 20);
-      ooMakeCall(dest, callToken, sizeof(callToken)); /* Make call */
+      ooMakeCall(dest, callToken, sizeof(callToken), NULL); /* Make call */
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
@@ -258,6 +271,21 @@ int main(int argc, char ** argv)
    ooH323EpDestroy();
    return 0;
 }
+
+/*
+int osEpOpenLogicalChannels(ooCallData *call)
+{
+  ooH323EpCapability *epCap=NULL;
+   printf("in OpenLogicalChannels\n");
+   epCap = call->jointCaps;
+   while(epCap)
+   {
+     printf("Joint cap: %d\n", epCap->cap);
+     epCap = epCap->next;
+   }
+   return OO_OK;
+
+}*/
 
 /* Callback to start receive media channel */
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
@@ -400,3 +428,4 @@ void* osEpHandleCommand(void* dummy)
    gCmdThrd=FALSE;
    return dummy;
 }
+

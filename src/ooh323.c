@@ -625,8 +625,8 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
          OOTRACEINFO3("H.225 Alerting message received (%s, %s)\n",
                       call->callType, call->callToken);
 
-         if(gH323ep.onAlerting)
-            gH323ep.onAlerting(call);
+         if(gH323ep.h323Callbacks.onAlerting)
+            gH323ep.h323Callbacks.onAlerting(call);
          ooFreeQ931Message(q931Msg);
          break;
       case Q931ConnectMsg:/* Connect message received */
@@ -657,8 +657,8 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
             if(gH323ep.h225Callbacks.onReceivedConnect)
                gH323ep.h225Callbacks.onReceivedConnect(call, q931Msg);
 
-            if(gH323ep.onCallEstablished)
-               gH323ep.onCallEstablished(call);
+            if(gH323ep.h323Callbacks.onCallEstablished)
+               gH323ep.h323Callbacks.onCallEstablished(call);
          }
          ooFreeQ931Message(q931Msg);
          break;
@@ -673,9 +673,6 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
 
          ooOnReceivedReleaseComplete(call, q931Msg);
         
-         /*         if(gH323ep.onCallCleared)
-                    gH323ep.onCallCleared(call);         */
-      
          ooFreeQ931Message(q931Msg);
          break;
       case Q931FacilityMsg:
@@ -1141,4 +1138,5 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
    }
    return OO_OK;
 }
+
 

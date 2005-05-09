@@ -308,6 +308,7 @@ int ooH323EpClearAllAliases(void)
    return OO_OK;
 }
 
+
 int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks)
 {
    gH323ep.h225Callbacks.onReceivedSetup = h225Callbacks.onReceivedSetup;
@@ -318,21 +319,16 @@ int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks)
    return OO_OK;
 }
    
-int ooH323EpRegisterCallbacks(cb_OnAlerting onAlerting,
-                              cb_OnIncomingCall onIncomingCall,
-                              cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted,
-                              cb_OnOutgoingCall onOutgoingCall,
-                              cb_OnCallEstablished onCallEstablished,
-                              cb_OnCallCleared onCallCleared)
-
+int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks)
 {
-   gH323ep.onAlerting = onAlerting;
-   gH323ep.onIncomingCall = onIncomingCall;
-   gH323ep.onOutgoingCallAdmitted = onOutgoingCallAdmitted;
-   gH323ep.onOutgoingCall = onOutgoingCall;
-   gH323ep.onCallEstablished = onCallEstablished;
-   gH323ep.onCallCleared = onCallCleared;
-
+   gH323ep.h323Callbacks.onNewCallCreated = h323Callbacks.onNewCallCreated;
+   gH323ep.h323Callbacks.onAlerting = h323Callbacks.onAlerting;
+   gH323ep.h323Callbacks.onIncomingCall = h323Callbacks.onIncomingCall;
+   gH323ep.h323Callbacks.onOutgoingCall = h323Callbacks.onOutgoingCall;
+   gH323ep.h323Callbacks.onCallAnswered = h323Callbacks.onCallAnswered;
+   gH323ep.h323Callbacks.onCallEstablished = h323Callbacks.onCallEstablished;
+   gH323ep.h323Callbacks.onCallCleared = h323Callbacks.onCallCleared;
+   gH323ep.h323Callbacks.openLogicalChannels = h323Callbacks.openLogicalChannels;
    return OO_OK;
 }
 
@@ -555,4 +551,28 @@ void ooH323EpPrintConfig(void)
 }
 
 
+int ooH323EpAddG711Capability(int cap, int txframes, int rxframes, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddG711Capability(NULL, cap, txframes, rxframes, dir,
+         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
+         stopTransmitChannel, FALSE);
+}
+
+
+int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
+                             OOBOOL comfortNoise, OOBOOL scrambled, int dir,
+                             cb_StartReceiveChannel startReceiveChannel,
+                             cb_StartTransmitChannel startTransmitChannel,
+                             cb_StopReceiveChannel stopReceiveChannel,
+                             cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddGSMCapability(NULL, cap, framesPerPkt, comfortNoise,
+                                     scrambled, dir, startReceiveChannel,
+                                     startTransmitChannel, stopReceiveChannel,
+                                     stopTransmitChannel, FALSE);
+}
 

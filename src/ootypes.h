@@ -218,6 +218,16 @@ typedef struct ooCommand {
    void * param3;
 } ooCommand;
 
+
+/*TODO: Should add caller-id, callername etc. So that they can be changed per
+  call basis*/
+typedef struct ooCallOptions {
+   OOBOOL fastStart; /* faststart for this call. overrides endpoint setting*/
+   OOBOOL tunneling; /* tunneling for this call. overrides endpoint setting*/
+   OOBOOL disableGk; /* If gk is enabled, then you can avoid going through gk for a specific call */
+   unsigned callMode; /* Effective when faststart is used. Tells stack which type of channels to setup*/
+}ooCallOptions;
+
 /**
  * This structure is used to define the port ranges to be used
  * by the application.
@@ -329,6 +339,9 @@ typedef struct ooTimerCallback{
    to or from outside pbx domian. For outgoing calls, ooMakeCallNoGk
    disables use of gk for specific call.
 */
+#define OO_M_DATASESSION        0x00800000
+#define OO_M_VIDEOSESSION       0x00400000
+#define OO_M_AUDIOSESSION       0x00200000
 #define OO_M_ENDPOINTCREATED    0x00100000
 #define OO_M_ENDSESSION_BUILT   0x08000000
 #define OO_M_RELEASE_BUILT      0x04000000
@@ -371,7 +384,9 @@ typedef struct ooCallData {
    ASN1UINT             statusDeterminationNumber;
    OOCapExchangeState   localTermCapState;
    OOCapExchangeState   remoteTermCapState;
-   struct ooH323EpCapability * remoteCaps;
+   struct ooH323EpCapability* ourCaps;
+   struct ooH323EpCapability* remoteCaps; /* TODO: once we are comfortable with supportedCaps, get rid of remoteCaps*/
+   struct ooH323EpCapability* jointCaps;
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
@@ -381,6 +396,7 @@ typedef struct ooCallData {
    int                  logicalChanNoBase;
    int                  logicalChanNoMax;
    int                  logicalChanNoCur;
+   unsigned             nextSessionID; /* Note by default 1 is audio session, 2 is video and 3 is data, from 3 onwards master decides*/
    DList                timerList;
    ASN1UINT             msdRetries;
    void                 *usrData; /* User can set this to user specific data */
@@ -438,18 +454,30 @@ typedef struct OOH225MsgCallbacks{
 }OOH225MsgCallbacks;
 
 
-
+typedef int (*cb_OnNewCallCreated)(ooCallData * call);
 typedef int (*cb_OnAlerting)(ooCallData * call);
 typedef int (*cb_OnIncomingCall)(ooCallData* call );
 typedef int (*cb_OnOutgoingCall)(ooCallData* call );
 typedef int (*cb_OnCallAnswered)(ooCallData* call);
-typedef int (*cb_OnCallEstablished)(ooCallData* call );
+typedef int (*cb_OnCallEstablished)(ooCallData* call);
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
-typedef int (*cb_OnCallCleared)(ooCallData* call );
+typedef int (*cb_OnCallCleared)(ooCallData* call);
+typedef int (*cb_OpenLogicalChannels)(ooCallData* call);
+
 struct ooGkClient;
 
 
-
+typedef struct OOH323CALLBACKS{
+   cb_OnAlerting onNewCallCreated;
+   cb_OnAlerting onAlerting;
+   cb_OnIncomingCall onIncomingCall;
+   cb_OnOutgoingCall onOutgoingCall;
+   cb_OnCallAnswered onCallAnswered;
+   cb_OnCallEstablished onCallEstablished;
+   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
+   cb_OnCallCleared onCallCleared;
+   cb_OpenLogicalChannels openLogicalChannels;
+} OOH323CALLBACKS;
 
 
 
@@ -503,12 +531,7 @@ typedef struct ooEndPoint {
    ooCapPrefs     capPrefs;
    int noOfCaps;
    OOH225MsgCallbacks h225Callbacks;
-   cb_OnAlerting onAlerting;
-   cb_OnIncomingCall onIncomingCall;
-   cb_OnOutgoingCall onOutgoingCall;
-   cb_OnCallEstablished onCallEstablished;
-   cb_OnCallCleared onCallCleared;
-   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
+   OOH323CALLBACKS h323Callbacks;
    char signallingIP[20];
    int listenPort;
    OOSOCKET *listener;
