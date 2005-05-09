@@ -102,7 +102,7 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
   
    epCap->next = NULL;
    if(!call)
-     {/*Add as local capability */
+   {/*Add as local capability */
       if(!gH323ep.myCaps)
          gH323ep.myCaps = epCap;
       else{
@@ -112,27 +112,28 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
       }
       ooAppendCapToCapPrefs(NULL, cap);
       gH323ep.noOfCaps++;
+   }else{
+      if(remote)
+      {
+         /*Add as remote capability */
+         if(!call->remoteCaps)
+            call->remoteCaps = epCap;
+         else{
+            cur = call->remoteCaps;
+            while(cur->next) cur = cur->next;
+            cur->next = epCap;
+         }
      }else{
-        if(remote)
-        {
-           /*Add as remote capability */
-           if(!call->remoteCaps)
-              call->remoteCaps = epCap;
-           else{
-              cur = call->remoteCaps;
-              while(cur->next) cur = cur->next;
-              cur->next = epCap;
-           }
-        }else{
-            /*Add as our capability */
-           if(!call->ourCaps)
-              call->ourCaps = epCap;
-           else{
-              cur = call->ourCaps;
-              while(cur->next) cur = cur->next;
-              cur->next = epCap;
-           }
-       }
+        /*Add as our capability */
+        if(!call->ourCaps)
+           call->ourCaps = epCap;
+        else{
+           cur = call->ourCaps;
+           while(cur->next) cur = cur->next;
+           cur->next = epCap;
+        }
+        ooAppendCapToCapPrefs(call, cap);
+     }
    }
         
    return OO_OK;
@@ -228,6 +229,7 @@ int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
+         ooAppendCapToCapPrefs(call, cap);
       }
    }
 

@@ -211,7 +211,7 @@ int main(int argc, char ** argv)
   
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
-   /* Register callbacks */
+   /* Set callbacks */
    ooH323EpSetH323Callbacks(h323Callbacks);
 
    /* Add audio capability */
