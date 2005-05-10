@@ -168,8 +168,8 @@ EXTERN int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id);
  * This function is used to add G711 capability for the call. The
  * "ooCallAdd...Capability" functions allow to override the global endpoint
  * capabilities and use specific capabilities for specific calls.
- * @param call           Call for which capability has to be added.
- * @param cap            Capability to be added.
+ * @param call                 Call for which capability has to be added.
+ * @param cap                  Capability to be added.
  * @param txframes             Number of frames per packet for transmission.
  * @param rxframes             Number of frames per packet for reception.
  * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
@@ -192,6 +192,7 @@ EXTERN int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
  * This function is used to add GSM capability for the call. The
  * "ooCallAdd...Capability" functions allow to override the global endpoint
  * capabilities and use specific capabilities for specific calls.
+ * @param call                 Call for which capability has to be added.
  * @param cap                  Type of GSM capability to be added.
  * @param framesPerPkt         Number of GSM frames pre packet.
  * @param comfortNoise         Comfort noise spec for the capability.

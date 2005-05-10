@@ -197,7 +197,7 @@ int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
  * call and if supported makes entry into the joint capability list for the
  * call.
  * @param call           Handle to the call
- * @param remoteCap      Remote cap which will be tested for compatibility.
+ * @param cap            Remote cap which will be tested for compatibility.
  *
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
@@ -353,6 +353,7 @@ EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
  * @param call     Handle to call, if call's preference list has to be modified
  *                 else NULL, to modify endpoint's preference list.
  * @param cap      Capability concerned
+ * @param pos      New position in the preference order
  *
  * @return         OO_OK, on success. OO_FAILED, otherwise.
  */
