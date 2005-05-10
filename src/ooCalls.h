@@ -213,6 +213,30 @@ EXTERN int ooCallAddGSMCapability(ooCallData* call, int cap,
                                   cb_StopTransmitChannel stopTransmitChannel);
 
 /**
+ * This function is used to enable rfc 2833 capability for the call. By default
+ * the stack uses the dtmf settings for the endpoint. But if you want to
+ * enable/disable dtmf for a specific call, then you can override end-point
+ * settings using this function
+ * @param call                  Call for which rfc2833 has to be enabled.
+ * @param dynamicRTPPayloadType dynamicRTPPayloadType to be used.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallEnableRFC2833(ooCallData *call, int dynamicRTPPayloadType);
+
+
+/**
+ * This function is used to disable rfc 2833 capability for the call.
+ * By default the stack uses the dtmf settings for the endpoint. But if you
+ * want to enable/disable dtmf for a specific call, then you can override
+ * end-point settings using this function
+ * @param call                  Call for which rfc2833 has to be disabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallDisableRFC2833(ooCallData *call);
+
+/**
  * This function is used to find a call by using the unique token for the call.
  * @param callToken      The unique token for the call.
  *

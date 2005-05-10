@@ -335,6 +335,21 @@ EXTERN int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                              cb_StartTransmitChannel startTransmitChannel,
                              cb_StopReceiveChannel stopReceiveChannel,
                              cb_StopTransmitChannel stopTransmitChannel);
+
+/**
+ * This function is used to enable rfc 2833 support for the endpoint.
+ * @param dynamicRTPPayloadType   Payload type value to use.
+ *
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpEnableRFC2833(int dynamicRTPPayloadType);
+
+/**
+ * This function is used to disable rfc 2833 support for the endpoint.
+ *
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpDisableRFC2833(void);
 /**
  * @}
  */

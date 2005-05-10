@@ -23,22 +23,38 @@ extern ooEndPoint gH323ep;
 static int giDynamicRTPPayloadType = 101;
 
 
-int ooEnableDTMFRFC2833(int dynamicRTPPayloadType)
+int ooCapabilityEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType)
 {
-   gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
+   if(!call)
+   {
+      gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
+      OOTRACEINFO1("Enabled RFC2833 DTMF capability for end-point\n");
+   }else{
+      call->dtmfmode |= OO_CAP_DTMF_RFC2833;
+      OOTRACEINFO3("Enabled RFC2833 DTMF capability for (%s, %s) \n",
+                   call->callType, call->callToken);
+   }
+
    /*Dynamic RTP payload type range is from 96 - 127 */
    if(dynamicRTPPayloadType >= 96 && dynamicRTPPayloadType <= 127)
       giDynamicRTPPayloadType = dynamicRTPPayloadType;
-   OOTRACEINFO1("Enabled RFC2833 DTMF capability \n");
+
    return OO_OK;
 }
 
 
 
-int ooDisableDTMFRFC2833()
+int ooCapabilityDisableDTMFRFC2833(ooCallData *call)
 {
-   gH323ep.dtmfmode ^= OO_CAP_DTMF_RFC2833;
-   OOTRACEINFO1("Disabled RFC2833 DTMF capability\n");
+   if(!call){
+      gH323ep.dtmfmode ^= OO_CAP_DTMF_RFC2833;
+      OOTRACEINFO1("Disabled RFC2833 DTMF capability for end-point\n");
+   }else{
+      call->dtmfmode ^= OO_CAP_DTMF_RFC2833;
+      OOTRACEINFO3("Disabled RFC2833 DTMF capability for (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+
    return OO_OK;
 }
 

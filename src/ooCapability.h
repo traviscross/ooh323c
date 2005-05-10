@@ -90,16 +90,21 @@ extern "C" {
 
 /**
  * This function is used to add rfc2833 based dtmf detection capability
+ * @param call                   Call if enabling for call, else null for
+ *                               endpoint.
  * @param dynamicRTPPayloadType  dynamicRTPPayloadType to be used.
  * @return                       OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooEnableDTMFRFC2833(int dynamicRTPPayloadType);
+EXTERN int ooCapabilityEnableDTMFRFC2833
+   (ooCallData *call, int dynamicRTPPayloadType);
 
 /**
  * This function is used to remove rfc2833 dtmf detection capability.
+ * @param call             Handle to call, if disabling for the call, else NULL
+ *                         for end-point.
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooDisableDTMFRFC2833(void);
+EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
 
 
 /**

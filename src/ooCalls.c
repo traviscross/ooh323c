@@ -542,6 +542,15 @@ int ooCallAddGSMCapability(ooCallData* call, int cap, ASN1USINT framesPerPkt,
 }
 
 
+int ooCallEnableRFC2833(ooCallData *call, int dynamicRTPPayloadType)
+{
+   return ooCapabilityEnableDTMFRFC2833(call, dynamicRTPPayloadType);
+}
+
+int ooCallDisableRFC2833(ooCallData *call)
+{
+  return ooCapabilityDisableDTMFRFC2833(call);
+}
 
 ooCallData* ooFindCallByToken(char *callToken)
 {
