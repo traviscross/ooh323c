@@ -79,17 +79,8 @@ int main (int argc, char** argv)
    OOBOOL bListen = FALSE;
    char logfile[50];
 
-   OOH323CALLBACKS h323Callbacks ={
-     .onNewCallCreated = NULL,
-     .onAlerting = onAlerting,
-     .onIncomingCall = onIncomingCall,
-     .onOutgoingCall = NULL,
-     .onCallAnswered = NULL,
-     .onCallEstablished = NULL,
-     .onOutgoingCallAdmitted = onOutgoingCallAdmitted,
-     .onCallCleared = onCallCleared,
-     .openLogicalChannels=NULL
-  };
+   OOH323CALLBACKS h323Callbacks;
+
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
 #endif
@@ -193,6 +184,16 @@ int main (int argc, char** argv)
    ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
+   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onAlerting = onAlerting;
+   h323Callbacks.onIncomingCall = onIncomingCall;
+   h323Callbacks.onOutgoingCall = NULL;
+   h323Callbacks.onCallAnswered = NULL;
+   h323Callbacks.onCallEstablished = NULL;
+   h323Callbacks.onOutgoingCallAdmitted = onOutgoingCallAdmitted;
+   h323Callbacks.onCallCleared = onCallCleared;
+   h323Callbacks.openLogicalChannels=NULL;
+ 
    ooH323EpSetH323Callbacks(h323Callbacks);
 
 

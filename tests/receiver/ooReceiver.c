@@ -45,17 +45,8 @@ int main(int argc, char ** argv)
 {
   int ret=0;
 
-  OOH323CALLBACKS h323Callbacks ={
-     .onNewCallCreated = NULL,
-     .onAlerting = osEpOnAlerting,
-     .onIncomingCall = osEpOnIncomingCall,
-     .onOutgoingCall = NULL,
-     .onCallAnswered = NULL,
-     .onCallEstablished = NULL,
-     .onOutgoingCallAdmitted = NULL,
-     .onCallCleared = osEpOnCallCleared,
-     .openLogicalChannels=NULL
-  };
+  OOH323CALLBACKS h323Callbacks;
+
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -72,6 +63,17 @@ int main(int argc, char ** argv)
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+
+
+   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onAlerting = osEpOnAlerting;
+   h323Callbacks.onIncomingCall = osEpOnIncomingCall;
+   h323Callbacks.onOutgoingCall = NULL;
+   h323Callbacks.onCallAnswered = NULL;
+   h323Callbacks.onCallEstablished = NULL;
+   h323Callbacks.onOutgoingCallAdmitted = NULL;
+   h323Callbacks.onCallCleared = osEpOnCallCleared;
+   h323Callbacks.openLogicalChannels=NULL;
 
    ooH323EpSetH323Callbacks(h323Callbacks);
 

@@ -45,17 +45,8 @@ int main(int argc, char ** argv)
    int ret=0;
    char localip[20];
   
-   OOH323CALLBACKS h323Callbacks ={
-     .onNewCallCreated = NULL,
-     .onAlerting = NULL,
-     .onIncomingCall = NULL,
-     .onOutgoingCall = NULL,
-     .onCallAnswered = NULL,
-     .onCallEstablished = NULL,
-     .onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted,
-     .onCallCleared = osEpOnCallCleared,
-     .openLogicalChannels=NULL
-  };
+   OOH323CALLBACKS h323Callbacks;
+
 #ifdef _WIN32
    HANDLE threadHdl;
 #else
@@ -74,6 +65,17 @@ int main(int argc, char ** argv)
    }
 
    /* Register callbacks */
+
+   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onAlerting = NULL;
+   h323Callbacks.onIncomingCall = NULL;
+   h323Callbacks.onOutgoingCall = NULL;
+   h323Callbacks.onCallAnswered = NULL;
+   h323Callbacks.onCallEstablished = NULL;
+   h323Callbacks.onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted;
+   h323Callbacks.onCallCleared = osEpOnCallCleared;
+   h323Callbacks.openLogicalChannels=NULL;
+
    ooH323EpSetH323Callbacks(h323Callbacks);
    ooSetTCPPorts(16050, 16250);
    ooSetUDPPorts(17050, 17250);
