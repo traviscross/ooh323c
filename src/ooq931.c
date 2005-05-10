@@ -2099,10 +2099,14 @@ int ooParseDestination(ooCallData *call, char *dest)
 {
    int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
    ooAliases * psNewAlias = NULL;
-   char *cAt = NULL;
+   char *cAt = NULL, *host=NULL;
+   char tmp[256];
+   char *alias=NULL;
    OOTRACEINFO2("Parsing destination %s\n", dest);
+ 
    /* Test for an IP address:Note that only supports dotted IPv4.
       IPv6 won't pass the test and so will numeric IP representation*/
+  
    sscanf(dest, "%d.%d.%d.%d:%d", &iEk, &iDon, &iTeen, &iChaar, &iPort);
    if((iEk > 0            && iEk <= 255)    &&
       (iDon >= 0          && iDon <= 255)   &&
@@ -2121,8 +2125,38 @@ int ooParseDestination(ooCallData *call, char *dest)
       return OO_OK;
    }
 
+   /* alias@host */
+   strncpy(tmp, dest, sizeof(tmp)-1);
+   tmp[sizeof(tmp)-1]='\0';
+   if(host=strchr(tmp, '@'))
+   {
+      *host = '\0';
+      host++;
+      sscanf(host, "%d.%d.%d.%d:%d", &iEk, &iDon, &iTeen, &iChaar, &iPort);
+      if((iEk > 0            && iEk <= 255)    &&
+         (iDon >= 0          && iDon <= 255)   &&
+         (iTeen >=0          && iTeen <= 255)  &&
+         (iChaar >= 0        && iChaar <= 255) &&
+         (!strchr(host, ':') || iPort != -1))
+      {
+
+         sprintf(call->remoteIP, "%d.%d.%d.%d", iEk, iDon, iTeen, iChaar);
+         if(strchr(dest, ':'))
+            call->remotePort = iPort;
+         else
+            call->remotePort = 1720; /*Default h.323 port */
+         OOTRACEINFO3("Destination for new call parsed as Ip %s and port %d\n",
+                      call->remoteIP, call->remotePort);
+         alias = tmp;
+      }
+   }
+
+   if(!alias)
+   {
+     alias = dest;
+   }
    /* url test */
-   if(dest == strstr(dest, "http://"))
+   if(alias == strstr(alias, "http://"))
    {
       psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
       if(!psNewAlias)
@@ -2132,14 +2166,14 @@ int ooParseDestination(ooCallData *call, char *dest)
       }
       /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_url_ID;
-      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
+      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
       if(!psNewAlias->value)
       {
          OOTRACEERR1("Error:Failed to allocate memory for new url alias\n");
          ASN1MEMFREEPTR(call->pctxt, psNewAlias);
          return OO_FAILED;
       }
-      strcpy(psNewAlias->value, dest);
+      strcpy(psNewAlias->value, alias);
       psNewAlias->next = call->remoteAliases;
       call->remoteAliases = psNewAlias;
       OOTRACEINFO2("Destination for new call parsed as url %s\n",
@@ -2148,7 +2182,7 @@ int ooParseDestination(ooCallData *call, char *dest)
    }
 
    /* E-mail ID test */
-   if((cAt = strchr(dest, '@')) && dest != strchr(dest, '@'))
+   if((cAt = strchr(alias, '@')) && alias != strchr(alias, '@'))
    {
       if(strchr(cAt, '.'))
       {
@@ -2160,14 +2194,14 @@ int ooParseDestination(ooCallData *call, char *dest)
          }
          /*         memset(psNewAlias, 0, sizeof(ooAliases));*/
          psNewAlias->type = T_H225AliasAddress_email_ID;
-         psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
+         psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
          if(!psNewAlias->value)
          {
             OOTRACEERR1("Error:Failed to allocate memory for new email alias\n");
             ASN1MEMFREEPTR(call->pctxt, psNewAlias);
             return OO_FAILED;
          }
-         strcpy(psNewAlias->value, dest);
+         strcpy(psNewAlias->value, alias);
          psNewAlias->next = call->remoteAliases;
          call->remoteAliases = psNewAlias;
          OOTRACEINFO2("Destination for new call is parsed as email %s\n",
@@ -2180,12 +2214,12 @@ int ooParseDestination(ooCallData *call, char *dest)
    /* e-164 */
    /* strspn(dest, "1234567890*#") == strlen(dest)*/
    /* Dialed digits test*/
-   for(i=0; i<(int)strlen(dest); i++)
+   for(i=0; i<(int)strlen(alias); i++)
    {
-      if(!isdigit(dest[i]))
+      if(!isdigit(alias[i]))
          break;
    }
-   if(i == (int)strlen(dest))
+   if(i == (int)strlen(alias))
    {
       psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
       if(!psNewAlias)
@@ -2195,14 +2229,14 @@ int ooParseDestination(ooCallData *call, char *dest)
       }
       /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_dialedDigits;
-      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
+      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
       if(!psNewAlias->value)
       {
          OOTRACEERR1("Error:Failed to allocate memory for new dialedDigits alias\n");
          ASN1MEMFREEPTR(call->pctxt, psNewAlias);
          return OO_FAILED;
       }
-      strcpy(psNewAlias->value, dest);
+      strcpy(psNewAlias->value, alias);
       psNewAlias->next = call->remoteAliases;
       call->remoteAliases = psNewAlias;
       OOTRACEINFO2("Destination for new call is parsed as dialed digits %s\n",
@@ -2218,14 +2252,14 @@ int ooParseDestination(ooCallData *call, char *dest)
    }
    /*   memset(psNewAlias, 0, sizeof(ooAliases));*/
    psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dest)+1);
+   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
    if(!psNewAlias->value)
    {
       OOTRACEERR1("Error:Failed to allocate memory for new h323-id alias\n");
       ASN1MEMFREEPTR(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
-   strcpy(psNewAlias->value, dest);
+   strcpy(psNewAlias->value, alias);
    psNewAlias->next = call->remoteAliases;
    call->remoteAliases = psNewAlias;
    OOTRACEINFO2("Destination for new call is parsed as h323-id %s\n",
