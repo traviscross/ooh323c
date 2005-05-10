@@ -342,14 +342,14 @@ EXTERN int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
  *
  * @return                        OO_OK, on success; OO_FAILED, on failure
  */
-EXTERN int ooH323EpEnableRFC2833(int dynamicRTPPayloadType);
+EXTERN int ooH323EpEnableDTMFRFC2833(int dynamicRTPPayloadType);
 
 /**
  * This function is used to disable rfc 2833 support for the endpoint.
  *
  * @return                        OO_OK, on success; OO_FAILED, on failure
  */
-EXTERN int ooH323EpDisableRFC2833(void);
+EXTERN int ooH323EpDisableDTMFRFC2833(void);
 /**
  * @}
  */
