@@ -1773,10 +1773,23 @@ int ooH323MakeCall_helper(ooCallData *call)
       i=0;
       for(k=0; k< call->capPrefs.index; k++)
       {
+         OOTRACEDBGC5("Preffered capability at index %d is %s. (%s, %s)\n",
+                      k, ooGetAudioCapTypeText(call->capPrefs.order[k]),
+                      call->callType, call->callToken);
+
          if(call->ourCaps)
+         {
             epCap = call->ourCaps;
-         else
+            OOTRACEDBGC3("Using call specific capabilities in faststart of "
+                         "setup message. (%s, %s)\n", call->callType,
+                         call->callToken);
+         }
+         else{
             epCap = gH323ep.myCaps;
+            OOTRACEDBGC3("Using end-point capabilities for faststart of setup"
+                         "message. (%s, %s)\n", call->callType,
+                         call->callToken);
+         }
 
          while(epCap){
             if(epCap->cap == call->capPrefs.order[k]) break;
@@ -1784,11 +1797,16 @@ int ooH323MakeCall_helper(ooCallData *call)
          }
          if(!epCap)
          {
-            OOTRACEWARN3("Warn:Preferred capability is abscent in capability "
-                         "list. (%s, %s)\n",call->callType, call->callToken);
+            OOTRACEWARN4("Warn:Preferred capability %s is abscent in "
+                         "capability list. (%s, %s)\n",
+                         ooGetAudioCapTypeText(call->capPrefs.order[k]),
+                         call->callType, call->callToken);
             continue;
          }
 
+         OOTRACEDBGC4("Building olcs with capability %s. (%s, %s)\n",
+                      ooGetAudioCapTypeText(epCap->cap), call->callType,
+                      call->callToken);
          if(epCap->dir & OORX)
          {
             olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,

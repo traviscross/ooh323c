@@ -943,7 +943,8 @@ int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
    newMediaInfo->lMediaPort = mediaInfo.lMediaPort;
    newMediaInfo->cap = mediaInfo.cap;
    newMediaInfo->next = NULL;
-   OOTRACEDBGC4("Configured mediainfo for cap %d (%s, %s)\n", mediaInfo.cap,
+   OOTRACEDBGC4("Configured mediainfo for cap %s (%s, %s)\n",
+                ooGetAudioCapTypeText(mediaInfo.cap),
                 call->callType, call->callToken);
    if(!call->mediaInfo)
       call->mediaInfo = newMediaInfo;

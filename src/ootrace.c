@@ -86,6 +86,7 @@ static const char *msgTypeText[]={
 };
 
 static const char *capTypes[]={
+   "unknown",
    "OO_NONSTANDARD",
    "OO_G711ALAW64K",
    "OO_G711ALAW56K",

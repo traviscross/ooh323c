@@ -99,8 +99,8 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
    epCap->startTransmitChannel = startTransmitChannel;
    epCap->stopReceiveChannel = stopReceiveChannel;
    epCap->stopTransmitChannel = stopTransmitChannel;
-  
    epCap->next = NULL;
+
    if(!call)
    {/*Add as local capability */
       if(!gH323ep.myCaps)
@@ -125,8 +125,13 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
          }
      }else{
         /*Add as our capability */
-        if(!call->ourCaps)
+        OOTRACEDBGC4("Adding call specific capability %s. (%s, %s)\n",
+                     ooGetAudioCapTypeText(epCap->cap), call->callType,
+                     call->callToken);
+        if(!call->ourCaps){
            call->ourCaps = epCap;
+           ooResetCapPrefs(call);
+        }
         else{
            cur = call->ourCaps;
            while(cur->next) cur = cur->next;
@@ -187,7 +192,13 @@ int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
    params->txframes = framesPerPkt;
    params->comfortNoise = comfortNoise;
    params->scrambled = scrambled;
-   epCap->dir = dir;
+   if(dir & OORXANDTX)
+   {
+      epCap->dir = OORX;
+      epCap->dir |= OOTX;
+   }else
+      epCap->dir = dir;
+
    epCap->cap = cap;
    epCap->capType = OO_CAP_TYPE_AUDIO;
    epCap->params = (void*)params;
@@ -221,9 +232,14 @@ int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
             cur->next = epCap;
          }
       }else{
+         OOTRACEDBGC4("Adding call specific capability %s. (%s, %s)\n",
+                     ooGetAudioCapTypeText(epCap->cap), call->callType,
+                     call->callToken);
          /*Add as our capability */
-         if(!call->ourCaps)
+         if(!call->ourCaps){
             call->ourCaps = epCap;
+            ooResetCapPrefs(call);
+         }
          else{
             cur = call->ourCaps;
             while(cur->next) cur = cur->next;
