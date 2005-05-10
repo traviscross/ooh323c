@@ -118,14 +118,17 @@ EXTERN int ooQ931Decode
          ie->length = 0;
       }
      
-      /* Extract calling party number */
+      /* Extract calling party number TODO:Give respect to presentation and
+         screening indicators ;-) */
       if(ie->discriminator == Q931CallingPartyNumberIE &&
          !call->callingPartyNumber)
       {
          if(ie->length < OO_MAX_NUMBER_LENGTH)
          {
-            memcpy(number, ie->data+1,ie->length-1);
-            number[ie->length-1]='\0';
+            int numoffset=1;
+            if(!(0x80 & ie->data[0])) numoffset = 2;
+            memcpy(number, ie->data+numoffset,ie->length-numoffset);
+            number[ie->length-numoffset]='\0';
             ooCallSetCallingPartyNumber(call, number);
          }else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
