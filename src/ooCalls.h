@@ -222,7 +222,7 @@ EXTERN int ooCallAddGSMCapability(ooCallData* call, int cap,
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooCallEnableRFC2833(ooCallData *call, int dynamicRTPPayloadType);
+EXTERN int ooCallEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType);
 
 
 /**
@@ -234,7 +234,7 @@ EXTERN int ooCallEnableRFC2833(ooCallData *call, int dynamicRTPPayloadType);
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooCallDisableRFC2833(ooCallData *call);
+EXTERN int ooCallDisableDTMFRFC2833(ooCallData *call);
 
 /**
  * This function is used to find a call by using the unique token for the call.
