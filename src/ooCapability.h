@@ -158,8 +158,8 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
-                                ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
-                                ASN1BOOL scrambled, int dir,
+                                unsigned framesPerPkt, OOBOOL comfortNoise,
+                                OOBOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,
                                 cb_StopReceiveChannel stopReceiveChannel,

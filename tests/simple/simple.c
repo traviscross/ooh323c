@@ -74,17 +74,7 @@ int main(int argc, char ** argv)
    char user[50];
    OOBOOL bListen=FALSE, bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
 
-   OOH323CALLBACKS h323Callbacks ={
-     .onNewCallCreated = NULL,
-     .onAlerting = osEpOnAlerting,
-     .onIncomingCall = osEpOnIncomingCall,
-     .onOutgoingCall = NULL,
-     .onCallAnswered = NULL,
-     .onCallEstablished = NULL,
-     .onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted,
-     .onCallCleared = osEpOnCallCleared,
-     .openLogicalChannels=NULL
-  };
+   OOH323CALLBACKS h323Callbacks;
 
 #ifdef _WIN32
    HANDLE threadHdl;
@@ -212,6 +202,17 @@ int main(int argc, char ** argv)
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Set callbacks */
+   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onAlerting = osEpOnAlerting;
+   h323Callbacks.onIncomingCall = osEpOnIncomingCall;
+   h323Callbacks.onOutgoingCall = NULL;
+   h323Callbacks.onCallAnswered = NULL;
+   h323Callbacks.onCallEstablished = NULL;
+   h323Callbacks.onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted;
+   h323Callbacks.onCallCleared = osEpOnCallCleared;
+   h323Callbacks.openLogicalChannels=NULL;
+
+
    ooH323EpSetH323Callbacks(h323Callbacks);
 
    /* Add audio capability */

@@ -176,8 +176,8 @@ int ooAddGSMCapability(int cap, ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
 #endif
 
 int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
-                                ASN1USINT framesPerPkt, ASN1BOOL comfortNoise,
-                                ASN1BOOL scrambled, int dir,
+                                unsigned framesPerPkt, OOBOOL comfortNoise,
+                                OOBOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
                                 cb_StartTransmitChannel startTransmitChannel,
                                 cb_StopReceiveChannel stopReceiveChannel,
@@ -1067,7 +1067,7 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
 {
    int rxframes=0, txframes=0;
    ASN1USINT audioUnitSize=0;
-   ASN1BOOL comfortNoise=FALSE, scrambled=FALSE;
+   OOBOOL comfortNoise=FALSE, scrambled=FALSE;
  
    switch(audioCap->t)
    {
