@@ -317,12 +317,56 @@ ooH323EpCapability* ooIsDataTypeSupported
                            (ooCallData *call, H245DataType *data, int dir);
 
 /**
+ * This function is used to clear the capability preference order.
+ * @param call      Handle to call, if capability preference order for call
+ *                  has to be cleared, NULL for endpoint.
  *
+ * @return          OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN  int ooResetCapPrefs(ooCallData *call);
+
+/**
+ * This function is used to remove a particular capability from preference
+ * list.
+ * @param call     Handle to call, if call's preference list has to be modified
+ *                 else NULL, to modify endpoint's preference list.
+ * @param cap      Capability to be removed
+ *
+ * @return         OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
+
+/**
+ * This function is used to append a particular capability to preference
+ * list.
+ * @param call     Handle to call, if call's preference list has to be modified
+ *                 else NULL, to modify endpoint's preference list.
+ * @param cap      Capability to be appended.
+ *
+ * @return         OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
+
+/**
+ * This function is used to change preference order of a particular capability
+ * in the preference list.
+ * @param call     Handle to call, if call's preference list has to be modified
+ *                 else NULL, to modify endpoint's preference list.
+ * @param cap      Capability concerned
+ *
+ * @return         OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos);
+
+/**
+ * This function is used to preppend a particular capability to preference
+ * list.
+ * @param call     Handle to call, if call's preference list has to be modified
+ *                 else NULL, to modify endpoint's preference list.
+ * @param cap      Capability to be preppended.
+ *
+ * @return         OO_OK, on success. OO_FAILED, otherwise.
+ */
 EXTERN int ooPreppendCapToCapPrefs(ooCallData *call, int cap);
 
 

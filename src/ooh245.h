@@ -416,7 +416,17 @@ EXTERN int ooBuildOpenLogicalChannelAudio(ooCallData *call,
                                           ooH323EpCapability *epCap,
                                           OOCTXT*pctxt, int dir);
 
-int ooEncodeH245Message
+/**
+ * This function is used to encode an H245 message and return encoded data
+ * into the buffer passed as a parameter to the function.
+ * @param call            Handle to the call
+ * @param ph245Msg        Handle to the message to be encoded.
+ * @param msgbuf          buffer in which encoded message will be returned.
+ * @param size            Size of the buffer.
+ *
+ * @return                OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooEncodeH245Message
       (ooCallData *call, H245Message *ph245Msg, char *msgbuf, int size);
 
 /**

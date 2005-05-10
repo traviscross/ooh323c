@@ -2400,9 +2400,9 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    case OO_G711ALAW56K:
    case OO_G711ULAW64K:
    case OO_G711ULAW56K:
+   case OO_GSMFULLRATE:
       ooOpenAudioChannel(call, epCap);
       break;
-   case OO_GSMFULLRATE:
    case OO_GSMHALFRATE:
    case OO_GSMENHANCEDFULLRATE:
    default:

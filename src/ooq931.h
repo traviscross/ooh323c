@@ -288,12 +288,6 @@ EXTERN void ooQ931Print (const Q931Message* q931msg);
  */
 EXTERN int ooCreateQ931Message(Q931Message **msg, int msgType);
 
-
-/*
-Need to figure out what parameters are to be passed to create bearer capability
-EXTERN int ooAddBearerCapabilityIE(struct ooAppContext *);
-*/
-
 /**
  * This function is invoked to generate a unique call reference number.
  * @param None
