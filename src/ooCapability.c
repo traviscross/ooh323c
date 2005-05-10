@@ -619,7 +619,8 @@ ASN1BOOL ooCheckCompatibility
 ooH323EpCapability* ooIsAudioDataTypeGSMSupported
    (ooCallData *call, H245AudioCapability* audioCap, int dir)
 {
-   unsigned cap=0, framesPerPkt=0;
+   unsigned framesPerPkt=0;
+   int cap=0;
    ooH323EpCapability *cur = NULL, *epCap=NULL;
    ooGSMCapParams *params = NULL;
 
