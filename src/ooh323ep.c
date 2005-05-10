@@ -577,3 +577,13 @@ int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                                      stopTransmitChannel, FALSE);
 }
 
+int ooH323EpEnableRFC2833(int dynamicRTPPayloadType)
+{
+   return ooCapabilityEnableRFC2833(NULL, dynamicRTPPayloadType);
+}
+
+int ooH323EpDisableRFC2833(void)
+{
+  return ooCapabilityDisableRFC2833(NULL);
+}
+
