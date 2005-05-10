@@ -632,11 +632,13 @@ int ooMonitorChannels()
                ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2,
                                                  (ooCallOptions*)cmd->param3);
                break;
+#if 0
             case OO_CMD_MAKECALL_NOGK:
                OOTRACEINFO2("Processing MakeCall_NoGk command %s\n",
                              (char*)cmd->param2);
-               ooH323MakeCall((char*)cmd->param1,(char*)cmd->param2, TRUE);
+               ooH323MakeCall((char*)cmd->param1,(char*)cmd->param2, NULL);
                break;
+#endif
             case OO_CMD_MAKECALL_3:
                if(gH323ep.gkClient &&
                   gH323ep.gkClient->state != GkClientRegistered)

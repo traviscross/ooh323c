@@ -502,7 +502,7 @@ OOBOOL ooCapabilityCheckCompatibility_GSM
    (ooCallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
 {
-   int noofframes=0, cap;
+   unsigned noofframes=0, cap;
    switch(audioCap->t)
    {
    case T_H245AudioCapability_gsmFullRate:
@@ -619,7 +619,7 @@ ASN1BOOL ooCheckCompatibility
 ooH323EpCapability* ooIsAudioDataTypeGSMSupported
    (ooCallData *call, H245AudioCapability* audioCap, int dir)
 {
-   int cap=0, framesPerPkt=0;
+   unsigned cap=0, framesPerPkt=0;
    ooH323EpCapability *cur = NULL, *epCap=NULL;
    ooGSMCapParams *params = NULL;
 
@@ -1108,19 +1108,19 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
                                   rxframes, dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmFullRate:
       return ooCapabilityAddGSMCapability(call, OO_GSMFULLRATE,
-                      (audioCap->u.gsmFullRate->audioUnitSize/OO_GSMFRAMESIZE),
+            (unsigned)(audioCap->u.gsmFullRate->audioUnitSize/OO_GSMFRAMESIZE),
                                         audioCap->u.gsmFullRate->comfortNoise,
                                         audioCap->u.gsmFullRate->scrambled,
                                         dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmHalfRate:
       return ooCapabilityAddGSMCapability(call, OO_GSMHALFRATE,
-                      (audioCap->u.gsmHalfRate->audioUnitSize/OO_GSMFRAMESIZE),
+            (unsigned)(audioCap->u.gsmHalfRate->audioUnitSize/OO_GSMFRAMESIZE),
                                         audioCap->u.gsmHalfRate->comfortNoise,
                                         audioCap->u.gsmHalfRate->scrambled,
                                         dir, NULL, NULL, NULL, NULL, TRUE);
    case T_H245AudioCapability_gsmEnhancedFullRate:
       return ooCapabilityAddGSMCapability(call, OO_GSMENHANCEDFULLRATE,
-              (audioCap->u.gsmEnhancedFullRate->audioUnitSize/OO_GSMFRAMESIZE),
+   (unsigned)(audioCap->u.gsmEnhancedFullRate->audioUnitSize/OO_GSMFRAMESIZE),
                                 audioCap->u.gsmEnhancedFullRate->comfortNoise,
                                 audioCap->u.gsmEnhancedFullRate->scrambled,
                                 dir, NULL, NULL, NULL, NULL, TRUE);
