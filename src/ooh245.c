@@ -2327,6 +2327,17 @@ int ooOpenLogicalChannels(ooCallData *call)
       if (!OO_TESTFLAG (call->flags, OO_M_AUDIO))
       {
          ret = ooOpenLogicalAudioChannel(call);
+         if(ret != OO_OK)
+         {
+            OOTRACEERR3("ERROR:Failed to open audio channels. Clearing call."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_HOST_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return ret;
+         }
          OO_SETFLAG (call->flags, OO_M_AUDIO);
       }
    }

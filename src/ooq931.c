@@ -1174,24 +1174,7 @@ int ooAcceptCall(ooCallData *call)
    connect->multipleCalls = FALSE;
    connect->maintainConnection = FALSE;
   
-    /* Add h245 listener address. Do not add H245 listener address in case
-       of fast-start. */
-   if ((!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) ||
-        call->remoteFastStartOLCs.count == 0) &&
-       !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
-   {
-      ooCreateH245Listener(call); /* First create an H.245 listener */
-      connect->m.h245AddressPresent = 1;
-      connect->h245Address.t = T_H225TransportAddress_ipAddress;
   
-      h245IpAddr = (H225TransportAddress_ipAddress*)
-         memAllocZ (pctxt, sizeof(H225TransportAddress_ipAddress));
-
-      ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
-      h245IpAddr->ip.numocts=4;
-      h245IpAddr->port = *(call->h245listenport);
-      connect->h245Address.u.ipAddress = h245IpAddr;
-   }
    connect->conferenceID.numocts = 16;
    for (i = 0; i < 16; i++)
       connect->conferenceID.data[i] = i + 1;
@@ -1257,7 +1240,7 @@ int ooAcceptCall(ooCallData *call)
                         call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
       memset(pFS, 0, call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
 
-      connect->m.fastStartPresent = TRUE;
+
       for(i=0, j=0; i<(int)call->remoteFastStartOLCs.count; i++)
       {
 
@@ -1416,8 +1399,39 @@ int ooAcceptCall(ooCallData *call)
       }
       OOTRACEDBGA4("Added %d fast start elements to CONNECT message "
                    "(%s, %s)\n",  j, call->callType, call->callToken);
-      connect->fastStart.n = j;
-      connect->fastStart.elem = pFS;
+      if(j != 0)
+      {
+         connect->m.fastStartPresent = TRUE;
+         connect->fastStart.n = j;
+         connect->fastStart.elem = pFS;
+      }else{
+         OOTRACEINFO3("None of the faststart elements received in setup can be"
+                      " supported, rejecting faststart.(%s, %s)\n",
+                      call->callType, call->callToken);
+         connect->m.fastStartPresent = FALSE;
+         OO_CLRFLAG(call->flags, OO_M_FASTSTART);
+         OOTRACEDBGC3("Faststart for call is disabled by local endpoint."
+                      "(%s, %s)\n", call->callType, call->callToken);
+      }
+   }
+
+    /* Add h245 listener address. Do not add H245 listener address in case
+       of fast-start. */
+   if ((!OO_TESTFLAG(call->flags, OO_M_FASTSTART) ||
+        call->remoteFastStartOLCs.count == 0) &&
+       !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+   {
+      ooCreateH245Listener(call); /* First create an H.245 listener */
+      connect->m.h245AddressPresent = TRUE;
+      connect->h245Address.t = T_H225TransportAddress_ipAddress;
+  
+      h245IpAddr = (H225TransportAddress_ipAddress*)
+         memAllocZ (pctxt, sizeof(H225TransportAddress_ipAddress));
+
+      ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
+      h245IpAddr->ip.numocts=4;
+      h245IpAddr->port = *(call->h245listenport);
+      connect->h245Address.u.ipAddress = h245IpAddr;
    }
 
    OOTRACEDBGA3("Built H.225 Connect message (%s, %s)\n", call->callType,
