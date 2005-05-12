@@ -24,7 +24,7 @@
 #include "ooh323.h"
 #include "ooGkClient.h"
 #include "ooTimer.h"
-
+#include <stdio.h>
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
