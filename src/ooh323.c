@@ -24,7 +24,7 @@
 #include "ooh323.h"
 #include "ooGkClient.h"
 #include "ooTimer.h"
-#include <stdio.h>
+
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
@@ -1158,7 +1158,7 @@ ooAliases* ooH323GetAliasFromList(ooAliases *aliasList, int type, char *value)
    {
      if(type != 0 && value)/* Search by type and value */
       {
-         if(pAlias->type == type && !strcasecmp(pAlias->value, value))
+         if(pAlias->type == type && !strcmp(pAlias->value, value))
          {
             return pAlias;
          }
@@ -1169,7 +1169,7 @@ ooAliases* ooH323GetAliasFromList(ooAliases *aliasList, int type, char *value)
       }
       else if(type == 0 && value) /* search by value */
       {
-         if(!strcasecmp(pAlias->value, value))
+         if(!strcmp(pAlias->value, value))
             return pAlias;
       }
       else{
