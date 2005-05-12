@@ -309,6 +309,7 @@ typedef struct ooLogicalChannel {
 typedef struct ooAliases{
    int type;
    char *value;
+   OOBOOL registered;
    struct ooAliases *next;
 }ooAliases;
 
@@ -525,6 +526,7 @@ typedef struct ooEndPoint {
    char callingPartyNumber[50];
    OOSOCKET *stackSocket;
    ooAliases *aliases;
+
    int callType;
 
    ooH323EpCapability *myCaps;

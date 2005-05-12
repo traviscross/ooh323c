@@ -43,7 +43,7 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
       if(((ooTimerCallback*)pTimer->cbData)->timerType &
                                                    OO_SESSION_TIMER)
       {
-         ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+         memFreePtr(call->pctxt, pTimer->cbData);
          ooTimerDelete(call->pctxt, &call->timerList, pTimer);
          OOTRACEDBGC3("Deleted Session Timer. (%s, %s)\n",
                        call->callType, call->callToken);
@@ -145,7 +145,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    pDisplayIE = ooQ931GetIE(q931Msg, Q931DisplayIE);
    if(pDisplayIE)
    {
-      call->remoteDisplayName = (ASN1OCTET*) ASN1MALLOC(call->pctxt,
+      call->remoteDisplayName = (ASN1OCTET*) memAlloc(call->pctxt,
                                  pDisplayIE->length*sizeof(ASN1OCTET)+1);
       strcpy(call->remoteDisplayName, pDisplayIE->data);
    }
@@ -154,7 +154,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       if(setup->sourceAddress.count>0)
       {
-         ooRetrieveAliases(call, &setup->sourceAddress, TRUE);
+         ooH323RetrieveAliases(call, &setup->sourceAddress, TRUE);
       }
    }
    /* Extract, aliases used for us, if present */     
@@ -162,7 +162,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       if(setup->destinationAddress.count>0)
       {
-         ooRetrieveAliases(call, &setup->destinationAddress, FALSE);
+         ooH323RetrieveAliases(call, &setup->destinationAddress, FALSE);
       }
    }
 
@@ -259,7 +259,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
       {
          olc = NULL;
          /*         memset(msgbuf, 0, sizeof(msgbuf));*/
-         olc = (H245OpenLogicalChannel*)ASN1MALLOC(call->pctxt,
+         olc = (H245OpenLogicalChannel*)memAlloc(call->pctxt,
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
          {
@@ -367,7 +367,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       {
          olc = NULL;
          /*         memset(msgbuf, 0, sizeof(msgbuf));*/
-         olc = (H245OpenLogicalChannel*)ASN1MALLOC(call->pctxt,
+         olc = (H245OpenLogicalChannel*)memAlloc(call->pctxt,
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
          {
@@ -641,7 +641,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
             if(((ooTimerCallback*)pTimer->cbData)->timerType &
                                                          OO_CALLESTB_TIMER)
             {
-               ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+               memFreePtr(call->pctxt, pTimer->cbData);
                ooTimerDelete(call->pctxt, &call->timerList, pTimer);
                OOTRACEDBGC3("Deleted CallESTB timer. (%s, %s)\n",
                                               call->callType, call->callToken);
@@ -888,7 +888,10 @@ int ooHandleTunneledH245Messages
    return OO_OK;
 }
 
-int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+
+
+
+int ooH323RetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
                       ASN1BOOL remote)
 {
    int i=0,j=0,k=0;
@@ -904,147 +907,145 @@ int ooRetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
       return OO_OK;
    }
    /* check for aliases */
-   if(pAddresses->count>0)
+   if(pAddresses->count<=0)
+      return OO_OK;
+  
+   for(i=0; i<(int)pAddresses->count; i++)
    {
-      for(i=0; i<(int)pAddresses->count; i++)
+      pNode = dListFindByIndex (pAddresses, i);
+
+      if(!pNode)
+         continue;
+
+      pAliasAddress = (H225AliasAddress*)pNode->data;
+
+      if(!pAliasAddress)
+         continue;
+
+      newAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
+      if(!newAlias)
       {
-         pNode = dListFindByIndex (pAddresses, i);
-         if(pNode)
-         {
-            pAliasAddress = (H225AliasAddress*)pNode->data;
-            if(pAliasAddress)
-            {
-               newAlias = (ooAliases*)ASN1MALLOC(call->pctxt,
-                                                           sizeof(ooAliases));
-               if(!newAlias)
-               {
-                  OOTRACEERR3("ERROR:Failed to allocate memory for alias "
-                              "(%s, %s)\n", call->callType, call->callToken);
-                  return OO_FAILED;
-               }
-               memset(newAlias, 0, sizeof(ooAliases));
-               switch(pAliasAddress->t)
-               {
-               case T_H225AliasAddress_dialedDigits:
-                  newAlias->type = T_H225AliasAddress_dialedDigits;
-                  newAlias->value = (char*) ASN1MALLOC(call->pctxt,
-                         strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
-                  /*                  memset(newAlias->value, 0,
-                      strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);*/
-                  memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
+         OOTRACEERR3("ERROR:Failed to allocate memory for alias "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      memset(newAlias, 0, sizeof(ooAliases));
+      switch(pAliasAddress->t)
+      {
+      case T_H225AliasAddress_dialedDigits:
+         newAlias->type = T_H225AliasAddress_dialedDigits;
+         newAlias->value = (char*) memAlloc(call->pctxt,
+                                   strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
+
+         memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
                            strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
-                  newAlias->value[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]='\0';
+         newAlias->value[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]='\0';
 
-                  if(remote && !strcmp(call->callType, "incoming") &&
-                     !call->callingPartyNumber)
-                  {
-                     call->callingPartyNumber = (char*)memAlloc(call->pctxt,
-                                     strlen(pAliasAddress->u.dialedDigits)*
-                                      sizeof(char)+1);
-                     if(call->callingPartyNumber)
-                     {
-                        memcpy(call->callingPartyNumber,
+         if(remote && !strcmp(call->callType, "incoming") &&
+            !call->callingPartyNumber)
+         {
+            call->callingPartyNumber = (char*)memAlloc(call->pctxt,
+                                  strlen(pAliasAddress->u.dialedDigits)*
+                                   sizeof(char)+1);
+            if(call->callingPartyNumber)
+            {
+               memcpy(call->callingPartyNumber,
                                pAliasAddress->u.dialedDigits,
                         strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
-                        call->callingPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
-                     }
-                  }
+               call->callingPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
+            }
+         }
 
-                  if(!remote && !strcmp(call->callType, "incoming") &&
-                     !call->calledPartyNumber)  
-                  {
-                     call->calledPartyNumber = (char*)memAlloc(call->pctxt,
-                                     strlen(pAliasAddress->u.dialedDigits)*
+         if(!remote && !strcmp(call->callType, "incoming") &&
+            !call->calledPartyNumber)  
+         {
+            call->calledPartyNumber = (char*)memAlloc(call->pctxt,
+                                       strlen(pAliasAddress->u.dialedDigits)*
                                       sizeof(char)+1);
-                     if(call->calledPartyNumber)
-                     {
-                        memcpy(call->calledPartyNumber,
-                               pAliasAddress->u.dialedDigits,
+            if(call->calledPartyNumber)
+            {
+               memcpy(call->calledPartyNumber,
+                        pAliasAddress->u.dialedDigits,
                         strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
-                        call->calledPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
-                     }
-                  }
-                  break;
-               case T_H225AliasAddress_h323_ID:
-                  newAlias->type = T_H225AliasAddress_h323_ID;
-                  newAlias->value = (char*)ASN1MALLOC(call->pctxt,
-                           (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
-                  /*   memset(newAlias->value, 0,
-                        (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);*/
-                  for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars; j++)
-                  {
-                     if(pAliasAddress->u.h323_ID.data[j] < 256)
-                     {
-                        newAlias->value[k++] = (char) pAliasAddress->u.h323_ID.data[j];
-                     }
-                  }
-                  newAlias->value[k] = '\0';
-                  break;  
-               case T_H225AliasAddress_url_ID:
-                  newAlias->type = T_H225AliasAddress_url_ID;
-                  newAlias->value = (char*)ASN1MALLOC(call->pctxt,
-                               strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
-                  /*memset(newAlias->value, 0,
-                    strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);*/
-                  memcpy(newAlias->value, pAliasAddress->u.url_ID,
-                                 strlen(pAliasAddress->u.url_ID)*sizeof(char));
-                  newAlias->value[strlen(pAliasAddress->u.url_ID)*sizeof(char)]='\0';
-                  break;
-               case T_H225AliasAddress_transportID:
-                  newAlias->type = T_H225AliasAddress_transportID;
-                  pTransportAddrss = pAliasAddress->u.transportID;
-                  if(pTransportAddrss->t != T_H225TransportAddress_ipAddress)
-                  {
-                     OOTRACEERR3("Error:Alias transportID not an IP address"
-                                "(%s, %s)\n", call->callType, call->callToken);
-                     ASN1MEMFREEPTR(call->pctxt, newAlias);
-                     break;
-                  }
-                  /* hopefully ip:port value can't exceed more than 30
-                     characters */
-                  newAlias->value = (char*)ASN1MALLOC(call->pctxt,
-                                                             30*sizeof(char));
-                  /*memset(newAlias->value, 0, 30*sizeof(char));*/
-                  sprintf(newAlias->value, "%d.%d.%d.%d:%d",
-                                     pTransportAddrss->u.ipAddress->ip.data[0],
-                                     pTransportAddrss->u.ipAddress->ip.data[1],
-                                     pTransportAddrss->u.ipAddress->ip.data[2],
-                                     pTransportAddrss->u.ipAddress->ip.data[3],
-                                     pTransportAddrss->u.ipAddress->port);
-                  break;
-               case T_H225AliasAddress_email_ID:
-                  newAlias->type = T_H225AliasAddress_email_ID;
-                  newAlias->value = (char*)ASN1MALLOC(call->pctxt,
-                             strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
-                  /*memset(newAlias->value, 0,
-                    strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);*/
-                  memcpy(newAlias->value, pAliasAddress->u.email_ID,
-                               strlen(pAliasAddress->u.email_ID)*sizeof(char));
-                  newAlias->value[strlen(pAliasAddress->u.email_ID)*sizeof(char)]='\0';
-                  break;
-               default:
-                  OOTRACEERR3("Error:Unhandled Alias type (%s, %s)\n",
-                               call->callType, call->callToken);
-                  ASN1MEMFREEPTR(call->pctxt, newAlias);
-                  continue;
-               }
-               if(remote)
-               {
-                  newAlias->next = call->remoteAliases;
-                  call->remoteAliases = newAlias;
-               }else{
-                  newAlias->next = call->ourAliases;
-                  call->ourAliases = newAlias;
-               }
-               newAlias = NULL;
-            }/* endof: if(pAliasAddress) */
-            pAliasAddress = NULL;
-         }/* endof: if(pNode) */
-         pNode = NULL;
-      }/* endof: for */
-   }
+               call->calledPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
+            }
+         }
+         break;
+      case T_H225AliasAddress_h323_ID:
+         newAlias->type = T_H225AliasAddress_h323_ID;
+         newAlias->value = (char*)memAlloc(call->pctxt,
+                         (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
+
+         for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars; j++)
+         {
+            if(pAliasAddress->u.h323_ID.data[j] < 256)
+            {
+               newAlias->value[k++] = (char) pAliasAddress->u.h323_ID.data[j];
+            }
+         }
+         newAlias->value[k] = '\0';
+         break;  
+      case T_H225AliasAddress_url_ID:
+         newAlias->type = T_H225AliasAddress_url_ID;
+         newAlias->value = (char*)memAlloc(call->pctxt,
+                              strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
+
+         memcpy(newAlias->value, pAliasAddress->u.url_ID,
+                               strlen(pAliasAddress->u.url_ID)*sizeof(char));
+         newAlias->value[strlen(pAliasAddress->u.url_ID)*sizeof(char)]='\0';
+         break;
+      case T_H225AliasAddress_transportID:
+         newAlias->type = T_H225AliasAddress_transportID;
+         pTransportAddrss = pAliasAddress->u.transportID;
+         if(pTransportAddrss->t != T_H225TransportAddress_ipAddress)
+         {
+            OOTRACEERR3("Error:Alias transportID not an IP address"
+                        "(%s, %s)\n", call->callType, call->callToken);
+            memFreePtr(call->pctxt, newAlias);
+            break;
+         }
+         /* hopefully ip:port value can't exceed more than 30
+            characters */
+         newAlias->value = (char*)memAlloc(call->pctxt,
+                                                      30*sizeof(char));
+         sprintf(newAlias->value, "%d.%d.%d.%d:%d",
+                                  pTransportAddrss->u.ipAddress->ip.data[0],
+                                  pTransportAddrss->u.ipAddress->ip.data[1],
+                                  pTransportAddrss->u.ipAddress->ip.data[2],
+                                  pTransportAddrss->u.ipAddress->ip.data[3],
+                                  pTransportAddrss->u.ipAddress->port);
+         break;
+      case T_H225AliasAddress_email_ID:
+         newAlias->type = T_H225AliasAddress_email_ID;
+         newAlias->value = (char*)memAlloc(call->pctxt,
+                                  strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
+
+         memcpy(newAlias->value, pAliasAddress->u.email_ID,
+                              strlen(pAliasAddress->u.email_ID)*sizeof(char));
+         newAlias->value[strlen(pAliasAddress->u.email_ID)*sizeof(char)]='\0';
+         break;
+      default:
+         OOTRACEERR3("Error:Unhandled Alias type (%s, %s)\n",
+                       call->callType, call->callToken);
+         memFreePtr(call->pctxt, newAlias);
+         continue;
+      }
+      if(remote)
+      {
+         newAlias->next = call->remoteAliases;
+         call->remoteAliases = newAlias;
+      }else{
+         newAlias->next = call->ourAliases;
+         call->ourAliases = newAlias;
+      }
+      newAlias = NULL;
+    
+     pAliasAddress = NULL;
+     pNode = NULL;
+   }/* endof: for */
    return OO_OK;
 }
+
 
 int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                            H225_SeqOfH225AliasAddress *pAliasList )
@@ -1140,3 +1141,124 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
 }
 
 
+ooAliases* ooH323GetAliasFromList(ooAliases *aliasList, int type, char *value)
+{
+
+   ooAliases *pAlias = NULL;
+
+   if(!aliasList)
+   {
+      OOTRACEDBGC1("No alias List to search\n");
+      return NULL;
+   }
+
+   pAlias = aliasList;
+
+   while(pAlias)
+   {
+     if(type != 0 && value)/* Search by type and value */
+      {
+         if(pAlias->type == type && !strcasecmp(pAlias->value, value))
+         {
+            return pAlias;
+         }
+      }else if(type != 0 && !value)/* search by type */
+      {
+         if(pAlias->type == type)
+            return pAlias;
+      }
+      else if(type == 0 && value) /* search by value */
+      {
+         if(!strcasecmp(pAlias->value, value))
+            return pAlias;
+      }
+      else{
+         OOTRACEDBGC1("No criteria to search the alias list\n");
+         return NULL;
+      }
+      pAlias = pAlias->next;
+   }
+
+   return NULL;
+}
+
+ooAliases* ooH323AddAliasToList(ooAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress)
+{
+   int i=0,j=0,k=0;
+   DListNode* pNode=NULL;
+   ooAliases *newAlias=NULL;
+   H225TransportAddress *pTransportAddrss=NULL;
+  
+   newAlias = (ooAliases*)memAlloc(pctxt, sizeof(ooAliases));
+   if(!newAlias)
+   {
+      OOTRACEERR1("Error: Failed to allocate memory for new alias to be added to the alias list\n");
+      return NULL;
+   }
+   memset(newAlias, 0, sizeof(ooAliases));
+
+   switch(pAliasAddress->t)
+   {
+   case T_H225AliasAddress_dialedDigits:
+      newAlias->type = T_H225AliasAddress_dialedDigits;
+      newAlias->value = (char*) memAlloc(pctxt, strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
+      strcpy(newAlias->value, pAliasAddress->u.dialedDigits);
+      break;
+   case T_H225AliasAddress_h323_ID:
+      newAlias->type = T_H225AliasAddress_h323_ID;
+      newAlias->value = (char*)memAlloc(pctxt,
+                           (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
+
+      for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars; j++)
+      {
+         if(pAliasAddress->u.h323_ID.data[j] < 256)
+         {
+            newAlias->value[k++] = (char) pAliasAddress->u.h323_ID.data[j];
+         }
+      }
+      newAlias->value[k] = '\0';
+      break;  
+   case T_H225AliasAddress_url_ID:
+      newAlias->type = T_H225AliasAddress_url_ID;
+      newAlias->value = (char*)memAlloc(pctxt,
+                            strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
+
+      strcpy(newAlias->value, pAliasAddress->u.url_ID);
+      break;
+   case T_H225AliasAddress_transportID:
+      newAlias->type = T_H225AliasAddress_transportID;
+      pTransportAddrss = pAliasAddress->u.transportID;
+      if(pTransportAddrss->t != T_H225TransportAddress_ipAddress)
+      {
+         OOTRACEERR1("Error:Alias transportID not an IP address\n");
+         memFreePtr(pctxt, newAlias);
+         return NULL;
+      }
+      /* hopefully ip:port value can't exceed more than 30
+         characters */
+      newAlias->value = (char*)memAlloc(pctxt,
+                                              30*sizeof(char));
+      sprintf(newAlias->value, "%d.%d.%d.%d:%d",
+                               pTransportAddrss->u.ipAddress->ip.data[0],
+                               pTransportAddrss->u.ipAddress->ip.data[1],
+                               pTransportAddrss->u.ipAddress->ip.data[2],
+                               pTransportAddrss->u.ipAddress->ip.data[3],
+                               pTransportAddrss->u.ipAddress->port);
+      break;
+   case T_H225AliasAddress_email_ID:
+      newAlias->type = T_H225AliasAddress_email_ID;
+      newAlias->value = (char*)memAlloc(pctxt,
+                 strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
+
+      strcpy(newAlias->value, pAliasAddress->u.email_ID);
+      break;
+   default:
+      OOTRACEERR1("Error:Unhandled Alias type \n");
+      memFreePtr(pctxt, newAlias);
+      return NULL;
+
+   }
+   newAlias->next = *pAliasList;
+   *pAliasList= newAlias;
+   return newAlias;
+}

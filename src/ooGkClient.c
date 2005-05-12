@@ -127,7 +127,7 @@ int ooGkClientDestroy(void)
       if(gH323ep.gkClient->state == GkClientRegistered)
       {
          OOTRACEINFO1("Unregistering from Gatekeeper\n");
-         if(ooGkClientSendURQ(gH323ep.gkClient)!=OO_OK)
+         if(ooGkClientSendURQ(gH323ep.gkClient, NULL)!=OO_OK)
             OOTRACEERR1("Error:Failed to send URQ to gatekeeper\n");
       }
       OOTRACEINFO1("Destroying Gatekeeper Client\n");
@@ -996,6 +996,15 @@ int ooGkClientHandleRegistrationConfirm
       pGkClient->gkCallSignallingPort = pCallSigAddr->u.ipAddress->port;
    }
   
+   /* Update list of registered aliases*/
+   if(pRegistrationConfirm->m.terminalAliasPresent)
+   {
+      ooGkClientUpdateRegisteredAliases(pGkClient,
+                                    &pRegistrationConfirm->terminalAlias);
+   }else{/* Everything registered*/
+     ooGkClientUpdateRegisteredAliases(pGkClient, NULL);
+   }
+
    /* Is keepAlive supported */
    if(pRegistrationConfirm->m.timeToLivePresent)
    {
@@ -1162,7 +1171,7 @@ int ooGkClientHandleRegistrationReject
 }
 
 
-int ooGkClientSendURQ(ooGkClient *pGkClient)
+int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
 {
    int iRet;
    H225RasMessage *pRasMsg=NULL;
@@ -1258,6 +1267,12 @@ int ooGkClientSendURQ(ooGkClient *pGkClient)
           (void*)pGkClient->gkId.data,
           sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);  
 
+   /* Check whether specific aliases are to be unregistered*/
+   if(aliases)
+   {
+      pUnregReq->m.endpointAliasPresent = TRUE;
+      ooPopulateAliasList(pctxt, aliases, &pUnregReq->endpointAlias);
+   }
 
  
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
@@ -2015,3 +2030,149 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
    return OO_FAILED;
 }
 
+
+int ooGkClientUpdateRegisteredAliases
+   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses)
+{
+   int i=0, j, k;
+   DListNode* pNode=NULL;
+   ooAliases *pAlias=NULL;
+   H225AliasAddress *pAliasAddress=NULL;
+   H225TransportAddress *pTransportAddrss=NULL;
+   char value[MAXFILENAME];
+   OOBOOL bAdd = FALSE;
+
+   if(!pAddresses)
+   {
+     /* All aliases registered */
+      pAlias = gH323ep.aliases;
+     
+      while(pAlias)
+      {
+         pAlias->registered = TRUE;
+         pAlias = pAlias->next;
+      }
+      return OO_OK;
+   }
+
+   /* Mark aliases as registered*/
+   if(pAddresses->count<=0)
+      return OO_FAILED;
+
+   for(i=0; i<(int)pAddresses->count; i++)
+   {
+      pNode = dListFindByIndex (pAddresses, i);
+      if(!pNode)
+      {
+         OOTRACEERR1("Error:Invalid alias list passed to "
+                     "ooGkClientUpdateRegisteredAliases\n");
+         continue;
+      }
+      pAliasAddress = (H225AliasAddress*)pNode->data;
+     
+      if(!pAliasAddress){
+         OOTRACEERR1("Error:Invalid alias list passed to "
+                     "ooGkClientUpdateRegisteredAliases\n");
+         continue;
+      }
+
+      switch(pAliasAddress->t)
+      {
+      case T_H225AliasAddress_dialedDigits:
+         pAlias = ooH323GetAliasFromList(gH323ep.aliases,
+                                          T_H225AliasAddress_dialedDigits,
+                                        (char*)pAliasAddress->u.dialedDigits);
+         if(pAlias)
+         {
+            pAlias->registered = TRUE;
+         }else{
+            bAdd = TRUE;
+         }
+         break;
+      case T_H225AliasAddress_h323_ID:
+         for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars && (k<MAXFILENAME-1); j++)
+         {
+            if(pAliasAddress->u.h323_ID.data[j] < 256)
+            {
+               value[k++] = (char) pAliasAddress->u.h323_ID.data[j];
+            }
+         }
+         value[k] = '\0';
+         pAlias = ooH323GetAliasFromList(gH323ep.aliases,
+                                         T_H225AliasAddress_h323_ID,
+                                          value);
+         if(pAlias)
+         {
+            pAlias->registered = TRUE;
+         }else{
+            bAdd = TRUE;
+         }
+         break;
+      case T_H225AliasAddress_url_ID:
+         pAlias = ooH323GetAliasFromList(gH323ep.aliases,
+                                         T_H225AliasAddress_url_ID,
+                                       (char*)pAliasAddress->u.url_ID);
+         if(pAlias)
+         {
+            pAlias->registered = TRUE;
+         }else{
+            bAdd = TRUE;
+         }
+         break;
+      case T_H225AliasAddress_transportID:
+         pTransportAddrss = pAliasAddress->u.transportID;
+         if(pTransportAddrss->t != T_H225TransportAddress_ipAddress)
+         {
+            OOTRACEERR1("Error:Alias transportID not IP address\n");
+            break;
+         }
+        
+         sprintf(value, "%d.%d.%d.%d:%d",
+                          pTransportAddrss->u.ipAddress->ip.data[0],
+                          pTransportAddrss->u.ipAddress->ip.data[1],
+                          pTransportAddrss->u.ipAddress->ip.data[2],
+                          pTransportAddrss->u.ipAddress->ip.data[3],
+                          pTransportAddrss->u.ipAddress->port);
+
+         pAlias = ooH323GetAliasFromList(gH323ep.aliases,
+                                         T_H225AliasAddress_transportID,
+                                         value);
+         if(pAlias)
+         {
+            pAlias->registered = TRUE;
+         }else{
+            bAdd = TRUE;
+         }
+         break;
+      case T_H225AliasAddress_email_ID:
+         pAlias = ooH323GetAliasFromList(gH323ep.aliases,
+                                         T_H225AliasAddress_email_ID,
+                                       (char*) pAliasAddress->u.email_ID);
+         if(pAlias)
+         {
+            pAlias->registered = TRUE;
+         }else{
+            bAdd = TRUE;
+         }
+         break;
+      default:
+         OOTRACEERR1("Error:Unhandled alias type found in registered "
+                     "aliases\n");
+      }
+      if(bAdd)
+      {
+         pAlias = ooH323AddAliasToList(&gH323ep.aliases,
+                                           &gH323ep.ctxt, pAliasAddress);
+         if(pAlias){
+            pAlias->registered = TRUE;
+         }
+         else{
+            OOTRACEERR2("Warning:Could not add registered alias of "
+                        "type %d to list.\n", pAliasAddress->t);
+         }
+         bAdd = FALSE;
+      }
+      pAlias = NULL;
+   }
+   return OO_OK;
+}

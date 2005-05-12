@@ -102,15 +102,20 @@ EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
 /**
  * This function is used to retrieve the aliases from Sequence of alias
  * addresses.
- * @param call       Handle to the call.
+ * @param call       Handle to the call.Null when retrieving registered
+ *                   aliases.
  * @param pAddresses Pointer to the sequence of alias addresses.
  * @param remote     Whether to retrieve remote aliases from message or local
+ *                   Used only when call handle is not NULL.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooRetrieveAliases
-   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, ASN1BOOL remote);
+EXTERN int ooH323RetrieveAliases
+   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, OOBOOL remote);
 
+       /*EXTERN int ooRetrieveAliases
+   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, ASN1BOOL remote);
+       */
 
 /**
  * This is a helper function used to populate alias list using aliases.
@@ -123,6 +128,30 @@ EXTERN int ooRetrieveAliases
  */
 EXTERN int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                                H225_SeqOfH225AliasAddress *pAliasList);
+
+/**
+ * This function is used to search a particular alias in the alias list. The
+ * search can be on the basis of alias type or value or both.
+ * @param aliasList Handle to the alias list to be searched.
+ * @param type      Type of the alias, if search has to consider type as
+ *                  criterion, otherwise 0.
+ * @param value     Value of the alias, if the search has to consider value as
+ *                  criterion, NULL otherwise.
+ */
+EXTERN ooAliases* ooH323GetAliasFromList
+                               (ooAliases *aliasList, int type, char *value);
+
+/**
+ * This function is used to add a new alias to alias list.
+ * @param pAliasList    Pointer to Alias list.
+ * @param pctxt         Pointer to OOCTXT structure to be used for memory
+ *                      allocation.
+ * @param pAliasAddress New alias address to be added.
+ *
+ * @return              Handle to newly added alias or NULL in case of failure.
+ */
+EXTERN ooAliases* ooH323AddAliasToList(ooAliases **pAliasList, OOCTXT *pctxt,
+                                H225AliasAddress *pAliasAddress);
 /**
  * @}
  */

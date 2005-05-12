@@ -347,10 +347,12 @@ EXTERN int ooGkClientHandleRegistrationReject
  * This function is used to send UnRegistration request message.
  * @param pGkClient  Handle to gatekeeper client for which URQ message has to
  *                   be sent.
+ * @param aliases    List of aliases to be unregistered. NULL, if all the
+ *                   aliases have to be unregistered.
  *
  * @return           OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient);
+EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases);
 
 /**
  * This function is used to handle a received Unregistration request message.
@@ -453,6 +455,18 @@ EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call);
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient);
+
+/**
+ * This function is used to update the registration status of aliases.
+ * @param pGkClient  Handle to the GK client.
+ * @param pAddresses List of newly registered addresses. NULL means all
+ *                   aliases have been successfully registered.
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooGkClientUpdateRegisteredAliases
+   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses);
+
 /**
  * @}
  */
