@@ -109,24 +109,33 @@ enum Q931InformationTransferCapability {
 };
 
 enum Q931CauseValues {
-   Q931NoRouteToNetwork      = 0x02,
-   Q931NoRouteToDestination  = 0x03,
-   Q931ChannelUnacceptable   = 0x06,
-   Q931NormalCallClearing    = 0x10,
-   Q931UserBusy              = 0x11,
-   Q931NoResponse            = 0x12,
-   Q931NoAnswer              = 0x13,
-   Q931SubscriberAbsent      = 0x14,
-   Q931CallRejected          = 0x15,
-   Q931NumberChanged         = 0x16,
-   Q931Redirection           = 0x17,
-   Q931DestinationOutOfOrder = 0x1b,
-   Q931InvalidNumberFormat   = 0x1c,
-   Q931StatusEnquiryResponse = 0x1e,
-   Q931NoCircuitChannelAvailable = 0x22,
-   Q931Congestion            = 0x2a,
-   Q931InvalidCallReference  = 0x51,
-   Q931ErrorInCauseIE        = 0
+   Q931UnallocatedNumber           = 0x01,
+   Q931NoRouteToNetwork            = 0x02,
+   Q931NoRouteToDestination        = 0x03,
+   Q931ChannelUnacceptable         = 0x06,
+   Q931NormalCallClearing          = 0x10,
+   Q931UserBusy                    = 0x11,
+   Q931NoResponse                  = 0x12,
+   Q931NoAnswer                    = 0x13,
+   Q931SubscriberAbsent            = 0x14,
+   Q931CallRejected                = 0x15,
+   Q931NumberChanged               = 0x16,
+   Q931Redirection                 = 0x17,
+   Q931DestinationOutOfOrder       = 0x1b,
+   Q931InvalidNumberFormat         = 0x1c,
+   Q931NormalUnspecified           = 0x1f,
+   Q931StatusEnquiryResponse       = 0x1e,
+   Q931NoCircuitChannelAvailable   = 0x22,
+   Q931NetworkOutOfOrder           = 0x26,
+   Q931TemporaryFailure            = 0x29,
+   Q931Congestion                  = 0x2a,
+   Q931RequestedCircuitUnAvailable = 0x2c,
+   Q931ResourcesUnavailable        = 0x2f,
+   Q931IncompatibleDestination     = 0x58,
+   Q931ProtocolErrorUnspecified    = 0x6f,
+   Q931RecoveryOnTimerExpiry       = 0x66,
+   Q931InvalidCallReference        = 0x51,
+   Q931ErrorInCauseIE              = 0
 };
 
 enum Q931SignalInfo {
@@ -573,6 +582,33 @@ EXTERN int ooQ931SetCallingPartyNumberIE
 EXTERN int ooQ931SetCauseIE
    (Q931Message *pmsg,enum Q931CauseValues cause, unsigned coding,
     unsigned location);
+
+/**
+ * This function is used to convert a call clear reason to cause and
+ * reason code. It is used when local user is endoing the call and
+ * sending releaseComplete.
+ * @param clearReason   Reason for ending call.
+ * @param cause         Pointer to Q931CauseVaules enum in which cause
+ *                      will be returned.
+ * @param reasonCode    Pointer to unsigned int in which reasonCode will
+ *                      be returned.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooQ931GetCauseAndReasonCodeFromCallClearReason
+   (OOCallClearReason clearReason, enum Q931CauseValues *cause,
+    unsigned *reasonCode);
+
+/**
+ * This function is used to convert a cause value and reason code received
+ * in ReleaseComplete message from remote endpoint into a CallClearReason.
+ * @param cause         cause value received.
+ * @param reasonCode    reasonCode received.
+ *
+ * @return              Returns a CallClearReason.
+ */
+EXTERN OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
+   (enum Q931CauseValues cause, unsigned reasonCode);
 /**
  * @}
  */

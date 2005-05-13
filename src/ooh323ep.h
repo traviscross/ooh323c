@@ -21,7 +21,7 @@
 #define OO_H323EP_H_
 #include "ootypes.h"
 #include "ooasn1.h"
-
+#include "ooGkClient.h"
 
 #define DEFAULT_TRACEFILE "trace.log"
 #define DEFAULT_TERMTYPE 50
@@ -268,6 +268,27 @@ EXTERN int ooH323EpSetCallingPartyNumber(const char * number);
 void ooH323EpPrintConfig(void);
 
 
+
+/**
+ * This function is used to add G729 capability to the H323 endpoint.
+ * @param cap                  Type of G729 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddG729Capability
+   (int cap, int txframes, int rxframes, int dir,
+    cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel);
+
 /**
  * This function is used to add G711 capability to the H323 endpoint.
  * @param cap                  Type of G711 capability to be added.
@@ -324,6 +345,19 @@ EXTERN int ooH323EpEnableDTMFRFC2833(int dynamicRTPPayloadType);
  * @return                        OO_OK, on success; OO_FAILED, on failure
  */
 EXTERN int ooH323EpDisableDTMFRFC2833(void);
+
+/**
+ * This function is used to add callbacks to the gatekeeper client. If user
+ * application wants to do some special processing of various gatekeeper client
+ * events, that can be done through these callbacks.
+ * @param gkClientCallbacks      Handle to the callback structure.Make sure all
+ *                               the members of the structure are appropriately
+ *                               initialized.
+ *
+ * @retun                        OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks);
+
 /**
  * @}
  */

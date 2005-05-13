@@ -132,7 +132,22 @@ typedef struct RasCallAdmissionInfo
    ASN1USINT irrFrequency;
 } RasCallAdmissionInfo;
 
+/** GkClient callbacks:
+ *  The first parameter is the message received. The second parameter provides
+ *  updated list of aliases after the message was processed by the stack.
+ */
+typedef int (*cb_OnReceivedRegistrationConfirm)
+                         (H225RegistrationConfirm *rcf, ooAliases *aliases);
+typedef int (*cb_OnReceivedUnregistrationConfirm)
+                       (H225UnregistrationConfirm *ucf, ooAliases *aliases);
+typedef int (*cb_OnReceivedUnregistrationRequest)
+                       (H225UnregistrationRequest *urq, ooAliases *aliases);
 
+typedef struct OOGKCLIENTCALLBACKS{
+   cb_OnReceivedRegistrationConfirm onReceivedRegistrationConfirm;
+   cb_OnReceivedUnregistrationConfirm onReceivedUnregistrationConfirm;
+   cb_OnReceivedUnregistrationRequest onReceivedUnregistrationRequest;
+}OOGKCLIENTCALLBACKS;
 
 
 typedef struct ooGkClient{
@@ -154,6 +169,7 @@ typedef struct ooGkClient{
    DList callsPendingList;
    DList callsAdmittedList;
    DList timerList;
+   OOGKCLIENTCALLBACKS callbacks;
    ASN1UINT grqRetries;
    ASN1UINT rrqRetries;
    ASN1UINT grqTimeout;
@@ -364,6 +380,18 @@ EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases);
 EXTERN int ooGkClientHandleUnregistrationRequest
    (ooGkClient *pGkClient, H225UnregistrationRequest *punregistrationRequest);
 
+
+/**
+ * This function is used to send an unregistration confirm messsage to
+ * gatekeeper.
+ * @param pGkClient        Handle to gatekeeper client.
+ * @param reqNo            Request Sequence number for the confirm message.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient,
+                                                               unsigned reqNo);
+
 /**
  * This function is invoked to request bandwith admission for a call.
  * @param pGkClient     Gatekeeper client to be used
@@ -461,12 +489,25 @@ EXTERN int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient);
  * @param pGkClient  Handle to the GK client.
  * @param pAddresses List of newly registered addresses. NULL means all
  *                   aliases have been successfully registered.
+ * @param registered Indicates whether aliases are registered or unregistered.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientUpdateRegisteredAliases
-   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses);
+   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses,
+    OOBOOL registered);
 
+
+/**
+ * This function is used to set callbacks for a gatekeeper client. It is never
+ * directly called by applications. Applications use
+ * ooH323EpSetGkClientCallbacks(..), which in turn calls this function.
+ * @param callbacks            Structure holding callback values.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, otherwise.
+ */
+int ooGkClientSetCallbacks
+   (ooGkClient *pGkClient, OOGKCLIENTCALLBACKS callbacks);
 /**
  * @}
  */

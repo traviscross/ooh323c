@@ -85,6 +85,18 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
 }
 
 
+int ooGkClientSetCallbacks
+   (ooGkClient *pGkClient, OOGKCLIENTCALLBACKS callbacks)
+{
+   pGkClient->callbacks.onReceivedRegistrationConfirm =
+                                      callbacks.onReceivedRegistrationConfirm;
+   pGkClient->callbacks.onReceivedUnregistrationConfirm =
+                                     callbacks.onReceivedUnregistrationConfirm;
+   pGkClient->callbacks.onReceivedUnregistrationRequest =
+                                     callbacks.onReceivedUnregistrationRequest;
+   return OO_OK;
+}
+
 int ooGkClientReInit(ooGkClient *pGkClient)
 {
 
@@ -1000,9 +1012,9 @@ int ooGkClientHandleRegistrationConfirm
    if(pRegistrationConfirm->m.terminalAliasPresent)
    {
       ooGkClientUpdateRegisteredAliases(pGkClient,
-                                    &pRegistrationConfirm->terminalAlias);
+                                   &pRegistrationConfirm->terminalAlias, TRUE);
    }else{/* Everything registered*/
-     ooGkClientUpdateRegisteredAliases(pGkClient, NULL);
+     ooGkClientUpdateRegisteredAliases(pGkClient, NULL, TRUE);
    }
 
    /* Is keepAlive supported */
@@ -1066,6 +1078,9 @@ int ooGkClientHandleRegistrationConfirm
       }
    }
    pGkClient->state = GkClientRegistered;
+   if(pGkClient->callbacks.onReceivedRegistrationConfirm)
+      pGkClient->callbacks.onReceivedRegistrationConfirm(pRegistrationConfirm,
+                                                              gH323ep.aliases);
    return OO_OK;
 }
 
@@ -1291,30 +1306,83 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
 
 
 
-/*TODO: If the unregister request has list of aliases,
-        only those aliases are unregistered. Right now we assume
-        complete unregistration and start again.
-        We also need to send UnRegistrationConfirm
-*/
 int ooGkClientHandleUnregistrationRequest
    (ooGkClient *pGkClient, H225UnregistrationRequest * punregistrationRequest)
 {
    int iRet=0;
-   /* Send a fresh Registration request and if that fails, go back to
-      Gatekeeper discovery.
-   */
-   OOTRACEINFO1("Sending fresh RRQ - as unregistration request received\n");
-   pGkClient->rrqRetries = 0;
-   pGkClient->state = GkClientDiscovered;
 
-   iRet = ooGkClientSendRRQ(pGkClient, 0);
-   if(iRet != OO_OK)
+   /* Lets first send unregistration confirm message back to gatekeeper*/
+   ooGkClientSendUnregistrationConfirm(pGkClient,
+                                      punregistrationRequest->requestSeqNum);
+
+   if(punregistrationRequest->m.endpointAliasPresent)
    {
-      OOTRACEERR1("Error: Failed to send RRQ message\n");
-      return OO_FAILED;
+      OOTRACEINFO1("Gatekeeper requested a list of aliases be unregistered\n");
+      ooGkClientUpdateRegisteredAliases(pGkClient,
+                                &punregistrationRequest->endpointAlias, FALSE);
+   }else{
+
+      OOTRACEINFO1("Gatekeeper requested a all aliases to be unregistered\n");
+      ooGkClientUpdateRegisteredAliases(pGkClient, NULL, FALSE);
+      /* Send a fresh Registration request and if that fails, go back to
+         Gatekeeper discovery.
+      */
+      OOTRACEINFO1("Sending fresh RRQ - as unregistration request received\n");
+      pGkClient->rrqRetries = 0;
+      pGkClient->state = GkClientDiscovered;
+
+      iRet = ooGkClientSendRRQ(pGkClient, 0);
+      if(iRet != OO_OK)
+      {
+         OOTRACEERR1("Error: Failed to send RRQ message\n");
+         return OO_FAILED;
+      }
    }
+
+
+   if(pGkClient->callbacks.onReceivedUnregistrationRequest)
+      pGkClient->callbacks.onReceivedUnregistrationRequest(
+                                      punregistrationRequest, gH323ep.aliases);
    return OO_OK;
 }
+
+int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient, unsigned reqNo)
+{
+   int iRet = OO_OK;
+   OOCTXT *pctxt = &pGkClient->msgCtxt;  
+   H225RasMessage *pRasMsg=NULL;
+   H225UnregistrationConfirm *pUCF=NULL;
+
+   pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
+   pUCF = (H225UnregistrationConfirm*)memAlloc(pctxt,
+                                           sizeof(H225UnregistrationConfirm));
+   if(!pRasMsg || !pUCF)
+   {
+      OOTRACEERR1("Error: Memory allocation for UCF RAS message failed\n");
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   pRasMsg->t = T_H225RasMessage_unregistrationConfirm;
+   pRasMsg->u.unregistrationConfirm = pUCF;
+   memset(pUCF, 0, sizeof(H225UnregistrationConfirm));
+  
+   pUCF->requestSeqNum = reqNo;
+  
+   iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
+   if(iRet != OO_OK)
+   {
+      OOTRACEERR1("Error:Failed to send UnregistrationConfirm message\n");
+      memReset(pctxt);
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+   OOTRACEINFO1("Unregistration Confirm message sent for \n");
+   memReset(pctxt);
+
+   return OO_OK;
+}
+
+
 
 
 int ooGkClientSendAdmissionRequest
@@ -2030,9 +2098,18 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
    return OO_FAILED;
 }
 
-
+/**
+ * TODO: This fuction might not work properly in case of additive registrations
+ * For example we registrered 10 aliases and gatekeeper accepted 8 of them.
+ * Now we want to register another two new aliases(not out of those first 10).
+ * Gk responds with RCF with empty terminalAlias field thus indicating both
+ * the aliases were accepted. If this function is called, it will even mark
+ * the earlier two unregistered aliases as registered. We will have to
+ * maintain a separete list of aliases being sent in RRQ for this.
+ */
 int ooGkClientUpdateRegisteredAliases
-   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses)
+   (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses,
+    OOBOOL registered)
 {
    int i=0, j, k;
    DListNode* pNode=NULL;
@@ -2044,18 +2121,18 @@ int ooGkClientUpdateRegisteredAliases
 
    if(!pAddresses)
    {
-     /* All aliases registered */
+     /* All aliases registered/unregistsred */
       pAlias = gH323ep.aliases;
      
       while(pAlias)
       {
-         pAlias->registered = TRUE;
+         pAlias->registered = registered?TRUE:FALSE;
          pAlias = pAlias->next;
       }
       return OO_OK;
    }
 
-   /* Mark aliases as registered*/
+   /* Mark aliases as registered/unregistered*/
    if(pAddresses->count<=0)
       return OO_FAILED;
 
@@ -2084,9 +2161,9 @@ int ooGkClientUpdateRegisteredAliases
                                         (char*)pAliasAddress->u.dialedDigits);
          if(pAlias)
          {
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }else{
-            bAdd = TRUE;
+            bAdd = registered?TRUE:FALSE;
          }
          break;
       case T_H225AliasAddress_h323_ID:
@@ -2103,9 +2180,9 @@ int ooGkClientUpdateRegisteredAliases
                                           value);
          if(pAlias)
          {
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }else{
-            bAdd = TRUE;
+            bAdd = registered?TRUE:FALSE;
          }
          break;
       case T_H225AliasAddress_url_ID:
@@ -2114,9 +2191,9 @@ int ooGkClientUpdateRegisteredAliases
                                        (char*)pAliasAddress->u.url_ID);
          if(pAlias)
          {
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }else{
-            bAdd = TRUE;
+            bAdd = registered?TRUE:FALSE;
          }
          break;
       case T_H225AliasAddress_transportID:
@@ -2139,9 +2216,9 @@ int ooGkClientUpdateRegisteredAliases
                                          value);
          if(pAlias)
          {
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }else{
-            bAdd = TRUE;
+            bAdd = registered?TRUE:FALSE;
          }
          break;
       case T_H225AliasAddress_email_ID:
@@ -2150,9 +2227,9 @@ int ooGkClientUpdateRegisteredAliases
                                        (char*) pAliasAddress->u.email_ID);
          if(pAlias)
          {
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }else{
-            bAdd = TRUE;
+            bAdd = registered?TRUE:FALSE;
          }
          break;
       default:
@@ -2164,7 +2241,7 @@ int ooGkClientUpdateRegisteredAliases
          pAlias = ooH323AddAliasToList(&gH323ep.aliases,
                                            &gH323ep.ctxt, pAliasAddress);
          if(pAlias){
-            pAlias->registered = TRUE;
+            pAlias->registered = registered?TRUE:FALSE;
          }
          else{
             OOTRACEERR2("Warning:Could not add registered alias of "

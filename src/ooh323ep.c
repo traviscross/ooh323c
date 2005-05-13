@@ -563,11 +563,21 @@ int ooH323EpAddG711Capability(int cap, int txframes, int rxframes, int dir,
                               cb_StopReceiveChannel stopReceiveChannel,
                               cb_StopTransmitChannel stopTransmitChannel)
 {
-   return ooCapabilityAddG711Capability(NULL, cap, txframes, rxframes, dir,
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, dir,
          startReceiveChannel, startTransmitChannel, stopReceiveChannel,
          stopTransmitChannel, FALSE);
 }
 
+int ooH323EpAddG729Capability(int cap, int txframes, int rxframes, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, dir,
+         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
+         stopTransmitChannel, FALSE);
+}
 
 int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                              OOBOOL comfortNoise, OOBOOL scrambled, int dir,
@@ -592,3 +602,15 @@ int ooH323EpDisableDTMFRFC2833(void)
    return ooCapabilityDisableDTMFRFC2833(NULL);
 }
 
+int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks)
+{
+
+   if(gH323ep.gkClient)
+   {
+      return ooGkClientSetCallbacks(gH323ep.gkClient, gkClientCallbacks);
+   }else{
+      OOTRACEERR1("Error:Gk Client hasn't been initialized yet\n");
+      return OO_FAILED;
+   }
+
+}

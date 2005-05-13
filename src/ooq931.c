@@ -102,7 +102,13 @@ EXTERN int ooQ931Decode
          else alen = len;
 
          ie = (Q931InformationElement*)
-            ASN1MALLOC (pctxt, sizeof(*ie) - sizeof(ie->data) + alen);
+            memAlloc (pctxt, sizeof(*ie) - sizeof(ie->data) + alen);
+         if(!ie)
+         {
+            OOTRACEERR3("Error:Memory - ooQ931Decode - ie(%s, %s)\n",
+                         call->callType, call->callToken);
+            return OO_FAILED;
+         }
          ie->discriminator = discriminator;
          ie->offset = ieOff;
          ie->length = len;
@@ -111,8 +117,14 @@ EXTERN int ooQ931Decode
          offset += len;
       }
       else {
-         ie = (Q931InformationElement*) ASN1MALLOC (pctxt,
+         ie = (Q931InformationElement*) memAlloc (pctxt,
                                         sizeof(*ie) - sizeof(ie->data));
+         if(!ie)
+         {
+            OOTRACEERR3("Error:Memory - ooQ931Decode - ie(%s, %s)\n",
+                         call->callType, call->callToken);
+            return OO_FAILED;
+         }
          ie->discriminator = discriminator;
          ie->offset = offset;
          ie->length = 0;
@@ -296,11 +308,11 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
 {
    OOCTXT *pctxt = &gH323ep.msgctxt;
   
-   *q931msg = (Q931Message*)ASN1MALLOC(pctxt, sizeof(Q931Message));
+   *q931msg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
                
    if(!*q931msg)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for q931 message\n");
+      OOTRACEERR1("Error:Memory -  ooCreateQ931Message - q931msg\n");
       return OO_FAILED;
    }
    else
@@ -421,14 +433,6 @@ int ooGenerateCallIdentifier(H225CallIdentifier *callid)
 }
 
 
-/* Need to figure out what parameters are to be passed to create
-   bearer capability
-*/
-/*
-int ooAddBearerCapabilityIE(struct ooAppContext *context)
-{
-}
-*/
 
 
 int ooFreeQ931Message(Q931Message *q931Msg)
@@ -475,12 +479,11 @@ int ooEncodeUUIE(Q931Message *q931msg)
    msgptr = encodeGetMsgPtr(pctxt, &len);
 
    /* Allocate memory to hold complete UserUser Information */
-   ie = (Q931InformationElement*)ASN1MALLOC (pctxt,
+   ie = (Q931InformationElement*)memAlloc (pctxt,
                                      sizeof(*ie) - sizeof(ie->data) + len);
    if(ie == NULL)
    {
-      OOTRACEERR1("Error: Allocation of Q931Information "
-                  "Element Failed\n");
+      OOTRACEERR1("Error:Memory -  ooEncodeUUIE - ie\n");
       return OO_FAILED;
    }
    ie->discriminator = Q931UserUserIE;
@@ -529,11 +532,11 @@ int ooDecodeUUIE(Q931Message *q931Msg)
    }
        
    /* Decode user-user ie */
-   q931Msg->userInfo = (H225H323_UserInformation *) ASN1MALLOC(pctxt,
+   q931Msg->userInfo = (H225H323_UserInformation *) memAlloc(pctxt,
                                              sizeof(H225H323_UserInformation));
    if(!q931Msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation failed for user-user ie\n");
+      OOTRACEERR1("ERROR:Memory - ooDecodeUUIE - userInfo\n");
       return OO_FAILED;
    }
    memset(q931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
@@ -771,12 +774,11 @@ int ooSendCallProceeding(ooCallData *call)
       return OO_FAILED;
    }
   
-   q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation for User-User ie for CallProceeding"
-                  " message failed\n");
+      OOTRACEERR1("ERROR:Memory - ooSendCallProceeding - userInfo\n");
       return OO_FAILED;
    }
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
@@ -786,11 +788,11 @@ int ooSendCallProceeding(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_callProceeding;
   
-   callProceeding = (H225CallProceeding_UUIE*)ASN1MALLOC(pctxt,
+   callProceeding = (H225CallProceeding_UUIE*)memAlloc(pctxt,
                                              sizeof(H225CallProceeding_UUIE));
    if(!callProceeding)
    {
-      OOTRACEERR1("ERROR:Memory Allocation failed for Call Proceeding UUIE\n");
+      OOTRACEERR1("ERROR:Memory - ooSendCallProceeding - callProceeding\n");
       return OO_FAILED;
    }
    memset(callProceeding, 0, sizeof(H225CallProceeding_UUIE));
@@ -859,12 +861,11 @@ int ooSendAlerting(ooCallData *call)
       return OO_FAILED;
    }
   
-   q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation for User-User ie for Alerting"
-                  " message failed\n");
+      OOTRACEERR1("ERROR:Memory -  ooSendAlerting - userInfo\n");
       return OO_FAILED;
    }
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
@@ -874,11 +875,11 @@ int ooSendAlerting(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_alerting;
   
-   alerting = (H225Alerting_UUIE*)ASN1MALLOC(pctxt,
+   alerting = (H225Alerting_UUIE*)memAlloc(pctxt,
                                              sizeof(H225Alerting_UUIE));
    if(!alerting)
    {
-      OOTRACEERR1("ERROR:Memory allocation for Alerting UUIE failed\n");
+      OOTRACEERR1("ERROR:Memory -  ooSendAlerting - alerting\n");
       return OO_FAILED;
    }
    memset(alerting, 0, sizeof(H225Alerting_UUIE));
@@ -972,12 +973,12 @@ int ooSendFacility(ooCallData *call)
           call->callType, call->callToken);
       return OO_FAILED;
    }
-   pQ931Msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!pQ931Msg->userInfo)
    {
-      OOTRACEERR3("ERROR:Memory allocation for User-User ie for Facility"
-                " message failed (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("ERROR:Memory - ooSendFacility - userInfo(%s, %s)\n",
+                   call->callType, call->callToken);
       return OO_FAILED;
    }
    memset (pQ931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
@@ -994,7 +995,7 @@ int ooSendFacility(ooCallData *call)
 
    if(!facility)
    {
-      OOTRACEERR3("ERROR:Memory allocation for facility UUIE failed (%s, %s)"
+      OOTRACEERR3("ERROR:Memory - ooSendFacility - facility (%s, %s)"
                   "\n", call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -1036,7 +1037,7 @@ int ooSendReleaseComplete(ooCallData *call)
    ret = ooCreateQ931Message(&q931msg, Q931ReleaseCompleteMsg);
    if(ret != OO_OK)
    {     
-      OOTRACEERR3("Error: In allocating memory for - H225 Release Complete "
+      OOTRACEERR3("Error: In ooCreateQ931Message - H225 Release Complete "
                   "message(%s, %s)\n", call->callType, call->callToken);
       if(call->callState < OO_CALL_CLEAR)
       {
@@ -1045,18 +1046,23 @@ int ooSendReleaseComplete(ooCallData *call)
       }
       return OO_FAILED;
    }
-   q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation for User-User ie for Alerting"
-                  " message failed\n");
+      OOTRACEERR1("ERROR:Memory - ooSendReleaseComplete - userInfo\n");
       return OO_FAILED;
    }
    memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
 
-   releaseComplete = (H225ReleaseComplete_UUIE*)ASN1MALLOC(pctxt,
+   releaseComplete = (H225ReleaseComplete_UUIE*)memAlloc(pctxt,
                                              sizeof(H225ReleaseComplete_UUIE));
+   if(!releaseComplete)
+   {
+      OOTRACEERR3("Error:Memory - ooSendReleaseComplete - releaseComplete"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
    memset(releaseComplete, 0, sizeof(H225ReleaseComplete_UUIE));
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
    q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
@@ -1145,8 +1151,7 @@ int ooAcceptCall(ooCallData *call)
 
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation for User-User ie for Connect"
-                  " message failed\n");
+      OOTRACEERR1("ERROR:Memory - ooAcceptCall - userInfo\n");
       return OO_FAILED;
    }  
 
@@ -1163,7 +1168,7 @@ int ooAcceptCall(ooCallData *call)
 
    if(!connect)
    {
-      OOTRACEERR1("ERROR:Memory allocation for Connect message failed\n");
+      OOTRACEERR1("ERROR:Memory - ooAcceptCall - connect\n");
       return OO_FAILED;
    }
 
@@ -1236,8 +1241,14 @@ int ooAcceptCall(ooCallData *call)
    if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) &&
       call->remoteFastStartOLCs.count>0)
    {
-      pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt,
+      pFS = (ASN1DynOctStr*)memAlloc(pctxt,
                         call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
+      if(!pFS)
+      {
+         OOTRACEERR3("Error:Memory - ooAcceptCall - pFS (%s, %s)\n",
+                      call->callType, call->callToken);   
+         return OO_FAILED;
+      }
       memset(pFS, 0, call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
 
 
@@ -1348,8 +1359,14 @@ int ooAcceptCall(ooCallData *call)
             }
             mediaPort = unicastAddress->u.iPAddress->tsapIdentifier; 
          }
-         respOlc = (H245OpenLogicalChannel*) ASN1MALLOC(pctxt,
+         respOlc = (H245OpenLogicalChannel*) memAlloc(pctxt,
                                                sizeof(H245OpenLogicalChannel));
+         if(!respOlc)
+         {
+            OOTRACEERR3("Error:Memory - ooAcceptCall - respOlc."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
          memset(respOlc, 0, sizeof(H245OpenLogicalChannel));
 
          respOlc->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
@@ -1427,7 +1444,12 @@ int ooAcceptCall(ooCallData *call)
   
       h245IpAddr = (H225TransportAddress_ipAddress*)
          memAllocZ (pctxt, sizeof(H225TransportAddress_ipAddress));
-
+      if(!h245IpAddr)
+      {
+         OOTRACEERR3("Error:Memory - ooAcceptCall - h245IpAddr"
+                     "(%s, %s)\n", call->callType, call->callToken);
+        return OO_FAILED;
+      }
       ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
@@ -1672,17 +1694,22 @@ int ooH323MakeCall_helper(ooCallData *call)
       ooQ931SetCalledPartyNumberIE(q931msg,
                             (const char*)call->calledPartyNumber, 1, 0);
 
-   q931msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:Memory allocation for User-User ie for SETUP"
-                  " message failed\n");
+      OOTRACEERR1("ERROR:Memory - ooH323MakeCall_helper - userInfo\n");
       return OO_FAILED;
    }
    memset(q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
 
-   setup = (H225Setup_UUIE*) ASN1MALLOC(pctxt, sizeof(H225Setup_UUIE));
+   setup = (H225Setup_UUIE*) memAlloc(pctxt, sizeof(H225Setup_UUIE));
+   if(!setup)
+   {
+      OOTRACEERR3("Error:Memory -  ooH323MakeCall_helper - setup (%s, %s)\n",
+                  call->callType, call->callToken);
+      return OO_FAILED;
+   }
    memset (setup, 0, sizeof(H225Setup_UUIE));
    setup->protocolIdentifier = gProtocolID;
   
@@ -1755,8 +1782,15 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the destination Call Signal Address */
    setup->destCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-   destCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
+   destCallSignalIpAddress = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
+   if(!destCallSignalIpAddress)
+   {
+      OOTRACEERR3("Error:Memory -  ooH323MakeCall_helper - "
+                 "destCallSignalAddress. (%s, %s)\n", call->callType,
+                 call->callToken);
+      return OO_FAILED;
+   }
    ooConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
 
    destCallSignalIpAddress->ip.numocts=4;
@@ -1768,8 +1802,14 @@ int ooH323MakeCall_helper(ooCallData *call)
 
    /* Populate the source Call Signal Address */
    setup->sourceCallSignalAddress.t=T_H225TransportAddress_ipAddress;
-   srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)ASN1MALLOC(pctxt,
+   srcCallSignalIpAddress = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                   sizeof(H225TransportAddress_ipAddress));
+   if(!srcCallSignalIpAddress)
+   {
+      OOTRACEERR3("Error:Memory - ooH323MakeCall_helper - srcCallSignalAddress"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
    ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
 
    srcCallSignalIpAddress->ip.numocts=4;
@@ -1783,8 +1823,14 @@ int ooH323MakeCall_helper(ooCallData *call)
    }
    else{
       setup->m.fastStartPresent = TRUE;
-      pFS = (ASN1DynOctStr*)ASN1MALLOC(pctxt, gH323ep.noOfCaps*
+      pFS = (ASN1DynOctStr*)memAlloc(pctxt, gH323ep.noOfCaps*
                                        sizeof(ASN1DynOctStr));
+      if(!pFS)
+      {
+         OOTRACEERR3("Error:Memory - ooH323MakeCall_helper - pFS(%s, %s)\n",
+                     call->callType, call->callToken);
+         return OO_FAILED;
+      }
 
       /* Use preference order of codecs */
       i=0;
@@ -1826,13 +1872,12 @@ int ooH323MakeCall_helper(ooCallData *call)
                       call->callToken);
          if(epCap->dir & OORX)
          {
-            olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
+            olc = (H245OpenLogicalChannel*)memAlloc(pctxt,
                                              sizeof(H245OpenLogicalChannel));
             if(!olc)
             {
-               OOTRACEERR3("ERROR:Allocating memory for OLC, in faststart "
-                           "SETUP message (%s, %s)\n", call->callType,
-                           call->callToken);
+               OOTRACEERR3("ERROR:Memory - ooH323MakeCall_helper - olc(%s, %s)"
+                           "\n", call->callType, call->callToken);
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
@@ -1869,13 +1914,12 @@ int ooH323MakeCall_helper(ooCallData *call)
 
          if(epCap->dir & OOTX)
          {
-            olc = (H245OpenLogicalChannel*)ASN1MALLOC(pctxt,
+            olc = (H245OpenLogicalChannel*)memAlloc(pctxt,
                                              sizeof(H245OpenLogicalChannel));
             if(!olc)
             {
-               OOTRACEERR3("ERROR:Allocating memory for OLC, in faststart "
-                           "SETUP message (%s, %s)\n", call->callType,
-                           call->callToken);
+               OOTRACEERR3("ERROR:Memory - ooH323MakeCall_helper - olc(%s, %s)"
+                           "\n", call->callType, call->callToken);
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
@@ -2012,7 +2056,8 @@ int ooSetBearerCapabilityIE
                       memAlloc(pctxt, sizeof(Q931InformationElement)+size-1);
    if(!pmsg->bearerCapabilityIE)
    {
-      OOTRACEERR1("Error:Failed to allocate memory for BearerCapability ie\n");
+      OOTRACEERR1("Error:Memory - ooSetBearerCapabilityIE - bearerCapabilityIE"
+                  "\n");
       return OO_FAILED;
    }
 
@@ -2045,7 +2090,8 @@ int ooQ931SetCallingPartyNumberIE
                       memAlloc(pctxt, sizeof(Q931InformationElement)+len+2-1);
    if(!pmsg->callingPartyNumberIE)
    {
-     OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
+      OOTRACEERR1("Error:Memory - ooQ931SetCallingPartyNumberIE - "
+                  "callingPartyNumberIE\n");
       return OO_FAILED;
    }
    pmsg->callingPartyNumberIE->discriminator = Q931CallingPartyNumberIE;
@@ -2074,7 +2120,8 @@ int ooQ931SetCalledPartyNumberIE
                       memAlloc(pctxt, sizeof(Q931InformationElement)+len+1-1);
    if(!pmsg->calledPartyNumberIE)
    {
-     OOTRACEERR1("Error:Failed to allocate memory for CallingPartyNumberIE\n");
+      OOTRACEERR1("Error:Memory - ooQ931SetCalledPartyNumberIE - "
+                  "calledPartyNumberIE\n");
       return OO_FAILED;
    }
    pmsg->calledPartyNumberIE->discriminator = Q931CalledPartyNumberIE;
@@ -2100,7 +2147,7 @@ int ooQ931SetCauseIE
                       memAlloc(pctxt, sizeof(Q931InformationElement)+1);
    if(!pmsg->causeIE)
    {
-     OOTRACEERR1("Error:Failed to allocate memory for CauseIE\n");
+      OOTRACEERR1("Error:Memory - ooQ931SetCauseIE - causeIE\n");
       return OO_FAILED;
    }
    pmsg->causeIE->discriminator = Q931CauseIE;
@@ -2175,19 +2222,19 @@ int ooParseDestination(ooCallData *call, char *dest)
    /* url test */
    if(alias == strstr(alias, "http://"))
    {
-      psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+      psNewAlias = (ooAliases*) memAlloc(call->pctxt, sizeof(ooAliases));
       if(!psNewAlias)
       {
-         OOTRACEERR1("Error: Failed to allocate memory for new url alias\n");
+         OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
          return OO_FAILED;
       }
       /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_url_ID;
-      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
+      psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(alias)+1);
       if(!psNewAlias->value)
       {
-         OOTRACEERR1("Error:Failed to allocate memory for new url alias\n");
-         ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+         OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias->value\n");
+         memFreePtr(call->pctxt, psNewAlias);
          return OO_FAILED;
       }
       strcpy(psNewAlias->value, alias);
@@ -2203,19 +2250,20 @@ int ooParseDestination(ooCallData *call, char *dest)
    {
       if(strchr(cAt, '.'))
       {
-         psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+         psNewAlias = (ooAliases*) memAlloc(call->pctxt, sizeof(ooAliases));
          if(!psNewAlias)
          {
-            OOTRACEERR1("Error: Failed to allocate memory for new email alias\n");
+            OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
             return OO_FAILED;
          }
          /*         memset(psNewAlias, 0, sizeof(ooAliases));*/
          psNewAlias->type = T_H225AliasAddress_email_ID;
-         psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
+         psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(alias)+1);
          if(!psNewAlias->value)
          {
-            OOTRACEERR1("Error:Failed to allocate memory for new email alias\n");
-            ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+            OOTRACEERR1("Error:Memory - ooParseDestination - "
+                        "psNewAlias->value\n");
+            memFreePtr(call->pctxt, psNewAlias);
             return OO_FAILED;
          }
          strcpy(psNewAlias->value, alias);
@@ -2238,19 +2286,19 @@ int ooParseDestination(ooCallData *call, char *dest)
    }
    if(i == (int)strlen(alias))
    {
-      psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+      psNewAlias = (ooAliases*) memAlloc(call->pctxt, sizeof(ooAliases));
       if(!psNewAlias)
       {
-         OOTRACEERR1("Error: Failed to allocate memory for new dialedDigits alias\n");
+         OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
          return OO_FAILED;
       }
       /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
       psNewAlias->type = T_H225AliasAddress_dialedDigits;
-      psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
+      psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(alias)+1);
       if(!psNewAlias->value)
       {
-         OOTRACEERR1("Error:Failed to allocate memory for new dialedDigits alias\n");
-         ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+         OOTRACEERR1("Error:Memroy - ooParseDestination - psNewAlias->value\n");
+         memFreePtr(call->pctxt, psNewAlias);
          return OO_FAILED;
       }
       strcpy(psNewAlias->value, alias);
@@ -2261,19 +2309,19 @@ int ooParseDestination(ooCallData *call, char *dest)
       return OO_OK;
    }
    /* Evrything else is an h323-id for now */
-   psNewAlias = (ooAliases*) ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*) memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for new h323-id alias\n");
+      OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
       return OO_FAILED;
    }
    /*   memset(psNewAlias, 0, sizeof(ooAliases));*/
    psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(alias)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(alias)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error:Failed to allocate memory for new h323-id alias\n");
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias->value\n");
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, alias);
@@ -2308,12 +2356,12 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   pQ931Msg->userInfo = (H225H323_UserInformation*)ASN1MALLOC(pctxt,
+   pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!pQ931Msg->userInfo)
    {
-      OOTRACEERR3("ERROR:Memory allocation for User-User ie for Facility"
-                " message failed (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("ERROR:Memory - ooSendAsTunneledMessage - userInfo"
+                " (%s, %s)\n", call->callType, call->callToken);
       memReset(&gH323ep.msgctxt);
       return OO_FAILED;
    }
@@ -2331,7 +2379,7 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
 
    if(!facility)
    {
-      OOTRACEERR3("ERROR:Memory allocation for facility UUIE failed (%s, %s)"
+      OOTRACEERR3("ERROR:Memory - ooSendAsTunneledMessage - facility (%s, %s)"
                   "\n", call->callType, call->callToken);
       memReset(&gH323ep.msgctxt);
       return OO_FAILED;
@@ -2357,12 +2405,12 @@ int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
    pH245Control = (H225H323_UU_PDU_h245Control*)
                    &pH323UUPDU->h245Control;
 
-   elem = (ASN1DynOctStr*) ASN1MALLOC(pctxt,
+   elem = (ASN1DynOctStr*) memAlloc(pctxt,
                                       sizeof(ASN1DynOctStr));
    if(!elem)
    {
-      OOTRACEERR3("ERROR:Failed to allocate memory for H245 control "
-                  "element (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("ERROR:Memory - ooSendAsTunneledMessage - elem "
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    elem->data = msgbuf;
@@ -2396,12 +2444,189 @@ int ooCallEstbTimerExpired(void *data)
    ooCallData *call = cbData->call;
    OOTRACEINFO3("Call Establishment timer expired. (%s, %s)\n",
                                             call->callType, call->callToken);
-   ASN1MEMFREEPTR(call->pctxt, cbData);
+   memFreePtr(call->pctxt, cbData);
    if(call->callState < OO_CALL_CLEAR){
       call->callState = OO_CALL_CLEAR;
       call->callEndReason = OO_HOST_CLEARED;     
    }
 
    return OO_OK;
+}
+
+
+int ooQ931GetCauseAndReasonCodeFromCallClearReason
+   (OOCallClearReason clearReason, enum Q931CauseValues *cause,
+    unsigned *reasonCode)
+{
+   switch(clearReason)
+   {
+   case OO_REASON_INVALIDMESSAGE:
+   case OO_REASON_TRANSPORTFAILURE:
+      *reasonCode =  T_H225ReleaseCompleteReason_undefinedReason;
+      *cause = Q931ProtocolErrorUnspecified;
+      break;
+   case OO_REASON_NOBW:
+      *reasonCode = T_H225ReleaseCompleteReason_noBandwidth;
+      *cause = Q931ErrorInCauseIE;
+      break;
+   case OO_REASON_GK_NOCALLEDUSER:
+      *reasonCode = T_H225ReleaseCompleteReason_calledPartyNotRegistered;
+      *cause = Q931SubscriberAbsent;
+      break;
+   case OO_REASON_GK_NOCALLERUSER:
+      *reasonCode = T_H225ReleaseCompleteReason_callerNotRegistered;
+      *cause = Q931SubscriberAbsent;     
+      break;
+   case OO_REASON_GK_UNREACHABLE:
+      *reasonCode = T_H225ReleaseCompleteReason_unreachableGatekeeper;
+      *cause = Q931TemporaryFailure;
+      break;
+   case OO_REASON_GK_NORESOURCES:
+   case OO_REASON_GK_CLEARED:
+      *reasonCode = T_H225ReleaseCompleteReason_gatekeeperResources;
+      *cause = Q931Congestion;
+      break;
+   case OO_REASON_NOCOMMON_CAPABILITIES:
+      *reasonCode =  T_H225ReleaseCompleteReason_undefinedReason;
+      *cause = Q931IncompatibleDestination;
+      break;
+   case OO_REASON_LOCAL_FWDED:
+   case OO_REASON_REMOTE_FWDED:
+      *reasonCode =  T_H225ReleaseCompleteReason_facilityCallDeflection;
+      *cause = Q931Redirection;
+      break;
+   case OO_REASON_REMOTE_CLEARED:
+   case OO_REASON_LOCAL_CLEARED:
+      *reasonCode = T_H225ReleaseCompleteReason_undefinedReason;
+      *cause = Q931NormalCallClearing;
+      break;
+   case OO_REASON_REMOTE_BUSY:
+   case OO_REASON_LOCAL_BUSY:
+      *reasonCode =  T_H225ReleaseCompleteReason_inConf;
+      *cause = Q931UserBusy;
+      break;
+   case OO_REASON_REMOTE_NOANSWER:
+   case OO_REASON_LOCAL_NOTANSWERED:
+      *reasonCode =  T_H225ReleaseCompleteReason_undefinedReason;
+      *cause = Q931NoAnswer;
+      break;
+   case OO_REASON_REMOTE_REJECTED:
+   case OO_REASON_LOCAL_REJECTED:
+      *reasonCode = T_H225ReleaseCompleteReason_destinationRejection;
+      *cause = Q931CallRejected;
+      break;
+   case OO_REASON_REMOTE_CONGESTED:
+   case OO_REASON_LOCAL_CONGESTED:
+      *reasonCode =  T_H225ReleaseCompleteReason_noBandwidth;
+      *cause = Q931Congestion;
+      break;
+   case OO_REASON_NOROUTE:
+      *reasonCode = T_H225ReleaseCompleteReason_unreachableDestination;
+      *cause = Q931NoRouteToDestination;
+      break;
+   case OO_REASON_NOUSER:
+      *reasonCode = T_H225ReleaseCompleteReason_undefinedReason;     
+      *cause = Q931SubscriberAbsent;
+      break;
+   case OO_REASON_UNKNOWN:
+   default:
+      *reasonCode = T_H225ReleaseCompleteReason_undefinedReason;
+      *cause = Q931NormalUnspecified;
+   }
+
+   return OO_OK;
+}
+
+enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
+   (enum Q931CauseValues cause, unsigned reasonCode)
+{
+   switch(cause)
+   {
+      case Q931NormalCallClearing:
+        return OO_REASON_REMOTE_CLEARED;
+
+      case Q931UserBusy:
+         return OO_REASON_REMOTE_BUSY;
+
+      case Q931NoResponse:
+      case Q931NoAnswer:
+         return OO_REASON_REMOTE_NOANSWER;
+
+      case Q931CallRejected:
+         return OO_REASON_REMOTE_REJECTED;
+
+      case Q931Redirection:
+         return OO_REASON_REMOTE_FWDED;
+
+      case Q931NetworkOutOfOrder:
+      case Q931TemporaryFailure:
+         return OO_REASON_TRANSPORTFAILURE;
+
+      case Q931NoCircuitChannelAvailable:
+      case Q931Congestion:
+      case Q931RequestedCircuitUnAvailable:
+      case Q931ResourcesUnavailable:
+         return OO_REASON_REMOTE_CONGESTED;
+
+      case Q931NoRouteToDestination:
+      case Q931NoRouteToNetwork:
+         return OO_REASON_NOROUTE;
+      case Q931NumberChanged:
+      case Q931UnallocatedNumber:
+      case Q931SubscriberAbsent:
+        return OO_REASON_NOUSER;
+      case Q931ChannelUnacceptable:
+      case Q931DestinationOutOfOrder:
+      case Q931InvalidNumberFormat:
+      case Q931NormalUnspecified:
+      case Q931StatusEnquiryResponse:
+      case Q931IncompatibleDestination:
+      case Q931ProtocolErrorUnspecified:
+      case Q931RecoveryOnTimerExpiry:
+      case Q931InvalidCallReference:
+      default:
+         switch(reasonCode)
+         {
+            case T_H225ReleaseCompleteReason_noBandwidth:
+               return OO_REASON_NOBW;
+            case T_H225ReleaseCompleteReason_gatekeeperResources:
+               return OO_REASON_GK_NORESOURCES;
+            case T_H225ReleaseCompleteReason_unreachableDestination:
+               return OO_REASON_NOROUTE;
+            case T_H225ReleaseCompleteReason_destinationRejection:
+               return OO_REASON_REMOTE_REJECTED;
+            case T_H225ReleaseCompleteReason_inConf:
+               return OO_REASON_REMOTE_BUSY;
+            case T_H225ReleaseCompleteReason_facilityCallDeflection:
+               return OO_REASON_REMOTE_FWDED;
+            case T_H225ReleaseCompleteReason_calledPartyNotRegistered:
+              return OO_REASON_GK_NOCALLEDUSER;
+            case T_H225ReleaseCompleteReason_callerNotRegistered:
+              return OO_REASON_GK_NOCALLERUSER;
+            case T_H225ReleaseCompleteReason_gatewayResources:
+              return OO_REASON_GK_NORESOURCES;
+            case T_H225ReleaseCompleteReason_unreachableGatekeeper:
+               return OO_REASON_GK_UNREACHABLE;
+            case T_H225ReleaseCompleteReason_invalidRevision:
+            case T_H225ReleaseCompleteReason_noPermission:
+            case T_H225ReleaseCompleteReason_badFormatAddress:
+            case T_H225ReleaseCompleteReason_adaptiveBusy:
+            case T_H225ReleaseCompleteReason_undefinedReason:
+            case T_H225ReleaseCompleteReason_securityDenied:
+            case T_H225ReleaseCompleteReason_newConnectionNeeded:
+            case T_H225ReleaseCompleteReason_nonStandardReason:
+            case T_H225ReleaseCompleteReason_replaceWithConferenceInvite:
+            case T_H225ReleaseCompleteReason_genericDataReason:
+            case T_H225ReleaseCompleteReason_neededFeatureNotSupported:
+            case T_H225ReleaseCompleteReason_tunnelledSignallingRejected:
+            case T_H225ReleaseCompleteReason_invalidCID:
+            case T_H225ReleaseCompleteReason_securityError:
+            case T_H225ReleaseCompleteReason_hopCountExceeded:
+            case T_H225ReleaseCompleteReason_extElem1:
+            default:
+               return OO_REASON_UNKNOWN;
+         }
+   }
+   return OO_REASON_UNKNOWN;
 }
 

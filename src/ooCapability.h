@@ -40,6 +40,9 @@
 #define OO_G711ALAW56K         3
 #define OO_G711ULAW64K         4
 #define OO_G711ULAW56K         5
+#define OO_G7231               9
+#define OO_G729                11
+#define OO_G729A               12
 #define OO_GSMFULLRATE         18
 #define OO_GSMHALFRATE         19
 #define OO_GSMENHANCEDFULLRATE 20
@@ -60,7 +63,7 @@
 typedef struct ooG711CapParams{
    int txframes;
    int rxframes;
-}ooG711CapParams;
+}ooCapParams;
 
 typedef struct ooGSMCapParams{
    unsigned txframes;
@@ -107,9 +110,68 @@ EXTERN int ooCapabilityEnableDTMFRFC2833
 EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
 
 
+
+/**
+ * This function is used to add simple capabilities which have only rxframes
+ * and txframes parameters to the endpoint or call.(ex. G711, G729)
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param cap                  Type of G711 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capability.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityAddSimpleCapability
+   (ooCallData *call, int cap, int txframes, int rxframes, int dir,
+    cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel,
+    OOBOOL remote);
+
+#if 0
+/**
+ * This is an internal helper function which is used to add a G729 capability
+ * to local endpoints capability list or to remote endpoints capability list or
+ * to a calls capability list.
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param cap                  Type of G729 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capability.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ *
+ */
+EXTERN int ooCapabilityAddG729Capability(ooCallData *call, int cap,
+                                         int txframes, int rxframes, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel,
+                                  OOBOOL remote);
+
 /**
  * This is an internal helper function which is used to add a G711 capability
- * to local endpoints capability list or to remote endpoints capability list.
+ * to local endpoints capability list or to remote endpoints capability list or
+ * to a call's capability list.
  * @param call                 Handle to a call. If this is not Null, then
  *                             capability is added to call's remote enpoint
  *                             capability list, else it is added to local H323
@@ -136,6 +198,7 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
                                  OOBOOL remote);
 
 
+#endif
 
 /**
  * This is an internal helper function which is used to add a GSM capability
@@ -276,7 +339,8 @@ struct H245AudioCapability* ooCreateGSMFullRateCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 /**
- * This function is used to create a g711 audio capability structure.
+ * This function is used to create a simple(g711, g729) audio capability
+ * structure.
  * @param epCap       Handle to the endpoint capability
  * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
@@ -286,8 +350,8 @@ struct H245AudioCapability* ooCreateGSMFullRateCapability
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateG711Capability
-(ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
+struct H245AudioCapability* ooCreateSimpleCapability
+   (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 
 /**
