@@ -760,7 +760,7 @@ int ooHandleMasterSlaveReject
                "Ending call. (%s, %s)\n", call->callType, call->callToken);
    if(call->callState < OO_CALL_CLEAR)
    {
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
       call->callState = OO_CALL_CLEAR;
    }
    return OO_OK;
@@ -1273,7 +1273,7 @@ int ooOnReceivedOpenLogicalChannelRejected(ooCallData *call,
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
    return OO_OK;
 }
@@ -1958,7 +1958,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
             if(call->callState < OO_CALL_CLEAR)
             {
                call->callState = OO_CALL_CLEAR;
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_NOCOMMON_CAPABILITIES;
             }
             break;
          case T_H245ResponseMessage_openLogicalChannelAck:
@@ -2333,7 +2333,7 @@ int ooOpenLogicalChannels(ooCallData *call)
                         "(%s, %s)\n", call->callType, call->callToken);
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }
             return ret;
@@ -2798,7 +2798,7 @@ int ooMSDTimerExpired(void *data)
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
 
    return OO_OK;
@@ -2815,7 +2815,7 @@ int ooTCSTimerExpired(void *data)
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
 
    return OO_OK;
@@ -2836,7 +2836,7 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
    ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;
@@ -2855,7 +2855,7 @@ int ooCloseLogicalChannelTimerExpired(void *pdata)
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
    ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;
@@ -2882,7 +2882,7 @@ int ooRequestChannelCloseTimerExpired(void *pdata)
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
    ASN1MEMFREEPTR(call->pctxt, cbData);
    return OO_OK;

@@ -269,7 +269,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
             /*Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -288,7 +288,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
             /* Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_INVALIDMESSAGE;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -322,7 +322,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       /* Mark call for clearing */
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_HOST_CLEARED;
+         call->callEndReason = OO_REASON_INVALIDMESSAGE;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -336,7 +336,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
       /* Mark call for clearing */
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_HOST_CLEARED;
+         call->callEndReason = OO_REASON_INVALIDMESSAGE;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -377,7 +377,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
             /*Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -395,7 +395,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
             /* Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_INVALIDMESSAGE;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -497,7 +497,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          /* Mark call for clearing */
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_INVALIDMESSAGE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -517,7 +517,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
          /* Mark call for clearing */
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;

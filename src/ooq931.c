@@ -1031,6 +1031,9 @@ int ooSendReleaseComplete(ooCallData *call)
    Q931InformationElement* ie=NULL;
    Q931Message *q931msg=NULL;
    H225ReleaseComplete_UUIE *releaseComplete;
+   enum Q931CauseValues cause = Q931ErrorInCauseIE;
+   unsigned h225ReasonCode = T_H225ReleaseCompleteReason_undefinedReason;
+
    OOCTXT *pctxt = &gH323ep.msgctxt;  
    OOTRACEDBGA3("Building Release Complete message to send(%s, %s)\n",
                 call->callType, call->callToken);
@@ -1041,7 +1044,7 @@ int ooSendReleaseComplete(ooCallData *call)
                   "message(%s, %s)\n", call->callType, call->callToken);
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_HOST_CLEARED;
+         call->callEndReason = OO_REASON_LOCAL_CLEARED;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -1070,9 +1073,16 @@ int ooSendReleaseComplete(ooCallData *call)
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_releaseComplete;
   
+   /* Get cause value and h225 reason code corresponding to OOCallClearReason*/
+   ooQ931GetCauseAndReasonCodeFromCallClearReason(call->callEndReason,
+                                                     &cause, &h225ReasonCode);
    /* Set Cause IE */
-   ooQ931SetCauseIE(q931msg, Q931NormalCallClearing, 0, 0);
+   ooQ931SetCauseIE(q931msg, cause, 0, 0);
   
+   /* Set H225 releaseComplete reasonCode */
+   releaseComplete->m.reasonPresent = TRUE;
+   releaseComplete->reason.t = h225ReasonCode;
+
    /* Add user-user ie */
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=TRUE;
    q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG (call->flags, OO_M_TUNNELING);
@@ -1403,7 +1413,7 @@ int ooAcceptCall(ooCallData *call)
             ooFreeQ931Message(q931msg);
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -1881,7 +1891,7 @@ int ooH323MakeCall_helper(ooCallData *call)
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
-                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
                   call->callState = OO_CALL_CLEAR;
                }
                return OO_FAILED;
@@ -1901,7 +1911,7 @@ int ooH323MakeCall_helper(ooCallData *call)
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
-                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
                   call->callState = OO_CALL_CLEAR;
                }
                return OO_FAILED;
@@ -1923,7 +1933,7 @@ int ooH323MakeCall_helper(ooCallData *call)
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
-                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
                   call->callState = OO_CALL_CLEAR;
                }
                return OO_FAILED;
@@ -1943,7 +1953,7 @@ int ooH323MakeCall_helper(ooCallData *call)
                ooFreeQ931Message(q931msg);
                if(call->callState < OO_CALL_CLEAR)
                {
-                  call->callEndReason = OO_HOST_CLEARED;
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
                   call->callState = OO_CALL_CLEAR;
                }
                return OO_FAILED;
@@ -2016,7 +2026,7 @@ int ooH323MakeCall_helper(ooCallData *call)
 
   
 
-int ooH323HangCall(char * callToken)
+int ooH323HangCall(char * callToken, OOCallClearReason reason)
 {
    int ret =0;
    ooCallData *call;
@@ -2031,7 +2041,7 @@ int ooH323HangCall(char * callToken)
    OOTRACEINFO3("Hanging up call (%s, %s)\n", call->callType, call->callToken);
    if(call->callState < OO_CALL_CLEAR)
    {
-      call->callEndReason = OO_HOST_CLEARED;
+      call->callEndReason = reason;
       call->callState = OO_CALL_CLEAR;
    }
    return OO_OK;
@@ -2447,7 +2457,7 @@ int ooCallEstbTimerExpired(void *data)
    memFreePtr(call->pctxt, cbData);
    if(call->callState < OO_CALL_CLEAR){
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_HOST_CLEARED;     
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;     
    }
 
    return OO_OK;

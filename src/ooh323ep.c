@@ -354,7 +354,7 @@ int ooH323EpDestroy(void)
          {
             temp = cur;
             cur = cur->next;
-            temp->callEndReason = OO_HOST_CLEARED;
+            temp->callEndReason = OO_REASON_LOCAL_CLEARED;
             ooCleanCall(temp);
          }
          gH323ep.callList = NULL;

@@ -435,10 +435,11 @@ int ooH323CallAdmitted( ooCallData *call);
  * This function is used to handup a currently active call. It sets the call
  * state to CLEARING and initiates closing of all logical channels.
  * @param callToken Unique token of the call to be hanged.
+ * @param reason    Reason for ending call.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323HangCall(char * callToken);
+EXTERN int ooH323HangCall(char * callToken, OOCallClearReason reason);
 
 
 /**

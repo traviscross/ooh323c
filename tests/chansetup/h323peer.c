@@ -355,7 +355,7 @@ static int onCallCleared (ooCallData* call)
 static int callDurationTimerExpired (void *pdata)
 {
    printf("callDurationTimerExpired - %s\n", (char*)pdata);
-   ooHangCall((char*)pdata);
+   ooHangCall((char*)pdata, OO_REASON_LOCAL_CLEARED);
    free(pdata);
    return OO_OK;
 }

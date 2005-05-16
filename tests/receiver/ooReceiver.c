@@ -157,7 +157,7 @@ void* osEpHandleCommand(void* dummy)
    if(isCallActive)
    {
       printf("Hanging up call\n");
-      ret = ooHangCall(callToken);
+      ret = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
       printf("Hit <ENTER> to quit\n");
       fgets(command, 20, stdin);
    }

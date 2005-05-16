@@ -38,7 +38,7 @@ int osEpOnAlerting(ooCallData* call);
 int osEpOpenLogicalChannels(ooCallData *call);
 void * osEpHandleCommand(void*);
 
-static int isActive;
+static OOBOOL bActive;
 static char callToken[20];
 static char ourip[20];
 static int ourport;
@@ -293,7 +293,6 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting Receive channel at %s:%d\n", call->localIP,
                                               pChannel->localRtpPort);
-   isActive = 1;
    ooCreateReceiveRTPChannel(call->localIP,
                              pChannel->localRtpPort);
    ooStartReceiveAudioAndPlayback();
@@ -305,7 +304,7 @@ int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting transmit channel to %s:%d\n",
           call->remoteIP, pChannel->mediaPort);
-   isActive = 1;
+
    ooCreateTransmitRTPChannel (call->remoteIP, pChannel->mediaPort);
    ooStartTransmitMic();
    return OO_OK;
@@ -337,6 +336,15 @@ int osEpOnIncomingCall(ooCallData* call )
 {
    ooMediaInfo mediaInfo1, mediaInfo2;
    char localip[20];
+
+   if(!bActive)
+      bActive = TRUE;
+   else{
+      ooHangCall(call->callToken, OO_REASON_LOCAL_BUSY);
+      printf("Incoming call Rejected - line busy\n");
+      return OO_OK;
+   }
+
    memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
    memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
 
@@ -359,7 +367,6 @@ int osEpOnIncomingCall(ooCallData* call )
    ooAddMediaInfo(call, mediaInfo2);
     
    strcpy(callToken, call->callToken);
-   isActive = 1;
   
    return OO_OK;
 }
@@ -398,8 +405,12 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
 /* CallCleared callback */
 int osEpOnCallCleared(ooCallData* call )
 {
-   printf("Call Ended\n");
-   isActive = 0;
+   if(!strcmp(call->callToken , callToken))
+   {
+      printf("Call Ended\n");
+      callToken[0]='\0';
+      bActive = FALSE;
+   }
    return OO_OK;
 }
 
@@ -414,10 +425,10 @@ void* osEpHandleCommand(void* dummy)
    memset(command, 0, sizeof(command));
    printf("Hit <ENTER> to Hang call\n");
    fgets(command, 20, stdin);
-   if(isActive)
+   if(bActive)
    {
       printf("Hanging up call\n");
-      ret = ooHangCall(callToken);
+      ret = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
    }
    else {
       printf("No active call\n");

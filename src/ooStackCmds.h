@@ -85,10 +85,11 @@ EXTERN int ooRejectCall(char* callToken, int cause);
 /**
  * This function is used by an user application to hang a call.
  * @param callToken   The uinque token for the call.
+ * @param reason      Reason for hanging call.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooHangCall(char * callToken);
+EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
 
 /**
  * This function is used by the user application to stop monitoring calls.

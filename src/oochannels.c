@@ -208,7 +208,7 @@ int ooSendH245Msg(ooCallData *call, H245Message *msg)
                       call->callType, call->callToken);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_INVALIDMESSAGE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -671,13 +671,14 @@ int ooMonitorChannels()
             case OO_CMD_HANGCALL:
                OOTRACEINFO2("Processing Hang call command %s\n",
                              (char*)cmd->param1);
-               ooH323HangCall((char*)cmd->param1);
+               ooH323HangCall((char*)cmd->param1,
+                                       *(OOCallClearReason*)cmd->param2);
                break;
             case OO_CMD_STOPMONITOR:
                OOTRACEINFO1("Processing StopMonitor command\n");
                ooStopMonitorCalls();
                break;
-            default: printf("Unhandled command\n");
+            default: OOTRACEERR1("ERROR:Unhandled command\n");
             }
            dListRemove (&gH323ep.stkCmdList, curNode);
            memFreePtr (&gH323ep.ctxt, curNode);
@@ -732,7 +733,7 @@ int ooMonitorChannels()
                                 "(%s, %s)\n", call->callType, call->callToken);
                      if(call->callState < OO_CALL_CLEAR)
                      {
-                        call->callEndReason = OO_HOST_CLEARED;
+                        call->callEndReason = OO_REASON_INVALIDMESSAGE;
                         call->callState = OO_CALL_CLEAR;
                       }
                   }
@@ -835,7 +836,7 @@ int ooH2250Receive(ooCallData *call)
       ooCloseH225Connection(call);
       if(call->callState < OO_CALL_CLEARED)
       {
-         call->callEndReason = OO_REMOTE_CLOSED_CONNECTION;
+         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
          call->callState = OO_CALL_CLEARED;
         
       }
@@ -856,7 +857,7 @@ int ooH2250Receive(ooCallData *call)
       ooFreeQ931Message(pmsg);
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_HOST_CLEARED;
+         call->callEndReason = OO_REASON_INVALIDMESSAGE;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -898,7 +899,7 @@ int ooH2250Receive(ooCallData *call)
          ooFreeQ931Message(pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -912,7 +913,7 @@ int ooH2250Receive(ooCallData *call)
          ooFreeQ931Message(pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_INVALIDMESSAGE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -972,7 +973,7 @@ int ooH245Receive(ooCallData *call)
       ooFreeH245Message(call, pmsg);
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_REMOTE_CLOSED_H245_CONNECTION;
+         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -985,7 +986,7 @@ int ooH245Receive(ooCallData *call)
       ooFreeH245Message(call, pmsg);
       if(call->callState < OO_CALL_CLEAR)
       {
-         call->callEndReason = OO_HOST_CLEARED;
+         call->callEndReason = OO_REASON_INVALIDMESSAGE;
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
@@ -1022,7 +1023,7 @@ int ooH245Receive(ooCallData *call)
          ooFreeH245Message(call, pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -1036,7 +1037,7 @@ int ooH245Receive(ooCallData *call)
          ooFreeH245Message(call, pmsg);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -1105,22 +1106,25 @@ int ooSendMsg(ooCallData *call, int type)
    if(call->callState == OO_CALL_CLEARED)
    {
       OOTRACEDBGA3("Warning:Call marked for cleanup. Can not send message."
-                   "(%s, %s)\n", call->callType, call->callState);
+                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_OK;
    }
+
    if(type == OOQ931MSG)
-   {
+     {
       if(call->pH225Channel->outQueue.count == 0)
       {
          OOTRACEWARN3("WARN:No H.2250 message to send. (%s, %s)\n",
                       call->callType, call->callToken);
          return OO_FAILED;
       }
+
       OOTRACEDBGA3("Sending Q931 message (%s, %s)\n", call->callType,
                                                       call->callToken);
       p_msgNode = call->pH225Channel->outQueue.head;
       msgptr = (ASN1OCTET*) p_msgNode->data;
       msgType = msgptr[0];
+
       if(msgType == OOFacility)
       {
          tunneledMsgType = msgptr[1];
@@ -1131,7 +1135,7 @@ int ooSendMsg(ooCallData *call, int type)
          len = len<<8;
          len = (len | msgptr[7]);
          msgToSend = msgptr+4;
-      }else {
+        }else {
          len = msgptr[3];
          len = len<<8;
          len = (len | msgptr[4]);
@@ -1159,7 +1163,7 @@ int ooSendMsg(ooCallData *call, int type)
          memFreePtr (call->pctxt, msgptr);
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_FAILED;
@@ -1200,7 +1204,7 @@ int ooSendMsg(ooCallData *call, int type)
          /*ooCloseH245Session(call);*/
          if(call->callState < OO_CALL_CLEAR)
          {
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
             call->callState = OO_CALL_CLEAR;
          }
          return OO_OK;
@@ -1227,7 +1231,7 @@ int ooSendMsg(ooCallData *call, int type)
                         call->callType, call->callToken);
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_TRANSPORTFAILURE;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -1247,7 +1251,7 @@ int ooSendMsg(ooCallData *call, int type)
                          call->callType, call->callToken);
             if(call->callState < OO_CALL_CLEAR)
             {
-               call->callEndReason = OO_HOST_CLEARED;
+               call->callEndReason = OO_REASON_INVALIDMESSAGE;
                call->callState = OO_CALL_CLEAR;
             }
             return OO_FAILED;
@@ -1680,7 +1684,7 @@ int ooStopMonitorCalls()
          {
             OOTRACEWARN3("Clearing call (%s, %s)\n", call->callType,
                           call->callToken);
-            call->callEndReason = OO_HOST_CLEARED;
+            call->callEndReason = OO_REASON_LOCAL_CLEARED;
             ooCleanCall(call);
             call = NULL;
             call = gH323ep.callList;

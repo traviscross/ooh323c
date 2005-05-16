@@ -262,7 +262,7 @@ int ooRejectCall(char* callToken, int cause)
 }
 
 
-int ooHangCall(char * callToken)
+int ooHangCall(char * callToken, OOCallClearReason reason)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -280,12 +280,14 @@ int ooHangCall(char * callToken)
    memset(cmd, 0, sizeof(ooCommand));
    cmd->type = OO_CMD_HANGCALL;
    cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
-   if(!cmd->param1)
+   cmd->param2 = (void*)memAlloc(&gH323ep.ctxt, sizeof(OOCallClearReason));
+   if(!cmd->param1 || !cmd->param2)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - HangCall\n");
+      OOTRACEERR1("ERROR:Allocating memory for cmd param1/param2- HangCall\n");
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
+   *((OOCallClearReason*)cmd->param2) = reason;
   
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
