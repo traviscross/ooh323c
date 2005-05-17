@@ -163,6 +163,12 @@ EXTERN int ooQ931Decode
          }
       }
 
+      /* Handle Cause ie */
+      if(ie->discriminator == Q931CauseIE)
+      {
+         msg->causeIE = ie;
+      }
+
       /* TODO: Get rid of ie list.*/
       dListAppend (pctxt, &msg->ies, ie);
       if (rv != ASN_OK)

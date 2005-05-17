@@ -166,6 +166,7 @@ const char* ooGetMsgTypeText (int msgType)
    return ooGetText (idx, msgTypeText, OONUMBEROF(msgTypeText));
 }
 
+
 void ooSetTraceThreshold(OOUINT32 traceLevel)
 {
    gs_traceLevel = traceLevel;

@@ -35,6 +35,18 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
    ASN1UINT i;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
+   unsigned reasonCode=T_H225ReleaseCompleteReason_undefinedReason;;
+   enum Q931CauseValues cause= Q931ErrorInCauseIE;
+
+   if(q931Msg->causeIE)
+   {
+      cause = q931Msg->causeIE->data[1];
+      /* Get rid of the extension bit.For more info, check ooQ931SetCauseIE */
+      cause = cause & 0x7f;
+      OOTRACEDBGA4("Cause of Release Complete is %x. (%s, %s)\n", cause,
+                                             call->callType, call->callToken);
+   }
+
    /* Remove session timer, if active*/
    for(i = 0; i<call->timerList.count; i++)
    {
@@ -80,18 +92,21 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
    releaseComplete = q931Msg->userInfo->h323_uu_pdu.h323_message_body.u.releaseComplete;
    if(!releaseComplete)
    {
-      OOTRACEERR3("Error: ReleaseComplete UUIE not found in received "
+      OOTRACEWARN3("WARN: ReleaseComplete UUIE not found in received "
                   "ReleaseComplete message - %s "
                   "%s\n", call->callType, call->callToken);
-      return OO_FAILED;
+   }else{
+
+      if(releaseComplete->m.reasonPresent)
+      {
+         OOTRACEINFO4("Release complete reason code %d. (%s, %s)\n",
+                   releaseComplete->reason.t, call->callType, call->callToken);
+         reasonCode = releaseComplete->reason.t;
+      }
    }
 
-   if(releaseComplete->m.reasonPresent)
-   {
-      OOTRACEINFO4("Release complete reason code %d. (%s, %s)\n",
-                  releaseComplete->reason.t, call->callType, call->callToken);
-   }
-
+   call->callEndReason = ooGetCallClearReasonFromCauseAndReasonCode(cause,
+                                                                   reasonCode);
 
    if (q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
        q931Msg->userInfo->h323_uu_pdu.h245Tunneling          &&
