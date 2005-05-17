@@ -35,12 +35,30 @@ static OOUINT32 gs_traceLevel = TRACELVL;
  * Reasons for ending call
  */
 static const char* reasonCodeText[] = {
-   "Reason unknown",
-   "Remote endpoint closed H.225 TCP connection",
-   "Remote endpoint closed H.245 TCP connection",
-   "Remote Ended call",
-   "Local host ended call",
-   "Normal End of Call"
+   "OO_REASON_UNKNOWN",
+   "OO_REASON_INVALIDMESSAGE",
+   "OO_REASON_TRANSPORTFAILURE",
+   "OO_REASON_NOROUTE",
+   "OO_REASON_NOUSER",
+   "OO_REASON_NOBW",
+   "OO_REASON_GK_NOCALLEDUSER",
+   "OO_REASON_GK_NOCALLERUSER",
+   "OO_REASON_GK_NORESOURCES",
+   "OO_REASON_GK_UNREACHABLE",
+   "OO_REASON_GK_CLEARED",
+   "OO_REASON_NOCOMMON_CAPABILITIES",
+   "OO_REASON_REMOTE_FWDED",  
+   "OO_REASON_LOCAL_FWDED",
+   "OO_REASON_REMOTE_CLEARED",
+   "OO_REASON_LOCAL_CLEARED",
+   "OO_REASON_REMOTE_BUSY",
+   "OO_REASON_LOCAL_BUSY",
+   "OO_REASON_REMOTE_NOANSWER",
+   "OO_REASON_LOCAL_NOTANSWERED",
+   "OO_REASON_REMOTE_REJECTED",
+   "OO_REASON_LOCAL_REJECTED",
+   "OO_REASON_REMOTE_CONGESTED",
+   "OO_REASON_LOCAL_CONGESTED"
 };
 
 static const char* callStateText[] = {

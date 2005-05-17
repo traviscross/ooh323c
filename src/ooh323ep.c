@@ -563,9 +563,9 @@ int ooH323EpAddG711Capability(int cap, int txframes, int rxframes, int dir,
                               cb_StopReceiveChannel stopReceiveChannel,
                               cb_StopTransmitChannel stopTransmitChannel)
 {
-   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, dir,
-         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
-         stopTransmitChannel, FALSE);
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, FALSE,
+                            dir, startReceiveChannel, startTransmitChannel,
+                            stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
 int ooH323EpAddG729Capability(int cap, int txframes, int rxframes, int dir,
@@ -574,9 +574,23 @@ int ooH323EpAddG729Capability(int cap, int txframes, int rxframes, int dir,
                               cb_StopReceiveChannel stopReceiveChannel,
                               cb_StopTransmitChannel stopTransmitChannel)
 {
-   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, dir,
-         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
-         stopTransmitChannel, FALSE);
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, FALSE,
+                               dir, startReceiveChannel, startTransmitChannel,
+                               stopReceiveChannel, stopTransmitChannel, FALSE);
+}
+
+
+int ooH323EpAddG7231Capability(int cap, int txframes, int rxframes,
+                              OOBOOL silenceSuppression, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes,
+                             silenceSuppression, dir, startReceiveChannel,
+                             startTransmitChannel, stopReceiveChannel,
+                             stopTransmitChannel, FALSE);
 }
 
 int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,

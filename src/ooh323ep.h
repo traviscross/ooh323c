@@ -289,6 +289,28 @@ EXTERN int ooH323EpAddG729Capability
     cb_StopReceiveChannel stopReceiveChannel,
     cb_StopTransmitChannel stopTransmitChannel);
 
+
+/**
+ * This function is used to add G7231 capability to the H323 endpoint.
+ * @param cap                  Type of G7231 capability to be added.
+ * @param txframes             Number of frames per packet for transmission.
+ * @param rxframes             Number of frames per packet for reception.
+ * @param silenceSuppression   Silence Suppression support
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddG7231Capability(int cap, int txframes, int rxframes,
+                              OOBOOL silenceSuppression, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                               cb_StopTransmitChannel stopTransmitChannel);
+
 /**
  * This function is used to add G711 capability to the H323 endpoint.
  * @param cap                  Type of G711 capability to be added.

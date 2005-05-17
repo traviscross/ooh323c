@@ -60,9 +60,10 @@
 #define OO_CAP_DTMF_H245    (1<<2)
 
 
-typedef struct ooG711CapParams{
+typedef struct ooCapParams{
    int txframes;
    int rxframes;
+   OOBOOL silenceSuppression;
 }ooCapParams;
 
 typedef struct ooGSMCapParams{
@@ -121,6 +122,8 @@ EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
  * @param cap                  Type of G711 capability to be added.
  * @param txframes             Number of frames per packet for transmission.
  * @param rxframes             Number of frames per packet for reception.
+ * @param silenceSuppression   Indicates support for silence suppression.
+ *                             Used only in case of g7231, otherwise ignored.
  * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
  * @param startReceiveChannel  Callback function to start receive channel.
  * @param startTransmitChannel Callback function to start transmit channel.
@@ -131,7 +134,8 @@ EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCapabilityAddSimpleCapability
-   (ooCallData *call, int cap, int txframes, int rxframes, int dir,
+   (ooCallData *call, int cap, int txframes, int rxframes,
+    OOBOOL silenceSuppression, int dir,
     cb_StartReceiveChannel startReceiveChannel,
     cb_StartTransmitChannel startTransmitChannel,
     cb_StopReceiveChannel stopReceiveChannel,

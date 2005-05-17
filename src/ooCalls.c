@@ -517,6 +517,22 @@ int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id)
 
 /* Used to override global end point capabilities and add call specific
    capabilities */
+
+int ooCallAddG7231Capability(ooCallData *call, int cap, int txframes,
+                            int rxframes, OOBOOL silenceSuppression, int dir,
+                            cb_StartReceiveChannel startReceiveChannel,
+                            cb_StartTransmitChannel startTransmitChannel,
+                            cb_StopReceiveChannel stopReceiveChannel,
+                            cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddSimpleCapability(call, cap, txframes, rxframes,
+                                silenceSuppression, dir, startReceiveChannel,
+                                startTransmitChannel, stopReceiveChannel,
+                                stopTransmitChannel, FALSE);
+}
+
+
+
 int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
                             int rxframes, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
@@ -524,9 +540,9 @@ int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
                             cb_StopReceiveChannel stopReceiveChannel,
                             cb_StopTransmitChannel stopTransmitChannel)
 {
-   return ooCapabilityAddSimpleCapability(call, cap, txframes, rxframes, dir,
-         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
-         stopTransmitChannel, FALSE);
+   return ooCapabilityAddSimpleCapability(call, cap, txframes, rxframes, FALSE,
+                          dir, startReceiveChannel, startTransmitChannel,
+                          stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
 int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
@@ -536,9 +552,9 @@ int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
                             cb_StopReceiveChannel stopReceiveChannel,
                             cb_StopTransmitChannel stopTransmitChannel)
 {
-   return ooCapabilityAddSimpleCapability(call, cap, txframes, rxframes, dir,
-         startReceiveChannel, startTransmitChannel, stopReceiveChannel,
-         stopTransmitChannel, FALSE);
+   return ooCapabilityAddSimpleCapability(call, cap, txframes, rxframes, FALSE,
+                            dir, startReceiveChannel, startTransmitChannel,
+                            stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
 int ooCallAddGSMCapability(ooCallData* call, int cap, ASN1USINT framesPerPkt,
