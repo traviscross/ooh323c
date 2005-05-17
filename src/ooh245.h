@@ -22,7 +22,7 @@
 #define _OOH245HDR_H_
 
 #include "ooasn1.h"
-#include "ootypes.h"
+#include "ooCapability.h"
 #include "oochannels.h"
 #include "ootrace.h"
 

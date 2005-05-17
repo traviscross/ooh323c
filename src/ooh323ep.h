@@ -19,8 +19,7 @@
  */
 #ifndef OO_H323EP_H_
 #define OO_H323EP_H_
-#include "ootypes.h"
-#include "ooasn1.h"
+#include "ooCapability.h"
 #include "ooGkClient.h"
 
 #define DEFAULT_TRACEFILE "trace.log"

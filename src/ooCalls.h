@@ -20,7 +20,7 @@
 #ifndef _OOCALLS_H_
 #define _OOCALLS_H_
 
-#include "ootypes.h"
+#include "ooCapability.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -24,10 +24,6 @@
 
 #define OO_GSMFRAMESIZE 33 /* standard frame size for gsm is 33 bytes */
 
-#define OO_CAP_TYPE_AUDIO 1
-#define OO_CAP_TYPE_VIDEO 2
-#define OO_CAP_TYPE_DATA  3
-
 #define OORX      (1<<0)
 #define OOTX      (1<<1)
 #define OORXANDTX (1<<2)
@@ -60,19 +56,56 @@
 #define OO_CAP_DTMF_H245    (1<<2)
 
 
-typedef struct ooCapParams{
+typedef struct ooCapParams {
    int txframes;
    int rxframes;
    OOBOOL silenceSuppression;
-}ooCapParams;
+} ooCapParams;
 
-typedef struct ooGSMCapParams{
+typedef struct ooGSMCapParams {
    unsigned txframes;
    unsigned rxframes;
    OOBOOL scrambled;
    OOBOOL comfortNoise;
-}ooGSMCapParams;
+} ooGSMCapParams;
 
+/** Call back for starting media receive channel */
+typedef int (*cb_StartReceiveChannel)
+     (ooCallData *call, ooLogicalChannel *pChannel);
+
+/** callback for starting media transmit channel */
+typedef int (*cb_StartTransmitChannel)
+     (ooCallData *call, ooLogicalChannel *pChannel);
+
+/** callback to stop media receive channel */
+typedef int (*cb_StopReceiveChannel)
+     (ooCallData *call, ooLogicalChannel *pChannel);
+
+/** callback to stop media transmit channel */
+typedef int (*cb_StopTransmitChannel)
+     (ooCallData *call, ooLogicalChannel *pChannel);
+
+typedef enum OOCapType {
+   OO_CAP_TYPE_AUDIO,
+   OO_CAP_TYPE_VIDEO,
+   OO_CAP_TYPE_DATA
+} OOCapType;
+
+/**
+ * Structure to store information related to end point
+ * capability
+ */
+typedef struct ooH323EpCapability {
+   int dir;
+   int cap;
+   OOCapType capType;
+   void *params;
+   cb_StartReceiveChannel startReceiveChannel;
+   cb_StartTransmitChannel startTransmitChannel;
+   cb_StopReceiveChannel stopReceiveChannel;
+   cb_StopTransmitChannel stopTransmitChannel;
+   struct ooH323EpCapability *next;
+} ooH323EpCapability;
 
 
 #ifdef __cplusplus

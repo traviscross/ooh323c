@@ -13,7 +13,6 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
-
 /**
  * @file ootypes.h
  * This file contains the definitions of common constants and data structures
@@ -194,12 +193,13 @@ typedef enum {
  of channels are created for the calls placed by the endpoint or received
  by the endpoint.
 */
-#define OO_CALLMODE_AUDIOCALL 301
-#define OO_CALLMODE_AUDIORX   302
-#define OO_CALLMODE_AUDIOTX   303
-#define OO_CALLMODE_VIDEOCALL 304
-#define OO_CALLMODE_FAX       305
-
+typedef enum OOCallMode {
+   OO_CALLMODE_AUDIOCALL,
+   OO_CALLMODE_AUDIORX,
+   OO_CALLMODE_AUDIOTX,
+   OO_CALLMODE_VIDEOCALL,
+   OO_CALLMODE_FAX
+} OOCallMode;
 
 /*
  * Flag macros - these operate on bit mask flags using mask values
@@ -243,7 +243,7 @@ typedef struct ooCallOptions {
    OOBOOL fastStart; /* faststart for this call. overrides endpoint setting*/
    OOBOOL tunneling; /* tunneling for this call. overrides endpoint setting*/
    OOBOOL disableGk; /* If gk is enabled, then you can avoid going through gk for a specific call */
-   unsigned callMode; /* Effective when faststart is used. Tells stack which type of channels to setup*/
+   OOCallMode callMode; /* Effective when faststart is used. Tells stack which type of channels to setup*/
 }ooCallOptions;
 
 /**
@@ -423,36 +423,6 @@ typedef struct ooCallData {
    struct ooCallData*   prev;
 } ooCallData;
 
-
-
-
-/** Call back for starting media receive channel */
-typedef int (*cb_StartReceiveChannel)(ooCallData *call, ooLogicalChannel *pChannel);
-/** callback for starting media transmit channel */
-typedef int (*cb_StartTransmitChannel)(ooCallData *call, ooLogicalChannel *pChannel);
-/** callback to stop media receive channel */
-typedef int (*cb_StopReceiveChannel)(ooCallData *call, ooLogicalChannel *pChannel);
-/** callback to stop media transmit channel */
-typedef int (*cb_StopTransmitChannel)(ooCallData *call, ooLogicalChannel *pChannel);
-
-/**
- * Structure to store information related to end point
- * capability
- */
-typedef struct ooH323EpCapability{
-   int dir;
-   int cap;
-   int capType;
-   void *params;
-   cb_StartReceiveChannel startReceiveChannel;
-   cb_StartTransmitChannel startTransmitChannel;
-   cb_StopReceiveChannel stopReceiveChannel;
-   cb_StopTransmitChannel stopTransmitChannel;
-   struct ooH323EpCapability *next;
-}ooH323EpCapability;
-
-
-
 /**
  * These are message callbacks which can be used by user applications
  * to perform application specific things on receiving a particular
@@ -485,7 +455,6 @@ typedef int (*cb_OpenLogicalChannels)(ooCallData* call);
 
 struct ooGkClient;
 
-
 typedef struct OOH323CALLBACKS{
    cb_OnAlerting onNewCallCreated;
    cb_OnAlerting onAlerting;
@@ -499,7 +468,11 @@ typedef struct OOH323CALLBACKS{
 } OOH323CALLBACKS;
 
 
-
+/*
+ * Forward reference to ooH323EpCapability structure.  This structure
+ * is defined in ooCapability.h.
+ */
+struct ooH323EpCapability;
 
 /**
  * Structure to store all configuration information related to the
@@ -547,7 +520,7 @@ typedef struct ooEndPoint {
 
    int callType;
 
-   ooH323EpCapability *myCaps;
+   struct ooH323EpCapability *myCaps;
    ooCapPrefs     capPrefs;
    int noOfCaps;
    OOH225MsgCallbacks h225Callbacks;
@@ -557,7 +530,7 @@ typedef struct ooEndPoint {
    OOSOCKET *listener;
    ooCallData *callList;
 
-   int callMode; /* audio/audiorx/audiotx/video/fax */
+   OOCallMode callMode; /* audio/audiorx/audiotx/video/fax */
    int dtmfmode;
    ASN1UINT callEstablishmentTimeout;
    ASN1UINT msdTimeout;
