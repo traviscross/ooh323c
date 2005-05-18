@@ -632,26 +632,6 @@ int ooMonitorChannels()
                ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2,
                                                  (ooCallOptions*)cmd->param3);
                break;
-#if 0
-            case OO_CMD_MAKECALL_NOGK:
-               OOTRACEINFO2("Processing MakeCall_NoGk command %s\n",
-                             (char*)cmd->param2);
-               ooH323MakeCall((char*)cmd->param1,(char*)cmd->param2, NULL);
-               break;
-#endif
-            case OO_CMD_MAKECALL_3:
-               if(gH323ep.gkClient &&
-                  gH323ep.gkClient->state != GkClientRegistered)
-               {
-                  OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
-                              "gatekeeper registration.\n");
-                  continue;
-               }
-               OOTRACEINFO2("Processing MakeCall_3 command %s\n",
-                            (char*)cmd->param2);
-               ooH323MakeCall_3((char*)cmd->param1, (char*)cmd->param2,
-                                                   *((ASN1USINT*)cmd->param3));
-               break;
             case OO_CMD_ANSCALL:
                if(gH323ep.gkClient &&
                   gH323ep.gkClient->state != GkClientRegistered)

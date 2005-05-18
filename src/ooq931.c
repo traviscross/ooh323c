@@ -1579,53 +1579,6 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    return OO_OK;
 }
 
-int ooH323MakeCall_3(char *dest, char* callToken, int callRef)
-{
-   OOCTXT *pctxt;
-   ooCallData *call;
-   int ret=0, i=0;
-   if(!dest)
-   {
-      OOTRACEERR1("ERROR:Invalid destination for new call\n");
-      return OO_FAILED;
-   }
-   if(!callToken)
-   {
-      OOTRACEERR1("ERROR: Invalid callToken parameter to make call\n");
-      return OO_FAILED;
-   }
-   OOTRACEINFO3("New Outgoing call callToken %s:callRef %d\n", callToken,
-                 callRef);
-   call = ooCreateCall("outgoing", callToken);
-   pctxt = call->pctxt;
-   ret = ooParseDestination(call, dest);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR2("Error: Failed to parse the destination string %s for "
-                  "new call\n", dest);
-      ooCleanCall(call);
-      return OO_FAILED;
-   }
-   strcpy(callToken, call->callToken);
-   call->callReference = callRef;
-   ooGenerateCallIdentifier(&call->callIdentifier);
-   call->confIdentifier.numocts = 16;
-   for (i = 0; i < 16; i++)
-      call->confIdentifier.data[i] = i+1;
-
-   if(gH323ep.gkClient)
-   {
-     /* No need to check registration status here as it is already checked for
-        MakeCall command */
-      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, FALSE);
-      call->callState = OO_CALL_WAITING_ADMISSION;
-   }
-   else
-      ret = ooH323CallAdmitted (call);
-
-   return OO_OK;
-}
-
 
 int ooH323CallAdmitted(ooCallData *call)
 {

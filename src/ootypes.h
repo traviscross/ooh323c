@@ -180,12 +180,10 @@ typedef enum {
 #define MAXFILENAME 256
 
 #define OO_CMD_MAKECALL      201
-#define OO_CMD_MAKECALL_NOGK 202
-#define OO_CMD_MAKECALL_3    203
-#define OO_CMD_ANSCALL       204
-#define OO_CMD_REJECTCALL    205
-#define OO_CMD_HANGCALL      206
-#define OO_CMD_STOPMONITOR   207
+#define OO_CMD_ANSCALL       202
+#define OO_CMD_REJECTCALL    203
+#define OO_CMD_HANGCALL      204
+#define OO_CMD_STOPMONITOR   205
 
 
 /**
