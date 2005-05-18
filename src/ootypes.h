@@ -181,7 +181,7 @@ typedef enum {
 
 #define OO_CMD_MAKECALL      201
 #define OO_CMD_ANSCALL       202
-#define OO_CMD_REJECTCALL    203
+#define OO_CMD_FWDCALL       203
 #define OO_CMD_HANGCALL      204
 #define OO_CMD_STOPMONITOR   205
 
@@ -349,6 +349,12 @@ typedef struct ooTimerCallback{
    ASN1UINT    channelNumber;
 } ooTimerCallback;
 
+typedef struct OOCallFwdData{
+   char ip[20];
+   int port;
+   ooAliases *aliases;
+}OOCallFwdData;
+
 /* Flag mask values */
 /* DISABLEGK is used to selectively disable gatekeeper use. For incoming calls
    DISABLEGK can be set in onReceivedSetup callback by application.
@@ -386,6 +392,7 @@ typedef struct ooCallData {
    OOH245SessionState   h245SessionState;
    int                  dtmfmode;
    ooMediaInfo          *mediaInfo;
+   OOCallFwdData        *pCallFwdData;
    char                 localIP[20];/* Local IP address */
    OOH323Channel*       pH225Channel;
    OOH323Channel*       pH245Channel;
@@ -402,7 +409,7 @@ typedef struct ooCallData {
    OOCapExchangeState   localTermCapState;
    OOCapExchangeState   remoteTermCapState;
    struct ooH323EpCapability* ourCaps;
-   struct ooH323EpCapability* remoteCaps; /* TODO: once we are comfortable with supportedCaps, get rid of remoteCaps*/
+   struct ooH323EpCapability* remoteCaps; /* TODO: once we start using jointCaps, get rid of remoteCaps*/
    struct ooH323EpCapability* jointCaps;
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;

@@ -62,13 +62,14 @@ EXTERN int ooMakeCall
 EXTERN int ooAnswerCall(char *callToken);
 
 /**
- * This function is used to reject an incoming call.
+ * This function is used to forward an existing call to third party.
  * @param callToken   Unique token for the call.
- * @param cause       Cause for rejecting the call.
+ * @param dest        Address to which the call has to be forwarded. Can be
+ *                    IP:PORT or alias.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooRejectCall(char* callToken, int cause);
+EXTERN int ooForwardCall(char* callToken, char *dest);
 
 /**
  * This function is used by an user application to hang a call.

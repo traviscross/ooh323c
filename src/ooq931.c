@@ -1517,6 +1517,8 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    OOCTXT *pctxt;
    ooCallData *call;
    int ret=0, i=0;
+   char tmp[30]="\0";
+   char *ip=NULL, *port = NULL;
 
    if(!dest)
    {
@@ -1550,7 +1552,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    }
 
 
-   ret = ooParseDestination(call, dest);
+   ret = ooParseDestination(call->pctxt, dest, tmp, 30, &call->remoteAliases);
    if(ret != OO_OK)
    {
       OOTRACEERR2("Error: Failed to parse the destination string %s for "
@@ -1558,6 +1560,18 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
       ooCleanCall(call);
       return OO_FAILED;
    }
+  
+   /* Check whether we have ip address */
+   if(!ooUtilsIsStrEmpty(tmp))
+   {
+      ip = tmp;
+      port = strchr(tmp, ':');
+      *port = '\0';
+      port++;
+      strcpy(call->remoteIP, ip);
+      call->remotePort = atoi(port);
+   }
+
    strcpy(callToken, call->callToken);
    call->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&call->callIdentifier);
@@ -1984,6 +1998,148 @@ int ooH323MakeCall_helper(ooCallData *call)
 }
 
   
+int ooH323ForwardCall(char* callToken, char *dest)
+{
+   int ret=0;
+   Q931Message *pQ931Msg = NULL;
+   H225Facility_UUIE *facility=NULL;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+   ooCallData *call;
+   char ip[30]="\0", *pcPort=NULL;
+   int port=0;
+   H225TransportAddress_ipAddress *fwdCallSignalIpAddress;
+
+   call= ooFindCallByToken(callToken);
+   if(!call)
+   {
+      OOTRACEERR2("ERROR: Invalid call token for forward - %s\n", callToken);
+      return OO_FAILED;
+   }
+   OOTRACEDBGA3("Building Facility message for call forward (%s, %s)\n",
+                                              call->callType, call->callToken);
+   call->pCallFwdData = (OOCallFwdData*)memAllocZ(call->pctxt,
+                                                     sizeof(OOCallFwdData));
+   if(!call->pCallFwdData)
+   {
+     OOTRACEERR3("Error:Memory - ooH323ForwardCall - pCallFwdData (%s, %s)\n",
+     call->callType, call->callToken);
+     return OO_FAILED;
+   }
+
+   ret = ooParseDestination(call->pctxt, dest, ip, 20,
+                                             &call->pCallFwdData->aliases);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR4("Error:Failed to parse the destination %s for call fwd."
+                  "(%s, %s)\n", dest, call->callType, call->callToken);
+      memFreePtr(call->pctxt, call->pCallFwdData);
+      return OO_FAILED;
+   }
+
+   if(!ooUtilsIsStrEmpty(ip))
+   {
+      pcPort = strchr(ip, ':');
+      if(pcPort)
+      {
+         *pcPort = '\0';
+         pcPort++;
+         call->pCallFwdData->port = atoi(pcPort);
+      }
+      strcpy(call->pCallFwdData->ip, ip);
+   }
+
+   ret = ooCreateQ931Message(&pQ931Msg, Q931FacilityMsg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3
+         ("ERROR: In allocating memory for call transfer facility message "
+          "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
+                             sizeof(H225H323_UserInformation));
+   if(!pQ931Msg->userInfo)
+   {
+      OOTRACEERR3("ERROR:Memory - ooH323ForwardCall - userInfo(%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   memset (pQ931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
+   pQ931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
+
+   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling =
+                                   OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
+   pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
+      T_H225H323_UU_PDU_h323_message_body_facility;
+  
+   facility = (H225Facility_UUIE*)
+      memAllocZ (pctxt, sizeof(H225Facility_UUIE));
+
+   if(!facility)
+   {
+      OOTRACEERR3("ERROR:Memory - ooH323ForwardCall - facility (%s, %s)"
+                  "\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
+  
+   facility->protocolIdentifier = gProtocolID; 
+   facility->m.callIdentifierPresent = 1;
+   facility->callIdentifier.guid.numocts =
+      call->callIdentifier.guid.numocts;
+
+   memcpy(facility->callIdentifier.guid.data,
+          call->callIdentifier.guid.data,
+          call->callIdentifier.guid.numocts);
+
+   facility->reason.t = T_H225FacilityReason_callForwarded;
+  
+   if(!ooUtilsIsStrEmpty(call->pCallFwdData->ip))
+   {
+      facility->m.alternativeAddressPresent = TRUE;
+      facility->alternativeAddress.t=T_H225TransportAddress_ipAddress;
+      fwdCallSignalIpAddress = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
+                                  sizeof(H225TransportAddress_ipAddress));
+      if(!fwdCallSignalIpAddress)
+      {
+         OOTRACEERR3("Error:Memory - ooH323ForwardCall - fwdCallSignalAddress"
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
+      ooConvertIpToNwAddr(call->pCallFwdData->ip,
+                                          fwdCallSignalIpAddress->ip.data);
+
+      fwdCallSignalIpAddress->ip.numocts=4;
+      fwdCallSignalIpAddress->port = call->pCallFwdData->port;
+      facility->alternativeAddress.u.ipAddress = fwdCallSignalIpAddress;
+   }
+
+   if(call->pCallFwdData->aliases)
+   {   
+      facility->m.alternativeAliasAddressPresent = TRUE;
+      ret = ooPopulateAliasList(pctxt, call->pCallFwdData->aliases,
+                                        &facility->alternativeAliasAddress);
+      if(ret != OO_OK)
+      {
+         OOTRACEERR3("Error:Failed to populate alternate aliases in "
+                     "ooH323ForwardCall. (%s, %s)\n", call->callType,
+                     call->callToken);
+         return OO_FAILED;
+      }
+   }
+
+    ret = ooSendH225Msg(call, pQ931Msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3
+         ("Error:Failed to enqueue Forward Facility message to outbound "
+          "queue.(%s, %s)\n", call->callType, call->callToken);
+   }
+   memReset (&gH323ep.msgctxt);
+   return ret;
+}
 
 int ooH323HangCall(char * callToken, OOCallClearReason reason)
 {
@@ -2127,7 +2283,8 @@ int ooQ931SetCauseIE
  
    return OO_OK;
 }
-
+#if 0
+/*TODO: Once we are comfortable with new parse function, get rid of this one */
 int ooParseDestination(ooCallData *call, char *dest)
 {
    int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
@@ -2300,7 +2457,7 @@ int ooParseDestination(ooCallData *call, char *dest)
                 psNewAlias->value);
    return OO_OK;
 }
-
+#endif
 
 /* Build a Facility message and tunnel H.245 message through it */
 int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
@@ -2599,3 +2756,188 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
    return OO_REASON_UNKNOWN;
 }
 
+/**
+ This function is used to parse destination string passed to ooH323MakeCall and
+ ooH323ForwardCall. If the string contains ip address and port, it is returned
+ in the parsedIP buffer and if it contains alias, it is added to aliasList
+*/
+int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, int len,
+                       ooAliases** aliasList)
+{
+   int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
+   ooAliases * psNewAlias = NULL;
+   char *cAt = NULL, *host=NULL;
+   char tmp[256], buf[30];
+   char *alias=NULL;
+   parsedIP[0] = '\0';
+
+   OOTRACEINFO2("Parsing destination %s\n", dest);
+ 
+   /* Test for an IP address:Note that only supports dotted IPv4.
+      IPv6 won't pass the test and so will numeric IP representation*/
+  
+   sscanf(dest, "%d.%d.%d.%d:%d", &iEk, &iDon, &iTeen, &iChaar, &iPort);
+   if((iEk > 0            && iEk <= 255)    &&
+      (iDon >= 0          && iDon <= 255)   &&
+      (iTeen >=0          && iTeen <= 255)  &&
+      (iChaar >= 0        && iChaar <= 255) &&
+      (!strchr(dest, ':') || iPort != -1))
+   {
+      if(!strchr(dest, ':'))
+         iPort = 1720; /*Default h.323 port */
+
+      sprintf(buf, "%d.%d.%d.%d:%d", iEk, iDon, iTeen, iChaar, iPort);
+      if(strlen(buf)+1>len)
+      {
+         OOTRACEERR1("Error:Insufficient buffer space for parsed ip - "
+                     "ooParseDestination\n");
+         return OO_FAILED;
+      }
+        
+      strcpy(parsedIP, buf);
+      return OO_OK;
+   }
+
+   /* alias@host */
+   strncpy(tmp, dest, sizeof(tmp)-1);
+   tmp[sizeof(tmp)-1]='\0';
+   if(host=strchr(tmp, '@'))
+   {
+      *host = '\0';
+      host++;
+      sscanf(host, "%d.%d.%d.%d:%d", &iEk, &iDon, &iTeen, &iChaar, &iPort);
+      if((iEk > 0            && iEk <= 255)    &&
+         (iDon >= 0          && iDon <= 255)   &&
+         (iTeen >=0          && iTeen <= 255)  &&
+         (iChaar >= 0        && iChaar <= 255) &&
+         (!strchr(host, ':') || iPort != -1))
+      {
+         if(!strchr(dest, ':'))
+            iPort = 1720; /*Default h.323 port */
+
+         sprintf(buf, "%d.%d.%d.%d:%d", iEk, iDon, iTeen, iChaar, iPort);
+         if(strlen(buf)+1>len)
+         {
+            OOTRACEERR1("Error:Insufficient buffer space for parsed ip - "
+                        "ooParseDestination\n");
+            return OO_FAILED;
+         }
+
+         strncpy(parsedIP, buf, len-1);
+         parsedIP[len-1]='\0';
+         alias = tmp;
+      }
+   }
+
+   if(!alias)
+   {
+     alias = dest;
+   }
+   /* url test */
+   if(alias == strstr(alias, "http://"))
+   {
+      psNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
+      if(!psNewAlias)
+      {
+         OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
+         return OO_FAILED;
+      }
+      psNewAlias->type = T_H225AliasAddress_url_ID;
+      psNewAlias->value = (char*) memAlloc(pctxt, strlen(alias)+1);
+      if(!psNewAlias->value)
+      {
+         OOTRACEERR1("Error:Memory - ooParseDestination - "
+                     "psNewAlias->value\n");
+         memFreePtr(pctxt, psNewAlias);
+         return OO_FAILED;
+      }
+      strcpy(psNewAlias->value, alias);
+      psNewAlias->next = *aliasList;
+      *aliasList = psNewAlias;
+      OOTRACEINFO2("Destination parsed as url %s\n", psNewAlias->value);
+      return OO_OK;
+   }
+
+   /* E-mail ID test */
+   if((cAt = strchr(alias, '@')) && alias != strchr(alias, '@'))
+   {
+      if(strchr(cAt, '.'))
+      {
+         psNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
+         if(!psNewAlias)
+         {
+            OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
+            return OO_FAILED;
+         }
+         psNewAlias->type = T_H225AliasAddress_email_ID;
+         psNewAlias->value = (char*) memAlloc(pctxt, strlen(alias)+1);
+         if(!psNewAlias->value)
+         {
+            OOTRACEERR1("Error:Memory - ooParseDestination - "
+                        "psNewAlias->value\n");
+            memFreePtr(pctxt, psNewAlias);
+            return OO_FAILED;
+         }
+         strcpy(psNewAlias->value, alias);
+         psNewAlias->next = *aliasList;
+         *aliasList = psNewAlias;
+         OOTRACEINFO2("Destination is parsed as email %s\n",psNewAlias->value);
+         return OO_OK;
+      }
+   }
+
+ 
+   /* e-164 */
+   /* strspn(dest, "1234567890*#") == strlen(dest)*/
+   /* Dialed digits test*/
+   for(i=0; i<(int)strlen(alias); i++)
+   {
+      if(!isdigit(alias[i]))
+         break;
+   }
+   if(i == (int)strlen(alias))
+   {
+      psNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
+      if(!psNewAlias)
+      {
+         OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
+         return OO_FAILED;
+      }
+      /*      memset(psNewAlias, 0, sizeof(ooAliases));*/
+      psNewAlias->type = T_H225AliasAddress_dialedDigits;
+      psNewAlias->value = (char*) memAlloc(pctxt, strlen(alias)+1);
+      if(!psNewAlias->value)
+      {
+         OOTRACEERR1("Error:Memroy - ooParseDestination - psNewAlias->value\n");
+         memFreePtr(pctxt, psNewAlias);
+         return OO_FAILED;
+      }
+      strcpy(psNewAlias->value, alias);
+      psNewAlias->next = *aliasList;
+      *aliasList = psNewAlias;
+      OOTRACEINFO2("Destination is parsed as dialed digits %s\n",
+                   psNewAlias->value);
+      return OO_OK;
+   }
+   /* Evrything else is an h323-id for now */
+   psNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
+   if(!psNewAlias)
+   {
+      OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias\n");
+      return OO_FAILED;
+   }
+   psNewAlias->type = T_H225AliasAddress_h323_ID;
+   psNewAlias->value = (char*) memAlloc(pctxt, strlen(alias)+1);
+   if(!psNewAlias->value)
+   {
+      OOTRACEERR1("Error:Memory - ooParseDestination - psNewAlias->value\n");
+      memFreePtr(pctxt, psNewAlias);
+      return OO_FAILED;
+   }
+   strcpy(psNewAlias->value, alias);
+   psNewAlias->next = *aliasList;
+   *aliasList = psNewAlias;
+   OOTRACEINFO2("Destination for new call is parsed as h323-id %s\n",
+                psNewAlias->value);
+   return OO_OK;
+}

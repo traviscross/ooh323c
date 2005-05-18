@@ -644,9 +644,10 @@ int ooMonitorChannels()
                             (char*)cmd->param1);
                ooSendConnect(ooFindCallByToken((char*)cmd->param1));
                break;
-            case OO_CMD_REJECTCALL:
-               OOTRACEINFO2("Rejecting call %s\n", (char*)cmd->param1);
-               ooEndCall(ooFindCallByToken((char*)cmd->param1));
+            case OO_CMD_FWDCALL:
+               OOTRACEINFO3("Forwarding call %s to %s\n", (char*)cmd->param1,
+                                                          (char*)cmd->param2);
+               ooH323ForwardCall((char*)cmd->param1, (char*)cmd->param2);
                break;
             case OO_CMD_HANGCALL:
                OOTRACEINFO2("Processing Hang call command %s\n",

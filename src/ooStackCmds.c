@@ -36,15 +36,14 @@ int ooMakeCall
    cmd = (ooCommand*) memAlloc (&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
-      OOTRACEERR1("Error:Allocating memory for command structure - "
-                  "MakeCall\n");
+      OOTRACEERR1("Error:Memory - ooMakeCall - cmd\n");
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL;
    cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(dest)+1);
    if(!cmd->param1)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - MakeCall\n");
+      OOTRACEERR1("ERROR:Memory - ooMakeCall - param1\n");
       memFreePtr(&gH323ep.ctxt, cmd);
       return OO_FAILED;
    }
@@ -65,7 +64,7 @@ int ooMakeCall
    cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param2)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param2 - MakeCall\n");
+      OOTRACEERR1("ERROR:Memory - ooMakeCall - param2\n");
       memFreePtr(&gH323ep.ctxt, cmd->param1);
       memFreePtr(&gH323ep.ctxt, cmd);
       return OO_FAILED;
@@ -80,7 +79,7 @@ int ooMakeCall
       cmd->param3 = (void*) memAlloc(&gH323ep.ctxt, sizeof(ooCallOptions));
       if(!cmd->param3)
       {
-         OOTRACEERR1("ERROR:Allocating memory for cmd param3 - MakeCall\n");
+         OOTRACEERR1("ERROR:Memory - ooMakeCall - param3\n");
          memFreePtr(&gH323ep.ctxt, cmd->param1);
          memFreePtr(&gH323ep.ctxt, cmd->param2);
          memFreePtr(&gH323ep.ctxt, cmd);
@@ -118,7 +117,7 @@ int ooAnswerCall(char *callToken)
    cmd = (ooCommand*)memAlloc(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
-      OOTRACEERR1("Error:Allocating memory for command structure - AnswerCall\n");
+      OOTRACEERR1("Error:Memory - ooAnswerCall - cmd\n");
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(ooCommand));
@@ -127,7 +126,7 @@ int ooAnswerCall(char *callToken)
    cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param1)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - AnsCall\n");
+      OOTRACEERR1("ERROR:Memory - ooAnswerCall - param1\n");
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -150,7 +149,7 @@ int ooAnswerCall(char *callToken)
    return OO_OK;
 }
 
-int ooRejectCall(char* callToken, int cause)
+int ooForwardCall(char* callToken, char *dest)
 {
    ooCommand *cmd;
 #ifdef _WIN32
@@ -161,20 +160,21 @@ int ooRejectCall(char* callToken, int cause)
    cmd = (ooCommand*)memAlloc(&gH323ep.ctxt, sizeof(ooCommand));
    if(!cmd)
    {
-      OOTRACEERR1("Error:Allocating memory for command structure - RejectCall\n");
+      OOTRACEERR1("Error:Memory - ooForwardCall - cmd\n");
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(ooCommand));
-   cmd->type = OO_CMD_REJECTCALL;
+   cmd->type = OO_CMD_FWDCALL;
 
    cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
+   cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(dest)+1);
    if(!cmd->param1)
    {
-      OOTRACEERR1("ERROR:Allocating memory for cmd param1 - RejectCall\n");
+      OOTRACEERR1("ERROR:Memory - ooForwardCall - param1/param2\n");
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
-  
+   strcpy((char*)cmd->param2, dest);
    dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
   
 #ifdef HAVE_PIPE

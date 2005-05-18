@@ -418,6 +418,17 @@ EXTERN int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts);
  */
 int ooH323CallAdmitted( ooCallData *call);
 
+
+/**
+ * This function is used for forwarding/redirecting a call to third party.
+ * @param callToken   callToken for the call which has to be redirected.
+ * @param dest        Address to which call has to be forwarded. Can be
+ *                    IP:Port or alias.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323ForwardCall(char* callToken, char *dest);
+
 /**
  * This function is used to handup a currently active call. It sets the call
  * state to CLEARING and initiates closing of all logical channels.
@@ -448,12 +459,16 @@ EXTERN int ooH323MakeCall_helper(ooCallData *call);
 
 /**
  * This function is used to parse the destination
- * @param call      Handle to the call
+ * @param pctxt     Handle to context to be used for memory allocation
  * @param dest      Destination string to be parsed.
+ * @param parsedIP  Pointer to buffer in which parsed ip:port will be returned.
+ * @param len       Length of the buffer passed.
+ * @param aliasList Aliase List in which new aliases will be added.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-int ooParseDestination(ooCallData *call, char *dest);
+int ooParseDestination(OOCTXT* pctxt, char *dest, char *parsedIP, int len,
+                       ooAliases**aliasList);
 
 /**
  * This function is used to generate a new call token
