@@ -28,7 +28,7 @@
 #include "ooh323ep.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 extern OO_MUTEX gCmdMutex;
 
@@ -47,7 +47,7 @@ int ooCreateH245Listener(ooCallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ret = ooBindPort(&gH323ep, OOTCP, channelSocket);
+   ret = ooBindPort (OOTCP, channelSocket);
    if(ret == OO_FAILED)
    {
       OOTRACEERR3("Error:Unable to bind to a TCP port - H245 listener creation"
@@ -93,7 +93,7 @@ int ooCreateH245Connection(ooCallData *call)
          bind socket to a port before connecting. Thus avoiding
          implicit bind done by a connect call.
       */
-      ret = ooBindPort(&gH323ep, OOTCP, channelSocket);
+      ret = ooBindPort(OOTCP, channelSocket);
       if(ret == OO_FAILED)
       {
          OOTRACEERR3("Error:Unable to bind to a TCP port - h245 connection "
@@ -274,7 +274,7 @@ int ooCreateH225Connection(ooCallData *call)
          to any random port.
       */
 #ifndef _WIN32
-      ret = ooBindPort(&gH323ep, OOTCP,channelSocket);
+      ret = ooBindPort(OOTCP,channelSocket);
 #else
       ret = ooBindOSAllocatedPort(channelSocket);
 #endif

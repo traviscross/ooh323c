@@ -16,12 +16,12 @@
 #include "ooCapability.h"
 #include "ootrace.h"
 #include "ooCalls.h"
+#include "ooh323ep.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 static int giDynamicRTPPayloadType = 101;
-
 
 int ooCapabilityEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType)
 {

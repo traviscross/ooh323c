@@ -17,9 +17,10 @@
 #include "ooStackCmds.h"
 #include "ootrace.h"
 #include "ooq931.h"
+#include "ooh323ep.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 extern OO_MUTEX gCmdMutex;
 

@@ -54,7 +54,7 @@ EXTERN ooCallData* ooCreateCall(char *type, char *callToken);
  *
  * @return             OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call);
+EXTERN int ooAddCallToList (ooCallData *call);
 
 /**
  * This function is used to set callerid for the call.
@@ -308,7 +308,7 @@ EXTERN int ooEndCall(ooCallData *call);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call);
+EXTERN int ooRemoveCallFromList (ooCallData *call);
 
 /**
  * This function is used to clean a call. It closes all associated sockets,

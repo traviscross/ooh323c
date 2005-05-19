@@ -52,6 +52,75 @@ extern "C" {
  * @defgroup h323ep  H323 Endpoint management functions
  * @{
  */
+/**
+ * Structure to store all configuration information related to the
+ * endpoint created by an application
+ */
+typedef struct OOH323EndPoint {
+   /**
+    * This context should be used for allocation of memory for
+    * items within the endpoint structure.
+    */
+   OOCTXT ctxt;
+
+   /**
+    * This context should be used for allocation of memory for
+    * message structures.
+    */
+   OOCTXT msgctxt;
+
+   char   traceFile[MAXFILENAME];
+   FILE * fptraceFile;
+
+   /** Range of port numbers to be used for TCP connections */
+   struct ooH323Ports tcpPorts;
+
+   /** Range of port numbers to be used for UDP connections */
+   struct ooH323Ports udpPorts;
+
+   /** Range of port numbers to be used for RTP connections */
+   struct ooH323Ports rtpPorts;
+ 
+   ASN1UINT  flags;
+
+   int termType; /* 50 - Terminal entity with No MC,
+                    60 - Gateway entity with no MC,
+                    70 - Terminal Entity with MC, but no MP etc.*/
+   int t35CountryCode;
+   int t35Extension;
+   int manufacturerCode;
+   const char *productID;
+   const char *versionID;
+   const char *callerid;
+   char callingPartyNumber[50];
+   OOSOCKET *stackSocket;
+   ooAliases *aliases;
+
+   int callType;
+
+   struct ooH323EpCapability *myCaps;
+   ooCapPrefs     capPrefs;
+   int noOfCaps;
+   OOH225MsgCallbacks h225Callbacks;
+   OOH323CALLBACKS h323Callbacks;
+   char signallingIP[20];
+   int listenPort;
+   OOSOCKET *listener;
+   ooCallData *callList;
+
+   OOCallMode callMode; /* audio/audiorx/audiotx/video/fax */
+   int dtmfmode;
+   ASN1UINT callEstablishmentTimeout;
+   ASN1UINT msdTimeout;
+   ASN1UINT tcsTimeout;
+   ASN1UINT logicalChannelTimeout;
+   ASN1UINT sessionTimeout;
+   int cmdPipe[2];
+   struct ooGkClient *gkClient;
+   DList stkCmdList;    /* stack command list */
+} OOH323EndPoint;
+
+#define ooEndPoint OOH323EndPoint
 
 /**
  * This function is the first function to be invoked before using stack. It

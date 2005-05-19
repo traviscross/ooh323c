@@ -14,18 +14,20 @@
  *
  *****************************************************************************/
 
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "ootypes.h"
 #include "ootrace.h"
 #include "ooCommon.h"
 #include "ooCapability.h"
 #include "ooq931.h"
 #include "ooh245.h"
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "ooh323ep.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 static OOUINT32 gs_traceLevel = TRACELVL;
 

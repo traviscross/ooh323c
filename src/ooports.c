@@ -16,10 +16,11 @@
 
 
 #include "ooports.h"
+#include "ooh323ep.h"
 #include "ootrace.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 int ooSetTCPPorts( int start, int max)
 {
@@ -99,64 +100,61 @@ int ooSetRTPPorts(int start, int max)
 }
 
 /* Get the next port of type TCP/UDP/RTP */
-int ooGetNextPort(ooEndPoint *ep, int type)
+int ooGetNextPort (OOH323PortType type)
 {
    if(type==OOTCP)
    {
-      if(ep->tcpPorts.current <= ep->tcpPorts.max)
-         return ep->tcpPorts.current++;
+      if(gH323ep.tcpPorts.current <= gH323ep.tcpPorts.max)
+         return gH323ep.tcpPorts.current++;
       else
       {
-         ep->tcpPorts.current = ep->tcpPorts.start;
-         return ep->tcpPorts.current++;
+         gH323ep.tcpPorts.current = gH323ep.tcpPorts.start;
+         return gH323ep.tcpPorts.current++;
       }
    }
    if(type==OOUDP)
    {
-      if(ep->udpPorts.current <= ep->udpPorts.max)
-         return ep->udpPorts.current++;
+      if(gH323ep.udpPorts.current <= gH323ep.udpPorts.max)
+         return gH323ep.udpPorts.current++;
       else
       {
-         ep->udpPorts.current = ep->udpPorts.start;
-         return ep->udpPorts.current++;
+         gH323ep.udpPorts.current = gH323ep.udpPorts.start;
+         return gH323ep.udpPorts.current++;
       }
    }
    if(type==OORTP)
    {
-      if(ep->rtpPorts.current <= ep->rtpPorts.max)
-         return ep->rtpPorts.current++;
+      if(gH323ep.rtpPorts.current <= gH323ep.rtpPorts.max)
+         return gH323ep.rtpPorts.current++;
       else
       {
-         ep->rtpPorts.current = ep->rtpPorts.start;
-         return ep->rtpPorts.current++;
+         gH323ep.rtpPorts.current = gH323ep.rtpPorts.start;
+         return gH323ep.rtpPorts.current++;
       }
    }
    return OO_FAILED;
 }
 
-int ooBindPort(ooEndPoint *ep, int type,
-               OOSOCKET socket)
+int ooBindPort (OOH323PortType type, OOSOCKET socket)
 {
    int initialPort, bindPort, ret;
    OOIPADDR ipAddrs;
-   /*char localip[40];
-   ooGetLocalIPAddress(localip);*/
-   initialPort = ooGetNextPort(ep, type);
+
+   initialPort = ooGetNextPort (type);
    bindPort = initialPort;
-   /*ret= ooSocketStrToAddr (localip, &ipAddrs);*/
-   ret= ooSocketStrToAddr (ep->signallingIP, &ipAddrs);
+
+   ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipAddrs);
+
    while(1)
    {
-      if((ret=ooSocketBind(socket, ipAddrs,
-                     bindPort))==ASN_OK)
+      if((ret=ooSocketBind(socket, ipAddrs, bindPort))==0)
       {
-        return bindPort;
+         return bindPort;
       }
       else
       {
-         bindPort = ooGetNextPort(ep, type);
-         if(bindPort == initialPort)
-            return OO_FAILED;
+         bindPort = ooGetNextPort (type);
+         if (bindPort == initialPort) return OO_FAILED;
       }
    }
 }

@@ -22,11 +22,12 @@
 #include "ooCalls.h"
 #include "printHandler.h"
 #include "ooh323.h"
+#include "ooh323ep.h"
 #include "ooGkClient.h"
 #include "ooTimer.h"
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
 {

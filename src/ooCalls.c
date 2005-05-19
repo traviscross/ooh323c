@@ -23,10 +23,11 @@
 #include "ooh245.h"
 #include "ooCapability.h"
 #include "ooGkClient.h"
+#include "ooh323ep.h"
 
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 ooCallData* ooCreateCall(char* type, char*callToken)
 {
@@ -139,25 +140,25 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,
                  call->callToken);
    /* Add new call to calllist */
-   ooAddCallToList(&gH323ep, call);
+   ooAddCallToList (call);
    if(gH323ep.h323Callbacks.onNewCallCreated)
      gH323ep.h323Callbacks.onNewCallCreated(call);
    return call;
 }
 
-int ooAddCallToList(ooEndPoint * h323ep, ooCallData *call)
+int ooAddCallToList(ooCallData *call)
 {
-   if(!h323ep->callList)
+   if(!gH323ep.callList)
    {
-      h323ep->callList = call;
+      gH323ep.callList = call;
       call->next = NULL;
       call->prev = NULL;
    }
    else{
-      call->next = h323ep->callList;
+      call->next = gH323ep.callList;
       call->prev = NULL;
-      h323ep->callList->prev = call;
-      h323ep->callList = call;
+      gH323ep.callList->prev = call;
+      gH323ep.callList = call;
    }
    return OO_OK;
 }
@@ -208,18 +209,18 @@ int ooEndCall(ooCallData *call)
 
 
 
-int ooRemoveCallFromList(ooEndPoint * h323ep, ooCallData *call)
+int ooRemoveCallFromList (ooCallData *call)
 {
    if(!call)
       return OO_OK;
 
-   if(call == h323ep->callList)
+   if(call == gH323ep.callList)
    {
       if(!call->next)
-         h323ep->callList = NULL;
+         gH323ep.callList = NULL;
       else{
          call->next->prev = NULL;
-         h323ep->callList = call->next;
+         gH323ep.callList = call->next;
       }
    }
    else{
@@ -270,7 +271,7 @@ int ooCleanCall(ooCallData *call)
       ooGkClientCleanCall(gH323ep.gkClient, call);
    }
 
-   ooRemoveCallFromList(&gH323ep, call);
+   ooRemoveCallFromList (call);
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
 
@@ -672,11 +673,13 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    }else{
       OOTRACEDBGC3("Using default media info (%s, %s)\n", call->callType,
                   call->callToken);
-      pNewChannel->localRtpPort = ooGetNextPort(&gH323ep, OORTP);
+      pNewChannel->localRtpPort = ooGetNextPort (OORTP);
+
       /* Ensures that RTP port is an even one */
       if((pNewChannel->localRtpPort & 1) == 1)
-        pNewChannel->localRtpPort = ooGetNextPort(&gH323ep, OORTP);
-      pNewChannel->localRtcpPort = ooGetNextPort(&gH323ep, OORTP);
+        pNewChannel->localRtpPort = ooGetNextPort (OORTP);
+
+      pNewChannel->localRtcpPort = ooGetNextPort (OORTP);
       strcpy(pNewChannel->localIP, call->localIP);
    }
   

@@ -32,18 +32,15 @@
 #include "ooDateTime.h"
 #include "ooq931.h"
 #include "ooh323.h"
+#include "ooh323ep.h"
 #include "ooTimer.h"
+
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
-
-
-
+extern OOH323EndPoint gH323ep;
 
 static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };
-
-
 
 int ooGkClientInit(enum RasGatekeeperMode eGkMode,
               char *szGkAddr, int iGkPort )
@@ -242,7 +239,7 @@ int ooGkClientCreateChannel(ooGkClient *pGkClient)
       }
    }
    else {
-      ret = ooBindPort(&gH323ep, OOUDP, pGkClient->rasSocket);
+      ret = ooBindPort (OOUDP, pGkClient->rasSocket);
       if(ret == OO_FAILED)
       {
          OOTRACEERR1("ERROR: Failed to bind port to RAS socket\n");

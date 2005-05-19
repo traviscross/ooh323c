@@ -24,9 +24,9 @@
 
 #include "ootypes.h"
 
-#define OOTCP 1
-#define OOUDP 2
-#define OORTP 3
+typedef enum OOH323PortType {
+   OOTCP, OOUDP, OORTP
+} OOH323PortType;
 
 
 #ifdef __cplusplus
@@ -89,7 +89,7 @@ EXTERN int ooSetRTPPorts(int start, int max);
  *
  * @return           The next port number for the specified type is returned.
  */
-EXTERN int ooGetNextPort(ooEndPoint *ep, int type);
+EXTERN int ooGetNextPort (OOH323PortType type);
 
 /**
  * Bind socket to a port within the port range specified by the
@@ -103,8 +103,7 @@ EXTERN int ooGetNextPort(ooEndPoint *ep, int type);
  *                  socket is bound and in case of failure just returns
  *                  a negative value.
 */
-EXTERN int ooBindPort(ooEndPoint *ep, int type,
-                        OOSOCKET socket);
+EXTERN int ooBindPort (OOH323PortType type, OOSOCKET socket);
 
 /**
  * This function is supported for windows version only.
