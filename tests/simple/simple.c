@@ -41,9 +41,12 @@ void * osEpHandleCommand(void*);
 static OOBOOL bActive;
 static char callToken[20];
 static char ourip[20];
-static int ourport;
-static char dest[256];
+static int ourport = 1720;
 static OOBOOL gCmdThrd;
+static OOBOOL bAutoAnswer=FALSE;
+static OOBOOL bRinging=FALSE;
+
+
 static char USAGE[]={
    "Listen to incoming calls\n"
    "\tsimple [options] --listen\n"
@@ -53,28 +56,47 @@ static char USAGE[]={
    "\t                           Can be ip:[port] or aliases(needs gk)\n"
 
    "options:\n"
-   "--user <username> - Name of the user. This will be used as\n"
-   "                  - display name for outbound calls\n"
-   "--h323id <h323id> - H323ID to be used for this endpoint\n"
-   "--e164 <number>   - E164 number used as callerid for this endpoint\n"
-   "--use-ip <ip>     - Ip address for the endpoint\n"
-   "                    (default - uses gethostbyname)\n"
-   "--use-port <port> - Port number to use for listening to incoming\n"
-   "                    calls.(default-1720)\n"
-   "--no-faststart    - Disable fast start(default - enabled)\n"
-   "--no-tunneling    - Disable H245 Tunneling\n" 
-   "--help            -  Prints this usage message\n"
+   "--user <username>      - Name of the user. This will be used as\n"
+   "                         display name for outbound calls\n"
+   "--user-number <number> - Caller number\n"
+   "--gk-discover          - Discover gatekeeper\n"
+   "--gk <ip:port>         - Use specific gatekeeper\n"
+   "--auto-answer          - Enables auto answer mode\n"
+   "--h323id <h323id>      - H323ID to be used for this endpoint\n"
+   "--e164 <number>        - E164 number used as callerid for\n"
+   "                         this endpoint\n"
+   "--use-ip <ip>          - Ip address for the endpoint\n"
+   "                         (default - uses gethostbyname)\n"
+   "--use-port <port>      - Port number to use for listening to incoming\n"
+   "                         calls.(default-1720)\n"
+   "--no-faststart         - Disable fast start(default - enabled)\n"
+   "--no-tunneling         - Disable H245 Tunneling\n" 
+   "-t                     - Trace. Use multiple times to increase\n"
+   "                         trace level\n"
+   "--help                 - Prints this usage message\n"
+};
+
+static char CMD_USAGE[]={
+   "\tSupported commands:\n"
+   "\tc <ip:port/alias> - Place a call\n"
+   "\ta                 - Answer call\n"
+   "\tr                 - Reject call\n"
+   "\tf <ip:port/alias> - Forward call\n"
+   "\th                 - Hangup call\n"
+   "\tq                 - Quit\n"
+   "\thelp              - Help\n"
 };
 
 int main(int argc, char ** argv)
 {
    int ret=0, x;
-   char h323id[50];
-   char e164[50];
-   char user[50];
+   char h323id[50], e164[50], user[50], user_num[50], dest[256], tmp[40];
+   int trace_level=0;
    OOBOOL bListen=FALSE, bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
-
    OOH323CALLBACKS h323Callbacks;
+   enum RasGatekeeperMode gkMode = RasNoGatekeeper;
+   char *gkIP=NULL, *pcPort=NULL;
+   int gkPort=0;
 
 #ifdef _WIN32
    HANDLE threadHdl;
@@ -85,8 +107,8 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
-    
-   if(argc>14 || argc==1)
+
+   if(argc==1)
    {
       printf("USAGE:\n%s", USAGE);
       return -1;
@@ -94,9 +116,10 @@ int main(int argc, char ** argv)
    h323id[0]='\0';
    e164[0]='\0';
    ourip[0]='\0';
-   ourport=0;
    dest[0]='\0';
    user[0]='\0';
+   user_num[0]='\0';
+  
    gCmdThrd = FALSE;
    /* parse args */
    for(x=1; x<argc; x++)
@@ -123,18 +146,52 @@ int main(int argc, char ** argv)
       {
          x++;
          strncpy(user, argv[x], sizeof(user)-1);
-      }else if(!strcmp(argv[x], "--h323id"))
+         user[sizeof(user)-1]='\0';
+      }else if(!strcmp(argv[x], "--user-number"))
+      {
+         x++;
+         strncpy(user_num, argv[x], sizeof(user_num)-1);
+         user_num[sizeof(user_num)-1]='\0';
+      }
+      else if(!strcmp(argv[x], "--h323id"))
       {
          x++;
          strncpy(h323id, argv[x], sizeof(h323id)-1);
-      }else if(!strcmp(argv[x], "--e164"))
+         h323id[sizeof(h323id)-1]='\0';
+      }
+      else if(!strcmp(argv[x], "--e164"))
       {
          x++;
          strncpy(e164, argv[x], sizeof(e164)-1);
+         e164[sizeof(e164)-1]='\0';
+      }else if(!strcmp(argv[x], "--auto-answer"))
+      {
+         bAutoAnswer = TRUE;
+      }else if(!strcmp(argv[x], "--gk-discover"))
+      {
+         gkMode = RasDiscoverGatekeeper;
+      }else if(!strcmp(argv[x], "--gk"))
+      {
+         x++;
+         strncpy(tmp, argv[x], sizeof(tmp)-1);
+         tmp[sizeof(tmp)-1]='\0';
+         pcPort = strchr(tmp, ':');
+         if(pcPort)
+         {
+            *pcPort = '\0';
+            pcPort++;
+            gkPort = atoi(pcPort);
+         }
+         gkIP = tmp;
+         gkMode = RasUseSpecificGatekeeper;
+      }else if(!strcmp(argv[x], "-t"))
+      {
+         trace_level++;
       }else if(!strcmp(argv[x], "--use-ip"))
       {
          x++;
          strncpy(ourip, argv[x], sizeof(ourip)-1);
+         ourip[sizeof(ourip)-1]='\0';
       }else if(!strcmp(argv[x],"--use-port"))
       {
          x++;
@@ -155,7 +212,7 @@ int main(int argc, char ** argv)
       return -1;
    }
    /* Determine ourip if not specified by user */
-   if(!strlen(ourip))
+   if(ooUtilsIsStrEmpty(ourip))
    {
       ooGetLocalIPAddress(ourip);
    }
@@ -170,7 +227,7 @@ int main(int argc, char ** argv)
       
           
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, "simple.log");
+   ret = ooH323EpInitialize(OO_CALLMODE_AUDIOCALL, "simple.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
@@ -184,17 +241,30 @@ int main(int argc, char ** argv)
    if(!bTunneling)
       ooH323EpDisableH245Tunneling();
 
-   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
+   if(trace_level == 1)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGA);
+   else if(trace_level == 2)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGB);
+   else if(trace_level >= 3)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
+
+   if(bAutoAnswer)
+      ooH323EpEnableAutoAnswer();
+   else
+      ooH323EpDisableAutoAnswer();
   
-   if(strlen(user))
+   if(!ooUtilsIsStrEmpty(user))
       ooH323EpSetCallerID(user);
 
-   if(strlen(h323id))
+   if(!ooUtilsIsStrEmpty(h323id))
       ooH323EpAddAliasH323ID(h323id);
 
-   if(strlen(e164)){
+   if(!ooUtilsIsStrEmpty(user_num))
+      ooH323EpSetCallingPartyNumber(user_num);
+
+   if(!ooUtilsIsStrEmpty(e164)){
       ooH323EpSetCallingPartyNumber(e164);
    }
   
@@ -221,8 +291,13 @@ int main(int argc, char ** argv)
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
    /* To use a gatekeeper */
-
-   /*ooGkClientInit(RasUseSpecificGatekeeper, "10.0.0.82", 0);*/
+   if(gkMode != RasNoGatekeeper)
+   {
+      if(gkMode == RasDiscoverGatekeeper)
+         ooGkClientInit(RasDiscoverGatekeeper, NULL, 0);
+      else if(gkMode == RasUseSpecificGatekeeper)
+         ooGkClientInit(RasUseSpecificGatekeeper, gkIP, gkPort);
+   }
 
   
    /* Load media plug-in*/
@@ -230,17 +305,52 @@ int main(int argc, char ** argv)
    ret = ooLoadSndRTPPlugin("oomedia.dll");
    if(ret != OO_OK)
    {
-      printf("\n Failed to load the media plug-in library - oomedia.dll\n");
+      printf("Failed to load the media plug-in library - oomedia.dll\n");
       exit(0);
    }
 #else
    ret = ooLoadSndRTPPlugin("liboomedia.so");
    if(ret != OO_OK)
    {
-      printf("\n Failed to load the media plug-in library - liboomedia.so\n");
+      printf("Failed to load the media plug-in library - liboomedia.so\n");
       exit(0);
    }
 #endif
+
+   /* Print config */
+   printf("Endpoint configuration:\n");
+   printf("\tFastStart: %s\n", bFastStart?"Enabled":"Disabled");
+   printf("\tTunneling: %s\n", bTunneling?"Enabled":"Disabled");
+   if(!ooUtilsIsStrEmpty(h323id))  
+      printf("\tH323ID: %s\n", h323id);
+
+   if(!ooUtilsIsStrEmpty(e164))
+      printf("\te164: %s\n", e164);
+   if(!ooUtilsIsStrEmpty(user))
+     printf("\tUser: %s\n", user);
+   if(!ooUtilsIsStrEmpty(user_num))
+     printf("\tUser Number: %s\n", user_num);
+
+   if(gkMode == RasNoGatekeeper)
+     printf("\tGatekeeper: Not Used\n");
+   else if(gkMode == RasDiscoverGatekeeper)
+     printf("\tGatekeeper: Discover Gatekeeper\n");
+   else if(gkMode == RasUseSpecificGatekeeper)
+   {
+      char gkAddr[60];
+
+      if(gkPort != 0)
+         sprintf(gkAddr, "%s:%d", gkIP, gkPort);
+      else
+         sprintf(gkAddr, "%s:DEFAULT", gkIP);
+
+      printf("\tGatekeeper: %s\n", gkAddr);
+   }
+   printf("\tListening for Calls At: %s:%d\n", ourip, ourport);
+
+     
+
+
    /* Create H.323 Listener */
    ret = ooCreateH323Listener();
    if(ret != OO_OK)
@@ -250,9 +360,10 @@ int main(int argc, char ** argv)
    }
    if(bDestFound)
    {
-      printf("Calling %s\n", dest);
+      printf("--->Calling %s\n", dest);
       memset(callToken, 0, 20);
       ooMakeCall(dest, callToken, sizeof(callToken), NULL); /* Make call */
+      bActive = TRUE;
    }
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
@@ -291,8 +402,10 @@ int osEpOpenLogicalChannels(ooCallData *call)
 /* Callback to start receive media channel */
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting Receive channel at %s:%d\n", call->localIP,
+   printf("\n--->Starting Receive channel at %s:%d", call->localIP,
                                               pChannel->localRtpPort);
+   printf("\nCMD>");
+   fflush(stdout);
    ooCreateReceiveRTPChannel(call->localIP,
                              pChannel->localRtpPort);
    ooStartReceiveAudioAndPlayback();
@@ -302,9 +415,10 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 /* Callback to start transmit media channel */
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Starting transmit channel to %s:%d\n",
+   printf("\n--->Starting transmit channel to %s:%d",
           call->remoteIP, pChannel->mediaPort);
-
+   printf("\nCMD>");
+   fflush(stdout);
    ooCreateTransmitRTPChannel (call->remoteIP, pChannel->mediaPort);
    ooStartTransmitMic();
    return OO_OK;
@@ -313,7 +427,9 @@ int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 /* Callback to stop receive media channel */
 int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Stopping Receive Channel\n");
+   printf("\n--->Stopping Receive Channel");
+   printf("\nCMD>");
+   fflush(stdout);
    ooStopReceiveAudioAndPlayback();
    return OO_OK;
 }
@@ -321,14 +437,28 @@ int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 /* Callback to stop transmit media channel */
 int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("Stopping Transmit Channel\n");
+   printf("\n--->Stopping Transmit Channel");
+   printf("\nCMD>");  
+   fflush(stdout);
    ooStopTransmitMic();
    return OO_OK;
 }
 
 int osEpOnAlerting(ooCallData* call)
 {
- 
+   if(!strcmp(call->callType, "incoming"))
+   {
+      bRinging = TRUE;
+      printf("\n--->Incoming call from\"%s\"(%s).",
+             (call->remoteDisplayName)?call->remoteDisplayName:"Unknown Name",
+           call->callingPartyNumber?call->callingPartyNumber:"Unknown Number");
+      if(!bAutoAnswer)
+      {
+         printf("Do you want to Answer/reject?(a/r)");
+      }
+      printf("\nCMD>");
+      fflush(stdout);
+   }
    return OO_OK;
 }
 /* on incoming call callback */
@@ -337,11 +467,15 @@ int osEpOnIncomingCall(ooCallData* call )
    ooMediaInfo mediaInfo1, mediaInfo2;
    char localip[20];
 
-   if(!bActive)
+   if(!bActive){
       bActive = TRUE;
+    
+   }
    else{
       ooHangCall(call->callToken, OO_REASON_LOCAL_BUSY);
-      printf("Incoming call Rejected - line busy\n");
+      printf("\n--->Incoming call Rejected - line busy");
+      printf("\nCMD>");
+      fflush(stdout);
       return OO_OK;
    }
 
@@ -407,13 +541,18 @@ int osEpOnCallCleared(ooCallData* call )
 {
    if(!strcmp(call->callToken , callToken))
    {
-      printf("Call Ended\n");
+      printf("\n--->Call %s Ended - %s\n", callToken,
+                                 ooGetReasonCodeText(call->callEndReason));
+      printf("\nCMD>");
+      fflush(stdout);
       callToken[0]='\0';
       bActive = FALSE;
+      bRinging = FALSE;
    }
    return OO_OK;
 }
 
+#if 0
 void* osEpHandleCommand(void* dummy)
 {
    int ret;
@@ -441,3 +580,143 @@ void* osEpHandleCommand(void* dummy)
    return dummy;
 }
 
+#endif
+
+void* osEpHandleCommand(void* dummy)
+{
+   int ret, cmdLen, i=0;
+   char command[256], *p=NULL, dest[256], ch=0;
+
+   gCmdThrd = TRUE;
+#ifndef _WIN32
+   pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+#endif
+   command[0]='\0';
+
+   printf("\nCMD USAGE:\n%s", CMD_USAGE);
+   while(ch != 'q')
+   {
+      printf("CMD>");
+      fflush(stdout);
+      memset(command, 0, sizeof(command));
+      fgets(command, 256, stdin);
+      cmdLen = strlen(command);
+      for(p=command; (*p == ' ' || *p == '\t') && p < command+cmdLen; p++);
+
+      if(*p == '\n')
+         continue;
+
+      if(p >= command + cmdLen)
+      {
+         printf("Invalid Command\n");
+         printf("CMD USAGE:\n%s", CMD_USAGE);
+         continue;
+      }
+
+      if(!strcmp(p, "help"))
+      {
+         printf("CMD USAGE:\n%s", CMD_USAGE);
+         continue;
+      } 
+      ch = tolower(*p);
+      if(*(p+1) != ' ' && *(p+1) != '\t' && *(p+1) != '\n')
+        ch ='i'; /* invalid command */
+      switch(ch)
+      {
+         case 'c':
+            if(bActive)
+            {   
+               printf("--->Can not make a new call while an active call is "
+                      "present\n");
+               break;
+            }
+            p++;
+            while((*p == ' ' || *p == '\t')&& p<command+cmdLen) p++;
+            if(p >= command + cmdLen || *p == '\n')
+            {
+               printf("--->Invalid Command\n");
+               printf("CMD USAGE:\n%s", CMD_USAGE);
+               break;
+            }
+            i=0;
+            while(*p != ' ' && *p != '\t' && *p != '\n')
+            {
+               dest[i++] = *p;
+               p++;
+            }
+            dest[i]='\0';
+            printf("--->Calling %s \n", dest);
+            ooMakeCall(dest, callToken, sizeof(callToken), NULL);
+            bActive = TRUE;
+            break;
+         case 'a':
+            if(bActive && bRinging)
+            {
+               ooAnswerCall(callToken);
+               bRinging = FALSE;
+            }else{
+               printf("--->There is no active call in ringing status\n");
+            }
+            break;
+         case 'r':
+           if(bActive && bRinging){
+              ooHangCall(callToken, OO_REASON_LOCAL_REJECTED);
+              bRinging = FALSE;
+           }
+           else{
+              printf("--->There is no active call in ringing status\n");
+           }
+           break;
+         case 'f':
+            if(bActive && !bRinging)
+            {
+               p++;
+               while((*p == ' ' || *p == '\t')&& p<command+cmdLen) p++;
+               if(p >= command + cmdLen || *p == '\n')
+               {
+                  printf("--->Invalid Command\n");
+                  printf("CMD USAGE:\n%s", CMD_USAGE);
+                  break;
+                }
+                i=0;
+                while(*p != ' ' && *p != '\t' && *p != '\n')
+                {
+                   dest[i++] = *p;
+                   p++;
+                }
+                dest[i]='\0';
+                printf("--->Forwarding Call to %s \n", dest);
+                ooForwardCall(callToken, dest);
+            }else{
+               printf("--->There is no established call to forward\n");
+            }
+            break;
+         case 'h':
+            if(bActive)
+            {
+               printf("--->Hanging call %s\n", callToken);
+               ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
+            }else{
+               printf("--->No active call to hang\n");
+            }
+            break;
+         case 'q':
+            if(bActive)
+            {
+               printf("--->Hanging Active Call %s\n");
+               ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
+            }
+            break;
+         case 'i':
+         default:
+            printf("Invalid Command\n");
+            printf("CMD USAGE:\n%s", CMD_USAGE);
+      }
+   }
+     
+   printf("--->Closing down stack\n");
+   fflush(stdout);
+   ooStopMonitor();
+   gCmdThrd=FALSE;
+   return dummy;
+}

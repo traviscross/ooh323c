@@ -125,7 +125,6 @@ typedef struct OOH323EndPoint {
 /**
  * This function is the first function to be invoked before using stack. It
  * initializes the H323 Endpoint.
- * @param callerid       ID to be used for outgoing calls.
  * @param callMode       Type of calls to be made(audio/video/fax).
  *                       (OO_CALLMODE_AUDIO, OO_CALLMODE_VIDEO)
  * @param tracefile      Trace file name.
@@ -133,7 +132,7 @@ typedef struct OOH323EndPoint {
  * @return               OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooH323EpInitialize
-   (const char *callerid, int callMode, const char* tracefile);
+   (int callMode, const char* tracefile);
 
 
 /**

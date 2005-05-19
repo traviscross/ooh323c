@@ -1402,7 +1402,8 @@ int ooGkClientSendAdmissionRequest
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
    {
-      OOTRACEERR1("Error: Memory allocation for ARQ RAS message failed\n");
+      OOTRACEERR3("Error:Memory - ooGkClientSendAdmissionRequest - "
+                  "pRasMsg(%s, %s)\n", call->callType, call->callToken);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
@@ -1411,7 +1412,8 @@ int ooGkClientSendAdmissionRequest
                                                  sizeof(H225AdmissionRequest));
    if(!pAdmReq)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for Admission Request.\n");
+      OOTRACEERR3("Error:Memory - ooGkClientSendAdmissionRequest - "
+                  "pAdmReq(%s, %s)\n", call->callType, call->callToken);
       memReset(pctxt);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
@@ -1490,8 +1492,9 @@ int ooGkClientSendAdmissionRequest
                            sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
    if(!pAdmReq->endpointIdentifier.data)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for EndPoint Id in ARQ "
-                  "message.\n");
+      OOTRACEERR3("Error:Memory -  ooGkClientSendAdmissionRequest - "
+                  "endpointIdentifier.data(%s, %s)\n", call->callType,
+                  call->callToken);
       memReset(pctxt);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;

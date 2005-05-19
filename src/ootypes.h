@@ -401,7 +401,7 @@ typedef struct ooCallData {
    char                 remoteIP[20];/* Remote IP address */
    int                  remotePort;
    int                  remoteH245Port;
-   ASN1OCTET            *remoteDisplayName;
+   char                 *remoteDisplayName;
    ooAliases            *remoteAliases;
    ooAliases            *ourAliases; /*aliases used in the call for us */
    OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */

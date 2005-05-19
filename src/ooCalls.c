@@ -78,7 +78,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
 
   
    call->callState = OO_CALL_CREATED;
-   call->callEndReason = 0;
+   call->callEndReason = OO_REASON_UNKNOWN;
 
    if(!strcmp(call->callType, "incoming"))
    {

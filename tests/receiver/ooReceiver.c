@@ -37,14 +37,26 @@
 #include <pthread.h>
 #endif
 
-int osEpOnCallCleared(ooCallData* call );
+static char USAGE[] = {
+   "To Run Receiver:\n"
+   "\t./ooReceiver [--use-ip <ip>] [--use-port <port>]\n"
+
+   "Where:\n"
+   "--use-ip <ip>     - Defines the local ip address to use\n"
+   "                    (Default uses gethostbyname)\n"
+   "--use-port <port> - Defines local port number to listen for calls\n"
+   "                    (Default - 1720)\n"
+};
 
 char callToken[20];
-int isCallActive;
+static OOBOOL bActive = FALSE;
+static char gLocalIp[20];
+
+int osEpOnCallCleared(ooCallData* call );
+
 int main(int argc, char ** argv)
 {
-  int ret=0;
-
+  int ret=0, port =0, x=0;
   OOH323CALLBACKS h323Callbacks;
 
 #ifdef _WIN32
@@ -56,14 +68,47 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
+
+   gLocalIp[0]='\0';
+   /*Parse any arguments passed */
+   for(x=1; x<argc; x++)
+   {
+      if(!strcmp(argv[x], "--use-ip"))
+      {
+         x++;
+         strncpy(gLocalIp, argv[x], sizeof(gLocalIp)-1);
+         gLocalIp[sizeof(gLocalIp)-1]='\0';
+      }else if(!strcmp(argv[x], "--use-port"))
+      {
+         x++;
+         port = atoi(argv[x]);
+      }else{
+         printf("Usage\n:%s", USAGE);
+         return -1;
+      }
+   }
+
+   if(ooUtilsIsStrEmpty(gLocalIp))
+   {
+      ooGetLocalIPAddress(gLocalIp);
+   }
+
+   if(!strcmp(gLocalIp, "127.0.0.1"))
+   {
+      printf("Error:Can't determine local ip. Please pass it as parameter\n");
+      printf("Usage\n:%s", USAGE);
+      return -1;
+   }
+
    /* Initialize the H323 endpoint */
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIORX, "receiver.log");
+   ret = ooH323EpInitialize(OO_CALLMODE_AUDIORX, "receiver.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
 
+   ooH323EpSetLocalAddress(gLocalIp, port);
 
    h323Callbacks.onNewCallCreated = NULL;
    h323Callbacks.onAlerting = osEpOnAlerting;
@@ -154,7 +199,7 @@ void* osEpHandleCommand(void* dummy)
    printf("Hit <ENTER> to hang call\n");
    memset(command, 0, sizeof(command));
    fgets(command, 20, stdin);
-   if(isCallActive)
+   if(bActive)
    {
       printf("Hanging up call\n");
       ret = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
@@ -178,18 +223,15 @@ int osEpOnAlerting(ooCallData* call )
 int osEpOnIncomingCall(ooCallData* call )
 {
    ooMediaInfo mediaInfo;
-   char localip[20];
    strcpy(callToken, call->callToken);
-   isCallActive = 1;
+   bActive = TRUE;
   
    memset(&mediaInfo, 0, sizeof(ooMediaInfo));
-   memset(localip, 0, 20);
    /* Configure mediainfo for receive media channel of type G711 */
-   ooGetLocalIPAddress(localip);
    mediaInfo.lMediaCntrlPort = 5001;
    mediaInfo.lMediaPort = 5000;
    mediaInfo.cap = OO_G711ULAW64K;
-   strcpy(mediaInfo.lMediaIP, localip);
+   strcpy(mediaInfo.lMediaIP, gLocalIp);
    strcpy(mediaInfo.dir, "receive");
    ooAddMediaInfo(call, mediaInfo);
    return OO_OK;
@@ -199,6 +241,6 @@ int osEpOnIncomingCall(ooCallData* call )
 int osEpOnCallCleared(ooCallData* call )
 {
    printf("Call Ended\n");
-   isCallActive = 0;
+   bActive = FALSE;
    return OO_OK;
 }

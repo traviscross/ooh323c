@@ -34,17 +34,29 @@
 #include <pthread.h>
 #endif
 
+static char USAGE[]={
+   "To Run Player Application:\n"
+   "\t./ooPlayer --audio-file <filename> [--use-ip<ip>] [remote-ip]\n"
+
+   "where:\n"
+   "--audio-file <filename>   - Wave file to play.\n"
+   "--use-ip <ip>             - Local ip address to use\n"
+   "                           (default - uses gethostbyname)\n"
+   "remote-ip                 - Remote ip address. Required only when \n"
+   "                            receiver is running on remote machine \n"
+};
+
 int osEpOnCallCleared(ooCallData* call );
 int osEpOnOutgoingCallAdmitted(ooCallData* call );
-int isCallActive;
-char ooPlayFile[100];
+static OOBOOL bActive=FALSE;
+static char gPlayFile[100];
 char callToken[20];
+static char gLocalIp[20];
 
 int main(int argc, char ** argv)
 {
-   int ret=0;
-   char localip[20];
-  
+   int ret=0, x=0;
+   char dest[256];
    OOH323CALLBACKS h323Callbacks;
 
 #ifdef _WIN32
@@ -56,13 +68,65 @@ int main(int argc, char ** argv)
 #ifdef _WIN32
    ooSocketsInit (); /*Initialize the windows socket api  */
 #endif
+   gPlayFile[0]='\0';
+   gLocalIp[0]='\0';
+   dest[0]='\0';
+   /* Parse arguments */
+   if(argc == 1)
+   {
+      printf("\nUSAGE:%s", USAGE);
+      return -1;
+   }
+
+   for(x=1; x<argc; x++)
+   {
+      if(!strcmp(argv[x], "--audio-file"))
+      {
+         x++;
+         strncpy(gPlayFile, argv[x], sizeof(gPlayFile)-1);
+         gPlayFile[sizeof(gPlayFile)-1]='\0';
+      }else if(!strcmp(argv[x], "--use-ip"))
+      {
+         x++;
+         strncpy(gLocalIp, argv[x], sizeof(gLocalIp)-1);
+         gLocalIp[sizeof(gLocalIp)-1]='\0';
+      }else{
+         strncpy(dest, argv[x], sizeof(dest)-1);
+         dest[sizeof(dest)-1]='\0';
+      }
+   }
+
+   if(ooUtilsIsStrEmpty(gPlayFile))
+   {     
+      printf("Error:Audio file name is required\n");
+      printf("Usage\n:%s", USAGE);
+      return -1;
+   }
+  
+   if(ooUtilsIsStrEmpty(gLocalIp))
+   {
+      ooGetLocalIPAddress(gLocalIp);
+   }
+
+   if(!strcmp(gLocalIp, "127.0.0.1"))
+   { 
+      printf("Could not determine local ip. Please pass as parameter\n");
+      printf("Usage\n:%s", USAGE);
+      return -1;
+   }
+
+   if(ooUtilsIsStrEmpty(dest))
+      strcpy(dest, gLocalIp);
+
    /* Initialize H323 endpoint */
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOTX, "player.log");
+   ret = ooH323EpInitialize(OO_CALLMODE_AUDIOTX, "player.log");
    if(ret != OO_OK)
    {
       printf("Failed to initialize H.323 Endpoint\n");
       return -1;
    }
+
+   ooH323EpSetLocalAddress(gLocalIp, 0);
 
    /* Register callbacks */
 
@@ -103,19 +167,9 @@ int main(int argc, char ** argv)
 #endif
   
   
-   if(argc == 2)
-   {
-      strcpy(ooPlayFile, argv[1]);
-      memset(localip, 0, sizeof(localip));
-      ooGetLocalIPAddress(localip);
-      ooMakeCall (localip, callToken, sizeof(callToken), NULL); /* make call*/  
-      isCallActive = 1;
-   }
-   else
-     {/* Otherwise print usage message and exit */
-      printf("\nUsage : player <filename>");
-      exit(0);
-   }
+
+    ooMakeCall (dest, callToken, sizeof(callToken), NULL); /* make call*/
+    bActive = TRUE;
    /* This thread is created to monitor user input on stdin while stack is
       monitoring sockets. Required for windows as windows does not allow
       file handles(i.e. stdin in this case) to be monitored by select.
@@ -141,7 +195,7 @@ int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
            call->remoteIP, pChannel->mediaPort);
 
    ooCreateTransmitRTPChannel(call->remoteIP, pChannel->mediaPort);
-   ooStartTransmitWaveFile(ooPlayFile);
+   ooStartTransmitWaveFile(gPlayFile);
    return OO_OK;
 }
 
@@ -165,7 +219,7 @@ void* osEpHandleCommand(void *dummy)
    printf("Hit <ENTER> to hang call\n");
    memset(command, 0, sizeof(command));
    fgets(command, 20, stdin);
-   if(isCallActive)
+   if(bActive)
    {
       printf("Hanging up call\n");
       ret = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
@@ -184,7 +238,7 @@ void* osEpHandleCommand(void *dummy)
 int osEpOnCallCleared(ooCallData* call )
 {
    printf("Call Ended\n");
-   isCallActive = 0;
+   bActive = FALSE;
    return OO_OK;
 }
 
@@ -192,14 +246,14 @@ int osEpOnCallCleared(ooCallData* call )
 int osEpOnOutgoingCallAdmitted(ooCallData* call )
 {
    ooMediaInfo mediaInfo;
-   char localip[20];
+
    memset(&mediaInfo, 0, sizeof(ooMediaInfo));
-   memset(localip, 0, 20);
+
    /* Configure mediainfo for transmit media of type G711*/
-   ooGetLocalIPAddress(localip);
+
    mediaInfo.lMediaCntrlPort = 5001;
    mediaInfo.lMediaPort = 5000;
-   strcpy(mediaInfo.lMediaIP, localip);
+   strcpy(mediaInfo.lMediaIP, gLocalIp);
    strcpy(mediaInfo.dir, "transmit");
    mediaInfo.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo);

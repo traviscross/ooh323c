@@ -2137,6 +2137,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
          ("Error:Failed to enqueue Forward Facility message to outbound "
           "queue.(%s, %s)\n", call->callType, call->callToken);
    }
+   call->callEndReason = OO_REASON_LOCAL_FWDED;
    memReset (&gH323ep.msgctxt);
    return ret;
 }
@@ -2937,7 +2938,7 @@ int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, int len,
    strcpy(psNewAlias->value, alias);
    psNewAlias->next = *aliasList;
    *aliasList = psNewAlias;
-   OOTRACEINFO2("Destination for new call is parsed as h323-id %s\n",
+   OOTRACEINFO2("Destination for new call is parsed as h323-id %s \n",
                 psNewAlias->value);
    return OO_OK;
 }

@@ -171,7 +171,7 @@ int main (int argc, char** argv)
            gCalls, gDuration, gInterval, localIPAddr, localPort,
            gDest, logfile);
 
-   ret = ooH323EpInitialize("objsyscall", OO_CALLMODE_AUDIOCALL, logfile);
+   ret = ooH323EpInitialize(OO_CALLMODE_AUDIOCALL, logfile);
 
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");

@@ -106,7 +106,8 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
       }
    }
 
-   call->callEndReason = ooGetCallClearReasonFromCauseAndReasonCode(cause,
+   if(call->callEndReason == OO_REASON_UNKNOWN)
+      call->callEndReason = ooGetCallClearReasonFromCauseAndReasonCode(cause,
                                                                    reasonCode);
 
    if (q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
@@ -1102,8 +1103,9 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
          case T_H225AliasAddress_h323_ID:
             pAliasEntry->t = T_H225AliasAddress_h323_ID;
             pAliasEntry->u.h323_ID.nchars = strlen(pAlias->value);
-            pAliasEntry->u.h323_ID.data = (ASN116BITCHAR*)memAlloc
+            pAliasEntry->u.h323_ID.data = (ASN116BITCHAR*)memAllocZ
                      (pctxt, strlen(pAlias->value)*sizeof(ASN116BITCHAR));
+           
             if(!pAliasEntry->u.h323_ID.data)
             {
                OOTRACEERR1("Error: Failed to allocate memory for h323id"

@@ -44,7 +44,7 @@ OO_MUTEX gCmdMutex;
 extern DList g_TimerList;
 
 int ooH323EpInitialize
-   (const char *callerid, int callMode, const char* tracefile)
+   (int callMode, const char* tracefile)
 {
   
    memset(&gH323ep, 0, sizeof(ooEndPoint));
@@ -114,12 +114,8 @@ int ooH323EpInitialize
 
    gH323ep.listener = NULL;
 
-   if (0 != callerid) {
-      ooH323EpSetCallerID (callerid);
-   }
-   else {
-      gH323ep.callerid = DEFAULT_CALLERID;
-   }
+   ooH323EpSetCallerID(DEFAULT_CALLERID);
+
 
    gH323ep.myCaps = NULL;
    gH323ep.noOfCaps = 0;
@@ -446,6 +442,8 @@ int ooH323EpSetProductID (const char* productID)
    if (0 != productID) {
       char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(productID)+1);
       strcpy (pstr, productID);
+      if(gH323ep.productID)
+         memFreePtr(&gH323ep.ctxt, gH323ep.productID);
       gH323ep.productID = pstr;
       return OO_OK;
    }
@@ -457,6 +455,8 @@ int ooH323EpSetVersionID (const char* versionID)
    if (0 != versionID) {
       char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(versionID)+1);
       strcpy (pstr, versionID);
+      if(gH323ep.versionID)
+         memFreePtr(&gH323ep.ctxt, gH323ep.versionID);
       gH323ep.versionID = pstr;
       return OO_OK;
    }
@@ -468,6 +468,8 @@ int ooH323EpSetCallerID (const char* callerID)
    if (0 != callerID) {
       char* pstr = (char*) memAlloc (&gH323ep.ctxt, strlen(callerID)+1);
       strcpy (pstr, callerID);
+      if(gH323ep.callerid)
+         memFreePtr(&gH323ep.ctxt, gH323ep.callerid);
       gH323ep.callerid = pstr;
       return OO_OK;
    }
