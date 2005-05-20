@@ -475,7 +475,7 @@ EXTERN int ooH323MakeCall_helper(ooCallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-int ooParseDestination(OOCTXT* pctxt, char *dest, char *parsedIP, int len,
+int ooParseDestination(OOCTXT* pctxt, char *dest, char *parsedIP, unsigned len,
                        ooAliases**aliasList);
 
 /**

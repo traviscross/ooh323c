@@ -30,6 +30,8 @@
 #include "oosndrtp.h"
 #include "ooCalls.h"
 #include "ooCapability.h"
+#include "ooUtils.h"
+
 #ifndef _OOCHANNELS_H_
 #include "oochannels.h"
 #endif

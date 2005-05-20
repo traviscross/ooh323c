@@ -607,7 +607,7 @@ void* osEpHandleCommand(void* dummy)
 
 void* osEpHandleCommand(void* dummy)
 {
-   int ret, cmdLen, i=0;
+   int cmdLen, i=0;
    char command[256], *p=NULL, dest[256], ch=0;
 
    gCmdThrd = TRUE;
@@ -668,23 +668,35 @@ void* osEpHandleCommand(void* dummy)
                p++;
             }
             dest[i]='\0';
-            printf("--->Calling %s \n", dest);
-            ooMakeCall(dest, callToken, sizeof(callToken), NULL);
-            bActive = TRUE;
+
+            if(ooMakeCall(dest, callToken, sizeof(callToken), NULL)!= OO_OK)
+            {
+               printf("--->Failed to place a call to %s \n",dest);
+            }else{
+               printf("--->Calling %s \n", dest);
+               bActive = TRUE;
+            }
             break;
          case 'a':
             if(bActive && bRinging)
             {
-               ooAnswerCall(callToken);
-               bRinging = FALSE;
+               if(ooAnswerCall(callToken)==OO_OK)
+                  bRinging = FALSE;
+               else{
+                  printf("--->Failed to answer the call %s\n", callToken);
+               }
             }else{
                printf("--->There is no active call in ringing status\n");
             }
             break;
          case 'r':
            if(bActive && bRinging){
-              ooHangCall(callToken, OO_REASON_LOCAL_REJECTED);
-              bRinging = FALSE;
+              if(ooHangCall(callToken, OO_REASON_LOCAL_REJECTED)!= OO_OK)
+              {
+                 printf("--->Failed to reject call %s\n", callToken);
+              }else{
+                 bRinging = FALSE;
+              }
            }
            else{
               printf("--->There is no active call in ringing status\n");
@@ -708,8 +720,14 @@ void* osEpHandleCommand(void* dummy)
                    p++;
                 }
                 dest[i]='\0';
-                printf("--->Forwarding Call to %s \n", dest);
-                ooForwardCall(callToken, dest);
+
+                if(ooForwardCall(callToken, dest)!= OO_OK)
+                {
+                   printf("--->Failed to forward call %s to %s\n", callToken,
+                                                                   dest);
+                }else{
+                   printf("--->Forwarding Call to %s \n", dest);
+                }
             }else{
                printf("--->There is no established call to forward\n");
             }
@@ -717,8 +735,12 @@ void* osEpHandleCommand(void* dummy)
          case 'h':
             if(bActive)
             {
-               printf("--->Hanging call %s\n", callToken);
-               ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
+               if(ooHangCall(callToken, OO_REASON_LOCAL_CLEARED)!= OO_OK)
+               {
+                  printf("--->Failed to hang call %s\n", callToken);
+               }else{
+                  printf("--->Hanging call %s\n", callToken);
+               }
             }else{
                printf("--->No active call to hang\n");
             }

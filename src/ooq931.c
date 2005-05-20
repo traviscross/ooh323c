@@ -2824,8 +2824,8 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
  ooH323ForwardCall. If the string contains ip address and port, it is returned
  in the parsedIP buffer and if it contains alias, it is added to aliasList
 */
-int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, int len,
-                       ooAliases** aliasList)
+int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
+                        ooAliases** aliasList)
 {
    int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
    ooAliases * psNewAlias = NULL;
