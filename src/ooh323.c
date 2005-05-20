@@ -36,7 +36,7 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
    ASN1UINT i;
    DListNode *pNode = NULL;
    OOTimer *pTimer = NULL;
-   unsigned reasonCode=T_H225ReleaseCompleteReason_undefinedReason;;
+   unsigned reasonCode=T_H225ReleaseCompleteReason_undefinedReason;
    enum Q931CauseValues cause= Q931ErrorInCauseIE;
 
    if(q931Msg->causeIE)

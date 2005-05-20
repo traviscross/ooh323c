@@ -25,6 +25,7 @@
 #include "ooh323ep.h"
 #include "ooCapability.h"
 #include "ooGkClient.h"
+#include "ooUtils.h"
 #include <time.h>
 
 /** Global endpoint structure */
