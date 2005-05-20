@@ -47,8 +47,8 @@ static char USAGE[]={
    "                            receiver is running on remote machine \n"
 };
 
-int osEpOnCallCleared(ooCallData* call );
-int osEpOnOutgoingCallAdmitted(ooCallData* call );
+int osEpOnCallCleared(OOH323CallData* call );
+int osEpOnOutgoingCallAdmitted(OOH323CallData* call );
 static OOBOOL bActive=FALSE;
 static char gPlayFile[100];
 char callToken[20];
@@ -190,7 +190,7 @@ int main(int argc, char ** argv)
 
 
 /* Callback to start transmit media channel */
-int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
+int osEpStartTransmitChannel(OOH323CallData *call, ooLogicalChannel *pChannel)
 {
    printf ("Starting transmit channel %s:%d\n",
            call->remoteIP, pChannel->mediaPort);
@@ -201,7 +201,7 @@ int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 }
 
 /* Callback to stop transmit media channel*/
-int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
+int osEpStopTransmitChannel(OOH323CallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Transmit Channel\n");
    ooStopTransmitWaveFile();
@@ -236,7 +236,7 @@ void* osEpHandleCommand(void *dummy)
 }
 
 /* Call cleared callback */
-int osEpOnCallCleared(ooCallData* call )
+int osEpOnCallCleared(OOH323CallData* call )
 {
    printf("Call Ended\n");
    bActive = FALSE;
@@ -244,7 +244,7 @@ int osEpOnCallCleared(ooCallData* call )
 }
 
 /* out going call callback */
-int osEpOnOutgoingCallAdmitted(ooCallData* call )
+int osEpOnOutgoingCallAdmitted(OOH323CallData* call )
 {
    ooMediaInfo mediaInfo;
 

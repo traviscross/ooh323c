@@ -341,10 +341,10 @@ typedef struct OOH323Channel {
 } OOH323Channel;
 
 
-struct ooCallData;
+struct OOH323CallData;
 
 typedef struct ooTimerCallback{
-   struct ooCallData* call;
+   struct OOH323CallData* call;
    ASN1UINT    timerType;
    ASN1UINT    channelNumber;
 } ooTimerCallback;
@@ -356,79 +356,6 @@ typedef struct OOCallFwdData{
    OOBOOL fwdedByRemote; /*Set when we are being fwded by remote*/
 }OOCallFwdData;     
 
-/* Flag mask values */
-/* DISABLEGK is used to selectively disable gatekeeper use. For incoming calls
-   DISABLEGK can be set in onReceivedSetup callback by application.
-   Very useful in pbx applications where gk is used only when call is
-   to or from outside pbx domian. For outgoing calls, ooMakeCallNoGk
-   disables use of gk for specific call.
-*/
-#define OO_M_DATASESSION        0x00800000
-#define OO_M_VIDEOSESSION       0x00400000
-#define OO_M_AUDIOSESSION       0x00200000
-#define OO_M_ENDPOINTCREATED    0x00100000
-#define OO_M_ENDSESSION_BUILT   0x08000000
-#define OO_M_RELEASE_BUILT      0x04000000
-#define OO_M_GKROUTED           0x02000000
-#define OO_M_AUTOANSWER         0x01000000
-#define OO_M_TUNNELING          0x80000000
-#define OO_M_FASTSTART          0x40000000
-#define OO_M_DISABLEGK          0x20000000
-#define OO_M_AUDIO              0x10000000
-
-typedef struct ooCallData {
-   OOCTXT               *pctxt;
-   char                 callToken[20]; /* ex: ooh323c_call_1 */
-   char                 callType[10]; /* incoming/outgoing */
-   ASN1USINT            callReference;
-   char                 ourCallerId[256];
-   H225CallIdentifier   callIdentifier;/* The call identifier for the active
-                                          call. */
-   char                 *callingPartyNumber;
-   char                 *calledPartyNumber;
-   H225ConferenceIdentifier confIdentifier;
-   ASN1UINT             flags;
-   OOCallState          callState;
-   OOCallClearReason    callEndReason;
-   OOH245SessionState   h245SessionState;
-   int                  dtmfmode;
-   ooMediaInfo          *mediaInfo;
-   OOCallFwdData        *pCallFwdData;
-   char                 localIP[20];/* Local IP address */
-   OOH323Channel*       pH225Channel;
-   OOH323Channel*       pH245Channel;
-   OOSOCKET             *h245listener;
-   int                  *h245listenport;
-   char                 remoteIP[20];/* Remote IP address */
-   int                  remotePort;
-   int                  remoteH245Port;
-   char                 *remoteDisplayName;
-   ooAliases            *remoteAliases;
-   ooAliases            *ourAliases; /*aliases used in the call for us */
-   OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
-   ASN1UINT             statusDeterminationNumber;
-   OOCapExchangeState   localTermCapState;
-   OOCapExchangeState   remoteTermCapState;
-   struct ooH323EpCapability* ourCaps;
-   struct ooH323EpCapability* remoteCaps; /* TODO: once we start using jointCaps, get rid of remoteCaps*/
-   struct ooH323EpCapability* jointCaps;
-   DList                remoteFastStartOLCs;
-   ASN1UINT8            remoteTermCapSeqNo;
-   ASN1UINT8            localTermCapSeqNo;
-   ooCapPrefs           capPrefs;  
-   ooLogicalChannel*    logicalChans;
-   int                  noOfLogicalChannels;
-   int                  logicalChanNoBase;
-   int                  logicalChanNoMax;
-   int                  logicalChanNoCur;
-   unsigned             nextSessionID; /* Note by default 1 is audio session, 2 is video and 3 is data, from 3 onwards master decides*/
-   DList                timerList;
-   ASN1UINT             msdRetries;
-   void                 *usrData; /* User can set this to user specific data */
-   struct ooCallData*   next;
-   struct ooCallData*   prev;
-} ooCallData;
-
 /**
  * These are message callbacks which can be used by user applications
  * to perform application specific things on receiving a particular
@@ -436,10 +363,17 @@ typedef struct ooCallData {
  * can change values of some parameters of setup message before it is actually
  * sent out.
  */
-typedef int (*cb_OnReceivedSetup)(ooCallData *call, Q931Message *pmsg);
-typedef int (*cb_OnReceivedConnect)(ooCallData *call, Q931Message *pmsg);
-typedef int (*cb_OnBuiltSetup)(ooCallData *call, Q931Message *pmsg);
-typedef int (*cb_OnBuiltConnect)(ooCallData *call, Q931Message *pmsg);
+typedef int (*cb_OnReceivedSetup)
+   (struct OOH323CallData *call, Q931Message *pmsg);
+
+typedef int (*cb_OnReceivedConnect)
+   (struct OOH323CallData *call, Q931Message *pmsg);
+
+typedef int (*cb_OnBuiltSetup)
+   (struct OOH323CallData *call, Q931Message *pmsg);
+
+typedef int (*cb_OnBuiltConnect)
+   (struct OOH323CallData *call, Q931Message *pmsg);
 
 typedef struct OOH225MsgCallbacks{
    cb_OnReceivedSetup onReceivedSetup;
@@ -449,16 +383,17 @@ typedef struct OOH225MsgCallbacks{
 }OOH225MsgCallbacks;
 
 
-typedef int (*cb_OnNewCallCreated)(ooCallData * call);
-typedef int (*cb_OnAlerting)(ooCallData * call);
-typedef int (*cb_OnIncomingCall)(ooCallData* call );
-typedef int (*cb_OnOutgoingCall)(ooCallData* call );
-typedef int (*cb_OnCallAnswered)(ooCallData* call);
-typedef int (*cb_OnCallEstablished)(ooCallData* call);
-typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
-typedef int (*cb_OnCallCleared)(ooCallData* call);
-typedef int (*cb_OpenLogicalChannels)(ooCallData* call);
-typedef int (*cb_OnCallForwarded)(ooCallData* call);
+typedef int (*cb_OnNewCallCreated)(struct OOH323CallData * call);
+typedef int (*cb_OnAlerting)(struct OOH323CallData * call);
+typedef int (*cb_OnIncomingCall)(struct OOH323CallData* call );
+typedef int (*cb_OnOutgoingCall)(struct OOH323CallData* call );
+typedef int (*cb_OnCallAnswered)(struct OOH323CallData* call);
+typedef int (*cb_OnCallEstablished)(struct OOH323CallData* call);
+typedef int (*cb_OnOutgoingCallAdmitted)(struct OOH323CallData* call );
+typedef int (*cb_OnCallCleared)(struct OOH323CallData* call);
+typedef int (*cb_OpenLogicalChannels)(struct OOH323CallData* call);
+typedef int (*cb_OnCallForwarded)(struct OOH323CallData* call);
+
 struct ooGkClient;
 
 typedef struct OOH323CALLBACKS{

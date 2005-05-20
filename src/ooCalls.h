@@ -15,7 +15,7 @@
  *****************************************************************************/
 /**
  * @file ooCalls.h
- * This file contains Call management functions.
+ * This file contains call management functions.
  */
 #ifndef _OOCALLS_H_
 #define _OOCALLS_H_
@@ -38,6 +38,81 @@ extern "C" {
  * @defgroup callmgmt  Call Management
  * @{
  */
+/* Flag mask values */
+/* DISABLEGK is used to selectively disable gatekeeper use. For incoming calls
+   DISABLEGK can be set in onReceivedSetup callback by application.
+   Very useful in pbx applications where gk is used only when call is
+   to or from outside pbx domian. For outgoing calls, ooMakeCallNoGk
+   disables use of gk for specific call.
+*/
+#define OO_M_DATASESSION        0x00800000
+#define OO_M_VIDEOSESSION       0x00400000
+#define OO_M_AUDIOSESSION       0x00200000
+#define OO_M_ENDPOINTCREATED    0x00100000
+#define OO_M_ENDSESSION_BUILT   0x08000000
+#define OO_M_RELEASE_BUILT      0x04000000
+#define OO_M_GKROUTED           0x02000000
+#define OO_M_AUTOANSWER         0x01000000
+#define OO_M_TUNNELING          0x80000000
+#define OO_M_FASTSTART          0x40000000
+#define OO_M_DISABLEGK          0x20000000
+#define OO_M_AUDIO              0x10000000
+
+typedef struct OOH323CallData {
+   OOCTXT               *pctxt;
+   char                 callToken[20]; /* ex: ooh323c_call_1 */
+   char                 callType[10]; /* incoming/outgoing */
+   ASN1USINT            callReference;
+   char                 ourCallerId[256];
+   H225CallIdentifier   callIdentifier;/* The call identifier for the active
+                                          call. */
+   char                 *callingPartyNumber;
+   char                 *calledPartyNumber;
+   H225ConferenceIdentifier confIdentifier;
+   ASN1UINT             flags;
+   OOCallState          callState;
+   OOCallClearReason    callEndReason;
+   OOH245SessionState   h245SessionState;
+   int                  dtmfmode;
+   ooMediaInfo          *mediaInfo;
+   OOCallFwdData        *pCallFwdData;
+   char                 localIP[20];/* Local IP address */
+   OOH323Channel*       pH225Channel;
+   OOH323Channel*       pH245Channel;
+   OOSOCKET             *h245listener;
+   int                  *h245listenport;
+   char                 remoteIP[20];/* Remote IP address */
+   int                  remotePort;
+   int                  remoteH245Port;
+   char                 *remoteDisplayName;
+   ooAliases            *remoteAliases;
+   ooAliases            *ourAliases; /*aliases used in the call for us */
+   OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
+   ASN1UINT             statusDeterminationNumber;
+   OOCapExchangeState   localTermCapState;
+   OOCapExchangeState   remoteTermCapState;
+   struct ooH323EpCapability* ourCaps;
+   struct ooH323EpCapability* remoteCaps; /* TODO: once we start using jointCaps, get rid of remoteCaps*/
+   struct ooH323EpCapability* jointCaps;
+   DList                remoteFastStartOLCs;
+   ASN1UINT8            remoteTermCapSeqNo;
+   ASN1UINT8            localTermCapSeqNo;
+   ooCapPrefs           capPrefs;  
+   ooLogicalChannel*    logicalChans;
+   int                  noOfLogicalChannels;
+   int                  logicalChanNoBase;
+   int                  logicalChanNoMax;
+   int                  logicalChanNoCur;
+   unsigned             nextSessionID; /* Note by default 1 is audio session, 2 is video and 3 is data, from 3 onwards master decides*/
+   DList                timerList;
+   ASN1UINT             msdRetries;
+   void                 *usrData; /* User can set this to user specific data */
+   struct OOH323CallData* next;
+   struct OOH323CallData* prev;
+} OOH323CallData;
+
+#define ooCallData OOH323CallData
+
 /**
  * This function is used to create a new call entry.
  * @param type         Type of the call (incoming/outgoing)
@@ -45,7 +120,7 @@ extern "C" {
  *
  * @return             Pointer to a newly created call
  */
-EXTERN ooCallData* ooCreateCall(char *type, char *callToken);
+EXTERN OOH323CallData* ooCreateCall(char *type, char *callToken);
 
 /**
  * This function is used to add a call to the list of existing calls.
@@ -54,7 +129,7 @@ EXTERN ooCallData* ooCreateCall(char *type, char *callToken);
  *
  * @return             OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooAddCallToList (ooCallData *call);
+EXTERN int ooAddCallToList (OOH323CallData *call);
 
 /**
  * This function is used to set callerid for the call.
@@ -63,7 +138,8 @@ EXTERN int ooAddCallToList (ooCallData *call);
  *
  * @return              OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooCallSetCallerId(ooCallData* call, const char* callerid);
+EXTERN int ooCallSetCallerId
+(OOH323CallData* call, const char* callerid);
 
 /**
  * This function is used to set calling party number for a particular call.
@@ -72,7 +148,8 @@ EXTERN int ooCallSetCallerId(ooCallData* call, const char* callerid);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallSetCallingPartyNumber(ooCallData *call, const char *number);
+EXTERN int ooCallSetCallingPartyNumber
+(OOH323CallData *call, const char *number);
 
 /**
  * This function is used to retrieve calling party number of a particular call.
@@ -82,7 +159,8 @@ EXTERN int ooCallSetCallingPartyNumber(ooCallData *call, const char *number);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len);
+EXTERN int ooCallGetCallingPartyNumber
+(OOH323CallData *call, char *buffer, int len);
 
 /**
  * This function is used to retrieve called party number of a particular call.
@@ -92,7 +170,8 @@ EXTERN int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len);
+EXTERN int ooCallGetCalledPartyNumber
+(OOH323CallData *call, char *buffer, int len);
 
 /**
  * This function is used to set called party number for a particular call.
@@ -101,7 +180,8 @@ EXTERN int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallSetCalledPartyNumber(ooCallData *call, const char *number);
+EXTERN int ooCallSetCalledPartyNumber
+(OOH323CallData *call, const char *number);
 
 /**
  * This function is used to clear the local aliases used by this call.
@@ -109,7 +189,7 @@ EXTERN int ooCallSetCalledPartyNumber(ooCallData *call, const char *number);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallClearAliases(ooCallData *call);
+EXTERN int ooCallClearAliases(OOH323CallData *call);
 
 /**
  * This function is used to add an H323ID alias to be used by local endpoint
@@ -119,7 +199,7 @@ EXTERN int ooCallClearAliases(ooCallData *call);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddAliasH323ID(ooCallData *call, const char* h323id);
+EXTERN int ooCallAddAliasH323ID(OOH323CallData *call, const char* h323id);
 
 /**
  * This function is used to add an dialedDigits alias to be used by local
@@ -130,7 +210,7 @@ EXTERN int ooCallAddAliasH323ID(ooCallData *call, const char* h323id);
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCallAddAliasDialedDigits
-                             (ooCallData *call, const char* dialedDigits);
+                             (OOH323CallData *call, const char* dialedDigits);
 
 /**
  * This function is used to add an email-id alias to be used by local
@@ -140,7 +220,7 @@ EXTERN int ooCallAddAliasDialedDigits
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddAliasEmailID(ooCallData *call, const char* email);
+EXTERN int ooCallAddAliasEmailID(OOH323CallData *call, const char* email);
 
 
 /**
@@ -151,7 +231,7 @@ EXTERN int ooCallAddAliasEmailID(ooCallData *call, const char* email);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddAliasURLID(ooCallData *call, const char* url);
+EXTERN int ooCallAddAliasURLID(OOH323CallData *call, const char* url);
 
 /**
  * This function is used to add an H323ID alias for the remote endpoint
@@ -161,7 +241,7 @@ EXTERN int ooCallAddAliasURLID(ooCallData *call, const char* url);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id);
+EXTERN int ooCallAddRemoteAliasH323ID(OOH323CallData *call, const char* h323id);
 
 
 /**
@@ -181,7 +261,7 @@ EXTERN int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id);
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddG7231Capability(ooCallData *call, int cap, int txframes,
+EXTERN int ooCallAddG7231Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, OOBOOL silenceSuppression, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -204,7 +284,7 @@ EXTERN int ooCallAddG7231Capability(ooCallData *call, int cap, int txframes,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
+EXTERN int ooCallAddG729Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -227,7 +307,7 @@ EXTERN int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
+EXTERN int ooCallAddG711Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -252,7 +332,7 @@ EXTERN int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCallAddGSMCapability(ooCallData* call, int cap,
+EXTERN int ooCallAddGSMCapability(OOH323CallData* call, int cap,
                                   ASN1USINT framesPerPkt, OOBOOL comfortNoise,
                                   OOBOOL scrambled, int dir,
                                   cb_StartReceiveChannel startReceiveChannel,
@@ -270,7 +350,7 @@ EXTERN int ooCallAddGSMCapability(ooCallData* call, int cap,
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooCallEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType);
+EXTERN int ooCallEnableDTMFRFC2833(OOH323CallData *call, int dynamicRTPPayloadType);
 
 
 /**
@@ -282,7 +362,7 @@ EXTERN int ooCallEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType);
  *
  * @return                      OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooCallDisableDTMFRFC2833(ooCallData *call);
+EXTERN int ooCallDisableDTMFRFC2833(OOH323CallData *call);
 
 /**
  * This function is used to find a call by using the unique token for the call.
@@ -290,7 +370,7 @@ EXTERN int ooCallDisableDTMFRFC2833(ooCallData *call);
  *
  * @return               Pointer to the call if found, NULL otherwise.
  */
-EXTERN ooCallData* ooFindCallByToken(char *callToken);
+EXTERN OOH323CallData* ooFindCallByToken(char *callToken);
 
 /**
  * This function is used to clear a call. Based on what stage of clearance the
@@ -299,7 +379,7 @@ EXTERN ooCallData* ooFindCallByToken(char *callToken);
  *
  * @return       OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooEndCall(ooCallData *call);
+EXTERN int ooEndCall(OOH323CallData *call);
 
 /**
  * This function is used to remove a call from the list of existing calls.
@@ -308,7 +388,7 @@ EXTERN int ooEndCall(ooCallData *call);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooRemoveCallFromList (ooCallData *call);
+EXTERN int ooRemoveCallFromList (OOH323CallData *call);
 
 /**
  * This function is used to clean a call. It closes all associated sockets,
@@ -317,7 +397,7 @@ EXTERN int ooRemoveCallFromList (ooCallData *call);
  *
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCleanCall(ooCallData *call);
+EXTERN int ooCleanCall(OOH323CallData *call);
 
 /**
  * This function is used to add a new logical channel entry into the list
@@ -333,7 +413,7 @@ EXTERN int ooCleanCall(ooCallData *call);
  * @return          Pointer to logical channel, on success. NULL, on failure
  */
 EXTERN ooLogicalChannel* ooAddNewLogicalChannel
-         (ooCallData *call, int channelNo, int sessionID, char *type,
+         (OOH323CallData *call, int channelNo, int sessionID, char *type,
           char * dir, ooH323EpCapability *epCap);
 
 /**
@@ -346,7 +426,7 @@ EXTERN ooLogicalChannel* ooAddNewLogicalChannel
  *                      otherwise.  
  */
 EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
-                                  (ooCallData *call,int channelNo);
+                                  (OOH323CallData *call,int channelNo);
 
 /**
  * This function is called when a new logical channel is established. It is
@@ -359,7 +439,7 @@ EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooOnLogicalChannelEstablished
-                              (ooCallData *call, ooLogicalChannel * pChannel);
+(OOH323CallData *call, ooLogicalChannel * pChannel);
 
 /**
  * This fuction is used to check whether a specified session in specified
@@ -372,7 +452,7 @@ EXTERN int ooOnLogicalChannelEstablished
  * @return           1, if session active. 0, otherwise.
  */
 EXTERN ASN1BOOL ooIsSessionEstablished
-                                  (ooCallData *call, int sessionID, char* dir);
+(OOH323CallData *call, int sessionID, char* dir);
 
 /**
  * This function is used to retrieve a logical channel with particular
@@ -385,7 +465,8 @@ EXTERN ASN1BOOL ooIsSessionEstablished
  * @return          Returns a pointer to the logical channel if found, NULL
  *                  otherwise.
  */
-EXTERN ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID);
+EXTERN ooLogicalChannel* ooGetLogicalChannel
+(OOH323CallData *call, int sessionID);
 
 /**
  * This function is used to remove a logical channel from the list of logical
@@ -395,7 +476,7 @@ EXTERN ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID);
  * @param ChannelNo         Forward logical channel number of the channel to be
  *                          removed.
  */
-EXTERN int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo);
+EXTERN int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo);
 
 /**
  * This function is used to cleanup a logical channel. It first stops media, if
@@ -406,7 +487,7 @@ EXTERN int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooClearLogicalChannel(ooCallData *call, int channelNo);
+EXTERN int ooClearLogicalChannel(OOH323CallData *call, int channelNo);
 
 /**
  * This function is used to cleanup all the logical channels associated with
@@ -415,7 +496,7 @@ EXTERN int ooClearLogicalChannel(ooCallData *call, int channelNo);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooClearAllLogicalChannels(ooCallData *call);
+EXTERN int ooClearAllLogicalChannels(OOH323CallData *call);
 
 /**
  * This function can be used by an application to specify media endpoint
@@ -428,7 +509,8 @@ EXTERN int ooClearAllLogicalChannels(ooCallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo);
+EXTERN int ooAddMediaInfo(OOH323CallData *call, ooMediaInfo mediaInfo);
+
 /**
  * This function is used to find a logical channel from a received
  * olc.
@@ -439,7 +521,7 @@ EXTERN int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo);
  *                 else returns NULL.
  */
 EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC
-                               (ooCallData *call, H245OpenLogicalChannel *olc);
+(OOH323CallData *call, H245OpenLogicalChannel *olc);
 
 /**
  * This function is used to find a logical channel based on session Id,
@@ -453,7 +535,7 @@ EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC
  * @return           Logical channel, if found, NULL otherwise.
  */
 EXTERN ooLogicalChannel * ooFindLogicalChannel
-   (ooCallData *call, int sessionID, char *dir, H245DataType * dataType);
+(OOH323CallData *call, int sessionID, char *dir, H245DataType * dataType);
 
 /**
  * @}

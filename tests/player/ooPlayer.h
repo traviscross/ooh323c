@@ -19,17 +19,23 @@
 #include "ootypes.h"
 #include "H323-MESSAGES.h"
 
+struct OOH323CallData;
 
 /**
  * This is the callback function registered with the stack component. This
- * function is called by the stack whenever there is a user activity on stdin.
- * The function handles the user commands to make/accpet/reject/hang calls
+ * function is called by the stack whenever there is user activity on stdin.
+ * The function handles the user commands to make/accept/reject/hang calls.
  *
  * @return      0, on success
  *             -1, on failure.
  */
 void* osEpHandleCommand(void*);
-int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
-int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
+
+int osEpStartTransmitChannel
+   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+
+int osEpStopTransmitChannel
+   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+
 #endif
 

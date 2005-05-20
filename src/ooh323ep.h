@@ -20,6 +20,7 @@
 #ifndef OO_H323EP_H_
 #define OO_H323EP_H_
 #include "ooCapability.h"
+#include "ooCalls.h"
 #include "ooGkClient.h"
 
 #define DEFAULT_TRACEFILE "trace.log"
@@ -106,7 +107,7 @@ typedef struct OOH323EndPoint {
    char signallingIP[20];
    int listenPort;
    OOSOCKET *listener;
-   ooCallData *callList;
+   OOH323CallData *callList;
 
    OOCallMode callMode; /* audio/audiorx/audiotx/video/fax */
    int dtmfmode;

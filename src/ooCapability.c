@@ -23,7 +23,8 @@ extern OOH323EndPoint gH323ep;
 
 static int giDynamicRTPPayloadType = 101;
 
-int ooCapabilityEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType)
+int ooCapabilityEnableDTMFRFC2833
+   (OOH323CallData *call, int dynamicRTPPayloadType)
 {
    if(!call)
    {
@@ -44,7 +45,7 @@ int ooCapabilityEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType)
 
 
 
-int ooCapabilityDisableDTMFRFC2833(ooCallData *call)
+int ooCapabilityDisableDTMFRFC2833(OOH323CallData *call)
 {
    if(!call){
       gH323ep.dtmfmode ^= OO_CAP_DTMF_RFC2833;
@@ -59,13 +60,14 @@ int ooCapabilityDisableDTMFRFC2833(ooCallData *call)
 }
 
 /* Used for g711 ulaw/alaw, g729 and g7231 */
-int ooCapabilityAddSimpleCapability(ooCallData *call, int cap, int txframes,
-                             int rxframes, OOBOOL silenceSuppression, int dir,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                 OOBOOL remote)
+int ooCapabilityAddSimpleCapability
+   (OOH323CallData *call, int cap, int txframes,
+    int rxframes, OOBOOL silenceSuppression, int dir,
+    cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel,
+    OOBOOL remote)
 {
    int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL, *lHead=NULL;
@@ -154,7 +156,7 @@ int ooCapabilityAddSimpleCapability(ooCallData *call, int cap, int txframes,
 }
 
 
-int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
+int ooCapabilityAddGSMCapability(OOH323CallData *call, int cap,
                                 unsigned framesPerPkt, OOBOOL comfortNoise,
                                 OOBOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
@@ -463,7 +465,7 @@ struct H245AudioCapability* ooCreateSimpleCapability
 
 /*Used for g711 ulaw/alaw, g729, g729a, g7231 */
 ASN1BOOL ooCapabilityCheckCompatibility_Simple
-   (ooCallData *call, ooH323EpCapability* epCap,
+   (OOH323CallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
 {
    int noofframes=0, cap;
@@ -519,7 +521,7 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
 
 
 OOBOOL ooCapabilityCheckCompatibility_GSM
-   (ooCallData *call, ooH323EpCapability* epCap,
+   (OOH323CallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
 {
    unsigned noofframes=0, cap;
@@ -565,7 +567,7 @@ OOBOOL ooCapabilityCheckCompatibility_GSM
 }
 
 OOBOOL ooCheckCompatibility_1
-   (ooCallData *call, ooH323EpCapability* epCap,
+   (OOH323CallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
 {
 
@@ -595,7 +597,7 @@ OOBOOL ooCheckCompatibility_1
   indicate the application that it is supposed to tx and a reduced rate.
  */
 ASN1BOOL ooCheckCompatibility
-   (ooCallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap)
+   (OOH323CallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap)
 {
 
    if(txCap->cap != rxCap->cap) return FALSE;
@@ -644,7 +646,7 @@ ASN1BOOL ooCheckCompatibility
 
 
 ooH323EpCapability* ooIsAudioDataTypeGSMSupported
-   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+   (OOH323CallData *call, H245AudioCapability* audioCap, int dir)
 {
    unsigned framesPerPkt=0;
    int cap=0;
@@ -769,7 +771,7 @@ ooH323EpCapability* ooIsAudioDataTypeGSMSupported
 
 /* used for g711 ulaw/alaw, g729, g729a, g7231 */
 ooH323EpCapability* ooIsAudioDataTypeSimpleSupported
-   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+   (OOH323CallData *call, H245AudioCapability* audioCap, int dir)
 {
    int cap, framesPerPkt=0;
    ooH323EpCapability *cur=NULL, *epCap=NULL;
@@ -921,7 +923,7 @@ ooH323EpCapability* ooIsAudioDataTypeSimpleSupported
 
 
 ooH323EpCapability* ooIsAudioDataTypeSupported
-   (ooCallData *call, H245AudioCapability* audioCap, int dir)
+   (OOH323CallData *call, H245AudioCapability* audioCap, int dir)
 {
    /* Find similar capability */
    switch(audioCap->t)
@@ -945,7 +947,7 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
 
 
 ooH323EpCapability* ooIsDataTypeSupported
-                   (ooCallData *call, H245DataType *data, int dir)
+                   (OOH323CallData *call, H245DataType *data, int dir)
 {
    OOTRACEDBGC3("Looking for data type support. (%s, %s)\n", call->callType,
                  call->callToken);
@@ -979,7 +981,7 @@ ooH323EpCapability* ooIsDataTypeSupported
    return NULL;
 }
 
-int ooResetCapPrefs(ooCallData *call)
+int ooResetCapPrefs(OOH323CallData *call)
 {
    ooCapPrefs *capPrefs=NULL;
    if(call)
@@ -990,7 +992,7 @@ int ooResetCapPrefs(ooCallData *call)
    return OO_OK;
 }
 
-int ooRemoveCapFromCapPrefs(ooCallData *call, int cap)
+int ooRemoveCapFromCapPrefs(OOH323CallData *call, int cap)
 {
    int i=0, j=0;
    ooCapPrefs *capPrefs=NULL, oldPrefs;
@@ -1011,7 +1013,7 @@ int ooRemoveCapFromCapPrefs(ooCallData *call, int cap)
 }
 
 
-int ooAppendCapToCapPrefs(ooCallData *call, int cap)
+int ooAppendCapToCapPrefs(OOH323CallData *call, int cap)
 {
    ooCapPrefs *capPrefs=NULL;
    if(call)
@@ -1023,7 +1025,7 @@ int ooAppendCapToCapPrefs(ooCallData *call, int cap)
    return OO_OK;
 }
 
-int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos)
+int ooChangeCapPrefOrder(OOH323CallData *call, int cap, int pos)
 {
    int i=0, j=0;
    ooCapPrefs *capPrefs = NULL;
@@ -1065,7 +1067,7 @@ int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos)
 
 }
 
-int ooPreppendCapToCapPrefs(ooCallData *call, int cap)
+int ooPreppendCapToCapPrefs(OOH323CallData *call, int cap)
 {
    int i=0, j=0;
    ooCapPrefs *capPrefs=NULL, oldPrefs;
@@ -1089,7 +1091,7 @@ int ooPreppendCapToCapPrefs(ooCallData *call, int cap)
 }
 
       
-int ooAddRemoteCapability(ooCallData *call, H245Capability *cap)
+int ooAddRemoteCapability(OOH323CallData *call, H245Capability *cap)
 {
    switch(cap->t)
    {
@@ -1109,7 +1111,8 @@ int ooAddRemoteCapability(ooCallData *call, H245Capability *cap)
    return OO_OK;
 }
 
-int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
+int ooAddRemoteAudioCapability(OOH323CallData *call,
+                               H245AudioCapability *audioCap,
                                int dir)
 {
    int rxframes=0, txframes=0;
@@ -1215,7 +1218,8 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
 
 
 
-int ooCapabilityUpdateJointCapabilities(ooCallData* call, H245Capability *cap)
+int ooCapabilityUpdateJointCapabilities
+   (OOH323CallData* call, H245Capability *cap)
 {
    ooH323EpCapability * epCap = NULL, *cur = NULL;
    OOTRACEDBGC3("checking whether we need to add cap to joint capabilities"

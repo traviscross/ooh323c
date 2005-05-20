@@ -113,7 +113,7 @@ int ooCreateH245Message(H245Message **pph245msg, int type)
    }
 }
 
-int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
+int ooFreeH245Message(OOH323CallData *call, H245Message *pmsg)
 {
   /* In case of tunneling, memory is freed when corresponding Q931 message is freed.*/
    OOTRACEDBGC1("msgCtxt Reset?");
@@ -130,7 +130,7 @@ int ooFreeH245Message(ooCallData *call, H245Message *pmsg)
 
 #ifndef _COMPACT
 static void ooPrintH245Message
-(ooCallData* call, ASN1OCTET* msgbuf, ASN1UINT msglen)
+(OOH323CallData* call, ASN1OCTET* msgbuf, ASN1UINT msglen)
 {
    OOCTXT ctxt;
    H245MultimediaSystemControlMessage mmMsg;
@@ -158,7 +158,7 @@ static void ooPrintH245Message
 #endif
 
 
-int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, int size)
+int ooEncodeH245Message(OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size)
 {
    int len=0, encodeLen=0, i=0;
    int stat=0;
@@ -221,7 +221,7 @@ int ooEncodeH245Message(ooCallData *call, H245Message *ph245Msg, char *msgbuf, i
    return OO_OK;
 }
 
-int ooSendTermCapMsg(ooCallData *call)
+int ooSendTermCapMsg(OOH323CallData *call)
 {
    int ret;
    H245RequestMessage * request;
@@ -438,7 +438,7 @@ ASN1UINT ooGenerateStatusDeterminationNumber()
          Remote endpoint after MasterSlaveDetermination sent within
          timeout.
 */
-int ooHandleMasterSlave(ooCallData *call, void * pmsg,
+int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
                           int msgType)
 {
    H245MasterSlaveDetermination *masterSlave;
@@ -551,7 +551,7 @@ int ooHandleMasterSlave(ooCallData *call, void * pmsg,
    return OO_OK;     
 }
 
-int ooSendMasterSlaveDetermination(ooCallData *call)
+int ooSendMasterSlaveDetermination(OOH323CallData *call)
 {
    int ret;
    H245Message* ph245msg=NULL;
@@ -605,7 +605,7 @@ int ooSendMasterSlaveDetermination(ooCallData *call)
    return ret;
 }
 
-int ooSendMasterSlaveDeterminationAck(ooCallData* call,
+int ooSendMasterSlaveDeterminationAck(OOH323CallData* call,
                                       char * status)
 {
    int ret=0;
@@ -651,7 +651,7 @@ int ooSendMasterSlaveDeterminationAck(ooCallData* call,
    return ret;
 }
 
-int ooSendMasterSlaveDeterminationReject (ooCallData* call)
+int ooSendMasterSlaveDeterminationReject (OOH323CallData* call)
 {
    int ret=0;
    H245ResponseMessage* response=NULL;
@@ -696,7 +696,7 @@ int ooSendMasterSlaveDeterminationReject (ooCallData* call)
    return ret;
 }
 
-int ooSendMasterSlaveDeterminationRelease(ooCallData * call)
+int ooSendMasterSlaveDeterminationRelease(OOH323CallData * call)
 {
    int ret=0;
    H245IndicationMessage* indication=NULL;
@@ -745,7 +745,7 @@ int ooSendMasterSlaveDeterminationRelease(ooCallData * call)
 }
 
 int ooHandleMasterSlaveReject
-   (ooCallData *call, H245MasterSlaveDeterminationReject* reject)
+   (OOH323CallData *call, H245MasterSlaveDeterminationReject* reject)
 {
    if(call->msdRetries < DEFAULT_MAX_RETRIES)
    {
@@ -767,7 +767,7 @@ int ooHandleMasterSlaveReject
 }
 
 
-int ooHandleOpenLogicalChannel(ooCallData* call,
+int ooHandleOpenLogicalChannel(OOH323CallData* call,
                                  H245OpenLogicalChannel *olc)
 {
 
@@ -874,7 +874,7 @@ int ooHandleOpenLogicalChannel(ooCallData* call,
 }      
 
 /*TODO: Need to clean logical channel in case of failure after creating one */
-int ooHandleOpenLogicalAudioChannel(ooCallData *call,
+int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
                                     H245OpenLogicalChannel*olc)
 {
    int ret=0;
@@ -1015,7 +1015,7 @@ int ooHandleOpenLogicalAudioChannel(ooCallData *call,
 }
 
 int ooSendOpenLogicalChannelReject
-   (ooCallData *call, ASN1UINT channelNum, ASN1UINT cause)
+   (OOH323CallData *call, ASN1UINT channelNum, ASN1UINT cause)
 {
    int ret=0;
    H245ResponseMessage* response=NULL;
@@ -1070,7 +1070,7 @@ int ooSendOpenLogicalChannelReject
 }
 
 
-int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
+int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
                                       H245OpenLogicalChannelAck *olcAck)
 {
    char remoteip[20];
@@ -1180,7 +1180,7 @@ int ooOnReceivedOpenLogicalChannelAck(ooCallData *call,
    return OO_OK;
 }
 
-int ooOnReceivedOpenLogicalChannelRejected(ooCallData *call,
+int ooOnReceivedOpenLogicalChannelRejected(OOH323CallData *call,
                                      H245OpenLogicalChannelReject *olcReject)
 {
    switch(olcReject->cause.t)
@@ -1281,7 +1281,7 @@ int ooOnReceivedOpenLogicalChannelRejected(ooCallData *call,
 /**
  * Currently only disconnect end session command is supported.
  **/
-int ooSendEndSessionCommand(ooCallData *call)
+int ooSendEndSessionCommand(OOH323CallData *call)
 {
    int ret;
    H245CommandMessage * command;
@@ -1318,7 +1318,7 @@ int ooSendEndSessionCommand(ooCallData *call)
 }
 
 
-int ooHandleH245Command(ooCallData *call,
+int ooHandleH245Command(OOH323CallData *call,
                         H245CommandMessage *command)
 {
    ASN1UINT i;
@@ -1382,7 +1382,7 @@ int ooHandleH245Command(ooCallData *call,
 }
 
 
-int ooOnReceivedTerminalCapabilitySetAck(ooCallData* call)
+int ooOnReceivedTerminalCapabilitySetAck(OOH323CallData* call)
 {
    call->localTermCapState = OO_LocalTermCapSetAckRecvd;
    if(call->remoteTermCapState != OO_RemoteTermCapSetAckSent)
@@ -1402,7 +1402,7 @@ int ooOnReceivedTerminalCapabilitySetAck(ooCallData* call)
    return OO_OK;
 }
 
-int ooCloseAllLogicalChannels(ooCallData *call)
+int ooCloseAllLogicalChannels(OOH323CallData *call)
 {
    ooLogicalChannel *temp;
    int outgoing=0;
@@ -1425,7 +1425,7 @@ int ooCloseAllLogicalChannels(ooCallData *call)
    return OO_OK;
 }
 
-int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
+int ooSendCloseLogicalChannel(OOH323CallData *call, ooLogicalChannel *logicalChan)
 {
    int ret = OO_OK, error=0;
    H245Message *ph245msg = NULL;
@@ -1491,7 +1491,7 @@ int ooSendCloseLogicalChannel(ooCallData *call, ooLogicalChannel *logicalChan)
 }
 
 /*TODO: Need to pass reason as a parameter */
-int ooSendRequestCloseLogicalChannel(ooCallData *call,
+int ooSendRequestCloseLogicalChannel(OOH323CallData *call,
                                      ooLogicalChannel *logicalChan)
 {
    int ret = OO_OK;
@@ -1546,7 +1546,7 @@ int ooSendRequestCloseLogicalChannel(ooCallData *call,
    return ret;
 }
 
-int ooSendRequestChannelCloseRelease(ooCallData *call, int channelNum)
+int ooSendRequestChannelCloseRelease(OOH323CallData *call, int channelNum)
 {
    int ret = OO_OK;
    H245Message *ph245msg = NULL;
@@ -1595,7 +1595,7 @@ int ooSendRequestChannelCloseRelease(ooCallData *call, int channelNum)
 
 
   
-int ooOnReceivedRequestChannelClose(ooCallData *call,
+int ooOnReceivedRequestChannelClose(OOH323CallData *call,
                                     H245RequestChannelClose *rclc)
 {
    int ret=0, error=0;
@@ -1687,7 +1687,7 @@ int ooOnReceivedRequestChannelClose(ooCallData *call,
   standards.
 */
 int ooOnReceivedRequestChannelCloseAck
-                       (ooCallData *call, H245RequestChannelCloseAck *rccAck)
+                       (OOH323CallData *call, H245RequestChannelCloseAck *rccAck)
 {
    int ret=OO_OK;
    /* Remote endpoint is ok to close channel. So let's do it */
@@ -1703,7 +1703,7 @@ int ooOnReceivedRequestChannelCloseAck
 }
 
 int ooOnReceivedRequestChannelCloseReject
-   (ooCallData *call, H245RequestChannelCloseReject *rccReject)
+   (OOH323CallData *call, H245RequestChannelCloseReject *rccReject)
 {
    int ret =0;
    switch(rccReject->cause.t)
@@ -1740,7 +1740,7 @@ int ooOnReceivedRequestChannelCloseReject
 }
 
 /****/
-int ooOnReceivedCloseLogicalChannel(ooCallData *call,
+int ooOnReceivedCloseLogicalChannel(OOH323CallData *call,
                                     H245CloseLogicalChannel* clc)
 {
    int ret=0;
@@ -1801,14 +1801,14 @@ int ooOnReceivedCloseLogicalChannel(ooCallData *call,
    return ret;
 }
 
-int ooOnReceivedCloseChannelAck(ooCallData* call,
+int ooOnReceivedCloseChannelAck(OOH323CallData* call,
                                 H245CloseLogicalChannelAck* clcAck)
 {
    int ret = OO_OK;
    return OO_OK;
 }
 
-int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
+int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
 {
    ASN1UINT i;
    DListNode *pNode = NULL;
@@ -2092,7 +2092,7 @@ int ooHandleH245Message(ooCallData *call, H245Message * pmsg)
    return OO_OK;
 }
 
-int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
+int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
 {
    int ret = 0,k;
    OOCTXT *pctxt=NULL;
@@ -2182,7 +2182,7 @@ int ooOnReceivedTerminalCapabilitySet(ooCallData *call, H245Message *pmsg)
 }
 
 int ooSendTerminalCapabilitySetReject
-                        (ooCallData *call, int seqNo, ASN1UINT cause)
+                        (OOH323CallData *call, int seqNo, ASN1UINT cause)
 {
    H245Message *ph245msg=NULL;
    H245ResponseMessage * response=NULL;
@@ -2224,7 +2224,7 @@ int ooSendTerminalCapabilitySetReject
    return ret;
 }
 
-int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
+int ooH245AcknowledgeTerminalCapabilitySet(OOH323CallData *call)
 {
    H245Message *ph245msg=NULL;
    H245ResponseMessage * response=NULL;
@@ -2265,7 +2265,7 @@ int ooH245AcknowledgeTerminalCapabilitySet(ooCallData *call)
 }
 
 
-int ooSendTerminalCapabilitySetRelease(ooCallData * call)
+int ooSendTerminalCapabilitySetRelease(OOH323CallData * call)
 {
    int ret=0;
    H245IndicationMessage* indication=NULL;
@@ -2314,7 +2314,7 @@ int ooSendTerminalCapabilitySetRelease(ooCallData * call)
 }
 
 
-int ooOpenLogicalChannels(ooCallData *call)
+int ooOpenLogicalChannels(OOH323CallData *call)
 {
    int ret=0;
    OOTRACEINFO3("Opening logical channels (%s, %s)\n", call->callType,
@@ -2345,7 +2345,7 @@ int ooOpenLogicalChannels(ooCallData *call)
    return OO_OK;
 }
 
-int ooOpenLogicalAudioChannel(ooCallData *call)
+int ooOpenLogicalAudioChannel(OOH323CallData *call)
 {
    ooH323EpCapability *epCap=NULL, *repCap=NULL;
    int k=0;
@@ -2425,7 +2425,7 @@ int ooOpenLogicalAudioChannel(ooCallData *call)
    return OO_OK;
 }
 
-int ooOpenAudioChannel(ooCallData* call, ooH323EpCapability *epCap)
+int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
 {
    int ret;
    H245Message *ph245msg = NULL;
@@ -2561,7 +2561,7 @@ int ooOpenAudioChannel(ooCallData* call, ooH323EpCapability *epCap)
     return ret;
 }
 
-int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
+int ooAddFastStartToSetup(OOH323CallData *call, H225Setup_UUIE *setup)
 {
    return OO_OK;
 }
@@ -2570,7 +2570,7 @@ int ooAddFastStartToSetup(ooCallData *call, H225Setup_UUIE *setup)
    are always with respect to the endpoint which proposes channels
    TODO: Need to clean logical channel in case of failure.    */
 int ooBuildOpenLogicalChannelAudio
-   (ooCallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap,
+   (OOH323CallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap,
     OOCTXT*pctxt, int dir)
 {
    int reverse=0, forward=0;
@@ -2792,7 +2792,7 @@ int ooBuildOpenLogicalChannelAudio
 int ooMSDTimerExpired(void *data)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)data;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    OOTRACEINFO3("MasterSlaveDetermination timeout. (%s, %s)\n", call->callType,
                  call->callToken);
    ASN1MEMFREEPTR(call->pctxt, cbData);
@@ -2809,7 +2809,7 @@ int ooMSDTimerExpired(void *data)
 int ooTCSTimerExpired(void *data)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)data;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    OOTRACEINFO3("TerminalCapabilityExchange timeout. (%s, %s)\n",
                  call->callType, call->callToken);
    ASN1MEMFREEPTR(call->pctxt, cbData);
@@ -2826,7 +2826,7 @@ int ooTCSTimerExpired(void *data)
 int ooOpenLogicalChannelTimerExpired(void *pdata)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    ooLogicalChannel *pChannel = NULL;
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
@@ -2847,7 +2847,7 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
 int ooCloseLogicalChannelTimerExpired(void *pdata)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    ooLogicalChannel *pChannel = NULL;
    OOTRACEINFO3("CloseLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
@@ -2867,7 +2867,7 @@ int ooRequestChannelCloseTimerExpired(void *pdata)
 {
    int ret = 0;
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    ooLogicalChannel *pChannel = NULL;
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
@@ -2894,7 +2894,7 @@ int ooSessionTimerExpired(void *pdata)
 {
    int ret = 0;
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
 
    OOTRACEINFO3("SessionTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);

@@ -29,7 +29,7 @@
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
+int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
 {
    int ret = OO_OK;
    H225ReleaseComplete_UUIE * releaseComplete = NULL;
@@ -124,7 +124,7 @@ int ooOnReceivedReleaseComplete(ooCallData *call, Q931Message *q931Msg)
    return ret;
 }
 
-int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
+int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
 {
    H225Setup_UUIE *setup=NULL;
    int i=0, ret=0;
@@ -364,7 +364,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    return OO_OK;
 }
 
-int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
+int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
 {
    int ret, i;
    H225TransportAddress *h245Address;
@@ -629,7 +629,7 @@ int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg)
    return OO_OK; 
 }
 
-int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
+int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
 {
    int ret=OO_OK;
    ASN1UINT i;
@@ -775,7 +775,7 @@ int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg)
    return ret;
 }
 
-int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
+int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
 {
    H225H323_UU_PDU * pH323UUPdu = NULL;
    H225Facility_UUIE * facility = NULL;
@@ -912,7 +912,7 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
 }
 
 int ooHandleStartH245FacilityMessage
-   (ooCallData *call, H225Facility_UUIE *facility)
+   (OOH323CallData *call, H225Facility_UUIE *facility)
 {
    H225TransportAddress_ipAddress *ipAddress = NULL;
    int ret;
@@ -959,7 +959,7 @@ int ooHandleStartH245FacilityMessage
 }
 
 int ooHandleTunneledH245Messages
-   (ooCallData *call, H225H323_UU_PDU * pH323UUPdu)
+   (OOH323CallData *call, H225H323_UU_PDU * pH323UUPdu)
 {
    H245Message *pmsg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
@@ -1013,9 +1013,8 @@ int ooHandleTunneledH245Messages
    return OO_OK;
 }
 
-
 int ooH323RetrieveAliases
-   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+   (OOH323CallData *call, H225_SeqOfH225AliasAddress *pAddresses,
     ooAliases **aliasList)
 {
    int i=0,j=0,k=0;

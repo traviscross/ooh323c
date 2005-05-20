@@ -54,7 +54,7 @@ char callToken[20];
 static OOBOOL bActive = FALSE;
 static char gLocalIp[20];
 
-int osEpOnCallCleared(ooCallData* call );
+int osEpOnCallCleared(OOH323CallData* call );
 
 int main(int argc, char ** argv)
 {
@@ -171,7 +171,7 @@ int main(int argc, char ** argv)
 }
 
 /* Callback for starting media receive channel */
-int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
+int osEpStartReceiveChannel(OOH323CallData *call, ooLogicalChannel *pChannel)
 {
    printf("Starting receive channel %s:%d\n", call->localIP, pChannel->localRtpPort);
    ooCreateReceiveRTPChannel(call->localIP,
@@ -181,7 +181,7 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 }
 
 /* Callback for stopping media receive channel */
-int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
+int osEpStopReceiveChannel(OOH323CallData *call, ooLogicalChannel *pChannel)
 {
    printf("Stopping Receive Channel\n");
    ooStopReceiveAudioAndPlayback();
@@ -216,13 +216,13 @@ void* osEpHandleCommand(void* dummy)
    return dummy;
 }
 
-int osEpOnAlerting(ooCallData* call )
+int osEpOnAlerting(OOH323CallData* call )
 {
    return OO_OK;
 }
 
 /* Callback to handle incoming call */
-int osEpOnIncomingCall(ooCallData* call )
+int osEpOnIncomingCall(OOH323CallData* call )
 {
    ooMediaInfo mediaInfo;
    strcpy(callToken, call->callToken);
@@ -240,7 +240,7 @@ int osEpOnIncomingCall(ooCallData* call )
 }
 
 /* Call cleared callback */
-int osEpOnCallCleared(ooCallData* call )
+int osEpOnCallCleared(OOH323CallData* call )
 {
    printf("Call Ended\n");
    bActive = FALSE;

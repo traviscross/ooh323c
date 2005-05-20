@@ -29,7 +29,7 @@
 #include <time.h>
 
 /** Global endpoint structure */
-extern ooEndPoint gH323ep;
+extern OOH323EndPoint gH323ep;
 
 extern OO_MUTEX gCallRefMutex;
 extern OO_MUTEX gCallTokenMutex;
@@ -39,7 +39,7 @@ static ASN1OBJID gProtocolID = {
 };
 
 EXTERN int ooQ931Decode
-   (ooCallData *call, Q931Message* msg, int length, ASN1OCTET *data)
+   (OOH323CallData *call, Q931Message* msg, int length, ASN1OCTET *data)
 {
    int offset;
    int rv = ASN_OK;
@@ -559,7 +559,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
 
 #ifndef _COMPACT
 static void ooPrintQ931Message
-   (ooCallData* call, ASN1OCTET *msgbuf, ASN1UINT msglen)
+   (OOH323CallData* call, ASN1OCTET *msgbuf, ASN1UINT msglen)
 {
 
    OOCTXT *pctxt = &gH323ep.msgctxt;
@@ -587,7 +587,7 @@ static void ooPrintQ931Message
 
 
 
-int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
+int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
                         char *msgbuf, int size)
 {
    int len=0, encodeLen=0, i=0, j=0, ieLen=0;
@@ -760,7 +760,7 @@ int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
 
 */
 
-int ooSendCallProceeding(ooCallData *call)
+int ooSendCallProceeding(OOH323CallData *call)
 {
    int ret;   
    H225VendorIdentifier *vendor;
@@ -849,7 +849,7 @@ int ooSendCallProceeding(ooCallData *call)
    return ret;
 }
 
-int ooSendAlerting(ooCallData *call)
+int ooSendAlerting(OOH323CallData *call)
 {
    int ret;   
    H225Alerting_UUIE *alerting;
@@ -960,7 +960,7 @@ int ooSendAlerting(ooCallData *call)
 }
 
 
-int ooSendFacility(ooCallData *call)
+int ooSendFacility(OOH323CallData *call)
 {
    int ret=0;
    Q931Message *pQ931Msg = NULL;
@@ -1029,7 +1029,7 @@ int ooSendFacility(ooCallData *call)
    return ret;
 }
 
-int ooSendReleaseComplete(ooCallData *call)
+int ooSendReleaseComplete(OOH323CallData *call)
 {
    int ret;  
    Q931InformationElement* ie=NULL;
@@ -1118,14 +1118,14 @@ int ooSendReleaseComplete(ooCallData *call)
 }
 
 
-int ooSendConnect(ooCallData *call)
+int ooSendConnect(OOH323CallData *call)
 {
    ooAcceptCall(call);
    return OO_OK;
 }
 
 /*TODO: Need to clean logical channel in case of failure after creating one */
-int ooAcceptCall(ooCallData *call)
+int ooAcceptCall(OOH323CallData *call)
 {
   int ret = 0, i=0, j=0, mediaPort=0, dir=0;
 
@@ -1509,9 +1509,9 @@ int ooAcceptCall(ooCallData *call)
    return OO_OK;
 }
 
-int ooH323HandleCallFwdRequest(ooCallData *call)
+int ooH323HandleCallFwdRequest(OOH323CallData *call)
 {
-   ooCallData *fwdedCall=NULL;
+   OOH323CallData *fwdedCall=NULL;
    OOCTXT *pctxt;
    ooAliases *pNewAlias=NULL, *alias=NULL;
    int i=0, ret = OO_OK;
@@ -1577,7 +1577,7 @@ int ooH323HandleCallFwdRequest(ooCallData *call)
 int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 {
    OOCTXT *pctxt;
-   ooCallData *call;
+   OOH323CallData *call;
    int ret=0, i=0;
    char tmp[30]="\0";
    char *ip=NULL, *port = NULL;
@@ -1656,7 +1656,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 }
 
 
-int ooH323CallAdmitted(ooCallData *call)
+int ooH323CallAdmitted(OOH323CallData *call)
 {
    int ret=0;
      
@@ -1692,7 +1692,7 @@ int ooH323CallAdmitted(ooCallData *call)
    return OO_OK;
 }
 
-int ooH323MakeCall_helper(ooCallData *call)
+int ooH323MakeCall_helper(OOH323CallData *call)
 {
    int ret=0,i=0, k;
    Q931Message *q931msg = NULL;
@@ -2066,7 +2066,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
    Q931Message *pQ931Msg = NULL;
    H225Facility_UUIE *facility=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
-   ooCallData *call;
+   OOH323CallData *call;
    char ip[30]="\0", *pcPort=NULL;
    int port=0;
    H225TransportAddress_ipAddress *fwdCallSignalIpAddress;
@@ -2207,7 +2207,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
 int ooH323HangCall(char * callToken, OOCallClearReason reason)
 {
    int ret =0;
-   ooCallData *call;
+   OOH323CallData *call;
 
    call= ooFindCallByToken(callToken);
    if(!call)
@@ -2348,7 +2348,7 @@ int ooQ931SetCauseIE
 }
 #if 0
 /*TODO: Once we are comfortable with new parse function, get rid of this one */
-int ooParseDestination(ooCallData *call, char *dest)
+int ooParseDestination(OOH323CallData *call, char *dest)
 {
    int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
    ooAliases * psNewAlias = NULL;
@@ -2523,7 +2523,7 @@ int ooParseDestination(ooCallData *call, char *dest)
 #endif
 
 /* Build a Facility message and tunnel H.245 message through it */
-int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf, int h245Len,
+int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf, int h245Len,
                             int h245MsgType, int associatedChan)
 {
    DListNode *pNode = NULL;
@@ -2630,7 +2630,7 @@ int ooCallEstbTimerExpired(void *data)
 {
 
    ooTimerCallback *cbData = (ooTimerCallback*) data;
-   ooCallData *call = cbData->call;
+   OOH323CallData *call = cbData->call;
    OOTRACEINFO3("Call Establishment timer expired. (%s, %s)\n",
                                             call->callType, call->callToken);
    memFreePtr(call->pctxt, cbData);

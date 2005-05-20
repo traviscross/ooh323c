@@ -340,7 +340,7 @@ int ooH323EpDestroy(void)
    /* free any internal memory allocated
       close trace file free context structure
    */
-   ooCallData * cur, *temp;
+   OOH323CallData * cur, *temp;
    if(OO_TESTFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED))
    {
       OOTRACEINFO1("Destroying H323 Endpoint\n");

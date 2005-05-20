@@ -19,6 +19,8 @@
 #include "ootypes.h"
 #include "H323-MESSAGES.h"
 
+struct OOH323CallData;
+
 /**
  * This is the callback function registered with the stack component. This
  * function is called by the stack whenever there is a user activity on stdin.
@@ -28,9 +30,16 @@
  *             -1, on failure.
  */
 void* osEpHandleCommand(void*);
-int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
-int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
-int osEpOnIncomingCall(ooCallData* call );
-int osEpOnAlerting(ooCallData* call );
+
+int osEpStartReceiveChannel
+   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+
+int osEpStopReceiveChannel
+   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+
+int osEpOnIncomingCall (struct OOH323CallData* call );
+
+int osEpOnAlerting (struct OOH323CallData* call );
+
 #endif
 

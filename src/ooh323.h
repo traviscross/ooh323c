@@ -38,6 +38,9 @@ extern "C" {
 #define EXTERN
 #endif /* _WIN32 */
 #endif /* EXTERN */
+
+struct OOH323CallData;
+
 /**
  * @addtogroup q931
  * @{
@@ -49,7 +52,8 @@ extern "C" {
  *
  * @return         OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg);
+EXTERN int ooOnReceivedSetup
+(struct OOH323CallData *call, Q931Message *q931Msg);
 
 /**
  * This function is used to process a received CONNECT message.
@@ -60,7 +64,8 @@ EXTERN int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg);
+EXTERN int ooOnReceivedSignalConnect
+(struct OOH323CallData* call, Q931Message *q931Msg);
 
 /**
  * This function is used to handle received H.2250 messages. It
@@ -70,7 +75,8 @@ EXTERN int ooOnReceivedSignalConnect(ooCallData* call, Q931Message *q931Msg);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg);
+EXTERN int ooHandleH2250Message
+(struct OOH323CallData *call, Q931Message *q931Msg);
 
 /**
  * This function is used to process a received Facility message.
@@ -79,7 +85,8 @@ EXTERN int ooHandleH2250Message(ooCallData *call, Q931Message *q931Msg);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg);
+EXTERN int ooOnReceivedFacility
+(struct OOH323CallData *call, Q931Message * pQ931Msg);
 
 /**
  * This function is used to process tunneled H245 messages
@@ -88,7 +95,7 @@ EXTERN int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooHandleTunneledH245Messages(ooCallData *call,
+EXTERN int ooHandleTunneledH245Messages(struct OOH323CallData *call,
                                         H225H323_UU_PDU * pH323UUPdu);
 
 /**
@@ -96,7 +103,7 @@ EXTERN int ooHandleTunneledH245Messages(ooCallData *call,
  * @param call       Handle to the call
  * @param facility   Pointer to the facility message.
  */
-EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
+EXTERN int ooHandleStartH245FacilityMessage(struct OOH323CallData *call,
                                             H225Facility_UUIE *facility);
 
 /**
@@ -111,9 +118,8 @@ EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323RetrieveAliases
-   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+   (struct OOH323CallData *call, H225_SeqOfH225AliasAddress *pAddresses,
     ooAliases **aliasList);
-
 
 /**
  * This is a helper function used to populate alias list using aliases.

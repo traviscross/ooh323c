@@ -42,11 +42,12 @@ extern "C" {
 #endif /* _WIN32 */
 #endif /* EXTERN */
 
+struct OOH323CallData;
+
 /**
  * @defgroup channels Channel Management
  * @{
  */
-
 /**
  * This function is used to create a listener for incoming calls.
  * @param None
@@ -61,7 +62,7 @@ EXTERN int ooCreateH323Listener(void);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCreateH245Listener(ooCallData *call);
+EXTERN int ooCreateH245Listener(struct OOH323CallData *call);
 
 /**
  * This function is used to accept incoming H.225 connections.
@@ -78,7 +79,7 @@ EXTERN int ooAcceptH225Connection(void);
  *
  * @return            OO_OK, on succes. OO_FAILED, on failure.
  */
-EXTERN int ooAcceptH245Connection(ooCallData *call);
+EXTERN int ooAcceptH245Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to create an H.225 connection to the remote end point.
@@ -86,7 +87,7 @@ EXTERN int ooAcceptH245Connection(ooCallData *call);
  *                   setup.
  * @return           OO_OK, on succes. OO_FAILED, on failure.
  */
-EXTERN int ooCreateH225Connection(ooCallData *call);
+EXTERN int ooCreateH225Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to setup an H.245 connection with the remote endpoint
@@ -95,7 +96,7 @@ EXTERN int ooCreateH225Connection(ooCallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCreateH245Connection(ooCallData *call);
+EXTERN int ooCreateH245Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to close an H.225 connection
@@ -104,7 +105,7 @@ EXTERN int ooCreateH245Connection(ooCallData *call);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCloseH225Connection(ooCallData *call);
+EXTERN int ooCloseH225Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to close an H.245 connection for a call.
@@ -112,7 +113,7 @@ EXTERN int ooCloseH225Connection(ooCallData *call);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCloseH245Connection(ooCallData *call);
+EXTERN int ooCloseH245Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to start monitoring channels for the calls. It has
@@ -140,7 +141,7 @@ EXTERN int ooStopMonitorCalls(void);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH2250Receive(ooCallData *call);
+EXTERN int ooH2250Receive(struct OOH323CallData *call);
 
 /**
  * This function is used to receive an H.245 message received on a calls
@@ -151,7 +152,7 @@ EXTERN int ooH2250Receive(ooCallData *call);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH245Receive(ooCallData *call);
+EXTERN int ooH245Receive(struct OOH323CallData *call);
 
 /**
  * This function is used to enqueue an H.225 message into an outgoing queue for
@@ -161,7 +162,7 @@ EXTERN int ooH245Receive(ooCallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendH225Msg(ooCallData *call, Q931Message *msg);
+EXTERN int ooSendH225Msg(struct OOH323CallData *call, Q931Message *msg);
 
 /**
  * This function is used to enqueue an H.245 message into an outgoing queue for
@@ -171,7 +172,7 @@ EXTERN int ooSendH225Msg(ooCallData *call, Q931Message *msg);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendH245Msg(ooCallData *call, H245Message *msg);
+EXTERN int ooSendH245Msg(struct OOH323CallData *call, H245Message *msg);
 
 /**
  * This function is used to Send a message on the channel, when channel is
@@ -181,7 +182,7 @@ EXTERN int ooSendH245Msg(ooCallData *call, H245Message *msg);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendMsg(ooCallData *call, int type);
+EXTERN int ooSendMsg(struct OOH323CallData *call, int type);
 
 /**
  * This function is called after a message is sent on the call's channel.
@@ -196,7 +197,8 @@ EXTERN int ooSendMsg(ooCallData *call, int type);
  * @return                OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooOnSendMsg
-   (ooCallData *call, int msgType, int tunneledMsgType, int associatedChan);
+   (struct OOH323CallData *call, int msgType, int tunneledMsgType,
+    int associatedChan);
 
 
 

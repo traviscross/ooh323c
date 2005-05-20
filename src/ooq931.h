@@ -229,7 +229,7 @@ typedef struct Q931InformationElement {
 } Q931InformationElement;
 
 
-
+struct OOH323CallData;
 
 /**
  * This function is invoked to decode a Q931 message.
@@ -242,7 +242,7 @@ typedef struct Q931InformationElement {
  * @return         Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooQ931Decode
-   (ooCallData *call, Q931Message* msg, int length, ASN1OCTET *data);
+(struct OOH323CallData *call, Q931Message* msg, int length, ASN1OCTET *data);
 
 /**
  * This function is used to decode the UUIE of the message from the list of
@@ -339,8 +339,8 @@ EXTERN int ooFreeQ931Message(Q931Message *q931Msg);
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooGetOutgoingQ931Msgbuf(ooCallData *call, ASN1OCTET * msgbuf,
-                                   int * len, int *msgType);
+EXTERN int ooGetOutgoingQ931Msgbuf
+(struct OOH323CallData *call, ASN1OCTET * msgbuf, int* len, int *msgType);
 
 /**
  * This function is invoked to send a ReleaseComplete message for
@@ -351,7 +351,7 @@ EXTERN int ooGetOutgoingQ931Msgbuf(ooCallData *call, ASN1OCTET * msgbuf,
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSendReleaseComplete(ooCallData *call);
+EXTERN int ooSendReleaseComplete(struct OOH323CallData *call);
 
 /**
  * This function is invoked to send a call proceeding message in response to
@@ -362,7 +362,7 @@ EXTERN int ooSendReleaseComplete(ooCallData *call);
  *
  * @return        Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSendCallProceeding(ooCallData *call);
+EXTERN int ooSendCallProceeding(struct OOH323CallData *call);
 
 /**
  * This function is invoked to send alerting message in response to received 
@@ -373,7 +373,7 @@ EXTERN int ooSendCallProceeding(ooCallData *call);
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSendAlerting(ooCallData *call);
+EXTERN int ooSendAlerting(struct OOH323CallData *call);
 
 /**
  * This function is invoked to send Facility message.
@@ -383,7 +383,7 @@ EXTERN int ooSendAlerting(ooCallData *call);
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSendFacility(ooCallData *call);
+EXTERN int ooSendFacility(struct OOH323CallData *call);
 
 /**
  * This function is invoked to send a Connect message in response to received 
@@ -394,7 +394,7 @@ EXTERN int ooSendFacility(ooCallData *call);
  *
  * @return          Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooSendConnect(ooCallData *call);
+EXTERN int ooSendConnect(struct OOH323CallData *call);
 
 /**
  * This function is used to send a SETUP message for outgoing call. It first
@@ -416,7 +416,7 @@ EXTERN int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure
  */
-int ooH323CallAdmitted( ooCallData *call);
+int ooH323CallAdmitted( struct OOH323CallData *call);
 
 /**
  * This function is used to handle a call forward request sent to local
@@ -425,7 +425,7 @@ int ooH323CallAdmitted( ooCallData *call);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323HandleCallFwdRequest(ooCallData *call);
+EXTERN int ooH323HandleCallFwdRequest(struct OOH323CallData *call);
 
 /**
  * This function is used for forwarding/redirecting a call to third party.
@@ -438,7 +438,7 @@ EXTERN int ooH323HandleCallFwdRequest(ooCallData *call);
 EXTERN int ooH323ForwardCall(char* callToken, char *dest);
 
 /**
- * This function is used to handup a currently active call. It sets the call
+ * This function is used to hangup a currently active call. It sets the call
  * state to CLEARING and initiates closing of all logical channels.
  * @param callToken Unique token of the call to be hanged.
  * @param reason    Reason for ending call.
@@ -455,15 +455,15 @@ EXTERN int ooH323HangCall(char * callToken, OOCallClearReason reason);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAcceptCall(ooCallData *call);
+EXTERN int ooAcceptCall(struct OOH323CallData *call);
 
-/**
+/*
  * An helper function to ooMakeCall.
  * @param call      Pointer to the new call.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323MakeCall_helper(ooCallData *call);
+EXTERN int ooH323MakeCall_helper(struct OOH323CallData *call);
 
 /**
  * This function is used to parse the destination
@@ -504,8 +504,9 @@ int ooGenerateCallToken (char *callToken, size_t size);
  *
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
-                         int h245Len, int h245MsgType, int associatedChan);
+EXTERN int ooSendAsTunneledMessage
+(struct OOH323CallData *call, ASN1OCTET* msgbuf,
+ int h245Len, int h245MsgType, int associatedChan);
 
 
 /**
@@ -518,7 +519,7 @@ EXTERN int ooSendAsTunneledMessage(ooCallData *call, ASN1OCTET* msgbuf,
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-int ooEncodeH225Message(ooCallData *call, Q931Message *pq931Msg,
+int ooEncodeH225Message(struct OOH323CallData *call, Q931Message *pq931Msg,
                         char *msgbuf, int size);
 
 /**

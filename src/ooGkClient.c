@@ -1383,7 +1383,7 @@ int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient, unsigned reqNo)
 
 
 int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, ASN1BOOL retransmit)
+   (ooGkClient *pGkClient, OOH323CallData *call, ASN1BOOL retransmit)
 {
    int iRet = 0;
    unsigned int x;
@@ -1777,7 +1777,7 @@ int ooGkClientHandleAdmissionConfirm
  * @return  Completion status - 0 on success, -1 on failure
  */
 
-int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, ooCallData *call)
+int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
 {
    int iRet = 0;  
    unsigned int x;
@@ -2009,7 +2009,7 @@ int ooGkClientARQTimerExpired(void* pdata)
    return OO_FAILED;
 }
 
-int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call)
+int ooGkClientCleanCall(ooGkClient *pGkClient, OOH323CallData *call)
 {
    unsigned int x=0;
    DListNode *pNode=NULL;

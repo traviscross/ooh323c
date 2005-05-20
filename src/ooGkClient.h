@@ -21,8 +21,6 @@
  *
  *
  */
-
-
 #ifndef _OOGKCLIENT_H_
 #define _OOGKCLIENT_H_
 
@@ -80,6 +78,7 @@ extern "C" {
  * @{
  */
 
+struct OOH323CallData;
 struct ooGkClient;
 struct RasCallAdmissionInfo;
 
@@ -126,7 +125,7 @@ typedef struct RasGatekeeperInfo
  */
 typedef struct RasCallAdmissionInfo
 {
-   ooCallData *call;
+   struct OOH323CallData *call;
    unsigned int retries;
    unsigned short requestSeqNum;
    ASN1USINT irrFrequency;
@@ -180,7 +179,7 @@ typedef struct ooGkClient{
    enum OOGkClientState  state;
 } ooGkClient;
 
-
+struct OOH323CallData;
 
 /**
  * This function is used to initialize the Gatekeeper client.
@@ -402,7 +401,7 @@ EXTERN int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient,
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooGkClientSendAdmissionRequest
-   (ooGkClient *pGkClient, ooCallData *call, ASN1BOOL retransmit);
+   (ooGkClient *pGkClient, struct OOH323CallData *call, ASN1BOOL retransmit);
 
 /**
  * This function is used to handle a received Admission confirm message.
@@ -422,7 +421,7 @@ EXTERN int ooGkClientHandleAdmissionConfirm
  * @return           Completion status - OO_OK on success, OO_FAILED on failure
  */
 EXTERN int ooGkClientSendDisengageRequest
-   (ooGkClient *pGkClient, ooCallData *call);
+   (ooGkClient *pGkClient, struct OOH323CallData *call);
 
 /**
  * This function is used to handle a received disengage confirm message.
@@ -473,7 +472,7 @@ EXTERN int ooGkClientARQTimerExpired(void* pdata);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, ooCallData *call);
+EXTERN int ooGkClientCleanCall(ooGkClient *pGkClient, struct OOH323CallData *call);
 
 /**
  * This function is used to handle gatekeeper client failure or gatekeeper

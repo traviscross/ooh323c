@@ -69,21 +69,27 @@ typedef struct ooGSMCapParams {
    OOBOOL comfortNoise;
 } ooGSMCapParams;
 
+struct OOH323CallData;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Call back for starting media receive channel */
 typedef int (*cb_StartReceiveChannel)
-     (ooCallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
 
 /** callback for starting media transmit channel */
 typedef int (*cb_StartTransmitChannel)
-     (ooCallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
 
 /** callback to stop media receive channel */
 typedef int (*cb_StopReceiveChannel)
-     (ooCallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
 
 /** callback to stop media transmit channel */
 typedef int (*cb_StopTransmitChannel)
-     (ooCallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
 
 typedef enum OOCapType {
    OO_CAP_TYPE_AUDIO,
@@ -108,10 +114,6 @@ typedef struct ooH323EpCapability {
 } ooH323EpCapability;
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef EXTERN
 #ifdef _WIN32
 #define EXTERN __declspec(dllexport)
@@ -133,7 +135,7 @@ extern "C" {
  * @return                       OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCapabilityEnableDTMFRFC2833
-   (ooCallData *call, int dynamicRTPPayloadType);
+   (struct OOH323CallData *call, int dynamicRTPPayloadType);
 
 /**
  * This function is used to remove rfc2833 dtmf detection capability.
@@ -141,7 +143,7 @@ EXTERN int ooCapabilityEnableDTMFRFC2833
  *                         for end-point.
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
+EXTERN int ooCapabilityDisableDTMFRFC2833(struct OOH323CallData *call);
 
 
 
@@ -167,7 +169,7 @@ EXTERN int ooCapabilityDisableDTMFRFC2833(ooCallData *call);
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCapabilityAddSimpleCapability
-   (ooCallData *call, int cap, int txframes, int rxframes,
+   (struct OOH323CallData *call, int cap, int txframes, int rxframes,
     OOBOOL silenceSuppression, int dir,
     cb_StartReceiveChannel startReceiveChannel,
     cb_StartTransmitChannel startTransmitChannel,
@@ -197,7 +199,7 @@ EXTERN int ooCapabilityAddSimpleCapability
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  *
  */
-EXTERN int ooCapabilityAddG729Capability(ooCallData *call, int cap,
+EXTERN int ooCapabilityAddG729Capability(struct OOH323CallData *call, int cap,
                                          int txframes, int rxframes, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
@@ -226,7 +228,8 @@ EXTERN int ooCapabilityAddG729Capability(ooCallData *call, int cap,
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  *
  */
-int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
+int ooCapabilityAddG711Capability(struct OOH323CallData *call,
+                                  int cap, int txframes,
                                  int rxframes, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
@@ -257,7 +260,7 @@ int ooCapabilityAddG711Capability(ooCallData *call, int cap, int txframes,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
+int ooCapabilityAddGSMCapability(struct OOH323CallData *call, int cap,
                                 unsigned framesPerPkt, OOBOOL comfortNoise,
                                 OOBOOL scrambled, int dir,
                                 cb_StartReceiveChannel startReceiveChannel,
@@ -277,7 +280,8 @@ int ooCapabilityAddGSMCapability(ooCallData *call, int cap,
  *
  * @return                    OO_OK, on success. OO_FAILED, otherwise.
  */
-int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
+int ooAddRemoteAudioCapability(struct OOH323CallData *call,
+                               H245AudioCapability *audioCap,
                                int dir);
 
 
@@ -289,7 +293,7 @@ int ooAddRemoteAudioCapability(ooCallData *call, H245AudioCapability *audioCap,
  *
  * @return               OO_OK, on success. OO_FAILED, otherwise.
  */
-int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
+int ooAddRemoteCapability(struct OOH323CallData *call, H245Capability *cap);
 
 /**
  * This function is used to update joint capabilities for call. It checks
@@ -302,7 +306,7 @@ int ooAddRemoteCapability(ooCallData *call, H245Capability *cap);
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
 EXTERN int ooCapabilityUpdateJointCapabilities
-                                       (ooCallData* call, H245Capability *cap);
+(struct OOH323CallData* call, H245Capability *cap);
 
 /**
  * This function is used to test the compatibility of the two capabilities.
@@ -315,7 +319,8 @@ EXTERN int ooCapabilityUpdateJointCapabilities
  * @return                    TRUE, if compatible, FALSE otherwise.
  */
 ASN1BOOL ooCheckCompatibility
-(ooCallData *call, ooH323EpCapability *txCap, ooH323EpCapability *rxCap);
+(struct OOH323CallData *call, ooH323EpCapability *txCap,
+ ooH323EpCapability *rxCap);
 
 /**
  * This function is used to test whether the endpoint capability in the
@@ -330,8 +335,9 @@ ASN1BOOL ooCheckCompatibility
  * @return                   TRUE, if compatible. FALSE, otherwise.
  */
 
-ASN1BOOL ooCheckCompatibility_1(ooCallData *call, ooH323EpCapability *epCap,
-                                     H245AudioCapability * audioCap, int dir);
+ASN1BOOL ooCheckCompatibility_1(struct OOH323CallData *call,
+                                ooH323EpCapability *epCap,
+                                H245AudioCapability * audioCap, int dir);
 
 
 /**
@@ -402,7 +408,7 @@ struct H245AudioCapability* ooCreateSimpleCapability
  *                  Null if none found
  */
 ooH323EpCapability* ooIsAudioDataTypeSupported
-                (ooCallData *call, H245AudioCapability* audioCap, int dir);
+(struct OOH323CallData *call, H245AudioCapability* audioCap, int dir);
 
 /**
  * This function is used to determine whether a particular capability type
@@ -415,7 +421,7 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
  *                  capability type, Null if none found
  */
 ooH323EpCapability* ooIsDataTypeSupported
-                           (ooCallData *call, H245DataType *data, int dir);
+(struct OOH323CallData *call, H245DataType *data, int dir);
 
 /**
  * This function is used to clear the capability preference order.
@@ -424,7 +430,7 @@ ooH323EpCapability* ooIsDataTypeSupported
  *
  * @return          OO_OK, on success. OO_FAILED, on failure
  */
-EXTERN  int ooResetCapPrefs(ooCallData *call);
+EXTERN  int ooResetCapPrefs(struct OOH323CallData *call);
 
 /**
  * This function is used to remove a particular capability from preference
@@ -435,7 +441,7 @@ EXTERN  int ooResetCapPrefs(ooCallData *call);
  *
  * @return         OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
+EXTERN  int ooRemoveCapFromCapPrefs(struct OOH323CallData *call, int cap);
 
 /**
  * This function is used to append a particular capability to preference
@@ -446,7 +452,7 @@ EXTERN  int ooRemoveCapFromCapPrefs(ooCallData *call, int cap);
  *
  * @return         OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
+EXTERN int ooAppendCapToCapPrefs(struct OOH323CallData *call, int cap);
 
 /**
  * This function is used to change preference order of a particular capability
@@ -458,7 +464,7 @@ EXTERN int ooAppendCapToCapPrefs(ooCallData *call, int cap);
  *
  * @return         OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos);
+EXTERN int ooChangeCapPrefOrder(struct OOH323CallData *call, int cap, int pos);
 
 /**
  * This function is used to preppend a particular capability to preference
@@ -469,7 +475,7 @@ EXTERN int ooChangeCapPrefOrder(ooCallData *call, int cap, int pos);
  *
  * @return         OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooPreppendCapToCapPrefs(ooCallData *call, int cap);
+EXTERN int ooPreppendCapToCapPrefs(struct OOH323CallData *call, int cap);
 
 
 /**

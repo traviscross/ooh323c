@@ -36,7 +36,7 @@ extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
 
-int ooCreateH245Listener(ooCallData *call)
+int ooCreateH245Listener(OOH323CallData *call)
 {
    int ret=0;
    OOSOCKET channelSocket=0;
@@ -71,7 +71,7 @@ int ooCreateH245Listener(ooCallData *call)
    return OO_OK;
 }
 
-int ooCreateH245Connection(ooCallData *call)
+int ooCreateH245Connection(OOH323CallData *call)
 {
    int ret=0;
    OOSOCKET channelSocket=0;
@@ -143,7 +143,7 @@ int ooCreateH245Connection(ooCallData *call)
    return OO_OK;
 }
 
-int ooSendH245Msg(ooCallData *call, H245Message *msg)
+int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
 {
    int iRet=0,  len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
    ASN1OCTET * encodebuf;
@@ -221,7 +221,7 @@ int ooSendH245Msg(ooCallData *call, H245Message *msg)
 }
 
 
-int ooSendH225Msg(ooCallData *call, Q931Message *msg)
+int ooSendH225Msg(OOH323CallData *call, Q931Message *msg)
 {
    int iRet=0;
    ASN1OCTET * encodebuf;
@@ -253,7 +253,7 @@ int ooSendH225Msg(ooCallData *call, Q931Message *msg)
    return OO_OK;
 }
 
-int ooCreateH225Connection(ooCallData *call)
+int ooCreateH225Connection(OOH323CallData *call)
 {
    int ret=0;
    OOSOCKET channelSocket=0;
@@ -317,7 +317,7 @@ int ooCreateH225Connection(ooCallData *call)
    }
 }
 
-int ooCloseH225Connection (ooCallData *call)
+int ooCloseH225Connection (OOH323CallData *call)
 {
    if (0 != call->pH225Channel)
    {
@@ -367,7 +367,7 @@ int ooCreateH323Listener()
 
 int ooAcceptH225Connection()   
 {
-   ooCallData * call;
+   OOH323CallData * call;
    int ret;
    char callToken[20];
    OOSOCKET h225Channel=0;
@@ -395,7 +395,7 @@ int ooAcceptH225Connection()
    return OO_OK;
 }
 
-int ooAcceptH245Connection(ooCallData *call)
+int ooAcceptH245Connection(OOH323CallData *call)
 {
    int ret;
    OOSOCKET h245Channel=0;
@@ -442,7 +442,7 @@ int ooMonitorChannels()
    int ret=0, nfds=0;
    struct timeval toMin, toNext;
    fd_set readfds, writefds;
-   ooCallData *call, *prev=NULL;
+   OOH323CallData *call, *prev=NULL;
    DListNode *curNode;
    ooCommand *cmd;
    int i=0;
@@ -788,7 +788,7 @@ int ooMonitorChannels()
    return OO_OK;
 }
 
-int ooH2250Receive(ooCallData *call)
+int ooH2250Receive(OOH323CallData *call)
 {
    int  recvLen=0, total=0, ret=0;
    ASN1OCTET message[MAXMSGLEN], message1[MAXMSGLEN];
@@ -926,7 +926,7 @@ int ooH2250Receive(ooCallData *call)
 
 
 
-int ooH245Receive(ooCallData *call)
+int ooH245Receive(OOH323CallData *call)
 {
    int  recvLen, ret, len, total=0;
    ASN1OCTET message[MAXMSGLEN], message1[MAXMSGLEN];
@@ -1076,7 +1076,7 @@ int ooH245Receive(ooCallData *call)
                              Note, no tpkt header is present in this case.
                            
 */
-int ooSendMsg(ooCallData *call, int type)
+int ooSendMsg(OOH323CallData *call, int type)
 {
 
    int len=0, ret=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
@@ -1247,7 +1247,7 @@ int ooSendMsg(ooCallData *call, int type)
    return OO_FAILED;
 }      
 
-int ooCloseH245Connection(ooCallData *call)
+int ooCloseH245Connection(OOH323CallData *call)
 {
    OOTRACEINFO3("Closing H.245 connection (%s, %s)\n", call->callType,
                 call->callToken);
@@ -1275,7 +1275,7 @@ int ooCloseH245Connection(ooCallData *call)
 }
 
 int ooOnSendMsg
-      (ooCallData *call, int msgType, int tunneledMsgType, int associatedChan)
+      (OOH323CallData *call, int msgType, int tunneledMsgType, int associatedChan)
 {
    ooTimerCallback *cbData=NULL;
    switch(msgType)
@@ -1652,7 +1652,7 @@ int ooOnSendMsg
 
 int ooStopMonitorCalls()
 {
-   ooCallData * call;
+   OOH323CallData * call;
    if(gMonitor)
    {
       OOTRACEINFO1("Doing ooStopMonitorCalls\n");

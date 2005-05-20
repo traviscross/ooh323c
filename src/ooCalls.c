@@ -24,14 +24,14 @@
 #include "ooCapability.h"
 #include "ooGkClient.h"
 #include "ooh323ep.h"
-
+#include "ooCalls.h"
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-ooCallData* ooCreateCall(char* type, char*callToken)
+OOH323CallData* ooCreateCall(char* type, char*callToken)
 {
-   ooCallData *call=NULL;
+   OOH323CallData *call=NULL;
    OOCTXT *pctxt=NULL;
 
    pctxt = newContext();
@@ -40,13 +40,13 @@ ooCallData* ooCreateCall(char* type, char*callToken)
       OOTRACEERR1("ERROR:Failed to create OOCTXT for new call\n");
       return NULL;
    }
-   call = (ooCallData*)ASN1MALLOC(pctxt, sizeof(ooCallData));
+   call = (OOH323CallData*)ASN1MALLOC(pctxt, sizeof(OOH323CallData));
    if(!call)
    {
       OOTRACEERR1("ERROR: Failed to allocate memory for new call data\n");
       return NULL;
    }
-   /*   memset(call, 0, sizeof(ooCallData));*/
+   /*   memset(call, 0, sizeof(OOH323CallData));*/
    call->pctxt = pctxt;
   
    sprintf(call->callToken, "%s", callToken);
@@ -146,7 +146,7 @@ ooCallData* ooCreateCall(char* type, char*callToken)
    return call;
 }
 
-int ooAddCallToList(ooCallData *call)
+int ooAddCallToList(OOH323CallData *call)
 {
    if(!gH323ep.callList)
    {
@@ -164,7 +164,7 @@ int ooAddCallToList(ooCallData *call)
 }
 
 
-int ooEndCall(ooCallData *call)
+int ooEndCall(OOH323CallData *call)
 {
    OOTRACEDBGA4("In ooEndCall call state is - %s (%s, %s)\n",
                  ooGetCallStateText(call->callState), call->callType,
@@ -209,7 +209,7 @@ int ooEndCall(ooCallData *call)
 
 
 
-int ooRemoveCallFromList (ooCallData *call)
+int ooRemoveCallFromList (OOH323CallData *call)
 {
    if(!call)
       return OO_OK;
@@ -231,7 +231,7 @@ int ooRemoveCallFromList (ooCallData *call)
    return OO_OK;
 }
 
-int ooCleanCall(ooCallData *call)
+int ooCleanCall(OOH323CallData *call)
 {
    OOCTXT *pctxt;
 
@@ -298,7 +298,7 @@ int ooCleanCall(ooCallData *call)
 }
 
 
-int ooCallSetCallerId(ooCallData* call, const char* callerid)
+int ooCallSetCallerId(OOH323CallData* call, const char* callerid)
 {
    if(!call || !callerid) return OO_FAILED;
    strncpy(call->ourCallerId, callerid, sizeof(call->ourCallerId)-1);
@@ -306,7 +306,7 @@ int ooCallSetCallerId(ooCallData* call, const char* callerid)
    return OO_OK;
 }
 
-int ooCallSetCallingPartyNumber(ooCallData *call, const char *number)
+int ooCallSetCallingPartyNumber(OOH323CallData *call, const char *number)
 {
    if(call->callingPartyNumber)
       memFreePtr(call->pctxt, call->callingPartyNumber);
@@ -328,7 +328,7 @@ int ooCallSetCallingPartyNumber(ooCallData *call, const char *number)
    return OO_OK;
 }
 
-int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len)
+int ooCallGetCallingPartyNumber(OOH323CallData *call, char *buffer, int len)
 {
    if(call->callingPartyNumber)
    {
@@ -343,7 +343,7 @@ int ooCallGetCallingPartyNumber(ooCallData *call, char *buffer, int len)
 }
 
 
-int ooCallSetCalledPartyNumber(ooCallData *call, const char *number)
+int ooCallSetCalledPartyNumber(OOH323CallData *call, const char *number)
 {
    if(call->calledPartyNumber)
       memFreePtr(call->pctxt, call->calledPartyNumber);
@@ -360,7 +360,7 @@ int ooCallSetCalledPartyNumber(ooCallData *call, const char *number)
    return OO_OK;
 }
 
-int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len)
+int ooCallGetCalledPartyNumber(OOH323CallData *call, char *buffer, int len)
 {
    if(call->calledPartyNumber)
    {
@@ -374,7 +374,7 @@ int ooCallGetCalledPartyNumber(ooCallData *call, char *buffer, int len)
    return OO_FAILED;
 }
 
-int ooCallClearAliases(ooCallData *call)
+int ooCallClearAliases(OOH323CallData *call)
 {
    if(call->ourAliases)
       memFreePtr(call->pctxt, call->ourAliases);
@@ -382,7 +382,7 @@ int ooCallClearAliases(ooCallData *call)
    return OO_OK;
 }
 
-int ooCallAddAliasH323ID(ooCallData *call, const char* h323id)
+int ooCallAddAliasH323ID(OOH323CallData *call, const char* h323id)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
@@ -410,7 +410,7 @@ int ooCallAddAliasH323ID(ooCallData *call, const char* h323id)
 }
 
 
-int ooCallAddAliasDialedDigits(ooCallData *call, const char* dialedDigits)
+int ooCallAddAliasDialedDigits(OOH323CallData *call, const char* dialedDigits)
 {
 
    ooAliases * psNewAlias=NULL;
@@ -440,7 +440,7 @@ int ooCallAddAliasDialedDigits(ooCallData *call, const char* dialedDigits)
 }
 
 
-int ooCallAddAliasEmailID(ooCallData *call, const char* email)
+int ooCallAddAliasEmailID(OOH323CallData *call, const char* email)
 {
 
    ooAliases * psNewAlias=NULL;
@@ -470,7 +470,7 @@ int ooCallAddAliasEmailID(ooCallData *call, const char* email)
 }
 
 
-int ooCallAddAliasURLID(ooCallData *call, const char* url)
+int ooCallAddAliasURLID(OOH323CallData *call, const char* url)
 {
 
    ooAliases * psNewAlias=NULL;
@@ -500,7 +500,7 @@ int ooCallAddAliasURLID(ooCallData *call, const char* url)
 }
 
 
-int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id)
+int ooCallAddRemoteAliasH323ID(OOH323CallData *call, const char* h323id)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
@@ -532,7 +532,7 @@ int ooCallAddRemoteAliasH323ID(ooCallData *call, const char* h323id)
 /* Used to override global end point capabilities and add call specific
    capabilities */
 
-int ooCallAddG7231Capability(ooCallData *call, int cap, int txframes,
+int ooCallAddG7231Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, OOBOOL silenceSuppression, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -547,7 +547,7 @@ int ooCallAddG7231Capability(ooCallData *call, int cap, int txframes,
 
 
 
-int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
+int ooCallAddG729Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -559,7 +559,7 @@ int ooCallAddG729Capability(ooCallData *call, int cap, int txframes,
                           stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
-int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
+int ooCallAddG711Capability(OOH323CallData *call, int cap, int txframes,
                             int rxframes, int dir,
                             cb_StartReceiveChannel startReceiveChannel,
                             cb_StartTransmitChannel startTransmitChannel,
@@ -571,7 +571,7 @@ int ooCallAddG711Capability(ooCallData *call, int cap, int txframes,
                             stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
-int ooCallAddGSMCapability(ooCallData* call, int cap, ASN1USINT framesPerPkt,
+int ooCallAddGSMCapability(OOH323CallData* call, int cap, ASN1USINT framesPerPkt,
                              OOBOOL comfortNoise, OOBOOL scrambled, int dir,
                              cb_StartReceiveChannel startReceiveChannel,
                              cb_StartTransmitChannel startTransmitChannel,
@@ -585,19 +585,19 @@ int ooCallAddGSMCapability(ooCallData* call, int cap, ASN1USINT framesPerPkt,
 }
 
 
-int ooCallEnableDTMFRFC2833(ooCallData *call, int dynamicRTPPayloadType)
+int ooCallEnableDTMFRFC2833(OOH323CallData *call, int dynamicRTPPayloadType)
 {
    return ooCapabilityEnableDTMFRFC2833(call, dynamicRTPPayloadType);
 }
 
-int ooCallDisableDTMFRFC2833(ooCallData *call)
+int ooCallDisableDTMFRFC2833(OOH323CallData *call)
 {
   return ooCapabilityDisableDTMFRFC2833(call);
 }
 
-ooCallData* ooFindCallByToken(char *callToken)
+OOH323CallData* ooFindCallByToken(char *callToken)
 {
-   ooCallData *call;
+   OOH323CallData *call;
    if(!callToken)
    {
       OOTRACEERR1("ERROR:Invalid call token passed - ooFindCallByToken\n");
@@ -627,7 +627,7 @@ ooCallData* ooFindCallByToken(char *callToken)
 
 
 
-ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
+ooLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
                                          int sessionID, char *type, char * dir,
                                          ooH323EpCapability *epCap)
 {
@@ -713,7 +713,7 @@ ooLogicalChannel* ooAddNewLogicalChannel(ooCallData *call, int channelNo,
    return pNewChannel;
 }
 
-ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(ooCallData *call,
+ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(OOH323CallData *call,
                                                          int ChannelNo)
 {
    ooLogicalChannel *pLogicalChannel=NULL;
@@ -736,7 +736,7 @@ ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo(ooCallData *call,
    return pLogicalChannel;
 }
 
-ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
+ooLogicalChannel * ooFindLogicalChannelByOLC(OOH323CallData *call,
                                H245OpenLogicalChannel *olc)
 {
    H245DataType * psDataType=NULL;
@@ -776,7 +776,7 @@ ooLogicalChannel * ooFindLogicalChannelByOLC(ooCallData *call,
    }
 }
 
-ooLogicalChannel * ooFindLogicalChannel(ooCallData *call, int sessionID,
+ooLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
                                         char *dir, H245DataType * dataType)
 {
    ooLogicalChannel * pChannel = NULL;
@@ -809,7 +809,7 @@ ooLogicalChannel * ooFindLogicalChannel(ooCallData *call, int sessionID,
 }
 
 /* This function is used to get a logical channel with a particular session ID */
-ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID)
+ooLogicalChannel* ooGetLogicalChannel(OOH323CallData *call, int sessionID)
 {
    ooLogicalChannel * pChannel = NULL;
    pChannel = call->logicalChans;
@@ -824,7 +824,7 @@ ooLogicalChannel* ooGetLogicalChannel(ooCallData *call, int sessionID)
 }
 
 /* Checks whether session with suplied ID and direction is already active*/
-ASN1BOOL ooIsSessionEstablished(ooCallData *call, int sessionID, char* dir)
+ASN1BOOL ooIsSessionEstablished(OOH323CallData *call, int sessionID, char* dir)
 {
    ooLogicalChannel * temp = NULL;
    temp = call->logicalChans;
@@ -839,7 +839,7 @@ ASN1BOOL ooIsSessionEstablished(ooCallData *call, int sessionID, char* dir)
    return FALSE;
 }
 
-int ooClearAllLogicalChannels(ooCallData *call)
+int ooClearAllLogicalChannels(OOH323CallData *call)
 {
    ooLogicalChannel * temp = NULL, *prev = NULL;
 
@@ -858,7 +858,7 @@ int ooClearAllLogicalChannels(ooCallData *call)
    return OO_OK;
 }
 
-int ooClearLogicalChannel(ooCallData *call, int channelNo)
+int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
 {
    int ret = OO_OK;
    ooLogicalChannel *pLogicalChannel = NULL;
@@ -907,7 +907,7 @@ int ooClearLogicalChannel(ooCallData *call, int channelNo)
    return OO_OK;
 }
 
-int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo)
+int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
 {
    ooLogicalChannel * temp = NULL, *prev=NULL;
    if(!call->logicalChans)
@@ -942,7 +942,7 @@ int ooRemoveLogicalChannel(ooCallData *call, int ChannelNo)
    return OO_FAILED;
 }
 
-int ooOnLogicalChannelEstablished(ooCallData *call, ooLogicalChannel * pChannel)
+int ooOnLogicalChannelEstablished(OOH323CallData *call, ooLogicalChannel * pChannel)
 {
    ooLogicalChannel * temp = NULL, *prev=NULL;
    /* Change the state of the channel as established and close all other
@@ -973,7 +973,7 @@ int ooOnLogicalChannelEstablished(ooCallData *call, ooLogicalChannel * pChannel)
 
 
 
-int ooAddMediaInfo(ooCallData *call, ooMediaInfo mediaInfo)
+int ooAddMediaInfo(OOH323CallData *call, ooMediaInfo mediaInfo)
 {
    ooMediaInfo *newMediaInfo=NULL;
 
