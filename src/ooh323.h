@@ -105,17 +105,15 @@ EXTERN int ooHandleStartH245FacilityMessage(ooCallData *call,
  * @param call       Handle to the call.Null when retrieving registered
  *                   aliases.
  * @param pAddresses Pointer to the sequence of alias addresses.
- * @param remote     Whether to retrieve remote aliases from message or local
- *                   Used only when call handle is not NULL.
+ * @param aliasList  Handle to alias list to be populated with retrieved
+ *                   aliases.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323RetrieveAliases
-   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, OOBOOL remote);
+   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+    ooAliases **aliasList);
 
-       /*EXTERN int ooRetrieveAliases
-   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses, ASN1BOOL remote);
-       */
 
 /**
  * This is a helper function used to populate alias list using aliases.

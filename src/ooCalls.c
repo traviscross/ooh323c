@@ -275,8 +275,21 @@ int ooCleanCall(ooCallData *call)
    OOTRACEINFO3("Removed call (%s, %s) from list\n", call->callType,
                  call->callToken);
 
-   if(gH323ep.h323Callbacks.onCallCleared)
-     gH323ep.h323Callbacks.onCallCleared(call);
+   if(call->pCallFwdData && call->pCallFwdData->fwdedByRemote)
+   {
+
+      if(gH323ep.h323Callbacks.onCallForwarded)
+         gH323ep.h323Callbacks.onCallForwarded(call);
+
+      if(ooH323HandleCallFwdRequest(call)!= OO_OK)
+      {
+         OOTRACEERR3("Error:Failed to forward call (%s, %s)\n", call->callType,
+                     call->callToken);
+      }
+   }else {
+      if(gH323ep.h323Callbacks.onCallCleared)
+        gH323ep.h323Callbacks.onCallCleared(call);
+   }
 
    pctxt = call->pctxt;
    freeContext(pctxt);

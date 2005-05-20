@@ -134,6 +134,7 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    DListNode* pNode=NULL;
    H225AliasAddress *pAliasAddress=NULL;
    Q931InformationElement* pDisplayIE=NULL;
+   ooAliases *pAlias=NULL;
 
    call->callReference = q931Msg->callReference;
 
@@ -171,15 +172,57 @@ int ooOnReceivedSetup(ooCallData *call, Q931Message *q931Msg)
    {
       if(setup->sourceAddress.count>0)
       {
-         ooH323RetrieveAliases(call, &setup->sourceAddress, TRUE);
+         ooH323RetrieveAliases(call, &setup->sourceAddress,
+                                                       &call->remoteAliases);
+         pAlias = call->remoteAliases;
+         while(pAlias)
+         {
+           if(pAlias->type ==  T_H225AliasAddress_dialedDigits)
+           {
+              if(!call->callingPartyNumber)
+              {
+                 call->callingPartyNumber = (char*)memAlloc(call->pctxt,
+                                                    strlen(pAlias->value)*+1);
+                 if(call->callingPartyNumber)
+                 {
+                     strcpy(call->callingPartyNumber, pAlias->value);
+                 }
+              }
+              break;
+           }
+           pAlias = pAlias->next;
+                    
+         }
       }
    }
-   /* Extract, aliases used for us, if present */     
+   /* Extract, aliases used for us, if present. Also,
+      Populate calledPartyNumber from dialedDigits, if not yet populated using
+      calledPartyNumber Q931 IE.
+   */     
    if(setup->m.destinationAddressPresent)
    {
       if(setup->destinationAddress.count>0)
       {
-         ooH323RetrieveAliases(call, &setup->destinationAddress, FALSE);
+         ooH323RetrieveAliases(call, &setup->destinationAddress,
+                                                       &call->ourAliases);
+         pAlias = call->ourAliases;
+         while(pAlias)
+         {
+           if(pAlias->type == T_H225AliasAddress_dialedDigits)
+           {
+              if(!call->calledPartyNumber)
+              {
+                 call->calledPartyNumber = (char*)memAlloc(call->pctxt,
+                                                    strlen(pAlias->value)*+1);
+                 if(call->calledPartyNumber)
+                 {
+                    strcpy(call->calledPartyNumber, pAlias->value);
+                 }
+              }
+              break;
+           }
+           pAlias = pAlias->next;
+         }
       }
    }
 
@@ -737,13 +780,14 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
    H225H323_UU_PDU * pH323UUPdu = NULL;
    H225Facility_UUIE * facility = NULL;
    int i=0, ret;
+   H225TransportAddress_ipAddress_ip *ip = NULL;
    OOTRACEDBGC3("Received Facility Message.(%s, %s)\n", call->callType,
                                                         call->callToken);
    /* Get Reference to H323_UU_PDU */
    if(!pQ931Msg->userInfo)
    {
-      OOTRACEERR3("Error: UserInfo not found in received H.225 Facility message"
-                  " (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error: UserInfo not found in received H.225 Facility "
+                  "message (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    pH323UUPdu = &pQ931Msg->userInfo->h323_uu_pdu;
@@ -759,7 +803,7 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
       /* Depending on the reason of facility message handle the message */
       if(facility->reason.t == T_H225FacilityReason_transportedInformation)
       {
-         if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+         if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          {
             OOTRACEDBGB3("Handling tunneled messages in Facility. (%s, %s)\n",
                         call->callType, call->callToken);
@@ -770,22 +814,85 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
          else
          {
             OOTRACEERR3("ERROR:Tunneled H.245 message received in facility. "
-                        "Tunneling is disabled at local for this call (%s, %s)\n",
+                     "Tunneling is disabled at local for this call (%s, %s)\n",
                         call->callType, call->callToken);
             return OO_FAILED;
          }
       }
       else if(facility->reason.t == T_H225FacilityReason_startH245)
       {
-         OOTRACEINFO3("Remote wants to start a separate H.245 Channel (%s, %s)\n",
-                      call->callType, call->callToken);
+         OOTRACEINFO3("Remote wants to start a separate H.245 Channel "
+                      "(%s, %s)\n", call->callType, call->callToken);
          /*start H.245 channel*/
          ret = ooHandleStartH245FacilityMessage(call, facility);
          if(ret != OO_OK)
          {
-            OOTRACEERR3("ERROR: Handling startH245 facility message (%s, %s) \n",
-                         call->callType, call->callToken);
+            OOTRACEERR3("ERROR: Handling startH245 facility message "
+                        "(%s, %s)\n", call->callType, call->callToken);
             return ret;
+         }
+      }
+      else if(facility->reason.t == T_H225FacilityReason_callForwarded)
+      {
+         OOTRACEINFO3("Call Forward Facility message received. (%s, %s)\n",
+                      call->callType, call->callToken);
+         if(!facility->m.alternativeAddressPresent &&
+            !facility->m.alternativeAliasAddressPresent)
+         {
+            OOTRACEERR3("Error:No alternative address provided in call forward"
+                       "facility message.(%s, %s)\n", call->callType,
+                        call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callState = OO_CALL_CLEAR;
+               call->callEndReason = OO_REASON_INVALIDMESSAGE;
+            }
+            return OO_OK;
+         }
+         call->pCallFwdData = (OOCallFwdData *) memAlloc(call->pctxt,
+                                                        sizeof(OOCallFwdData));
+         if(!call->pCallFwdData)
+         {
+            OOTRACEERR3("Error:Memory - ooOnReceivedFacility - pCallFwdData "
+                        "(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+         call->pCallFwdData->fwdedByRemote = TRUE;
+         call->pCallFwdData->ip[0]='\0';
+         call->pCallFwdData->aliases = NULL;
+         if(facility->m.alternativeAddressPresent)
+         {
+            if(facility->alternativeAddress.t !=
+                                           T_H225TransportAddress_ipAddress)
+            {
+               OOTRACEERR3("ERROR: Source call signalling address type not ip "
+                           "(%s, %s)\n", call->callType, call->callToken);
+          
+               return OO_FAILED;
+            }
+
+            ip = &facility->alternativeAddress.u.ipAddress->ip;
+            sprintf(call->pCallFwdData->ip, "%d.%d.%d.%d", ip->data[0],
+                                       ip->data[1], ip->data[2], ip->data[3]);
+            call->pCallFwdData->port = 
+                               facility->alternativeAddress.u.ipAddress->port;
+         }
+
+         if(facility->m.alternativeAliasAddressPresent)
+         {
+           ooH323RetrieveAliases(call, &facility->alternativeAliasAddress,
+                                                &call->pCallFwdData->aliases);
+         }
+         /* Now we have to clear the current call and make a new call to
+            fwded location*/
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callState = OO_CALL_CLEAR;
+            call->callEndReason = OO_REASON_REMOTE_FWDED;
+         }else{
+            OOTRACEERR3("Error:Can't forward call as it is being cleared."
+                        " (%s, %s)\n", call->callType, call->callToken);
+           return OO_OK;
          }
       }
       else{
@@ -804,7 +911,8 @@ int ooOnReceivedFacility(ooCallData *call, Q931Message * pQ931Msg)
    return OO_OK;
 }
 
-int ooHandleStartH245FacilityMessage(ooCallData *call, H225Facility_UUIE *facility)
+int ooHandleStartH245FacilityMessage
+   (ooCallData *call, H225Facility_UUIE *facility)
 {
    H225TransportAddress_ipAddress *ipAddress = NULL;
    int ret;
@@ -906,10 +1014,9 @@ int ooHandleTunneledH245Messages
 }
 
 
-
-
-int ooH323RetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
-                      ASN1BOOL remote)
+int ooH323RetrieveAliases
+   (ooCallData *call, H225_SeqOfH225AliasAddress *pAddresses,
+    ooAliases **aliasList)
 {
    int i=0,j=0,k=0;
    DListNode* pNode=NULL;
@@ -942,7 +1049,7 @@ int ooH323RetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddress
       newAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
       if(!newAlias)
       {
-         OOTRACEERR3("ERROR:Failed to allocate memory for alias "
+         OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - newAlias "
                      "(%s, %s)\n", call->callType, call->callToken);
          return OO_FAILED;
       }
@@ -952,41 +1059,11 @@ int ooH323RetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddress
       case T_H225AliasAddress_dialedDigits:
          newAlias->type = T_H225AliasAddress_dialedDigits;
          newAlias->value = (char*) memAlloc(call->pctxt,
-                                   strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
+                         strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
 
          memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
                            strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
          newAlias->value[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]='\0';
-
-         if(remote && !strcmp(call->callType, "incoming") &&
-            !call->callingPartyNumber)
-         {
-            call->callingPartyNumber = (char*)memAlloc(call->pctxt,
-                                  strlen(pAliasAddress->u.dialedDigits)*
-                                   sizeof(char)+1);
-            if(call->callingPartyNumber)
-            {
-               memcpy(call->callingPartyNumber,
-                               pAliasAddress->u.dialedDigits,
-                        strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
-               call->callingPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
-            }
-         }
-
-         if(!remote && !strcmp(call->callType, "incoming") &&
-            !call->calledPartyNumber)  
-         {
-            call->calledPartyNumber = (char*)memAlloc(call->pctxt,
-                                       strlen(pAliasAddress->u.dialedDigits)*
-                                      sizeof(char)+1);
-            if(call->calledPartyNumber)
-            {
-               memcpy(call->calledPartyNumber,
-                        pAliasAddress->u.dialedDigits,
-                        strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
-               call->calledPartyNumber[strlen(pAliasAddress->u.dialedDigits)*sizeof(char)]= '\0';
-            }
-         }
          break;
       case T_H225AliasAddress_h323_ID:
          newAlias->type = T_H225AliasAddress_h323_ID;
@@ -1047,14 +1124,10 @@ int ooH323RetrieveAliases(ooCallData *call, H225_SeqOfH225AliasAddress *pAddress
          memFreePtr(call->pctxt, newAlias);
          continue;
       }
-      if(remote)
-      {
-         newAlias->next = call->remoteAliases;
-         call->remoteAliases = newAlias;
-      }else{
-         newAlias->next = call->ourAliases;
-         call->ourAliases = newAlias;
-      }
+
+      newAlias->next = *aliasList;
+      *aliasList = newAlias;
+
       newAlias = NULL;
     
      pAliasAddress = NULL;

@@ -33,6 +33,7 @@ int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
 int osEpOnOutgoingCallAdmitted(ooCallData* call );
+int osEpOnCallForwarded(ooCallData *call);
 int osEpOnCallCleared(ooCallData* call );
 int osEpOnAlerting(ooCallData* call);
 int osEpOpenLogicalChannels(ooCallData *call);
@@ -279,6 +280,7 @@ int main(int argc, char ** argv)
    h323Callbacks.onCallAnswered = NULL;
    h323Callbacks.onCallEstablished = NULL;
    h323Callbacks.onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted;
+   h323Callbacks.onCallForwarded = osEpOnCallForwarded;
    h323Callbacks.onCallCleared = osEpOnCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
 
@@ -533,6 +535,26 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
    strcpy(callToken, call->callToken);
 
   
+   return OO_OK;
+}
+/* Callback when we are being forwarded to another destination by remote
+   endpoint.
+*/
+int osEpOnCallForwarded(ooCallData *call)
+{
+   printf("\n--->Call %s being forwarded to ", call->callToken);
+
+   if(!ooUtilsIsStrEmpty(call->pCallFwdData->ip))
+   {
+      printf("ip %s", call->pCallFwdData->ip);
+   }
+
+   if(call->pCallFwdData->aliases)
+   {
+     printf("(alias - %s)", call->pCallFwdData->aliases->value);
+   }
+   printf("\nCMD>");
+   fflush(stdout);
    return OO_OK;
 }
 

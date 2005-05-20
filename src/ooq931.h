@@ -418,6 +418,14 @@ EXTERN int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts);
  */
 int ooH323CallAdmitted( ooCallData *call);
 
+/**
+ * This function is used to handle a call forward request sent to local
+ * endpoint by remote endpoint.
+ * @param call        Handle to the call which is being forwarded
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323HandleCallFwdRequest(ooCallData *call);
 
 /**
  * This function is used for forwarding/redirecting a call to third party.

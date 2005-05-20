@@ -353,7 +353,8 @@ typedef struct OOCallFwdData{
    char ip[20];
    int port;
    ooAliases *aliases;
-}OOCallFwdData;
+   OOBOOL fwdedByRemote; /*Set when we are being fwded by remote*/
+}OOCallFwdData;     
 
 /* Flag mask values */
 /* DISABLEGK is used to selectively disable gatekeeper use. For incoming calls
@@ -457,7 +458,7 @@ typedef int (*cb_OnCallEstablished)(ooCallData* call);
 typedef int (*cb_OnOutgoingCallAdmitted)(ooCallData* call );
 typedef int (*cb_OnCallCleared)(ooCallData* call);
 typedef int (*cb_OpenLogicalChannels)(ooCallData* call);
-
+typedef int (*cb_OnCallForwarded)(ooCallData* call);
 struct ooGkClient;
 
 typedef struct OOH323CALLBACKS{
@@ -467,6 +468,7 @@ typedef struct OOH323CALLBACKS{
    cb_OnOutgoingCall onOutgoingCall;
    cb_OnCallAnswered onCallAnswered;
    cb_OnCallEstablished onCallEstablished;
+   cb_OnCallForwarded onCallForwarded;
    cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
    cb_OnCallCleared onCallCleared;
    cb_OpenLogicalChannels openLogicalChannels;

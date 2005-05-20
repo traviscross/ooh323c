@@ -438,9 +438,6 @@ int ooGenerateCallIdentifier(H225CallIdentifier *callid)
 
 }
 
-
-
-
 int ooFreeQ931Message(Q931Message *q931Msg)
 {
    if(!q931Msg)
@@ -1511,6 +1508,70 @@ int ooAcceptCall(ooCallData *call)
    return OO_OK;
 }
 
+int ooH323HandleCallFwdRequest(ooCallData *call)
+{
+   ooCallData *fwdedCall=NULL;
+   OOCTXT *pctxt;
+   ooAliases *pNewAlias=NULL, *alias=NULL;
+   int i=0, ret = OO_OK;
+   /* Note: We keep same callToken, for new call which is going
+      to replace an existing call, thus treating it as a single call.*/
+
+   fwdedCall = ooCreateCall("outgoing", call->callToken);
+
+   pctxt = fwdedCall->pctxt;
+
+   /* Retrieve new destination info from original call */
+   if(!ooUtilsIsStrEmpty(call->pCallFwdData->ip))
+   {
+      strcpy(fwdedCall->remoteIP, call->pCallFwdData->ip);
+   }
+   fwdedCall->remotePort = call->pCallFwdData->port;
+  
+   if(call->pCallFwdData->aliases)
+   {
+      alias = call->pCallFwdData->aliases;
+      while(alias)
+      {
+         pNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
+         pNewAlias->value = (char*) memAlloc(pctxt, strlen(alias->value)+1);
+         if(!pNewAlias || !pNewAlias->value)
+         {
+            OOTRACEERR3("Error:Memory - ooH323HandleCallFwdRequest - "
+                        "pNewAlias/pNewAlias->value"
+                        "(%s, %s)\n", call->callType, call->callToken);
+            ooCleanCall(fwdedCall);
+            return OO_FAILED;
+         }
+         pNewAlias->type = alias->type;
+         strcpy(pNewAlias->value, alias->value);
+         pNewAlias->next = fwdedCall->remoteAliases;
+         fwdedCall->remoteAliases = pNewAlias;
+         alias = alias->next;
+         pNewAlias = NULL;
+      }
+   }
+
+   fwdedCall->callReference = ooGenerateCallReference();
+   ooGenerateCallIdentifier(&fwdedCall->callIdentifier);
+   fwdedCall->confIdentifier.numocts = 16;
+   for (i = 0; i < 16; i++)
+      fwdedCall->confIdentifier.data[i] = i+1;
+     
+
+   if(gH323ep.gkClient && !OO_TESTFLAG(fwdedCall->flags, OO_M_DISABLEGK))
+   {
+     /* No need to check registration status here as it is already checked for
+        MakeCall command */
+      ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, fwdedCall, FALSE);
+      fwdedCall->callState = OO_CALL_WAITING_ADMISSION;
+   }
+   else
+      ret = ooH323CallAdmitted (fwdedCall);
+
+   return OO_OK;
+
+}
 
 int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 {
