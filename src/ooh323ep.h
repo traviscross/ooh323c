@@ -22,6 +22,7 @@
 #include "ooCapability.h"
 #include "ooCalls.h"
 #include "ooGkClient.h"
+#include "ooports.h"
 
 #define DEFAULT_TRACEFILE "trace.log"
 #define DEFAULT_TERMTYPE 50
@@ -145,6 +146,36 @@ EXTERN int ooH323EpInitialize
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetLocalAddress(char * localip, int listenport);
+
+/**
+ * This function is used to set the range of tcp ports the application will
+ * use for tcp transport.
+ * @param base           Starting port number for the range
+ * @param max            Ending port number for the range.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.   
+ */
+EXTERN int ooH323EpSetTCPPortRange(int base, int max);
+
+/**
+ * This function is used to set the range of udp ports the application will
+ * use for udp transport.
+ * @param base           Starting port number for the range
+ * @param max            Ending port number for the range.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.   
+ */
+EXTERN int ooH323EpSetUDPPortRange(int base, int max);
+
+/**
+ * This function is used to set the range of rtp ports the application will
+ * use for media streams.
+ * @param base           Starting port number for the range
+ * @param max            Ending port number for the range.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.   
+ */
+EXTERN int ooH323EpSetRTPPortRange(int base, int max);
 
 /**
  * This function is used to set the trace level for the H.323 endpoint.

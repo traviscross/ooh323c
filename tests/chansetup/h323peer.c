@@ -179,9 +179,9 @@ int main (int argc, char** argv)
 
    if(bListen)
    {
-     ooSetTCPPorts(20050, 20250);
-     ooSetUDPPorts(21050, 21250);
-     ooSetRTPPorts(22050, 22250);
+     ooH323EpSetTCPPortRange(20050, 20250);
+     ooH323EpSetUDPPortRange(21050, 21250);
+     ooH323EpSetRTPPortRange(22050, 22250);
    }
    ooH323EpSetTraceLevel(OOTRCLVLDBGC);
    ooH323EpSetLocalAddress(localIPAddr, localPort);

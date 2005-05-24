@@ -42,44 +42,6 @@ extern "C" {
 #endif /* EXTERN */
 
 /**
- * Sets the range of ports that can be potentially used for TCP
- * connections.
- *
- * @param start     Starting port number for the range.
- * @param max       Ending port number for the range
- *
- * @return          Completion status of operation: 0 (OO_OK) = success,
- *                  negative return value is error.
- */
-EXTERN int ooSetTCPPorts(int start, int max);
-
-/**
- *  Sets the range of ports that can be potentially used for UDP
- *  transport
- *
- * @param start     Starting port number for the range.
- * @param max       Ending port number for the range
- *
- * @return          Completion status of operation: 0 (OO_OK) = success,
- *                  negative return value is error.
- */
-
-EXTERN int ooSetUDPPorts(int start, int max);
-
-/**
- * Sets the range of ports that can be potentially used for RTP
- * RTCP transport.
- *
- * @param start     Starting port number for the range.
- * @param max       Ending port number for the range
- *
- * @return           Completion status of operation: 0 (OO_OK) = success,
- *                   negative return value is error.
- */
-
-EXTERN int ooSetRTPPorts(int start, int max);
-
-/**
  * Get the next port of type TCP/UDP/RTP from the corresponding range.
  * When max value for the range is reached, it starts again from the
  * first port number of the range.

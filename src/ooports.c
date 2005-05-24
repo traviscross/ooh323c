@@ -21,7 +21,7 @@
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
-
+#if 0
 int ooSetTCPPorts( int start, int max)
 {
    if(start < 1024)
@@ -98,6 +98,7 @@ int ooSetRTPPorts(int start, int max)
    OOTRACEINFO1("RTP port range initialize - successful\n");
    return OO_OK;
 }
+#endif
 
 /* Get the next port of type TCP/UDP/RTP */
 int ooGetNextPort (OOH323PortType type)

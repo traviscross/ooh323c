@@ -631,3 +631,75 @@ int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks)
    }
 
 }
+/* 0-1024 are reserved for well known services */
+int ooH323EpSetTCPPortRange(int base, int max)
+{
+   if(base <= 1024)
+      gH323ep.tcpPorts.start = 1025;
+   else
+      gH323ep.tcpPorts.start = base;
+   if(max > 65500)
+      gH323ep.tcpPorts.max = 65500;
+   else
+      gH323ep.tcpPorts.max = max;
+
+   if(gH323ep.tcpPorts.max<gH323ep.tcpPorts.start)
+   {
+      OOTRACEERR1("Error: Failed to set tcp ports- "
+                  "Max port number less than Start port number\n");
+      return OO_FAILED;
+   }
+   gH323ep.tcpPorts.current = gH323ep.tcpPorts.start;
+       
+   OOTRACEINFO1("TCP port range initialize - successful\n");
+   return OO_OK;
+}
+
+int ooH323EpSetUDPPortRange(int base, int max)
+{
+   if(base <= 1024)
+      gH323ep.udpPorts.start = 1025;
+   else
+      gH323ep.udpPorts.start = base;
+   if(max > 65500)
+      gH323ep.udpPorts.max = 65500;
+   else
+      gH323ep.udpPorts.max = max;
+       
+   if(gH323ep.udpPorts.max<gH323ep.udpPorts.start)
+   {
+      OOTRACEERR1("Error: Failed to set udp ports- Max port number"
+                  " less than Start port number\n");
+      return OO_FAILED;
+   }
+       
+   gH323ep.udpPorts.current = gH323ep.udpPorts.start;
+       
+   OOTRACEINFO1("UDP port range initialize - successful\n");
+
+   return OO_OK;
+}
+
+int ooH323EpSetRTPPortRange(int base, int max)
+{
+   if(base <= 1024)
+      gH323ep.rtpPorts.start = 1025;
+   else
+      gH323ep.rtpPorts.start = base;
+   if(max > 65500)
+      gH323ep.rtpPorts.max = 65500;
+   else
+      gH323ep.rtpPorts.max = max;
+       
+   if(gH323ep.rtpPorts.max<gH323ep.rtpPorts.start)
+   {
+      OOTRACEERR1("Error: Failed to set rtp ports- Max port number"
+                  " less than Start port number\n");
+      return OO_FAILED;
+   }
+       
+   gH323ep.rtpPorts.current = gH323ep.rtpPorts.start;
+   OOTRACEINFO1("RTP port range initialize - successful\n");
+   return OO_OK;
+}
+

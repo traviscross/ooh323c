@@ -142,9 +142,9 @@ int main(int argc, char ** argv)
    h323Callbacks.openLogicalChannels=NULL;
 
    ooH323EpSetH323Callbacks(h323Callbacks);
-   ooSetTCPPorts(16050, 16250);
-   ooSetUDPPorts(17050, 17250);
-   ooSetRTPPorts(18050, 18250);
+   ooH323EpSetTCPPortRange(16050, 16250);
+   ooH323EpSetUDPPortRange(17050, 17250);
+   ooH323EpSetRTPPortRange(18050, 18250);
 
    /* Add transmit audio capability of type G711 ULaw */
 
