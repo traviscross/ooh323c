@@ -458,8 +458,6 @@ int ooMonitorChannels()
    struct timeval toMin, toNext;
    fd_set readfds, writefds;
    OOH323CallData *call, *prev=NULL;
-   DListNode *curNode;
-   ooCommand *cmd;
    int i=0;
 #ifdef HAVE_PIPE  
    char buf[2];
@@ -625,69 +623,13 @@ int ooMonitorChannels()
         read(gH323ep.cmdPipe[0], buf, 1);
       }
 #endif
-      if (gH323ep.stkCmdList.count > 0)
-      {
-         for(i=0; i< (int)gH323ep.stkCmdList.count; i++)
-         {
-            curNode = dListFindByIndex (&gH323ep.stkCmdList, i) ;
-            cmd = (ooCommand*) curNode->data;
-            switch(cmd->type)
-            {
-            case OO_CMD_MAKECALL:
-               if(gH323ep.gkClient &&
-                  gH323ep.gkClient->state != GkClientRegistered)
-               {
-                  OOTRACEWARN1("WARN:New outgoing call cmd is waiting for "
-                               "gatekeeper registration.\n");
-                  continue;
-               }
 
-               OOTRACEINFO2("Processing MakeCall command %s\n",
-                             (char*)cmd->param2);
-               ooH323MakeCall((char*)cmd->param1, (char*)cmd->param2,
-                                                 (ooCallOptions*)cmd->param3);
-               break;
-            case OO_CMD_ANSCALL:
-               if(gH323ep.gkClient &&
-                  gH323ep.gkClient->state != GkClientRegistered)
-               {
-                  OOTRACEWARN1("New answer call cmd is waiting for "
-                               "gatekeeper registration.\n");
-                  continue;
-               }
-               OOTRACEINFO2("Processing Answer Call command for %s\n",
-                            (char*)cmd->param1);
-               ooSendConnect(ooFindCallByToken((char*)cmd->param1));
-               break;
-            case OO_CMD_FWDCALL:
-               OOTRACEINFO3("Forwarding call %s to %s\n", (char*)cmd->param1,
-                                                          (char*)cmd->param2);
-               ooH323ForwardCall((char*)cmd->param1, (char*)cmd->param2);
-               break;
-            case OO_CMD_HANGCALL:
-               OOTRACEINFO2("Processing Hang call command %s\n",
-                             (char*)cmd->param1);
-               ooH323HangCall((char*)cmd->param1,
-                                       *(OOCallClearReason*)cmd->param2);
-               break;
-            case OO_CMD_STOPMONITOR:
-               OOTRACEINFO1("Processing StopMonitor command\n");
-               ooStopMonitorCalls();
-               break;
-            default: OOTRACEERR1("ERROR:Unhandled command\n");
-            }
-           dListRemove (&gH323ep.stkCmdList, curNode);
-           memFreePtr (&gH323ep.ctxt, curNode);
-           if(cmd->param1) memFreePtr(&gH323ep.ctxt, cmd->param1);
-           if(cmd->param2) memFreePtr(&gH323ep.ctxt, cmd->param2);
-           if(cmd->param3) memFreePtr(&gH323ep.ctxt, cmd->param3);
-           memFreePtr (&gH323ep.ctxt, cmd);
-         }
-      }
+      ooProcStackCmds();
+
 #ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
+      LeaveCriticalSection(&gCmdMutex);
 #else
-   pthread_mutex_unlock(&gCmdMutex);
+      pthread_mutex_unlock(&gCmdMutex);
 #endif
       /* Manage ready descriptors after select */
 

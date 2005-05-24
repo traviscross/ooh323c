@@ -13,11 +13,39 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
+/*! \mainpage
+ * <H1>ooH323c Stack Functions</H1>
+ *
+ * The <B>Objective Open H.323 for C (ooH323c)</B> protocol stack is an
+ * open source applications program interface (API) for building H.323 based
+ * applications.   The stack implements Q.931/H.225 call signaling procedures,
+ * H.245 logical channel operations, and Registration, Admission, and Status
+ * (RAS) messaging for Gatekeeper communications.
+ *
+ * The categories of user functions provided are as follows:<UL>
+ * <LI>Stack command functions.  These are high level functions used to
+ * initiate common H.323 telephony operations (for example, to make a
+ * call).</LI>
+ * <LI>Gatekeeper functions.  These are high level functions for
+ * managing communications with a gatekeeper using RAS messages.</LI>
+ * <LI>H.323 endpoint management functions.  These are function for
+ * used for managing the global H.323 endpoint.</LI>
+ * <LI>Call management functions.  These are functions used to manage
+ * active calls within the stack.</LI>
+ * <LI>Capability management functions.  These functions are used for
+ * negotiating capabilities between two different terminals.</LI>
+ * <LI>H.225 and H.245 message handling functions.  Functions for
+ * creating and handling H.323 standard ASN.1 messages.</LI>
+ * <LI>Q.931 functions.  Functions for the execution of various
+ * standard Q.931 operations.</LI>
+ * <LI>TCP/IP and UDP socket communication functions.  Low-level
+ * functions for writing data to and receiving data from sockets.</LI>
+ * </UL>
+ */
 /**
  * @file ootypes.h
- * This file contains the definitions of common constants and data structures
+ * This file contains definitions of common constants and data structures.
  */
-
 #ifndef _OOTYPES_H_
 #define _OOTYPES_H_
 
@@ -29,15 +57,19 @@
 
 #define OOH323C_VERSION "v0.6.1"
 
-/*  types */
-#define OO_FAILED -1
-#define OO_OK 1
-
 /**
-  Various states of master slave determination prcedure
-*/
-/*TODO: States for both local and remote initiation should be maintained
+ * @defgroup ootypes Common type and constant definitions.
+ * @{
+ */
+/* Function return codes */
+#define OO_FAILED       -1
+#define OO_OK           1
+
+/* TODO: States for both local and remote initiation should be maintained
    separately */
+/**
+ * States defined for master/slave determination procedure.
+ */
 typedef enum OOMasterSlaveState {
    OO_MasterSlave_Idle,
    OO_MasterSlave_DetermineSent,
@@ -46,7 +78,9 @@ typedef enum OOMasterSlaveState {
    OO_MasterSlave_Slave
 } OOMasterSlaveState;
 
-/** States for Capability Exchange Procedure */
+/**
+ * States defined for the capability exchange procedure.
+ */
 typedef enum {
    OO_LocalTermCapExchange_Idle,
    OO_LocalTermCapSetSent,
@@ -56,7 +90,9 @@ typedef enum {
    OO_RemoteTermCapSetAckSent
 } OOCapExchangeState;
 
-/** Call Clear Reasons */
+/**
+ * Call clear reason codes.
+ */
 typedef enum OOCallClearReason {
    OO_REASON_UNKNOWN=0,
    OO_REASON_INVALIDMESSAGE,
@@ -84,19 +120,23 @@ typedef enum OOCallClearReason {
    OO_REASON_LOCAL_CONGESTED
 } OOCallClearReason;
 
-/** call states */
+/**
+ * Call states.
+ */
 typedef enum {
-   OO_CALL_CREATED,
-   OO_CALL_WAITING_ADMISSION,
-   OO_CALL_CONNECTING,
-   OO_CALL_CONNECTED,
-   OO_CALL_CLEAR,             /* call marked for clearing */
-   OO_CALL_CLEAR_RELEASERECVD,
-   OO_CALL_CLEAR_RELEASESENT,     /* Release Sent */
-   OO_CALL_CLEARED            /* Call Cleared */
+   OO_CALL_CREATED,               /*!< Call created. */
+   OO_CALL_WAITING_ADMISSION,     /*!< Call waiting for admission by GK */
+   OO_CALL_CONNECTING,            /*!< Call in process of connecting */
+   OO_CALL_CONNECTED,             /*!< Call currently connected. */
+   OO_CALL_CLEAR,                 /*!< Call marked for clearing */
+   OO_CALL_CLEAR_RELEASERECVD,    /*!< Release command received. */
+   OO_CALL_CLEAR_RELEASESENT,     /*!< Release sent */
+   OO_CALL_CLEARED                /*!< Call cleared */
 } OOCallState;
 
-/** H245 Session state */
+/**
+ * H.245 session state
+ */
 typedef enum {
    OO_H245SESSION_IDLE,
    OO_H245SESSION_ACTIVE,
@@ -105,7 +145,9 @@ typedef enum {
    OO_H245SESSION_CLOSED
 } OOH245SessionState;
 
-/** Logical Channel states */
+/**
+ * Logical channel states.
+ */
 typedef enum {
    OO_LOGICAL_CHAN_UNKNOWN,
    OO_LOGICALCHAN_IDLE,
@@ -114,11 +156,12 @@ typedef enum {
 } OOLogicalChannelState;
 
 /**
-   Terminal type of the endpoint. Default is 60.
-*/
+ * Terminal type of the endpoint. Default is 60.
+ */
 #define OOTERMTYPE 60
 #define MAX_IP_LENGTH 15
 #define MAXLOGMSGLEN 2048
+
 /**
    Various message types for H225 and H245 messages
 */
@@ -174,9 +217,13 @@ typedef enum {
 #define RTPPORTSEND   14230
 
 /**
- Maximum length for received messages
-*/
+ * Maximum length for received messages.
+ */
 #define MAXMSGLEN 4096
+
+/**
+ * Maximum length of a filename.
+ */
 #define MAXFILENAME 256
 
 #define OO_CMD_MAKECALL      201
@@ -383,7 +430,15 @@ typedef struct OOH225MsgCallbacks{
 }OOH225MsgCallbacks;
 
 
+/**
+ * This callback function is triggered when a new call structure is
+ * created inside the stack for an incoming or outgoing call.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
 typedef int (*cb_OnNewCallCreated)(struct OOH323CallData * call);
+
 typedef int (*cb_OnAlerting)(struct OOH323CallData * call);
 typedef int (*cb_OnIncomingCall)(struct OOH323CallData* call );
 typedef int (*cb_OnOutgoingCall)(struct OOH323CallData* call );
@@ -409,5 +464,8 @@ typedef struct OOH323CALLBACKS{
    cb_OpenLogicalChannels openLogicalChannels;
 } OOH323CALLBACKS;
 
+/**
+ * @}
+ */
 #endif
 

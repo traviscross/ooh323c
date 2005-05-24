@@ -71,6 +71,21 @@ DListNode* dListAppendNode (OOCTXT* pctxt, DList* pList, void* pData)
    return pListNode;
 }
 
+/* Delete the head node from the list and return the data item stored   */
+/* in that node..                                                       */
+
+void* dListDeleteHead (OOCTXT* pctxt, DList* pList)
+{
+   DListNode* pNode = (0 != pList) ? pList->head : 0;
+   if (0 != pNode) {
+      void* pdata = pNode->data;
+      dListRemove (pList, pNode);
+      memFreePtr (pctxt, pNode);
+      return pdata;
+   }
+   return 0;
+}
+
 /* Free all nodes, but not the data */
 void dListFreeNodes (OOCTXT* pctxt, DList* pList)
 {

@@ -238,6 +238,73 @@ int ooHangCall(char * callToken, OOCallClearReason reason)
    return OO_OK;
 }
 
+int ooProcStackCmds()
+{
+   if (gH323ep.stkCmdList.count > 0)
+   {
+      ooCommand *cmd;
+      while (0 != (cmd = dListDeleteHead (&gH323ep.ctxt, &gH323ep.stkCmdList)))
+      {
+         switch(cmd->type) {
+            case OO_CMD_MAKECALL:
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
+               {
+                  OOTRACEWARN1("WARNING: New outgoing call cmd is waiting for "
+                               "gatekeeper registration.\n");
+                  continue;
+               }
+
+               OOTRACEINFO2("Processing MakeCall command %s\n",
+                             (char*)cmd->param2);
+
+               ooH323MakeCall ((char*)cmd->param1, (char*)cmd->param2,
+                               (ooCallOptions*)cmd->param3);
+               break;
+
+            case OO_CMD_ANSCALL:
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
+               {
+                  OOTRACEWARN1("New answer call cmd is waiting for "
+                               "gatekeeper registration.\n");
+                  continue;
+               }
+               OOTRACEINFO2("Processing Answer Call command for %s\n",
+                            (char*)cmd->param1);
+               ooSendConnect(ooFindCallByToken((char*)cmd->param1));
+               break;
+
+            case OO_CMD_FWDCALL:
+               OOTRACEINFO3("Forwarding call %s to %s\n", (char*)cmd->param1,
+                                                          (char*)cmd->param2);
+               ooH323ForwardCall((char*)cmd->param1, (char*)cmd->param2);
+               break;
+
+            case OO_CMD_HANGCALL:
+               OOTRACEINFO2("Processing Hang call command %s\n",
+                             (char*)cmd->param1);
+               ooH323HangCall((char*)cmd->param1,
+                                       *(OOCallClearReason*)cmd->param2);
+               break;
+
+            case OO_CMD_STOPMONITOR:
+               OOTRACEINFO1("Processing StopMonitor command\n");
+               ooStopMonitorCalls();
+               break;
+
+            default: OOTRACEERR1("ERROR:Unhandled command\n");
+         }
+         if(cmd->param1) memFreePtr(&gH323ep.ctxt, cmd->param1);
+         if(cmd->param2) memFreePtr(&gH323ep.ctxt, cmd->param2);
+         if(cmd->param3) memFreePtr(&gH323ep.ctxt, cmd->param3);
+         memFreePtr (&gH323ep.ctxt, cmd);
+      }
+   }
+
+   return OO_OK;
+}
+
 int ooStopMonitor()
 {
    ooCommand *cmd;
