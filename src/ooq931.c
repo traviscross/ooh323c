@@ -1676,7 +1676,11 @@ int ooH323CallAdmitted(OOH323CallData *call)
       {
          OOTRACEERR3("ERROR:Failed to create H225 connection to %s:%d\n",
                       call->remoteIP, call->remotePort);
-         ooCleanCall(call);
+         if(call->callState< OO_CALL_CLEAR)
+         {
+            call->callState = OO_CALL_CLEAR;
+            call->callEndReason = OO_REASON_UNKNOWN;
+         }
          return OO_FAILED;
       }
      

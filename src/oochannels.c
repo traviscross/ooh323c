@@ -262,6 +262,11 @@ int ooCreateH225Connection(OOH323CallData *call)
    {
       OOTRACEERR3("Failed to create socket for transmit H2250 channel (%s, %s)"
                   "\n", call->callType, call->callToken);
+      if(call->callState < OO_CALL_CLEAR)
+      {
+         call->callState = OO_CALL_CLEAR;
+         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+      }
       return OO_FAILED;
    }
    else
@@ -283,6 +288,11 @@ int ooCreateH225Connection(OOH323CallData *call)
       {
          OOTRACEERR3("Error:Unable to bind to a TCP port (%s, %s)\n",
          call->callType, call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callState = OO_CALL_CLEAR;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         }
          return OO_FAILED;
       }
 
@@ -310,6 +320,11 @@ int ooCreateH225Connection(OOH323CallData *call)
       {
          OOTRACEERR3("ERROR:Failed to connect to remote destination for "
                     "transmit H2250 channel\n",call->callType,call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+         {  /* No one is listening at remote end */
+            call->callState = OO_CALL_CLEAR;
+            call->callEndReason = OO_REASON_NOUSER;
+         }
          return OO_FAILED;
       }
 
@@ -1311,9 +1326,9 @@ int ooOnSendMsg
                     call->callToken);
       break;
    case OOAlert:
-      OOTRACEINFO3("Sent Message - Alerting (%s, %s)\n", call->callType,
+      OOTRACEINFO3("Sent Message - Alerting (%s, %s) \n", call->callType,
                     call->callToken);
-      if(gH323ep.h323Callbacks.onAlerting)
+      if(gH323ep.h323Callbacks.onAlerting && call->callState < OO_CALL_CLEAR)
          gH323ep.h323Callbacks.onAlerting(call);
       break;
    case OOConnect:

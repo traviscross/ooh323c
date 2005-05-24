@@ -195,13 +195,18 @@ int ooEndCall(OOH323CallData *call)
    }
 
 
-   if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))  
+   if(!call->pH225Channel || call->pH225Channel->sock ==0)
    {
-      if(call->callState == OO_CALL_CLEAR ||
-         call->callState == OO_CALL_CLEAR_RELEASERECVD)
+      call->callState = OO_CALL_CLEARED;
+   }else{
+      if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))  
       {
-         ooSendReleaseComplete(call);
-         OO_SETFLAG(call->flags, OO_M_RELEASE_BUILT);
+         if(call->callState == OO_CALL_CLEAR ||
+            call->callState == OO_CALL_CLEAR_RELEASERECVD)
+         {
+            ooSendReleaseComplete(call);
+            OO_SETFLAG(call->flags, OO_M_RELEASE_BUILT);
+         }
       }
    }
      

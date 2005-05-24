@@ -688,7 +688,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
          OOTRACEINFO3("H.225 Alerting message received (%s, %s)\n",
                       call->callType, call->callToken);
 
-         if(gH323ep.h323Callbacks.onAlerting)
+         if(gH323ep.h323Callbacks.onAlerting && call->callState<OO_CALL_CLEAR)
             gH323ep.h323Callbacks.onAlerting(call);
          ooFreeQ931Message(q931Msg);
          break;
