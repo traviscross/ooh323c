@@ -40,10 +40,10 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
       OOTRACEERR1("ERROR:Failed to create OOCTXT for new call\n");
       return NULL;
    }
-   call = (OOH323CallData*)ASN1MALLOC(pctxt, sizeof(OOH323CallData));
+   call = (OOH323CallData*)memAlloc(pctxt, sizeof(OOH323CallData));
    if(!call)
    {
-      OOTRACEERR1("ERROR: Failed to allocate memory for new call data\n");
+      OOTRACEERR1("ERROR:Memory - ooCreateCall - call\n");
       return NULL;
    }
    /*   memset(call, 0, sizeof(OOH323CallData));*/
@@ -79,6 +79,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
   
    call->callState = OO_CALL_CREATED;
    call->callEndReason = OO_REASON_UNKNOWN;
+   call->pCallFwdData = NULL;
 
    if(!strcmp(call->callType, "incoming"))
    {
@@ -94,8 +95,8 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
          {
             strcpy(call->callingPartyNumber, gH323ep.callingPartyNumber);
          }else{
-            OOTRACEERR3("Error:Failed to allocate memory for calling party "
-                        "number.(%s, %s)\n", call->callType, call->callToken);
+            OOTRACEERR3("Error:Memory - ooCreateCall - callingPartyNumber"
+                        ".(%s, %s)\n", call->callType, call->callToken);
             freeContext(pctxt);
             return NULL;
          }
@@ -288,7 +289,7 @@ int ooCleanCall(OOH323CallData *call)
       }
    }else {
       if(gH323ep.h323Callbacks.onCallCleared)
-        gH323ep.h323Callbacks.onCallCleared(call);
+         gH323ep.h323Callbacks.onCallCleared(call);
    }
 
    pctxt = call->pctxt;
@@ -316,8 +317,9 @@ int ooCallSetCallingPartyNumber(OOH323CallData *call, const char *number)
    {
      strcpy(call->callingPartyNumber, number);
    }else{
-      OOTRACEERR3("Error:Failed to allocate memory for calling party number."
-                  "(%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallSetCallingPartyNumber - "
+                  "callingPartyNumber.(%s, %s)\n", call->callType,
+                  call->callToken);
       return OO_FAILED;
    }
    /* Set dialed digits alias */
@@ -353,8 +355,9 @@ int ooCallSetCalledPartyNumber(OOH323CallData *call, const char *number)
    {
      strcpy(call->calledPartyNumber, number);
    }else{
-      OOTRACEERR3("Error:Failed to allocate memory for calling party number."
-                  "(%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallSetCalledPartyNumber - "
+                  "calledPartyNumber.(%s, %s)\n", call->callType,
+                  call->callToken);
       return OO_FAILED;
    }
    return OO_OK;
@@ -385,20 +388,20 @@ int ooCallClearAliases(OOH323CallData *call)
 int ooCallAddAliasH323ID(OOH323CallData *call, const char* h323id)
 {
    ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for new H323-ID alias for"
+      OOTRACEERR3("Error:Memory - ooCallAddAliasH323ID - psNewAlias"
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(h323id)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(h323id)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for the new H323-ID alias "
-                  "value. (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasH323ID - psNewAlias->value"
+                  " (%s, %s)\n", call->callType, call->callToken);
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, h323id);
@@ -414,20 +417,21 @@ int ooCallAddAliasDialedDigits(OOH323CallData *call, const char* dialedDigits)
 {
 
    ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for new DialedDigits alias"
-                  " for (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasDialedDigits - psNewAlias"
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_dialedDigits;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(dialedDigits)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(dialedDigits)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for the new DialedDigits "
-                  "alias value. (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasDialedDigits - "
+                  "psNewAlias->value. (%s, %s)\n", call->callType,
+                   call->callToken);
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, dialedDigits);
@@ -444,20 +448,20 @@ int ooCallAddAliasEmailID(OOH323CallData *call, const char* email)
 {
 
    ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for new email id alias"
-                  " for (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasEmailID - psNewAlias"
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_email_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(email)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(email)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for the new email-id "
-                  "alias value. (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasEmailID - psNewAlias->value "
+                  "(%s, %s)\n", call->callType, call->callToken);
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, email);
@@ -474,20 +478,20 @@ int ooCallAddAliasURLID(OOH323CallData *call, const char* url)
 {
 
    ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for new url id alias"
-                  " for (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasURLID - psNewAlias"
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_url_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(url)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(url)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for the new url-id "
-                  "alias value. (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR3("Error:Memory - ooCallAddAliasURLID - psNewAlias->value"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, url);
@@ -503,20 +507,21 @@ int ooCallAddAliasURLID(OOH323CallData *call, const char* url)
 int ooCallAddRemoteAliasH323ID(OOH323CallData *call, const char* h323id)
 {
    ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)ASN1MALLOC(call->pctxt, sizeof(ooAliases));
+   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for remote H323-ID alias "
-                  "for (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Memory - ooCallAddRemoteAliasH323ID - psNewAlias "
+                  "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) ASN1MALLOC(call->pctxt, strlen(h323id)+1);
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(h323id)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error: Failed to allocate memory for the remote H323-ID "
-                  "alias value. (%s, %s)\n", call->callType, call->callToken);
-      ASN1MEMFREEPTR(call->pctxt, psNewAlias);
+      OOTRACEERR3("Error:Memory - ooCallAddRemoteAliasH323ID - "
+                  "psNewAlias->value. (%s, %s)\n", call->callType,
+                   call->callToken);
+      memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
    strcpy(psNewAlias->value, h323id);
@@ -636,11 +641,11 @@ ooLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
    OOTRACEDBGC5("Adding new media channel for cap %d dir %s (%s, %s)\n",
                 epCap->cap, dir, call->callType, call->callToken);
    /* Create a new logical channel entry */
-   pNewChannel = (ooLogicalChannel*)ASN1MALLOC(call->pctxt,
+   pNewChannel = (ooLogicalChannel*)memAlloc(call->pctxt,
                                                      sizeof(ooLogicalChannel));
    if(!pNewChannel)
    {
-      OOTRACEERR3("ERROR:Memory allocation for new logical channel failed "
+      OOTRACEERR3("ERROR:Memory - ooAddNewLogicalChannel - pNewChannel "
                   "(%s, %s)\n", call->callType, call->callToken);
       return NULL;
    }
@@ -863,6 +868,10 @@ int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
    int ret = OO_OK;
    ooLogicalChannel *pLogicalChannel = NULL;
    ooH323EpCapability *epCap=NULL;
+
+   OOTRACEDBGC4("Clearing logical channel number %d. (%s, %s)\n", channelNo,
+                call->callType, call->callToken);
+
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,channelNo);
    if(!pLogicalChannel)
    {
@@ -878,7 +887,7 @@ int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
       {
          epCap->stopReceiveChannel(call, pLogicalChannel);
          OOTRACEINFO4("Stopped Receive channel %d (%s, %s)\n",
-              channelNo, call->callType, call->callToken);
+                                 channelNo, call->callType, call->callToken);
       }
       else{
          OOTRACEERR4("ERROR:No callback registered for stopReceiveChannel %d "
@@ -893,11 +902,12 @@ int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
          {
             epCap->stopTransmitChannel(call, pLogicalChannel);
             OOTRACEINFO4("Stopped Transmit channel %d (%s, %s)\n",
-                 channelNo, call->callType, call->callToken);
+                          channelNo, call->callType, call->callToken);
          }
          else{
-            OOTRACEERR4("ERROR:No callback registered for stopTransmitChannel %d "
-                        "(%s, %s)\n", channelNo, call->callType, call->callToken);
+            OOTRACEERR4("ERROR:No callback registered for stopTransmitChannel"
+                        " %d (%s, %s)\n", channelNo, call->callType,
+                        call->callToken);
          }
       }
    }
@@ -926,8 +936,8 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
          if(!prev)   call->logicalChans = temp->next;
          else   prev->next = temp->next;
          //ASN1MEMFREEPTR(call->pctxt, temp->chanCap->cap);
-         ASN1MEMFREEPTR(call->pctxt, temp->chanCap);
-         ASN1MEMFREEPTR(call->pctxt, temp);
+         memFreePtr(call->pctxt, temp->chanCap);
+         memFreePtr(call->pctxt, temp);
          OOTRACEDBGC4("Removed logical channel %d (%s, %s)\n", ChannelNo,
                        call->callType, call->callToken);
          call->noOfLogicalChannels--;
@@ -942,7 +952,8 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
    return OO_FAILED;
 }
 
-int ooOnLogicalChannelEstablished(OOH323CallData *call, ooLogicalChannel * pChannel)
+int ooOnLogicalChannelEstablished
+   (OOH323CallData *call, ooLogicalChannel * pChannel)
 {
    ooLogicalChannel * temp = NULL, *prev=NULL;
    /* Change the state of the channel as established and close all other
@@ -983,10 +994,10 @@ int ooAddMediaInfo(OOH323CallData *call, ooMediaInfo mediaInfo)
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-   newMediaInfo = (ooMediaInfo*) ASN1MALLOC(call->pctxt, sizeof(ooMediaInfo));
+   newMediaInfo = (ooMediaInfo*) memAlloc(call->pctxt, sizeof(ooMediaInfo));
    if(!newMediaInfo)
    {
-      OOTRACEERR3("Error:failed to allocate memory for new mediaInfo. "
+      OOTRACEERR3("Error:Memory - ooAddMediaInfo - newMediaInfo. "
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }

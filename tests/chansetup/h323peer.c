@@ -36,6 +36,7 @@ static int stopReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel);
 static int stopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 static int onIncomingCall (ooCallData* call);
 static int onOutgoingCallAdmitted (ooCallData* call);
+static int onCallEstablished(ooCallData *call);
 static int onCallCleared (ooCallData* call);
 static int onAlerting (ooCallData* call);
 static void* runtest (void*);
@@ -66,7 +67,7 @@ static int gDuration = 5; /*sec*/
 static int gInterval = 0; /* 0 interval means let previous call finish */
 static char gDest[256];
 static int gCallCounter=0;
-
+static OOBOOL bListen = FALSE;
 int main (int argc, char** argv)
 {
    char callToken[20], *token=NULL;
@@ -74,9 +75,7 @@ int main (int argc, char** argv)
    int  localPort = 0;
    OOTimer *pTimer = NULL;
    int ret=0, x;
-   OOBOOL isActive = FALSE;
    OOBOOL bDestFound=FALSE;
-   OOBOOL bListen = FALSE;
    char logfile[50];
 
    OOH323CALLBACKS h323Callbacks;
@@ -140,7 +139,7 @@ int main (int argc, char** argv)
       }
    }
   
-    if(!bListen && !bDestFound)
+   if((!bListen && !bDestFound) || (bListen && bDestFound))
    {
       printf("USAGE:\n%s",USAGE);
       return -1;
@@ -178,6 +177,13 @@ int main (int argc, char** argv)
       return -1;
    }
 
+   if(bListen)
+   {
+     ooSetTCPPorts(20050, 20250);
+     ooSetUDPPorts(21050, 21250);
+     ooSetRTPPorts(22050, 22250);
+   }
+   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
    ooH323EpSetLocalAddress(localIPAddr, localPort);
    ooH323EpAddAliasH323ID ("objsys");
    ooH323EpAddAliasDialedDigits ("5087556929");
@@ -189,7 +195,7 @@ int main (int argc, char** argv)
    h323Callbacks.onIncomingCall = onIncomingCall;
    h323Callbacks.onOutgoingCall = NULL;
    h323Callbacks.onCallAnswered = NULL;
-   h323Callbacks.onCallEstablished = NULL;
+   h323Callbacks.onCallEstablished = onCallEstablished;
    h323Callbacks.onOutgoingCallAdmitted = onOutgoingCallAdmitted;
    h323Callbacks.onCallCleared = onCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
@@ -334,18 +340,29 @@ static int onOutgoingCallAdmitted (ooCallData* call)
    return OO_OK;
 }
 
+/* Callback to handle call established event */
+
+int onCallEstablished(ooCallData *call)
+{
+   printf("onCallEstablished - %s\n", call->callToken);
+   return OO_OK;
+}
+
 /* Callback to handle call cleared */
 
 static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
    printf ("onCallCleared - %s\n", call->callToken);
-   if (gInterval == 0) {
-      if (gCallCounter < gCalls) {
+   if(gInterval == 0 && !bListen)
+   {
+      if(gCallCounter < gCalls)
+      {
          ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
          gCallCounter++;
       }
-      else {
+      else{
+         printf("Issuing StopMonitor command\n");
          ooStopMonitor();
       }
    }

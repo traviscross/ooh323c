@@ -595,8 +595,9 @@ int ooSendMasterSlaveDetermination(OOH323CallData *call)
 
    if(ret != OO_OK)
    {
-      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDetermination message to outbound queue. (%s, %s)\n",
-                      call->callType, call->callToken);
+      OOTRACEERR3("Error:Failed to enqueue MasterSlaveDetermination message to"
+                  " outbound queue. (%s, %s)\n", call->callType,
+                  call->callToken);
    }else
       call->masterSlaveState = OO_MasterSlave_DetermineSent;
   

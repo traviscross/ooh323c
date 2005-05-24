@@ -323,9 +323,8 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
          {
-            OOTRACEERR3("ERROR:Allocating memory for OLC, in received "
-                        "faststart SETUP message (%s, %s)\n", call->callType,
-                        call->callToken);
+            OOTRACEERR3("ERROR:Memory - ooOnReceivedSetup - olc (%s, %s)\n",
+                        call->callType, call->callToken);
             /*Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
@@ -431,9 +430,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
          {
-            OOTRACEERR3("ERROR:Allocating memory for OLC, in received "
-                        "faststart CONNECT message (%s, %s)\n",
-                        call->callType, call->callToken);
+            OOTRACEERR3("ERROR:Memory - ooOnReceivedSignalConnect - olc"
+                        "(%s, %s)\n", call->callType, call->callToken);
             /*Mark call for clearing */
             if(call->callState < OO_CALL_CLEAR)
             {
@@ -596,7 +594,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
          }
       }
    }
-   if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+   if (OO_TESTFLAG(call->flags, OO_M_TUNNELING))
    {
       OOTRACEDBGB3("Handling tunneled messages in CONNECT. (%s, %s)\n",
                     call->callType, call->callToken);
@@ -605,26 +603,31 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
       OOTRACEDBGB3("Finished tunneled messages in Connect. (%s, %s)\n",
                     call->callType, call->callToken);
 
-#if 0
+      /*Send TCS as call established and no capability exchange has yet
+        started. This will be true only when separate h245 connection is not
+        established and tunneling is being used.*/
       if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
       {
-      /* Start terminal capability exchange and master slave determination */
-      ret = ooSendTermCapMsg(call);
-      if(ret != OO_OK)
-      {
-         OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
-                      call->callType, call->callToken);
-         return ret;
+         /*Start terminal capability exchange and master slave determination */
+         ret = ooSendTermCapMsg(call);
+         if(ret != OO_OK)
+         {
+            OOTRACEERR3("ERROR:Sending Terminal capability message (%s, %s)\n",
+                         call->callType, call->callToken);
+            return ret;
+         }
       }
-      ret = ooSendMasterSlaveDetermination(call);
-      if(ret != OO_OK)
+      if(call->masterSlaveState == OO_MasterSlave_Idle)
       {
-         OOTRACEERR3("ERROR:Sending Master-slave determination message "
-                  "(%s, %s)\n", call->callType, call->callToken);
-         return ret;
-      }  
+         ret = ooSendMasterSlaveDetermination(call);
+         if(ret != OO_OK)
+         {
+            OOTRACEERR3("ERROR:Sending Master-slave determination message "
+                     "(%s, %s)\n", call->callType, call->callToken);
+            return ret;
+         }  
       }
-#endif
+
    }
    return OO_OK; 
 }
@@ -982,6 +985,12 @@ int ooHandleTunneledH245Messages
                          "(%s, %s)\n",i+1, pH323UUPdu->h245Control.n,
                          call->callType, call->callToken);
             pmsg = (H245Message*)memAlloc(pctxt, sizeof(H245Message));
+            if(!pmsg)
+            {
+               OOTRACEERR3("Error:Memory - ooHandleH245TunneledMessages - pmsg"
+                          "(%s, %s)\n", call->callType, call->callToken);
+               return OO_FAILED;
+            }
 
             setPERBuffer(pctxt,
                          (ASN1OCTET*)pH323UUPdu->h245Control.elem[i].data,
@@ -1059,6 +1068,14 @@ int ooH323RetrieveAliases
          newAlias->type = T_H225AliasAddress_dialedDigits;
          newAlias->value = (char*) memAlloc(call->pctxt,
                          strlen(pAliasAddress->u.dialedDigits)*sizeof(char)+1);
+         if(!newAlias->value)
+         {
+            OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
+                        "newAlias->value(dialedDigits) (%s, %s)\n",
+                         call->callType, call->callToken);
+            memFreePtr(call->pctxt, newAlias); 
+            return OO_FAILED;
+         }
 
          memcpy(newAlias->value, pAliasAddress->u.dialedDigits,
                            strlen(pAliasAddress->u.dialedDigits)*sizeof(char));
@@ -1068,6 +1085,14 @@ int ooH323RetrieveAliases
          newAlias->type = T_H225AliasAddress_h323_ID;
          newAlias->value = (char*)memAlloc(call->pctxt,
                          (pAliasAddress->u.h323_ID.nchars+1)*sizeof(char)+1);
+         if(!newAlias->value)
+         {
+            OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
+                        "newAlias->value(h323id) (%s, %s)\n", call->callType,
+                         call->callToken);
+            memFreePtr(call->pctxt, newAlias); 
+            return OO_FAILED;
+         }
 
          for(j=0, k=0; j<(int)pAliasAddress->u.h323_ID.nchars; j++)
          {
@@ -1082,6 +1107,14 @@ int ooH323RetrieveAliases
          newAlias->type = T_H225AliasAddress_url_ID;
          newAlias->value = (char*)memAlloc(call->pctxt,
                               strlen(pAliasAddress->u.url_ID)*sizeof(char)+1);
+         if(!newAlias->value)
+         {
+            OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
+                        "newAlias->value(urlid) (%s, %s)\n", call->callType,
+                         call->callToken);
+            memFreePtr(call->pctxt, newAlias); 
+            return OO_FAILED;
+         }
 
          memcpy(newAlias->value, pAliasAddress->u.url_ID,
                                strlen(pAliasAddress->u.url_ID)*sizeof(char));
@@ -1111,7 +1144,15 @@ int ooH323RetrieveAliases
       case T_H225AliasAddress_email_ID:
          newAlias->type = T_H225AliasAddress_email_ID;
          newAlias->value = (char*)memAlloc(call->pctxt,
-                                  strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
+                             strlen(pAliasAddress->u.email_ID)*sizeof(char)+1);
+         if(!newAlias->value)
+         {
+            OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
+                        "newAlias->value(emailid) (%s, %s)\n", call->callType,
+                         call->callToken);
+            memFreePtr(call->pctxt, newAlias); 
+            return OO_FAILED;
+         }
 
          memcpy(newAlias->value, pAliasAddress->u.email_ID,
                               strlen(pAliasAddress->u.email_ID)*sizeof(char));
@@ -1154,7 +1195,7 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                                                      sizeof(H225AliasAddress));
          if(!pAliasEntry)
          {
-            OOTRACEERR1("ERROR: Failed to allocate memory for alias entry\n");
+            OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - pAliasEntry\n");
             return OO_FAILED;
          }
          switch(pAlias->type)
@@ -1165,8 +1206,9 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                                                      strlen(pAlias->value)+1);
             if(!pAliasEntry->u.dialedDigits)
             {
-               OOTRACEERR1("ERROR:Failed to allocated memory for dialedDigits"
-                           " alias entry\n");
+               OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - "
+                           "dialedDigits\n");
+               memFreePtr(pctxt, pAliasEntry);
                return OO_FAILED;
             }
             strcpy((char*)pAliasEntry->u.dialedDigits, pAlias->value);
@@ -1180,8 +1222,8 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
            
             if(!pAliasEntry->u.h323_ID.data)
             {
-               OOTRACEERR1("Error: Failed to allocate memory for h323id"
-                           " data alias entry\n");
+               OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - h323_id\n");
+               memFreePtr(pctxt, pAliasEntry);
                return OO_FAILED;
             }
             for(i=0; i<(int)strlen(pAlias->value); i++)
@@ -1194,8 +1236,8 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
                                                      strlen(pAlias->value)+1);
             if(!pAliasEntry->u.url_ID)
             {
-               OOTRACEERR1("ERROR: Failed to allocate memory for urlID alias "
-                           "entry \n");
+               OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - url_id\n");
+               memFreePtr(pctxt, pAliasEntry);              
                return OO_FAILED;
             }
             strcpy((char*)pAliasEntry->u.url_ID, pAlias->value);

@@ -1,4 +1,4 @@
-AUTOMKAE_OPTIONS = gnu
+AUTOMAKE_OPTIONS = gnu
 
 
 opt:
