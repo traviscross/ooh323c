@@ -64,24 +64,6 @@ int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
       }
    }
 
-   if(call->h245SessionState != OO_H245SESSION_IDLE &&
-      call->h245SessionState != OO_H245SESSION_CLOSED)
-      ooCloseH245Connection(call);  
-
-   if(call->callState == OO_CALL_CLEAR_RELEASESENT)
-      call->callState = OO_CALL_CLEARED;
-   else{
-      call->callState = OO_CALL_CLEAR_RELEASERECVD;
-
-      if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
-      {
-         if(gH323ep.gkClient->state == GkClientRegistered){
-            OOTRACEDBGA3("Sending DRQ after received ReleaseComplete."
-                         "(%s, %s)\n", call->callType, call->callToken);
-            ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
-         }
-      }
-   }
 
    if(!q931Msg->userInfo)
    {
@@ -109,7 +91,7 @@ int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
    if(call->callEndReason == OO_REASON_UNKNOWN)
       call->callEndReason = ooGetCallClearReasonFromCauseAndReasonCode(cause,
                                                                    reasonCode);
-
+#if 0
    if (q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
        q931Msg->userInfo->h323_uu_pdu.h245Tunneling          &&
        OO_TESTFLAG (call->flags, OO_M_TUNNELING) )
@@ -121,6 +103,26 @@ int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
       OOTRACEDBGB3("Finished handling tunneled messages in ReleaseComplete."
                    " (%s, %s)\n", call->callType, call->callToken);
    }
+#endif
+   if(call->h245SessionState != OO_H245SESSION_IDLE &&
+      call->h245SessionState != OO_H245SESSION_CLOSED)
+   {
+      ooCloseH245Connection(call);
+   }
+
+   if(call->callState != OO_CALL_CLEAR_RELEASESENT)
+   {
+      if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
+      {
+         if(gH323ep.gkClient->state == GkClientRegistered){
+            OOTRACEDBGA3("Sending DRQ after received ReleaseComplete."
+                         "(%s, %s)\n", call->callType, call->callToken);
+            ooGkClientSendDisengageRequest(gH323ep.gkClient, call);
+         }
+      }
+   }
+   call->callState = OO_CALL_CLEARED;
+
    return ret;
 }
 

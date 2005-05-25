@@ -25,6 +25,7 @@
 #include "MULTIMEDIA-SYSTEM-CONTROL.h"
 #include "ootypes.h"
 #include "ooSocket.h"
+#include "ooCalls.h"
 
 #define OORECEIVER 1
 #define OOTRANSMITTER 2
@@ -201,7 +202,14 @@ EXTERN int ooOnSendMsg
    (struct OOH323CallData *call, int msgType, int tunneledMsgType,
     int associatedChan);
 
-
+/**
+ * This function is used to check the status of tcp connection.
+ * @param call     Handle to the call to which connection belongs.
+ * @param sock     Connected socket.
+ *
+ * @return         True if connection is ok, false otherwise.
+ */
+EXTERN OOBOOL ooChannelsIsConnectionOK(OOH323CallData *call, OOSOCKET sock);
 
 /**
  * @}

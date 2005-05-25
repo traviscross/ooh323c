@@ -214,6 +214,21 @@ EXTERN int ooSocketsCleanup (void);
  */
 EXTERN int ooSocketListen (OOSOCKET socket, int maxConnection);
 
+
+/**
+ * This function is used to peek at the received data without actually removing
+ * it from the receive socket buffer. A receive call after this will get the
+ * same data from the socket.
+ * @param socket       The socket's handle created by call to ::rtSocketCreate
+ *                     or ::rtSocketAccept function.
+ * @param pbuf         Pointer to the buffer for the incoming data.
+ * @param bufsize      Length of the buffer.
+ * @return             If no error occurs, returns the number of bytes
+ *                     received. Otherwise, the negative value is error code.
+ */
+EXTERN int ooSocketRecvPeek
+   (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize);
+
 /**
  * This function receives data from a connected socket. It is used to read
  * incoming data on sockets. The socket must be connected before calling this

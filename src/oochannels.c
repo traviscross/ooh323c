@@ -54,11 +54,11 @@ int ooCreateH245Listener(OOH323CallData *call)
                   " (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   call->h245listenport = (int*) ASN1MALLOC(call->pctxt, sizeof(int));
+   call->h245listenport = (int*) memAlloc(call->pctxt, sizeof(int));
    *(call->h245listenport) = ret;
-   call->h245listener = (OOSOCKET*)ASN1MALLOC(call->pctxt, sizeof(OOSOCKET));
+   call->h245listener = (OOSOCKET*)memAlloc(call->pctxt, sizeof(OOSOCKET));
    *(call->h245listener) = channelSocket;
-   ret = ooSocketListen(*(call->h245listener), 5);
+   ret = ooSocketListen(*(call->h245listener), 20);
    if(ret != ASN_OK)
    {
       OOTRACEERR3("Error:Unable to listen on H.245 socket (%s, %s)\n",
@@ -180,12 +180,21 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
          return OO_FAILED;
       }
    }
-          
+
+   /* We need to send EndSessionCommand immediately.*/    
    if(!OO_TESTFLAG(call->flags, OO_M_TUNNELING)){
-      dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
-      OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
-                call->pH245Channel->outQueue.count,
-                call->callType, call->callToken);  
+      if(encodebuf[0]== OOEndSessionCommand) /* High priority message */
+      {
+         dListFreeAll(call->pctxt, &call->pH245Channel->outQueue);
+         dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
+         ooSendMsg(call, OOH245MSG);
+      }else{
+
+         dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
+         OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
+                   call->pH245Channel->outQueue.count,
+                   call->callType, call->callToken);  
+      }
    }
    else{
       msgType = encodebuf[0];
@@ -244,12 +253,21 @@ int ooSendH225Msg(OOH323CallData *call, Q931Message *msg)
       return OO_FAILED;
    }
 
-   dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
+   /* If high priority messages, send immediately.*/
+   if(encodebuf[0] == OOReleaseComplete ||
+      (encodebuf[0]==OOFacility && encodebuf[1]==OOEndSessionCommand))
+   {
+      dListFreeAll(call->pctxt, &call->pH225Channel->outQueue);
+      dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
+      ooSendMsg(call, OOQ931MSG);
+   }else{
 
-   OOTRACEDBGC4("Queued H225 messages %d. (%s, %s)\n",
-                call->pH225Channel->outQueue.count,
-                call->callType, call->callToken); 
+      dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
 
+      OOTRACEDBGC4("Queued H225 messages %d. (%s, %s)\n",
+                                     call->pH225Channel->outQueue.count,
+                                     call->callType, call->callToken); 
+   }
    return OO_OK;
 }
 
@@ -364,10 +382,10 @@ int ooCreateH323Listener()
    if((ret=ooSocketBind (channelSocket, ipaddrs,
                          gH323ep.listenPort))==ASN_OK)
    {
-      gH323ep.listener = (OOSOCKET*)ASN1MALLOC(&gH323ep.ctxt,sizeof(OOSOCKET));
+      gH323ep.listener = (OOSOCKET*)memAlloc(&gH323ep.ctxt,sizeof(OOSOCKET));
       *(gH323ep.listener) = channelSocket;
          
-      ooSocketListen(channelSocket, 5); /*listen on socket*/
+      ooSocketListen(channelSocket,20); /*listen on socket*/
       OOTRACEINFO1("H323 listener creation - successful\n");
       return OO_OK;
    }
@@ -894,7 +912,7 @@ int ooH245Receive(OOH323CallData *call)
    struct timeval timeout;
    fd_set readfds;
   
-   pmsg = (H245Message*)ASN1MALLOC(pctxt, sizeof(H245Message));
+   pmsg = (H245Message*)memAlloc(pctxt, sizeof(H245Message));
 
    /* First read just TPKT header which is four bytes */
    recvLen = ooSocketRecv (call->pH245Channel->sock, message, 4);
@@ -1037,9 +1055,11 @@ int ooSendMsg(OOH323CallData *call, int type)
 {
 
    int len=0, ret=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
-   int i =0;
+   int i =0; 
    DListNode * p_msgNode=NULL;
    ASN1OCTET *msgptr, *msgToSend=NULL;
+  
+
 
    if(call->callState == OO_CALL_CLEARED)
    {
@@ -1049,7 +1069,7 @@ int ooSendMsg(OOH323CallData *call, int type)
    }
 
    if(type == OOQ931MSG)
-     {
+   {
       if(call->pH225Channel->outQueue.count == 0)
       {
          OOTRACEWARN3("WARN:No H.2250 message to send. (%s, %s)\n",
@@ -1084,8 +1104,23 @@ int ooSendMsg(OOH323CallData *call, int type)
       dListRemove(&(call->pH225Channel->outQueue), p_msgNode);
       if(p_msgNode)
          memFreePtr(call->pctxt, p_msgNode);
-
-      /* Send message out via TCP */
+     
+      /*TODO: This is not required ideally. We will see for some time and if
+         we don't face any problems we will delete this code */
+#if 0
+      /* Check whether connection with remote is alright */
+      if(!ooChannelsIsConnectionOK(call, call->pH225Channel->sock))
+      {
+         OOTRACEERR3("Error:Transport failure for signalling channel. "
+                     "Abandoning message send and marking call for cleanup.(%s"
+                     "'%s)\n", call->callType, call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         call->callState = OO_CALL_CLEARED;
+         return OO_OK;
+      }
+#endif    
+      /* Send message out via TCP */     
       ret = ooSocketSend(call->pH225Channel->sock, msgToSend, len);
       if(ret == ASN_OK)
       {
@@ -1134,7 +1169,7 @@ int ooSendMsg(OOH323CallData *call, int type)
          memFreePtr(call->pctxt, p_msgNode);
 
       /* Send message out */
-      if (0 == call->pH245Channel && !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+      if (0 == call->pH245Channel && !OO_TESTFLAG(call->flags, OO_M_TUNNELING))
       {
          OOTRACEWARN3("Neither H.245 channel nor tunneling active "
                      "(%s, %s)\n", call->callType, call->callToken);
@@ -1232,7 +1267,7 @@ int ooCloseH245Connection(OOH323CallData *call)
 }
 
 int ooOnSendMsg
-      (OOH323CallData *call, int msgType, int tunneledMsgType, int associatedChan)
+   (OOH323CallData *call, int msgType, int tunneledMsgType, int associatedChan)
 {
    ooTimerCallback *cbData=NULL;
    switch(msgType)
@@ -1241,7 +1276,7 @@ int ooOnSendMsg
       OOTRACEINFO3("Sent Message - Setup (%s, %s)\n", call->callType,
                     call->callToken);
       /* Start call establishment timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1256,7 +1291,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create call establishment timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
 
@@ -1298,7 +1333,7 @@ int ooOnSendMsg
       if(call->callState == OO_CALL_CLEAR_RELEASESENT &&
          call->h245SessionState == OO_H245SESSION_IDLE)
       {
-         cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+         cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                   sizeof(ooTimerCallback));
          if(!cbData)
          {
@@ -1315,7 +1350,7 @@ int ooOnSendMsg
             OOTRACEERR3("Error:Unable to create EndSession timer- "
                         "ReleaseComplete.(%s, %s)\n", call->callType,
                         call->callToken);
-            ASN1MEMFREEPTR(call->pctxt, cbData);
+            memFreePtr(call->pctxt, cbData);
             return OO_FAILED;
          }
       }
@@ -1350,7 +1385,7 @@ int ooOnSendMsg
          OOTRACEINFO3("Sent Message - MasterSlaveDetermination (%s, %s)\n",
                        call->callType, call->callToken);
        /* Start MSD timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1365,7 +1400,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create MSD timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
 
@@ -1407,7 +1442,7 @@ int ooOnSendMsg
          OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
       /* Start TCS timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1422,7 +1457,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create TCS timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
 
@@ -1451,7 +1486,7 @@ int ooOnSendMsg
          OOTRACEINFO4("Sent Message - OpenLogicalChannel(%d). (%s, %s)\n",
                        associatedChan, call->callType, call->callToken);
       /* Start LogicalChannel timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1468,7 +1503,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create OpenLogicalChannel timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
      
@@ -1501,7 +1536,7 @@ int ooOnSendMsg
       {
          /* Start EndSession timer */
          call->h245SessionState = OO_H245SESSION_ENDSENT;
-         cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+         cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                   sizeof(ooTimerCallback));
          if(!cbData)
          {
@@ -1517,7 +1552,7 @@ int ooOnSendMsg
          {
             OOTRACEERR3("Error:Unable to create EndSession timer. "
                         "(%s, %s)\n", call->callType, call->callToken);
-            ASN1MEMFREEPTR(call->pctxt, cbData);
+            memFreePtr(call->pctxt, cbData);
             return OO_FAILED;
          }
       }else{
@@ -1532,7 +1567,7 @@ int ooOnSendMsg
          OOTRACEINFO3("Sent Message - CloseLogicalChannel (%s, %s)\n",
                        call->callType, call->callToken);
       /* Start LogicalChannel timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1549,7 +1584,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create CloseLogicalChannel timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
      
@@ -1570,7 +1605,7 @@ int ooOnSendMsg
          OOTRACEINFO3("Sent Message - RequestChannelClose (%s, %s)\n",
                        call->callType, call->callToken);
       /* Start RequestChannelClose timer */
-      cbData = (ooTimerCallback*) ASN1MALLOC(call->pctxt,
+      cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));
       if(!cbData)
       {
@@ -1587,7 +1622,7 @@ int ooOnSendMsg
       {
          OOTRACEERR3("Error:Unable to create RequestChannelClose timer. "
                      "(%s, %s)\n", call->callType, call->callToken);
-         ASN1MEMFREEPTR(call->pctxt, cbData);
+         memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
       break;
@@ -1642,3 +1677,44 @@ int ooStopMonitorCalls()
    }
    return OO_OK;
 }
+
+OOBOOL ooChannelsIsConnectionOK(OOH323CallData *call, OOSOCKET sock)
+{
+   struct timeval to;
+   fd_set readfds;
+   int ret = 0, nfds=0;
+
+   to.tv_sec = 0;
+   to.tv_usec = 500;
+   FD_ZERO(&readfds);
+
+   FD_SET(sock, &readfds);
+   if(nfds < (int)sock)
+      nfds = (int)sock;
+
+   nfds++;
+
+   ret = ooSocketSelect(nfds, &readfds, NULL, NULL, &to);
+     
+   if(ret == -1)
+   {
+      OOTRACEERR3("Error in select ...broken pipe check(%s, %s)\n",
+                   call->callType, call->callToken );
+      return FALSE;
+   }
+
+   if(FD_ISSET(sock, &readfds))
+   {
+      char buf[2];     
+      if(ooSocketRecvPeek(sock, buf, 2) == 0)
+      {
+         OOTRACEWARN3("Broken pipe detected. (%s, %s)", call->callType,
+                       call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         call->callState = OO_CALL_CLEARED;
+         return FALSE;
+      }
+   }
+   return TRUE;
+} 

@@ -369,6 +369,18 @@ int ooSocketSendTo(OOSOCKET socket, const ASN1OCTET* pdata, ASN1UINT size,
    return ASN_OK;
 }
 
+int ooSocketRecvPeek(OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize)
+{
+   int len;
+   int flags = MSG_PEEK;
+
+   if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
+
+   if ((len = recv (socket, (char*) pbuf, bufsize, flags)) == -1)
+      return ASN_E_INVSOCKET;
+   return len;
+}
+
 int ooSocketRecv (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize)
 {
    int len;

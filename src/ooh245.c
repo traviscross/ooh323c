@@ -1350,16 +1350,22 @@ int ooHandleH245Command(OOH323CallData *call,
                }
             }
             ooCloseH245Connection(call);
-      }else{
+         }else{
 
-         call->h245SessionState = OO_H245SESSION_ENDRECVD;
-         if(call->callState < OO_CALL_CLEAR)
-            call->callState = OO_CALL_CLEAR;
-                      /*   if(call->callState < OO_CALL_CLEAR_ENDSESSION)
+            call->h245SessionState = OO_H245SESSION_ENDRECVD;
+#if 0
+            if(call->callState < OO_CALL_CLEAR)
+               call->callState = OO_CALL_CLEAR;
+#else
+            if(call->logicalChans)
             {
-               ooSendEndSessionCommand(call);
-               call->callState = OO_CALL_CLEAR_ENDSESSION;
-               }*/
+               OOTRACEINFO3("In response to received EndSessionCommand - "
+                            "Clearing all logical channels. (%s, %s)\n",
+                            call->callType, call->callToken);
+               ooClearAllLogicalChannels(call);
+            }
+            ooSendEndSessionCommand(call);
+#endif
          }
            
            
