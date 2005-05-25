@@ -43,6 +43,7 @@ extern "C" {
 #endif /* EXTERN */
 
 struct OOH323CallData;
+struct Q931Message;
 
 /**
  * @defgroup channels Channel Management
@@ -162,7 +163,7 @@ EXTERN int ooH245Receive(struct OOH323CallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendH225Msg(struct OOH323CallData *call, Q931Message *msg);
+EXTERN int ooSendH225Msg(struct OOH323CallData *call, struct Q931Message *msg);
 
 /**
  * This function is used to enqueue an H.245 message into an outgoing queue for

@@ -40,6 +40,30 @@ extern "C" {
  * @{
  */
 /**
+ * This is an enumeration of stack command codes.
+ */
+typedef enum OOStackCmdID {
+   OO_CMD_MAKECALL,          /*!< Make call */
+   OO_CMD_ANSCALL,           /*!< Answer call */
+   OO_CMD_FWDCALL,           /*!< Forward call */
+   OO_CMD_HANGCALL,          /*!< Terminate call */
+   OO_CMD_STOPMONITOR        /*!< Stop the event monitor */
+} OOStackCmdID;
+
+/**
+ * This structure is used to queue a stack command for processing in
+ * the event handler loop.
+ */
+typedef struct OOStackCommand {
+   OOStackCmdID type;
+   void* param1;
+   void* param2;
+   void* param3;
+} OOStackCommand;
+
+#define ooCommand OOStackCommand;
+
+/**
  * This function is used by an application to place a call.
  * @param dest        Call Destination - IP:port / alias
  * @param callToken   Pointer to a buffer in which callToken will be returned

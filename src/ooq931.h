@@ -228,6 +228,26 @@ typedef struct Q931InformationElement {
    ASN1OCTET data[1];
 } Q931InformationElement;
 
+/**
+ * Q.931 message structure. Contains context for memory allocation,
+ * protocol discriminator, call reference, meesage type and list of
+ * user-user information elements (IEs).
+ */
+typedef struct Q931Message {
+   ASN1UINT protocolDiscriminator;
+   ASN1UINT callReference;
+   ASN1BOOL fromDestination;
+   ASN1UINT messageType;      /* Q931MsgTypes */
+   ASN1UINT tunneledMsgType;  /* The H245 message this message is tunneling*/
+   ASN1INT  logicalChannelNo; /* channel number associated with tunneled */
+                              /* message, 0 if no channel */
+   DList ies;   
+   Q931InformationElement *bearerCapabilityIE;
+   Q931InformationElement *callingPartyNumberIE;
+   Q931InformationElement *calledPartyNumberIE;
+   Q931InformationElement *causeIE;
+   H225H323_UserInformation *userInfo;
+} Q931Message;
 
 struct OOH323CallData;
 

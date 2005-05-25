@@ -63,7 +63,7 @@
  */
 /* Function return codes */
 #define OO_FAILED       -1
-#define OO_OK           1
+#define OO_OK           0
 
 /* TODO: States for both local and remote initiation should be maintained
    separately */
@@ -155,12 +155,17 @@ typedef enum {
    OO_LOGICALCHAN_ESTABLISHED
 } OOLogicalChannelState;
 
-/**
- * Terminal type of the endpoint. Default is 60.
- */
+/** Terminal type of the endpoint. Default is 60. */
 #define OOTERMTYPE 60
+
+/** Maximum length of an IP address (xxx.xxx.xxx.xxx). */
 #define MAX_IP_LENGTH 15
+
+/** Maximum length of a log file message */
 #define MAXLOGMSGLEN 2048
+
+/** Number of times to retry a failed operation. */
+#define DEFAULT_MAX_RETRIES 3
 
 /**
    Various message types for H225 and H245 messages
@@ -206,64 +211,44 @@ typedef enum {
 #define OO_RCC_TIMER       (1<<5)
 #define OO_SESSION_TIMER   (1<<6)
 
-/**
-  Default port ranges used
-*/
-#define TCPPORTSSTART 12030
-#define TCPPORTSEND   12230
-#define UDPPORTSSTART 13030
-#define UDPPORTSEND   13230
-#define RTPPORTSSTART 14030
-#define RTPPORTSEND   14230
+/* Default port ranges */
+#define TCPPORTSSTART 12030  /*!< Starting TCP port number */
+#define TCPPORTSEND   12230  /*!< Ending TCP port number   */
+#define UDPPORTSSTART 13030  /*!< Starting UDP port number */
+#define UDPPORTSEND   13230  /*!< Ending UDP port number   */
+#define RTPPORTSSTART 14030  /*!< Starting RTP port number */
+#define RTPPORTSEND   14230  /*!< Ending RTP port number   */
 
-/**
- * Maximum length for received messages.
- */
+/** Maximum length for received messages */
 #define MAXMSGLEN 4096
 
-/**
- * Maximum length of a filename.
- */
+/** Maximum length of a filename */
 #define MAXFILENAME 256
 
-#define OO_CMD_MAKECALL      201
-#define OO_CMD_ANSCALL       202
-#define OO_CMD_FWDCALL       203
-#define OO_CMD_HANGCALL      204
-#define OO_CMD_STOPMONITOR   205
-
-
 /**
- Endpoint call modes. The call mode of the endpoint dictates what type
- of channels are created for the calls placed by the endpoint or received
- by the endpoint.
-*/
+ * Endpoint call modes. The call mode of the endpoint dictates what type
+ * of channels are created for the calls placed by the endpoint or received
+ * by the endpoint.
+ */
 typedef enum OOCallMode {
-   OO_CALLMODE_AUDIOCALL,
-   OO_CALLMODE_AUDIORX,
-   OO_CALLMODE_AUDIOTX,
-   OO_CALLMODE_VIDEOCALL,
-   OO_CALLMODE_FAX
+   OO_CALLMODE_AUDIOCALL,   /*!< Audio call */
+   OO_CALLMODE_AUDIORX,     /*!< Audio call - receive only */
+   OO_CALLMODE_AUDIOTX,     /*!< Audio call - transmit only */
+   OO_CALLMODE_VIDEOCALL,   /*!< Video call */
+   OO_CALLMODE_FAX          /*!< Fax transmission */
 } OOCallMode;
 
 /*
  * Flag macros - these operate on bit mask flags using mask values
  */
+/** This macro sets a flag within a bit mask */
 #define OO_SETFLAG(flags,mask) (flags |= mask)
+
+/** This macro clears a flag within a bit mask */
 #define OO_CLRFLAG(flags,mask) (flags &= ~mask)
+
+/** This macro tests a flag with a bit mask */
 #define OO_TESTFLAG(flags,mask) ((flags & mask) != 0)
-
-#define DEFAULT_MAX_RETRIES 3
-/** Type of callback functions to be registered at the time of
- * channel creation.
- */
-typedef int (*ChannelCallback)(void*);
-
-/**
- * Type of callback function registered at initialization
- * for handling commands
- */
-typedef int (*CommandCallback)(void);
 
 /* Define common mutex type */
 #ifdef _WIN32
@@ -272,23 +257,18 @@ typedef int (*CommandCallback)(void);
 #define OO_MUTEX pthread_mutex_t
 #endif
 
-/**
- * Structure for stack commands */
-typedef struct ooCommand {
-   int type;
-   void * param1;
-   void * param2;
-   void * param3;
-} ooCommand;
-
-
 /*TODO: Should add caller-id, callername etc. So that they can be changed per
   call basis*/
+/**
+ * This structure defines options that can be set at the level of an
+ * individual call. They override options set in the H.323 endpoint
+ * structure.
+ */
 typedef struct ooCallOptions {
-   OOBOOL fastStart; /* faststart for this call. overrides endpoint setting*/
-   OOBOOL tunneling; /* tunneling for this call. overrides endpoint setting*/
-   OOBOOL disableGk; /* If gk is enabled, then you can avoid going through gk for a specific call */
-   OOCallMode callMode; /* Effective when faststart is used. Tells stack which type of channels to setup*/
+   OOBOOL fastStart;    /*!< Use FastStart signaling */
+   OOBOOL tunneling;    /*!< Use H.245 tunneling */
+   OOBOOL disableGk;    /*!< Disable use of gatekeeper */
+   OOCallMode callMode; /*!< Type of channel to setup with FastStart */
 }ooCallOptions;
 
 /**
@@ -301,28 +281,6 @@ struct ooH323Ports
    int max;
    int current;
 };
-
-struct Q931InformationElement;
-/**
- Defines the Q931 message structure. Contains
- context for memory allocation, protocol Discriminator,
- call reference, meesage type and list of user user IEs.
-*/
-typedef struct Q931Message {
-   ASN1UINT protocolDiscriminator;
-   ASN1UINT callReference;
-   ASN1BOOL fromDestination;
-   ASN1UINT messageType;      /* Q931MsgTypes */
-   ASN1UINT tunneledMsgType;  /* The H245 message this message is tunneling*/
-   ASN1INT  logicalChannelNo; /* channel number associated with tunneled */
-                              /* message, 0 if no channel */
-   DList ies;   
-   struct Q931InformationElement *bearerCapabilityIE;
-   struct Q931InformationElement *callingPartyNumberIE;
-   struct Q931InformationElement *calledPartyNumberIE;
-   struct Q931InformationElement *causeIE;
-   H225H323_UserInformation *userInfo;
-} Q931Message;
 
 /**
  Defines the H245 message structure. All request/response
@@ -403,6 +361,7 @@ typedef struct OOCallFwdData{
    OOBOOL fwdedByRemote; /*Set when we are being fwded by remote*/
 }OOCallFwdData;     
 
+struct Q931Message;
 /**
  * These are message callbacks which can be used by user applications
  * to perform application specific things on receiving a particular
@@ -411,16 +370,16 @@ typedef struct OOCallFwdData{
  * sent out.
  */
 typedef int (*cb_OnReceivedSetup)
-   (struct OOH323CallData *call, Q931Message *pmsg);
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
 
 typedef int (*cb_OnReceivedConnect)
-   (struct OOH323CallData *call, Q931Message *pmsg);
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
 
 typedef int (*cb_OnBuiltSetup)
-   (struct OOH323CallData *call, Q931Message *pmsg);
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
 
 typedef int (*cb_OnBuiltConnect)
-   (struct OOH323CallData *call, Q931Message *pmsg);
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
 
 typedef struct OOH225MsgCallbacks{
    cb_OnReceivedSetup onReceivedSetup;
