@@ -262,7 +262,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
   
    request->t = T_H245RequestMessage_terminalCapabilitySet;
    request->u.terminalCapabilitySet = (H245TerminalCapabilitySet*)
-                  ASN1MALLOC(pctxt, sizeof(H245TerminalCapabilitySet));
+                  memAlloc(pctxt, sizeof(H245TerminalCapabilitySet));
    termCap = request->u.terminalCapabilitySet;
    memset(termCap, 0, sizeof(H245TerminalCapabilitySet));
    termCap->m.multiplexCapabilityPresent = 0;
@@ -325,7 +325,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
           continue;
       }
       /* Add  Capabilities to Capability Table */
-      entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
+      entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
                       sizeof(H245CapabilityTableEntry));
       memset(entry, 0, sizeof(H245CapabilityTableEntry));
       entry->m.capabilityPresent = 1;
@@ -351,7 +351,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
          OOTRACEWARN3("WARN:Failed to add RFC2833 cap to TCS(%s, %s)\n",
                      call->callType, call->callToken);
       }else {
-         entry = (H245CapabilityTableEntry*) ASN1MALLOC(pctxt,
+         entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
                       sizeof(H245CapabilityTableEntry));
          if(!entry)
          {
@@ -385,7 +385,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
           
    /* Define capability descriptior */
    capDesc = (H245CapabilityDescriptor*)
-             ASN1MALLOC(pctxt, sizeof(H245CapabilityDescriptor));
+             memAlloc(pctxt, sizeof(H245CapabilityDescriptor));
    memset(capDesc, 0, sizeof(H245CapabilityDescriptor));
    capDesc->m.simultaneousCapabilitiesPresent = 1;
    capDesc->capabilityDescriptorNumber = 1;
@@ -398,7 +398,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
    for(j=0; j<i; j++)
    {
       altSet = (H245AlternativeCapabilitySet*)
-               ASN1MALLOC(pctxt, sizeof(H245AlternativeCapabilitySet));
+               memAlloc(pctxt, sizeof(H245AlternativeCapabilitySet));
       memset(altSet, 0, sizeof(H245AlternativeCapabilitySet));
       altSet->n = 1;
       altSet->elem[0] = j+1;
@@ -2568,17 +2568,14 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
     return ret;
 }
 
-int ooAddFastStartToSetup(OOH323CallData *call, H225Setup_UUIE *setup)
-{
-   return OO_OK;
-}
+
 /* Used to build Audio OLCs for fast connect. Keep in mind that forward and
    reverse
    are always with respect to the endpoint which proposes channels
    TODO: Need to clean logical channel in case of failure.    */
 int ooBuildOpenLogicalChannelAudio
-   (OOH323CallData *call, H245OpenLogicalChannel *olc, ooH323EpCapability *epCap,
-    OOCTXT*pctxt, int dir)
+   (OOH323CallData *call, H245OpenLogicalChannel *olc,
+    ooH323EpCapability *epCap, OOCTXT*pctxt, int dir)
 {
    int reverse=0, forward=0;
    H245AudioCapability *audioCap=NULL;

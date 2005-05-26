@@ -67,6 +67,14 @@ EXTERN int ooCreateH323Listener(void);
 EXTERN int ooCreateH245Listener(struct OOH323CallData *call);
 
 /**
+ * This function is used to close an H245 listener for a call.
+ * @param call      Pointer to call for which H245 Listener has to be closed.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCloseH245Listener(struct OOH323CallData *call);
+
+/**
  * This function is used to accept incoming H.225 connections.
  * @param None
  *

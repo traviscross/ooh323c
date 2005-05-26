@@ -259,6 +259,12 @@ int ooCleanCall(OOH323CallData *call)
          memFreePtr(call->pctxt, call->pH245Channel);
       }
    }
+
+   /* Close H.245 listener, if not already closed */
+   if(call->h245listener)
+   {
+      ooCloseH245Listener(call);
+   }
   
    /* Close H225 connection, if not already closed. */
    if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)

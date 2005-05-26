@@ -1255,14 +1255,21 @@ int ooCloseH245Connection(OOH323CallData *call)
       OOTRACEDBGC3("Closed H245 connection. (%s, %s)\n", call->callType,
                                                        call->callToken);
    }
+   call->h245SessionState = OO_H245SESSION_CLOSED;
+
+   return OO_OK;
+}
+
+int ooCloseH245Listener(OOH323CallData *call)
+{
+   OOTRACEINFO3("Closing H.245 Listener (%s, %s)\n", call->callType,
+                call->callToken);
    if(call->h245listener)
    {
       ooSocketClose(*(call->h245listener));
       memFreePtr(call->pctxt, call->h245listener);
       call->h245listener = NULL;
    }
-   call->h245SessionState = OO_H245SESSION_CLOSED;
-
    return OO_OK;
 }
 
