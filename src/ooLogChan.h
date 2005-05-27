@@ -28,8 +28,7 @@ extern "C" {
 #endif
 
 /**
- * @defgroup logchan
- * H.245 logical channel management
+ * @defgroup logchan H.245 logical channel management
  * @{
  */
 struct ooH323EpCapability;
