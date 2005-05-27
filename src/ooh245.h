@@ -48,6 +48,16 @@ struct OOH323CallData;
  * @{
  */
 /**
+ * Defines the H.245 message structure. All request/response
+ * and command messages are represented using this structure.
+ */
+typedef struct H245Message {
+   H245MultimediaSystemControlMessage h245Msg;
+   ASN1UINT msgType;
+   ASN1INT  logicalChannelNo;
+} H245Message;
+
+/**
  * Creates an outgoing H245 message of the type specified by the type
  * argument for the Application context.
  *
@@ -70,6 +80,16 @@ EXTERN int ooCreateH245Message(H245Message **msg, int type);
  * @return          OO_OK, on success. OO_FAILED, on failure        
  */
 EXTERN int ooFreeH245Message(struct OOH323CallData *call, H245Message *pmsg);
+
+/**
+ * This function is used to enqueue an H.245 message into an outgoing queue for
+ * the call.
+ * @param call      Pointer to call for which message has to be enqueued.
+ * @param msg       Pointer to the H.245 message to be sent.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendH245Msg(struct OOH323CallData *call, H245Message *msg);
 
 /**
  * This function is used to retrieve an H.245 message enqueued in the outgoing

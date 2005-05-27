@@ -54,8 +54,15 @@
 #include "H323-MESSAGES.h"
 #include "ooasn1.h"
 
-
 #define OOH323C_VERSION "v0.6.1"
+
+#ifndef EXTERN
+#ifdef _WIN32
+#define EXTERN __declspec(dllexport)
+#else
+#define EXTERN
+#endif /* _WIN32 */
+#endif /* EXTERN */
 
 /**
  * @defgroup ootypes Common type and constant definitions.
@@ -120,41 +127,6 @@ typedef enum OOCallClearReason {
    OO_REASON_LOCAL_CONGESTED
 } OOCallClearReason;
 
-/**
- * Call states.
- */
-typedef enum {
-   OO_CALL_CREATED,               /*!< Call created. */
-   OO_CALL_WAITING_ADMISSION,     /*!< Call waiting for admission by GK */
-   OO_CALL_CONNECTING,            /*!< Call in process of connecting */
-   OO_CALL_CONNECTED,             /*!< Call currently connected. */
-   OO_CALL_CLEAR,                 /*!< Call marked for clearing */
-   OO_CALL_CLEAR_RELEASERECVD,    /*!< Release command received. */
-   OO_CALL_CLEAR_RELEASESENT,     /*!< Release sent */
-   OO_CALL_CLEARED                /*!< Call cleared */
-} OOCallState;
-
-/**
- * H.245 session state
- */
-typedef enum {
-   OO_H245SESSION_IDLE,
-   OO_H245SESSION_ACTIVE,
-   OO_H245SESSION_ENDSENT,
-   OO_H245SESSION_ENDRECVD,
-   OO_H245SESSION_CLOSED
-} OOH245SessionState;
-
-/**
- * Logical channel states.
- */
-typedef enum {
-   OO_LOGICAL_CHAN_UNKNOWN,
-   OO_LOGICALCHAN_IDLE,
-   OO_LOGICALCHAN_PROPOSED,
-   OO_LOGICALCHAN_ESTABLISHED
-} OOLogicalChannelState;
-
 /** Terminal type of the endpoint. Default is 60. */
 #define OOTERMTYPE 60
 
@@ -201,7 +173,6 @@ typedef enum {
 #define OOEndSessionCommand            128
 #define OO_MSGTYPE_MAX                 128
 
-
 /* Timer types */
 #define OO_CALLESTB_TIMER  (1<<0)
 #define OO_MSD_TIMER       (1<<1)
@@ -210,14 +181,6 @@ typedef enum {
 #define OO_CLC_TIMER       (1<<4)
 #define OO_RCC_TIMER       (1<<5)
 #define OO_SESSION_TIMER   (1<<6)
-
-/* Default port ranges */
-#define TCPPORTSSTART 12030  /*!< Starting TCP port number */
-#define TCPPORTSEND   12230  /*!< Ending TCP port number   */
-#define UDPPORTSSTART 13030  /*!< Starting UDP port number */
-#define UDPPORTSEND   13230  /*!< Ending UDP port number   */
-#define RTPPORTSSTART 14030  /*!< Starting RTP port number */
-#define RTPPORTSEND   14230  /*!< Ending RTP port number   */
 
 /** Maximum length for received messages */
 #define MAXMSGLEN 4096
@@ -271,79 +234,10 @@ typedef struct ooCallOptions {
    OOCallMode callMode; /*!< Type of channel to setup with FastStart */
 }ooCallOptions;
 
-/**
- * This structure is used to define the port ranges to be used
- * by the application.
- */
-struct ooH323Ports
-{
-   int start;
-   int max;
-   int current;
-};
-
-/**
- Defines the H245 message structure. All request/response
- and command messages are represented using this structure.
-*/
-typedef struct H245Message {
-   H245MultimediaSystemControlMessage h245Msg;
-   ASN1UINT msgType;
-   ASN1INT  logicalChannelNo;
-} H245Message;
-
-struct ooH323EpCapability;
 typedef struct ooCapPrefs {
   int order[20];
   int index;
 }ooCapPrefs;
-
-/* Store local and remote media endpoint info, for media type */
-typedef struct ooMediaInfo{
-   char  dir[15]; /* transmit/receive*/
-   int   cap;
-   int   lMediaPort;
-   int   lMediaCntrlPort;
-   char  lMediaIP[20];
-   struct ooMediaInfo *next;
-} ooMediaInfo;
-
-/**
- * Structure to store information of logical channels for call.
- */
-typedef struct ooLogicalChannel {
-   int  channelNo;
-   int  sessionID;
-   char type[10]; /* audio/video/data */
-   char dir[10];  /* receive/transmit */
-   char remoteIP[20];
-   int  mediaPort;
-   int  mediaControlPort;
-   int  localRtpPort;
-   int  localRtcpPort;
-   char localIP[20];
-   OOLogicalChannelState state;        
-   struct ooH323EpCapability *chanCap;
-   struct ooLogicalChannel *next;
-} ooLogicalChannel;
-
-typedef struct ooAliases{
-   int type;
-   char *value;
-   OOBOOL registered;
-   struct ooAliases *next;
-}ooAliases;
-
-
-/**
- * Structure to store all the information related to a particular
- * call.
- */
-typedef struct OOH323Channel {
-   OOSOCKET     sock;
-   int          port;
-   DList        outQueue;
-} OOH323Channel;
 
 
 struct OOH323CallData;
@@ -353,75 +247,6 @@ typedef struct ooTimerCallback{
    ASN1UINT    timerType;
    ASN1UINT    channelNumber;
 } ooTimerCallback;
-
-typedef struct OOCallFwdData{
-   char ip[20];
-   int port;
-   ooAliases *aliases;
-   OOBOOL fwdedByRemote; /*Set when we are being fwded by remote*/
-}OOCallFwdData;     
-
-struct Q931Message;
-/**
- * These are message callbacks which can be used by user applications
- * to perform application specific things on receiving a particular
- * message or before sending a particular message. For ex. user application
- * can change values of some parameters of setup message before it is actually
- * sent out.
- */
-typedef int (*cb_OnReceivedSetup)
-   (struct OOH323CallData *call, struct Q931Message *pmsg);
-
-typedef int (*cb_OnReceivedConnect)
-   (struct OOH323CallData *call, struct Q931Message *pmsg);
-
-typedef int (*cb_OnBuiltSetup)
-   (struct OOH323CallData *call, struct Q931Message *pmsg);
-
-typedef int (*cb_OnBuiltConnect)
-   (struct OOH323CallData *call, struct Q931Message *pmsg);
-
-typedef struct OOH225MsgCallbacks{
-   cb_OnReceivedSetup onReceivedSetup;
-   cb_OnReceivedConnect onReceivedConnect;
-   cb_OnBuiltSetup onBuiltSetup;
-   cb_OnBuiltConnect onBuiltConnect;
-}OOH225MsgCallbacks;
-
-
-/**
- * This callback function is triggered when a new call structure is
- * created inside the stack for an incoming or outgoing call.
- *
- * @param call H.323 call data structure
- * @return 0 if callback was successful, non-zero error code if failure.
- */
-typedef int (*cb_OnNewCallCreated)(struct OOH323CallData * call);
-
-typedef int (*cb_OnAlerting)(struct OOH323CallData * call);
-typedef int (*cb_OnIncomingCall)(struct OOH323CallData* call );
-typedef int (*cb_OnOutgoingCall)(struct OOH323CallData* call );
-typedef int (*cb_OnCallAnswered)(struct OOH323CallData* call);
-typedef int (*cb_OnCallEstablished)(struct OOH323CallData* call);
-typedef int (*cb_OnOutgoingCallAdmitted)(struct OOH323CallData* call );
-typedef int (*cb_OnCallCleared)(struct OOH323CallData* call);
-typedef int (*cb_OpenLogicalChannels)(struct OOH323CallData* call);
-typedef int (*cb_OnCallForwarded)(struct OOH323CallData* call);
-
-struct ooGkClient;
-
-typedef struct OOH323CALLBACKS{
-   cb_OnAlerting onNewCallCreated;
-   cb_OnAlerting onAlerting;
-   cb_OnIncomingCall onIncomingCall;
-   cb_OnOutgoingCall onOutgoingCall;
-   cb_OnCallAnswered onCallAnswered;
-   cb_OnCallEstablished onCallEstablished;
-   cb_OnCallForwarded onCallForwarded;
-   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
-   cb_OnCallCleared onCallCleared;
-   cb_OpenLogicalChannels openLogicalChannels;
-} OOH323CALLBACKS;
 
 /**
  * @}

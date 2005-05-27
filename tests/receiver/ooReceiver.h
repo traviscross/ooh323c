@@ -17,6 +17,7 @@
 #ifndef H323EP_H
 #define H323EP_H
 #include "ootypes.h"
+#include "ooLogChan.h"
 #include "H323-MESSAGES.h"
 
 struct OOH323CallData;
@@ -32,10 +33,10 @@ struct OOH323CallData;
 void* osEpHandleCommand(void*);
 
 int osEpStartReceiveChannel
-   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+   (struct OOH323CallData *call, OOLogicalChannel *pChannel);
 
 int osEpStopReceiveChannel
-   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+   (struct OOH323CallData *call, OOLogicalChannel *pChannel);
 
 int osEpOnIncomingCall (struct OOH323CallData* call );
 

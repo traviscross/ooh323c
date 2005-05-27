@@ -20,19 +20,12 @@
 #ifndef _OOCALLS_H_
 #define _OOCALLS_H_
 
+#include "ooLogChan.h"
 #include "ooCapability.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#ifndef EXTERN
-#ifdef _WIN32
-#define EXTERN __declspec(dllexport)
-#else
-#define EXTERN
-#endif /* _WIN32 */
-#endif /* EXTERN */
 
 /**
  * @defgroup callmgmt  Call Management
@@ -58,6 +51,73 @@ extern "C" {
 #define OO_M_DISABLEGK          0x20000000
 #define OO_M_AUDIO              0x10000000
 
+/**
+ * Call states.
+ */
+typedef enum {
+   OO_CALL_CREATED,               /*!< Call created. */
+   OO_CALL_WAITING_ADMISSION,     /*!< Call waiting for admission by GK */
+   OO_CALL_CONNECTING,            /*!< Call in process of connecting */
+   OO_CALL_CONNECTED,             /*!< Call currently connected. */
+   OO_CALL_CLEAR,                 /*!< Call marked for clearing */
+   OO_CALL_CLEAR_RELEASERECVD,    /*!< Release command received. */
+   OO_CALL_CLEAR_RELEASESENT,     /*!< Release sent */
+   OO_CALL_CLEARED                /*!< Call cleared */
+} OOCallState;
+
+/**
+ * H.245 session states.
+ */
+typedef enum {
+   OO_H245SESSION_IDLE,
+   OO_H245SESSION_ACTIVE,
+   OO_H245SESSION_ENDSENT,
+   OO_H245SESSION_ENDRECVD,
+   OO_H245SESSION_CLOSED
+} OOH245SessionState;
+
+/**
+ * Structure to store local and remote media endpoint info for a
+ * given media type.
+ */
+typedef struct OOMediaInfo{
+   char  dir[15]; /* transmit/receive*/
+   int   cap;
+   int   lMediaPort;
+   int   lMediaCntrlPort;
+   char  lMediaIP[20];
+   struct OOMediaInfo *next;
+} OOMediaInfo;
+
+#define ooMediaInfo OOMediaInfo
+
+struct OOAliases;
+
+/**
+ * Structure to hold information on a forwarded call.
+ */
+typedef struct OOCallFwdData {
+   char ip[20];
+   int port;
+   struct OOAliases *aliases;
+   OOBOOL fwdedByRemote; /*Set when we are being fwded by remote*/
+} OOCallFwdData;     
+
+/**
+ * Structure to store information on an H.323 channel (H.225 or H.245) for
+ * a particular call.
+ */
+typedef struct OOH323Channel {
+   OOSOCKET     sock;      /*!< Socket connection for the channel */
+   int          port;      /*!< Port assigned to the channel */
+   DList        outQueue;  /*!< Output message queue */
+} OOH323Channel;
+
+/**
+ * This structure is used to maintain all information on an active call.
+ * A list of these structures is maintained within the global endpoint
+ * structure.
+ */
 typedef struct OOH323CallData {
    OOCTXT               *pctxt;
    char                 callToken[20]; /* ex: ooh323c_call_1 */
@@ -74,7 +134,7 @@ typedef struct OOH323CallData {
    OOCallClearReason    callEndReason;
    OOH245SessionState   h245SessionState;
    int                  dtmfmode;
-   ooMediaInfo          *mediaInfo;
+   OOMediaInfo          *mediaInfo;
    OOCallFwdData        *pCallFwdData;
    char                 localIP[20];/* Local IP address */
    OOH323Channel*       pH225Channel;
@@ -85,8 +145,8 @@ typedef struct OOH323CallData {
    int                  remotePort;
    int                  remoteH245Port;
    char                 *remoteDisplayName;
-   ooAliases            *remoteAliases;
-   ooAliases            *ourAliases; /*aliases used in the call for us */
+   struct OOAliases     *remoteAliases;
+   struct OOAliases     *ourAliases; /*aliases used in the call for us */
    OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
    ASN1UINT             statusDeterminationNumber;
    OOCapExchangeState   localTermCapState;
@@ -98,7 +158,7 @@ typedef struct OOH323CallData {
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
    ooCapPrefs           capPrefs;  
-   ooLogicalChannel*    logicalChans;
+   OOLogicalChannel*    logicalChans;
    int                  noOfLogicalChannels;
    int                  logicalChanNoBase;
    int                  logicalChanNoMax;
@@ -112,6 +172,103 @@ typedef struct OOH323CallData {
 } OOH323CallData;
 
 #define ooCallData OOH323CallData
+
+/**
+ * This callback function is triggered when a new call structure is
+ * created inside the stack for an incoming or outgoing call.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnNewCallCreated)(OOH323CallData* call);
+
+/**
+ * This callback function is triggered when a Q.931 alerting message is
+ * received for an outgoing call or when a Q.931 alerting message is sent
+ * for an incoming call.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnAlerting)(OOH323CallData * call);
+
+/**
+ * This callback function is triggered when there is an incoming call.
+ * In the case where a gatekeeper is in use, the call must first be
+ * admitted by the gatekeeper before this callback is triggered.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnIncomingCall)(OOH323CallData* call );
+
+/**
+ * This callback function is triggered after a Q.931 setup message
+ * is sent for an outgoing call.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnOutgoingCall)(OOH323CallData* call );
+
+/* ? */
+typedef int (*cb_OnCallAnswered)(struct OOH323CallData* call);
+
+/**
+ * This callback function is triggered when a Q.931 connect message is
+ * sent in case of incoming call.  In case of outgoing call, this is invoked
+ * when a Q.931 connect message is received. It is not invoked until after
+ * fast start and H.245 tunneling messages within the connect message are
+ * processed.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnCallEstablished)(struct OOH323CallData* call);
+
+/* ? */
+typedef int (*cb_OnOutgoingCallAdmitted)(struct OOH323CallData* call );
+
+/**
+ * This callback function is triggered when a call is cleared.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OnCallCleared)(struct OOH323CallData* call);
+
+/**
+ * This callback function is triggered when master-slave determination
+ * and capabilities negotiation procedures are successfully completed
+ * for a call.
+ *
+ * @param call H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure.
+ */
+typedef int (*cb_OpenLogicalChannels)(struct OOH323CallData* call);
+
+/**
+ *
+ */
+typedef int (*cb_OnCallForwarded)(struct OOH323CallData* call);
+
+/**
+ * This structure holds all of the H.323 signaling callback function
+ * addresses.
+ * @see ooH323EpSetH323Callbacks
+ */
+typedef struct OOH323CALLBACKS {
+   cb_OnAlerting onNewCallCreated;
+   cb_OnAlerting onAlerting;
+   cb_OnIncomingCall onIncomingCall;
+   cb_OnOutgoingCall onOutgoingCall;
+   cb_OnCallAnswered onCallAnswered;
+   cb_OnCallEstablished onCallEstablished;
+   cb_OnCallForwarded onCallForwarded;
+   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
+   cb_OnCallCleared onCallCleared;
+   cb_OpenLogicalChannels openLogicalChannels;
+} OOH323CALLBACKS;
 
 /**
  * This function is used to create a new call entry.
@@ -400,48 +557,6 @@ EXTERN int ooRemoveCallFromList (OOH323CallData *call);
 EXTERN int ooCleanCall(OOH323CallData *call);
 
 /**
- * This function is used to add a new logical channel entry into the list
- * of currently active logical channels.
- * @param call      Pointer to the call for which new logical channel
- *                  entry has to be created.
- * @param channelNo Channel number for the new channel entry.
- * @param sessionID Session identifier for the new channel.
- * @param type      Type of the channel(audio/video/data)
- * @param dir       Direction of the channel(transmit/receive)
- * @param epCap     Capability to be used for the new channel.
- *
- * @return          Pointer to logical channel, on success. NULL, on failure
- */
-EXTERN ooLogicalChannel* ooAddNewLogicalChannel
-         (OOH323CallData *call, int channelNo, int sessionID, char *type,
-          char * dir, ooH323EpCapability *epCap);
-
-/**
- * This function is used to find a logical channel by logical channel number.
- * @param call          Pointer to the call for which logical channel is
- *                      required.
- * @param channelNo     Forward Logical Channel number for the logical channel
- *
- * @return              Pointer to the logical channel if found, NULL
- *                      otherwise.  
- */
-EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
-                                  (OOH323CallData *call,int channelNo);
-
-/**
- * This function is called when a new logical channel is established. It is
- * particularly useful in case of faststart. When the remote endpoint selects
- * one of the proposed alternatives, other channels for the same session type
- * need to be closed. This function is used for that.
- * @param call      Handle to the call which owns the logical channel.
- * @param pChannel  Handle to the newly established logical channel.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooOnLogicalChannelEstablished
-(OOH323CallData *call, ooLogicalChannel * pChannel);
-
-/**
  * This fuction is used to check whether a specified session in specified
  * direction is active for the call.
  * @param call       Handle to call for which session has to be queried.
@@ -455,87 +570,17 @@ EXTERN ASN1BOOL ooIsSessionEstablished
 (OOH323CallData *call, int sessionID, char* dir);
 
 /**
- * This function is used to retrieve a logical channel with particular
- * sessionID. Note that there can be two entries of logical channel, one in
- * each direction. This function will return the first channel which has the
- * same session ID.
- * @param call      Handle to the call which owns the channels to be searched.
- * @param sessionID Session id of the session which is to be searched for.
- *
- * @return          Returns a pointer to the logical channel if found, NULL
- *                  otherwise.
- */
-EXTERN ooLogicalChannel* ooGetLogicalChannel
-(OOH323CallData *call, int sessionID);
-
-/**
- * This function is used to remove a logical channel from the list of logical
- * channels.
- * @param call              Pointer to the call from which logical channel has
- *                          to be removed.
- * @param ChannelNo         Forward logical channel number of the channel to be
- *                          removed.
- */
-EXTERN int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo);
-
-/**
- * This function is used to cleanup a logical channel. It first stops media, if
- * it is still active and then removes the channel from the list, freeing up
- * all the associated memory.
- * @param call       Handle to the call which owns the logical channel.
- * @param channelNo  Channel number identifying the channel.
- *
- * @return           OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooClearLogicalChannel(OOH323CallData *call, int channelNo);
-
-/**
- * This function is used to cleanup all the logical channels associated with
- * the call.
- * @param call      Handle to the call which owns the channels.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooClearAllLogicalChannels(OOH323CallData *call);
-
-/**
  * This function can be used by an application to specify media endpoint
  * information for different types of media. The stack by default uses local IP
  * and port for media. An application can provide mediainfo if it wants to
  * override default.
  * @param call      Handle to the call
- * @param mediaInfo mediainfo structure which defines the media endpoint to be
+ * @param mediaInfo Structure which defines the media endpoint to be
  *                  used.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooAddMediaInfo(OOH323CallData *call, ooMediaInfo mediaInfo);
-
-/**
- * This function is used to find a logical channel from a received
- * olc.
- * @param call     Handle to the related call.
- * @param olc      Handle to the received OLC.
- *
- * @return         Returns the corresponding logical channel if found,
- *                 else returns NULL.
- */
-EXTERN ooLogicalChannel * ooFindLogicalChannelByOLC
-(OOH323CallData *call, H245OpenLogicalChannel *olc);
-
-/**
- * This function is used to find a logical channel based on session Id,
- * direction of channel and datatype.
- * @param call       Handle to the call
- * @param sessionID  Session ID for the channel to be searched.
- * @param dir        Direction of the channel wrt local endpoint.
- *                   (transmit/receive)
- * @param dataType   Handle to the data type for the channel.
- *
- * @return           Logical channel, if found, NULL otherwise.
- */
-EXTERN ooLogicalChannel * ooFindLogicalChannel
-(OOH323CallData *call, int sessionID, char *dir, H245DataType * dataType);
+EXTERN int ooAddMediaInfo(OOH323CallData *call, OOMediaInfo mediaInfo);
 
 /**
  * @}
@@ -544,7 +589,5 @@ EXTERN ooLogicalChannel * ooFindLogicalChannel
 #ifdef __cplusplus
 }
 #endif
-
-
 
 #endif

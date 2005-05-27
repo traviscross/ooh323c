@@ -13,7 +13,6 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
-
 /**
  * @file ooq931.h
  * This file contains functions to support call signalling.
@@ -39,7 +38,7 @@ extern "C" {
 #endif /* EXTERN */
 
 /**
- * @defgroup q931 Q931/H.2250 Message Handling
+ * @defgroup q931 Q.931/H.2250 Message Handling
  * @{
  */
 /* Maximum length of the Calling/Called party number number */
@@ -189,7 +188,6 @@ enum Q931CodingStandard{
   Q931NetworkStd
 };
 
-
 enum Q931TransferMode {
   Q931TransferCircuitMode,   /* 00 */
   Q931TransferPacketMode     /* 10 */
@@ -249,7 +247,80 @@ typedef struct Q931Message {
    H225H323_UserInformation *userInfo;
 } Q931Message;
 
+/**
+ * This structure is used to hold an H.323 alias address.
+ */
+typedef struct OOAliases {
+   int type;           /*!< H.225 AliasAddress choice option (t value) */
+   char *value;        /*!< H.225 AliasAddress value */
+   OOBOOL registered;
+   struct OOAliases *next;
+} OOAliases;
+
+#define ooAliases OOAliases
+
 struct OOH323CallData;
+
+/*
+ * These are message callbacks which can be used by user applications
+ * to perform application specific things on receiving a particular
+ * message or before sending a particular message. For ex. user application
+ * can change values of some parameters of setup message before it is actually
+ * sent out.
+ */
+/**
+ * This callback is triggered when an H.225 SETUP message is received by
+ * the application.
+ * @param call  The call the message is associated with.
+ * @param pmsg  Q.931 message structure.
+ * @return OO_OK if message processing successful or OO_FAILED if not.
+ */
+typedef int (*cb_OnReceivedSetup)
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
+
+/**
+ * This callback is triggered when an H.225 CONNECT message is received by
+ * the application.
+ * @param call  The call the message is associated with.
+ * @param pmsg  Q.931 message structure.
+ * @return OO_OK if message processing successful or OO_FAILED if not.
+ */
+typedef int (*cb_OnReceivedConnect)
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
+
+/**
+ * This callback is triggered after an H.225 SETUP message has been
+ * constructed and is ready to be sent out.  It provides the application
+ * with an opportunity to add additional non-standard information.
+ * @param call  The call the message is associated with.
+ * @param pmsg  Q.931 message structure.
+ * @return OO_OK if message processing successful or OO_FAILED if not.
+ */
+typedef int (*cb_OnBuiltSetup)
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
+
+/**
+ * This callback is triggered after an H.225 CONNECT message has been
+ * constructed and is ready to be sent out.  It provides the application
+ * with an opportunity to add additional non-standard information.
+ * @param call  The call the message is associated with.
+ * @param pmsg  Q.931 message structure.
+ * @return OO_OK if message processing successful or OO_FAILED if not.
+ */
+typedef int (*cb_OnBuiltConnect)
+   (struct OOH323CallData *call, struct Q931Message *pmsg);
+
+/**
+ * This structure holds the various callback functions that are
+ * triggered when H.225 messages are received or constructed.
+ * @see ooH323EpSetH225MsgCallbacks
+ */
+typedef struct OOH225MsgCallbacks {
+   cb_OnReceivedSetup onReceivedSetup;
+   cb_OnReceivedConnect onReceivedConnect;
+   cb_OnBuiltSetup onBuiltSetup;
+   cb_OnBuiltConnect onBuiltConnect;
+} OOH225MsgCallbacks;
 
 /**
  * This function is invoked to decode a Q931 message.
@@ -496,7 +567,7 @@ EXTERN int ooH323MakeCall_helper(struct OOH323CallData *call);
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 int ooParseDestination(OOCTXT* pctxt, char *dest, char *parsedIP, unsigned len,
-                       ooAliases**aliasList);
+                       OOAliases** aliasList);
 
 /**
  * This function is used to generate a new call token

@@ -70,6 +70,7 @@ typedef struct ooGSMCapParams {
 } ooGSMCapParams;
 
 struct OOH323CallData;
+struct OOLogicalChannel;
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,19 +78,19 @@ extern "C" {
 
 /** Call back for starting media receive channel */
 typedef int (*cb_StartReceiveChannel)
-     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
 /** callback for starting media transmit channel */
 typedef int (*cb_StartTransmitChannel)
-     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
 /** callback to stop media receive channel */
 typedef int (*cb_StopReceiveChannel)
-     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
 /** callback to stop media transmit channel */
 typedef int (*cb_StopTransmitChannel)
-     (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+     (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
 typedef enum OOCapType {
    OO_CAP_TYPE_AUDIO,

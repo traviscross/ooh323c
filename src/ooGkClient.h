@@ -131,16 +131,20 @@ typedef struct RasCallAdmissionInfo
    ASN1USINT irrFrequency;
 } RasCallAdmissionInfo;
 
+struct OOAliases;
+
 /** GkClient callbacks:
  *  The first parameter is the message received. The second parameter provides
  *  updated list of aliases after the message was processed by the stack.
  */
 typedef int (*cb_OnReceivedRegistrationConfirm)
-                         (H225RegistrationConfirm *rcf, ooAliases *aliases);
+     (H225RegistrationConfirm *rcf, struct OOAliases *aliases);
+
 typedef int (*cb_OnReceivedUnregistrationConfirm)
-                       (H225UnregistrationConfirm *ucf, ooAliases *aliases);
+     (H225UnregistrationConfirm *ucf, struct OOAliases *aliases);
+
 typedef int (*cb_OnReceivedUnregistrationRequest)
-                       (H225UnregistrationRequest *urq, ooAliases *aliases);
+     (H225UnregistrationRequest *urq, struct OOAliases *aliases);
 
 typedef struct OOGKCLIENTCALLBACKS{
    cb_OnReceivedRegistrationConfirm onReceivedRegistrationConfirm;
@@ -179,6 +183,7 @@ typedef struct ooGkClient{
    enum OOGkClientState  state;
 } ooGkClient;
 
+struct OOAliases;
 struct OOH323CallData;
 
 /**
@@ -367,7 +372,7 @@ EXTERN int ooGkClientHandleRegistrationReject
  *
  * @return           OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases);
+EXTERN int ooGkClientSendURQ(ooGkClient *pGkClient, struct OOAliases *aliases);
 
 /**
  * This function is used to handle a received Unregistration request message.

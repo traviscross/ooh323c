@@ -119,7 +119,7 @@ EXTERN int ooHandleStartH245FacilityMessage(struct OOH323CallData *call,
  */
 EXTERN int ooH323RetrieveAliases
    (struct OOH323CallData *call, H225_SeqOfH225AliasAddress *pAddresses,
-    ooAliases **aliasList);
+    OOAliases **aliasList);
 
 /**
  * This is a helper function used to populate alias list using aliases.
@@ -130,7 +130,7 @@ EXTERN int ooH323RetrieveAliases
  *
  * @return           OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
+EXTERN int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
                                H225_SeqOfH225AliasAddress *pAliasList);
 
 /**
@@ -142,8 +142,8 @@ EXTERN int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
  * @param value     Value of the alias, if the search has to consider value as
  *                  criterion, NULL otherwise.
  */
-EXTERN ooAliases* ooH323GetAliasFromList
-                               (ooAliases *aliasList, int type, char *value);
+EXTERN OOAliases* ooH323GetAliasFromList
+                               (OOAliases *aliasList, int type, char *value);
 
 /**
  * This function is used to add a new alias to alias list.
@@ -154,8 +154,9 @@ EXTERN ooAliases* ooH323GetAliasFromList
  *
  * @return              Handle to newly added alias or NULL in case of failure.
  */
-EXTERN ooAliases* ooH323AddAliasToList(ooAliases **pAliasList, OOCTXT *pctxt,
-                                H225AliasAddress *pAliasAddress);
+EXTERN OOAliases* ooH323AddAliasToList
+(OOAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress);
+
 /**
  * @}
  */

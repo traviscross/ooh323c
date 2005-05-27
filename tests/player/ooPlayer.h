@@ -17,6 +17,7 @@
 #ifndef OOPLAYER_H
 #define OOPLAYER_H
 #include "ootypes.h"
+#include "ooLogChan.h"
 #include "H323-MESSAGES.h"
 
 struct OOH323CallData;
@@ -32,10 +33,10 @@ struct OOH323CallData;
 void* osEpHandleCommand(void*);
 
 int osEpStartTransmitChannel
-   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+   (struct OOH323CallData *call, OOLogicalChannel *pChannel);
 
 int osEpStopTransmitChannel
-   (struct OOH323CallData *call, ooLogicalChannel *pChannel);
+   (struct OOH323CallData *call, OOLogicalChannel *pChannel);
 
 #endif
 

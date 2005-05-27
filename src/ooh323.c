@@ -136,7 +136,7 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    DListNode* pNode=NULL;
    H225AliasAddress *pAliasAddress=NULL;
    Q931InformationElement* pDisplayIE=NULL;
-   ooAliases *pAlias=NULL;
+   OOAliases *pAlias=NULL;
 
    call->callReference = q931Msg->callReference;
 
@@ -1026,12 +1026,12 @@ int ooHandleTunneledH245Messages
 
 int ooH323RetrieveAliases
    (OOH323CallData *call, H225_SeqOfH225AliasAddress *pAddresses,
-    ooAliases **aliasList)
+    OOAliases **aliasList)
 {
    int i=0,j=0,k=0;
    DListNode* pNode=NULL;
    H225AliasAddress *pAliasAddress=NULL;
-   ooAliases *newAlias=NULL;
+   OOAliases *newAlias=NULL;
    H225TransportAddress *pTransportAddrss=NULL;
 
    if(!pAddresses)
@@ -1056,14 +1056,14 @@ int ooH323RetrieveAliases
       if(!pAliasAddress)
          continue;
 
-      newAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
+      newAlias = (OOAliases*)memAlloc(call->pctxt, sizeof(OOAliases));
       if(!newAlias)
       {
          OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - newAlias "
                      "(%s, %s)\n", call->callType, call->callToken);
          return OO_FAILED;
       }
-      memset(newAlias, 0, sizeof(ooAliases));
+      memset(newAlias, 0, sizeof(OOAliases));
       switch(pAliasAddress->t)
       {
       case T_H225AliasAddress_dialedDigits:
@@ -1179,11 +1179,11 @@ int ooH323RetrieveAliases
 }
 
 
-int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
+int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
                            H225_SeqOfH225AliasAddress *pAliasList )
 {
    H225AliasAddress *pAliasEntry=NULL;
-   ooAliases * pAlias=NULL;
+   OOAliases * pAlias=NULL;
    ASN1BOOL bValid=FALSE;
    int i = 0;
 
@@ -1275,10 +1275,10 @@ int ooPopulateAliasList(OOCTXT *pctxt, ooAliases *pAliases,
 }
 
 
-ooAliases* ooH323GetAliasFromList(ooAliases *aliasList, int type, char *value)
+OOAliases* ooH323GetAliasFromList(OOAliases *aliasList, int type, char *value)
 {
 
-   ooAliases *pAlias = NULL;
+   OOAliases *pAlias = NULL;
 
    if(!aliasList)
    {
@@ -1316,20 +1316,21 @@ ooAliases* ooH323GetAliasFromList(ooAliases *aliasList, int type, char *value)
    return NULL;
 }
 
-ooAliases* ooH323AddAliasToList(ooAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress)
+OOAliases* ooH323AddAliasToList
+(OOAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress)
 {
    int i=0,j=0,k=0;
    DListNode* pNode=NULL;
-   ooAliases *newAlias=NULL;
+   OOAliases *newAlias=NULL;
    H225TransportAddress *pTransportAddrss=NULL;
   
-   newAlias = (ooAliases*)memAlloc(pctxt, sizeof(ooAliases));
+   newAlias = (OOAliases*) memAlloc(pctxt, sizeof(OOAliases));
    if(!newAlias)
    {
       OOTRACEERR1("Error: Failed to allocate memory for new alias to be added to the alias list\n");
       return NULL;
    }
-   memset(newAlias, 0, sizeof(ooAliases));
+   memset(newAlias, 0, sizeof(OOAliases));
 
    switch(pAliasAddress->t)
    {

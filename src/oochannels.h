@@ -175,16 +175,6 @@ EXTERN int ooH245Receive(struct OOH323CallData *call);
 EXTERN int ooSendH225Msg(struct OOH323CallData *call, struct Q931Message *msg);
 
 /**
- * This function is used to enqueue an H.245 message into an outgoing queue for
- * the call.
- * @param call      Pointer to call for which message has to be enqueued.
- * @param msg       Pointer to the H.245 message to be sent.
- *
- * @return          OO_OK, on success. OO_FAILED, on failure.
- */
-EXTERN int ooSendH245Msg(struct OOH323CallData *call, H245Message *msg);
-
-/**
  * This function is used to Send a message on the channel, when channel is
  * available for write.
  * @param call       Pointer to call for which message has to be sent.

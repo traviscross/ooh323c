@@ -157,7 +157,6 @@ static void ooPrintH245Message
 }
 #endif
 
-
 int ooEncodeH245Message(OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size)
 {
    int len=0, encodeLen=0, i=0;
@@ -218,6 +217,92 @@ int ooEncodeH245Message(OOH323CallData *call, H245Message *ph245Msg, char *msgbu
 #ifndef _COMPACT
    ooPrintH245Message (call, encodePtr, encodeLen);
 #endif
+   return OO_OK;
+}
+
+int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
+{
+   int iRet=0,  len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
+   ASN1OCTET * encodebuf;
+   ASN1OCTET *msgptr=NULL;
+
+   if(!call)
+      return OO_FAILED;
+
+   encodebuf = (ASN1OCTET*) memAlloc (call->pctxt, MAXMSGLEN);
+   if(!encodebuf)
+   {
+      OOTRACEERR3("Error:Failed to allocate memory for encoding H245 "
+                  "message(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   iRet = ooEncodeH245Message(call, msg, encodebuf, MAXMSGLEN);
+
+   if(iRet != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to encode H245 message. (%s, %s)\n",
+                                             call->callType, call->callToken);
+      memFreePtr (call->pctxt, encodebuf);
+      return OO_FAILED;
+   }
+   if(!call->pH245Channel)
+   {
+      call->pH245Channel = 
+              (OOH323Channel*) memAllocZ (call->pctxt, sizeof(OOH323Channel));
+      if(!call->pH245Channel)
+      {
+         OOTRACEERR3("Error:Failed to allocate memory for H245Channel "
+                     "structure. (%s, %s)\n", call->callType, call->callToken);
+         memFreePtr (call->pctxt, encodebuf);
+         return OO_FAILED;
+      }
+   }
+
+   /* We need to send EndSessionCommand immediately.*/    
+   if(!OO_TESTFLAG(call->flags, OO_M_TUNNELING)){
+      if(encodebuf[0]== OOEndSessionCommand) /* High priority message */
+      {
+         dListFreeAll(call->pctxt, &call->pH245Channel->outQueue);
+         dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
+         ooSendMsg(call, OOH245MSG);
+      }else{
+
+         dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
+         OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
+                   call->pH245Channel->outQueue.count,
+                   call->callType, call->callToken);  
+      }
+   }
+   else{
+      msgType = encodebuf[0];
+
+      logicalChannelNo = encodebuf[1];
+      logicalChannelNo = logicalChannelNo << 8;
+      logicalChannelNo = (logicalChannelNo | encodebuf[2]);
+
+      len = encodebuf[3];
+      len = len<<8;
+      len = (len | encodebuf[4]);
+
+      iRet = ooSendAsTunneledMessage
+            (call, encodebuf+5,len,msgType, logicalChannelNo);
+
+      if(iRet != OO_OK)
+      {
+         memFreePtr (call->pctxt, encodebuf);
+         OOTRACEERR3("ERROR:Failed to tunnel H.245 message (%s, %s)\n",
+                      call->callType, call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+         {
+            call->callEndReason = OO_REASON_INVALIDMESSAGE;
+            call->callState = OO_CALL_CLEAR;
+         }
+         return OO_FAILED;
+      }
+      memFreePtr (call->pctxt, encodebuf);
+      return OO_OK;
+   }
+
    return OO_OK;
 }
 

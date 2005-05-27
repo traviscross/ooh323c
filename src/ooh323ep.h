@@ -23,6 +23,7 @@
 #include "ooCalls.h"
 #include "ooGkClient.h"
 #include "ooports.h"
+#include "ooq931.h"
 
 #define DEFAULT_TRACEFILE "trace.log"
 #define DEFAULT_TERMTYPE 50
@@ -54,6 +55,24 @@ extern "C" {
  * @defgroup h323ep  H323 Endpoint management functions
  * @{
  */
+/* Default port ranges */
+#define TCPPORTSSTART 12030  /*!< Starting TCP port number */
+#define TCPPORTSEND   12230  /*!< Ending TCP port number   */
+#define UDPPORTSSTART 13030  /*!< Starting UDP port number */
+#define UDPPORTSEND   13230  /*!< Ending UDP port number   */
+#define RTPPORTSSTART 14030  /*!< Starting RTP port number */
+#define RTPPORTSEND   14230  /*!< Ending RTP port number   */
+
+/**
+ * This structure is used to define the port ranges to be used
+ * by the application.
+ */
+typedef struct OOH323Ports {
+   int start;    /*!< Starting port number. */
+   int max;      /*!< Maximum port number.  */
+   int current;  /*!< Current port number.  */
+} OOH323Ports;
+
 /**
  * Structure to store all configuration information related to the
  * endpoint created by an application
@@ -75,13 +94,13 @@ typedef struct OOH323EndPoint {
    FILE * fptraceFile;
 
    /** Range of port numbers to be used for TCP connections */
-   struct ooH323Ports tcpPorts;
+   OOH323Ports tcpPorts;
 
    /** Range of port numbers to be used for UDP connections */
-   struct ooH323Ports udpPorts;
+   OOH323Ports udpPorts;
 
    /** Range of port numbers to be used for RTP connections */
-   struct ooH323Ports rtpPorts;
+   OOH323Ports rtpPorts;
  
    ASN1UINT  flags;
 
@@ -96,7 +115,7 @@ typedef struct OOH323EndPoint {
    const char *callerid;
    char callingPartyNumber[50];
    OOSOCKET *stackSocket;
-   ooAliases *aliases;
+   OOAliases *aliases;
 
    int callType;
 
