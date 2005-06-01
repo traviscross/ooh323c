@@ -68,8 +68,8 @@ typedef struct OOCapPrefs {
 }OOCapPrefs;
 
 typedef struct OOCapParams {
-   int txframes;
-   int rxframes;
+   int txframes;  /*!< Number of frames per packet for transmission */
+   int rxframes;  /*!< Number of frames per packet for reception */
    OOBOOL silenceSuppression;
 } OOCapParams;
 
@@ -89,9 +89,9 @@ typedef enum OOPictureFormat{
 }OOPictureFormat;
 
 typedef struct OOH263CapParams {
-   enum OOPictureFormat picFormat; /* sqcif, qcif, cif, cif4, cif16 */
-   unsigned MPI;
-   unsigned maxBitRate;
+   enum OOPictureFormat picFormat; /* !< One of sqcif, qcif, cif, cif4, cif16*/
+   unsigned MPI; /* !< Minimum Picture Interval */
+  unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
 } OOH263CapParams;
 
 struct OOH323CallData;
@@ -101,19 +101,52 @@ struct OOLogicalChannel;
 extern "C" {
 #endif
 
-/** Call back for starting media receive channel */
+/**
+ * This callback is used for starting media receive channel. This callback
+ * function is triggered when receive media channel has to be started.
+ * @param call     Call for which receive media channel has to be started.
+ * @param pChannel Channel details. This structure has important information
+ *                 such as rtp ip:port and capability describing media type
+ *                 to be received.
+ * @return         OO_OK, on success. OO_FAILED, on failure
+ */
 typedef int (*cb_StartReceiveChannel)
      (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
-/** callback for starting media transmit channel */
+
+/**
+ * This callback is used for starting media transmit channel. This callback
+ * function is triggered when transmit media channel has to be started.
+ * @param call     Call for which transmit media channel has to be started.
+ * @param pChannel Channel details. This structure has important information
+ *                 such as rtp ip:port and capability describing media type
+ *                 to be transmitted.
+ * @return         OO_OK, on success. OO_FAILED, on failure
+ */
 typedef int (*cb_StartTransmitChannel)
      (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
-/** callback to stop media receive channel */
+/**
+ * This callback is used for stopping media receive channel. This callback
+ * function is triggered when receive media channel has to be stopped.
+ * @param call     Call for which receive media channel has to be stopped.
+ * @param pChannel Channel details. This structure has important information
+ *                 such as rtp ip:port and capability describing media type
+ *                 being received.
+ * @return         OO_OK, on success. OO_FAILED, on failure
+ */
 typedef int (*cb_StopReceiveChannel)
      (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
-/** callback to stop media transmit channel */
+/**
+ * This callback is used for stopping media transmit channel. This callback
+ * function is triggered when transmit media channel has to be stopped.
+ * @param call     Call for which transmit media channel has to be stopped.
+ * @param pChannel Channel details. This structure has important information
+ *                 such as rtp ip:port and capability describing media type
+ *                 being transmitted.
+ * @return         OO_OK, on success. OO_FAILED, on failure
+ */
 typedef int (*cb_StopTransmitChannel)
      (struct OOH323CallData *call, struct OOLogicalChannel *pChannel);
 
@@ -127,7 +160,7 @@ typedef enum OOCapType {
  * Structure to store information related to end point
  * capability
  */
-typedef struct ooH323EpCapability {
+typedef struct OOH323EpCapability {
    int dir;
    int cap;
    OOCapType capType;
@@ -137,7 +170,9 @@ typedef struct ooH323EpCapability {
    cb_StopReceiveChannel stopReceiveChannel;
    cb_StopTransmitChannel stopTransmitChannel;
    struct ooH323EpCapability *next;
-} ooH323EpCapability;
+} OOH323EpCapability;
+
+#define ooH323EpCapability OOH323EpCapability
 
 
 #ifndef EXTERN

@@ -49,8 +49,7 @@ extern "C" {
 #define OO_M_TUNNELING          0x04000000
 #define OO_M_FASTSTART          0x02000000
 #define OO_M_DISABLEGK          0x01000000
-  //#define OO_M_VIDEO              0x40000000 
-  //#define OO_M_AUDIO              0x10000000
+
 
 /**
  * Call states.
