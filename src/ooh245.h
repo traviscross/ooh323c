@@ -192,14 +192,15 @@ EXTERN int ooHandleOpenLogicalChannel
                    (struct OOH323CallData* call, H245OpenLogicalChannel *olc);
 
 /**
- * This function is used to handle a received OpenLogicalChannel message which
- * is trying to open a audio channel.
+ * This is a helper function used to handle a received OpenLogicalChannel
+ * message. It builds an OpenLogicalChannelAck message and sends it.
+ *
  * @param call        Pointer to cll for which OLC was received.
  * @param olc         The received OpenLogicalChannel message.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.        
  */
-EXTERN int ooHandleOpenLogicalAudioChannel
+EXTERN int ooHandleOpenLogicalChannel_helper
 (struct OOH323CallData *call, H245OpenLogicalChannel*olc);
 
 /**
@@ -350,25 +351,26 @@ EXTERN int ooH245AcknowledgeTerminalCapabilitySet(struct OOH323CallData *call);
 EXTERN int ooOpenLogicalChannels(struct OOH323CallData *call);
 
 /**
- * This function is used to send OpenLogicalChannel message for audio channel.
- * It uses the first capability match in the local and remote audio capabilities
- * for the audio channel and calls corresponding helper function.
- * @param call            Pointer to call for which audio channel ahs to be opened.
+ * This function is used to send OpenLogicalChannel message for audio/video
+ * channel.
+ * @param call            Pointer to call for which  channel has to be opened.
+ * @param capType         Type of media channel.
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOpenLogicalAudioChannel(struct OOH323CallData *call);
+EXTERN int ooOpenLogicalChannel(struct OOH323CallData *call,
+                                enum OOCapType capType);
 
 /**
- * This function is used to build aand send OpenLogicalChannel message using
- * audio capability passed as parameter.
+ * This function is used to build and send OpenLogicalChannel message using
+ *  capability passed as parameter.
  * @param call            Pointer to call for which OpenLogicalChannel message
  *                        has to be built.
- * @param epCap           Pointer to audio capability
+ * @param epCap           Pointer to capability
  *
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooOpenAudioChannel
+EXTERN int ooOpenChannel
 (struct OOH323CallData* call, ooH323EpCapability *epCap);
 
 /**
@@ -431,7 +433,7 @@ int ooOnReceivedRequestChannelCloseAck
    (struct OOH323CallData *call, H245RequestChannelCloseAck *rccAck);
 
 /**
- * Builds an OLC with an audio capability passed as parameter.
+ * Builds an OLC with an audio/video capability passed as parameter.
  * @param call             Handle to call for which OLC has to be built.
  * @param olc              Pointer to an OLC structure which will be populated.
  * @param epCap            Pointer to the capability which will be used to
@@ -442,7 +444,7 @@ int ooOnReceivedRequestChannelCloseAck
  *
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooBuildOpenLogicalChannelAudio(struct OOH323CallData *call,
+EXTERN int ooBuildOpenLogicalChannel(struct OOH323CallData *call,
                                           H245OpenLogicalChannel *olc,
                                           ooH323EpCapability *epCap,
                                           OOCTXT*pctxt, int dir);

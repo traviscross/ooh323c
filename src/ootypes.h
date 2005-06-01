@@ -234,11 +234,6 @@ typedef struct ooCallOptions {
    OOCallMode callMode; /*!< Type of channel to setup with FastStart */
 }ooCallOptions;
 
-typedef struct ooCapPrefs {
-  int order[20];
-  int index;
-}ooCapPrefs;
-
 
 struct OOH323CallData;
 

@@ -132,7 +132,15 @@ static const char *capTypes[]={
    "OO_VBD",
    "OO_AUDIOTELEPHONYEVENT",
    "OO_AUDIOTONE",
-   "OO_EXTELEM1"
+   "OO_EXTELEM1",
+   "OO_VIDEO_BASE",
+   "OO_NONSTDVIDEO",
+   "OO_H261VIDEO",
+   "OO_H262VIDEO",
+   "OO_H263VIDEO",
+   "OO_IS11172VIDEO",  /* mpeg */
+   "OO_GENERICVIDEO",
+   "OO_EXTELEMVIDEO"
 };
 
 /*DTMF capabilities*/
@@ -157,7 +165,7 @@ const char* ooGetCallStateText (int callState)
    return ooGetText (callState, callStateText, OONUMBEROF(callStateText));
 }
 
-const char* ooGetAudioCapTypeText(int cap)
+const char* ooGetCapTypeText(int cap)
 {
    return ooGetText (cap, capTypes, OONUMBEROF(capTypes));
 }

@@ -27,6 +27,7 @@
 extern "C" {
 #endif
 
+
 /**
  * @defgroup callmgmt  Call Management
  * @{
@@ -38,18 +39,18 @@ extern "C" {
    to or from outside pbx domian. For outgoing calls, ooMakeCallNoGk
    disables use of gk for specific call.
 */
-#define OO_M_DATASESSION        0x00800000
-#define OO_M_VIDEOSESSION       0x00400000
-#define OO_M_AUDIOSESSION       0x00200000
-#define OO_M_ENDPOINTCREATED    0x00100000
-#define OO_M_ENDSESSION_BUILT   0x08000000
-#define OO_M_RELEASE_BUILT      0x04000000
-#define OO_M_GKROUTED           0x02000000
-#define OO_M_AUTOANSWER         0x01000000
-#define OO_M_TUNNELING          0x80000000
-#define OO_M_FASTSTART          0x40000000
-#define OO_M_DISABLEGK          0x20000000
-#define OO_M_AUDIO              0x10000000
+
+
+#define OO_M_ENDPOINTCREATED    0x00800000
+#define OO_M_ENDSESSION_BUILT   0x00400000
+#define OO_M_RELEASE_BUILT      0x00200000
+#define OO_M_GKROUTED           0x00100000
+#define OO_M_AUTOANSWER         0x08000000
+#define OO_M_TUNNELING          0x04000000
+#define OO_M_FASTSTART          0x02000000
+#define OO_M_DISABLEGK          0x01000000
+  //#define OO_M_VIDEO              0x40000000 
+  //#define OO_M_AUDIO              0x10000000
 
 /**
  * Call states.
@@ -81,7 +82,7 @@ typedef enum {
  * given media type.
  */
 typedef struct OOMediaInfo{
-   char  dir[15]; /* transmit/receive*/
+   char   dir[15]; /* transmit/receive*/
    int   cap;
    int   lMediaPort;
    int   lMediaCntrlPort;
@@ -122,6 +123,7 @@ typedef struct OOH323CallData {
    OOCTXT               *pctxt;
    char                 callToken[20]; /* ex: ooh323c_call_1 */
    char                 callType[10]; /* incoming/outgoing */
+   OOCallMode           callMode;
    ASN1USINT            callReference;
    char                 ourCallerId[256];
    H225CallIdentifier   callIdentifier;/* The call identifier for the active
@@ -157,7 +159,7 @@ typedef struct OOH323CallData {
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
-   ooCapPrefs           capPrefs;  
+   OOCapPrefs           capPrefs;  
    OOLogicalChannel*    logicalChans;
    int                  noOfLogicalChannels;
    int                  logicalChanNoBase;
@@ -582,6 +584,17 @@ EXTERN ASN1BOOL ooIsSessionEstablished
  */
 EXTERN int ooAddMediaInfo(OOH323CallData *call, OOMediaInfo mediaInfo);
 
+/**
+ * This function is used to generate a media session id for the new media
+ * session for the call.
+ * @param call       Handle to the call.
+ * @param type       Type of media session.
+ * @param dir        Direction of session
+ *
+ * @return           Generated session id.
+ */
+EXTERN unsigned ooCallGenerateSessionID
+                    (OOH323CallData *call, OOCapType type, char *dir);
 /**
  * @}
  */

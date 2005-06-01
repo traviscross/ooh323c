@@ -19,7 +19,7 @@
 #include "ootypes.h"
 #include "ooLogChan.h"
 #include "H323-MESSAGES.h"
-
+#include "ooLogChan.h"
 struct OOH323CallData;
 
 /**

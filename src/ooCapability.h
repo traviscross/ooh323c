@@ -30,44 +30,69 @@
 #define OORXTX    (1<<3) /* For symmetric capabilities */
 /* Various types of caps. Note that not all
    supported */
+typedef enum OOCapabilities{
+   OO_CAP_AUDIO_BASE      = 0,
+   OO_G711ALAW64K         = 2,
+   OO_G711ALAW56K         = 3,
+   OO_G711ULAW64K         = 4,
+   OO_G711ULAW56K         = 5,
+   OO_G7231               = 9,
+   OO_G729                = 11,
+   OO_G729A               = 12,
+   OO_GSMFULLRATE         = 18,
+   OO_GSMHALFRATE         = 19,
+   OO_GSMENHANCEDFULLRATE = 20,
+   OO_CAP_VIDEO_BASE      = 27,
+   OO_NONSTDVIDEO         = 28,
+   OO_H261VIDEO           = 29,
+   OO_H262VIDEO           = 30,
+   OO_H263VIDEO           = 31,
+   OO_IS11172VIDEO        = 32,  /* mpeg */
+   OO_GENERICVIDEO        = 33,
+   OO_EXTELEMVIDEO        = 34
+} OOCapabilities;
 
-#define OO_CAP_AUDIO_BASE      0
-#define OO_G711ALAW64K         2
-#define OO_G711ALAW56K         3
-#define OO_G711ULAW64K         4
-#define OO_G711ULAW56K         5
-#define OO_G7231               9
-#define OO_G729                11
-#define OO_G729A               12
-#define OO_GSMFULLRATE         18
-#define OO_GSMHALFRATE         19
-#define OO_GSMENHANCEDFULLRATE 20
-
-#define OO_CAP_VIDEO_BASE 26
-#define OO_CAP_DATA_BASE -1 /* place holder */
-
-#define OOABSAUDIOCAP(cap) cap-OO_CAP_AUDIO_BASE
-#define OOABSVIDEOCAP(cap) cap-OO_CAP_VIDEO_BASE
-#define OOABSDATACAP(cap)  cap-OO_CAP_DATA_BASE
 
 /*DTMF capabilities*/
 #define OO_CAP_DTMF_RFC2833 (1<<0)
 #define OO_CAP_DTMF_Q931    (1<<1)
 #define OO_CAP_DTMF_H245    (1<<2)
 
+/**
+ * This structure defines the preference order for capabilities.
+ *
+ */
+typedef struct OOCapPrefs {
+  int order[20];
+  int index;
+}OOCapPrefs;
 
-typedef struct ooCapParams {
+typedef struct OOCapParams {
    int txframes;
    int rxframes;
    OOBOOL silenceSuppression;
-} ooCapParams;
+} OOCapParams;
 
-typedef struct ooGSMCapParams {
+typedef struct OOGSMCapParams {
    unsigned txframes;
    unsigned rxframes;
    OOBOOL scrambled;
    OOBOOL comfortNoise;
-} ooGSMCapParams;
+} OOGSMCapParams;
+
+typedef enum OOPictureFormat{
+   OO_PICFORMAT_SQCIF,
+   OO_PICFORMAT_QCIF,
+   OO_PICFORMAT_CIF,
+   OO_PICFORMAT_CIF4,
+   OO_PICFORMAT_CIF16
+}OOPictureFormat;
+
+typedef struct OOH263CapParams {
+   enum OOPictureFormat picFormat; /* sqcif, qcif, cif, cif4, cif16 */
+   unsigned MPI;
+   unsigned maxBitRate;
+} OOH263CapParams;
 
 struct OOH323CallData;
 struct OOLogicalChannel;
@@ -271,6 +296,28 @@ int ooCapabilityAddGSMCapability(struct OOH323CallData *call, int cap,
                                 OOBOOL remote);
 
 
+
+EXTERN int ooCapabilityAddH263VideoCapability(struct OOH323CallData *call,
+                                 int dir,
+                                 unsigned sqcifMPI, unsigned qcifMPI,
+                                 unsigned cifMPI, unsigned cif4MPI,
+                                 unsigned cif16MPI, unsigned maxBitRate,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel,
+                                       OOBOOL remote);
+int ooCapabilityAddH263VideoCapability_helper(struct OOH323CallData *call,
+                                 int dir,
+                                 unsigned sqcifMPI, unsigned qcifMPI,
+                                 unsigned cifMPI, unsigned cif4MPI,
+                                 unsigned cif16MPI, unsigned maxBitRate,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel,
+                                              OOBOOL remote);
+
 /**
  * This function is used to add a audio capability to calls remote 
  * capability list.
@@ -309,6 +356,7 @@ int ooAddRemoteCapability(struct OOH323CallData *call, H245Capability *cap);
 EXTERN int ooCapabilityUpdateJointCapabilities
 (struct OOH323CallData* call, H245Capability *cap);
 
+#if 0
 /**
  * This function is used to test the compatibility of the two capabilities.
  * It checks whether tx capability can be received by rx capability.
@@ -322,13 +370,14 @@ EXTERN int ooCapabilityUpdateJointCapabilities
 ASN1BOOL ooCheckCompatibility
 (struct OOH323CallData *call, ooH323EpCapability *txCap,
  ooH323EpCapability *rxCap);
+#endif
 
 /**
  * This function is used to test whether the endpoint capability in the
  * specified direction can be supported by the audio capability.
  * @param call               Handle to the call.
  * @param epCap              Endpoint capability.
- * @param audioCap           Audio capability with which compatibility has to
+ * @param dataType           Data type with which compatibility has to
  *                           be tested.
  * @param dir                Direction indicating whether endpoint capability
  *                           will be used for transmission or reception.
@@ -336,9 +385,9 @@ ASN1BOOL ooCheckCompatibility
  * @return                   TRUE, if compatible. FALSE, otherwise.
  */
 
-ASN1BOOL ooCheckCompatibility_1(struct OOH323CallData *call,
+ASN1BOOL ooCapabilityCheckCompatibility(struct OOH323CallData *call,
                                 ooH323EpCapability *epCap,
-                                H245AudioCapability * audioCap, int dir);
+                                H245DataType *dataType, int dir);
 
 
 /**
@@ -353,8 +402,24 @@ ASN1BOOL ooCheckCompatibility_1(struct OOH323CallData *call,
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateAudioCapability
+struct H245AudioCapability* ooCapabilityCreateAudioCapability
 (ooH323EpCapability* epCap, OOCTXT *pctxt, int dir);
+
+/**
+ * This function is used to create a video capability structure using the
+ * capability type.
+ * @param epCap       Capability.
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
+ *                    for new video capability.
+ * @param dir         Direction in which the newly created capability will be
+ *                    used.
+ *
+ * @return            Newly created video capability on success, NULL on
+ *                    failure.
+ */
+struct H245VideoCapability* ooCapabilityCreateVideoCapability
+   (ooH323EpCapability *epCap, OOCTXT *pctxt, int dir);
+
 
 /**
  * This function is used to create a dtmf capability which can be added to
@@ -366,7 +431,7 @@ struct H245AudioCapability* ooCreateAudioCapability
  * @return            Pointer to the created DTMF capability, NULL in case of
  *                    failure.
  */
-void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
+void * ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt);
 
 
 /**
@@ -379,7 +444,7 @@ void * ooCreateDTMFCapability(int cap, OOCTXT *pctxt);
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateGSMFullRateCapability
+struct H245AudioCapability* ooCapabilityCreateGSMFullRateCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 /**
@@ -394,10 +459,12 @@ struct H245AudioCapability* ooCreateGSMFullRateCapability
  * @return            Newly created audio capability on success, NULL on
  *                    failure.
  */
-struct H245AudioCapability* ooCreateSimpleCapability
+struct H245AudioCapability* ooCapabilityCreateSimpleCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 
+struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
+(ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 /**
  * This function is used to determine whether a particular capability
  * can be supported by the endpoint.

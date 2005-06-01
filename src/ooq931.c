@@ -1385,7 +1385,7 @@ int ooAcceptCall(OOH323CallData *call)
 
          respOlc->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
         
-         ooBuildOpenLogicalChannelAudio(call, respOlc, epCap, pctxt, dir);
+         ooBuildOpenLogicalChannel(call, respOlc, epCap, pctxt, dir);
         
          pChannel = ooFindLogicalChannelByLogicalChannelNo
             (call, respOlc->forwardLogicalChannelNumber);
@@ -1399,7 +1399,7 @@ int ooAcceptCall(OOH323CallData *call)
                epCap->startTransmitChannel(call, pChannel);     
                OOTRACEINFO3("Transmit channel of type audio started "
                             "(%s, %s)\n", call->callType, call->callToken);
-               OO_SETFLAG (call->flags, OO_M_AUDIO);
+               /*OO_SETFLAG (call->flags, OO_M_AUDIO);*/
             }
             else{
                OOTRACEERR3("ERROR:No callback registered to start transmit"
@@ -1611,6 +1611,8 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
          OO_SETFLAG(call->flags, OO_M_DISABLEGK);
       else
          OO_CLRFLAG(call->flags, OO_M_DISABLEGK);
+
+      call->callMode = opts->callMode;
    }
 
 
@@ -1886,7 +1888,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
       for(k=0; k< call->capPrefs.index; k++)
       {
          OOTRACEDBGC5("Preffered capability at index %d is %s. (%s, %s)\n",
-                      k, ooGetAudioCapTypeText(call->capPrefs.order[k]),
+                      k, ooGetCapTypeText(call->capPrefs.order[k]),
                       call->callType, call->callToken);
 
          if(call->ourCaps)
@@ -1911,13 +1913,15 @@ int ooH323MakeCall_helper(OOH323CallData *call)
          {
             OOTRACEWARN4("Warn:Preferred capability %s is abscent in "
                          "capability list. (%s, %s)\n",
-                         ooGetAudioCapTypeText(call->capPrefs.order[k]),
+                         ooGetCapTypeText(call->capPrefs.order[k]),
                          call->callType, call->callToken);
             continue;
          }
 
+
+
          OOTRACEDBGC4("Building olcs with capability %s. (%s, %s)\n",
-                      ooGetAudioCapTypeText(epCap->cap), call->callType,
+                      ooGetCapTypeText(epCap->cap), call->callType,
                       call->callToken);
          if(epCap->dir & OORX)
          {
@@ -1940,7 +1944,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
        
-            ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt, OORX);
+            ooBuildOpenLogicalChannel(call, olc, epCap, pctxt, OORX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
             if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
@@ -1958,7 +1962,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
             olc = NULL;
             i++;
-            OOTRACEDBGC2("Added RX fs element %d\n", i);
+            OOTRACEDBGC5("Added RX fs element %d with capability %s(%s, %s)\n",
+                          i, ooGetCapTypeText(epCap->cap), call->callType,
+                          call->callToken);
          }
 
          if(epCap->dir & OOTX)
@@ -1982,7 +1988,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
        
-            ooBuildOpenLogicalChannelAudio(call, olc, epCap, pctxt, OOTX);
+            ooBuildOpenLogicalChannel(call, olc, epCap, pctxt, OOTX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
             if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
@@ -2000,7 +2006,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
             olc = NULL;
             i++;
-            OOTRACEDBGC2("Added TX fs element %d\n", i);
+            OOTRACEDBGC5("Added TX fs element %d with capability %s(%s, %s)\n",
+                          i, ooGetCapTypeText(epCap->cap), call->callType,
+                          call->callToken);
          }
 
       }

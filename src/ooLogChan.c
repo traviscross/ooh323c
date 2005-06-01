@@ -21,7 +21,7 @@
 extern OOH323EndPoint gH323ep;
 
 OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
-                                         int sessionID, char *type, char * dir,
+                                         int sessionID, char *dir,
                                          ooH323EpCapability *epCap)
 {
    OOLogicalChannel *pNewChannel=NULL, *pChannel=NULL;
@@ -42,7 +42,8 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
    pNewChannel->channelNo = channelNo;
    pNewChannel->sessionID = sessionID;
    pNewChannel->state = OO_LOGICALCHAN_IDLE;
-   strcpy(pNewChannel->type, type);
+   pNewChannel->type = epCap->capType;
+   /*   strcpy(pNewChannel->type, type);*/
    strcpy(pNewChannel->dir, dir);
 
    pNewChannel->chanCap = epCap;
@@ -180,19 +181,16 @@ OOLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
       {
          if(!strcmp(pChannel->dir, dir))
          {
-            if(dataType->t == T_H245DataType_audioData)
+            if(!strcmp(dir, "receive"))
             {
-               if(!strcmp(dir, "receive"))
-               {
-                 if(ooCheckCompatibility_1(call, pChannel->chanCap,
-                     dataType->u.audioData, OORX))
-                     return pChannel;
-               }else if(!strcmp(dir, "transmit"))
-               {
-                 if(ooCheckCompatibility_1(call, pChannel->chanCap,
-                     dataType->u.audioData, OOTX))
-                     return pChannel;
-               }
+               if(ooCapabilityCheckCompatibility(call, pChannel->chanCap,
+                                         dataType, OORX))
+                  return pChannel;
+            }else if(!strcmp(dir, "transmit"))
+            {
+               if(ooCapabilityCheckCompatibility(call, pChannel->chanCap,
+                                         dataType, OOTX))
+                  return pChannel;
             }
          }
       }
@@ -202,13 +200,14 @@ OOLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
 }
 
 /* This function is used to get a logical channel with a particular session ID */
-OOLogicalChannel* ooGetLogicalChannel(OOH323CallData *call, int sessionID)
+OOLogicalChannel* ooGetLogicalChannel
+   (OOH323CallData *call, int sessionID, char *dir)
 {
    OOLogicalChannel * pChannel = NULL;
    pChannel = call->logicalChans;
    while(pChannel)
    {
-      if(pChannel->sessionID == sessionID)
+      if(pChannel->sessionID == sessionID && !strcmp(pChannel->dir, dir))
          return pChannel;
       else
          pChannel = pChannel->next;
@@ -232,6 +231,7 @@ int ooClearAllLogicalChannels(OOH323CallData *call)
                                                       of of logical channel in the list. Can be
                                                       easily improved.*/
    }
+   call->logicalChans = NULL;
    return OO_OK;
 }
 
@@ -307,7 +307,6 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
       {
          if(!prev)   call->logicalChans = temp->next;
          else   prev->next = temp->next;
-         //ASN1MEMFREEPTR(call->pctxt, temp->chanCap->cap);
          memFreePtr(call->pctxt, temp->chanCap);
          memFreePtr(call->pctxt, temp);
          OOTRACEDBGC4("Removed logical channel %d (%s, %s)\n", ChannelNo,

@@ -65,6 +65,7 @@
 #define OOTRACEINFO3(a,b,c)   ooTrace(OOTRCLVLINFO,a,b,c)
 #define OOTRACEINFO4(a,b,c,d) ooTrace(OOTRCLVLINFO,a,b,c,d)
 #define OOTRACEINFO5(a,b,c,d,e) ooTrace(OOTRCLVLINFO,a,b,c,d,e)
+#define OOTRACEINFO6(a,b,c,d,e,f) ooTrace(OOTRCLVLINFO,a,b,c,d,e, f)
 #ifndef _COMPACT
 #define OOTRACEDBGA1(a)       ooTrace(OOTRCLVLDBGA,a)
 #define OOTRACEDBGA2(a,b)     ooTrace(OOTRCLVLDBGA,a,b)
@@ -137,12 +138,12 @@ const char* ooGetCallStateText (int callState);
 const char* ooGetMsgTypeText (int msgType);
 
 /**
- * This function is used to retrieve the description for audio capability
+ * This function is used to retrieve the text description for a capability
  * type.
- * @param cap     Audio cap type
+ * @param cap     Capability
  * @return        The text description string.
  */
-const char* ooGetAudioCapTypeText(int cap);
+const char* ooGetCapTypeText(int cap);
 
 /**
  * This function is used to set the trace level.

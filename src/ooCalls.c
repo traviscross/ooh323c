@@ -48,7 +48,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    }
    /*   memset(call, 0, sizeof(OOH323CallData));*/
    call->pctxt = pctxt;
-  
+   call->callMode = gH323ep.callMode;
    sprintf(call->callToken, "%s", callToken);
    sprintf(call->callType, "%s", type);
    call->callReference = 0;
@@ -128,7 +128,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    dListInit(&call->remoteFastStartOLCs);
    call->remoteTermCapSeqNo =0;
    call->localTermCapSeqNo = 0;
-   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(ooCapPrefs));   
+   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(OOCapPrefs));   
    call->logicalChans = NULL;
    call->noOfLogicalChannels = 0;
    call->logicalChanNoBase = 1001;
@@ -680,7 +680,7 @@ int ooAddMediaInfo(OOH323CallData *call, OOMediaInfo mediaInfo)
    memcpy (newMediaInfo, &mediaInfo, sizeof(OOMediaInfo));
 
    OOTRACEDBGC4("Configured mediainfo for cap %s (%s, %s)\n",
-                ooGetAudioCapTypeText(mediaInfo.cap),
+                ooGetCapTypeText(mediaInfo.cap),
                 call->callType, call->callToken);
    if(!call->mediaInfo) {
       newMediaInfo->next = NULL;
@@ -692,3 +692,48 @@ int ooAddMediaInfo(OOH323CallData *call, OOMediaInfo mediaInfo)
    }
    return OO_OK;
 }
+
+unsigned ooCallGenerateSessionID
+   (OOH323CallData *call, OOCapType type, char *dir)
+{
+   unsigned sessionID=0;
+
+   if(type == OO_CAP_TYPE_AUDIO)
+   {
+      if(!ooGetLogicalChannel(call, 1, dir))
+      {
+         sessionID = 1;
+      }
+      else{
+         if(call->masterSlaveState == OO_MasterSlave_Master)
+            sessionID = call->nextSessionID++;
+         else{
+           OOTRACEDBGC4("Session id for %s channel of type audio has to be "
+                        "provided by remote.(%s, %s)\n", dir, call->callType,
+                         call->callToken);
+            sessionID = 0; /* Will be assigned by remote */
+         }
+      }
+   }
+
+   if(type == OO_CAP_TYPE_VIDEO)
+   {
+      if(!ooGetLogicalChannel(call, 2, dir))
+      {
+         sessionID = 2;
+      }
+      else{
+         if(call->masterSlaveState == OO_MasterSlave_Master)
+            sessionID = call->nextSessionID++;
+         else{
+            sessionID = 0; /* Will be assigned by remote */
+            OOTRACEDBGC4("Session id for %s channel of type video has to be "
+                        "provided by remote.(%s, %s)\n", dir, call->callType,
+                         call->callToken);
+         }
+      }
+   }
+   return sessionID;
+
+}
+

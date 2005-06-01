@@ -22,7 +22,7 @@
 #define _OOLOGCHAN_H_
 
 #include "ootypes.h"
-
+#include "ooCapability.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -50,7 +50,7 @@ typedef enum {
 typedef struct OOLogicalChannel {
    int  channelNo;
    int  sessionID;
-   char type[10]; /* audio/video/data */
+   enum OOCapType type;
    char dir[10];  /* receive/transmit */
    char remoteIP[20];
    int  mediaPort;
@@ -72,15 +72,14 @@ typedef struct OOLogicalChannel {
  *                  entry has to be created.
  * @param channelNo Channel number for the new channel entry.
  * @param sessionID Session identifier for the new channel.
- * @param type      Type of the channel(audio/video/data)
  * @param dir       Direction of the channel(transmit/receive)
  * @param epCap     Capability to be used for the new channel.
  *
  * @return          Pointer to logical channel, on success. NULL, on failure
  */
 EXTERN ooLogicalChannel* ooAddNewLogicalChannel
-(struct OOH323CallData *call, int channelNo, int sessionID, char *type,
- char * dir, struct ooH323EpCapability *epCap);
+   (struct OOH323CallData *call, int channelNo, int sessionID,
+    char *dir, ooH323EpCapability *epCap);
 
 /**
  * This function is used to find a logical channel using the logical
@@ -115,12 +114,13 @@ EXTERN int ooOnLogicalChannelEstablished
  * same session ID.
  * @param call      Handle to the call which owns the channels to be searched.
  * @param sessionID Session id of the session which is to be searched for.
+ * @param dir       Direction of the channel.(transmit/receive)
  *
  * @return          Returns a pointer to the logical channel if found, NULL
  *                  otherwise.
  */
 EXTERN ooLogicalChannel* ooGetLogicalChannel
-(struct OOH323CallData *call, int sessionID);
+(struct OOH323CallData *call, int sessionID, char *dir);
 
 /**
  * This function is used to remove a logical channel from the list of

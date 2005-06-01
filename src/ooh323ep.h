@@ -51,6 +51,7 @@ extern "C" {
 #endif /* _WIN32 */
 #endif /* EXTERN */
 
+struct OOCapPrefs;
 /**
  * @defgroup h323ep  H323 Endpoint management functions
  * @{
@@ -120,7 +121,7 @@ typedef struct OOH323EndPoint {
    int callType;
 
    struct ooH323EpCapability *myCaps;
-   ooCapPrefs     capPrefs;
+   OOCapPrefs     capPrefs;
    int noOfCaps;
    OOH225MsgCallbacks h225Callbacks;
    OOH323CALLBACKS h323Callbacks;

@@ -385,7 +385,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       {
          OOTRACEDBGC4("Sending receive capability %d in TCS.(%s, %s)\n",
                        epCap->cap, call->callType, call->callToken);
-         audioCap = ooCreateAudioCapability(epCap, pctxt, OORX);
+         audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OORX);
          if(!audioCap)
          {
             OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
@@ -396,7 +396,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       {
          OOTRACEDBGC4("Sending transmit capability %d in TCS.(%s, %s)\n",
                        epCap->cap, call->callType, call->callToken);
-         audioCap = ooCreateAudioCapability(epCap, pctxt, OOTX);
+         audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OOTX);
          if(!audioCap)
          {
             OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
@@ -429,8 +429,8 @@ int ooSendTermCapMsg(OOH323CallData *call)
    /* Add dtmf capability, if any */
    if(call->dtmfmode & OO_CAP_DTMF_RFC2833)
    {
-      ateCap = (H245AudioTelephonyEventCapability*)ooCreateDTMFCapability(
-                                                   OO_CAP_DTMF_RFC2833, pctxt);
+      ateCap = (H245AudioTelephonyEventCapability*)
+                  ooCapabilityCreateDTMFCapability(OO_CAP_DTMF_RFC2833, pctxt);
       if(!ateCap)
       {
          OOTRACEWARN3("WARN:Failed to add RFC2833 cap to TCS(%s, %s)\n",
@@ -885,14 +885,8 @@ int ooHandleOpenLogicalChannel(OOH323CallData* call,
              T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       break;
    case T_H245DataType_videoData:
-      OOTRACEWARN3("Warn:Media channel data type "
-                   "'T_H245DataType_videoData' not supported (%s, %s)\n",
-                   call->callType, call->callToken);
-      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
-             T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
-      break;
    case T_H245DataType_audioData:
-      ooHandleOpenLogicalAudioChannel(call, olc);
+      ooHandleOpenLogicalChannel_helper(call, olc);
       break;
    case T_H245DataType_data:
       OOTRACEWARN3("Warn:Media channel data type "
@@ -960,7 +954,7 @@ int ooHandleOpenLogicalChannel(OOH323CallData* call,
 }      
 
 /*TODO: Need to clean logical channel in case of failure after creating one */
-int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
+int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
                                     H245OpenLogicalChannel*olc)
 {
    int ret=0;
@@ -968,20 +962,31 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    H245ResponseMessage *response;
    H245OpenLogicalChannelAck *olcAck;
    ooH323EpCapability *epCap=NULL;
-   H245H2250LogicalChannelAckParameters *h2250lcap;
+   H245H2250LogicalChannelAckParameters *h2250lcap=NULL;
    OOCTXT *pctxt;
    H245UnicastAddress *unicastAddrs, *unicastAddrs1;
    H245UnicastAddress_iPAddress *iPAddress, *iPAddress1;
    ooLogicalChannel *pLogicalChannel = NULL;
-  
+   H245H2250LogicalChannelParameters *h2250lcp=NULL;
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
     &(olc->forwardLogicalChannelParameters);
 
-   if(!(epCap=ooIsAudioDataTypeSupported(call, flcp->dataType.u.audioData,
-                                     OORX)))
+   if(!flcp || flcp->multiplexParameters.t != T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
    {
-      OOTRACEERR3("ERROR:OpenLogicalChannel - audio capability not supported "
-                  "(%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:ooHandleOpenLogicalChannel_helper - invalid forward "
+                 "logical channel parameters. (%s, %s)\n", call->callType,
+                 call->callToken);
+      ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
+          T_H245OpenLogicalChannelReject_cause_unspecified);
+      return OO_FAILED;
+   }
+
+   h2250lcp = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
+
+   if(!(epCap=ooIsDataTypeSupported(call, &flcp->dataType, OORX)))
+   {
+      OOTRACEERR3("ERROR:HandleOpenLogicalChannel_helper - capability not "
+                  "supported (%s, %s)\n", call->callType, call->callToken);
       ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
           T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       return OO_FAILED;
@@ -1006,7 +1011,7 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    memset(response, 0, sizeof(H245ResponseMessage));
    response->t = T_H245ResponseMessage_openLogicalChannelAck;
    response->u.openLogicalChannelAck = (H245OpenLogicalChannelAck*)
-                   ASN1MALLOC(pctxt, sizeof(H245OpenLogicalChannelAck));  
+                   memAlloc(pctxt, sizeof(H245OpenLogicalChannelAck));  
    olcAck = response->u.openLogicalChannelAck;
    memset(olcAck, 0, sizeof(H245OpenLogicalChannelAck));
    olcAck->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
@@ -1024,7 +1029,11 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    h2250lcap->m.mediaChannelPresent = 1;
    h2250lcap->m.mediaControlChannelPresent = 1;
    h2250lcap->m.sessionIDPresent = 1;
-   h2250lcap->sessionID = 1;
+
+   if(h2250lcp->sessionID == 0)
+      h2250lcap->sessionID = ooCallGenerateSessionID(call, epCap->capType, "receive");
+   else
+      h2250lcap->sessionID = h2250lcp->sessionID;
   
    h2250lcap->mediaChannel.t =
                          T_H245TransportAddress_unicastAddress;
@@ -1035,13 +1044,13 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    memset(unicastAddrs, 0, sizeof(H245UnicastAddress));
    unicastAddrs->t = T_H245UnicastAddress_iPAddress;
    unicastAddrs->u.iPAddress = (H245UnicastAddress_iPAddress*)
-               ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+               memAlloc(pctxt, sizeof(H245UnicastAddress_iPAddress));
    iPAddress = unicastAddrs->u.iPAddress;
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
 
    pLogicalChannel = ooAddNewLogicalChannel(call,
                         olc->forwardLogicalChannelNumber, h2250lcap->sessionID,
-                        "audio", "receive", epCap);
+                        "receive", epCap);
    if(!pLogicalChannel)
    {
       OOTRACEERR3("ERROR:Failed to add new logical channel entry to call "
@@ -1063,7 +1072,7 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    memset(unicastAddrs1, 0, sizeof(H245UnicastAddress));
    unicastAddrs1->t = T_H245UnicastAddress_iPAddress;
    unicastAddrs1->u.iPAddress = (H245UnicastAddress_iPAddress*)
-               ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+               memAlloc(pctxt, sizeof(H245UnicastAddress_iPAddress));
    iPAddress1 = unicastAddrs1->u.iPAddress;
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
@@ -1087,9 +1096,10 @@ int ooHandleOpenLogicalAudioChannel(OOH323CallData *call,
    if(epCap->startReceiveChannel)
    {
       epCap->startReceiveChannel(call, pLogicalChannel);     
-      OOTRACEINFO5("Receive channel of type audio started at %s:%d(%s, %s)\n",
-                    call->localIP, pLogicalChannel->localRtpPort,
-                    call->callType, call->callToken);
+      OOTRACEINFO6("Receive channel of type %s started at %s:%d(%s, %s)\n",
+                    ooGetCapTypeText(epCap->cap), call->localIP,
+                    pLogicalChannel->localRtpPort, call->callType,
+                    call->callToken);
    }
    else{
       OOTRACEERR3("ERROR:No callback registered to start receive audio "
@@ -1247,6 +1257,12 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
                   call->callType, call->callToken);
       return OO_FAILED;
    }
+
+   /* Update session id if we were waiting for remote to assign one and remote
+      did assign one. */
+   if(pLogicalChannel->sessionID == 0 && h2250lcap->m.sessionIDPresent)
+      pLogicalChannel->sessionID = h2250lcap->sessionID;  
+
    /* Populate ports for channel */
    pLogicalChannel->mediaPort = iPAddress->tsapIdentifier;
    pLogicalChannel->mediaControlPort = iPAddress1->tsapIdentifier;
@@ -1255,7 +1271,8 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
    {
       pLogicalChannel->chanCap->startTransmitChannel(call, pLogicalChannel);
       OOTRACEINFO4("TransmitLogical Channel of type %s started (%s, %s)\n",
-                   pLogicalChannel->type,call->callType, call->callToken);
+                   ooGetCapTypeText(pLogicalChannel->chanCap->cap),
+                   call->callType, call->callToken);
    }
    else{
       OOTRACEERR3("ERROR:No callback registered for starting transmit channel "
@@ -2063,7 +2080,7 @@ int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
                 response->u.openLogicalChannelAck->forwardLogicalChannelNumber)
                {
 
-                  ASN1MEMFREEPTR(call->pctxt, pTimer->cbData);
+                  memFreePtr(call->pctxt, pTimer->cbData);
                   ooTimerDelete(call->pctxt, &call->timerList, pTimer);
                   OOTRACEDBGC3("Deleted OpenLogicalChannel Timer. (%s, %s)\n",
                                 call->callType, call->callToken);
@@ -2416,9 +2433,9 @@ int ooOpenLogicalChannels(OOH323CallData *call)
    if(gH323ep.callMode == OO_CALLMODE_AUDIOCALL ||
       gH323ep.callMode == OO_CALLMODE_AUDIOTX)
    {
-      if (!OO_TESTFLAG (call->flags, OO_M_AUDIO))
-      {
-         ret = ooOpenLogicalAudioChannel(call);
+     /*      if (!OO_TESTFLAG (call->flags, OO_M_AUDIOSESSION))
+             {*/
+         ret = ooOpenLogicalChannel(call, OO_CAP_TYPE_AUDIO);
          if(ret != OO_OK)
          {
             OOTRACEERR3("ERROR:Failed to open audio channels. Clearing call."
@@ -2430,14 +2447,47 @@ int ooOpenLogicalChannels(OOH323CallData *call)
             }
             return ret;
          }
-         OO_SETFLAG (call->flags, OO_M_AUDIO);
-      }
+         // }
    }
   
+   if(gH323ep.callMode == OO_CALLMODE_VIDEOCALL)
+   {
+     /*      if (!OO_TESTFLAG (call->flags, OO_M_AUDIOSESSION))
+             {*/
+         ret = ooOpenLogicalChannel(call, OO_CAP_TYPE_AUDIO);
+         if(ret != OO_OK)
+         {
+            OOTRACEERR3("ERROR:Failed to open audio channel. Clearing call."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return ret;
+         }
+         //      }
+         /*      if(!OO_TESTFLAG(call->flags, OO_M_VIDEOSESSION))
+                 {*/
+         ret = ooOpenLogicalChannel(call, OO_CAP_TYPE_VIDEO);
+         if(ret != OO_OK)
+         {
+            OOTRACEERR3("ERROR:Failed to open video channel. Clearing call."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return ret;
+         }
+         // }
+   }
    return OO_OK;
 }
 
-int ooOpenLogicalAudioChannel(OOH323CallData *call)
+/* CapType indicates whether to Open Audio or Video channel */
+int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
 {
    ooH323EpCapability *epCap=NULL, *repCap=NULL;
    int k=0;
@@ -2452,51 +2502,68 @@ int ooOpenLogicalAudioChannel(OOH323CallData *call)
   
    /* Go through local endpoints capabilities sequentially, and find out the
       first one which has a match in the remote endpoints receive capabilities.
-      TODO: Capability matching should find first preffered capability of
-      master that slave supports.
-      TODO: Should use joint capabilities, instead of going through remoteCaps
-            and finding a match again
    */
-   OOTRACEINFO3("Looking for matching audio capabilities. (%s, %s)\n",
+   OOTRACEINFO3("Looking for matching capabilities. (%s, %s)\n",
                  call->callType, call->callToken);
-
-   for(k=0; k<call->capPrefs.index; k++)
+   if(call->masterSlaveState == OO_MasterSlave_Master)
    {
-      if(call->ourCaps)
-         epCap = call->ourCaps;
-      else
-         epCap = gH323ep.myCaps;
+      for(k=0; k<call->capPrefs.index; k++)
+      {
+         /*Search for audio caps only */
+         if(capType == OO_CAP_TYPE_AUDIO &&
+            call->capPrefs.order[k] > OO_CAP_VIDEO_BASE)
+            continue;
+         /* Search for video caps only */
+         if(capType == OO_CAP_TYPE_VIDEO &&
+            call->capPrefs.order[k] <= OO_CAP_VIDEO_BASE)
+            continue;
+
+         epCap = call->jointCaps;
+
+         while(epCap){
+            if(epCap->cap == call->capPrefs.order[k] &&
+               ((epCap->dir & OOTX)))
+               break;
+            epCap = epCap->next;
+         }
+         if(!epCap)
+         {
+            OOTRACEDBGA4("Prefereed capability %d is not a local transmit "
+                         "capability(%s, %s)\n", call->capPrefs.order[k],
+                         call->callType, call->callToken);
+            continue;
+         }
+         break;
+      }
+      if(!epCap)
+      {
+         OOTRACEERR4("ERROR:Incompatible capabilities - Can not open "
+                  "%s channel (%s, %s)\n",
+                  (capType==OO_CAP_TYPE_AUDIO)?"audio":"video", call->callType,
+                  call->callToken);
+         return OO_FAILED;
+      }
+
+   }else if(call->masterSlaveState == OO_MasterSlave_Slave)
+   {
+      epCap = call->jointCaps;
 
       while(epCap){
-         if(epCap->cap == call->capPrefs.order[k] &&
-            ((epCap->dir & OOTX)))
+         if(epCap->capType == capType && epCap->dir & OOTX)
             break;
          epCap = epCap->next;
       }
       if(!epCap)
       {
-         OOTRACEDBGA4("Prefereed capability %d is not a local transmit "
-                      "capability(%s, %s)\n", call->capPrefs.order[k],
-                      call->callType, call->callToken);
-         continue;
+         OOTRACEERR4("ERROR:Incompatible audio capabilities - Can not open "
+                  "%s channel (%s, %s)\n",
+                  (capType==OO_CAP_TYPE_AUDIO)?"audio":"video", call->callType,
+                  call->callToken);
+         return OO_FAILED;
       }
-      repCap = call->remoteCaps;
-      while(repCap)
-      {
-         if(ooCheckCompatibility(call, epCap, repCap))
-            break;
-         repCap = repCap->next;
-      }
-      if(repCap) break;
+      
+   }
 
-   }
-  
-   if(!repCap)
-   {
-      OOTRACEERR3("ERROR:Incompatible audio capabilities - Can not open "
-                  "audio channel (%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
    switch(epCap->cap)
    {
    case OO_G711ALAW64K:
@@ -2506,10 +2573,13 @@ int ooOpenLogicalAudioChannel(OOH323CallData *call)
    case OO_G729A:
    case OO_G7231:
    case OO_GSMFULLRATE:
-      ooOpenAudioChannel(call, epCap);
+   case OO_H263VIDEO:
+      ooOpenChannel(call, epCap);
       break;
    case OO_GSMHALFRATE:
    case OO_GSMENHANCEDFULLRATE:
+
+     
    default:
       OOTRACEERR3("ERROR:Unknown Audio Capability type (%s, %s)\n",
                    call->callType, call->callToken);
@@ -2517,23 +2587,24 @@ int ooOpenLogicalAudioChannel(OOH323CallData *call)
    return OO_OK;
 }
 
-int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
+int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
 {
    int ret;
    H245Message *ph245msg = NULL;
    H245RequestMessage * request;
    DListNode *curNode1 = NULL;
-   OOCTXT *pctxt;
-   H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp;
-   H245AudioCapability *audioCap;
-   H245H2250LogicalChannelParameters *h2250lcp;
-   H245UnicastAddress *unicastAddrs;
-   H245UnicastAddress_iPAddress *iPAddress;
-
+   OOCTXT *pctxt = NULL;
+   H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp = NULL;
+   H245AudioCapability *audioCap = NULL;
+   H245VideoCapability *videoCap = NULL;
+   H245H2250LogicalChannelParameters *h2250lcp = NULL;
+   H245UnicastAddress *unicastAddrs = NULL;
+   H245UnicastAddress_iPAddress *iPAddress = NULL;
+   unsigned session_id=0;
    ooLogicalChannel *pLogicalChannel = NULL;
   
-   OOTRACEDBGC4("Doing OpenAudio Channel for %s. (%s, %s)\n",
-                 ooGetAudioCapTypeText(epCap->cap), call->callType,
+   OOTRACEDBGC4("Doing Open Channel for %s. (%s, %s)\n",
+                 ooGetCapTypeText(epCap->cap), call->callType,
                  call->callToken);
 
    ret = ooCreateH245Message(&ph245msg,
@@ -2541,7 +2612,7 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    if(ret != OO_OK)
    {
       OOTRACEERR4("Error: H245 message creation failed for - Open %s"
-                  "channel (%s, %s)\n", ooGetAudioCapTypeText(epCap->cap),
+                  "channel (%s, %s)\n", ooGetCapTypeText(epCap->cap),
                   call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -2558,15 +2629,26 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
 
    request->t = T_H245RequestMessage_openLogicalChannel;
    request->u.openLogicalChannel = (H245OpenLogicalChannel*)
-                     ASN1MALLOC(pctxt, sizeof(H245OpenLogicalChannel));
+                     memAlloc(pctxt, sizeof(H245OpenLogicalChannel));
+   if(!request->u.openLogicalChannel)
+   {
+      OOTRACEERR3("Error:Memory - ooOpenChannel - openLogicalChannel."
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+
+   }
    memset(request->u.openLogicalChannel, 0,
                                      sizeof(H245OpenLogicalChannel));
-   request->u.openLogicalChannel->forwardLogicalChannelNumber = ph245msg->logicalChannelNo;
+   request->u.openLogicalChannel->forwardLogicalChannelNumber =
+                                                 ph245msg->logicalChannelNo;
 
   
+   session_id = ooCallGenerateSessionID(call, epCap->capType, "transmit");
+
+
    pLogicalChannel = ooAddNewLogicalChannel(call,
                    request->u.openLogicalChannel->forwardLogicalChannelNumber,
-                   1, "audio", "transmit", epCap);
+                   session_id, "transmit", epCap);
   
    if(!pLogicalChannel)
    {
@@ -2581,22 +2663,46 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    flcp->m.forwardLogicalChannelDependencyPresent = 0;
    flcp->m.replacementForPresent = 0;
 
-   /* data type of channel is audio */
-   flcp->dataType.t = T_H245DataType_audioData;
-
-   /* set audio capability for channel */
-   audioCap = ooCreateAudioCapability(epCap,pctxt, OOTX);
-   if(!audioCap)
+   /* data type of channel */
+   if(epCap->capType == OO_CAP_TYPE_AUDIO)
    {
-      OOTRACEERR4("Error:Failed to create duplicate audio capability in "
-                  "ooOpenAudioChannel- %s (%s, %s)\n",
-                  ooGetAudioCapTypeText(epCap->cap), call->callType,
-                  call->callToken);
-      ooFreeH245Message(call, ph245msg);
+      flcp->dataType.t = T_H245DataType_audioData;
+      /* set audio capability for channel */
+      audioCap = ooCapabilityCreateAudioCapability(epCap,pctxt, OOTX);
+      if(!audioCap)
+      {
+         OOTRACEERR4("Error:Failed to create duplicate audio capability in "
+                     "ooOpenChannel- %s (%s, %s)\n",
+                     ooGetCapTypeText(epCap->cap), call->callType,
+                     call->callToken);
+         ooFreeH245Message(call, ph245msg);
+         return OO_FAILED;
+      }
+  
+      flcp->dataType.u.audioData = audioCap;
+   }
+   else if(epCap->capType == OO_CAP_TYPE_VIDEO)
+   {
+      flcp->dataType.t = T_H245DataType_videoData;     
+      videoCap = ooCapabilityCreateVideoCapability(epCap, pctxt, OOTX);
+      if(!videoCap)
+      {
+         OOTRACEERR4("Error:Failed to create duplicate video capability in "
+                     "ooOpenChannel- %s (%s, %s)\n",
+                     ooGetCapTypeText(epCap->cap), call->callType,
+                     call->callToken);
+         ooFreeH245Message(call, ph245msg);
+         return OO_FAILED;
+      }
+  
+      flcp->dataType.u.videoData = videoCap;
+   }
+   else{
+      OOTRACEERR1("Error: Unhandled media type in ooOpenChannel\n");
       return OO_FAILED;
    }
-  
-   flcp->dataType.u.audioData = audioCap;
+
+ 
    flcp->multiplexParameters.t =
       T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
    flcp->multiplexParameters.u.h2250LogicalChannelParameters =
@@ -2606,16 +2712,8 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    h2250lcp = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
    memset(h2250lcp, 0, sizeof(H245H2250LogicalChannelParameters));
 
-   if(!OO_TESTFLAG(call->flags, OO_M_AUDIOSESSION)){
-      h2250lcp->sessionID = 1;
-      OO_SETFLAG(call->flags, OO_M_AUDIOSESSION);
-   }
-   else{
-      if(call->masterSlaveState == OO_MasterSlave_Master)
-         h2250lcp->sessionID = call->nextSessionID++;
-      else
-         h2250lcp->sessionID = 0;/*assigned by remote. He is master :-( */
-   }
+   h2250lcp->sessionID = session_id;
+
    h2250lcp->mediaGuaranteedDelivery = 0;
    h2250lcp->silenceSuppression = 0;
    h2250lcp->m.mediaControlChannelPresent = 1;
@@ -2639,7 +2737,7 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
    pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
    OOTRACEDBGA4("Built OpenLogicalChannel-%s (%s, %s)\n",
-                 ooGetAudioCapTypeText(epCap->cap), call->callType,
+                 ooGetCapTypeText(epCap->cap), call->callType,
                  call->callToken);
    ret = ooSendH245Msg(call, ph245msg);
    if(ret != OO_OK)
@@ -2658,12 +2756,14 @@ int ooOpenAudioChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    reverse
    are always with respect to the endpoint which proposes channels
    TODO: Need to clean logical channel in case of failure.    */
-int ooBuildOpenLogicalChannelAudio
+int ooBuildOpenLogicalChannel
    (OOH323CallData *call, H245OpenLogicalChannel *olc,
     ooH323EpCapability *epCap, OOCTXT*pctxt, int dir)
 {
-   int reverse=0, forward=0;
+   OOBOOL reverse=FALSE, forward=FALSE;
+   unsigned sessionID=0;
    H245AudioCapability *audioCap=NULL;
+   H245VideoCapability *videoCap = NULL;
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp=NULL;
    H245OpenLogicalChannel_reverseLogicalChannelParameters *rlcp=NULL;
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
@@ -2671,38 +2771,38 @@ int ooBuildOpenLogicalChannelAudio
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
 
    ooLogicalChannel *pLogicalChannel = NULL;
-   int outgoing=0;
+   int outgoing=FALSE;
 
    if(!strcmp(call->callType, "outgoing"))  
-      outgoing = 1;
+      outgoing = TRUE;
   
    if(dir & OORX)
    {
-      OOTRACEDBGA3("Building OpenLogicalChannel for Receive Audio Capability "
+      OOTRACEDBGA3("Building OpenLogicalChannel for Receive  Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                 olc->forwardLogicalChannelNumber, 1, "audio",
+                                 olc->forwardLogicalChannelNumber, 1,
                                  "receive", epCap);
       if(outgoing)
-         reverse = 1;
+         reverse = TRUE;
       else
-         forward = 1;
+         forward = TRUE;
    }
    else if(dir & OOTX)
    {
-      OOTRACEDBGA3("Building OpenLogicalChannel for transmit Audio Capability "
+      OOTRACEDBGA3("Building OpenLogicalChannel for transmit Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                  olc->forwardLogicalChannelNumber, 1, "audio",
+                                  olc->forwardLogicalChannelNumber, 1,
                                   "transmit", epCap);
       if(outgoing)
-         forward = 1;
+         forward = TRUE;
       else
-         reverse = 1;
+         reverse = TRUE;
    }
    else if(dir & OORXTX)
    {
-      OOTRACEDBGA3("Building OpenLogicalChannel for ReceiveAndTransmit Audio "
+      OOTRACEDBGA3("Building OpenLogicalChannel for ReceiveAndTransmit  "
                    "Capability (%s, %s)\n", call->callType, call->callToken);
       reverse = 1;
       forward = 1;
@@ -2718,9 +2818,20 @@ int ooBuildOpenLogicalChannelAudio
       flcp = &(olc->forwardLogicalChannelParameters);
       memset(flcp, 0,
              sizeof(H245OpenLogicalChannel_forwardLogicalChannelParameters));
-      flcp->dataType.t = T_H245DataType_audioData;
-      flcp->dataType.u.audioData = ooCreateAudioCapability(epCap, pctxt, dir);
-     
+
+      if(epCap->capType == OO_CAP_TYPE_AUDIO)
+      {
+         sessionID =1;
+         flcp->dataType.t = T_H245DataType_audioData;
+         flcp->dataType.u.audioData = ooCapabilityCreateAudioCapability(epCap,
+                                                                   pctxt, dir);
+      }else if(epCap->capType == OO_CAP_TYPE_VIDEO)
+      {
+         sessionID = 2;
+         flcp->dataType.t = T_H245DataType_videoData;
+         flcp->dataType.u.videoData = ooCapabilityCreateVideoCapability(epCap,
+                                                                   pctxt, dir);
+      }
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
       pH2250lcp1 = (H245H2250LogicalChannelParameters*)ASN1MALLOC(pctxt,
                                     sizeof(H245H2250LogicalChannelParameters));
@@ -2729,7 +2840,7 @@ int ooBuildOpenLogicalChannelAudio
      
       flcp->multiplexParameters.u.h2250LogicalChannelParameters = pH2250lcp1;
          
-      pH2250lcp1->sessionID = 1;
+      pH2250lcp1->sessionID = sessionID;
       if(!outgoing)
       {
          pH2250lcp1->m.mediaChannelPresent = 1;
@@ -2773,12 +2884,15 @@ int ooBuildOpenLogicalChannelAudio
          if(epCap->startReceiveChannel)
          {  
             epCap->startReceiveChannel(call, pLogicalChannel);     
-            OOTRACEINFO3("Receive channel of type audio started (%s, %s)\n",
-                          call->callType, call->callToken);
+            OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                        call->callType, call->callToken);
          }
          else{
-            OOTRACEERR3("ERROR:No callback registered to start receive audio"
-                       " channel (%s, %s)\n", call->callType, call->callToken);
+            OOTRACEERR4("ERROR:No callback registered to start receive %s"
+                       " channel (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                        call->callType, call->callToken);
             return OO_FAILED;
          }
       }
@@ -2795,29 +2909,43 @@ int ooBuildOpenLogicalChannelAudio
       olc->m.reverseLogicalChannelParametersPresent = 1;
       rlcp = &(olc->reverseLogicalChannelParameters);
       memset(rlcp, 0, sizeof(H245OpenLogicalChannel_reverseLogicalChannelParameters));
-      rlcp->dataType.t = T_H245DataType_audioData;
+      if(epCap->capType == OO_CAP_TYPE_AUDIO)
+      {
+         sessionID = 1;
+         rlcp->dataType.t = T_H245DataType_audioData;
  
-      rlcp->dataType.u.audioData = ooCreateAudioCapability(epCap, pctxt, dir);
+         rlcp->dataType.u.audioData = ooCapabilityCreateAudioCapability(epCap,
+                                                                   pctxt, dir);
+      }else if(epCap->capType == OO_CAP_TYPE_VIDEO)
+      {
+         sessionID = 2;
+         rlcp->dataType.t = T_H245DataType_videoData;
+ 
+         rlcp->dataType.u.videoData = ooCapabilityCreateVideoCapability(epCap,
+                                                                   pctxt, dir);
+      }
 
       rlcp->m.multiplexParametersPresent = 1;
       rlcp->multiplexParameters.t = T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
       pH2250lcp2 = (H245H2250LogicalChannelParameters*) ASN1MALLOC(pctxt, sizeof(H245H2250LogicalChannelParameters));
       rlcp->multiplexParameters.u.h2250LogicalChannelParameters = pH2250lcp2;
       memset(pH2250lcp2, 0, sizeof(H245H2250LogicalChannelParameters));
-      pH2250lcp2->sessionID = 1;
+      pH2250lcp2->sessionID = sessionID;
+
       if(outgoing)
       {
          pH2250lcp2->m.mediaChannelPresent = 1;
 
          pH2250lcp2->mediaChannel.t =
                                     T_H245TransportAddress_unicastAddress;
-         pUnicastAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
-        
+         pUnicastAddrs = (H245UnicastAddress*) memAlloc(pctxt,
+                                                  sizeof(H245UnicastAddress));
          memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
          pH2250lcp2->mediaChannel.u.unicastAddress =  pUnicastAddrs;
      
          pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
-         pIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
+         pIpAddrs = (H245UnicastAddress_iPAddress*) memAlloc(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
          memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUnicastAddrs->u.iPAddress = pIpAddrs;     
 
@@ -2854,12 +2982,15 @@ int ooBuildOpenLogicalChannelAudio
          if(epCap->startReceiveChannel)
          {  
             epCap->startReceiveChannel(call, pLogicalChannel);     
-            OOTRACEINFO3("Receive channel of type audio started (%s, %s)\n",
+            OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
+                         (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
                           call->callType, call->callToken);
          }
          else{
-            OOTRACEERR3("ERROR:No callback registered to start receive audio "
-                        "channel (%s, %s)\n", call->callType, call->callToken);
+            OOTRACEERR4("ERROR:No callback registered to start receive %s "
+                        "channel (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                        call->callType, call->callToken);
             return OO_FAILED;
          }  
       }
@@ -3000,7 +3131,7 @@ int ooSessionTimerExpired(void *pdata)
       }
    }
 
-   ASN1MEMFREEPTR(call->pctxt, cbData);
+   memFreePtr(call->pctxt, cbData);
 
    if(call->callState == OO_CALL_CLEAR_RELEASESENT)
       call->callState = OO_CALL_CLEARED;
