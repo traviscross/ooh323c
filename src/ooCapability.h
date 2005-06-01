@@ -385,7 +385,37 @@ int ooAddRemoteCapability(struct OOH323CallData *call, H245Capability *cap);
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
 EXTERN int ooCapabilityUpdateJointCapabilities
-(struct OOH323CallData* call, H245Capability *cap);
+   (struct OOH323CallData* call, H245Capability *cap);
+
+
+/**
+ * This function is used to update joint video capabilities for call. It checks
+ * whether remote capability can be supported by local capabilities for the
+ * call and if supported makes entry into the joint capability list for the
+ * call.
+ * @param call           Handle to the call
+ * @param videoCap       Remote video capability which will be tested for
+ *                       compatibility.
+ *
+ * @return               returns OO_OK, if updated else OO_FAILED; 
+ */
+EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
+   (OOH323CallData *call, H245VideoCapability *videoCap, int dir);
+
+
+/**
+ * This function is used to update joint video H263 capabilities for call. It
+ * checks whether remote capability can be supported by local capabilities for
+ * the call and if supported makes entry into the joint capability list for the
+ * call.
+ * @param call           Handle to the call
+ * @param pH263Cap       Remote H263 video capability which will be tested for
+ *                       compatibility.
+ *
+ * @return               returns OO_OK, if updated else OO_FAILED; 
+ */
+EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH263
+   (OOH323CallData *call, H245H263VideoCapability *pH263Cap, int dir);
 
 
 /**
@@ -507,6 +537,33 @@ struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
  */
 ooH323EpCapability* ooIsAudioDataTypeSupported
 (struct OOH323CallData *call, H245AudioCapability* audioCap, int dir);
+
+/**
+ * This function is used to determine whether a particular video capability
+ * can be supported by the endpoint.
+ * @param call       Handle to the call.
+ * @param pVideoCap  Handle to the  video capability.
+ * @param dir        Direction in which support is desired.
+ *
+ * @return          Handle to the copy of capability which supports video
+ *                  capability, Null if none found
+ */
+ooH323EpCapability* ooIsVideoDataTypeSupported
+   (OOH323CallData *call, H245VideoCapability* pVideoCap, int dir);
+
+/**
+ * This function is used to determine whether a particular H263 capability
+ * can be supported by the endpoint.
+ * @param call       Handle to the call.
+ * @param pH263Cap   Handle to the H263 video capability.
+ * @param dir        Direction in which support is desired.
+ *
+ * @return          Handle to the copy of capability which supports H263
+ *                  capability, Null if none found
+ */
+ooH323EpCapability* ooIsVideoDataTypeH263Supported
+   (OOH323CallData *call, H245H263VideoCapability* pH263Cap, int dir,
+    OOPictureFormat picFormat);
 
 /**
  * This function is used to determine whether a particular capability type
