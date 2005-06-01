@@ -609,6 +609,26 @@ int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                                      stopTransmitChannel, FALSE);
 }
 
+
+int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
+                                 unsigned qcifMPI, unsigned cifMPI,
+                                 unsigned cif4MPI, unsigned cif16MPI,
+                                 unsigned maxBitRate, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel)
+{
+
+   return ooCapabilityAddH263VideoCapability(NULL, sqcifMPI, qcifMPI, cifMPI,
+                                     cif4MPI, cif16MPI, maxBitRate,dir,
+                                     startReceiveChannel, startTransmitChannel,
+                                     stopReceiveChannel, stopTransmitChannel,
+                                     FALSE);
+
+}
+
+
 int ooH323EpEnableDTMFRFC2833(int dynamicRTPPayloadType)
 {
    return ooCapabilityEnableDTMFRFC2833(NULL, dynamicRTPPayloadType);

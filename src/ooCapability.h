@@ -203,72 +203,11 @@ EXTERN int ooCapabilityAddSimpleCapability
     cb_StopTransmitChannel stopTransmitChannel,
     OOBOOL remote);
 
-#if 0
-/**
- * This is an internal helper function which is used to add a G729 capability
- * to local endpoints capability list or to remote endpoints capability list or
- * to a calls capability list.
- * @param call                 Handle to a call. If this is not Null, then
- *                             capability is added to call's remote enpoint
- *                             capability list, else it is added to local H323
- *                             endpoint list.
- * @param cap                  Type of G729 capability to be added.
- * @param txframes             Number of frames per packet for transmission.
- * @param rxframes             Number of frames per packet for reception.
- * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
- * @param startReceiveChannel  Callback function to start receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
- * @param remote               TRUE, if adding call's remote capability.
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
- *
- */
-EXTERN int ooCapabilityAddG729Capability(struct OOH323CallData *call, int cap,
-                                         int txframes, int rxframes, int dir,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                  OOBOOL remote);
-
-/**
- * This is an internal helper function which is used to add a G711 capability
- * to local endpoints capability list or to remote endpoints capability list or
- * to a call's capability list.
- * @param call                 Handle to a call. If this is not Null, then
- *                             capability is added to call's remote enpoint
- *                             capability list, else it is added to local H323
- *                             endpoint list.
- * @param cap                  Type of G711 capability to be added.
- * @param txframes             Number of frames per packet for transmission.
- * @param rxframes             Number of frames per packet for reception.
- * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
- * @param startReceiveChannel  Callback function to start receive channel.
- * @param startTransmitChannel Callback function to start transmit channel.
- * @param stopReceiveChannel   Callback function to stop receive channel.
- * @param stopTransmitChannel  Callback function to stop transmit channel.
- * @param remote               TRUE, if adding call's remote capability.
- *
- * @return                     OO_OK, on success. OO_FAILED, on failure.
- *
- */
-int ooCapabilityAddG711Capability(struct OOH323CallData *call,
-                                  int cap, int txframes,
-                                 int rxframes, int dir,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                 OOBOOL remote);
-
-
-#endif
 
 /**
  * This is an internal helper function which is used to add a GSM capability
- * to local endpoints capability list or to remote endpoints capability list.
+ * to local endpoints capability list or to remote endpoints capability list or
+ * to a call's capability list.
  * @param call                 Handle to a call. If this is not Null, then
  *                             capability is added to call's remote enpoint
  *                             capability list, else it is added to local H323
@@ -296,27 +235,84 @@ int ooCapabilityAddGSMCapability(struct OOH323CallData *call, int cap,
                                 OOBOOL remote);
 
 
-
+/**
+ * This function is used to add H263 video capability to local endpoints
+ * capability list or to remote endpoints capability list or to a call's
+ * capability list.
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param sqcifMPI             Minimum picture interval for encoding/decoding
+ *                             of SQCIF pictures.
+ * @param qcifMPI              Minimum picture interval for encoding/decoding
+ *                             of QCIF pictures.
+ * @param cifMPI               Minimum picture interval for encoding/decoding
+ *                             of CIF pictures.
+ * @param cif4MPI              Minimum picture interval for encoding/decoding
+ *                             of CIF4 pictures.
+ * @param cif16MPI             Minimum picture interval for encoding/decoding
+ *                             of CIF16 pictures.
+ * @param maxBitRate           Maximum bit rate in units of 100 bits/s at
+ *                             which a transmitter can transmit video or a
+ *                             receiver can receive video.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capabilities.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
 EXTERN int ooCapabilityAddH263VideoCapability(struct OOH323CallData *call,
-                                 int dir,
-                                 unsigned sqcifMPI, unsigned qcifMPI,
-                                 unsigned cifMPI, unsigned cif4MPI,
-                                 unsigned cif16MPI, unsigned maxBitRate,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                       OOBOOL remote);
+                               unsigned sqcifMPI, unsigned qcifMPI,
+                               unsigned cifMPI, unsigned cif4MPI,
+                               unsigned cif16MPI, unsigned maxBitRate, int dir,
+                               cb_StartReceiveChannel startReceiveChannel,
+                               cb_StartTransmitChannel startTransmitChannel,
+                               cb_StopReceiveChannel stopReceiveChannel,
+                               cb_StopTransmitChannel stopTransmitChannel,
+                               OOBOOL remote);
+
+
+/**
+ * This function is an helper function to ooCapabilityAddH263VideoCapability.
+ * @param call                 Handle to a call. If this is not Null, then
+ *                             capability is added to call's remote enpoint
+ *                             capability list, else it is added to local H323
+ *                             endpoint list.
+ * @param sqcifMPI             Minimum picture interval for encoding/decoding
+ *                             of SQCIF pictures.
+ * @param qcifMPI              Minimum picture interval for encoding/decoding
+ *                             of QCIF pictures.
+ * @param cifMPI               Minimum picture interval for encoding/decoding
+ *                             of CIF pictures.
+ * @param cif4MPI              Minimum picture interval for encoding/decoding
+ *                             of CIF4 pictures.
+ * @param cif16MPI             Minimum picture interval for encoding/decoding
+ *                             of CIF16 pictures.
+ * @param maxBitRate           Maximum bit rate in units of 100 bits/s at
+ *                             which a transmitter can transmit video or a
+ *                             receiver can receive video.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ * @param remote               TRUE, if adding call's remote capabilities.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
 int ooCapabilityAddH263VideoCapability_helper(struct OOH323CallData *call,
-                                 int dir,
-                                 unsigned sqcifMPI, unsigned qcifMPI,
-                                 unsigned cifMPI, unsigned cif4MPI,
-                                 unsigned cif16MPI, unsigned maxBitRate,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                              OOBOOL remote);
+                              unsigned sqcifMPI, unsigned qcifMPI,
+                              unsigned cifMPI, unsigned cif4MPI,
+                              unsigned cif16MPI, unsigned maxBitRate, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel,
+                              OOBOOL remote);
 
 /**
  * This function is used to add a audio capability to calls remote 
@@ -356,21 +352,6 @@ int ooAddRemoteCapability(struct OOH323CallData *call, H245Capability *cap);
 EXTERN int ooCapabilityUpdateJointCapabilities
 (struct OOH323CallData* call, H245Capability *cap);
 
-#if 0
-/**
- * This function is used to test the compatibility of the two capabilities.
- * It checks whether tx capability can be received by rx capability.
- * @param call                Handle to the call.
- * @param txCap               Transmit capability to be tested for
- *                            compatibility.
- * @param rxCap               Receive capability to be tested for compatibility
- *
- * @return                    TRUE, if compatible, FALSE otherwise.
- */
-ASN1BOOL ooCheckCompatibility
-(struct OOH323CallData *call, ooH323EpCapability *txCap,
- ooH323EpCapability *rxCap);
-#endif
 
 /**
  * This function is used to test whether the endpoint capability in the
@@ -463,8 +444,22 @@ struct H245AudioCapability* ooCapabilityCreateSimpleCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 
+/**
+ * This function is used to create a H263 video capability
+ * structure.
+ * @param epCap       Handle to the endpoint capability
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
+ *                    for new video capability.
+ * @param dir         Direction in which the newly created capability will be
+ *                    used.
+ *
+ * @return            Newly created video capability on success, NULL on
+ *                    failure.
+ */
 struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
 (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
+
+
 /**
  * This function is used to determine whether a particular capability
  * can be supported by the endpoint.

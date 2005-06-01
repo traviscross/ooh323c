@@ -471,6 +471,38 @@ EXTERN int ooH323EpAddGSMCapability(int cap, ASN1USINT framesPerPkt,
                              cb_StartTransmitChannel startTransmitChannel,
                              cb_StopReceiveChannel stopReceiveChannel,
                              cb_StopTransmitChannel stopTransmitChannel);
+/**
+ * This function is used to add H263 video capability to the H323 endpoint.
+ * @param cap                  Capability type - OO_H263VIDEO
+ * @param sqcifMPI             Minimum picture interval for encoding/decoding
+ *                             of SQCIF pictures.
+ * @param qcifMPI              Minimum picture interval for encoding/decoding
+ *                             of QCIF pictures.
+ * @param cifMPI               Minimum picture interval for encoding/decoding
+ *                             of CIF pictures.
+ * @param cif4MPI              Minimum picture interval for encoding/decoding
+ *                             of CIF4 pictures.
+ * @param cif16MPI             Minimum picture interval for encoding/decoding
+ *                             of CIF16 pictures.
+ * @param maxBitRate           Maximum bit rate in units of 100 bits/s at
+ *                             which a transmitter can transmit video or a
+ *                             receiver can receive video.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
+                                 unsigned qcifMPI, unsigned cifMPI,
+                                 unsigned cif4MPI, unsigned cif16MPI,
+                                 unsigned maxBitRate, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel);
 
 /**
  * This function is used to enable rfc 2833 support for the endpoint.

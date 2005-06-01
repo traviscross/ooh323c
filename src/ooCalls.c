@@ -587,12 +587,13 @@ int ooCallAddG711Capability(OOH323CallData *call, int cap, int txframes,
                             stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
-int ooCallAddGSMCapability(OOH323CallData* call, int cap, ASN1USINT framesPerPkt,
-                             OOBOOL comfortNoise, OOBOOL scrambled, int dir,
-                             cb_StartReceiveChannel startReceiveChannel,
-                             cb_StartTransmitChannel startTransmitChannel,
-                             cb_StopReceiveChannel stopReceiveChannel,
-                             cb_StopTransmitChannel stopTransmitChannel)
+int ooCallAddGSMCapability
+   (OOH323CallData* call, int cap, ASN1USINT framesPerPkt,
+    OOBOOL comfortNoise, OOBOOL scrambled, int dir,
+    cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel)
 {
    return ooCapabilityAddGSMCapability(call, cap, framesPerPkt, comfortNoise,
                                      scrambled, dir, startReceiveChannel,
@@ -600,6 +601,23 @@ int ooCallAddGSMCapability(OOH323CallData* call, int cap, ASN1USINT framesPerPkt
                                      stopTransmitChannel, FALSE);
 }
 
+
+int ooCallAddH263VideoCapability
+   (OOH323CallData *call, int cap, unsigned sqcifMPI, unsigned qcifMPI,
+    unsigned cifMPI, unsigned cif4MPI, unsigned cif16MPI, unsigned maxBitRate,
+    int dir, cb_StartReceiveChannel startReceiveChannel,
+    cb_StartTransmitChannel startTransmitChannel,
+    cb_StopReceiveChannel stopReceiveChannel,
+    cb_StopTransmitChannel stopTransmitChannel)
+{
+
+   return ooCapabilityAddH263VideoCapability(call, sqcifMPI, qcifMPI, cifMPI,
+                                     cif4MPI, cif16MPI, maxBitRate,dir,
+                                     startReceiveChannel, startTransmitChannel,
+                                     stopReceiveChannel, stopTransmitChannel,
+                                     FALSE);
+
+}
 
 int ooCallEnableDTMFRFC2833(OOH323CallData *call, int dynamicRTPPayloadType)
 {

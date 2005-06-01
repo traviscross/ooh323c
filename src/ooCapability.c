@@ -61,21 +61,21 @@ int ooCapabilityDisableDTMFRFC2833(OOH323CallData *call)
 
 
 
-int ooCapabilityAddH263VideoCapability(ooCallData *call, int dir,
-                                 unsigned sqcifMPI, unsigned qcifMPI,
-                                 unsigned cifMPI, unsigned cif4MPI,
-                                 unsigned cif16MPI, unsigned maxBitRate,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                 OOBOOL remote)
+int ooCapabilityAddH263VideoCapability(ooCallData *call,
+                              unsigned sqcifMPI, unsigned qcifMPI,
+                              unsigned cifMPI, unsigned cif4MPI,
+                              unsigned cif16MPI, unsigned maxBitRate, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel,
+                              OOBOOL remote)
 {
    int ret = OO_OK;
    if(sqcifMPI>0)
    {
-      ret = ooCapabilityAddH263VideoCapability_helper(call, dir, sqcifMPI, 0,
-                                 0, 0, 0, maxBitRate, startReceiveChannel,
+      ret = ooCapabilityAddH263VideoCapability_helper(call, sqcifMPI, 0,
+                                 0, 0, 0, maxBitRate, dir, startReceiveChannel,
                                  startTransmitChannel, stopReceiveChannel,
                                  stopTransmitChannel, remote);
       if(ret != OO_OK)
@@ -86,8 +86,8 @@ int ooCapabilityAddH263VideoCapability(ooCallData *call, int dir,
    }
    if(qcifMPI>0)
    {
-      ret = ooCapabilityAddH263VideoCapability_helper(call, dir, 0, qcifMPI, 0,
-                                 0, 0, maxBitRate, startReceiveChannel,
+      ret = ooCapabilityAddH263VideoCapability_helper(call, 0, qcifMPI, 0,
+                                 0, 0, maxBitRate, dir, startReceiveChannel,
                                  startTransmitChannel, stopReceiveChannel,
                                  stopTransmitChannel, remote);
       if(ret != OO_OK)
@@ -98,8 +98,8 @@ int ooCapabilityAddH263VideoCapability(ooCallData *call, int dir,
    }
    if(cifMPI>0)
    {
-      ret = ooCapabilityAddH263VideoCapability_helper(call, dir, 0, 0, cifMPI,
-                                 0, 0, maxBitRate, startReceiveChannel,
+      ret = ooCapabilityAddH263VideoCapability_helper(call, 0, 0, cifMPI,
+                                 0, 0, maxBitRate, dir, startReceiveChannel,
                                  startTransmitChannel, stopReceiveChannel,
                                  stopTransmitChannel, remote);
       if(ret != OO_OK)
@@ -110,8 +110,9 @@ int ooCapabilityAddH263VideoCapability(ooCallData *call, int dir,
    }
    if(cif4MPI>0)
    {
-      ret = ooCapabilityAddH263VideoCapability_helper(call, dir, 0, 0, 0,
-                                 cif4MPI, 0, maxBitRate, startReceiveChannel,
+      ret = ooCapabilityAddH263VideoCapability_helper(call, 0, 0, 0,
+                                 cif4MPI, 0, maxBitRate, dir,
+                                 startReceiveChannel,
                                  startTransmitChannel, stopReceiveChannel,
                                  stopTransmitChannel, remote);
       if(ret != OO_OK)
@@ -136,15 +137,15 @@ int ooCapabilityAddH263VideoCapability(ooCallData *call, int dir,
 
 }
 
-int ooCapabilityAddH263VideoCapability_helper(ooCallData *call, int dir,
-                                 unsigned sqcifMPI, unsigned qcifMPI,
-                                 unsigned cifMPI, unsigned cif4MPI,
-                                 unsigned cif16MPI, unsigned maxBitRate,
-                                 cb_StartReceiveChannel startReceiveChannel,
-                                 cb_StartTransmitChannel startTransmitChannel,
-                                 cb_StopReceiveChannel stopReceiveChannel,
-                                 cb_StopTransmitChannel stopTransmitChannel,
-                                 OOBOOL remote)
+int ooCapabilityAddH263VideoCapability_helper(ooCallData *call,
+                              unsigned sqcifMPI, unsigned qcifMPI,
+                              unsigned cifMPI, unsigned cif4MPI,
+                              unsigned cif16MPI, unsigned maxBitRate, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel,
+                              OOBOOL remote)
 {
    int iRet=0;
    ooH323EpCapability *epCap = NULL, *cur=NULL, *lHead=NULL;
@@ -615,7 +616,7 @@ struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
    }
 
    pH263Cap->m.errorCompensationPresent = TRUE;
-   pH263Cap->maxBitRate=params->maxBitRate;
+   pH263Cap->maxBitRate = params->maxBitRate;
    pH263Cap->unrestrictedVector = FALSE;
    pH263Cap->arithmeticCoding = FALSE;
    pH263Cap->advancedPrediction = FALSE;
