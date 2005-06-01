@@ -76,6 +76,8 @@ int ooCreateH245Connection(OOH323CallData *call)
 {
    int ret=0;
    OOSOCKET channelSocket=0;
+   ooTimerCallback *cbData=NULL;
+
    OOTRACEINFO1("Creating H245 Connection\n");
    if((ret=ooSocketCreate (&channelSocket))!=ASN_OK)
    {
@@ -136,9 +138,47 @@ int ooCreateH245Connection(OOH323CallData *call)
       }
       else
       {
-         OOTRACEINFO3("ERROR:Failed to connect to remote destination for H245 "
-                     "connection (%s, %s)\n", call->callType, call->callToken);
-         return OO_FAILED;
+         if(call->h245ConnectionAttempts >= 3)
+         {
+            OOTRACEERR3("Error:Failed to setup an H245 connection with remote "
+                        "destination. (%s, %s)\n", call->callType,
+                         call->callToken);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+         else{
+            OOTRACEWARN4("Warn:Failed to connect to remote destination for "
+                         "H245 connection - will retry after %d seconds"
+                         "(%s, %s)\n", DEFAULT_H245CONNECTION_RETRYTIMEOUT,
+                         call->callType, call->callToken);
+
+            cbData = (ooTimerCallback*) memAlloc(call->pctxt,
+                                                     sizeof(ooTimerCallback));
+            if(!cbData)
+            {
+               OOTRACEERR3("Error:Unable to allocate memory for timer "
+                           "callback.(%s, %s)\n", call->callType,
+                            call->callToken);
+               return OO_FAILED;
+            }
+            cbData->call = call;
+            cbData->timerType = OO_H245CONNECT_TIMER;
+            if(!ooTimerCreate(call->pctxt, &call->timerList,
+                              &ooCallH245ConnectionRetryTimerExpired,
+                              DEFAULT_H245CONNECTION_RETRYTIMEOUT, cbData,
+                              FALSE))
+            {
+               OOTRACEERR3("Error:Unable to create H245 connection retry timer"
+                           "(%s, %s)\n", call->callType, call->callToken);
+               memFreePtr(call->pctxt, cbData);
+               return OO_FAILED;
+            }
+            return OO_OK;
+         }
       }
    }
    return OO_OK;

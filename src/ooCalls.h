@@ -134,6 +134,7 @@ typedef struct OOH323CallData {
    ASN1UINT             flags;
    OOCallState          callState;
    OOCallClearReason    callEndReason;
+   unsigned             h245ConnectionAttempts;
    OOH245SessionState   h245SessionState;
    int                  dtmfmode;
    OOMediaInfo          *mediaInfo;
@@ -149,7 +150,7 @@ typedef struct OOH323CallData {
    char                 *remoteDisplayName;
    struct OOAliases     *remoteAliases;
    struct OOAliases     *ourAliases; /*aliases used in the call for us */
-   OOMasterSlaveState   masterSlaveState;   /* Master-Slave state */
+   OOMasterSlaveState   masterSlaveState;   /*!< Master-Slave state */
    ASN1UINT             statusDeterminationNumber;
    OOCapExchangeState   localTermCapState;
    OOCapExchangeState   remoteTermCapState;
@@ -168,7 +169,7 @@ typedef struct OOH323CallData {
    unsigned             nextSessionID; /* Note by default 1 is audio session, 2 is video and 3 is data, from 3 onwards master decides*/
    DList                timerList;
    ASN1UINT             msdRetries;
-   void                 *usrData; /* User can set this to user specific data */
+   void                 *usrData; /*!<User can set this to user specific data*/
    struct OOH323CallData* next;
    struct OOH323CallData* prev;
 } OOH323CallData;
@@ -629,6 +630,17 @@ EXTERN int ooAddMediaInfo(OOH323CallData *call, OOMediaInfo mediaInfo);
  */
 EXTERN unsigned ooCallGenerateSessionID
                     (OOH323CallData *call, OOCapType type, char *dir);
+
+/**
+ * This is an handler for H245 connection retry timer. When remote end is not
+ * yet listening for H245 connections, this timer provides a wait and retry
+ * mechanism to establish H245 connection.
+ * @param data      Timer callback data.
+ *
+ * @return          OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallH245ConnectionRetryTimerExpired(void *data);
+
 /**
  * @}
  */

@@ -181,6 +181,7 @@ typedef enum OOCallClearReason {
 #define OO_CLC_TIMER       (1<<4)
 #define OO_RCC_TIMER       (1<<5)
 #define OO_SESSION_TIMER   (1<<6)
+#define OO_H245CONNECT_TIMER (1<<7)
 
 /** Maximum length for received messages */
 #define MAXMSGLEN 4096

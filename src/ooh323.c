@@ -574,7 +574,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
       {
          OOTRACEERR3("Error: H.245 channel creation failed (%s, %s)\n",
                      call->callType, call->callToken);
-         /* Mark call for clearing */
+
          if(call->callState < OO_CALL_CLEAR)
          {
             call->callEndReason = OO_REASON_TRANSPORTFAILURE;

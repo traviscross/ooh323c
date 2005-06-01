@@ -104,6 +104,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    }
 
    call->calledPartyNumber = NULL;
+   call->h245ConnectionAttempts = 0;
    call->h245SessionState = OO_H245SESSION_IDLE;
    call->dtmfmode = gH323ep.dtmfmode;
    call->mediaInfo = NULL;
@@ -755,3 +756,19 @@ unsigned ooCallGenerateSessionID
 
 }
 
+
+int ooCallH245ConnectionRetryTimerExpired(void *data)
+{
+   ooTimerCallback *cbData = (ooTimerCallback*) data;
+   OOH323CallData *call = cbData->call;
+
+   OOTRACEINFO3("H245 connection retry timer expired. (%s, %s)\n",
+                                            call->callType, call->callToken);
+   memFreePtr(call->pctxt, cbData);
+
+   call->h245ConnectionAttempts++;
+
+   ooCreateH245Connection(call);
+
+   return OO_OK;
+}
