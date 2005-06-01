@@ -160,7 +160,7 @@ typedef enum OOCapType {
  * Structure to store information related to end point
  * capability
  */
-typedef struct OOH323EpCapability {
+typedef struct ooH323EpCapability {
    int dir;
    int cap;
    OOCapType capType;
@@ -170,9 +170,9 @@ typedef struct OOH323EpCapability {
    cb_StopReceiveChannel stopReceiveChannel;
    cb_StopTransmitChannel stopTransmitChannel;
    struct ooH323EpCapability *next;
-} OOH323EpCapability;
+} ooH323EpCapability;
 
-#define ooH323EpCapability OOH323EpCapability
+
 
 
 #ifndef EXTERN

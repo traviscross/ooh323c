@@ -51,6 +51,7 @@ extern "C" {
 #define OO_M_DISABLEGK          0x01000000
 
 
+
 /**
  * Call states.
  */

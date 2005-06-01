@@ -130,7 +130,7 @@ int ooFreeH245Message(OOH323CallData *call, H245Message *pmsg)
 
 #ifndef _COMPACT
 static void ooPrintH245Message
-(OOH323CallData* call, ASN1OCTET* msgbuf, ASN1UINT msglen)
+   (OOH323CallData* call, ASN1OCTET* msgbuf, ASN1UINT msglen)
 {
    OOCTXT ctxt;
    H245MultimediaSystemControlMessage mmMsg;
@@ -157,7 +157,8 @@ static void ooPrintH245Message
 }
 #endif
 
-int ooEncodeH245Message(OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size)
+int ooEncodeH245Message
+   (OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size)
 {
    int len=0, encodeLen=0, i=0;
    int stat=0;
@@ -618,12 +619,20 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
             call->remoteTermCapState == OO_RemoteTermCapSetAckSent)
          {
             /*Since Cap exchange and MasterSlave Procedures are done */
+            if(gH323ep.h323Callbacks.openLogicalChannels)
+               gH323ep.h323Callbacks.openLogicalChannels(call);
+            else{
+               if(!call->logicalChans)
+                  ooOpenLogicalChannels(call);
+            }
+#if 0
             if(!call->logicalChans){
                if(!gH323ep.h323Callbacks.openLogicalChannels)
                   ooOpenLogicalChannels(call);
                else
                   gH323ep.h323Callbacks.openLogicalChannels(call);
             }
+#endif
          }
          else
             OOTRACEDBGC1("Not opening logical channels as Cap exchange "
@@ -1500,12 +1509,20 @@ int ooOnReceivedTerminalCapabilitySetAck(OOH323CallData* call)
    if(call->masterSlaveState == OO_MasterSlave_Master ||
        call->masterSlaveState == OO_MasterSlave_Slave)
    {
+      if(gH323ep.h323Callbacks.openLogicalChannels)
+         gH323ep.h323Callbacks.openLogicalChannels(call);
+      else{
+         if(!call->logicalChans)
+            ooOpenLogicalChannels(call);
+      }
+#if 0
       if(!call->logicalChans){
          if(!gH323ep.h323Callbacks.openLogicalChannels)
             ooOpenLogicalChannels(call);
          else
             gH323ep.h323Callbacks.openLogicalChannels(call);
       }
+#endif
    }
      
    return OO_OK;
@@ -2281,12 +2298,20 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
    /* As both MasterSlave and TerminalCapabilitySet procedures have finished,
       OpenLogicalChannels*/
 
+   if(gH323ep.h323Callbacks.openLogicalChannels)
+      gH323ep.h323Callbacks.openLogicalChannels(call);
+   else{
+      if(!call->logicalChans)
+         ooOpenLogicalChannels(call);
+   }
+#if 0
    if(!call->logicalChans){
       if(!gH323ep.h323Callbacks.openLogicalChannels)
          ret = ooOpenLogicalChannels(call);
       else
          gH323ep.h323Callbacks.openLogicalChannels(call);
    }
+#endif
    return OO_OK;
 }
 
