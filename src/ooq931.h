@@ -390,7 +390,6 @@ EXTERN int ooCreateQ931Message(Q931Message **msg, int msgType);
 
 /**
  * This function is invoked to generate a unique call reference number.
- * @param None
  *
  * @return         - call reference number
  */

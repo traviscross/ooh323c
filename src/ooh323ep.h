@@ -264,7 +264,7 @@ EXTERN int ooH323EpClearAllAliases(void);
 EXTERN int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks);
 
 /**
- * This function is used to set high level H323 call backs for the endpoint.
+ * This function is used to set high level H.323 callbacks for the endpoint.
  * Make sure all unused callbacks in the structure are set to NULL before
  * calling this function.
  * @param h323Callbacks    Callback structure containing various high level
@@ -278,8 +278,6 @@ EXTERN int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks);
  * This function is the last function to be invoked after done using the
  * stack. It closes the H323 Endpoint for an application, releasing all
  * the associated memory.
- *
- * @param None
  *
  * @return          OO_OK on success
  *                  OO_FAILED on failure
@@ -527,7 +525,7 @@ EXTERN int ooH323EpDisableDTMFRFC2833(void);
  *                               the members of the structure are appropriately
  *                               initialized.
  *
- * @retun                        OO_OK, on success. OO_FAILED, on failure.
+ * @return                       OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks);
 

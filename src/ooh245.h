@@ -108,9 +108,10 @@ EXTERN int ooGetOutgoingH245Msgbuf(struct OOH323CallData *call,
                                    int *len, int *msgType);
 
 /**
- * This function is used to send out a treminal capability set message.
- * @param call      Pointer to a call, for which TerminalCapabilitySet message
- *                  has to be sent.
+ * This function is used to send out a terminal capability set message.
+ *
+ * @param call      Pointer to a call for which TerminalCapabilitySet message
+ *                  will be sent.
  *
  * @return          OO_OK, on success. OO_FAILED, on failure. 
  */
@@ -119,7 +120,6 @@ EXTERN int ooSendTermCapMsg(struct OOH323CallData *call);
 /**
  * This function is used to generate a random status determination number
  * for MSD procedure.
- * @param None
  *
  * @return          Generated status determination number.
  */

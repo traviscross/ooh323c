@@ -275,18 +275,16 @@ EXTERN OOH323CallData* ooCreateCall(char *type, char *callToken);
 
 /**
  * This function is used to add a call to the list of existing calls.
- * @param h323ep       Pointer to the H323 Endpoint structure.
  * @param call         Pointer to the call to be added.
- *
  * @return             OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooAddCallToList (OOH323CallData *call);
 
 /**
- * This function is used to set callerid for the call.
- * @param call          Handle to the call
- * @param callerid      caller id value
+ * This function is used to set the caller ID for a call.
  *
+ * @param call          Handle to the call
+ * @param callerid      caller ID value
  * @return              OO_OK, on success. OO_FAILED, otherwise.
  */
 EXTERN int ooCallSetCallerId
@@ -566,34 +564,33 @@ EXTERN int ooCallDisableDTMFRFC2833(OOH323CallData *call);
 EXTERN OOH323CallData* ooFindCallByToken(char *callToken);
 
 /**
- * This function is used to clear a call. Based on what stage of clearance the
+ * This function is used to end a call. Based on what stage of clearance the
  * call is it takes appropriate action.
- * @param call   Handle to the call which has to be cleared.
  *
+ * @param call   Handle to the call which has to be cleared.
  * @return       OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooEndCall(OOH323CallData *call);
 
 /**
  * This function is used to remove a call from the list of existing calls.
- * @param h323ep        Pointer to the H323 Endpoint.
- * @param call          Pointer to the call to be removed.
  *
+ * @param call          Pointer to the call to be removed.
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooRemoveCallFromList (OOH323CallData *call);
 
 /**
- * This function is used to clean a call. It closes all associated sockets,
- * removes call from list and frees up associated memory.
- * @param call          Pointer to the call to be cleared.
+ * This function is used to clean up a call. It closes all associated sockets,
+ * removes the call from the global list and frees up associated memory.
  *
+ * @param call          Pointer to the call to be cleared.
  * @return              OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCleanCall(OOH323CallData *call);
 
 /**
- * This fuction is used to check whether a specified session in specified
+ * This function is used to check whether a specified session in specified
  * direction is active for the call.
  * @param call       Handle to call for which session has to be queried.
  * @param sessionID  Session id to identify the type of session(1 for audio,

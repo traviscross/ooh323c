@@ -1,0 +1,232 @@
+
+BODY {
+  background-color: #FFFFFF;
+  background-image: url('/images/bg.gif');
+}
+
+P {
+  font-family: "Arial";
+  font-size: 12px;
+}
+
+TD {
+  font-family: "Arial";
+  font-size: 12px;
+}       
+
+H1 {
+  font-family: "Arial";
+  font-size: 20px;
+}       
+
+H2 {
+  font-family: "Arial";
+  font-size: 16px;
+  color: #0704A1;
+  text-decoration: underline;
+}       
+
+H3 {
+  font-family: "Arial";
+  font-size: 14px;
+  color: #0704A1;
+}       
+
+H4 {
+  font-family: "Arial";
+  font-size: 12px;
+  color: black;
+}       
+
+A:link {
+  color: blue;
+}
+
+A:visited {
+  color: blue;
+}
+
+A:active {
+  color: red;
+}
+
+A:hover {
+  color: red;
+}
+
+A.Nav:link {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none;
+  color: #630000;
+}
+
+A.Nav:visited {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none;
+  color: #630000;
+}
+
+A.Nav:active {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: underline;
+  color: #006666;
+}
+
+A.Nav:hover {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: underline;
+  color: #006666;
+}
+
+A.Navb:link {
+  font-family: "Arial Narrow";
+  font-size: 11px;
+  text-decoration: none;
+  color: #006666;
+}
+
+A.Navb:visited {
+  font-family: "Arial Narrow";
+  font-size: 11px;
+  text-decoration: none;
+  color: #006666;
+}
+
+A.Navb:active {
+  font-family: "Arial Narrow";
+  font-size: 11px;
+  text-decoration: underline;
+  color: #630000;
+}
+
+A.Navb:hover {
+  font-family: "Arial Narrow";
+  font-size: 11px;
+  text-decoration: underline;
+  color: #630000;
+}
+
+.Top {
+  font-family: "Arial";
+  font-weight: bold;
+  font-style: italic;
+  font-size: 14px;
+  color: #00009C;
+}
+
+.Table {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 10px;
+  color: white;
+}               
+
+.TableH {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 11px;
+  color: black;
+}               
+
+A.TableL:link {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 11px;
+  text-decoration: underline;
+  color: lightblue;
+}
+
+A.TableL:visited {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 11px;
+  text-decoration: underline;
+  color: lightblue;
+}
+
+A.TableL:active {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 11px;
+  text-decoration: underline;
+  color: red;
+}
+
+A.TableL:hover {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 11px;
+  text-decoration: underline;
+  color: red;
+}
+
+A.qindex:link {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none;
+  color: #630000;
+}
+
+A.qindex:visited {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: none;
+  color: #630000;
+}
+
+A.qindex:active {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: underline;
+  color: #006666;
+}
+
+A.qindex:hover {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 12px;
+  text-decoration: underline;
+  color: #006666;
+}
+
+.Footer {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.Time {
+  font-family: "Arial";
+  font-weight: bold;
+  font-size: 10px;
+  color: #630000;
+}
+
+.Title {
+  font-family: "Arial";
+  font-size: 14px;
+  font-weight: bold;
+  color: #0704A1;
+}
+table {
+ background-color: white;
+}
+
+#pageDiv {
+ border-left:1px solid black;
+ border-right: 1px solid black;
+ width: 760px;
+}
+$DOCUMENT {
+}

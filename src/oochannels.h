@@ -52,9 +52,8 @@ struct Q931Message;
  */
 /**
  * This function is used to create a listener for incoming calls.
- * @param None
  *
- * @return           OO_OK, on success. OO_FAILED, on failure.
+ * @return  OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCreateH323Listener(void);
 
@@ -76,7 +75,6 @@ EXTERN int ooCloseH245Listener(struct OOH323CallData *call);
 
 /**
  * This function is used to accept incoming H.225 connections.
- * @param None
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
@@ -119,8 +117,9 @@ EXTERN int ooCloseH225Connection(struct OOH323CallData *call);
 
 /**
  * This function is used to close an H.245 connection for a call.
- * @param call       Pointer to call for which H.245 connection has to be closed.
  *
+ * @param call       Pointer to call for which H.245 connection has
+ *                   to be closed.
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCloseH245Connection(struct OOH323CallData *call);
@@ -128,15 +127,13 @@ EXTERN int ooCloseH245Connection(struct OOH323CallData *call);
 /**
  * This function is used to start monitoring channels for the calls. It has
  * an infinite loop which uses select to monitor various channels.
- * @param None
  *
  */
 EXTERN int ooMonitorChannels(void);
 
 /**
- * This function is called to stop the monitor channels thread.
- * It cleans up all the active calls, before stopping monitor thread.
- * @param None
+ * This function is called to stop the monitor channels event loop.
+ * It cleans up all the active calls before stopping the monitor.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure
  */

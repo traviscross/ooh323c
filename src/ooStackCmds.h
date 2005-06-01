@@ -96,7 +96,7 @@ EXTERN int ooAnswerCall(char *callToken);
 EXTERN int ooForwardCall(char* callToken, char *dest);
 
 /**
- * This function is used by an user application to hang a call.
+ * This function is used by an user application to terminate a call.
  * @param callToken   The uinque token for the call.
  * @param reason      Reason for hanging call.
  *
@@ -112,7 +112,6 @@ EXTERN int ooProcStackCmds ();
 
 /**
  * This function is used by the user application to stop monitoring calls.
- * @param None
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
