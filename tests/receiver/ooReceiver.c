@@ -116,9 +116,7 @@ int main(int argc, char ** argv)
    h323Callbacks.onAlerting = osEpOnAlerting;
    h323Callbacks.onIncomingCall = osEpOnIncomingCall;
    h323Callbacks.onOutgoingCall = NULL;
-   h323Callbacks.onCallAnswered = NULL;
    h323Callbacks.onCallEstablished = NULL;
-   h323Callbacks.onOutgoingCallAdmitted = NULL;
    h323Callbacks.onCallCleared = osEpOnCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
 

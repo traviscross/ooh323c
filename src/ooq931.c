@@ -1671,8 +1671,6 @@ int ooH323CallAdmitted(OOH323CallData *call)
 
    if(!strcmp(call->callType, "outgoing"))
    {
-      if(gH323ep.h323Callbacks.onOutgoingCallAdmitted)
-         gH323ep.h323Callbacks.onOutgoingCallAdmitted(call);
       ret = ooCreateH225Connection(call);
       if(ret != OO_OK)
       {

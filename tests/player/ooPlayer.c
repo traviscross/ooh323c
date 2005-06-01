@@ -49,7 +49,7 @@ static char USAGE[]={
 };
 
 int osEpOnCallCleared(OOH323CallData* call );
-int osEpOnOutgoingCallAdmitted(OOH323CallData* call );
+int osEpOnNewCallCreated(OOH323CallData* call );
 static OOBOOL bActive=FALSE;
 static char gPlayFile[100];
 char callToken[20];
@@ -132,13 +132,11 @@ int main(int argc, char ** argv)
 
    /* Register callbacks */
 
-   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onNewCallCreated = osEpOnNewCallCreated;
    h323Callbacks.onAlerting = NULL;
    h323Callbacks.onIncomingCall = NULL;
    h323Callbacks.onOutgoingCall = NULL;
-   h323Callbacks.onCallAnswered = NULL;
    h323Callbacks.onCallEstablished = NULL;
-   h323Callbacks.onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted;
    h323Callbacks.onCallCleared = osEpOnCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
 
@@ -244,8 +242,8 @@ int osEpOnCallCleared(OOH323CallData* call )
    return OO_OK;
 }
 
-/* out going call callback */
-int osEpOnOutgoingCallAdmitted(OOH323CallData* call )
+/* New call structure created callback */
+int osEpOnNewCallCreated(OOH323CallData* call )
 {
    ooMediaInfo mediaInfo;
 

@@ -34,7 +34,7 @@ int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpStopReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 int osEpOnIncomingCall(ooCallData* call );
-int osEpOnOutgoingCallAdmitted(ooCallData* call );
+int osEpOnNewCallCreated(ooCallData* call );
 int osEpOnCallForwarded(ooCallData *call);
 int osEpOnCallCleared(ooCallData* call );
 int osEpOnAlerting(ooCallData* call);
@@ -275,13 +275,11 @@ int main(int argc, char ** argv)
    ooH323EpAddAliasURLID("http://www.obj-sys.com");
 
    /* Set callbacks */
-   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onNewCallCreated = osEpOnNewCallCreated;
    h323Callbacks.onAlerting = osEpOnAlerting;
    h323Callbacks.onIncomingCall = osEpOnIncomingCall;
    h323Callbacks.onOutgoingCall = NULL;
-   h323Callbacks.onCallAnswered = NULL;
    h323Callbacks.onCallEstablished = NULL;
-   h323Callbacks.onOutgoingCallAdmitted = osEpOnOutgoingCallAdmitted;
    h323Callbacks.onCallForwarded = osEpOnCallForwarded;
    h323Callbacks.onCallCleared = osEpOnCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
@@ -468,8 +466,6 @@ int osEpOnAlerting(ooCallData* call)
 /* on incoming call callback */
 int osEpOnIncomingCall(ooCallData* call )
 {
-   ooMediaInfo mediaInfo1, mediaInfo2;
-   char localip[20];
 
    if(!bActive){
       bActive = TRUE;
@@ -483,33 +479,10 @@ int osEpOnIncomingCall(ooCallData* call )
       return OO_OK;
    }
 
-   memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
-   memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
-
-   /* Configure mediainfo for transmit media channel of type G711 */
-   memset(localip, 0, 20);
-   ooGetLocalIPAddress(localip);
-   mediaInfo1.lMediaCntrlPort = 5001;
-   mediaInfo1.lMediaPort = 5000;
-   mediaInfo1.cap = OO_G711ULAW64K;
-   strcpy(mediaInfo1.lMediaIP, localip);
-   strcpy(mediaInfo1.dir, "transmit");
-   ooAddMediaInfo(call, mediaInfo1);
-  
-   /* Configure mediainfo for receive media channel of type G711 */
-   mediaInfo2.lMediaCntrlPort = 5001;
-   mediaInfo2.lMediaPort = 5000;
-   mediaInfo2.cap =  OO_G711ULAW64K;
-   strcpy(mediaInfo2.lMediaIP, localip);
-   strcpy(mediaInfo2.dir, "receive");
-   ooAddMediaInfo(call, mediaInfo2);
-    
-   strcpy(callToken, call->callToken);
-  
    return OO_OK;
 }
 
-int osEpOnOutgoingCallAdmitted(ooCallData* call )
+int osEpOnNewCallCreated(ooCallData* call )
 {
    ooMediaInfo mediaInfo1, mediaInfo2;
    char localip[20];
@@ -536,7 +509,6 @@ int osEpOnOutgoingCallAdmitted(ooCallData* call )
     
    strcpy(callToken, call->callToken);
 
-  
    return OO_OK;
 }
 /* Callback when we are being forwarded to another destination by remote

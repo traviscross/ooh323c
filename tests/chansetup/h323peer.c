@@ -35,7 +35,7 @@ static int startTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 static int stopReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel);
 static int stopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel);
 static int onIncomingCall (ooCallData* call);
-static int onOutgoingCallAdmitted (ooCallData* call);
+static int onNewCallCreated (ooCallData* call);
 static int onCallEstablished(ooCallData *call);
 static int onCallCleared (ooCallData* call);
 static int onAlerting (ooCallData* call);
@@ -190,13 +190,11 @@ int main (int argc, char** argv)
    ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
-   h323Callbacks.onNewCallCreated = NULL;
+   h323Callbacks.onNewCallCreated = onNewCallCreated;
    h323Callbacks.onAlerting = onAlerting;
    h323Callbacks.onIncomingCall = onIncomingCall;
    h323Callbacks.onOutgoingCall = NULL;
-   h323Callbacks.onCallAnswered = NULL;
    h323Callbacks.onCallEstablished = onCallEstablished;
-   h323Callbacks.onOutgoingCallAdmitted = onOutgoingCallAdmitted;
    h323Callbacks.onCallCleared = onCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
  
@@ -330,9 +328,9 @@ static int onIncomingCall (ooCallData* call)
 
 /* Callback to handle outgoing call admitted */
 
-static int onOutgoingCallAdmitted (ooCallData* call)
+static int onNewCallCreated (ooCallData* call)
 {
-   printf ("onOutgoingCallAdmitted - %s\n", call->callToken);
+   printf ("onNewCallCreated - %s\n", call->callToken);
 
    /* TODO: user would add application specific logic here to handle    */
    /* outgoing call admitted..                                          */

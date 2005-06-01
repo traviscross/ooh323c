@@ -326,10 +326,8 @@ int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks)
    gH323ep.h323Callbacks.onAlerting = h323Callbacks.onAlerting;
    gH323ep.h323Callbacks.onIncomingCall = h323Callbacks.onIncomingCall;
    gH323ep.h323Callbacks.onOutgoingCall = h323Callbacks.onOutgoingCall;
-   gH323ep.h323Callbacks.onCallAnswered = h323Callbacks.onCallAnswered;
    gH323ep.h323Callbacks.onCallEstablished = h323Callbacks.onCallEstablished;
    gH323ep.h323Callbacks.onCallForwarded = h323Callbacks.onCallForwarded;
-   gH323ep.h323Callbacks.onOutgoingCallAdmitted = h323Callbacks.onOutgoingCallAdmitted;
    gH323ep.h323Callbacks.onCallCleared = h323Callbacks.onCallCleared;
    gH323ep.h323Callbacks.openLogicalChannels = h323Callbacks.openLogicalChannels;
    return OO_OK;

@@ -213,9 +213,6 @@ typedef int (*cb_OnIncomingCall)(OOH323CallData* call );
  */
 typedef int (*cb_OnOutgoingCall)(OOH323CallData* call );
 
-/* ? */
-typedef int (*cb_OnCallAnswered)(struct OOH323CallData* call);
-
 /**
  * This callback function is triggered when a Q.931 connect message is
  * sent in case of incoming call.  In case of outgoing call, this is invoked
@@ -227,9 +224,6 @@ typedef int (*cb_OnCallAnswered)(struct OOH323CallData* call);
  * @return 0 if callback was successful, non-zero error code if failure.
  */
 typedef int (*cb_OnCallEstablished)(struct OOH323CallData* call);
-
-/* ? */
-typedef int (*cb_OnOutgoingCallAdmitted)(struct OOH323CallData* call );
 
 /**
  * This callback function is triggered when a call is cleared.
@@ -264,10 +258,8 @@ typedef struct OOH323CALLBACKS {
    cb_OnAlerting onAlerting;
    cb_OnIncomingCall onIncomingCall;
    cb_OnOutgoingCall onOutgoingCall;
-   cb_OnCallAnswered onCallAnswered;
    cb_OnCallEstablished onCallEstablished;
    cb_OnCallForwarded onCallForwarded;
-   cb_OnOutgoingCallAdmitted onOutgoingCallAdmitted;
    cb_OnCallCleared onCallCleared;
    cb_OpenLogicalChannels openLogicalChannels;
 } OOH323CALLBACKS;
