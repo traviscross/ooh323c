@@ -290,7 +290,7 @@ int ooProcStackCmds()
 
             case OO_CMD_STOPMONITOR:
                OOTRACEINFO1("Processing StopMonitor command\n");
-               ooStopMonitorCalls();
+               ooStopMonitor();
                break;
 
             default: OOTRACEERR1("ERROR:Unhandled command\n");

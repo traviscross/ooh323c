@@ -108,7 +108,7 @@ EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
  * This function is invoked from the main event handling loop to
  * process queued stack commands.
  */
-EXTERN int ooProcStackCmds ();
+EXTERN int ooProcStackCmds (void);
 
 /**
  * This function is used by the user application to stop monitoring calls.

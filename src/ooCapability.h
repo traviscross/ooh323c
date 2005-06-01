@@ -400,7 +400,7 @@ EXTERN int ooCapabilityUpdateJointCapabilities
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
 EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
-   (OOH323CallData *call, H245VideoCapability *videoCap, int dir);
+   (struct OOH323CallData *call, H245VideoCapability *videoCap, int dir);
 
 
 /**
@@ -415,7 +415,7 @@ EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
 EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH263
-   (OOH323CallData *call, H245H263VideoCapability *pH263Cap, int dir);
+   (struct OOH323CallData *call, H245H263VideoCapability *pH263Cap, int dir);
 
 
 /**
@@ -549,7 +549,7 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
  *                  capability, Null if none found
  */
 ooH323EpCapability* ooIsVideoDataTypeSupported
-   (OOH323CallData *call, H245VideoCapability* pVideoCap, int dir);
+   (struct OOH323CallData *call, H245VideoCapability* pVideoCap, int dir);
 
 /**
  * This function is used to determine whether a particular H263 capability
@@ -562,7 +562,7 @@ ooH323EpCapability* ooIsVideoDataTypeSupported
  *                  capability, Null if none found
  */
 ooH323EpCapability* ooIsVideoDataTypeH263Supported
-   (OOH323CallData *call, H245H263VideoCapability* pH263Cap, int dir,
+   (struct OOH323CallData *call, H245H263VideoCapability* pH263Cap, int dir,
     OOPictureFormat picFormat);
 
 /**

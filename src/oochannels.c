@@ -26,6 +26,7 @@
 #include "stdio.h"
 #include "ooTimer.h"
 #include "ooh323ep.h"
+#include "ooStackCmds.h"
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
