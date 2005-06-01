@@ -177,6 +177,10 @@ SOURCE=.\ooh323ep.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooLogChan.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ooports.c
 # End Source File
 # Begin Source File
@@ -282,6 +286,10 @@ SOURCE=.\ooh323ep.h
 # Begin Source File
 
 SOURCE=.\oohdr.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooLogChan.h
 # End Source File
 # Begin Source File
 
