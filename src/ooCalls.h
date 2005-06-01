@@ -244,7 +244,10 @@ typedef int (*cb_OnCallCleared)(struct OOH323CallData* call);
 typedef int (*cb_OpenLogicalChannels)(struct OOH323CallData* call);
 
 /**
- *
+ * This callback function is triggered when a call is forwarded by
+ * a remote endpoint to another remote destination.
+ * @param call Associated H.323 call data structure
+ * @return 0 if callback was successful, non-zero error code if failure
  */
 typedef int (*cb_OnCallForwarded)(struct OOH323CallData* call);
 
