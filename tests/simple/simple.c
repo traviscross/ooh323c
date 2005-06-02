@@ -376,30 +376,20 @@ int main(int argc, char ** argv)
    ooMonitorChannels();
 
    if(gCmdThrd)
+   {
 #ifdef _WIN32
       TerminateThread(threadHdl, 0);
 #else
       pthread_cancel(threadHdl);
       pthread_join(threadHdl, NULL);
+
 #endif
+   }
+   printf("--->Destroying H323Ep\n");
    ooH323EpDestroy();
    return 0;
 }
 
-/*
-int osEpOpenLogicalChannels(ooCallData *call)
-{
-  ooH323EpCapability *epCap=NULL;
-   printf("in OpenLogicalChannels\n");
-   epCap = call->jointCaps;
-   while(epCap)
-   {
-     printf("Joint cap: %d\n", epCap->cap);
-     epCap = epCap->next;
-   }
-   return OO_OK;
-
-}*/
 
 /* Callback to start receive media channel */
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
@@ -418,10 +408,10 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("\n--->Starting transmit channel to %s:%d",
-          call->remoteIP, pChannel->mediaPort);
+          call->remoteIP, pChannel->remoteMediaPort);
    printf("\nCMD>");
    fflush(stdout);
-   ooCreateTransmitRTPChannel (call->remoteIP, pChannel->mediaPort);
+   ooCreateTransmitRTPChannel (call->remoteIP, pChannel->remoteMediaPort);
    ooStartTransmitMic();
    return OO_OK;
 }

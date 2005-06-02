@@ -1273,8 +1273,8 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
       pLogicalChannel->sessionID = h2250lcap->sessionID;  
 
    /* Populate ports for channel */
-   pLogicalChannel->mediaPort = iPAddress->tsapIdentifier;
-   pLogicalChannel->mediaControlPort = iPAddress1->tsapIdentifier;
+   pLogicalChannel->remoteMediaPort = iPAddress->tsapIdentifier;
+   pLogicalChannel->remoteMediaControlPort = iPAddress1->tsapIdentifier;
 
    if(pLogicalChannel->chanCap->startTransmitChannel)
    {
@@ -2777,11 +2777,11 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
 }
 
 
-/* Used to build Audio OLCs for fast connect. Keep in mind that forward and
+/* Used to build  OLCs for fast connect. Keep in mind that forward and
    reverse
    are always with respect to the endpoint which proposes channels
    TODO: Need to clean logical channel in case of failure.    */
-int ooBuildOpenLogicalChannel
+int ooBuildFastStartOLC
    (OOH323CallData *call, H245OpenLogicalChannel *olc,
     ooH323EpCapability *epCap, OOCTXT*pctxt, int dir)
 {
@@ -3163,4 +3163,181 @@ int ooSessionTimerExpired(void *pdata)
   
    return OO_OK;
 }
+
+
+int ooGetIpPortFromH245TransportAddress
+   (OOH323CallData *call, H245TransportAddress *h245Address, char *ip,
+    int *port)
+{
+   H245UnicastAddress *unicastAddress = NULL;
+   H245UnicastAddress_iPAddress *ipAddress = NULL;
+
+   if(h245Address->t != T_H245TransportAddress_unicastAddress)
+   {
+      OOTRACEERR3("ERROR:Unsupported H245 address type "
+                           "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+     
+   unicastAddress = h245Address->u.unicastAddress;
+   if(unicastAddress->t != T_H245UnicastAddress_iPAddress)
+   {
+      OOTRACEERR3("ERROR:H245 Address type is not IP"
+                   "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   ipAddress = unicastAddress->u.iPAddress;
+
+   *port = ipAddress->tsapIdentifier;
+
+   sprintf(ip, "%d.%d.%d.%d", ipAddress->network.data[0],
+                              ipAddress->network.data[1],
+                              ipAddress->network.data[2],
+                              ipAddress->network.data[3]);
+   return OO_OK;
+}
+
+
+int ooPrepareFastStartResponseOLC
+   (OOH323CallData *call, H245OpenLogicalChannel *olc,
+    ooH323EpCapability *epCap, OOCTXT*pctxt, int dir)
+{
+   OOBOOL reverse=FALSE, forward=FALSE;
+   H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp=NULL;
+   H245OpenLogicalChannel_reverseLogicalChannelParameters *rlcp=NULL;
+   H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
+   H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
+   H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
+
+   ooLogicalChannel *pLogicalChannel = NULL;
+  
+   if(dir & OORX)
+   {
+      OOTRACEDBGA3("ooPrepareFastStartResponseOLC for Receive  Capability "
+                   "(%s, %s)\n", call->callType, call->callToken);
+      pLogicalChannel = ooAddNewLogicalChannel(call,
+                                 olc->forwardLogicalChannelNumber, 1,
+                                 "receive", epCap);
+      forward = TRUE;
+   }
+   else if(dir & OOTX)
+   {
+      OOTRACEDBGA3("ooPrepareFastStartResponseOLC for transmit Capability "
+                   "(%s, %s)\n", call->callType, call->callToken);
+      pLogicalChannel = ooAddNewLogicalChannel(call,
+                                  olc->forwardLogicalChannelNumber, 1,
+                                  "transmit", epCap);
+      reverse = TRUE;
+   }
+   else if(dir & OORXTX)
+   {
+      OOTRACEDBGA3("ooPrepareFastStartResponseOLC for ReceiveAndTransmit  "
+                   "Capability (%s, %s)\n", call->callType, call->callToken);
+      reverse = 1;
+      forward = 1;
+      OOTRACEERR3("Symmetric capability is not supported as of now (%s, %s)\n",
+                   call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   if(forward)
+   {
+      OOTRACEDBGC3("Preparing olc for receive channel. (%s, %s)\n",
+                   call->callType, call->callToken);
+      flcp = &(olc->forwardLogicalChannelParameters);
+
+      pH2250lcp1 = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
+         
+
+      pH2250lcp1->m.mediaChannelPresent = 1;
+      pH2250lcp1->mediaChannel.t = T_H245TransportAddress_unicastAddress;
+      pUniAddrs = (H245UnicastAddress*) memAlloc(pctxt,
+                                                   sizeof(H245UnicastAddress));
+      pUniIpAddrs = (H245UnicastAddress_iPAddress*) memAlloc(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
+      if(!pUniAddrs || !pUniIpAddrs)
+      {
+         OOTRACEERR3("Error:Memory - ooPrepareFastStartResponseOLC - pUniAddrs"
+                     "/pUniIpAddrs (%s, %s)\n", call->callType,
+                     call->callToken);
+         return OO_FAILED;
+      }
+
+      pH2250lcp1->mediaChannel.u.unicastAddress =  pUniAddrs;
+      pUniAddrs->t = T_H245UnicastAddress_iPAddress;
+      pUniAddrs->u.iPAddress = pUniIpAddrs;
+    
+      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+
+      pUniIpAddrs->network.numocts = 4;
+      pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
+
+      pH2250lcp1->m.mediaControlChannelPresent = 1;
+      pH2250lcp1->mediaControlChannel.t =
+                                 T_H245TransportAddress_unicastAddress;
+      pUnicastAddrs = (H245UnicastAddress*) memAlloc(pctxt,
+                                                   sizeof(H245UnicastAddress));
+      pIpAddrs = (H245UnicastAddress_iPAddress*) memAlloc(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
+      if(!pUnicastAddrs || !pIpAddrs)
+      {
+         OOTRACEERR3("Error:Memory - ooPrepareFastStartResponseOLC - "
+                     "pUnicastAddrs/pIpAddrs (%s, %s)\n", call->callType,
+                     call->callToken);
+         return OO_FAILED;
+      }
+      memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
+      pH2250lcp1->mediaControlChannel.u.unicastAddress =  pUnicastAddrs;
+      pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
+     
+      pUnicastAddrs->u.iPAddress = pIpAddrs;
+    
+      ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+
+      pIpAddrs->network.numocts = 4;
+      pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
+   }
+
+   if(reverse)
+   {
+      OOTRACEDBGC3("Building reverse olc. (%s, %s)\n", call->callType,
+                    call->callToken);
+
+      rlcp = &(olc->reverseLogicalChannelParameters);
+
+      pH2250lcp2 = rlcp->multiplexParameters.u.h2250LogicalChannelParameters;
+
+      pH2250lcp2->m.mediaControlChannelPresent = 1;
+      pH2250lcp2->mediaControlChannel.t =
+                                 T_H245TransportAddress_unicastAddress;
+      pUniAddrs = (H245UnicastAddress*) memAlloc(pctxt,
+                                                   sizeof(H245UnicastAddress));
+      pUniIpAddrs = (H245UnicastAddress_iPAddress*) memAlloc(pctxt,
+                                         sizeof(H245UnicastAddress_iPAddress));
+      if(!pUniAddrs || !pUniIpAddrs)
+      {
+         OOTRACEERR3("Error:Memory - ooPrepareFastStartResponseOLC - "
+                    "pUniAddrs/pUniIpAddrs (%s, %s)\n", call->callType,
+                     call->callToken);
+         return OO_FAILED;
+      }
+
+      pH2250lcp2->mediaControlChannel.u.unicastAddress =  pUniAddrs;
+     
+      pUniAddrs->t = T_H245UnicastAddress_iPAddress;
+
+      pUniAddrs->u.iPAddress = pUniIpAddrs;
+
+      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+      pUniIpAddrs->network.numocts = 4;
+      pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
+         
+   }
+
+   pLogicalChannel->state = OO_LOGICALCHAN_ESTABLISHED;
+
+   return OO_OK;
+}
+
+
 

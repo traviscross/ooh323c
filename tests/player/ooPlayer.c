@@ -192,9 +192,9 @@ int main(int argc, char ** argv)
 int osEpStartTransmitChannel(OOH323CallData *call, ooLogicalChannel *pChannel)
 {
    printf ("Starting transmit channel %s:%d\n",
-           call->remoteIP, pChannel->mediaPort);
+           call->remoteIP, pChannel->remoteMediaPort);
 
-   ooCreateTransmitRTPChannel(call->remoteIP, pChannel->mediaPort);
+   ooCreateTransmitRTPChannel(call->remoteIP, pChannel->remoteMediaPort);
    ooStartTransmitWaveFile(gPlayFile);
    return OO_OK;
 }

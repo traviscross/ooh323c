@@ -1621,8 +1621,12 @@ ooH323EpCapability* ooIsDataTypeSupported
    switch(data->t)
    {
    case T_H245DataType_nonStandard:
+      OOTRACEDBGC3("NonStandard data type not supported.(%s, %s)\n",
+                   call->callType, call->callToken);
       return NULL;
    case T_H245DataType_nullData:
+      OOTRACEDBGC3("Null data type not supported.(%s, %s)\n",
+                   call->callType, call->callToken);
       return NULL;
    case T_H245DataType_videoData:
       OOTRACEDBGC3("Looking for video dataType support. (%s, %s)\n",
@@ -1633,8 +1637,12 @@ ooH323EpCapability* ooIsDataTypeSupported
                    call->callType, call->callToken);
       return ooIsAudioDataTypeSupported(call, data->u.audioData, dir);
    case T_H245DataType_data:
+     OOTRACEDBGC3("Data type not supported.(%s, %s)\n",
+                   call->callType, call->callToken);
      return NULL;
    case T_H245DataType_encryptionData:
+     OOTRACEDBGC3("Encryption data type not supported.(%s, %s)\n",
+                   call->callType, call->callToken);
      return NULL;
    case T_H245DataType_h235Control:
      return NULL;

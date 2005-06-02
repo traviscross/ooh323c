@@ -521,7 +521,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                            "(%s, %s)\n", call->callType, call->callToken);
                return OO_FAILED;
             }
-            pChannel->mediaPort = unicastAddress->u.iPAddress->tsapIdentifier;
+            pChannel->remoteMediaPort =
+                                  unicastAddress->u.iPAddress->tsapIdentifier;
             if(!pChannel->chanCap->startTransmitChannel)
             {
                OOTRACEERR3("ERROR:No callback registered to start transmit "

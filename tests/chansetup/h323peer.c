@@ -262,7 +262,7 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    OOTimer* timer = NULL;
    char *token=NULL;
    printf ("Starting transmit channel to %s:%d - %s\n",
-           call->remoteIP, pChannel->mediaPort, call->callToken);
+           call->remoteIP, pChannel->remoteMediaPort, call->callToken);
    if(gCalls != 0)
    {
       token = (char*)malloc(strlen(call->callToken)+1);

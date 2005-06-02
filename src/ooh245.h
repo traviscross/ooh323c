@@ -433,7 +433,8 @@ int ooOnReceivedRequestChannelCloseAck
    (struct OOH323CallData *call, H245RequestChannelCloseAck *rccAck);
 
 /**
- * Builds an OLC with an audio/video capability passed as parameter.
+ * Builds an OLC for faststart with an audio/video capability passed as
+ * parameter.
  * @param call             Handle to call for which OLC has to be built.
  * @param olc              Pointer to an OLC structure which will be populated.
  * @param epCap            Pointer to the capability which will be used to
@@ -444,10 +445,28 @@ int ooOnReceivedRequestChannelCloseAck
  *
  * @return                 OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooBuildOpenLogicalChannel(struct OOH323CallData *call,
+EXTERN int ooBuildFastStartOLC(struct OOH323CallData *call,
                                           H245OpenLogicalChannel *olc,
                                           ooH323EpCapability *epCap,
                                           OOCTXT*pctxt, int dir);
+
+/**
+ * Prepares a faststart response olc from the olc received in SETUP message.
+ * This function just changes the mediaChannel and mediaControl channel part
+ * of the olc received in SETUP.
+ * @param call             Handle to call for which OLC has to be built.
+ * @param olc              Pointer to an received OLC structure.
+ * @param epCap            Pointer to the capability which will be used for
+ *                         this channel.
+ * @param pctxt            Pointer to an OOCTXT structure which will be used
+ *                         to allocate additional memory for OLC.
+ * @param dir              Direction of channel OORX, OOTX etc.
+ *
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooPrepareFastStartResponseOLC
+   (OOH323CallData *call, H245OpenLogicalChannel *olc,
+    ooH323EpCapability *epCap, OOCTXT*pctxt, int dir);
 
 /**
  * This function is used to encode an H245 message and return encoded data
@@ -493,6 +512,24 @@ int ooSendTerminalCapabilitySetReject
  * @return                OO_OK, on success; OO_FAILED, on failure.
  */
 int ooSendTerminalCapabilitySetRelease(struct OOH323CallData * call);
+
+
+/**
+ * This is an helper function used to extract ip address and port info from
+ * H245TransportAddress structure.
+ * @param call           Handle to associated call.
+ * @param h245Address    Handle to H245TransportAddress structure from which
+ *                       information has to be extracted.
+ * @param ip             Pointer to buffer in which ip address will be
+ *                       returned. Make sure that buffer has sufficient length.
+ * @param port           Pointer to integer in which port number will be
+ *                       returned.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooGetIpPortFromH245TransportAddress
+   (OOH323CallData *call, H245TransportAddress *h245Address, char *ip,
+    int *port);
 
 /**
  * This is a callback function for handling an expired master-slave

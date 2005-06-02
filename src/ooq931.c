@@ -1127,18 +1127,18 @@ int ooSendConnect(OOH323CallData *call)
 /*TODO: Need to clean logical channel in case of failure after creating one */
 int ooAcceptCall(OOH323CallData *call)
 {
-  int ret = 0, i=0, j=0, mediaPort=0, dir=0;
-
+   int ret = 0, i=0, j=0, remoteMediaPort=0, remoteMediaControlPort = 0, dir=0;
+   char remoteMediaIP[20], remoteMediaControlIP[20];
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
    H225VendorIdentifier *vendor;
    Q931Message *q931msg=NULL;
    DListNode *pNode = NULL;
-   H245OpenLogicalChannel *olc = NULL, *respOlc = NULL;
+   H245OpenLogicalChannel *olc = NULL;
    ooH323EpCapability *epCap = NULL;
    ASN1DynOctStr *pFS=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;  
-   H245H2250LogicalChannelParameters * h2250lcp = NULL; 
+   H245H2250LogicalChannelParameters *h2250lcp = NULL; 
    H245UnicastAddress *unicastAddress;
    ooLogicalChannel* pChannel;
 
@@ -1271,7 +1271,17 @@ int ooAcceptCall(OOH323CallData *call)
 
          pNode = dListFindByIndex(&call->remoteFastStartOLCs, i);
          olc = (H245OpenLogicalChannel*)pNode->data;
-         /* Forward Channel */
+
+         if(olc->forwardLogicalChannelParameters.dataType.t !=
+                                                   T_H245DataType_nullData &&
+            olc->m.reverseLogicalChannelParametersPresent)
+         {
+            OOTRACEINFO3("Ignoring bidirectional OLC as it is not supported."
+                         "(%s, %s)\n", call->callType, call->callToken);
+            continue;
+         }
+
+         /* Forward Channel - remote transmits - local receives */
          if(olc->forwardLogicalChannelParameters.dataType.t !=
                                                    T_H245DataType_nullData)
          {
@@ -1296,15 +1306,36 @@ int ooAcceptCall(OOH323CallData *call)
                epCap = NULL;
                continue;
             }
+            h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+
             if(ooIsSessionEstablished(call, olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "receive"))
             {
+
+               OOTRACEINFO4("Receive channel with sessionID %d already "
+                            "established.(%s, %s)\n", olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID,
+                            call->callType, call->callToken);
                memFreePtr(call->pctxt, epCap);
                epCap = NULL;
                continue;
             }
+
+            /* Extract mediaControlChannel info, if supplied */
+            if(h2250lcp->m.mediaControlChannelPresent)
+            {
+               if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
+                                &h2250lcp->mediaControlChannel,
+                                remoteMediaControlIP, &remoteMediaControlPort))
+               {
+                  OOTRACEERR3("Error: Invalid media control channel address "
+                              "(%s, %s)\n", call->callType, call->callToken);
+                  memFreePtr(call->pctxt, epCap);
+                  epCap = NULL;
+                  continue;
+               }
+            }
          }
          else if(olc->m.reverseLogicalChannelParametersPresent)
-         {
+         {/* Reverse channel - remote receives - local transmits */
             OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
                           call->callToken);
@@ -1314,7 +1345,9 @@ int ooAcceptCall(OOH323CallData *call)
                                 OOTX);
             if(!epCap)
                continue;
+
             OOTRACEINFO1("Transmit Channel data type supported\n");
+
             if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
                T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
             {
@@ -1328,6 +1361,10 @@ int ooAcceptCall(OOH323CallData *call)
             }
             if(ooIsSessionEstablished(call, olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "transmit"))
             {
+
+               OOTRACEINFO4("Transmit session with sessionID %d already "
+                            "established.(%s, %s)\n", olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, call->callType, call->callToken);
+
                memFreePtr(call->pctxt, epCap);
                epCap = NULL;
                continue;
@@ -1352,48 +1389,74 @@ int ooAcceptCall(OOH323CallData *call)
                epCap = NULL;
                return OO_FAILED;
             }
-            if(h2250lcp->mediaChannel.t !=
-                                         T_H245TransportAddress_unicastAddress)
+            if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
+                                &h2250lcp->mediaChannel,
+                                remoteMediaIP, &remoteMediaPort))
             {
-               OOTRACEERR3("ERROR:Unsupported media channel address type "
+               OOTRACEERR3("Error: Invalid media  channel address "
                            "(%s, %s)\n", call->callType, call->callToken);
                memFreePtr(call->pctxt, epCap);
                epCap = NULL;
-               return OO_FAILED;
+               continue;
             }
-     
-            unicastAddress = h2250lcp->mediaChannel.u.unicastAddress;
-            if(unicastAddress->t != T_H245UnicastAddress_iPAddress)
-            {
-               OOTRACEERR3("ERROR:media channel address type is not IP"
-                           "(%s, %s)\n", call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               return OO_FAILED;
-            }
-            mediaPort = unicastAddress->u.iPAddress->tsapIdentifier; 
-         }
-         respOlc = (H245OpenLogicalChannel*) memAlloc(pctxt,
-                                               sizeof(H245OpenLogicalChannel));
-         if(!respOlc)
-         {
-            OOTRACEERR3("Error:Memory - ooAcceptCall - respOlc."
-                        "(%s, %s)\n", call->callType, call->callToken);
-            return OO_FAILED;
-         }
-         memset(respOlc, 0, sizeof(H245OpenLogicalChannel));
 
-         respOlc->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
+            /* Extract mediaControlChannel info, if supplied */
+            if(h2250lcp->m.mediaControlChannelPresent)
+            {
+               if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
+                                &h2250lcp->mediaControlChannel,
+                                remoteMediaControlIP, &remoteMediaControlPort))
+               {
+                  OOTRACEERR3("Error: Invalid media control channel address "
+                              "(%s, %s)\n", call->callType, call->callToken);
+                  memFreePtr(call->pctxt, epCap);
+                  epCap = NULL;
+                  continue;
+               }
+            }
+         }
+
+         if(dir & OOTX)
+         {  /* According to the spec if we are accepting olc for transmission
+               from called endpoint to calling endpoint, called endpoint should
+               insert a unqiue forwardLogicalChannelNumber into olc
+            */
+            olc->forwardLogicalChannelNumber =  call->logicalChanNoCur++;
+            if(call->logicalChanNoCur > call->logicalChanNoMax)
+               call->logicalChanNoCur = call->logicalChanNoBase;
+         }
+
         
-         ooBuildOpenLogicalChannel(call, respOlc, epCap, pctxt, dir);
+         ooPrepareFastStartResponseOLC(call, olc, epCap, pctxt, dir);
         
          pChannel = ooFindLogicalChannelByLogicalChannelNo
-            (call, respOlc->forwardLogicalChannelNumber);
+            (call, olc->forwardLogicalChannelNumber);
   
-         if(olc->forwardLogicalChannelParameters.dataType.t ==
-                                                      T_H245DataType_nullData)
+         if(dir & OORX)
          {
-            pChannel->mediaPort = mediaPort;
+            strcpy(pChannel->remoteIP, remoteMediaControlIP);
+            pChannel->remoteMediaControlPort = remoteMediaControlPort;
+            if(epCap->startReceiveChannel)
+            {  
+               epCap->startReceiveChannel(call, pChannel);     
+               OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                        call->callType, call->callToken);
+            }
+            else{
+               OOTRACEERR4("ERROR:No callback registered to start receive %s"
+                          " channel (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                           call->callType, call->callToken);
+               return OO_FAILED;
+            }
+         }
+         if(dir & OOTX)
+         {
+            pChannel->remoteMediaPort = remoteMediaPort;
+            strcpy(pChannel->remoteIP, remoteMediaIP);
+            pChannel->remoteMediaControlPort = remoteMediaControlPort;
+
             if(epCap->startTransmitChannel)
             {  
                epCap->startTransmitChannel(call, pChannel);     
@@ -1410,7 +1473,7 @@ int ooAcceptCall(OOH323CallData *call)
          }
          /* Do not specify msg buffer let automatic allocation work */
          setPERBuffer(pctxt, NULL, 0, 1);
-         if(asn1PE_H245OpenLogicalChannel(pctxt, respOlc) != ASN_OK)
+         if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
          {
             OOTRACEERR3("ERROR:Encoding of olc failed for faststart "
                         "(%s, %s)\n", call->callType, call->callToken);
@@ -1423,7 +1486,6 @@ int ooAcceptCall(OOH323CallData *call)
             return OO_FAILED;
          }
          pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
-         respOlc = NULL;
          olc = NULL;
          j++;
          epCap = NULL;
@@ -1942,7 +2004,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
        
-            ooBuildOpenLogicalChannel(call, olc, epCap, pctxt, OORX);
+            ooBuildFastStartOLC(call, olc, epCap, pctxt, OORX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
             if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
@@ -1986,7 +2048,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
        
-            ooBuildOpenLogicalChannel(call, olc, epCap, pctxt, OOTX);
+            ooBuildFastStartOLC(call, olc, epCap, pctxt, OOTX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
             if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)

@@ -53,8 +53,8 @@ typedef struct OOLogicalChannel {
    enum OOCapType type;
    char dir[10];  /* receive/transmit */
    char remoteIP[20];
-   int  mediaPort;
-   int  mediaControlPort;
+   int  remoteMediaPort;
+   int  remoteMediaControlPort;
    int  localRtpPort;
    int  localRtcpPort;
    char localIP[20];
