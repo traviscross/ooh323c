@@ -54,7 +54,7 @@
 #include "H323-MESSAGES.h"
 #include "ooasn1.h"
 
-#define OOH323C_VERSION "v0.6.1"
+#define OOH323C_VERSION "vx.y"
 
 #ifndef EXTERN
 #ifdef _WIN32
