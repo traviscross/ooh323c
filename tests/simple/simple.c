@@ -390,6 +390,20 @@ int main(int argc, char ** argv)
    return 0;
 }
 
+/*
+int osEpOpenLogicalChannels(ooCallData *call)
+{
+  ooH323EpCapability *epCap=NULL;
+   printf("in OpenLogicalChannels\n");
+   epCap = call->jointCaps;
+   while(epCap)
+   {
+     printf("Joint cap: %d\n", epCap->cap);
+     epCap = epCap->next;
+   }
+   return OO_OK;
+
+}*/
 
 /* Callback to start receive media channel */
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
