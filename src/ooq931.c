@@ -1139,7 +1139,6 @@ int ooAcceptCall(OOH323CallData *call)
    ASN1DynOctStr *pFS=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;  
    H245H2250LogicalChannelParameters *h2250lcp = NULL; 
-   H245UnicastAddress *unicastAddress;
    ooLogicalChannel* pChannel;
 
    ret = ooCreateQ931Message(&q931msg, Q931ConnectMsg);

@@ -18,6 +18,7 @@
 #include "ootrace.h"
 #include "ooq931.h"
 #include "ooh323ep.h"
+#include "oochannels.h"
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
