@@ -132,8 +132,12 @@ print `cp -r -f ./media/oomedia.dsp ./ooh323c-${version}/media/oomedia.dsp`;
 `perl dos2unix.pl  ooh323c-${version} ooh323c-${version}-temp`;
 `rm -rf ooh323c-${version}`;
 `mv ooh323c-${version}-temp ooh323c-${version}`;
+
 `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
 `gzip ooh323c-${version}.tar`;
 #`rm -rf ooh323c`;
+
+
+
 
 

@@ -74,7 +74,7 @@ Building on Linux:
  
 1. Change directory to the package root directory.
 
-        cd ooh323c-0.6
+        cd ooh323c-xx.aa
 
    (note: the version number may be different depending on what distribution
     you are working with).
@@ -93,7 +93,7 @@ Building on Linux:
    was installed prior to running the installation step (step 4).  For
    example:
 
-        ./configure --prefix=$HOME/ooh323c-0.6
+        ./configure --prefix=$HOME/ooh323c-xx.aa
 
 3. Execute the generated makefile:
 
@@ -122,7 +122,7 @@ Building on Windows
 
 The package includes Visual Studio 6 based workspace and project files.
 
-1. Open the package root directory ooh323c-0.6 (or whatever version
+1. Open the package root directory ooh323c-xx.aa (or whatever version
    you have).
   
 2. Open the ooh323c.dsw workspace which includes all the projects within
@@ -140,7 +140,7 @@ The package includes Visual Studio 6 based workspace and project files.
       oochansetup.dsp - oostk.dsp
 
 5. After a successful build, the libraries will be installed in
-   ooh323c-0.6\lib\release and ooh323c-0.6\lib\debug directories.
+   ooh323c-xx.aa\lib\release and ooh323c-xx.aa\lib\debug directories.
 
 
 Sample Programs
@@ -153,7 +153,7 @@ object library (liboomedia.so) is set in LD_LIBRARY_PATH:
 
 On Windows, make sure the path to the media plug-in library DLL
 (oomedia.dll) is in your PATH.  The DLL is located in the
-ooh323c-0.6\lib\release and ooh323c-0.6\lib\debug directories.
+ooh323c-xx.aa\lib\release and ooh323c-xx.aa\lib\debug directories.
 
 The sample programs are locates in the 'tests' subdirectory.  The following
 programs are available:

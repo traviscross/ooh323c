@@ -1573,6 +1573,7 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
                   call->callToken);
       return epCap;
    }
+   return NULL;
 
 }
 

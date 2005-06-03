@@ -1,7 +1,7 @@
 AC_PREREQ(2.57)
-AC_INIT([OOH323C],[0.6.1],[Objective Systems <support@obj-sys.com>],[ooh323c])
+AC_INIT([OOH323C],[xx.aa],[Objective Systems <support@obj-sys.com>],[ooh323c])
 PACKAGE=ooh323c
-VERSION=0.6.1
+VERSION=xx.aa
 
 AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
