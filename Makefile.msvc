@@ -1,0 +1,203 @@
+OOH323CCONF = .\config.msvc
+!include $(OOH323CCONF)
+OOH323C_MAJOR_VERSION=0 #Should be part of configure script
+OOH323C_MINOR_VERSION=7
+
+LIBDIR=.\libs
+
+
+#intermediate files
+OOH323C_OBJDIR=$(INTDIR)\release\ooh323c
+OOH323CA_OBJDIR=$(INTDIR)\release\ooh323c_a
+OOH323CD_OBJDIR=$(INTDIR)\debug\ooh323c
+
+OOMEDIA_OBJDIR=$(INTDIR)\release\media
+OOMEDIAD_OBJDIR=$(INTDIR)\debug\media
+
+OOSIMPLE_OBJDIR=$(INTDIR)\release\simple
+OOSIMPLED_OBJDIR=$(INTDIR)\debug\simple
+
+OOPLAYER_OBJDIR=$(INTDIR)\release\player
+OOPLAYERD_OBJDIR=$(INTDIR)\debug\player
+
+OORECEIVER_OBJDIR=$(INTDIR)\release\receiver
+OORECEIVERD_OBJDIR=$(INTDIR)\debug\receiver
+
+OOH323PEER_OBJDIR=$(INTDIR)\release\h323peer
+OOH323PEERD_OBJDIR=$(INTDIR)\debug\h323peer
+
+#Names of various output files
+OOH323C_A=ooh323c_a.lib
+OOH323C_IMP=ooh323c.lib
+OOH323C_DLL=ooh323c.dll
+
+OOH323CD_A=ooh323cd_a.lib
+OOH323CD_LIB=ooh323cd.lib
+OOH323CD_DLL=ooh323cd.dll
+
+SIMPLE=simple.exe
+SIMPLED=simpled.exe
+
+PLAYER=player.exe
+PLAYERD=playerd.exe
+
+RECEIVER=receiver.exe
+RECEIVERD=receiverd.exe
+
+H323PEER=h323peer.exe
+H323PEERD=h323peerd.exe
+
+OOMEDIA_DLL=oomedia.dll
+OOMEDIA_IMP=oomedia.lib
+
+#Various source directories
+OOH323CDIR=.
+SRCDIR=$(OOH323CDIR)/src
+H323DIR=$(OOH323CDIR)/src/h323
+PLAYERDIR=$(OOH323CDIR)/tests/player
+RECEIVERDIR=$(OOH323CDIR)/tests/receiver
+SIMPLEDIR=$(OOH323CDIR)/tests/simple
+H323PEERDIR=$(OOH323CDIR)/tests/chansetup
+MEDIADIR=$(OOH323CDIR)/media
+
+
+CC=cl.exe
+
+CFLAGS=/nologo /W3 /GX /I$(SRCDIR) /I$(H323DIR)  /D "WIN32" /D "_WIN32" /D "_COMPACT" /O2 /Gy /c
+
+CFLAGSD=/nologo /W3 /Gm /GX /Zi /I$(SRCDIR) /I$(H323DIR)  /D "WIN32" /D "_MBCS" /D "_LIB" /D "_WIN32" /D DEBUG  /Od /c
+
+DLLOPTS=/GD /LD /MD
+DLLOPTSD= /LDd /MDd
+
+
+# The linker and its options.
+LD = link.exe
+LDFLAGS = /nologo /subsystem:console /VERSION:$(OOH323C_MAJOR_VERSION).$(OOH323C_MINOR_VERSION)
+LDFLAGS= $(LDFLAGS)  /incremental:no /OPT:NOREF
+LIBS = ws2_32.lib
+
+#Archiver and its options
+AR=lib.exe
+ARFLAGS=/nologo
+
+!include objects.mk
+
+
+all: release 
+
+release:  media ooh323c
+
+ooh323c: $(LIBDIR)\$(OOH323C_DLL)
+
+### Build dynamic library ###
+$(LIBDIR)\$(OOH323C_DLL): $(LIBDIR) $(OOH323COBJS) 
+	$(LD) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOH323C_IMP) /OUT:$(LIBDIR)\$(OOH323C_DLL) $(OOH323COBJS) $(LIBS)
+
+$(OOH323COBJS): $(OOH323C_OBJDIR)
+	@echo -  Compiling stack library (release)
+	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(SRCDIR)/*.c 	
+	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(H323DIR)/*.c	
+
+
+### Build static library ###
+ooh323ca: $(LIBDIR)\$(OOH323C_A)
+	@echo -  Compiling static stack library (release)
+	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(SRCDIR)/*.c 
+	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(H323DIR)/*.c
+
+$(LIBDIR)\$(OOH323C_A): $(LIBDIR) $(OOH323COBJS_A) 
+	$(AR) $(ARFLAGS) /OUT:$(LIBDIR)\$(OOH323C_A) $(OOH323COBJS_A)
+
+$(OOH323COBJS_A): $(OOH323CA_OBJDIR)
+### Build simple application ###
+simple: $(OOSIMPLEOBJS) ooh323ca
+	@echo - Linking simple application
+	$(LD) $(OOH323C_A) $(LIBS) $(LDFLAGS) /LIBPATH:$(LIBDIR) $(OOSIMPLEOBJS) /OUT:$(SIMPLEDIR)/$(SIMPLE)
+
+$(OOSIMPLEOBJS): $(OOSIMPLE_OBJDIR)
+	@echo -  Compiling simple application (release)
+	$(CC) $(CFLAGS) /Fo$(OOSIMPLE_OBJDIR)/ $(SIMPLEDIR)/*.c
+
+### Build player application ###
+player: $(OOPLAYEROBJS) ooh323ca
+	@echo - Linking player application
+	$(LD) $(OOH323C_A) $(LIBS) $(LDFLAGS) /LIBPATH:$(LIBDIR) $(OOPLAYEROBJS) /OUT:$(PLAYERDIR)/$(PLAYER)
+
+$(OOPLAYEROBJS): $(OOPLAYER_OBJDIR)
+	@echo -  Compiling player application (release)
+	$(CC) $(CFLAGS) /Fo$(OOPLAYER_OBJDIR)/ $(PLAYERDIR)/*.c
+
+### Build receiver application ###
+receiver: $(OORECEIVEROBJS) ooh323ca
+	@echo - Linking receiver application
+	$(LD) $(OOH323C_A) $(LIBS) $(LDFLAGS) /LIBPATH:$(LIBDIR) $(OORECEIVEROBJS) /OUT:$(RECEIVERDIR)/$(RECEIVER)
+
+$(OORECEIVEROBJS): $(OORECEIVER_OBJDIR)
+	@echo -  Compiling receiver application (release)
+	$(CC) $(CFLAGS) /Fo$(OORECEIVER_OBJDIR)/ $(RECEIVERDIR)/*.c
+
+### Build h323 peer application ###
+h323peer: $(OOH323PEEROBJS) ooh323ca
+	@echo - Linking h323peer application
+	$(LD) $(OOH323C_A) $(LIBS) $(LDFLAGS) /LIBPATH:$(LIBDIR) $(OOH323PEEROBJS) /OUT:$(H323PEERDIR)/$(H323PEER)
+
+$(OOH323PEEROBJS): $(OOH323PEER_OBJDIR)	
+	@echo -  Compiling h323peer application (release)
+	$(CC) $(CFLAGS) /Fo$(OOH323PEER_OBJDIR)/ $(H323PEERDIR)/*.c
+
+### Build media library ###
+media: $(LIBDIR)\$(OOMEDIA_DLL)
+
+$(LIBDIR)\$(OOMEDIA_DLL): $(LIBDIR) $(OOMEDIAOBJS) 
+	@echo - Linking oomedia shared library
+	$(LD) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOMEDIA_IMP) /OUT:$(LIBDIR)\$(OOMEDIA_DLL) $(OOMEDIAOBJS) $(LIBS) winmm.lib 
+
+$(OOMEDIAOBJS): $(OOMEDIA_OBJDIR)
+	@echo - Compiling media library
+	$(CC) $(CFLAGS) /Fo$(OOMEDIA_OBJDIR)\ $(MEDIADIR)/ooCommon.c 
+	$(CC) $(CFLAGS) /Fo$(OOMEDIA_OBJDIR)\ $(MEDIADIR)/oortp.c 
+	$(CC) $(CFLAGS) /Fo$(OOMEDIA_OBJDIR)\ $(MEDIADIR)/ooSock.c 
+	$(CC) $(CFLAGS) /Fo$(OOMEDIA_OBJDIR)\ $(MEDIADIR)/ooWave.c 
+	$(CC) $(CFLAGS) /Fo$(OOMEDIA_OBJDIR)\ $(MEDIADIR)/g711.c
+
+#Create various directories
+$(LIBDIR): 
+	@if not exist $(LIBDIR) mkdir $(LIBDIR)
+
+
+$(INTDIR):
+	@if not exist $(INTDIR) mkdir $(INTDIR)
+
+$(INTDIR)/release: $(INTDIR)
+	@if not exist $(INTDIR)\release mkdir $(INTDIR)\release
+
+$(INTDIR)/debug: $(INTDIR)
+	@if not exist "$(INTDIR)/debug/$(NULL)" mkdir "$(INTDIR)/debug"
+
+$(OOH323C_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOH323C_OBJDIR) mkdir $(OOH323C_OBJDIR)
+
+$(OOH323CA_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOH323CA_OBJDIR) mkdir $(OOH323CA_OBJDIR)
+
+$(OOH323CD_OBJDIR):
+	@if not exist $(OOH323CD_OBJDIR) mkdir $(OOH323CD_OBJDIR)
+
+$(OOSIMPLE_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOSIMPLE_OBJDIR) mkdir $(OOSIMPLE_OBJDIR)
+
+$(OOSIMPLED_OBJDIR):
+	@if not exist $(OOSIMPLED_OBJDIR) mkdir $(OOSIMPLED_OBJDIR)
+
+$(OOPLAYER_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOPLAYER_OBJDIR) mkdir $(OOPLAYER_OBJDIR)	
+
+$(OORECEIVER_OBJDIR): $(INTDIR)/release
+	@if not exist $(OORECEIVER_OBJDIR) mkdir $(OORECEIVER_OBJDIR)
+
+$(OOH323PEER_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOH323PEER_OBJDIR) mkdir $(OOH323PEER_OBJDIR)
+
+$(OOMEDIA_OBJDIR): $(INTDIR)/release
+	@if not exist $(OOMEDIA_OBJDIR) mkdir $(OOMEDIA_OBJDIR)
