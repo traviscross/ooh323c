@@ -35,7 +35,7 @@ sub updateVersion{
    open (INFILE, $filename) || die ("could not open $filename");
    open (OUTFILE, ">temp.txt") || die ("could not open temp.txt");
    while(<INFILE>) {
-      s/xx.aa/$version;
+      s/xx.aa/$version/;
    }
    close (INFILE);
    close (OUTFILE);
