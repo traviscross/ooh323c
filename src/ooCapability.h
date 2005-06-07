@@ -360,8 +360,7 @@ int ooCapabilityAddH263VideoCapability_helper(struct OOH323CallData *call,
  * @return                    OO_OK, on success. OO_FAILED, otherwise.
  */
 int ooAddRemoteAudioCapability(struct OOH323CallData *call,
-                               H245AudioCapability *audioCap,
-                               int dir);
+                               H245AudioCapability *audioCap, int dir);
 
 
 /**
