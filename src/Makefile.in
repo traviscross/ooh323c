@@ -89,9 +89,9 @@ install_sh = @install_sh@
 AUTOMAKE_OPTIONS = gnu
 CFLAGS = @OOH323CFLAGS@
 
-lib_LIBRARIES = liboostk.a
+lib_LIBRARIES = libooh323c.a
 #liboostk_la_LDFLAGS = -version-info 1:1:0
-liboostk_a_SOURCES = ooUtils.c ooUtils.h ooGkClient.h ooGkClient.c context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c eventHandler.c eventHandler.h ooCalls.c ooCalls.h ooLogChan.c ooLogChan.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
+libooh323c_a_SOURCES = ooUtils.c ooUtils.h ooGkClient.h ooGkClient.c context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c eventHandler.c eventHandler.h ooCalls.c ooCalls.h ooLogChan.c ooLogChan.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
 
 INCLUDES = -Ih323
 
@@ -104,9 +104,9 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 LIBRARIES = $(lib_LIBRARIES)
 
-liboostk_a_AR = $(AR) cru
-liboostk_a_LIBADD =
-am_liboostk_a_OBJECTS = ooUtils.$(OBJEXT) ooGkClient.$(OBJEXT) \
+libooh323c_a_AR = $(AR) cru
+libooh323c_a_LIBADD =
+am_libooh323c_a_OBJECTS = ooUtils.$(OBJEXT) ooGkClient.$(OBJEXT) \
         context.$(OBJEXT) ooDateTime.$(OBJEXT) decode.$(OBJEXT) \
         dlist.$(OBJEXT) encode.$(OBJEXT) errmgmt.$(OBJEXT) \
         memheap.$(OBJEXT) ootrace.$(OBJEXT) oochannels.$(OBJEXT) \
@@ -121,7 +121,7 @@ am_liboostk_a_OBJECTS = ooUtils.$(OBJEXT) ooGkClient.$(OBJEXT) \
         MULTIMEDIA-SYSTEM-CONTROL.$(OBJEXT) \
         MULTIMEDIA-SYSTEM-CONTROLDec.$(OBJEXT) \
         MULTIMEDIA-SYSTEM-CONTROLEnc.$(OBJEXT)
-liboostk_a_OBJECTS = $(am_liboostk_a_OBJECTS)
+libooh323c_a_OBJECTS = $(am_libooh323c_a_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -159,11 +159,11 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
         $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(liboostk_a_SOURCES)
+DIST_SOURCES = $(libooh323c_a_SOURCES)
 HEADERS = $(include_HEADERS)
 
 DIST_COMMON = $(include_HEADERS) Makefile.am Makefile.in
-SOURCES = $(liboostk_a_SOURCES)
+SOURCES = $(libooh323c_a_SOURCES)
 
 all: all-am
 
@@ -216,10 +216,10 @@ MULTIMEDIA-SYSTEM-CONTROLDec.$(OBJEXT): \
         h323/MULTIMEDIA-SYSTEM-CONTROLDec.c
 MULTIMEDIA-SYSTEM-CONTROLEnc.$(OBJEXT): \
         h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c
-liboostk.a: $(liboostk_a_OBJECTS) $(liboostk_a_DEPENDENCIES)
-        -rm -f liboostk.a
-        $(liboostk_a_AR) liboostk.a $(liboostk_a_OBJECTS) $(liboostk_a_LIBADD)
-        $(RANLIB) liboostk.a
+libooh323c.a: $(libooh323c_a_OBJECTS) $(libooh323c_a_DEPENDENCIES)
+        -rm -f libooh323c.a
+        $(libooh323c_a_AR) libooh323c.a $(libooh323c_a_OBJECTS) $(libooh323c_a_LIBADD)
+        $(RANLIB) libooh323c.a
 
 mostlyclean-compile:
         -rm -f *.$(OBJEXT) core *.core
