@@ -133,16 +133,32 @@ typedef struct RasCallAdmissionInfo
 
 struct OOAliases;
 
-/** GkClient callbacks:
- *  The first parameter is the message received. The second parameter provides
- *  updated list of aliases after the message was processed by the stack.
+/**
+ * NOTE- This functionality is not yet fully completed.
+ * This is a callback function which is triggered when registration confirm
+ * message is received from the gatekeeper. The first parameter is the message
+ * received. The second parameter provides updated list of aliases after the
+ * message was processed by the stack.
  */
 typedef int (*cb_OnReceivedRegistrationConfirm)
      (H225RegistrationConfirm *rcf, struct OOAliases *aliases);
 
+/**
+ * NOTE- This functionality is not yet fully completed.
+ * This is a callback function which is triggered when unregistration confirm
+ * message is received. The first parameter is the message received. The second
+ * parameter provides updated list of aliases after the message was processed
+ * by the stack.
+ */
 typedef int (*cb_OnReceivedUnregistrationConfirm)
      (H225UnregistrationConfirm *ucf, struct OOAliases *aliases);
 
+/**
+ * NOTE- This functionality is not yet fully completed.
+ * This is a callback function which is triggered when unregistration request
+ * message is received. The first parameter is the message received. The second
+ * parameter provides the list of aliases requested to be unregistered.
+ */
 typedef int (*cb_OnReceivedUnregistrationRequest)
      (H225UnregistrationRequest *urq, struct OOAliases *aliases);
 
@@ -152,7 +168,11 @@ typedef struct OOGKCLIENTCALLBACKS{
    cb_OnReceivedUnregistrationRequest onReceivedUnregistrationRequest;
 }OOGKCLIENTCALLBACKS;
 
-
+/**
+ * Structure to store all the configuration information for the gatekeeper
+ * client. Gatekeeper client is responsible for all the communication with
+ * a gatekeeper.
+ */
 typedef struct ooGkClient{
    ASN1BOOL discoveryComplete;
    OOCTXT ctxt;
@@ -187,7 +207,9 @@ struct OOAliases;
 struct OOH323CallData;
 
 /**
- * This function is used to initialize the Gatekeeper client.
+ * This function is used to initialize the Gatekeeper client.If an application
+ * wants to use gatekeeper services, it should call this function immediately
+ * after initializing the H323 EndPoint.
  * @param eGkMode          Gatekeeper mode.
  * @param szGkAddr         Dotted gk ip address, if gk has to be specified.
  * @param iGkPort          Gk port.
@@ -200,7 +222,7 @@ EXTERN int ooGkClientInit
 
 /**
  * This function is used to print the gatekeeper client configuration
- * information.
+ * information to log.
  * @param pGkClient        Handle to gatekeeper client.
  */
 EXTERN void ooGkClientPrintConfig(ooGkClient *pGkClient);
