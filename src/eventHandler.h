@@ -35,11 +35,11 @@ extern "C" {
 
 
 #ifndef EXTERN
-#ifdef _WIN32
+#if define (MAKE_DLL)
 #define EXTERN __declspec(dllexport)
 #else
 #define EXTERN
-#endif /* _WIN32 */
+#endif /* MAKE_DLL */
 #endif /* EXTERN */
 
 

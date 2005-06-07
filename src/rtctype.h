@@ -68,11 +68,11 @@ extern "C" {
 #endif
 
 #ifndef EXTERN
-#ifdef _WIN32
+#ifdef MAKE_DLL
 #define EXTERN __declspec(dllexport)
 #else
 #define EXTERN
-#endif /* _WIN32 */
+#endif /* MAKE_DLL */
 #endif /* EXTERN */
 /* ctype module table */
 

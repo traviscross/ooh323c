@@ -47,13 +47,13 @@ extern "C" {
 #endif
 
 #ifndef EXTERN
-#ifdef ASN1DLL
+#if defined (MAKE_DLL)
 #define EXTERN __declspec(dllexport)
 #elif defined (USEASN1DLL)
 #define EXTERN __declspec(dllimport)
 #else
 #define EXTERN
-#endif /* ASN1DLL */
+#endif /* MAKE_DLL */
 #endif /* EXTERN */
 
 /**

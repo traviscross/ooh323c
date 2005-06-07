@@ -535,13 +535,13 @@ extern "C" {
 #endif
 
 #ifndef EXTERN
-#ifdef ASN1DLL
+#ifdef MAKE_DLL
 #define EXTERN __declspec(dllexport)
 #elif defined (USEASN1DLL)
 #define EXTERN __declspec(dllimport)
 #else
 #define EXTERN
-#endif /* ASN1DLL */
+#endif /* MAKE_DLL */
 #endif /* EXTERN */
 
 #ifndef _NO_MALLOC

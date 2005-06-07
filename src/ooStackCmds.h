@@ -29,11 +29,11 @@ extern "C" {
 #endif
 
 #ifndef EXTERN
-#ifdef _WIN32
+#if defined (MAKE_DLL)
 #define EXTERN __declspec(dllexport)
 #else
 #define EXTERN
-#endif /* _WIN32 */
+#endif /* MAKE_DLL */
 #endif /* EXTERN */
 /**
  * @defgroup stackcmds Stack Control Commands

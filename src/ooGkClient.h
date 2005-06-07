@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 #ifndef EXTERN
-#ifdef _WIN32
+#ifdef MAKE_DLL
 #define EXTERN __declspec(dllexport)
 #else
 #define EXTERN
