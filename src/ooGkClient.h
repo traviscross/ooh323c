@@ -523,7 +523,16 @@ EXTERN int ooGkClientUpdateRegisteredAliases
    (ooGkClient *pGkClient, H225_SeqOfH225AliasAddress *pAddresses,
     OOBOOL registered);
 
-
+/**
+ * This function is used internally to set Gatekeeper Clients callbacks.
+ * Note: This functionality is not yet fully supported
+ * @param pGkClient  Handle to the GK client.
+ * @param callbacks  Callback structure contatining various gatekeeper client
+ *                   callbacks.
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooGkClientSetCallbacks
+   (ooGkClient *pGkClient, OOGKCLIENTCALLBACKS callbacks);
 /**
  * @}
  */
