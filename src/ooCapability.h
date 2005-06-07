@@ -396,6 +396,7 @@ EXTERN int ooCapabilityUpdateJointCapabilities
  * @param call           Handle to the call
  * @param videoCap       Remote video capability which will be tested for
  *                       compatibility.
+ * @param dir            Direction of the capability
  *
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
@@ -411,6 +412,7 @@ EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
  * @param call           Handle to the call
  * @param pH263Cap       Remote H263 video capability which will be tested for
  *                       compatibility.
+ * @param dir            Direction of the H263 capability
  *
  * @return               returns OO_OK, if updated else OO_FAILED; 
  */
@@ -557,6 +559,7 @@ ooH323EpCapability* ooIsVideoDataTypeSupported
  * @param call       Handle to the call.
  * @param pH263Cap   Handle to the H263 video capability.
  * @param dir        Direction in which support is desired.
+ * @param picFormat  Picture type(cif, qcif etc.)
  *
  * @return          Handle to the copy of capability which supports H263
  *                  capability, Null if none found

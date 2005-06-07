@@ -22,7 +22,8 @@
  * H.245 logical channel operations, and Registration, Admission, and Status
  * (RAS) messaging for Gatekeeper communications.
  *
- * The categories of user functions provided are as follows:<UL>
+ * The categories of user functions provided are as follows:
+ * <UL>
  * <LI>Stack command functions.  These are high level functions used to
  * initiate common H.323 telephony operations (for example, to make a
  * call).</LI>

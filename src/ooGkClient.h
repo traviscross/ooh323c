@@ -503,16 +503,6 @@ EXTERN int ooGkClientUpdateRegisteredAliases
 
 
 /**
- * This function is used to set callbacks for a gatekeeper client. It is never
- * directly called by applications. Applications use
- * ooH323EpSetGkClientCallbacks(..), which in turn calls this function.
- * @param callbacks            Structure holding callback values.
- *
- * @return                     OO_OK, on success. OO_FAILED, otherwise.
- */
-int ooGkClientSetCallbacks
-   (ooGkClient *pGkClient, OOGKCLIENTCALLBACKS callbacks);
-/**
  * @}
  */
 
