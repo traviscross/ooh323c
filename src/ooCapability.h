@@ -22,6 +22,7 @@
 #include "ootypes.h"
 #include "ooasn1.h"
 
+
 #define OO_GSMFRAMESIZE 33 /* standard frame size for gsm is 33 bytes */
 
 #define OORX      (1<<0)
