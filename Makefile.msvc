@@ -38,11 +38,11 @@ OOH323CD_DLL=ooh323cd.dll
 SIMPLE=simple.exe
 SIMPLED=simpled.exe
 
-PLAYER=player.exe
-PLAYERD=playerd.exe
+PLAYER=ooPlayer.exe
+PLAYERD=ooPlayerd.exe
 
-RECEIVER=receiver.exe
-RECEIVERD=receiverd.exe
+RECEIVER=ooReceiver.exe
+RECEIVERD=ooReceiverd.exe
 
 H323PEER=h323peer.exe
 H323PEERD=h323peerd.exe
