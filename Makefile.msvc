@@ -86,7 +86,7 @@ ARFLAGS=/nologo
 
 all: release 
 
-release:  media ooh323c
+release:  media ooh323c ooh323ca simple player receiver h323peer
 
 ooh323c: $(LIBDIR)\$(OOH323C_DLL)
 
@@ -110,6 +110,7 @@ $(LIBDIR)\$(OOH323C_A): $(LIBDIR) $(OOH323COBJS_A)
 	$(AR) $(ARFLAGS) /OUT:$(LIBDIR)\$(OOH323C_A) $(OOH323COBJS_A)
 
 $(OOH323COBJS_A): $(OOH323CA_OBJDIR)
+
 ### Build simple application ###
 simple: $(OOSIMPLEOBJS) ooh323ca
 	@echo - Linking simple application
