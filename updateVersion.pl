@@ -28,7 +28,6 @@ updateVersion("${ooh323cdir}/README", $version);
 updateVersion("${ooh323cdir}/ChangeLog", $version);
 updateVersion("${ooh323cdir}/src/ootypes.h", $version);
 
-print "Version number updated\n"
 
 sub updateVersion{
    print @_, "\n";
