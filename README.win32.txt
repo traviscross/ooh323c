@@ -69,9 +69,9 @@ Getting Started
 ----------------
 Sample Programs
 
-To run the sample programs, make sure the path to the media plug-in library DLL
-(oomedia.dll) is in your PATH.  The DLL is located in the
-ooh323c-xx.aa\lib\release and ooh323c-xx.aa\lib\debug directories.
+To run the sample programs, make sure the path to the media plug-in library
+ (oomedia.dll) is in your PATH.  The DLL is located in the ooh323c-xx.aa\lib
+directory.
 
 The sample programs are locates in the 'tests' subdirectory.  The following
 programs are available:

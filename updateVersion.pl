@@ -38,6 +38,9 @@ sub updateVersion{
    open (OUTFILE, ">temp.txt") || die ("could not open temp.txt");
    while(<INFILE>) {
       s/xx.aa/$version/;
+      s/xx.aa/$version/;
+      s/xx.aa/$version/;
+      s/xx.aa/$version/;
       print OUTFILE $_;
    }
    close (INFILE);
