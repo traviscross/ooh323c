@@ -159,7 +159,7 @@ if ($ARGV[0] eq "unix") {
 
 # windows binary build
 if ($ARGV[0] eq "win") {
-   mkdir (ooh323c-${version}/libs", 0777);
+   mkdir ("ooh323c-${version}/libs", 0777);
    print `cp -f ./libs/ooh323c_a.lib ./ooh323c-${version}/libs/ooh323c_a.lib`;
    print `cp -f ./libs/ooh323c.dll ./ooh323c-${version}/libs/ooh323c.dll`;
    print `cp -f ./libs/ooh323c.lib ./ooh323c-${version}/libs/ooh323c.lib`;
