@@ -146,7 +146,7 @@ if ($ARGV[0] eq "src") {
 
 #unix binary build
 if ($ARGV[0] eq "unix") {
-   mkdir (ooh323c-${version}/libs", 0777);
+   mkdir ("ooh323c-${version}/libs", 0777);
    print `cp -f ./lib/ooh323c.a ./ooh323c-${version}/libs/ooh323c.a`;
    print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/libs/.`;  
    print `cp -f ./lib/liboomedia.so ./ooh323c-${version}/libs/.`;
