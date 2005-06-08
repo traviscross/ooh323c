@@ -146,10 +146,10 @@ if ($ARGV[0] eq "src") {
 
 #unix binary build
 if ($ARGV[0] eq "unix") {
-   mkdir ("ooh323c-${version}/libs", 0777);
-   print `cp -f ./lib/ooh323c.a ./ooh323c-${version}/libs/ooh323c.a`;
-   print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/libs/.`;  
-   print `cp -f ./lib/liboomedia.so ./ooh323c-${version}/libs/.`;
+   mkdir ("ooh323c-${version}/lib", 0777);
+   print `cp -f ./lib/ooh323c.a ./ooh323c-${version}/lib/ooh323c.a`;
+   print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/.`;  
+   print `cp -f ./lib/liboomedia.so ./ooh323c-${version}/lib/.`;
    print `cp -f ./tests/simple/simple ./ooh323c-${version}/tests/simple/.`;
    print `cp -f ./tests/player/ooPlayer ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.raw ./ooh323c-${version}/tests/player/space.raw`;
@@ -159,10 +159,10 @@ if ($ARGV[0] eq "unix") {
 
 # windows binary build
 if ($ARGV[0] eq "win") {
-   mkdir ("ooh323c-${version}/libs", 0777);
-   print `cp -f ./libs/ooh323c_a.lib ./ooh323c-${version}/libs/ooh323c_a.lib`;
-   print `cp -f ./libs/ooh323c.dll ./ooh323c-${version}/libs/ooh323c.dll`;
-   print `cp -f ./libs/ooh323c.lib ./ooh323c-${version}/libs/ooh323c.lib`;
+   mkdir ("ooh323c-${version}/lib", 0777);
+   print `cp -f ./lib/ooh323c_a.lib ./ooh323c-${version}/lib/ooh323c_a.lib`;
+   print `cp -f ./lib/ooh323c.dll ./ooh323c-${version}/lib/ooh323c.dll`;
+   print `cp -f ./lib/ooh323c.lib ./ooh323c-${version}/lib/ooh323c.lib`;
    print `cp -f ./tests/simple/simple.exe ./ooh323c-${version}/tests/simple/.`;
    print `cp -f ./tests/player/ooPlayer.exe ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.wav ./ooh323c-${version}/tests/player`;
