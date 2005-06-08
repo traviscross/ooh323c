@@ -105,7 +105,7 @@ if ($ARGV[0] eq "src") {
    print `cp -f ./src/oostk.dsp ./ooh323c-${version}/src/oostk.dsp`;
    print `cp -f ./src/*.h ./ooh323c-${version}/src`;
    print `cp -f ./src/*.c ./ooh323c-${version}/src`;
-   print `cp -f ./src/h323$/*.h ./ooh323c-${version}/src/h323`;
+   print `cp -f ./src/h323/*.h ./ooh323c-${version}/src/h323`;
    print `cp -f ./src/h323/*.c ./ooh323c-${version}/src/h323`;
 }
 
@@ -125,30 +125,34 @@ if ($ARGV[0] eq "src") {
    print `cp -f ./tests/Makefile.in ./ooh323c-${version}/tests/Makefile.in`;
 
    #simple
-   print `cp -f ./tests/simple/*.c ./ooh323c-${version}/tests/simple`;
-   print `cp -f ./tests/simple/*.h ./ooh323c-${version}/tests/simple`;
+   print "Copying simple sources\n";
+   print `cp -f ./tests/simple/*.c ./ooh323c-${version}/tests/simple/`;
+   print `cp -f ./tests/simple/*.h ./ooh323c-${version}/tests/simple/`;
    print `cp -f ./tests/simple/Makefile.am ./ooh323c-${version}/tests/simple/Makefile.am`;
    print `cp -f ./tests/simple/Makefile.in ./ooh323c-${version}/tests/simple/Makefile.in`;
    print `cp -f ./tests/simple/simple.dsp ./ooh323c-${version}/tests/simple/simple.dsp`;
 
    #player
+    print "Copying player sources\n";
    print `cp -f ./tests/player/*.c ./ooh323c-${version}/tests/player`;
    print `cp -f ./tests/player/*.h ./ooh323c-${version}/tests/player`;
    print `cp -f ./tests/player/Makefile.am ./ooh323c-${version}/tests/player/Makefile.am`;
    print `cp -f ./tests/player/Makefile.in ./ooh323c-${version}/tests/player/Makefile.in`;
    print `cp -f ./tests/player/ooPlayer.dsp ./ooh323c-${version}/tests/player/ooPlayer.dsp`;
-   print `cp -f ./tests/player/space.wav ./ooh323c-${version}/tests/player`;
-   print `cp -f ./tests/player/states.wav ./ooh323c-${version}/tests/player`;
+   print `cp -f ./tests/player/space.wav ./ooh323c-${version}/tests/player/.`;
+   print `cp -f ./tests/player/states.wav ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.raw ./ooh323c-${version}/tests/player/space.raw`;
 
    #receiver
-   print `cp -f ./tests/receiver/*.c ./ooh323c-${version}/tests/receiver`;
-   print `cp -f ./tests/receiver/*.h ./ooh323c-${version}/tests/receiver`;
+   print "Copying receiver sources\n";
+   print `cp -f ./tests/receiver/*.c ./ooh323c-${version}/tests/receiver/`;
+   print `cp -f ./tests/receiver/*.h ./ooh323c-${version}/tests/receiver/`;
    print `cp -f ./tests/receiver/Makefile.am ./ooh323c-${version}/tests/receiver/Makefile.am`;
    print `cp -f ./tests/receiver/Makefile.in ./ooh323c-${version}/tests/receiver/Makefile.in`;
    print `cp -f ./tests/receiver/ooReceiver.dsp ./ooh323c-${version}/tests/receiver/ooReceiver.dsp`;
 
    #h323peer
+   print "Copying h323peer sources\n";
    print `cp -f ./tests/chansetup/*.c ./ooh323c-${version}/tests/chansetup`;
    print `cp -f ./tests/chansetup/Makefile.am ./ooh323c-${version}/tests/chansetup/Makefile.am`;
    print `cp -f ./tests/chansetup/Makefile.in ./ooh323c-${version}/tests/chansetup/Makefile.in`;
