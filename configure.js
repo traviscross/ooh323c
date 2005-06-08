@@ -55,7 +55,7 @@ var examplesInstall = "yes";
 var headersInstall = "no";
 var version = "0.7";
 var error = 0;
-var objDir=".\OBJECTS";
+var objDir=".\\OBJECTS";
 
 for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++)
 {

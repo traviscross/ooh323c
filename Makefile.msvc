@@ -3,10 +3,11 @@ OOH323CCONF = .\config.msvc
 OOH323C_MAJOR_VERSION=0 #Should be part of configure script
 OOH323C_MINOR_VERSION=7
 
-LIBDIR=.\libs
+LIBDIR=.\lib
 
 
 #intermediate files
+
 OOH323C_OBJDIR=$(INTDIR)\release\ooh323c
 OOH323CA_OBJDIR=$(INTDIR)\release\ooh323c_a
 OOH323CD_OBJDIR=$(INTDIR)\debug\ooh323c
@@ -102,14 +103,15 @@ $(OOH323COBJS): $(OOH323C_OBJDIR)
 
 ### Build static library ###
 ooh323ca: $(LIBDIR)\$(OOH323C_A)
-	@echo -  Compiling static stack library (release)
-	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(SRCDIR)/*.c 
-	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(H323DIR)/*.c
+	
 
 $(LIBDIR)\$(OOH323C_A): $(LIBDIR) $(OOH323COBJS_A) 
 	$(AR) $(ARFLAGS) /OUT:$(LIBDIR)\$(OOH323C_A) $(OOH323COBJS_A)
 
 $(OOH323COBJS_A): $(OOH323CA_OBJDIR)
+	@echo -  Compiling static stack library (release)
+	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(SRCDIR)/*.c 
+	$(CC) $(CFLAGS) /Fo$(OOH323CA_OBJDIR)\ $(H323DIR)/*.c
 
 ### Build simple application ###
 simple: $(OOSIMPLEOBJS) ooh323ca
