@@ -1,0 +1,109 @@
+Release xx.aa
+1. Added support for G711 alaw, G729, G729a, G723.1, GSM, H.263 codecs
+2. Better callback support. Two levels of callbacks, viz., at call level
+   (examples onIncomingCall, onCallEstablished, onCallCleared) and at message
+   level(examples onReceivedSetup, onBuiltSetup). The call level callbacks
+   provide applications high level call events where as message level callbacks
+   allow applications to do finer things like additional processing of incoming
+   messages or modify outgoing messages before they are sent.
+3. Improved sample telephony application.
+4. Support for Call Forward using Facility UUIE.
+5. Improved documentation.
+6. Code improvement and bug fixes.
+        
+Release 0.6
+1. Added support for timers for various messages.
+2. Added support for various Reject/Release messages.
+3. RAS layer functionality changed to create a more modular gatekeeper client.
+4. Code refactoring for better design and performance.
+5. Improved capability creation and management code.
+6. Added alias addresses to connect/setup/alerting messages.
+        
+Release 0.5.2
+1. Added dtmf rfc2833 support
+2. Reduced dynamic encode buffer extension size from 16*1024 to 2*1024, as
+   large size causes problems in some embedded systems like uclinux.
+3. Added support for logging outgoing messages.
+4. Fixed indentation bug in message logging.
+5. Added better way to convert internet address to network address.
+6. Updated simple.c for ip address problem
+
+
+Release 0.5.1
+1. Callback functions updated.
+2. Consolidated Text/Error descriptions in oo.c
+3. Improved the capability handling code. Now applications can simply use
+   predefined caps such as OO_CAP_ULAW_64k_240 etc, instead of having to
+   populate the whole capability structure.
+4. Removed the code to load the media library from the main stack library,
+   and now it is part of the applications such as "simple", "player" etc. This
+   change was made in effort to keep stack totally independent of media.
+5. Fixed bugs - Specifically memory bug which causes uncertain behaviour on
+   certain embedded systems.
+
+
+Release 0.5:
+1. Added RAS channel support. This release supports
+   GatekeeperRequest, RegistrationRequest, AdmissionRequest,
+   DisengageRequest and corresponding response messages.
+2. Added aliases support and parsing capability. The endpoint
+   will now be able to register an e-mail id, h323-id, url,
+   and dialedDigits aliases and will be able to call other
+   endpoints using these types of aliases with the help of
+   gatekeeper.
+3. Added capability to configure local call signalling address.
+   This was done to avoid problems with logic to retrieve local
+   IP address which can fail on some systems, which do not have
+   host name setup. This logic is still used as backup, in case
+   user does not configure IP.
+4. Added auto answer feature.This was done to allow user make a
+   decision to answer/reject call.
+5. Fixed bugs reported in 0.4 release.
+
+Release 0.4:
+1. Added support for FastStart and Tunneling.
+2. Added support for external configuration of RTP ip:port. This
+   allows application to use any ip:port combination for media channel.
+   Thus, now it is possible to terminate signalling at one ip address and
+   media at some different ip address. Default uses localip and an RTP port
+   from the range specified by the application.
+3. Display ie added to outgoing SETUP message.
+4. Error handling and logging improved.
+
+
+Release 0.3.1:
+1. Fixes bug reported on source forge as request Id: 1079205
+   Also fixes other many unknown bug related with ooh245.c & ooq931.c function
+   calls.
+2. Fixes bug reported on source forge as request Id:1078936
+   Host name can be longer than 20 length, Increased the capacity upto 100
+   character
+3. Fixed problem with pdf documents
+
+
+Release 0.3: New Features
+1. New Design
+   a. Allows handling multiple simultaneous calls
+   b. Unique call identifiers for calls
+   c. Applications can add capabilities and register control functions
+      such as start/stop for managing those media channels. The stack
+      just calls start/stop callback functions to start or stop media
+      channel.
+   d. Applications are much simpler to write as they just have to initialize
+      end point with all the capabilities and stack handles all the message
+      exchanges, unlike the earlier design where application had to build
+      SETUP, CONNECT etc. messages
+
+2. Debugging capabilities
+   a. Prints all received messages to log
+   b. Prints call-ids to identify which log message is associated with which
+      call.
+
+3. Detects remote endpoints abruptly closing TCP connections.
+
+4.Verifies that the Capability specified in the OpenLogicalChannel by remote
+  endpoint is actually supported by local endpoint.
+
+
+  
+        
