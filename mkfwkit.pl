@@ -178,9 +178,8 @@ if ($ARGV[0] eq "src") {
 if ($ARGV[0] eq "unix") {
    print "Copying linux binaries\n";
    mkdir ("ooh323c-${version}/lib", 0777);
-   print `cp -f ./lib/ooh323c.a ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/liboomedia.so ./ooh323c-${version}/lib/.`;
+   print `cp -f ./lib/libooh323c.a ./ooh323c-${version}/lib/.`;
+   print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/liboomedia.so`;
    print `cp -f ./tests/simple/simple ./ooh323c-${version}/tests/simple/.`;
    print `cp -f ./tests/player/ooPlayer ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.raw ./ooh323c-${version}/tests/player/space.raw`;
