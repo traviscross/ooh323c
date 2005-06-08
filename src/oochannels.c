@@ -746,7 +746,8 @@ int ooH2250Receive(OOH323CallData *call)
       ooCloseH225Connection(call);
       if(call->callState < OO_CALL_CLEARED)
       {
-         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         if(call->callState < OO_CALL_CLEAR)
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
          call->callState = OO_CALL_CLEARED;
         
       }
