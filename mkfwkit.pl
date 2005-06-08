@@ -27,12 +27,15 @@ $version = $ARGV[1];
 print `rm -f ooh323c-${version}.tar.gz`;
 print `rm -rf ooh323c-${version}`;
 mkdir ("ooh323c-${version}", 0777);
+print "Copying top level ooh323c dir";
+
 print `cp -f ./AUTHORS ./ooh323c-${version}/AUTHORS`;
 print `cp -f ./COPYING ./ooh323c-${version}/COPYING`;
 print `cp -f ./ChangeLog ./ooh323c-${version}/ChangeLog`;
 
 #ooh323c directory
 if ($ARGV[0] eq "src") {
+
    print `cp -f ./INSTALL ./ooh323c-${version}/INSTALL`;
    print `cp -f ./Makefile.am ./ooh323c-${version}/Makefile.am`;
    print `cp -f ./Makefile.in ./ooh323c-${version}/Makefile.in`;
@@ -54,6 +57,7 @@ print `cp -f ./README ./ooh323c-${version}/README`;
 
 
 #ooh323c docs
+print "Copying ooh323c docs";
 mkdir ("ooh323c-${version}/doc", 0777);
 mkdir ("ooh323c-${version}/doc/html", 0777);
 print `cp -f -r ./doc/H323Introduction.PDF ./ooh323c-${version}/doc/.`;
@@ -66,6 +70,7 @@ print `rm -rf ./ooh323c-${version}/doc/html/CVS`;
 
 
 #oomedia docs
+print "Copying media docs";
 mkdir ("ooh323c-${version}/media", 0777);
 mkdir ("ooh323c-${version}/media/doc", 0777);
 mkdir ("ooh323c-${version}/media/doc/html", 0777);
@@ -74,11 +79,13 @@ print `cp -f -r ./media/doc/html/* ./ooh323c-${version}/media/doc/html/.`;
 print `rm -rf ./ooh323c-${version}/media/doc/html/CVS`;
 
 #specs
+print "Copying specs";
 mkdir ("ooh323c-${version}/specs", 0777);
 print `cp -f ./specs/*.asn ./ooh323c-${version}/specs`;
 
 #ooh323c library source files
 if ($ARGV[0] eq "src") {  
+   print "Copying ooh323c sources";
    mkdir ("ooh323c-${version}/src", 0777);
    mkdir ("ooh323c-${version}/src/h323", 0777);
    print `cp -f ./src/Makefile.am ./ooh323c-${version}/src/Makefile.am`;
@@ -100,7 +107,7 @@ mkdir ("ooh323c-${version}/tests/chansetup", 0777);
 
 #copy example sources
 if ($ARGV[0] eq "src") {
-
+    print "Copying examples sources";
    #test dir
    print `cp -f ./tests/Makefile.am ./ooh323c-${version}/tests/Makefile.am`;
    print `cp -f ./tests/Makefile.in ./ooh323c-${version}/tests/Makefile.in`;
@@ -146,6 +153,7 @@ if ($ARGV[0] eq "src") {
 
 #unix binary build
 if ($ARGV[0] eq "unix") {
+   print "Copying linux binaries";
    mkdir ("ooh323c-${version}/lib", 0777);
    print `cp -f ./lib/ooh323c.a ./ooh323c-${version}/lib/ooh323c.a`;
    print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/.`;  
@@ -159,6 +167,7 @@ if ($ARGV[0] eq "unix") {
 
 # windows binary build
 if ($ARGV[0] eq "win") {
+   print "Copying windows binaries";
    mkdir ("ooh323c-${version}/lib", 0777);
    print `cp -f ./lib/ooh323c_a.lib ./ooh323c-${version}/lib/ooh323c_a.lib`;
    print `cp -f ./lib/ooh323c.dll ./ooh323c-${version}/lib/ooh323c.dll`;
