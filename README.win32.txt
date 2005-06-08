@@ -111,8 +111,9 @@ The receiver and player program must be run in parallel as follows:
         cd ../player
         ooPlayer.exe --audio-file states.wav [--use-ip <ip>]
 
-   where, --audio-file is used to specify the audio file to be played.[--use-ip      <ip>] is used to specify local ip address. By deafault, player application
-   tries to determine ip address on it's own.
+   where, --audio-file is used to specify the audio file to be played.
+   [--use-ip <ip>] is used to specify local ip address. By deafault, player
+   application tries to determine ip address on it's own.
 
    A log file will be created in the tests/player directory
    (ooPlayer.log). Also, a log file for the media plug-in will be
@@ -172,7 +173,7 @@ To run the stack test application chansetup
 
 Reporting Problems:
 
-Report problems you encounter by sending E-mail to support@obj-sys.com.
+Report problems you encounter by sending E-mail to ooh323c-devel@lists.sourceforge.net.
 
 If you have any further questions or comments on what you would like to
 see in the product or what is difficult to use or understand, please
