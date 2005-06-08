@@ -28,14 +28,21 @@ print `rm -f ooh323c-${version}.tar.gz`;
 print `rm -rf ooh323c-${version}`;
 mkdir ("ooh323c-${version}", 0777);
 print "Copying top level ooh323c dir\n";
-
-print `cp -f ./AUTHORS ./ooh323c-${version}/AUTHORS`;
-print `cp -f ./COPYING ./ooh323c-${version}/COPYING`;
-print `cp -f ./ChangeLog ./ooh323c-${version}/ChangeLog`;
+if ($ARGV[0] eq "unix") {
+   print `cp -f ./AUTHORS ./ooh323c-${version}/AUTHORS`;
+   print `cp -f ./COPYING ./ooh323c-${version}/COPYING`;
+   print `cp -f ./ChangeLog ./ooh323c-${version}/ChangeLog`;
+}
+if ($ARGV[0] eq "win") {
+   print `cp -f ./COPYING ./ooh323c-${version}/COPYING.txt`;
+   print `cp -f ./ChangeLog ./ooh323c-${version}/ChangeLog.txt`;
+}
 
 #ooh323c directory
 if ($ARGV[0] eq "src") {
-
+   print `cp -f ./AUTHORS ./ooh323c-${version}/AUTHORS`;
+   print `cp -f ./COPYING ./ooh323c-${version}/COPYING`;
+   print `cp -f ./ChangeLog ./ooh323c-${version}/ChangeLog`;
    print `cp -f ./INSTALL ./ooh323c-${version}/INSTALL`;
    print `cp -f ./Makefile.am ./ooh323c-${version}/Makefile.am`;
    print `cp -f ./Makefile.in ./ooh323c-${version}/Makefile.in`;
