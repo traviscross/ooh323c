@@ -311,7 +311,6 @@ int main (int argc, char** argv)
 
 
    ooH323EpSetLocalAddress(localIPAddr, localPort);
-   ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
    h323Callbacks.onNewCallCreated = onNewCallCreated;
