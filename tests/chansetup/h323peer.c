@@ -18,7 +18,7 @@
 #include "ooCapability.h"
 #include "ooStackCmds.h"
 #include "ooTimer.h"
-
+#include "ooUtils.h"
 #ifndef _WIN32
 #include <pthread.h>
 #endif
@@ -56,29 +56,48 @@ static char USAGE[]={
    "\t--help                    -  To display usage information\n"
    "\t--use-ip <ip>             -  local ip to use\n"
    "\t--use-port <port>         -  local port to use\n"
+   "\t--gk-discover             -  Discover gatekeeper\n"
+   "\t--gk <ip:[port]>          -  Use specific gatekeeper\n"
+   "\t--user <username>         -  Local user name. Used as display name\n"
+   "\t--user-number <number>    -  Local number\n"
+   "\t--h323id <h323id>         -  H323ID to be used for this endpoint\n"
+   "\t--no-faststart            -  Disable fast start(default - enabled)\n"
+   "\t--no-tunneling            -  Disable tunneling (default - enabled)\n"
+   "\t-t                        -  Trace. Use multiple times to increase \n"
+   "\t                             trace level\n"
+   "\t--tcp-min <port>          -  TCP port range - start\n"
+   "\t--tcp-max <port>          -  TCP port range - end\n"
+   "\t--udp-min <port>          -  UDP port range - start\n"
+   "\t--udp-max <port>          -  UDP port range - end\n"
+   "\t--rtp-min <port>          -  RTP port range start\n"
+   "\t--rtp-max <port>          -  RTP port range end\n"
+   "\n"
    "Options specific to make call mode\n"
    "\t-n <NoOfCalls>            -  Number of outgoing calls\n"
    "\t-duration <call duration> -  Duration of each call in seconds\n"
-   "\t-interval <interval>      -  Interval between successive calls in seconds\n"
+   "\t-interval <interval>      -  Interval between successive calls \n"
+   "\t                             in seconds\n"
 };
-
+/* globals */
 static int gCalls = 0;
 static int gDuration = 5; /*sec*/
 static int gInterval = 0; /* 0 interval means let previous call finish */
 static char gDest[256];
 static int gCallCounter=0;
 static OOBOOL bListen = FALSE;
+
 int main (int argc, char** argv)
 {
-   char callToken[20], *token=NULL;
-   char localIPAddr[20];
-   int  localPort = 0;
    OOTimer *pTimer = NULL;
-   int ret=0, x;
-   OOBOOL bDestFound=FALSE;
-   char logfile[50];
-
+   OOBOOL bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
    OOH323CALLBACKS h323Callbacks;
+   int ret=0, x=0, localPort = 0, gkPort=0, tcpmin=0, tcpmax=0, udpmin=0;
+   int udpmax=0, rtpmin=0, rtpmax=0;
+   char localIPAddr[20], callToken[20], logfile[50], h323id[50], user[50];
+   char user_num[50], tmp[40];
+   char *pcPort =NULL, *gkIP=NULL, *token=NULL;
+   unsigned char trace_level = 0;
+   enum RasGatekeeperMode gkMode = RasNoGatekeeper;
 
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
@@ -86,10 +105,12 @@ int main (int argc, char** argv)
   
    localIPAddr[0] = '\0';
    gDest[0] = '\0';
-  
-   /* parse args */
+   h323id[0]='\0';
+   user[0]='\0';
+   user_num[0]='\0';
 
-   if(argc > 12 || argc ==1)
+   /* parse args */
+   if(argc > 32  || argc == 1)
    {
       printf("USAGE:\n%s", USAGE);
       return -1;
@@ -128,10 +149,86 @@ int main (int argc, char** argv)
          x++;
          gInterval = atoi(argv[x]);
       }
+      else if(!strcmp(argv[x], "--gk-discover")){
+         gkMode = RasDiscoverGatekeeper;
+      }
+      else if(!strcmp(argv[x], "--gk")){
+         x++;
+         strncpy(tmp, argv[x], sizeof(tmp)-1);
+         tmp[sizeof(tmp)-1]='\0';
+         pcPort = strchr(tmp, ':');
+         if(pcPort)
+         {
+            *pcPort = '\0';
+            pcPort++;
+            gkPort = atoi(pcPort);
+         }
+         gkIP = tmp;
+         gkMode = RasUseSpecificGatekeeper;
+      }
+      else if(!strcmp(argv[x], "--user")) {
+         x++;
+         strncpy(user, argv[x], sizeof(user)-1);
+         user[sizeof(user)-1]='\0';
+      }
+      else if(!strcmp(argv[x], "--user-number")){
+         x++;
+         strncpy(user_num, argv[x], sizeof(user_num)-1);
+         user_num[sizeof(user_num)-1]='\0';
+      }
+      else if(!strcmp(argv[x], "--h323id")){
+         x++;
+         strncpy(h323id, argv[x], sizeof(h323id)-1);
+         h323id[sizeof(h323id)-1]='\0';
+      }
+      else if(!strcmp(argv[x], "--no-faststart")){
+         bFastStart = FALSE;
+      }
+      else if(!strcmp(argv[x], "--no-tunneling")){
+         bTunneling = FALSE;
+      }
+      else if(!strcmp(argv[x],"--tcp-min")){
+         x++;
+         tcpmin = atoi(argv[x]);
+         if(tcpmin < 0 )
+            tcpmin = 0;
+      }
+      else if(!strcmp(argv[x],"--tcp-max")){
+         x++;
+         tcpmax = atoi(argv[x]);
+         if(tcpmax < 0 )
+            tcpmax = 0;
+      }
+      else if(!strcmp(argv[x],"--udp-min")){
+         x++;
+         udpmin = atoi(argv[x]);
+         if(udpmin < 0)
+            udpmin = 0;
+      }
+      else if(!strcmp(argv[x],"--udp-max")){
+         x++;
+         udpmax = atoi(argv[x]);
+         if(udpmax < 0)
+            udpmax = 0;
+      }
+      else if(!strcmp(argv[x],"--rtp-min")){
+         x++;
+         rtpmin = atoi(argv[x]);
+         if(rtpmin < 0)
+            rtpmin = 0;
+      }
+      else if(!strcmp(argv[x],"--rtp-max")){
+         x++;
+         rtpmax = atoi(argv[x]);
+         if(rtpmax < 0)
+            rtpmax = 0;
+      }
+      else if(!strcmp(argv[x], "-t")){
+         trace_level++;
+      }
       else if (!bDestFound && !bListen) {
          strncpy (gDest, argv[x], sizeof(gDest)-1);
          bDestFound = TRUE;
-         if (0 == gCalls) gCalls++;
       }
       else {
          printf("USAGE:\n%s",USAGE);
@@ -144,9 +241,11 @@ int main (int argc, char** argv)
       printf("USAGE:\n%s",USAGE);
       return -1;
    }
-   /* Determine local IP address if not specified by user */
+   if(bDestFound && !gCalls)
+      gCalls++;
 
-   if (0 == strlen(localIPAddr)) {
+   /* Determine local IP address if not specified by user */
+   if (ooUtilsIsStrEmpty(localIPAddr)) {                  
       ooGetLocalIPAddress (localIPAddr);
    }
 
@@ -168,25 +267,50 @@ int main (int argc, char** argv)
            "\tRemote Address: %s\n"
            "\tLog File      : %s\n",
            gCalls, gDuration, gInterval, localIPAddr, localPort,
-           gDest, logfile);
+           gDest[0] ? gDest : "(In listen mode)" , logfile);
+
 
    ret = ooH323EpInitialize(OO_CALLMODE_AUDIOCALL, logfile);
-
    if (ret != OO_OK) {
       printf ("Failed to initialize H.323 endpoint\n");
       return -1;
    }
 
-   if(bListen)
-   {
-     ooH323EpSetTCPPortRange(20050, 20250);
-     ooH323EpSetUDPPortRange(21050, 21250);
-     ooH323EpSetRTPPortRange(22050, 22250);
-   }
-   ooH323EpSetTraceLevel(OOTRCLVLDBGC);
+   if(!bFastStart)
+      ooH323EpDisableFastStart();
+
+   if(!bTunneling)
+      ooH323EpDisableH245Tunneling();
+
+
+   if(trace_level == 1)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGA);
+   else if(trace_level == 2)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGB);
+   else if(trace_level >= 3)
+      ooH323EpSetTraceLevel(OOTRCLVLDBGC);
+
+   if(!ooUtilsIsStrEmpty(user))
+      ooH323EpSetCallerID(user);
+        
+
+   if(!ooUtilsIsStrEmpty(h323id))
+      ooH323EpAddAliasH323ID(h323id);
+
+   if(!ooUtilsIsStrEmpty(user_num))
+      ooH323EpSetCallingPartyNumber(user_num);
+
+   if(tcpmax != 0 && tcpmin != 0 && tcpmin < tcpmax)
+      ooH323EpSetTCPPortRange(tcpmin, tcpmax);
+
+   if(udpmin != 0 && udpmax != 0 && udpmin < udpmax)
+      ooH323EpSetUDPPortRange(udpmin,udpmax);
+
+   if(rtpmin != 0 && rtpmax != 0 && rtpmin  < rtpmax)
+      ooH323EpSetRTPPortRange(rtpmin,rtpmax);
+
+
    ooH323EpSetLocalAddress(localIPAddr, localPort);
-   ooH323EpAddAliasH323ID ("objsys");
-   ooH323EpAddAliasDialedDigits ("5087556929");
    ooH323EpAddAliasURLID ("http://www.obj-sys.com");
 
    /* Register callbacks */
@@ -202,16 +326,28 @@ int main (int argc, char** argv)
 
 
    /* Add audio capability */
-
-   ooH323EpAddG711Capability
-      (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
+   ooH323EpAddG711Capability (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
-   /* Create H.323 Listener */
-   if(bListen){
-      ret = ooCreateH323Listener();
+   if(gkMode != RasNoGatekeeper)
+   {
+      if(gkMode == RasDiscoverGatekeeper)
+         ret = ooGkClientInit(RasDiscoverGatekeeper, NULL, 0);
+      else if(gkMode == RasUseSpecificGatekeeper)
+         ret = ooGkClientInit(RasUseSpecificGatekeeper, gkIP, gkPort);
+      if(ret != OO_OK)
+      {
+         printf("Failed to initialize gatekeeper client\n");
+         return -1;
+      }
+   }
 
-      if (ret != OO_OK) {
+   /* Create H.323 Listener */
+   if(bListen)
+   {
+      ret = ooCreateH323Listener();
+      if (ret != OO_OK)
+      {
          OOTRACEERR1 ("Failed to Create H.323 Listener");
          return -1;
       }
@@ -223,12 +359,14 @@ int main (int argc, char** argv)
       gCallCounter++;
       if(gInterval != 0)
       {
-         token = (char*)malloc(strlen(callToken)+1);
+         if( (token = (char * )malloc( strlen( callToken) + 1)) == NULL )             
+         {
+            printf("malloc failed\n");
+            return 1;
+         }                                                                      
          strcpy(token, callToken);
-         pTimer = ooTimerCreate
-            (&gH323ep.ctxt, NULL, callIntervalTimerExpired,
-             gInterval, token, FALSE);
-
+         pTimer = ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
+                                 token, FALSE);
       }
    }
 
@@ -267,9 +405,8 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    {
       token = (char*)malloc(strlen(call->callToken)+1);
       strcpy(token, call->callToken);
-      timer =  ooTimerCreate
-         (&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
-          token, FALSE);
+      timer =  ooTimerCreate (&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
+                               token, FALSE);
 
    }
    /* TODO: user would add application specific logic here to start     */
@@ -318,8 +455,11 @@ static int onAlerting (ooCallData* call)
 
 static int onIncomingCall (ooCallData* call)
 {
-   printf ("onIncomingCall - %s\n", call->callToken);
 
+   if(bListen)
+         printf("onIncomingCall from\"%s\"(%s) ---- %s\n",
+             (call->remoteDisplayName)?call->remoteDisplayName:"Unknown Name",
+           call->callingPartyNumber?call->callingPartyNumber:"Unknown Number",call->callToken);
    /* TODO: user would add application specific logic here to handle    */
    /* an incoming call request..                                        */
 
@@ -351,7 +491,7 @@ int onCallEstablished(ooCallData *call)
 static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
-   printf ("onCallCleared - %s\n", call->callToken);
+  printf ("onCallCleared -(call end reason  %s ) -- %s\n",ooGetReasonCodeText(call->callEndReason), call->callToken);
    if(gInterval == 0 && !bListen)
    {
       if(gCallCounter < gCalls)
@@ -385,10 +525,13 @@ static int callIntervalTimerExpired(void *pdata)
    if (gCallCounter < gCalls)
    {
       ooMakeCall (gDest, callToken, sizeof(callToken), NULL); /* Make call */
-      token = (char*)malloc(strlen(callToken)+1);
+        if( ( token = (char*)malloc(strlen(callToken)+1)) == NULL)
+        {
+                printf("\nmalloc failed\n");
+                return 1;
+        }
       strcpy(token, callToken);
-      pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired,
-                               gInterval, token, FALSE);
+        pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval, token, FALSE);
       gCallCounter++;
    }
 
