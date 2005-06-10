@@ -310,17 +310,18 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
 int ooSendTermCapMsg(OOH323CallData *call)
 {
    int ret;
-   H245RequestMessage * request;
-   OOCTXT *pctxt;
-   ooH323EpCapability *epCap;
-   H245TerminalCapabilitySet *termCap;
-   H245AudioCapability *audioCap;
+   H245RequestMessage *request=NULL;
+   OOCTXT *pctxt=NULL;
+   ooH323EpCapability *epCap=NULL;
+   H245TerminalCapabilitySet *termCap=NULL;
+   H245AudioCapability *audioCap=NULL;
    H245AudioTelephonyEventCapability *ateCap=NULL;
-   H245CapabilityTableEntry *entry;
-   H245AlternativeCapabilitySet *altSet;
+   H245CapabilityTableEntry *entry=NULL;
+   H245AlternativeCapabilitySet *altSet=NULL;
    DListNode * curNode=NULL;
-   H245CapabilityDescriptor *capDesc;
+   H245CapabilityDescriptor *capDesc=NULL;
    H245Message *ph245msg=NULL;
+   H245VideoCapability *videoCap=NULL;
 
    int i=0, j=0, k=0;
 
@@ -378,54 +379,122 @@ int ooSendTermCapMsg(OOH323CallData *call)
          continue;
       }
 
-      /* Create audio capability. If capability supports receive, we only add
-         it as receive capability in TCS. However, if it supports only
-         transmit, we add it as transmit capability in TCS.
-      */
-      if((epCap->dir & OORX))
+      if(epCap->capType == OO_CAP_TYPE_AUDIO)
       {
-         OOTRACEDBGC4("Sending receive capability %d in TCS.(%s, %s)\n",
-                       epCap->cap, call->callType, call->callToken);
-         audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OORX);
-         if(!audioCap)
+
+         /* Create audio capability. If capability supports receive, we only
+            add it as receive capability in TCS. However, if it supports only
+            transmit, we add it as transmit capability in TCS.
+         */
+         if((epCap->dir & OORX))
          {
-            OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
-                        call->callType, call->callToken);
+
+            OOTRACEDBGC4("Sending receive capability %s in TCS.(%s, %s)\n",
+                ooGetCapTypeText(epCap->cap), call->callType, call->callToken);
+
+            audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OORX);
+            if(!audioCap)
+            {
+               OOTRACEWARN4("WARN:Failed to create audio capability %s "
+                            "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
+                            call->callType, call->callToken);
+               continue;
+            }
+         }else if(epCap->dir & OOTX)
+         {
+            OOTRACEDBGC4("Sending transmit capability %s in TCS.(%s, %s)\n",
+                ooGetCapTypeText(epCap->cap), call->callType, call->callToken);
+            audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OOTX);
+            if(!audioCap)
+            {
+               OOTRACEWARN4("WARN:Failed to create audio capability %s "
+                            "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
+                            call->callType, call->callToken);
+               continue;
+            }    
+         }else{
+            OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
+                         "capabilities are not supported.(%s, %s)\n",
+                         call->callType, call->callToken);
             continue;
          }
-      }else if(epCap->dir & OOTX)
-      {
-         OOTRACEDBGC4("Sending transmit capability %d in TCS.(%s, %s)\n",
-                       epCap->cap, call->callType, call->callToken);
-         audioCap = ooCapabilityCreateAudioCapability(epCap, pctxt, OOTX);
-         if(!audioCap)
+         /* Add  Capabilities to Capability Table */
+         entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
+                         sizeof(H245CapabilityTableEntry));
+         if(!entry)
          {
-            OOTRACEWARN3("WARN:Failed to create audio capability (%s, %s)",
-                        call->callType, call->callToken);
-            continue;
-         }    
-      }else{
-         OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
-                      "capabilities are not supported.(%s, %s)\n",
-                      call->callType, call->callToken);
-          continue;
-      }
-      /* Add  Capabilities to Capability Table */
-      entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
-                      sizeof(H245CapabilityTableEntry));
-      memset(entry, 0, sizeof(H245CapabilityTableEntry));
-      entry->m.capabilityPresent = 1;
-      if((epCap->dir & OORX))
+            OOTRACEERR3("Error:Memory - ooSendTermCapMsg - entry(audio Cap)."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+         memset(entry, 0, sizeof(H245CapabilityTableEntry));
+         entry->m.capabilityPresent = 1;
+         if((epCap->dir & OORX))
+         {
+            entry->capability.t = T_H245Capability_receiveAudioCapability;
+            entry->capability.u.receiveAudioCapability = audioCap;
+         }else{
+            entry->capability.t = T_H245Capability_transmitAudioCapability;
+            entry->capability.u.transmitAudioCapability = audioCap;
+         }
+         entry->capabilityTableEntryNumber = i+1;
+         dListAppend(pctxt , &(termCap->capabilityTable), entry);
+         i++;
+      }else if(epCap->capType == OO_CAP_TYPE_VIDEO)
       {
-         entry->capability.t = T_H245Capability_receiveAudioCapability;
-         entry->capability.u.receiveAudioCapability = audioCap;
-      }else{
-         entry->capability.t = T_H245Capability_transmitAudioCapability;
-         entry->capability.u.transmitAudioCapability = audioCap;
+         if((epCap->dir & OORX))
+         {
+            OOTRACEDBGC4("Sending receive capability %s in TCS.(%s, %s)\n",
+                ooGetCapTypeText(epCap->cap), call->callType, call->callToken);
+            videoCap = ooCapabilityCreateVideoCapability(epCap, pctxt, OORX);
+            if(!videoCap)
+            {
+               OOTRACEWARN4("WARN:Failed to create Video capability %s "
+                            "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
+                           call->callType, call->callToken);
+               continue;
+            }
+         }else if(epCap->dir & OOTX)
+         {
+            OOTRACEDBGC4("Sending transmit capability %s in TCS.(%s, %s)\n",
+                ooGetCapTypeText(epCap->cap), call->callType, call->callToken);
+            videoCap = ooCapabilityCreateVideoCapability(epCap, pctxt, OOTX);
+            if(!videoCap)
+            {
+               OOTRACEWARN4("WARN:Failed to create video capability %s "
+                            "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
+                           call->callType, call->callToken);
+               continue;
+            }    
+         }else{
+            OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
+                         "capabilities are not supported.(%s, %s)\n",
+                         call->callType, call->callToken);
+            continue;
+         }
+         /* Add Video capabilities to Capability Table */
+         entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
+                            sizeof(H245CapabilityTableEntry));
+         if(!entry)
+         {
+            OOTRACEERR3("Error:Memory - ooSendTermCapMsg - entry(video Cap)."
+                        "(%s, %s)\n", call->callType, call->callToken);
+            return OO_FAILED;
+         }
+         memset(entry, 0, sizeof(H245CapabilityTableEntry));
+         entry->m.capabilityPresent = 1;
+         if((epCap->dir & OORX))
+         {
+            entry->capability.t = T_H245Capability_receiveVideoCapability;
+            entry->capability.u.receiveVideoCapability = videoCap;
+         }else{
+            entry->capability.t = T_H245Capability_transmitVideoCapability;
+            entry->capability.u.transmitVideoCapability = videoCap;
+         }
+         entry->capabilityTableEntryNumber = i+1;
+         dListAppend(pctxt , &(termCap->capabilityTable), entry);
+         i++;
       }
-      entry->capabilityTableEntryNumber = i+1;
-      dListAppend(pctxt , &(termCap->capabilityTable), entry);
-      i++;
    }
    /* Add dtmf capability, if any */
    if(call->dtmfmode & OO_CAP_DTMF_RFC2833)
