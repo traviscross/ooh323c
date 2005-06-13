@@ -394,8 +394,12 @@ ASN1USINT ooGenerateCallReference()
    else
       lastCallRef++;
 
-   if(lastCallRef>=32760)
-      lastCallRef=0;
+   /* Note callReference can be at the most 15 bits that is from 0 to 32767.
+      if we generate number bigger than that, bring it in range.
+   */
+   if(lastCallRef>=32766)
+      lastCallRef=1;
+
    newCallRef = lastCallRef;
 #ifdef _WIN32
    LeaveCriticalSection(&gCallRefMutex);

@@ -1,4 +1,8 @@
 Release xx.aa
+1.
+
+        
+Release 0.7
 1. Added support for G711 alaw, G729, G729a, G723.1, GSM, H.263 codecs
 2. Better callback support. Two levels of callbacks, viz., at call level
    (examples onIncomingCall, onCallEstablished, onCallCleared) and at message
