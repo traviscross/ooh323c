@@ -139,9 +139,11 @@ struct OOAliases;
  * message is received from the gatekeeper. The first parameter is the message
  * received. The second parameter provides updated list of aliases after the
  * message was processed by the stack.
+ * @param rcf  Handle to the received registration confirm message
  */
 typedef int (*cb_OnReceivedRegistrationConfirm)
      (H225RegistrationConfirm *rcf, struct OOAliases *aliases);
+
 
 /**
  * NOTE- This functionality is not yet fully completed.
@@ -439,6 +441,19 @@ EXTERN int ooGkClientSendAdmissionRequest
  */
 EXTERN int ooGkClientHandleAdmissionConfirm
    (ooGkClient *pGkClient, H225AdmissionConfirm *pAdmissionConfirm);
+
+
+/**
+ * This function is used to handle a received Admission Reject message. It
+ * finds the associated call and marks it for cleaning with appropriate
+ * call end reason code.
+ * @param pGkClient         Handle to Gatekeeper client.
+ * @param pAdmissionReject  Handle to received admission reject message.
+ *
+ * @return                  OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooGkClientHandleAdmissionReject
+   (ooGkClient *pGkClient, H225AdmissionReject *pAdmissionReject);
 
 /**
  * This function is invoked to request call disengage to gatekeeper.

@@ -1768,6 +1768,84 @@ int ooGkClientHandleAdmissionConfirm
 }
 
 
+int ooGkClientHandleAdmissionReject
+   (ooGkClient *pGkClient, H225AdmissionReject *pAdmissionReject)
+{
+   RasCallAdmissionInfo* pCallAdmInfo=NULL;
+   unsigned int x;
+   DListNode *pNode=NULL;
+   OOH323CallData *call=NULL;
+
+   /* Search call in pending calls list */
+   for(x=0 ; x<pGkClient->callsPendingList.count; x++)
+   {
+      pNode = dListFindByIndex(&pGkClient->callsPendingList, x);
+      pCallAdmInfo = (RasCallAdmissionInfo*) pNode->data;
+      if(pCallAdmInfo->requestSeqNum == pAdmissionReject->requestSeqNum)
+         break;
+      pNode = NULL;
+      pCallAdmInfo = NULL;
+   }
+
+   if(!pCallAdmInfo)
+   {
+      OOTRACEWARN2("Received admission reject with request number %d can not"
+                   " be matched with any pending call.\n",
+                   pAdmissionReject->requestSeqNum);
+      return OO_OK;
+   }else{
+      call = pCallAdmInfo->call;
+      dListRemove(&pGkClient->callsPendingList, pNode);
+      memFreePtr(&pGkClient->ctxt, pNode);
+   }
+
+   OOTRACEINFO4("Admission Reject message received with reason code %d for "
+                "(%s, %s)\n", pAdmissionReject->rejectReason.t, call->callType,
+                 call->callToken);
+  
+   call->callState = OO_CALL_CLEAR;
+
+   switch(pAdmissionReject->rejectReason.t)
+   {
+      case T_H225AdmissionRejectReason_calledPartyNotRegistered:
+         call->callEndReason = OO_REASON_GK_NOCALLEDUSER;
+         break;
+      case T_H225AdmissionRejectReason_invalidPermission:
+      case T_H225AdmissionRejectReason_requestDenied:
+      case T_H225AdmissionRejectReason_undefinedReason:
+         call->callEndReason = OO_REASON_GK_CLEARED;
+         break;
+      case T_H225AdmissionRejectReason_callerNotRegistered:
+         call->callEndReason = OO_REASON_GK_NOCALLERUSER;
+         break;
+      case T_H225AdmissionRejectReason_exceedsCallCapacity:
+      case T_H225AdmissionRejectReason_resourceUnavailable:
+         call->callEndReason = OO_REASON_GK_NORESOURCES;
+         break;
+      case T_H225AdmissionRejectReason_noRouteToDestination:
+      case T_H225AdmissionRejectReason_unallocatedNumber:
+         call->callEndReason = OO_REASON_GK_UNREACHABLE;
+         break;
+      case T_H225AdmissionRejectReason_routeCallToGatekeeper:
+      case T_H225AdmissionRejectReason_invalidEndpointIdentifier:
+      case T_H225AdmissionRejectReason_securityDenial:
+      case T_H225AdmissionRejectReason_qosControlNotSupported:
+      case T_H225AdmissionRejectReason_incompleteAddress:
+      case T_H225AdmissionRejectReason_aliasesInconsistent:
+      case T_H225AdmissionRejectReason_routeCallToSCN:
+      case T_H225AdmissionRejectReason_collectDestination:
+      case T_H225AdmissionRejectReason_collectPIN:
+      case T_H225AdmissionRejectReason_genericDataReason:
+      case T_H225AdmissionRejectReason_neededFeatureNotSupported:
+      case T_H225AdmissionRejectReason_securityErrors:
+      case T_H225AdmissionRejectReason_securityDHmismatch:
+      case T_H225AdmissionRejectReason_extElem1:
+         call->callEndReason = OO_REASON_GK_CLEARED;
+         break;
+   }
+
+   return OO_OK;  
+}
 
 /**
  * This function is invoked to request call disengage to gatekeeper.
