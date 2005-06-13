@@ -710,7 +710,7 @@ void* osEpHandleCommand(void* dummy)
          case 'q':
             if(bActive)
             {
-               printf("--->Hanging Active Call %s\n");
+               printf("--->Hanging Active Call %s\n", callToken);
                ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
             }
             break;
