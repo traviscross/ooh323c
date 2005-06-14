@@ -434,6 +434,8 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
       break;
    case T_H225RasMessage_admissionReject:
       OOTRACEINFO1("Admission Reject (ARJ) message received.\n");
+      iRet = ooGkClientHandleAdmissionReject(pGkClient,
+                                                   pRasMsg->u.admissionReject);
       break;
    case T_H225RasMessage_disengageConfirm:
       iRet = ooGkClientHandleDisengageConfirm(pGkClient,
@@ -1796,6 +1798,7 @@ int ooGkClientHandleAdmissionReject
    }else{
       call = pCallAdmInfo->call;
       dListRemove(&pGkClient->callsPendingList, pNode);
+      memFreePtr(&pGkClient->ctxt, pCallAdmInfo);
       memFreePtr(&pGkClient->ctxt, pNode);
    }
 
