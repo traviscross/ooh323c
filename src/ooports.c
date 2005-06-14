@@ -86,17 +86,14 @@ int ooBindPort (OOH323PortType type, OOSOCKET socket)
 int ooBindOSAllocatedPort(OOSOCKET socket)
 {
    OOIPADDR ipAddrs;
-/*   char localip[40];*/
    int size, ret;
    struct sockaddr_in name;
    size = sizeof(struct sockaddr_in);
-   /*ooGetLocalIPAddress(localip);
-   ret= ooSocketStrToAddr (localip, &ipAddrs);*/
    ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipAddrs);
    if((ret=ooSocketBind(socket, ipAddrs,
                      0))==ASN_OK)
    {
-      ret = ooGetSockName(socket, &name, &size);
+      ret = ooSocketGetSockName(socket, &name, &size);
       if(ret == ASN_OK)
       {
          return name.sin_port;

@@ -346,7 +346,7 @@ EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
  * @return             Completion status of operation: 0 (ASN_OK) = success,
  *                     negative return value is error.
  */
-int ooConvertIpToNwAddr(char *inetIp, char *netIp);
+EXTERN int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp);
 
 /**
  * This function retrives the IP address of the local host.
@@ -358,13 +358,27 @@ int ooConvertIpToNwAddr(char *inetIp, char *netIp);
  */
 EXTERN int ooGetLocalIPAddress(char * pIPAddrs);
 
-#ifdef _WIN32
-EXTERN int ooGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size);
-#endif
 
-EXTERN long ooHTONL(long val);
+EXTERN int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name,
+                                                      int *size);
 
-EXTERN short ooHTONS(short val);
+
+EXTERN long ooSocketHTONL(long val);
+
+EXTERN short ooSocketHTONS(short val);
+
+/**
+ * This function is used to retrieve the ip and port number used by the socket
+ * passed as parameter. It internally uses getsockname system call for this
+ * purpose.
+ * @param socket  Socket for which ip and port has to be determined.
+ * @param ip      Buffer in which ip address will be returned.
+ * @param len     Length of the ip address buffer.
+ * @param port    Pointer to integer in which port number will be returned.
+ *
+ * @return        ASN_OK, on success; -ve on failed.
+ */
+EXTERN int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port);
 /**
  * @}
  */

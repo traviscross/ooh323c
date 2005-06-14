@@ -378,6 +378,18 @@ int ooAcceptH225Connection()
       memAllocZ (call->pctxt, sizeof(OOH323Channel));
 
    call->pH225Channel->sock = h225Channel;
+
+   /* Added logic to get local ip from socket so that stack will work with
+      multihomed hosts.
+   */
+   ret =  ooSocketGetIpAndPort(h225Channel, call->localIP, 20,
+                                                 &call->pH225Channel->port);
+   if(ret != ASN_OK)
+   {
+      OOTRACEERR3("Error:Failed to determine ip and port from socket"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
  
    return OO_OK;
 }
@@ -831,7 +843,7 @@ int ooH2250Receive(OOH323CallData *call)
       }
    }
 
-   OOTRACEDBGC3("Received H.2250 message: (%s, %s)\n",
+   OOTRACEDBGC3("Received Q.931 message: (%s, %s)\n",
                 call->callType, call->callToken);
 
    initializePrintHandler(&printHandler, "Received H.2250 Message");

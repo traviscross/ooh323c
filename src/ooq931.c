@@ -52,11 +52,14 @@ EXTERN int ooQ931Decode
       return Q931_E_TOOSHORT;
 
    msg->protocolDiscriminator = data[0];
-
+   OOTRACEDBGB2("   protocolDiscriminator = %d\n", msg->protocolDiscriminator);
    if (data[1] != 2) /* Call reference must be 2 bytes long */
       return Q931_E_INVCALLREF;
 
    msg->callReference = ((data[2] & 0x7f) << 8) | data[3];
+
+   OOTRACEDBGB2("   callReference = %d\n", msg->callReference);
+
    msg->fromDestination = (data[2] & 0x80) != 0;
 
    msg->messageType = data[4];
@@ -133,35 +136,41 @@ EXTERN int ooQ931Decode
      
       /* Extract calling party number TODO:Give respect to presentation and
          screening indicators ;-) */
-      if(ie->discriminator == Q931CallingPartyNumberIE &&
-         !call->callingPartyNumber)
+      if(ie->discriminator == Q931CallingPartyNumberIE)
       {
+         OOTRACEDBGB1("   CallingPartyNumber IE = {\n");
          if(ie->length < OO_MAX_NUMBER_LENGTH)
          {
             int numoffset=1;
             if(!(0x80 & ie->data[0])) numoffset = 2;
             memcpy(number, ie->data+numoffset,ie->length-numoffset);
             number[ie->length-numoffset]='\0';
-            ooCallSetCallingPartyNumber(call, number);
+            OOTRACEDBGB2("      %s\n", number);
+            if(!call->callingPartyNumber)
+               ooCallSetCallingPartyNumber(call, number);
          }else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
                            call->callType, call->callToken);
          }
+         OOTRACEDBGB1("   }\n");
       }
 
       /* Extract called party number */
-      if(ie->discriminator == Q931CalledPartyNumberIE &&
-         !call->calledPartyNumber)
+      if(ie->discriminator == Q931CalledPartyNumberIE)
       {
+         OOTRACEDBGB1("   CalledPartyNumber IE = {\n");
          if(ie->length < OO_MAX_NUMBER_LENGTH)
          {
             memcpy(number, ie->data+1,ie->length-1);
             number[ie->length-1]='\0';
-            ooCallSetCalledPartyNumber(call, number);
+            OOTRACEDBGB2("      %s\n", number);
+            if(!call->calledPartyNumber)
+               ooCallSetCalledPartyNumber(call, number);
          }else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
                            call->callType, call->callToken);
          }
+         OOTRACEDBGB1("   }\n");
       }
 
       /* Handle Cause ie */
@@ -570,7 +579,7 @@ static void ooPrintQ931Message
    Q931Message q931Msg;
    int ret;
 
-   initializePrintHandler(&printHandler, "H.2250 Message");
+   initializePrintHandler(&printHandler, "Q931 Message");
 
    /* Set event handler */
    setEventHandler (pctxt, &printHandler);
@@ -1529,7 +1538,7 @@ int ooAcceptCall(OOH323CallData *call)
                      "(%s, %s)\n", call->callType, call->callToken);
         return OO_FAILED;
       }
-      ooConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
+      ooSocketConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
       connect->h245Address.u.ipAddress = h245IpAddr;
@@ -1910,7 +1919,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                  call->callToken);
       return OO_FAILED;
    }
-   ooConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
 
    destCallSignalIpAddress->ip.numocts=4;
    destCallSignalIpAddress->port = call->remotePort;
@@ -1929,7 +1938,8 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ooConvertIpToNwAddr(gH323ep.signallingIP, srcCallSignalIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP,
+                                              srcCallSignalIpAddress->ip.data);
 
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= call->pH225Channel->port;
@@ -2250,7 +2260,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
                      "(%s, %s)\n", call->callType, call->callToken);
          return OO_FAILED;
       }
-      ooConvertIpToNwAddr(call->pCallFwdData->ip,
+      ooSocketConvertIpToNwAddr(call->pCallFwdData->ip,
                                           fwdCallSignalIpAddress->ip.data);
 
       fwdCallSignalIpAddress->ip.numocts=4;

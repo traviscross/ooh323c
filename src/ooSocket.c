@@ -272,8 +272,8 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
    return ASN_OK;
 }
 
-#ifdef _WIN32
-int ooGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
+
+int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
 {
    int ret;
    ret = getsockname(socket, (struct sockaddr*)name, size);
@@ -282,7 +282,28 @@ int ooGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
    else
       return ASN_E_INVSOCKET;
 }
-#endif
+
+int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port)
+{
+   int ret=ASN_OK;
+   struct sockaddr_in addr;
+   char *host=NULL;
+
+   ret = ooSocketGetSockName(socket, &addr, sizeof(addr));
+   if(ret != 0)
+      return ASN_E_INVSOCKET;
+
+   host = inet_ntoa(addr.sin_addr);
+
+   if(host && strlen(host) < len)
+      strcpy(ip, host);  
+   else
+      return -1;
+  
+   *port = addr.sin_port;
+
+   return ASN_OK;
+}
 
 int ooSocketListen (OOSOCKET socket, int maxConnection)
 {
@@ -470,7 +491,7 @@ int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr)
    return ASN_OK;
 }
 
-int ooConvertIpToNwAddr(char *inetIp, char *netIp)
+int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp)
 {
   int ret=0;
    struct sockaddr_in sin = {0};
@@ -524,12 +545,12 @@ int ooSocketsCleanup (void)
    return ASN_OK;
 }
 
-long ooHTONL(long val)
+long ooSocketHTONL(long val)
 {
    return htonl(val);
 }
 
-short ooHTONS(short val)
+short ooSocketHTONS(short val)
 {
    return htons(val);
 }

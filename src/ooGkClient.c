@@ -34,7 +34,7 @@
 #include "ooh323.h"
 #include "ooh323ep.h"
 #include "ooTimer.h"
-
+#include "ooSocket.h"
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
@@ -594,7 +594,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    }
 
 
-   ooConvertIpToNwAddr(gH323ep.signallingIP, pRasAddress->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pRasAddress->ip.data);
 
    pRasAddress->ip.numocts = 4;
    pRasAddress->port = pGkClient->localRASPort;
@@ -842,7 +842,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
   
@@ -869,7 +869,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
   
-   ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
 
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = pGkClient->localRASPort;
@@ -1240,7 +1240,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
   
@@ -1438,14 +1438,14 @@ int ooGkClientSendAdmissionRequest
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   ooConvertIpToNwAddr(gH323ep.signallingIP, pIpAddressLocal->ip.data);
+   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddressLocal->ip.data);
 
    pIpAddressLocal->ip.numocts = 4;
    pIpAddressLocal->port = gH323ep.listenPort;
 
    if(strlen(call->remoteIP))
    {
-      ooConvertIpToNwAddr(call->remoteIP, pIpAddressRemote->ip.data);
+      ooSocketConvertIpToNwAddr(call->remoteIP, pIpAddressRemote->ip.data);
       pIpAddressRemote->ip.numocts = 4;
       pIpAddressRemote->port = call->remotePort;
    }

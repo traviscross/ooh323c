@@ -1135,7 +1135,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ooConvertIpToNwAddr(call->localIP, iPAddress->network.data);
+   ooSocketConvertIpToNwAddr(call->localIP, iPAddress->network.data);
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -1154,7 +1154,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
    iPAddress1 = unicastAddrs1->u.iPAddress;
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
-   ooConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
+   ooSocketConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
 
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -2825,7 +2825,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    iPAddress = unicastAddrs->u.iPAddress;
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
 
-   ooConvertIpToNwAddr(pLogicalChannel->localIP, iPAddress->network.data);
+   ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,iPAddress->network.data);
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -2950,7 +2950,7 @@ int ooBuildFastStartOLC
          memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUniAddrs->u.iPAddress = pUniIpAddrs;
     
-         ooConvertIpToNwAddr(pLogicalChannel->localIP,
+         ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
                                                 pUniIpAddrs->network.data);
 
          pUniIpAddrs->network.numocts = 4;
@@ -2969,7 +2969,8 @@ int ooBuildFastStartOLC
       memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUnicastAddrs->u.iPAddress = pIpAddrs;
     
-       ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+       ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                      pIpAddrs->network.data);
 
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -3043,7 +3044,8 @@ int ooBuildFastStartOLC
          memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUnicastAddrs->u.iPAddress = pIpAddrs;     
 
-         ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+         ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                       pIpAddrs->network.data);
 
          pIpAddrs->network.numocts = 4;
          pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -3062,7 +3064,8 @@ int ooBuildFastStartOLC
       memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
-      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                    pUniIpAddrs->network.data);
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
          
@@ -3336,7 +3339,8 @@ int ooPrepareFastStartResponseOLC
       pUniAddrs->t = T_H245UnicastAddress_iPAddress;
       pUniAddrs->u.iPAddress = pUniIpAddrs;
     
-      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                    pUniIpAddrs->network.data);
 
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -3361,7 +3365,8 @@ int ooPrepareFastStartResponseOLC
      
       pUnicastAddrs->u.iPAddress = pIpAddrs;
     
-      ooConvertIpToNwAddr(pLogicalChannel->localIP, pIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                       pIpAddrs->network.data);
 
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -3397,7 +3402,8 @@ int ooPrepareFastStartResponseOLC
 
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
-      ooConvertIpToNwAddr(pLogicalChannel->localIP, pUniIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
+                                                    pUniIpAddrs->network.data);
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
          
