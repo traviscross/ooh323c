@@ -791,6 +791,8 @@ int ooSendCallProceeding(OOH323CallData *call)
       return OO_FAILED;
    }
   
+   q931msg->callReference = call->callReference;
+
    q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
@@ -877,7 +879,9 @@ int ooSendAlerting(OOH323CallData *call)
                   "Alerting message\n");
       return OO_FAILED;
    }
-  
+
+   q931msg->callReference = call->callReference;
+
    q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
@@ -990,6 +994,9 @@ int ooSendFacility(OOH323CallData *call)
           call->callType, call->callToken);
       return OO_FAILED;
    }
+
+   q931msg->callReference = call->callReference;
+
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!pQ931Msg->userInfo)
@@ -1066,6 +1073,9 @@ int ooSendReleaseComplete(OOH323CallData *call)
       }
       return OO_FAILED;
    }
+
+   q931msg->callReference = call->callReference;
+
    q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!q931msg->userInfo)
@@ -1161,6 +1171,7 @@ int ooAcceptCall(OOH323CallData *call)
                   "Connect message\n");
       return OO_FAILED;
    }
+   q931msg->callReference = call->callReference;
 
    /* Set bearer capability */
    if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
@@ -2208,6 +2219,9 @@ int ooH323ForwardCall(char* callToken, char *dest)
           "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
+
+   q931msg->callReference = call->callReference;
+
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!pQ931Msg->userInfo)
@@ -2635,6 +2649,9 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf, int h245Len
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
+
+   q931msg->callReference = call->callReference;
+
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
    if(!pQ931Msg->userInfo)
