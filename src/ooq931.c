@@ -995,7 +995,7 @@ int ooSendFacility(OOH323CallData *call)
       return OO_FAILED;
    }
 
-   q931msg->callReference = call->callReference;
+   pQ931Msg->callReference = call->callReference;
 
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
@@ -2220,7 +2220,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
       return OO_FAILED;
    }
 
-   q931msg->callReference = call->callReference;
+   pQ931Msg->callReference = call->callReference;
 
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
@@ -2650,7 +2650,7 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf, int h245Len
       return OO_FAILED;
    }
 
-   q931msg->callReference = call->callReference;
+   pQ931Msg->callReference = call->callReference;
 
    pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
