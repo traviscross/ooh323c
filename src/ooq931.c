@@ -1828,17 +1828,22 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    setup->protocolIdentifier = gProtocolID;
   
    /* Populate Alias Address.*/
-   setup->m.sourceAddressPresent = TRUE;
-  
-   if(call->ourAliases)
-     ret = ooPopulateAliasList(pctxt, call->ourAliases, &setup->sourceAddress);
-   else
-     ret =  ooPopulateAliasList(pctxt, gH323ep.aliases, &setup->sourceAddress);
-   if(OO_OK != ret)
-   {
-      OOTRACEERR1("Error:Failed to populate alias list in SETUP message\n");
-      memReset(pctxt);
-      return OO_FAILED;
+
+   if(call->ourAliases || gH323ep.aliases)
+   {  
+      setup->m.sourceAddressPresent = TRUE;
+      if(call->ourAliases)
+         ret = ooPopulateAliasList(pctxt, call->ourAliases,
+                                                       &setup->sourceAddress);
+      else if(gH323ep.aliases)
+         ret =  ooPopulateAliasList(pctxt, gH323ep.aliases,
+                                                       &setup->sourceAddress);
+      if(OO_OK != ret)
+      {
+         OOTRACEERR1("Error:Failed to populate alias list in SETUP message\n");
+         memReset(pctxt);
+         return OO_FAILED;
+      }
    }
    setup->m.presentationIndicatorPresent = TRUE;
    setup->presentationIndicator.t =
