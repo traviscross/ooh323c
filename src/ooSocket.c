@@ -279,26 +279,33 @@ int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
    ret = getsockname(socket, (struct sockaddr*)name, size);
    if(ret == 0)
       return ASN_OK;
-   else
+   else{
+      OOTRACEERR1("Error:ooSocketGetSockName - getsockname\n");
       return ASN_E_INVSOCKET;
+   }
 }
 
 int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port)
 {
-   int ret=ASN_OK;
+   int ret=ASN_OK, size;
    struct sockaddr_in addr;
    char *host=NULL;
 
-   ret = ooSocketGetSockName(socket, &addr, sizeof(addr));
+   size = sizeof(addr);
+
+   ret = ooSocketGetSockName(socket, (struct sockaddr*)&addr, &size);
    if(ret != 0)
       return ASN_E_INVSOCKET;
 
    host = inet_ntoa(addr.sin_addr);
 
-   if(host && strlen(host) < len)
+   if(host && strlen(host) < (unsigned)len)
       strcpy(ip, host);  
-   else
+   else{
+     OOTRACEERR1("Error:Insufficient buffer for ip address - "
+                 "ooSocketGetIpAndPort\n");
       return -1;
+   }
   
    *port = addr.sin_port;
 

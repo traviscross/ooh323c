@@ -1157,7 +1157,7 @@ int ooAcceptCall(OOH323CallData *call)
    H225VendorIdentifier *vendor;
    Q931Message *q931msg=NULL;
    DListNode *pNode = NULL;
-   H245OpenLogicalChannel *olc = NULL;
+   H245OpenLogicalChannel *olc = NULL, printOlc;
    ooH323EpCapability *epCap = NULL;
    ASN1DynOctStr *pFS=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;  
@@ -1509,6 +1509,28 @@ int ooAcceptCall(OOH323CallData *call)
             return OO_FAILED;
          }
          pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
+
+         /* Dump faststart element in logfile for debugging purpose */
+         setPERBuffer(pctxt,  (char*)pFS[j].data, pFS[j].numocts, 1);
+         initializePrintHandler(&printHandler, "FastStart Element");
+         setEventHandler (pctxt, &printHandler);
+         memset(&printOlc, 0, sizeof(printOlc));
+         ret = asn1PD_H245OpenLogicalChannel(pctxt, &(printOlc));
+         if(ret != ASN_OK)
+         {
+            OOTRACEERR3("Error: Failed decoding FastStart Element (%s, %s)\n",
+                        call->callType, call->callToken);
+            ooFreeQ931Message(q931msg);
+            if(call->callState < OO_CALL_CLEAR)
+            {
+               call->callEndReason = OO_REASON_LOCAL_CLEARED;
+               call->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+         finishPrint();
+         removeEventHandler(pctxt);
+
          olc = NULL;
          j++;
          epCap = NULL;
@@ -1531,8 +1553,8 @@ int ooAcceptCall(OOH323CallData *call)
       }
    }
 
-    /* Add h245 listener address. Do not add H245 listener address in case
-       of fast-start. */
+   /* Add h245 listener address. Do not add H245 listener address in case
+      of fast-start. */
    if ((!OO_TESTFLAG(call->flags, OO_M_FASTSTART) ||
         call->remoteFastStartOLCs.count == 0) &&
        !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
@@ -1549,7 +1571,7 @@ int ooAcceptCall(OOH323CallData *call)
                      "(%s, %s)\n", call->callType, call->callToken);
         return OO_FAILED;
       }
-      ooSocketConvertIpToNwAddr(gH323ep.signallingIP, h245IpAddr->ip.data);
+      ooSocketConvertIpToNwAddr(call->localIP, h245IpAddr->ip.data);
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
       connect->h245Address.u.ipAddress = h245IpAddr;
@@ -1794,7 +1816,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    ooH323EpCapability *epCap=NULL;
    DListNode *curNode = NULL;
    OOCTXT *pctxt = NULL;
-   H245OpenLogicalChannel *olc;
+   H245OpenLogicalChannel *olc, printOlc;
    ASN1BOOL aligned = 1;
    H225AliasAddress * pAliasAddress=NULL;
    pctxt = &gH323ep.msgctxt;
@@ -1949,8 +1971,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP,
-                                              srcCallSignalIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(call->localIP, srcCallSignalIpAddress->ip.data);
 
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= call->pH225Channel->port;
@@ -2049,6 +2070,29 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                return OO_FAILED;
             }
             pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+
+            /* Dump faststart element in logfile for debugging purpose */
+            setPERBuffer(pctxt,  (char*)pFS[i].data, pFS[i].numocts, 1);
+            initializePrintHandler(&printHandler, "FastStart Element");
+            setEventHandler (pctxt, &printHandler);
+            memset(&printOlc, 0, sizeof(printOlc));
+            ret = asn1PD_H245OpenLogicalChannel(pctxt, &(printOlc));
+            if(ret != ASN_OK)
+            {
+               OOTRACEERR3("Error: Failed decoding FastStart Element."
+                           "(%s, %s)\n", call->callType, call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
+            }
+            finishPrint();
+            removeEventHandler(pctxt);
+
+
             olc = NULL;
             i++;
             OOTRACEDBGC5("Added RX fs element %d with capability %s(%s, %s)\n",

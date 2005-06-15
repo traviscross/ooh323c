@@ -229,7 +229,6 @@ int ooCreateH225Connection(OOH323CallData *call)
 {
    int ret=0;
    OOSOCKET channelSocket=0;
-
    if((ret=ooSocketCreate (&channelSocket))!=ASN_OK)
    {
       OOTRACEERR3("Failed to create socket for transmit H2250 channel (%s, %s)"
@@ -286,12 +285,37 @@ int ooCreateH225Connection(OOH323CallData *call)
          OOTRACEINFO3("H2250 transmiter channel creation - succesful "
                       "(%s, %s)\n", call->callType, call->callToken);
 
+         /* If multihomed, get ip from socket */
+         if(!strcmp(call->localIP, "0.0.0.0"))
+         {
+            OOTRACEDBGA3("Determining ip address for outgoing call in "
+                         "multihomed mode. (%s, %s)\n", call->callType,
+                          call->callToken);
+            ret = ooSocketGetIpAndPort(channelSocket, call->localIP, 20,
+                                       &call->pH225Channel->port);
+            if(ret != ASN_OK)
+            {
+               OOTRACEERR3("Error:Failed to retrieve local ip and port from "
+                           "socket for multihomed mode.(%s, %s)\n",
+                            call->callType, call->callToken);
+               if(call->callState < OO_CALL_CLEAR)
+               {  /* transport failure */
+                  call->callState = OO_CALL_CLEAR;
+                  call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+               }
+               return OO_FAILED;
+            }
+            OOTRACEDBGA4("Using local ip %s for outgoing call(multihomedMode)."
+                         " (%s, %s)\n", call->localIP, call->callType,
+                         call->callToken);
+         }
          return OO_OK;
       }
       else
       {
          OOTRACEERR3("ERROR:Failed to connect to remote destination for "
-                    "transmit H2250 channel\n",call->callType,call->callToken);
+                    "transmit H2250 channel(%s, %s)\n",call->callType,
+                     call->callToken);
          if(call->callState < OO_CALL_CLEAR)
          {  /* No one is listening at remote end */
             call->callState = OO_CALL_CLEAR;
@@ -379,18 +403,31 @@ int ooAcceptH225Connection()
 
    call->pH225Channel->sock = h225Channel;
 
-   /* Added logic to get local ip from socket so that stack will work with
-      multihomed hosts.
-   */
-   ret =  ooSocketGetIpAndPort(h225Channel, call->localIP, 20,
-                                                 &call->pH225Channel->port);
-   if(ret != ASN_OK)
+   /* If multihomed, get ip from socket */
+   if(!strcmp(call->localIP, "0.0.0.0"))
    {
-      OOTRACEERR3("Error:Failed to determine ip and port from socket"
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
+      OOTRACEDBGA3("Determining IP address for incoming call in multihomed "
+                   "mode (%s, %s)\n", call->callType, call->callToken);
+
+      ret = ooSocketGetIpAndPort(h225Channel, call->localIP, 20,
+                                       &call->pH225Channel->port);
+      if(ret != ASN_OK)
+      {
+         OOTRACEERR3("Error:Failed to retrieve local ip and port from "
+                     "socket for multihomed mode.(%s, %s)\n",
+                      call->callType, call->callToken);
+         if(call->callState < OO_CALL_CLEAR)
+         {  /* transport failure */
+            call->callState = OO_CALL_CLEAR;
+            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         }
+         return OO_FAILED;
+      }
+      OOTRACEDBGA4("Using Local IP address %s for incoming call in multihomed "
+                   "mode. (%s, %s)\n", call->localIP, call->callType,
+                    call->callToken);
    }
- 
+
    return OO_OK;
 }
 

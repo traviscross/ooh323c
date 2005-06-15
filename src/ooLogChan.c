@@ -76,7 +76,13 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
                   call->callToken);
       pNewChannel->localRtpPort = pMediaInfo->lMediaPort;
       pNewChannel->localRtcpPort = pMediaInfo->lMediaCntrlPort;
-      strcpy(pNewChannel->localIP, pMediaInfo->lMediaIP);
+      /* If user application has not specified a specific ip and is using
+         multihomed mode, substitute appropriate ip.
+      */
+      if(!strcmp(pMediaInfo->lMediaIP, "0.0.0.0"))
+         strcpy(pNewChannel->localIP, call->localIP);
+      else
+         strcpy(pNewChannel->localIP, pMediaInfo->lMediaIP);
    }else{
       OOTRACEDBGC3("Using default media info (%s, %s)\n", call->callType,
                   call->callToken);
