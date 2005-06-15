@@ -293,7 +293,7 @@ int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port)
 
    size = sizeof(addr);
 
-   ret = ooSocketGetSockName(socket, (struct sockaddr*)&addr, &size);
+   ret = ooSocketGetSockName(socket, &addr, &size);
    if(ret != 0)
       return ASN_E_INVSOCKET;
 
