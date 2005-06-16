@@ -1514,7 +1514,7 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
                                                    sizeof(ooH323EpCapability));
          params = (OOH263CapParams*) memAlloc(call->pctxt,
                                                       sizeof(OOH263CapParams));
-         if(!epCap && !params)
+         if(!epCap || !params)
          {
            OOTRACEERR3("Error:Memory - ooIsVideoDataTypeH263Supported - "
                        "epCap/params. (%s, %s)\n", call->callType,
@@ -1543,7 +1543,7 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
                                                   sizeof(ooH323EpCapability));
       params = (OOH263CapParams*) memAlloc(call->pctxt,
                                                       sizeof(OOH263CapParams));
-      if(!epCap && !params)
+      if(!epCap || !params)
       {
          OOTRACEERR3("Error:Memory - ooIsVideoDataTypeH263Supported - "
                      "epCap/params. (%s, %s)\n", call->callType,
