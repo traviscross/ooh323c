@@ -747,13 +747,11 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
 int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
 {
    int ret, i;
-   H225TransportAddress *h245Address;
    H225Connect_UUIE *connect;
    H245OpenLogicalChannel* olc;
    ASN1OCTET msgbuf[MAXMSGLEN];
    ooLogicalChannel * pChannel = NULL;
    H245H2250LogicalChannelParameters * h2250lcp = NULL; 
-   H245UnicastAddress *unicastAddress;
 
    if(!q931Msg->userInfo)
    {

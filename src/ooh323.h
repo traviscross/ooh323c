@@ -158,6 +158,20 @@ EXTERN OOAliases* ooH323AddAliasToList
 (OOAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress);
 
 /**
+ * This function is used to retrieve ip address and port number from an
+ * H225TransportAddress structure.
+ * @param call          Handle to the associated call.
+ * @param h225Address   Pointer to H225TransportAddress structure
+ * @param ip            Pointer to the buffer in which dotted ip address will
+ *                      be returned.
+ * @param port          Pointer to the integer in which port value will be
+ *                      returned.
+ *
+ * @return              OO_OK, on success; OO_FAILED, on failure.
+ */
+int ooH323GetIpPortFromH225TransportAddress(struct OOH323CallData *call,
+   H225TransportAddress *h225Address, char *ip, int *port);
+/**
  * @}
  */
 #ifdef __cplusplus
