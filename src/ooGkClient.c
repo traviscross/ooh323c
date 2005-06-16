@@ -60,6 +60,8 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    initContext(&(pGkClient->msgCtxt));
    pGkClient->rrqRetries = 0;
    pGkClient->grqRetries = 0;
+
+   strcpy(pGkClient->localRASIP, gH323ep.signallingIP);
   
    if(OO_OK != ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort))
    {
@@ -224,14 +226,9 @@ int ooGkClientCreateChannel(ooGkClient *pGkClient)
    }
    if(pGkClient->localRASPort)
    {
-      ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipaddrs);
+      ret= ooSocketStrToAddr (pGkClient->localRASIP, &ipaddrs);
       if( (ret=ooSocketBind( pGkClient->rasSocket, ipaddrs,
-           pGkClient->localRASPort))==ASN_OK )
-      {
-         OOTRACEINFO1("H323 RAS channel creation - successful\n");
-         return OO_OK;
-      }
-      else
+           pGkClient->localRASPort))!=ASN_OK )
       {
          OOTRACEERR1("ERROR:Failed to create RAS channel\n");
          pGkClient->state = GkClientFailed;
@@ -246,9 +243,29 @@ int ooGkClientCreateChannel(ooGkClient *pGkClient)
          pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
-      OOTRACEINFO1("H323 RAS channel creation - successful\n");
       pGkClient->localRASPort = ret;
    }
+   /* Test Code NOTE- This doesn't work..:(( Have to fix this */
+   /* If multihomed, get ip from socket */
+   if(!strcmp(pGkClient->localRASIP, "0.0.0.0"))
+   {
+      OOTRACEDBGA1("Determining ip address for RAS channel "
+                   "multihomed mode. \n");
+      ret = ooSocketGetIpAndPort(pGkClient->rasSocket, pGkClient->localRASIP,
+                                 20, &pGkClient->localRASPort);
+      if(ret != ASN_OK)
+      {
+         OOTRACEERR1("Error:Failed to retrieve local ip and port from "
+                     "socket for RAS channel(multihomed).\n");
+         pGkClient->state = GkClientFailed;
+         return OO_FAILED;
+      }
+      OOTRACEDBGA3("Using local ip %s and port %d for RAS channel"
+                   "(multihomedMode).\n", pGkClient->localRASIP,
+                   pGkClient->localRASPort);
+   }
+   /* End of Test code */
+   OOTRACEINFO1("H323 RAS channel creation - successful\n");
    return OO_OK;
 }
 
@@ -594,7 +611,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    }
 
 
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pRasAddress->ip.data);
+   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pRasAddress->ip.data);
 
    pRasAddress->ip.numocts = 4;
    pRasAddress->port = pGkClient->localRASPort;
@@ -842,7 +859,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
   
@@ -869,7 +886,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
   
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
 
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = pGkClient->localRASPort;
@@ -1240,7 +1257,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
   
@@ -1438,7 +1455,7 @@ int ooGkClientSendAdmissionRequest
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(gH323ep.signallingIP, pIpAddressLocal->ip.data);
+   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddressLocal->ip.data);
 
    pIpAddressLocal->ip.numocts = 4;
    pIpAddressLocal->port = gH323ep.listenPort;

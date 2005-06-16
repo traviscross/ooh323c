@@ -2071,6 +2071,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             }
             pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
 
+
             /* Dump faststart element in logfile for debugging purpose */
             setPERBuffer(pctxt,  (char*)pFS[i].data, pFS[i].numocts, 1);
             initializePrintHandler(&printHandler, "FastStart Element");
@@ -2137,6 +2138,29 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                return OO_FAILED;
             }
             pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+
+            /* Dump faststart element in logfile for debugging purpose */
+            setPERBuffer(pctxt,  (char*)pFS[i].data, pFS[i].numocts, 1);
+            initializePrintHandler(&printHandler, "FastStart Element");
+            setEventHandler (pctxt, &printHandler);
+            memset(&printOlc, 0, sizeof(printOlc));
+            ret = asn1PD_H245OpenLogicalChannel(pctxt, &(printOlc));
+            if(ret != ASN_OK)
+            {
+               OOTRACEERR3("Error: Failed decoding FastStart Element."
+                           "(%s, %s)\n", call->callType, call->callToken);
+               ooFreeQ931Message(q931msg);
+               if(call->callState < OO_CALL_CLEAR)
+               {
+                  call->callEndReason = OO_REASON_LOCAL_CLEARED;
+                  call->callState = OO_CALL_CLEAR;
+               }
+               return OO_FAILED;
+            }
+            finishPrint();
+            removeEventHandler(pctxt);
+
+
             olc = NULL;
             i++;
             OOTRACEDBGC5("Added TX fs element %d with capability %s(%s, %s)\n",

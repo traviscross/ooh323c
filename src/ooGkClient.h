@@ -181,6 +181,7 @@ typedef struct ooGkClient{
    OOCTXT msgCtxt;
    OOSOCKET rasSocket;
    int localRASPort;
+   char localRASIP[20];
    char gkRasIP[20];
    char gkCallSignallingIP[20];
    RasGatekeeperInfo gkInfo;
