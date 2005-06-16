@@ -177,6 +177,9 @@ EXTERN int ooQ931Decode
       if(ie->discriminator == Q931CauseIE)
       {
          msg->causeIE = ie;
+         OOTRACEDBGB1("   Cause IE = {\n");
+         OOTRACEDBGB2("      %s\n", ooGetQ931CauseValueText(ie->data[1]&0x7f));
+         OOTRACEDBGB1("   }\n");
       }
 
       /* TODO: Get rid of ie list.*/

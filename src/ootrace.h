@@ -110,6 +110,7 @@ extern "C" {
 #endif /* MAKE_DLL */
 #endif /* EXTERN */
 
+
 /**
  * This function is used to retrieve the description text for a reason
  * code.
@@ -144,6 +145,15 @@ const char* ooGetMsgTypeText (int msgType);
  * @return        The text description string.
  */
 const char* ooGetCapTypeText(int cap);
+
+/**
+ * This function is used to retrieve the text description for a Q931 Cause
+ * value in Cause IE.
+ * @param val     Q931 Cause value
+ * @return        The text description string
+ */
+const char* ooGetQ931CauseValueText(int val);
+
 
 /**
  * This function is used to set the trace level.
