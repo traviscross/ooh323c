@@ -244,8 +244,11 @@ int ooProcStackCmds()
    if (gH323ep.stkCmdList.count > 0)
    {
       OOStackCommand *cmd;
-      while (0 != (cmd = dListDeleteHead (&gH323ep.ctxt, &gH323ep.stkCmdList)))
+      DListNode *pNode = NULL;
+      //while (0 !=(cmd=dListDeleteHead (&gH323ep.ctxt, &gH323ep.stkCmdList)))
+      while (0 != (pNode = dListFindByIndex(&gH323ep.stkCmdList, 0)))
       {
+         cmd = (OOStackCommand*)pNode->data;
          switch(cmd->type) {
             case OO_CMD_MAKECALL:
                if(gH323ep.gkClient &&
@@ -261,6 +264,8 @@ int ooProcStackCmds()
 
                ooH323MakeCall ((char*)cmd->param1, (char*)cmd->param2,
                                (ooCallOptions*)cmd->param3);
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
                break;
 
             case OO_CMD_ANSCALL:
@@ -274,12 +279,16 @@ int ooProcStackCmds()
                OOTRACEINFO2("Processing Answer Call command for %s\n",
                             (char*)cmd->param1);
                ooSendConnect(ooFindCallByToken((char*)cmd->param1));
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
                break;
 
             case OO_CMD_FWDCALL:
                OOTRACEINFO3("Forwarding call %s to %s\n", (char*)cmd->param1,
                                                           (char*)cmd->param2);
                ooH323ForwardCall((char*)cmd->param1, (char*)cmd->param2);
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
                break;
 
             case OO_CMD_HANGCALL:
@@ -287,11 +296,15 @@ int ooProcStackCmds()
                              (char*)cmd->param1);
                ooH323HangCall((char*)cmd->param1,
                                        *(OOCallClearReason*)cmd->param2);
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
                break;
 
             case OO_CMD_STOPMONITOR:
                OOTRACEINFO1("Processing StopMonitor command\n");
                ooStopMonitorCalls();
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
                break;
 
             default: OOTRACEERR1("ERROR:Unhandled command\n");
