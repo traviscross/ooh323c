@@ -141,6 +141,7 @@ typedef struct OOH323EndPoint {
    int cmdPipe[2];
    struct ooGkClient *gkClient;
    DList stkCmdList;    /* stack command list */
+   OOInterface *ifList; /* interface list for the host we are running on*/
 } OOH323EndPoint;
 
 #define ooEndPoint OOH323EndPoint

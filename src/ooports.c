@@ -58,7 +58,7 @@ int ooGetNextPort (OOH323PortType type)
    return OO_FAILED;
 }
 
-int ooBindPort (OOH323PortType type, OOSOCKET socket)
+int ooBindPort (OOH323PortType type, OOSOCKET socket, char *ip)
 {
    int initialPort, bindPort, ret;
    OOIPADDR ipAddrs;
@@ -66,7 +66,7 @@ int ooBindPort (OOH323PortType type, OOSOCKET socket)
    initialPort = ooGetNextPort (type);
    bindPort = initialPort;
 
-   ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipAddrs);
+   ret= ooSocketStrToAddr (ip, &ipAddrs);
 
    while(1)
    {
@@ -83,13 +83,13 @@ int ooBindPort (OOH323PortType type, OOSOCKET socket)
 }
 
 #ifdef _WIN32       
-int ooBindOSAllocatedPort(OOSOCKET socket)
+int ooBindOSAllocatedPort(OOSOCKET socket, char *ip)
 {
    OOIPADDR ipAddrs;
    int size, ret;
    struct sockaddr_in name;
    size = sizeof(struct sockaddr_in);
-   ret= ooSocketStrToAddr (gH323ep.signallingIP, &ipAddrs);
+   ret= ooSocketStrToAddr (ip, &ipAddrs);
    if((ret=ooSocketBind(socket, ipAddrs,
                      0))==ASN_OK)
    {

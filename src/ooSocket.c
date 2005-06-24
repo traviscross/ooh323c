@@ -37,6 +37,7 @@ static LPFN_RECV recv;
 static LPFN_SHUTDOWN shutdown;
 
 
+static LPFN_IOCTL ioctl;
 static LPFN_SENDTO sendto;
 static LPFN_INET_NTOA inet_ntoa;
 static LPFN_RECVFROM recvfrom;
@@ -55,6 +56,8 @@ static HMODULE ws32 = 0;
 #define SHUTDOWN_FLAGS SHUT_RDWR
 #define closesocket close
 #endif
+
+
 
 int ooSocketsInit ()
 {
@@ -136,6 +139,9 @@ int ooSocketsInit ()
    getsockname = (LPFN_GETSOCKNAME) GetProcAddress (ws32, "getsockname");
    if (getsockname == NULL) return ASN_E_NOTINIT;
   
+   ioctl = (LPFN_IOCTL) GetProcAddress(ws32, "ioctl");
+   if(ioctl == NULL) return ASN_E_NOTINIT;
+
    sendto = (LPFN_SENDTO) GetProcAddress (ws32, "sendto");
    if (sendto == NULL) return ASN_E_NOTINIT;
 
@@ -560,4 +566,152 @@ long ooSocketHTONL(long val)
 short ooSocketHTONS(short val)
 {
    return htons(val);
+}
+
+int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
+{
+   OOSOCKET sock;
+   struct ifconf ifc;
+   int ifNum;
+   OOInterface *pIf=NULL;
+
+   OOTRACEDBGA1("Retrieving local interfaces\n");
+   if(ooSocketCreateUDP(&sock)!= ASN_OK)
+   {
+      OOTRACEERR1("Error:Failed to create udp socket - "
+                  "ooSocketGetInterfaceList\n");  
+      return -1;
+   }
+#ifdef SIOCGIFNUM
+   if(ioctl(sock, SIOCGIFNUM, &ifNum) >= 0)
+   {
+      OOTRACEERR1("Error: ioctl for ifNum failed\n");
+      return -1;
+   }
+#else
+   ifNum = 50;
+#endif
+
+   ifc.ifc_len = ifNum * sizeof(struct ifreq);
+   ifc.ifc_req = (struct ifreq *)memAlloc(pctxt, ifNum *sizeof(struct ifreq));
+   if(!ifc.ifc_req)
+   {
+      OOTRACEERR1("Error:Memory - ooSocketGetInterfaceList - ifc.ifc_req\n");
+      return -1;
+   }
+
+   if (ioctl(sock, SIOCGIFCONF, &ifc) >= 0) {
+      void * ifEndList = (char *)ifc.ifc_req + ifc.ifc_len;
+      struct ifreq *ifName;
+      struct ifreq ifReq;
+      int flags;
+      for (ifName = ifc.ifc_req; (void*)ifName < ifEndList; ifName++) {
+         char *pName=NULL;
+         char addr[50], mask[50];
+        
+         pIf = (struct OOInterface*)memAlloc(pctxt, sizeof(struct OOInterface));
+         pName = (char*)memAlloc(pctxt, strlen(ifName->ifr_name)+1);
+         if(!pIf)
+         {
+            OOTRACEERR1("Error:Memory - ooSocketGetInterfaceList - "
+                        "pIf/pName\n");
+            return -1;
+         }
+         OOTRACEDBGA2("\tInterface name: %s\n", ifName->ifr_name);
+        
+        
+         strcpy(ifReq.ifr_name, ifName->ifr_name);
+         strcpy(pName, ifName->ifr_name);
+         pIf->name = pName;
+
+         /* Check whether the interface is up*/
+         if (ioctl(sock, SIOCGIFFLAGS, &ifReq) < 0) {
+            OOTRACEERR2("Error:Unable to determine status of interface %s\n",
+                        pName);
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf);
+            continue;
+         }
+         flags = ifReq.ifr_flags;
+         if (!(flags & IFF_UP)) {
+            OOTRACEWARN2("Warn:Interface %s is not up\n", pName);
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf);
+            continue;
+         }
+
+         /* Retrieve interface address */
+         if (ioctl(sock, SIOCGIFADDR, &ifReq) < 0)
+         {
+            OOTRACEWARN2("Warn:Unable to determine address of interface %s\n",
+                          pName);
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf);
+            continue;
+         }
+         strcpy(addr, inet_ntoa(((struct sockaddr_in*)&ifReq.ifr_addr)->sin_addr));
+         OOTRACEDBGA2("\tIP address is %s\n", addr);
+         pIf->addr = (char*)memAlloc(pctxt, strlen(addr)+1);
+         if(!pIf->addr)
+         {
+            OOTRACEERR1("Error:Memory - ooSocketGetInterfaceList - "
+                        "pIf->addr\n");
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf);
+            return -1;
+         }
+         strcpy(pIf->addr, addr);
+        
+
+         if (ioctl(sock, SIOCGIFNETMASK, &ifReq) < 0)
+         {
+            OOTRACEWARN2("Warn:Unable to determine mask for interface %s\n",
+                          pName);
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf->addr);
+            memFreePtr(pctxt, pIf);
+            continue;
+         }
+         strcpy(mask, inet_ntoa(((struct sockaddr_in *)&ifReq.ifr_netmask)->sin_addr));
+         OOTRACEDBGA2("\tMask is %s\n", mask);
+         pIf->mask = (char*)memAlloc(pctxt, strlen(mask)+1);
+         if(!pIf->mask)
+         {
+            OOTRACEERR1("Error:Memory - ooSocketGetInterfaceList - "
+                        "pIf->mask\n");
+            memFreePtr(pctxt, pIf->name);
+            memFreePtr(pctxt, pIf->addr);
+            memFreePtr(pctxt, pIf);
+            return -1;
+         }
+         strcpy(pIf->mask, mask);
+
+         pIf->next = NULL;
+
+         /* Add to the list */
+         if(!*ifList)
+         {
+            *ifList = pIf;
+            pIf = NULL;
+         }else{
+            pIf->next = *ifList;
+            *ifList = pIf;
+            pIf=NULL;
+         }
+/*
+#if defined(OO_FREEBSD) || defined(OO_OPENBSD) || defined(OO_NETBSD) || defined(OO_MACOSX) || defined(OO_VXWORKS) || defined(OO_RTEMS) || defined(OO_QNX)
+#ifndef _SIZEOF_ADDR_IFREQ
+#define _SIZEOF_ADDR_IFREQ(ifr) \
+        ((ifr).ifr_addr.sa_len > sizeof(struct sockaddr) ? \
+         (sizeof(struct ifreq) - sizeof(struct sockaddr) + \
+          (ifr).ifr_addr.sa_len) : sizeof(struct ifreq))
+#endif
+      ifName = (struct ifreq *)((char *)ifName + _SIZEOF_ADDR_IFREQ(*ifName));
+#else
+      ifName++;
+*/
+      }
+
+   } 
+   return ASN_OK;
 }

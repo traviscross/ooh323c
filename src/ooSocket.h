@@ -33,10 +33,12 @@
 #include <sys/types.h>
 #include "sys/time.h"
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <net/if.h>
 #endif
 
 #include "ooasn1.h"
@@ -80,6 +82,14 @@ typedef unsigned long OOIPADDR;
 
 #define OOIPADDR_ANY   ((OOIPADDR)0)
 #define OOIPADDR_LOCAL ((OOIPADDR)0x7f000001UL) /* 127.0.0.1 */
+
+typedef struct OOInterface{
+   char *name;
+   char *addr;
+   char *mask;
+   struct OOInterface *next;
+}OOInterface;
+
 
 
 /**
@@ -379,6 +389,8 @@ EXTERN short ooSocketHTONS(short val);
  * @return        ASN_OK, on success; -ve on failed.
  */
 EXTERN int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port);
+
+EXTERN int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList);
 /**
  * @}
  */

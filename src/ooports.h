@@ -60,22 +60,28 @@ EXTERN int ooGetNextPort (OOH323PortType type);
  * @param ep        Reference to H323 Endpoint structure.
  * @param type      Type of the port required for the socket.
  * @param socket    The socket to be bound.
+ * @param ip        Dotted Ip address to bind to.
  *
  * @return          In case of success returns the port number to which
  *                  socket is bound and in case of failure just returns
  *                  a negative value.
 */
-EXTERN int ooBindPort (OOH323PortType type, OOSOCKET socket);
+EXTERN int ooBindPort (OOH323PortType type, OOSOCKET socket, char *ip);
 
 /**
  * This function is supported for windows version only.
  *  Windows sockets have problem in reusing the addresses even after
  *  setting SO_REUSEADDR, hence in windows we just allow os to bind
  *  to any random port.
-*/
-
+ * @param socket    Socket to be bound.
+ * @param ip        Dotted ip address to bind to.
+ *
+ * @return          In case of success returns the port number to which
+ *                  socket is bound and in case of failure just returns
+ *                  a negative value.
+ */
 #ifdef _WIN32       
-EXTERN int ooBindOSAllocatedPort(OOSOCKET socket);
+EXTERN int ooBindOSAllocatedPort(OOSOCKET socket, char *ip);
 #endif
 
 #ifdef __cplusplus

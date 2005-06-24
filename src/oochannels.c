@@ -48,7 +48,7 @@ int ooCreateH245Listener(OOH323CallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ret = ooBindPort (OOTCP, channelSocket);
+   ret = ooBindPort (OOTCP, channelSocket, call->localIP);
    if(ret == OO_FAILED)
    {
       OOTRACEERR3("Error:Unable to bind to a TCP port - H245 listener creation"
@@ -96,7 +96,7 @@ int ooCreateH245Connection(OOH323CallData *call)
          bind socket to a port before connecting. Thus avoiding
          implicit bind done by a connect call.
       */
-      ret = ooBindPort(OOTCP, channelSocket);
+      ret = ooBindPort(OOTCP, channelSocket, call->localIP);
       if(ret == OO_FAILED)
       {
          OOTRACEERR3("Error:Unable to bind to a TCP port - h245 connection "
@@ -250,9 +250,9 @@ int ooCreateH225Connection(OOH323CallData *call)
          to any random port.
       */
 #ifndef _WIN32
-      ret = ooBindPort(OOTCP,channelSocket);
+      ret = ooBindPort(OOTCP,channelSocket, call->localIP);
 #else
-      ret = ooBindOSAllocatedPort(channelSocket);
+      ret = ooBindOSAllocatedPort(channelSocket, call->localIP);
 #endif
      
       if(ret == OO_FAILED)

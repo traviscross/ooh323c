@@ -143,6 +143,7 @@ int ooH323EpInitialize
    gH323ep.logicalChannelTimeout = DEFAULT_LOGICALCHAN_TIMEOUT;
 
    gH323ep.sessionTimeout = DEFAULT_ENDSESSION_TIMEOUT;
+   gH323ep.ifList = NULL;
 #ifdef HAVE_PIPE
    if(pipe(gH323ep.cmdPipe)<0){
       OOTRACEERR1("Error:Failed to create command pipe\n");

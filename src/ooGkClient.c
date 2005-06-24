@@ -46,6 +46,7 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
               char *szGkAddr, int iGkPort )
 {
    ooGkClient *pGkClient=NULL;
+   OOInterface *cur=NULL;
    pGkClient = (ooGkClient*)
                          memAlloc(&gH323ep.ctxt, sizeof(ooGkClient));
    if(!pGkClient)
@@ -62,6 +63,32 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    pGkClient->grqRetries = 0;
 
    strcpy(pGkClient->localRASIP, gH323ep.signallingIP);
+   if(!strcmp(pGkClient->localRASIP, "0.0.0.0") ||
+      !strcmp(pGkClient->localRASIP, "127.0.0.1"))
+   {
+      if(!gH323ep.ifList)
+      {
+         if(ooSocketGetInterfaceList(&gH323ep.ctxt, &gH323ep.ifList)!= ASN_OK)
+         {
+            OOTRACEERR1("Error:Failed to retrieve interface addresses\n");
+            return OO_FAILED;
+         }
+      }
+      for(cur = gH323ep.ifList; cur; cur = cur->next)
+      {
+         if(!strcmp(cur->name, "lo") || !strcmp(cur->addr, "127.0.0.1"))
+            continue;
+         break;
+      }
+      if(cur)
+      {
+         OOTRACEINFO2("Using local RAS Ip address %s\n", cur->addr);
+         strcpy(pGkClient->localRASIP, cur->addr);
+      }else{
+         OOTRACEERR1("Error:Failed to assign a local RAS IP address\n");
+         return OO_FAILED;
+      }
+   }
   
    if(OO_OK != ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort))
    {
@@ -236,7 +263,7 @@ int ooGkClientCreateChannel(ooGkClient *pGkClient)
       }
    }
    else {
-      ret = ooBindPort (OOUDP, pGkClient->rasSocket);
+      ret = ooBindPort (OOUDP, pGkClient->rasSocket, pGkClient->localRASIP);
       if(ret == OO_FAILED)
       {
          OOTRACEERR1("ERROR: Failed to bind port to RAS socket\n");
