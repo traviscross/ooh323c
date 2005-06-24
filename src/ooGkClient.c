@@ -63,6 +63,7 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
    pGkClient->grqRetries = 0;
 
    strcpy(pGkClient->localRASIP, gH323ep.signallingIP);
+#ifndef _WIN32
    if(!strcmp(pGkClient->localRASIP, "0.0.0.0") ||
       !strcmp(pGkClient->localRASIP, "127.0.0.1"))
    {
@@ -89,7 +90,7 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
          return OO_FAILED;
       }
    }
-  
+#endif  
    if(OO_OK != ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort))
    {
       OOTRACEERR1("Error:Failed to set Gk mode\n");

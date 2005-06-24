@@ -37,7 +37,7 @@ static LPFN_RECV recv;
 static LPFN_SHUTDOWN shutdown;
 
 
-static LPFN_IOCTL ioctl;
+static LPFN_IOCTLSOCKET ioctlsocket;
 static LPFN_SENDTO sendto;
 static LPFN_INET_NTOA inet_ntoa;
 static LPFN_RECVFROM recvfrom;
@@ -139,8 +139,8 @@ int ooSocketsInit ()
    getsockname = (LPFN_GETSOCKNAME) GetProcAddress (ws32, "getsockname");
    if (getsockname == NULL) return ASN_E_NOTINIT;
   
-   ioctl = (LPFN_IOCTL) GetProcAddress(ws32, "ioctl");
-   if(ioctl == NULL) return ASN_E_NOTINIT;
+   ioctlsocket = (LPFN_IOCTLSOCKET) GetProcAddress(ws32, "ioctlsocket");
+   if(ioctlsocket == NULL) return ASN_E_NOTINIT;
 
    sendto = (LPFN_SENDTO) GetProcAddress (ws32, "sendto");
    if (sendto == NULL) return ASN_E_NOTINIT;
@@ -568,6 +568,7 @@ short ooSocketHTONS(short val)
    return htons(val);
 }
 
+#ifndef _WIN32
 int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
 {
    OOSOCKET sock;
@@ -715,3 +716,4 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
    } 
    return ASN_OK;
 }
+#endif
