@@ -390,6 +390,7 @@ EXTERN short ooSocketHTONS(short val);
  */
 EXTERN int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port);
 
+
 EXTERN int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList);
 /**
  * @}
