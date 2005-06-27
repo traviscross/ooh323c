@@ -660,7 +660,13 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    /* Q931 protocol discriminator */
    msgbuf[i++] = pq931Msg->protocolDiscriminator;
    msgbuf[i++] = 2; /* length of call ref is two octets */
-   msgbuf[i++] = (pq931Msg->callReference >> 8); /* populate 1st octet */
+   msgbuf[i] = (pq931Msg->callReference >> 8); /* populate 1st octet */
+   if(!strcmp(call->callType, "incoming"))
+      msgbuf[i++] |= 0x80;   /* fromDestination*/
+   else
+      i++;   /* fromOriginator*/
+
+ 
    msgbuf[i++] = pq931Msg->callReference; /* populate 2nd octet */
    msgbuf[i++] = pq931Msg->messageType; /* type of q931 message */
 
@@ -831,6 +837,8 @@ int ooSendCallProceeding(OOH323CallData *call)
           call->callIdentifier.guid.data,
           call->callIdentifier.guid.numocts);
    callProceeding->protocolIdentifier = gProtocolID; 
+
+   callProceeding->destinationInfo.m.terminalPresent = TRUE;
    callProceeding->destinationInfo.m.vendorPresent = 1;
    vendor = &callProceeding->destinationInfo.vendor;
    if(gH323ep.productID)
@@ -942,6 +950,8 @@ int ooSendAlerting(OOH323CallData *call)
           call->callIdentifier.guid.data,
           call->callIdentifier.guid.numocts);
    alerting->protocolIdentifier = gProtocolID; 
+
+   alerting->destinationInfo.m.terminalPresent = TRUE;
    alerting->destinationInfo.m.vendorPresent = 1;
    vendor = &alerting->destinationInfo.vendor;
    if(gH323ep.productID)
@@ -1255,6 +1265,8 @@ int ooAcceptCall(OOH323CallData *call)
 
    connect->protocolIdentifier = gProtocolID; 
 
+   connect->destinationInfo.m.terminalPresent = TRUE;
+  
    connect->destinationInfo.m.vendorPresent = 1;
    vendor = &connect->destinationInfo.vendor;
      
