@@ -3380,6 +3380,8 @@ int ooPrepareFastStartResponseOLC
       rlcp = &(olc->reverseLogicalChannelParameters);
 
       pH2250lcp2 = rlcp->multiplexParameters.u.h2250LogicalChannelParameters;
+      pH2250lcp2->m.mediaChannelPresent = 0;
+      memset(&pH2250lcp2->mediaChannel, 0, sizeof(H245TransportAddress));
 
       pH2250lcp2->m.mediaControlChannelPresent = 1;
       pH2250lcp2->mediaControlChannel.t =
