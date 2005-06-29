@@ -24,6 +24,7 @@ if(@ARGV < 2) {
 print "Updating version number in ", $ooh323cdir, " to ", $version, "\n";
 
 updateVersion("${ooh323cdir}/configure.in", $version);
+updateVersion("${ooh323cdir}/config.h", $version);
 updateVersion("${ooh323cdir}/README", $version);
 updateVersion("${ooh323cdir}/README.win32.txt", $version);
 updateVersion("${ooh323cdir}/README.unix", $version);

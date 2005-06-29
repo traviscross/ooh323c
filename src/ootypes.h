@@ -55,6 +55,14 @@
 #include "H323-MESSAGES.h"
 #include "ooasn1.h"
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_PTHREAD_H
+#include <pthread.h>
+#endif
+
 #define OOH323C_VERSION "vxx.aa"
 
 #ifndef EXTERN

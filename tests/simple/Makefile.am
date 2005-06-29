@@ -6,12 +6,12 @@ simple_LDADD = -looh323c -ldl -lpthread
 simple_LDFLAGS = -L$(top_builddir)/src
 
 opt:
-        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_REENTRANT -D_COMPACT -O2" all
+        $(MAKE) all
 
 debug:
-        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) all
 
 profile:
-        $(MAKE) "CFLAGS = -g -pg -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) all
 
 EXTRA_DIST = simple.dsp

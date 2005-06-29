@@ -28,6 +28,7 @@
 #include "ooUtils.h"
 #include <time.h>
 
+
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 

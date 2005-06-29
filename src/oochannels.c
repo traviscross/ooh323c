@@ -28,6 +28,10 @@
 #include "ooh323ep.h"
 #include "ooStackCmds.h"
 
+#ifdef HAVE_PTHREAD_H
+#include <pthread.h>
+#endif
+
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 

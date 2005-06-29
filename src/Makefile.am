@@ -9,13 +9,13 @@ INCLUDES = -Ih323
 
 
 opt:
-        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_REENTRANT -O2 -D_COMPACT" all
+        $(MAKE) all
 
 debug:
-        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT"  all
+        $(MAKE) all
 
 profile:
-        $(MAKE) "CFLAGS = -g -pg -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) all
 
 include_HEADERS = dlist.h ooUtils.h memheap.h ooCommon.h ooDateTime.h ooGkClient.h ooasn1.h oochannels.h ootrace.h ooh245.h ooports.h ooq931.h oohdr.h ooper.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCapability.h ooCalls.h ooLogChan.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h
 

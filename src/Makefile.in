@@ -79,6 +79,8 @@ LN_S = @LN_S@
 OBJDUMP = @OBJDUMP@
 OOH323CDIR = @OOH323CDIR@
 OOH323CFLAGS = @OOH323CFLAGS@
+OOMEDIADIR = @OOMEDIADIR@
+OOTESTSDIRS = @OOTESTSDIRS@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 STRIP = @STRIP@
@@ -603,13 +605,13 @@ uninstall-am: uninstall-includeHEADERS uninstall-info-am \
 
 
 opt:
-        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_REENTRANT -O2 -D_COMPACT" all
+        $(MAKE) all
 
 debug:
-        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT"  all
+        $(MAKE) all
 
 profile:
-        $(MAKE) "CFLAGS = -g -pg -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) all
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -18,7 +18,9 @@
    format..
 */
 #include <stdlib.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 #include "printHandler.h"
 #include "ootypes.h"
 #include "rtctype.h"

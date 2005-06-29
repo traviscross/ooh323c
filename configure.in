@@ -20,7 +20,7 @@ fi
 
 
 AC_SUBST(INSTALLPREFIX)
-OOH323CFLAGS="-DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -D_COMPACT"
+OOH323CFLAGS="-DGNU -D_GNU_SOURCE -D_REENTRANT"
 AC_SUBST(OOH323CFLAGS)
 
 
@@ -30,10 +30,21 @@ AC_LANG_C
 
 dnl not required as using libtool AC_PROG_RANLIB
 AC_HEADER_STDC
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h netdb.h netinet/in.h stddef.h stdlib.h string.h sys/socket.h unistd.h sys/ioctl.h])
+AC_CHECK_HEADERS([pthread.h arpa/inet.h fcntl.h limits.h netdb.h netinet/in.h stddef.h stdlib.h string.h sys/socket.h unistd.h sys/ioctl.h malloc.h])
 
-AC_CHECK_HEADERS(linux/soundcard.h, [], [AC_MSG_WARN(******linux/soundcard.h is required for media library.
-                  ******You won't be able to build sample media library***)])
+OOINCLUDEMEDIA=yes
+AC_CHECK_HEADERS(linux/soundcard.h, [], [OOINCLUDEMEDIA=no])
+
+OOMEDIADIR="media"
+OOTESTSDIRS="simple receiver player"
+if test "x$OOINCLUDEMEDIA" = xno; then
+   AC_MSG_WARN([***Media Library Requires "linux/soundcard.h.***
+               ***Will skip building media library and examples***])
+   OOMEDIADIR=""
+   OOTESTSDIRS=""
+fi
+AC_SUBST(OOMEDIADIR)
+AC_SUBST(OOTESTSDIRS)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -46,7 +57,7 @@ AC_FUNC_MALLOC
 AC_FUNC_SELECT_ARGTYPES
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname gethostname pipe])
+AC_CHECK_FUNCS([gettimeofday inet_ntoa memchr memset select socket gethostbyname gethostname pipe ioctl])
 
 
 dnl AC_CONFIG_FILES([src/Makefile media/Makefile tests/simple/Makefile tests/player/Makefile tests/receiver/Makefile])

@@ -79,6 +79,8 @@ LN_S = @LN_S@
 OBJDUMP = @OBJDUMP@
 OOH323CDIR = @OOH323CDIR@
 OOH323CFLAGS = @OOH323CFLAGS@
+OOMEDIADIR = @OOMEDIADIR@
+OOTESTSDIRS = @OOTESTSDIRS@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 STRIP = @STRIP@
@@ -88,7 +90,7 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 AUTOMAKE_OPTIONS = gnu
 
-SUBDIRS = . chansetup simple player receiver
+SUBDIRS = . chansetup @OOTESTSDIRS@
 subdir = tests
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

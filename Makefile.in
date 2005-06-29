@@ -79,6 +79,8 @@ LN_S = @LN_S@
 OBJDUMP = @OBJDUMP@
 OOH323CDIR = @OOH323CDIR@
 OOH323CFLAGS = @OOH323CFLAGS@
+OOMEDIADIR = @OOMEDIADIR@
+OOTESTSDIRS = @OOTESTSDIRS@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 STRIP = @STRIP@
@@ -87,8 +89,9 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 AUTOMAKE_OPTIONS = gnu
+CFLAGS = @OOH323CFLAGS@
 
-SUBDIRS = . src media tests
+SUBDIRS = . src @OOMEDIADIR@ tests
 EXTRA_DIST = doc ooh323c.dsw
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -440,13 +443,13 @@ uninstall-info: uninstall-info-recursive
 
 
 opt:
-        $(MAKE) "CFLAGS = -DGNU -D_GNU_SOURCE -D_REENTRANT -D_COMPACT -O2" all
+        $(MAKE) "CFLAGS = $(CFLAGS) -O2 -D_COMPACT" all
 
 debug:
-        $(MAKE) "CFLAGS = -g -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) "CFLAGS = $(CFLAGS) -g" all
 
 profile:
-        $(MAKE) "CFLAGS = -g -pg -DGNU -D_GNU_SOURCE -D_REENTRANT" all
+        $(MAKE) "CFLAGS = $(CFLAGS) -g -pg" all
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
