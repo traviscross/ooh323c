@@ -111,6 +111,13 @@ int ooMakeCall
 int ooAnswerCall(char *callToken)
 {
    OOStackCommand *cmd;
+
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken passed to ooHangCall\n");
+      return OO_FAILED;
+   }
+
 #ifdef _WIN32
    EnterCriticalSection(&gCmdMutex);
 #else
@@ -154,6 +161,12 @@ int ooAnswerCall(char *callToken)
 int ooForwardCall(char* callToken, char *dest)
 {
    OOStackCommand *cmd;
+
+   if(!callToken || !dest)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken/dest passed to ooHangCall\n");
+      return OO_FAILED;
+   }
 #ifdef _WIN32
    EnterCriticalSection(&gCmdMutex);
 #else
@@ -195,14 +208,22 @@ int ooForwardCall(char* callToken, char *dest)
 }
 
 
-int ooHangCall(char * callToken, OOCallClearReason reason)
+int ooHangCall(char *callToken, OOCallClearReason reason)
 {
    OOStackCommand *cmd;
+
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken passed to ooHangCall\n");
+      return OO_FAILED;
+   }
+
 #ifdef _WIN32
    EnterCriticalSection(&gCmdMutex);
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
+ 
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
