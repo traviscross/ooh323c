@@ -794,6 +794,7 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
    case T_H245AudioCapability_g7231:
      cap = OO_G7231;
      noofframes = audioCap->u.g7231->maxAl_sduAudioFrames;
+     break;
    default:
       return FALSE;
    }
