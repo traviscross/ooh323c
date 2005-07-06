@@ -1,7 +1,10 @@
 Release xx.aa
 1.
 
-        
+
+Release 0.7.1
+1. Bug fixes and fix for CISCO gateway interop issue.
+
 Release 0.7
 1. Added support for G711 alaw, G729, G729a, G723.1, GSM, H.263 codecs
 2. Better callback support. Two levels of callbacks, viz., at call level
