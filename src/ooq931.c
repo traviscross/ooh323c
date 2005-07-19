@@ -1925,6 +1925,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
 
    /* Populate the vendor information */
+   setup->sourceInfo.m.terminalPresent = TRUE;
    setup->sourceInfo.m.vendorPresent=TRUE;
    setup->sourceInfo.vendor.vendor.t35CountryCode = gH323ep.t35CountryCode;
    setup->sourceInfo.vendor.vendor.t35Extension = gH323ep.t35Extension;
