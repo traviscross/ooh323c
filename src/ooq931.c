@@ -2657,12 +2657,12 @@ int ooParseDestination(OOH323CallData *call, char *dest)
    /* e-164 */
    /* strspn(dest, "1234567890*#") == strlen(dest)*/
    /* Dialed digits test*/
-   for(i=0; i<(int)strlen(alias); i++)
+   for(i=0; *(alias+i) != '\0'; i++)
    {
       if(!isdigit(alias[i]))
          break;
    }
-   if(i == (int)strlen(alias))
+   if(*(alias+i) == '\0')
    {
       psNewAlias = (ooAliases*) memAlloc(call->pctxt, sizeof(ooAliases));
       if(!psNewAlias)
@@ -3145,12 +3145,12 @@ int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
    /* e-164 */
    /* strspn(dest, "1234567890*#") == strlen(dest)*/
    /* Dialed digits test*/
-   for(i=0; i<(int)strlen(alias); i++)
+   for(i=0; *(alias+i) != '\0'; i++)
    {
       if(!isdigit(alias[i]))
          break;
    }
-   if(i == (int)strlen(alias))
+   if(*(alias+i) == '\0')
    {
       psNewAlias = (ooAliases*) memAlloc(pctxt, sizeof(ooAliases));
       if(!psNewAlias)

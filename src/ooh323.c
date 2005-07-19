@@ -1604,7 +1604,7 @@ int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
                memFreePtr(pctxt, pAliasEntry);
                return OO_FAILED;
             }
-            for(i=0; i<(int)strlen(pAlias->value); i++)
+            for(i=0; *(pAlias->value+i) != '\0'; i++)
                pAliasEntry->u.h323_ID.data[i] =(ASN116BITCHAR)pAlias->value[i];
             bValid = TRUE;
             break;
