@@ -217,7 +217,7 @@ int ooSendH225Msg(OOH323CallData *call, Q931Message *msg)
    {
       dListFreeAll(call->pctxt, &call->pH225Channel->outQueue);
       dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
-      ooSendMsg(call, OOQ931MSG);
+      // ooSendMsg(call, OOQ931MSG);
    }else{
 
       dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);

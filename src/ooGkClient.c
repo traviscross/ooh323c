@@ -1471,7 +1471,7 @@ int ooGkClientSendAdmissionRequest
    /* Populate call signalling addresses */
    pIpAddressLocal = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                      sizeof(H225TransportAddress_ipAddress));
-   if(strlen(call->remoteIP))
+   if(ooUtilsIsStrEmpty(call->remoteIP))
       pIpAddressRemote = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                       sizeof(H225TransportAddress_ipAddress));
 

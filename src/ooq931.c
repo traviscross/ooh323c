@@ -42,7 +42,7 @@ static ASN1OBJID gProtocolID = {
 EXTERN int ooQ931Decode
    (OOH323CallData *call, Q931Message* msg, int length, ASN1OCTET *data)
 {
-   int offset;
+   int offset, x;
    int rv = ASN_OK;
    char number[128];
    OOCTXT *pctxt = &gH323ep.msgctxt;
@@ -62,9 +62,16 @@ EXTERN int ooQ931Decode
    OOTRACEDBGB2("   callReference = %d\n", msg->callReference);
 
    msg->fromDestination = (data[2] & 0x80) != 0;
+   if(msg->fromDestination)
+      OOTRACEDBGB1("   from = destination\n");
+   else
+      OOTRACEDBGB1("   from = originator\n");  
+
 
    msg->messageType = data[4];
+   OOTRACEDBGB2("   messageType = %x\n", msg->messageType);
 
+  
    /* Have preamble, start getting the informationElements into buffers */
    offset = 5;
    while (offset < length) {
@@ -134,7 +141,24 @@ EXTERN int ooQ931Decode
          ie->offset = offset;
          ie->length = 0;
       }
-     
+      if(ie->discriminator == Q931BearerCapabilityIE)
+      {
+         OOTRACEDBGB1("   Bearer-Capability IE = {\n");
+         for(x=0; x<ie->length; x++)
+         {
+            if(x==0)
+               OOTRACEDBGB2("      %x", ie->data[x]);
+            else
+               OOTRACEDBGB2(", %x", ie->data[x]);
+         }
+         OOTRACEDBGB1("   }\n");
+      }
+      if(ie->discriminator == Q931DisplayIE)
+      {
+         OOTRACEDBGB1("   Display IE = {\n");
+         OOTRACEDBGB2("      %s\n", ie->data);
+         OOTRACEDBGB1("   }\n");
+      }
       /* Extract calling party number TODO:Give respect to presentation and
          screening indicators ;-) */
       if(ie->discriminator == Q931CallingPartyNumberIE)
@@ -575,7 +599,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
 }
 
 #ifndef _COMPACT
-static void ooPrintQ931Message
+static void ooQ931PrintMessage
    (OOH323CallData* call, ASN1OCTET *msgbuf, ASN1UINT msglen)
 {
 
@@ -694,7 +718,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    }
      
    /*Add display ie. */
-   if(strlen(call->ourCallerId)>0)
+   if(ooUtilsIsStrEmpty(call->ourCallerId))
    {
       msgbuf[i++] = Q931DisplayIE;
       ieLen = strlen(call->ourCallerId)+1;
@@ -772,9 +796,9 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
  
 #ifndef _COMPACT
    if(msgbuf[0] != OOFacility)
-      ooPrintQ931Message (call, msgbuf+5, len-4);
+      ooQ931PrintMessage (call, msgbuf+5, len-4);
    else
-      ooPrintQ931Message (call, msgbuf+8, len-4);
+      ooQ931PrintMessage (call, msgbuf+8, len-4);
 #endif
    return OO_OK;
 }
@@ -2225,7 +2249,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    /* For H.323 version 4 and higher, if fast connect, tunneling should be
       supported.
    */
-   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
+   if(OO_TESTFLAG(call->flags, OO_M_FASTSTART))
       q931msg->userInfo->h323_uu_pdu.h245Tunneling = TRUE;
 
    OOTRACEDBGA3("Built SETUP message (%s, %s)\n", call->callType,
