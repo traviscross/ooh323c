@@ -718,7 +718,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    }
      
    /*Add display ie. */
-   if(ooUtilsIsStrEmpty(call->ourCallerId))
+   if(!ooUtilsIsStrEmpty(call->ourCallerId))
    {
       msgbuf[i++] = Q931DisplayIE;
       ieLen = strlen(call->ourCallerId)+1;
