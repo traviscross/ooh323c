@@ -1932,13 +1932,14 @@ int ooCapabilityUpdateJointCapabilities
       OOTRACEDBGC3("Adding cap to joint capabilities(%s, %s)\n",call->callType,
                    call->callToken);
       /* Note:we add jointCaps in remote endpoints preference order.*/
-      if(call->jointCaps)
-      {
+      if(!call->jointCaps)
+         call->jointCaps = epCap;
+      else {
          cur = call->jointCaps;
          while(cur->next) cur = cur->next;
          cur->next = epCap;
       }
-      call->jointCaps = epCap;
+
       return OO_OK;
    }
 
@@ -1979,13 +1980,14 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-SQCIF to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
+
       }    
    }
 
@@ -2000,13 +2002,14 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-QCIF to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
+
       }    
    }
 
@@ -2021,13 +2024,14 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-CIF to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
+
       }    
    }
 
@@ -2042,13 +2046,14 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-CIF to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
+
       }    
    }
 
@@ -2063,13 +2068,13 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-CIF4 to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
       }    
    }
 
@@ -2084,13 +2089,14 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
          OOTRACEDBGC3("Adding H263-CIF16 to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(call->jointCaps)
-         {
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
             cur = call->jointCaps;
             while(cur->next) cur = cur->next;
             cur->next = epCap;
          }
-         call->jointCaps = epCap;
+
       }    
    }
 
