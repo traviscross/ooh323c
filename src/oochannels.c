@@ -792,10 +792,15 @@ int ooH2250Receive(OOH323CallData *call)
    memset(pmsg, 0, sizeof(Q931Message));
    /* First read just TPKT header which is four bytes */
    recvLen = ooSocketRecv (call->pH225Channel->sock, message, 4);
-   if(recvLen == 0)
+   if(recvLen <= 0)
    {
-      OOTRACEWARN3("Warn:RemoteEndpoint closed connection (%s, %s)\n",
-                   call->callType, call->callToken);
+      if(recvLen == 0)
+         OOTRACEWARN3("Warn:RemoteEndpoint closed connection (%s, %s)\n",
+                      call->callType, call->callToken);
+      else
+         OOTRACEERR3("Error:Transport failure while reading Q931 "
+                     "message (%s, %s)\n", call->callType, call->callToken);
+
       ooCloseH225Connection(call);
       if(call->callState < OO_CALL_CLEARED)
       {
@@ -928,11 +933,15 @@ int ooH245Receive(OOH323CallData *call)
       message boundary. Has to be done at channel level, as channels
       know the message formats and can determine boundaries
    */
-   if(recvLen==0)
+   if(recvLen<=0)
    {
-     
-      OOTRACEINFO3("Closing H.245 channels as remote end point closed H.245"
-                   " connection (%s, %s)\n", call->callType, call->callToken);
+      if(recvLen == 0)
+         OOTRACEINFO3("Closing H.245 channels as remote end point closed H.245"
+                    " connection (%s, %s)\n", call->callType, call->callToken);
+      else
+         OOTRACEERR3("Error: Transport failure while trying to receive H245"
+                     " message (%s, %s)\n", call->callType, call->callToken);
+
       ooCloseH245Connection(call);
       ooFreeH245Message(call, pmsg);
       if(call->callState < OO_CALL_CLEAR)

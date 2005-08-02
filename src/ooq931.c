@@ -1860,6 +1860,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    ASN1BOOL aligned = 1;
    H225AliasAddress * pAliasAddress=NULL;
    pctxt = &gH323ep.msgctxt;
+   ooAliases *pAlias = NULL;
     
    ret = ooCreateQ931Message(&q931msg, Q931SetupMsg);
    if(ret != OO_OK)
@@ -1873,7 +1874,8 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    /* Set bearer capability */
    if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
                           Q931TransferSpeech, Q931TransferCircuitMode,
-                          Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
+                          Q931TransferRate64Kbps, Q931UserInfoLayer1G722G725))
+//                        Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
    {
       OOTRACEERR3("Error: Failed to set bearer capability ie.(%s, %s)\n",
                    call->callType, call->callToken);
@@ -1884,11 +1886,36 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    if(call->callingPartyNumber)
      ooQ931SetCallingPartyNumberIE(q931msg,
                             (const char*)call->callingPartyNumber, 1, 0, 1, 1);
+  
 
    /* Set called party number Q931 ie */
    if(call->calledPartyNumber)
       ooQ931SetCalledPartyNumberIE(q931msg,
                             (const char*)call->calledPartyNumber, 1, 0);
+   else if(call->remoteAliases) {
+      pAlias = call->remoteAliases;
+      while(pAlias) {
+         if(pAlias->type == T_H225AliasAddress_dialedDigits)
+            break;
+         pAlias = pAlias->next;
+      }
+      if(pAlias)
+      {
+         call->calledPartyNumber = (char*)memAlloc(call->pctxt,
+                                                   strlen(pAlias->value)+1);
+         if(!call->calledPartyNumber)
+         {
+            OOTRACEERR3("Error:Memory - ooH323MakeCall_helper - "
+                        "calledPartyNumber(%s, %s)\n", call->callType,
+                        call->callToken);
+            return OO_FAILED;
+         }
+         strcpy(call->calledPartyNumber, pAlias->value);
+         ooQ931SetCalledPartyNumberIE(q931msg,
+                            (const char*)call->calledPartyNumber, 1, 0);
+      }
+
+   }
 
    q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
                              sizeof(H225H323_UserInformation));
@@ -1927,11 +1954,17 @@ int ooH323MakeCall_helper(OOH323CallData *call)
          return OO_FAILED;
       }
    }
+
    setup->m.presentationIndicatorPresent = TRUE;
    setup->presentationIndicator.t =
                              T_H225PresentationIndicator_presentationAllowed;
    setup->m.screeningIndicatorPresent = TRUE;
    setup->screeningIndicator = userProvidedNotScreened;
+
+   setup->m.multipleCallsPresent = TRUE;
+   setup->multipleCalls = FALSE;
+   setup->m.maintainConnectionPresent = TRUE;
+   setup->maintainConnection = FALSE;
 
    /* Populate Destination aliases */
    if(call->remoteAliases)

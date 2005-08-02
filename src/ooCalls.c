@@ -335,10 +335,10 @@ int ooCallSetCallingPartyNumber(OOH323CallData *call, const char *number)
       return OO_FAILED;
    }
    /* Set dialed digits alias */
-   if(!strcmp(call->callType, "outgoing"))
+   /*   if(!strcmp(call->callType, "outgoing"))
    {
       ooCallAddAliasDialedDigits(call, number);
-   }
+   }*/
    return OO_OK;
 }
 
