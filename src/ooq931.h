@@ -189,8 +189,8 @@ enum Q931CodingStandard{
 };
 
 enum Q931TransferMode {
-  Q931TransferCircuitMode,   /* 00 */
-  Q931TransferPacketMode     /* 10 */
+  Q931TransferCircuitMode = 0,   /* 00 */
+  Q931TransferPacketMode  = 2   /* 10 */
 };
 
 enum Q931TransferRate{
