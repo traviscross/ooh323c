@@ -387,6 +387,33 @@ EXTERN int ooCallAddAliasEmailID(OOH323CallData *call, const char* email);
  */
 EXTERN int ooCallAddAliasURLID(OOH323CallData *call, const char* url);
 
+
+/**
+ * This is a helper function used by other call related add aliases functions
+ * to add a particular alias. This function is not supposed to be called
+ * directly.
+ * @param call          Handle to the call
+ * @param aliasType     Type of alias being added
+ * @param value         Alias value
+ * @param local         Whether alias is for local party or remote party
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
+int ooCallAddAlias
+   (OOH323CallData *call, int aliasType, const char *value, OOBOOL local);
+
+
+/**
+ * This function is used to add an dialed digits alias for the remote endpoint
+ * involved in a particular call.
+ * @param call          Handle to the call
+ * @param dialedDigits  dialedDigits alias to add for the remote endpoint.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCallAddRemoteAliasDialedDigits
+   (OOH323CallData *call, const char* dialedDigits);
+
 /**
  * This function is used to add an H323ID alias for the remote endpoint
  * involved in a particular call.

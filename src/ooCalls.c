@@ -397,151 +397,78 @@ int ooCallClearAliases(OOH323CallData *call)
    return OO_OK;
 }
 
-int ooCallAddAliasH323ID(OOH323CallData *call, const char* h323id)
+
+int ooCallAddAlias
+   (OOH323CallData *call, int aliasType, const char *value, OOBOOL local)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasH323ID - psNewAlias"
+      OOTRACEERR3("Error:Memory - ooCallAddAlias - psNewAlias"
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(h323id)+1);
+   psNewAlias->type = aliasType;
+   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(value)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasH323ID - psNewAlias->value"
+      OOTRACEERR3("Error:Memory - ooCallAddAlias - psNewAlias->value"
                   " (%s, %s)\n", call->callType, call->callToken);
       memFreePtr(call->pctxt, psNewAlias);
       return OO_FAILED;
    }
-   strcpy(psNewAlias->value, h323id);
-   psNewAlias->next = call->ourAliases;
-   call->ourAliases = psNewAlias;
-   OOTRACEDBGC4("Added alias H323ID %s to call. (%s, %s)\n", h323id,
-                call->callType, call->callToken);
+   strcpy(psNewAlias->value, value);
+
+   if(local)
+   {
+      psNewAlias->next = call->ourAliases;
+      call->ourAliases = psNewAlias;
+   }else {
+     psNewAlias->next = call->remoteAliases;
+     call->remoteAliases = psNewAlias;
+   }
+
+   OOTRACEDBGC5("Added %s alias %s to call. (%s, %s)\n",
+              local?"local":"remote", value, call->callType, call->callToken);
    return OO_OK;
+}
+
+int ooCallAddAliasH323ID(OOH323CallData *call, const char* h323id)
+{
+   return ooCallAddAlias(call, T_H225AliasAddress_h323_ID, h323id, TRUE);
 }
 
 
 int ooCallAddAliasDialedDigits(OOH323CallData *call, const char* dialedDigits)
 {
-
-   ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
-   if(!psNewAlias)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasDialedDigits - psNewAlias"
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   psNewAlias->type = T_H225AliasAddress_dialedDigits;
-   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(dialedDigits)+1);
-   if(!psNewAlias->value)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasDialedDigits - "
-                  "psNewAlias->value. (%s, %s)\n", call->callType,
-                   call->callToken);
-      memFreePtr(call->pctxt, psNewAlias);
-      return OO_FAILED;
-   }
-   strcpy(psNewAlias->value, dialedDigits);
-   psNewAlias->next = call->ourAliases;
-   call->ourAliases = psNewAlias;
-   OOTRACEDBGC4("Added alias dialedDigits %s to call. (%s, %s)\n",dialedDigits,
-                call->callType, call->callToken);
-
-   return OO_OK;
+   return ooCallAddAlias
+               (call, T_H225AliasAddress_dialedDigits, dialedDigits, TRUE);
 }
 
 
 int ooCallAddAliasEmailID(OOH323CallData *call, const char* email)
 {
-
-   ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
-   if(!psNewAlias)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasEmailID - psNewAlias"
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   psNewAlias->type = T_H225AliasAddress_email_ID;
-   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(email)+1);
-   if(!psNewAlias->value)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasEmailID - psNewAlias->value "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      memFreePtr(call->pctxt, psNewAlias);
-      return OO_FAILED;
-   }
-   strcpy(psNewAlias->value, email);
-   psNewAlias->next = call->ourAliases;
-   call->ourAliases = psNewAlias;
-   OOTRACEDBGC4("Added alias Email-id %s to call. (%s, %s)\n", email,
-                call->callType, call->callToken);
-
-   return OO_OK;
+   return ooCallAddAlias(call, T_H225AliasAddress_email_ID, email, TRUE);
 }
 
 
 int ooCallAddAliasURLID(OOH323CallData *call, const char* url)
 {
-
-   ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
-   if(!psNewAlias)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasURLID - psNewAlias"
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   psNewAlias->type = T_H225AliasAddress_url_ID;
-   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(url)+1);
-   if(!psNewAlias->value)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddAliasURLID - psNewAlias->value"
-                  "(%s, %s)\n", call->callType, call->callToken);
-      memFreePtr(call->pctxt, psNewAlias);
-      return OO_FAILED;
-   }
-   strcpy(psNewAlias->value, url);
-   psNewAlias->next = call->ourAliases;
-   call->ourAliases = psNewAlias;
-   OOTRACEDBGC4("Added alias Url-id %s to call. (%s, %s)\n", url,
-                call->callType, call->callToken);
-
-   return OO_OK;
+   return ooCallAddAlias(call, T_H225AliasAddress_url_ID, url, TRUE);
 }
 
 
 int ooCallAddRemoteAliasH323ID(OOH323CallData *call, const char* h323id)
 {
-   ooAliases * psNewAlias=NULL;
-   psNewAlias = (ooAliases*)memAlloc(call->pctxt, sizeof(ooAliases));
-   if(!psNewAlias)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddRemoteAliasH323ID - psNewAlias "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   psNewAlias->type = T_H225AliasAddress_h323_ID;
-   psNewAlias->value = (char*) memAlloc(call->pctxt, strlen(h323id)+1);
-   if(!psNewAlias->value)
-   {
-      OOTRACEERR3("Error:Memory - ooCallAddRemoteAliasH323ID - "
-                  "psNewAlias->value. (%s, %s)\n", call->callType,
-                   call->callToken);
-      memFreePtr(call->pctxt, psNewAlias);
-      return OO_FAILED;
-   }
-   strcpy(psNewAlias->value, h323id);
-   psNewAlias->next = call->remoteAliases;
-   call->remoteAliases = psNewAlias;
-   OOTRACEDBGC4("Added remote alias H323ID %s to call. (%s, %s)\n", h323id,
-                call->callType, call->callToken);
-   return OO_OK;
+   return ooCallAddAlias(call, T_H225AliasAddress_h323_ID, h323id, FALSE);
+}
+
+int ooCallAddRemoteAliasDialedDigits
+   (OOH323CallData *call, const char* dialedDigits)
+{
+   return ooCallAddAlias
+              (call, T_H225AliasAddress_dialedDigits, dialedDigits, FALSE);
 }
 
 
