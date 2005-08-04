@@ -2321,6 +2321,8 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
       pNode = dListFindByIndex(&tcs->capabilityTable, k);
       if(pNode)
       {
+         OOTRACEDBGC4("Processing CapabilityTable Entry %d (%s, %s)\n", k,
+                       call->callType, call->callToken);
          capEntry = (H245CapabilityTableEntry*) pNode->data;
          if(capEntry->m.capabilityPresent){
             ret =  ooAddRemoteCapability(call, &capEntry->capability);

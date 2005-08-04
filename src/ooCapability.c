@@ -1915,6 +1915,7 @@ int ooCapabilityUpdateJointCapabilities
       break;
    case T_H245Capability_receiveAndTransmitAudioCapability:
       epCap = NULL;
+      break;
    case T_H245Capability_receiveVideoCapability:
       return ooCapabilityUpdateJointCapabilitiesVideo(call,
                                           cap->u.receiveVideoCapability, OOTX);
@@ -2000,28 +2001,6 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
       if(epCap)
       {
          OOTRACEDBGC3("Adding H263-QCIF to joint capabilities(%s, %s)\n",
-                      call->callType, call->callToken);
-         /* Note:we add jointCaps in remote endpoints preference order.*/
-         if(!call->jointCaps)
-            call->jointCaps = epCap;
-         else {
-            cur = call->jointCaps;
-            while(cur->next) cur = cur->next;
-            cur->next = epCap;
-         }
-
-      }    
-   }
-
-   epCap = NULL;
-
-   if(pH263Cap->m.cifMPIPresent)
-   {
-      epCap =  ooIsVideoDataTypeH263Supported(call, pH263Cap, dir,
-                                                          OO_PICFORMAT_CIF);
-      if(epCap)
-      {
-         OOTRACEDBGC3("Adding H263-CIF to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
          if(!call->jointCaps)
