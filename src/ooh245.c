@@ -324,6 +324,12 @@ int ooSendTermCapMsg(OOH323CallData *call)
    H245VideoCapability *videoCap=NULL;
 
    int i=0, j=0, k=0;
+   if(call->localTermCapState == OO_LocalTermCapSetSent)
+   {
+      OOTRACEINFO3("TerminalCapabilitySet exchange procedure already in "
+                   "progress. (%s, %s)\n", call->callType, call->callToken);
+      return OO_OK;
+   }
 
    ret = ooCreateH245Message(&ph245msg, 
                              T_H245MultimediaSystemControlMessage_request);
@@ -727,7 +733,7 @@ int ooSendMasterSlaveDetermination(OOH323CallData *call)
    {
       OOTRACEINFO3("MasterSlave determination already in progress (%s, %s)\n",
                    call->callType, call->callToken);
-      return OO_FAILED;
+      return OO_OK;
    }
 
    ret = ooCreateH245Message(&ph245msg,
