@@ -1510,7 +1510,7 @@ int ooGkClientSendAdmissionRequest
       pAdmReq->m.srcCallSignalAddressPresent = TRUE;
       pAdmReq->srcCallSignalAddress.t = T_H225TransportAddress_ipAddress;
       pAdmReq->srcCallSignalAddress.u.ipAddress = pIpAddressLocal;
-      if(!ooUitlsIsStrEmpty(call->remoteIP))
+      if(!ooUtilsIsStrEmpty(call->remoteIP))
       {
          pAdmReq->m.destCallSignalAddressPresent = TRUE;
          pAdmReq->destCallSignalAddress.t = T_H225TransportAddress_ipAddress;
