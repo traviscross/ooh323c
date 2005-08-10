@@ -1471,11 +1471,11 @@ int ooGkClientSendAdmissionRequest
    /* Populate call signalling addresses */
    pIpAddressLocal = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                      sizeof(H225TransportAddress_ipAddress));
-   if(ooUtilsIsStrEmpty(call->remoteIP))
+   if(!ooUtilsIsStrEmpty(call->remoteIP))
       pIpAddressRemote = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                       sizeof(H225TransportAddress_ipAddress));
 
-   if(!pIpAddressLocal || (strlen(call->remoteIP) && (!pIpAddressRemote)))
+   if(!pIpAddressLocal || (!ooUtilsIsStrEmpty(call->remoteIP) && (!pIpAddressRemote)))
    {
       OOTRACEERR1("Error:Failed to allocate memory for Call Signalling "
                   "Addresses of ARQ message\n");
@@ -1488,7 +1488,7 @@ int ooGkClientSendAdmissionRequest
    pIpAddressLocal->ip.numocts = 4;
    pIpAddressLocal->port = gH323ep.listenPort;
 
-   if(strlen(call->remoteIP))
+   if(!ooUtilsIsStrEmpty(call->remoteIP))
    {
       ooSocketConvertIpToNwAddr(call->remoteIP, pIpAddressRemote->ip.data);
       pIpAddressRemote->ip.numocts = 4;
@@ -1500,7 +1500,7 @@ int ooGkClientSendAdmissionRequest
       pAdmReq->m.destCallSignalAddressPresent = TRUE;
       pAdmReq->destCallSignalAddress.t = T_H225TransportAddress_ipAddress;
       pAdmReq->destCallSignalAddress.u.ipAddress = pIpAddressLocal;
-      if(strlen(call->remoteIP))
+      if(!ooUtilsIsStrEmpty(call->remoteIP))
       {
          pAdmReq->m.srcCallSignalAddressPresent = TRUE;
          pAdmReq->srcCallSignalAddress.t = T_H225TransportAddress_ipAddress;
@@ -1510,7 +1510,7 @@ int ooGkClientSendAdmissionRequest
       pAdmReq->m.srcCallSignalAddressPresent = TRUE;
       pAdmReq->srcCallSignalAddress.t = T_H225TransportAddress_ipAddress;
       pAdmReq->srcCallSignalAddress.u.ipAddress = pIpAddressLocal;
-      if(strlen(call->remoteIP))
+      if(!ooUitlsIsStrEmpty(call->remoteIP))
       {
          pAdmReq->m.destCallSignalAddressPresent = TRUE;
          pAdmReq->destCallSignalAddress.t = T_H225TransportAddress_ipAddress;
