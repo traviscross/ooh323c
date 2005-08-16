@@ -1861,8 +1861,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    H245OpenLogicalChannel *olc, printOlc;
    ASN1BOOL aligned = 1;
    H225AliasAddress * pAliasAddress=NULL;
-   pctxt = &gH323ep.msgctxt;
    ooAliases *pAlias = NULL;
+
+   pctxt = &gH323ep.msgctxt;
     
    ret = ooCreateQ931Message(&q931msg, Q931SetupMsg);
    if(ret != OO_OK)
