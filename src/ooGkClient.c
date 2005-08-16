@@ -35,6 +35,8 @@
 #include "ooh323ep.h"
 #include "ooTimer.h"
 #include "ooSocket.h"
+#include "ooUtils.h"
+
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 

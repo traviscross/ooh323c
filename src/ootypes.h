@@ -63,7 +63,7 @@
 #include <pthread.h>
 #endif
 
-#define OOH323C_VERSION "vxx.aa"
+#define OOH323C_VERSION "v0.7.2"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL
