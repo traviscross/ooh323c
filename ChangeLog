@@ -1,6 +1,17 @@
 Release xx.aa
-1. Lot's of interop issues solved.
-2. Bug Fixes and performance improvement
+
+Release 0.7.2
+1. Interop issues with Xener gateway and couple of Cisco devices solved.
+2. Bearer capability IE changed to use PacketMode
+3. Support for binding to multiple interfaces.
+4. Support for NULL type encoded as zero length element.
+5. Support for handling faststart response received in CallProceeding/alerting
+   messages.
+6. Tracing of CalledPartyNumber, CallingPartyNumber, BearerCapability,
+   FastStart elements.
+7. Bug causing crash fixed in ooCapability.c when symmetric capability is
+   received.
+8. Other small bug fixes and performance improvement.
 
 
 Release 0.7.1
