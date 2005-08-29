@@ -44,7 +44,7 @@ OO_MUTEX gCmdMutex;
 extern DList g_TimerList;
 
 int ooH323EpInitialize
-   (int callMode, const char* tracefile)
+   (enum OOCallMode callMode, const char* tracefile)
 {
   
    memset(&gH323ep, 0, sizeof(ooEndPoint));

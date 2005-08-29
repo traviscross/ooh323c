@@ -156,7 +156,7 @@ typedef struct OOH323EndPoint {
  * @return               OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooH323EpInitialize
-   (int callMode, const char* tracefile);
+   (enum OOCallMode callMode, const char* tracefile);
 
 
 /**
