@@ -19,6 +19,7 @@
 #include "ooq931.h"
 #include "ooh323ep.h"
 #include "oochannels.h"
+#include "ooCalls.h"
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
@@ -114,7 +115,7 @@ int ooAnswerCall(char *callToken)
 
    if(!callToken)
    {
-      OOTRACEERR1("ERROR: Invalid callToken passed to ooHangCall\n");
+      OOTRACEERR1("ERROR: Invalid callToken passed to ooAnswerCall\n");
       return OO_FAILED;
    }
 
@@ -164,7 +165,7 @@ int ooForwardCall(char* callToken, char *dest)
 
    if(!callToken || !dest)
    {
-      OOTRACEERR1("ERROR: Invalid callToken/dest passed to ooHangCall\n");
+      OOTRACEERR1("ERROR: Invalid callToken/dest passed to ooForwardCall\n");
       return OO_FAILED;
    }
 #ifdef _WIN32
@@ -183,7 +184,7 @@ int ooForwardCall(char* callToken, char *dest)
 
    cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
    cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(dest)+1);
-   if(!cmd->param1)
+   if(!cmd->param1 || !cmd->param2)
    {
       OOTRACEERR1("ERROR:Memory - ooForwardCall - param1/param2\n");
       return OO_FAILED;
@@ -262,6 +263,7 @@ int ooHangCall(char *callToken, OOCallClearReason reason)
 
 int ooProcStackCmds()
 {
+   OOH323CallData *call = NULL;
    if (gH323ep.stkCmdList.count > 0)
    {
       OOStackCommand *cmd;
@@ -320,6 +322,29 @@ int ooProcStackCmds()
                dListRemove(&gH323ep.stkCmdList, pNode);
                memFreePtr(&gH323ep.ctxt, pNode);
                break;
+           
+            case OO_CMD_SENDDIGIT:
+               call = ooFindCallByToken((char*)cmd->param1);
+               if(!call)
+               {
+                  OOTRACEERR2("Error:Invalid calltoken %s\n",
+                                                         (char*)cmd->param1);
+                  dListRemove(&gH323ep.stkCmdList, pNode);
+                  memFreePtr(&gH323ep.ctxt, pNode);
+                  break;
+               }
+               if(call->jointDtmfMode & OO_CAP_DTMF_H245_alphanumeric)
+                  ooSendH245UserInputIndication_alphanumeric(call,
+                                                    (const char*)cmd->param2);
+               else if(call->jointDtmfMode & OO_CAP_DTMF_H245_signal)
+                  ooSendH245UserInputIndication_signal(call,
+                                                     (const char*)cmd->param2);
+               else
+                  ooQ931SendDTMFAsKeyPadIE(call, (const char*)cmd->param2);
+
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
+               break;
 
             case OO_CMD_STOPMONITOR:
                OOTRACEINFO1("Processing StopMonitor command\n");
@@ -371,5 +396,57 @@ int ooStopMonitor()
 #else
    pthread_mutex_unlock(&gCmdMutex);
 #endif
+   return OO_OK;
+}
+
+int ooSendDTMFDigit(char *callToken, char* dtmf)
+{
+   OOStackCommand *cmd = NULL;
+
+   if(!callToken)
+   {
+      OOTRACEERR1("ERROR: Invalid callToken passed to ooSendDTMFDigit\n");
+      return OO_FAILED;
+   }
+
+#ifdef _WIN32
+   EnterCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_lock(&gCmdMutex);
+#endif
+   cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
+   if(!cmd)
+   {
+      OOTRACEERR1("Error:Memory - ooSendDTMFDigit - cmd\n");
+      return OO_FAILED;
+   }
+   memset(cmd, 0, sizeof(OOStackCommand));
+   cmd->type = OO_CMD_SENDDIGIT;
+
+   cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
+   cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(dtmf)+1);
+   if(!cmd->param1 || !cmd->param2)
+   {
+      OOTRACEERR1("ERROR:Memory - ooSendDTMFDigit - param1/param2\n");
+      return OO_FAILED;
+   }
+   strcpy((char*)cmd->param1, callToken);
+   strcpy((char*)cmd->param2, dtmf);
+  
+   dListAppend(&gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
+  
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
    return OO_OK;
 }

@@ -158,6 +158,7 @@ typedef struct OOH323CallData {
    struct ooH323EpCapability* ourCaps;
    struct ooH323EpCapability* remoteCaps; /* TODO: once we start using jointCaps, get rid of remoteCaps*/
    struct ooH323EpCapability* jointCaps;
+   int                  jointDtmfMode;
    DList                remoteFastStartOLCs;
    ASN1UINT8            remoteTermCapSeqNo;
    ASN1UINT8            localTermCapSeqNo;
@@ -254,6 +255,14 @@ typedef int (*cb_OpenLogicalChannels)(struct OOH323CallData* call);
 typedef int (*cb_OnCallForwarded)(struct OOH323CallData* call);
 
 /**
+ * This callback function is triggered when dtmf is received over Q.931(keypad)
+ * or H.245(alphanumeric) or H.245(signal). This is not triggered when rfc
+ * 2833 based dtmf is received.
+ */
+typedef int (*cb_OnReceivedDTMF)
+   (struct OOH323CallData *call, const char *dtmf);
+
+/**
  * This structure holds all of the H.323 signaling callback function
  * addresses.
  * @see ooH323EpSetH323Callbacks
@@ -267,6 +276,7 @@ typedef struct OOH323CALLBACKS {
    cb_OnCallForwarded onCallForwarded;
    cb_OnCallCleared onCallCleared;
    cb_OpenLogicalChannels openLogicalChannels;
+   cb_OnReceivedDTMF onReceivedDTMF;
 } OOH323CALLBACKS;
 
 /**
@@ -586,6 +596,82 @@ EXTERN int ooCallEnableDTMFRFC2833
  * @return                      OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooCallDisableDTMFRFC2833(OOH323CallData *call);
+
+
+/**
+ * This function is used to enable H.245(alphanumeric) dtmf support for the
+ * call. By default the stack uses the dtmf settings for the endpoint. But if
+ * you want to enable H.245(alphanumeric) dtmf for a specific call, then you
+ * can override end-point settings using this function
+ * @param call                  Call for which H.245(alphanumeric) dtmf support
+ *                              has to be enabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallEnableDTMFH245Alphanumeric(OOH323CallData *call);
+
+/**
+ * This function is used to disable H.245(alphanumeric) dtmf support for the
+ * call. By default the stack uses the dtmf settings for the endpoint. But if
+ * you want to disable H.245(alphanumeric) dtmf for a specific call, then you
+ * can override end-point settings using this function
+ * @param call                  Call for which H.245(alphanumeric) dtmf support
+ *                              has to be disabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallDisableDTMFH245Alphanumeric(OOH323CallData *call);
+
+/**
+ * This function is used to enable H.245(signal) dtmf support for the call.
+ * By default the stack uses the dtmf settings for the endpoint. But if you
+ * want to enable H.245(signal) dtmf for a specific call, then you can override
+ * end-point settings using this function
+ * @param call                  Call for which H.245(signal) dtmf support
+ *                              has to be enabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallEnableDTMFH245Signal(OOH323CallData *call);
+
+
+/**
+ * This function is used to disable H.245(signal) dtmf support for the call.
+ * By default the stack uses the dtmf settings for the endpoint. But if you
+ * want to disable H.245(signal) dtmf for a specific call, then you can
+ * override end-point settings using this function
+ * @param call                  Call for which H.245(signal) dtmf support
+ *                              has to be disabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallDisableDTMFH245Signal(OOH323CallData *call);
+
+
+/**
+ * This function is used to enable Q.931(keypad) dtmf support for the call.
+ * By default the stack uses the dtmf settings for the endpoint. But if you
+ * want to enable Q.931(keypad) dtmf support for a specific call, then you can
+ * override end-point settings using this function
+ * @param call                  Call for which Q.931(keypad) dtmf support
+ *                              has to be enabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallEnableDTMFQ931Keypad(OOH323CallData *call);
+
+/**
+ * This function is used to disable Q.931(keypad) dtmf support for the call.
+ * By default the stack uses the dtmf settings for the endpoint. But if you
+ * want to disable Q.931(keypad) dtmf support for a specific call, then you can
+ * override end-point settings using this function
+ * @param call                  Call for which Q.931(keypad) dtmf support
+ *                              has to be disabled.
+ *
+ * @return                      OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooCallDisableDTMFQ931Keypad(OOH323CallData *call);
+
 
 /**
  * This function is used to find a call by using the unique token for the call.

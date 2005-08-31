@@ -59,7 +59,83 @@ int ooCapabilityDisableDTMFRFC2833(OOH323CallData *call)
    return OO_OK;
 }
 
+int ooCapabilityEnableDTMFH245Alphanumeric(OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode |= OO_CAP_DTMF_H245_alphanumeric;
+      OOTRACEINFO1("Dtmf mode set to H.245(alphanumeric) for endpoint\n");
+   }else {
+      call->dtmfmode |= OO_CAP_DTMF_H245_alphanumeric;
+      OOTRACEINFO3("Dtmf mode set to H.245(alphanumeric) for (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
 
+int ooCapabilityDisableDTMFH245Alphanumeric(OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode ^= OO_CAP_DTMF_H245_alphanumeric;
+      OOTRACEINFO1("Dtmf mode H.245(alphanumeric) disabled for endpoint\n");
+   }else {
+      call->dtmfmode ^= OO_CAP_DTMF_H245_alphanumeric;
+      OOTRACEINFO3("Dtmf mode H.245(alphanumeric) disabled for (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
+
+int ooCapabilityEnableDTMFH245Signal(OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode |= OO_CAP_DTMF_H245_signal;
+      OOTRACEINFO1("Dtmf mode set to H.245(signal) for endpoint\n");
+   }else {
+      call->dtmfmode |= OO_CAP_DTMF_H245_signal;
+      OOTRACEINFO3("Dtmf mode set to H.245(signal) for (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
+
+int ooCapabilityDisableDTMFH245Signal(OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode ^= OO_CAP_DTMF_H245_signal;
+      OOTRACEINFO1("Dtmf mode H.245(signal) disabled for endpoint\n");
+   }else {
+      call->dtmfmode ^= OO_CAP_DTMF_H245_signal;
+      OOTRACEINFO3("Dtmf mode H.245(signal) disabled for (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
+
+int ooCapabilityEnableDTMFQ931Keypad(struct OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode |= OO_CAP_DTMF_Q931;
+      OOTRACEINFO1("Dtmf mode set to Q.931(keypad) for the endpoint\n");
+   }else {
+      call->dtmfmode |= OO_CAP_DTMF_Q931;
+      OOTRACEINFO3("Dtmf mode set to Q.931(keypad) for the call (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
+
+int ooCapabilityDisableDTMFQ931Keypad(struct OOH323CallData *call)
+{
+   if(!call){
+      gH323ep.dtmfmode ^= OO_CAP_DTMF_Q931;
+      OOTRACEINFO1("Dtmf mode Q.931(keypad) disabled for the endpoint\n");
+   }else {
+      call->dtmfmode ^= OO_CAP_DTMF_Q931;
+      OOTRACEINFO3("Dtmf mode Q.931(keypad) disabled for the call (%s, %s)\n",
+                    call->callType, call->callToken);
+   }
+   return OO_OK;
+}
 
 int ooCapabilityAddH263VideoCapability(ooCallData *call,
                               unsigned sqcifMPI, unsigned qcifMPI,
@@ -532,6 +608,7 @@ struct H245AudioCapability* ooCapabilityCreateAudioCapability
 void* ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt)
 {
    H245AudioTelephonyEventCapability *pATECap=NULL;
+   H245UserInputCapability *userInput = NULL;
    char *events=NULL;
    switch(cap)
    {
@@ -555,6 +632,28 @@ void* ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt)
       strncpy(events, "0-16", strlen("0-16"));
       pATECap->audioTelephoneEvent = events;
       return pATECap;
+   case OO_CAP_DTMF_H245_alphanumeric:
+      userInput = (H245UserInputCapability*)memAllocZ(pctxt,
+                                          sizeof(H245UserInputCapability));
+      if(!userInput)
+      {
+         OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - "
+                     "userInput\n");
+         return NULL;
+      }
+      userInput->t = T_H245UserInputCapability_basicString;
+      return userInput;
+   case OO_CAP_DTMF_H245_signal:
+      userInput = (H245UserInputCapability*)memAllocZ(pctxt,
+                                          sizeof(H245UserInputCapability));
+      if(!userInput)
+      {
+         OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - "
+                     "userInput\n");
+         return NULL;
+      }
+      userInput->t = T_H245UserInputCapability_dtmf;
+      return userInput;
    default:
      OOTRACEERR1("Error:unknown dtmf capability type\n");
    }
@@ -1922,7 +2021,21 @@ int ooCapabilityUpdateJointCapabilities
    case T_H245Capability_transmitVideoCapability:
       return ooCapabilityUpdateJointCapabilitiesVideo(call,
                                          cap->u.transmitVideoCapability, OORX);
-  
+   case T_H245Capability_receiveUserInputCapability:
+      if((cap->u.receiveUserInputCapability->t ==
+                                 T_H245UserInputCapability_basicString) &&
+         (call->dtmfmode & OO_CAP_DTMF_H245_alphanumeric))
+      {
+         call->jointDtmfMode |= OO_CAP_DTMF_H245_alphanumeric;
+         return OO_OK;
+      }else if((cap->u.receiveUserInputCapability->t ==
+                                         T_H245UserInputCapability_dtmf) &&
+               (call->dtmfmode & OO_CAP_DTMF_H245_signal))
+      {
+         call->jointDtmfMode |= OO_CAP_DTMF_H245_signal;
+         return OO_OK;
+      }
+      //break;
    default:
      OOTRACEDBGA3("Unsupported cap type encountered. Ignoring. (%s, %s)\n",
                    call->callType, call->callToken);

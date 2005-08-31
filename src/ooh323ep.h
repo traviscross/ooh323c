@@ -65,6 +65,8 @@ struct OOCapPrefs;
 #define RTPPORTSSTART 14030  /*!< Starting RTP port number */
 #define RTPPORTSEND   14230  /*!< Ending RTP port number   */
 
+
+ 
 /**
  * This structure is used to define the port ranges to be used
  * by the application.
@@ -518,6 +520,34 @@ EXTERN int ooH323EpEnableDTMFRFC2833(int dynamicRTPPayloadType);
  * @return                        OO_OK, on success; OO_FAILED, on failure
  */
 EXTERN int ooH323EpDisableDTMFRFC2833(void);
+
+/**
+ * This function is used to enable the H245(alphanumeric) dtmf capability for
+ * the endpoint.
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpEnableDTMFH245Alphanumeric();
+
+/**
+ * This function is used to disable the H245(alphanumeric) dtmf capability for
+ * the endpoint.
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpDisableDTMFH245Alphanumeric();
+
+/**
+ * This function is used to enable the H245(signal) dtmf capability for
+ * the endpoint.
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpEnableDTMFH245Signal();
+
+/**
+ * This function is used to disable the H245(signal) dtmf capability for
+ * the endpoint.
+ * @return                        OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpDisableDTMFH245Signal();
 
 /**
  * This function is used to add callbacks to the gatekeeper client. If user

@@ -331,6 +331,7 @@ int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks)
    gH323ep.h323Callbacks.onCallForwarded = h323Callbacks.onCallForwarded;
    gH323ep.h323Callbacks.onCallCleared = h323Callbacks.onCallCleared;
    gH323ep.h323Callbacks.openLogicalChannels = h323Callbacks.openLogicalChannels;
+   gH323ep.h323Callbacks.onReceivedDTMF = h323Callbacks.onReceivedDTMF;
    return OO_OK;
 }
 
@@ -638,6 +639,36 @@ int ooH323EpDisableDTMFRFC2833(void)
    return ooCapabilityDisableDTMFRFC2833(NULL);
 }
 
+int ooH323EpEnableDTMFH245Alphanumeric()
+{
+   return ooCapabilityEnableDTMFH245Alphanumeric(NULL);
+}
+
+int ooH323EpDisableDTMFH245Alphanumeric()
+{
+   return ooCapabilityDisableDTMFH245Alphanumeric(NULL);
+}
+
+int ooH323EpEnableDTMFH245Signal()
+{
+   return ooCapabilityEnableDTMFH245Signal(NULL);
+}
+
+int ooH323EpDisableDTMFH245Signal()
+{
+   return ooCapabilityDisableDTMFH245Signal(NULL);
+}
+
+int ooH323EpEnableDTMFQ931Keypad()
+{
+   return ooCapabilityEnableDTMFQ931Keypad(NULL);
+}
+
+int ooH323EpDisableDTMFQ931Keypad()
+{
+   return ooCapabilityDisableDTMFQ931Keypad(NULL);
+}
+
 int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks)
 {
 
@@ -650,6 +681,9 @@ int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks)
    }
 
 }
+
+
+
 /* 0-1024 are reserved for well known services */
 int ooH323EpSetTCPPortRange(int base, int max)
 {

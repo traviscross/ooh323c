@@ -316,6 +316,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
    H245TerminalCapabilitySet *termCap=NULL;
    H245AudioCapability *audioCap=NULL;
    H245AudioTelephonyEventCapability *ateCap=NULL;
+   H245UserInputCapability *userInputCap = NULL;
    H245CapabilityTableEntry *entry=NULL;
    H245AlternativeCapabilitySet *altSet=NULL;
    DListNode * curNode=NULL;
@@ -534,7 +535,75 @@ int ooSendTermCapMsg(OOH323CallData *call)
 
          i++;
       }
-   }     
+   }
+
+   if(call->dtmfmode & OO_CAP_DTMF_H245_alphanumeric)
+   {
+      userInputCap = (H245UserInputCapability*)ooCapabilityCreateDTMFCapability
+                                        (OO_CAP_DTMF_H245_alphanumeric, pctxt);
+      if(!userInputCap)
+      {
+         OOTRACEWARN3("WARN:Failed to add H245(alphanumeric) cap to "
+                      "TCS(%s, %s)\n", call->callType, call->callToken);
+      }else {
+         entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
+                      sizeof(H245CapabilityTableEntry));
+         if(!entry)
+         {
+            OOTRACEERR3("Error:Failed to allocate memory for new capability "
+                        "table entry. (%s, %s)\n", call->callType,
+                        call->callToken);
+            ooFreeH245Message(call, ph245msg);
+            return OO_FAILED;
+         }
+           
+         memset(entry, 0, sizeof(H245CapabilityTableEntry));
+         entry->m.capabilityPresent = 1;
+
+         entry->capability.t = T_H245Capability_receiveUserInputCapability;
+         entry->capability.u.receiveUserInputCapability = userInputCap;
+     
+         entry->capabilityTableEntryNumber = i+1;
+         dListAppend(pctxt , &(termCap->capabilityTable), entry);
+
+         i++;
+      }
+   }
+   userInputCap = NULL;
+   if(call->dtmfmode & OO_CAP_DTMF_H245_signal)
+   {
+      userInputCap = (H245UserInputCapability*)ooCapabilityCreateDTMFCapability
+                                        (OO_CAP_DTMF_H245_signal, pctxt);
+      if(!userInputCap)
+      {
+         OOTRACEWARN3("WARN:Failed to add H245(signal) cap to "
+                      "TCS(%s, %s)\n", call->callType, call->callToken);
+      }else {
+         entry = (H245CapabilityTableEntry*) memAlloc(pctxt,
+                      sizeof(H245CapabilityTableEntry));
+         if(!entry)
+         {
+            OOTRACEERR3("Error:Failed to allocate memory for new capability "
+                        "table entry. (%s, %s)\n", call->callType,
+                        call->callToken);
+            ooFreeH245Message(call, ph245msg);
+            return OO_FAILED;
+         }
+           
+         memset(entry, 0, sizeof(H245CapabilityTableEntry));
+         entry->m.capabilityPresent = 1;
+
+         entry->capability.t = T_H245Capability_receiveUserInputCapability;
+         entry->capability.u.receiveUserInputCapability = userInputCap;
+     
+         entry->capabilityTableEntryNumber = i+1;
+         dListAppend(pctxt , &(termCap->capabilityTable), entry);
+
+         i++;
+      }
+   }
+
+         
    /*TODO:Add Video and Data capabilities, if required*/
    if(i==0)
    {
@@ -2019,9 +2088,10 @@ int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
       Request/Response/Command/Indication. Each one of them need to be
       handled separately.
    */  
-   H245RequestMessage *request;
-   H245ResponseMessage *response;
-   H245CommandMessage *command;
+   H245RequestMessage *request = NULL;
+   H245ResponseMessage *response = NULL;
+   H245CommandMessage *command = NULL;
+   H245IndicationMessage *indication = NULL;
   
    OOTRACEDBGC3("Handling H245 message. (%s, %s)\n", call->callType,
                  call->callToken);
@@ -2284,12 +2354,44 @@ int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
          break;
       /* H.245 Indication message received */
       case (T_H245MultimediaSystemControlMessage_indication):
+         indication = pH245->h245Msg.u.indication;
+         switch(indication->t)
+         {
+            case T_H245IndicationMessage_userInput:
+               ooOnReceivedUserInputIndication(call, indication->u.userInput);
+               break;
+            default:
+               OOTRACEWARN3("Unhandled indication message received.(%s, %s)\n",
+                             call->callType, call->callToken);
+         }
          break;
       default:
         ;
    }
    OOTRACEDBGC3("Finished handling H245 message. (%s, %s)\n",
                  call->callType, call->callToken);
+   return OO_OK;
+}
+
+
+int ooOnReceivedUserInputIndication
+   (OOH323CallData *call, H245UserInputIndication *indication)
+{
+   if((indication->t == T_H245UserInputIndication_alphanumeric) &&
+      (call->dtmfmode & OO_CAP_DTMF_H245_alphanumeric))
+   {
+      if(gH323ep.h323Callbacks.onReceivedDTMF)
+         gH323ep.h323Callbacks.onReceivedDTMF(call,indication->u.alphanumeric);
+   }else if((indication->t == T_H245UserInputIndication_signal) &&
+      (call->dtmfmode & OO_CAP_DTMF_H245_signal))
+   {
+      if(gH323ep.h323Callbacks.onReceivedDTMF)
+         gH323ep.h323Callbacks.onReceivedDTMF(call,
+                                             indication->u.signal->signalType);
+   }else{
+      OOTRACEINFO3("Unsupported userInput message type received - ignoring."
+                   "(%s, %s)\n", call->callType, call->callToken);
+   }
    return OO_OK;
 }
 
@@ -2516,6 +2618,128 @@ int ooSendTerminalCapabilitySetRelease(OOH323CallData * call)
    if (ret != OO_OK) {
       OOTRACEERR3
          ("Error:Failed to enqueue TerminalCapabilitySetRelease "
+          "message to outbound queue.(%s, %s)\n", call->callType,
+          call->callToken);
+   }
+  
+   ooFreeH245Message (call, ph245msg);
+   return ret;
+}
+
+
+int ooSendH245UserInputIndication_alphanumeric
+   (OOH323CallData *call, const char *data)
+{
+   int ret=0;
+   H245IndicationMessage* indication=NULL;
+   H245Message *ph245msg=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
+
+   ret = ooCreateH245Message
+      (&ph245msg, T_H245MultimediaSystemControlMessage_indication);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3("Error:H245 message creation failed for - H245UserInput"
+                  "Indication_alphanumeric (%s, %s)\n",call->callType,
+                  call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OOUserInputIndication;
+   indication = ph245msg->h245Msg.u.indication;
+
+   indication->t = T_H245IndicationMessage_userInput;
+   indication->u.userInput =
+      (H245UserInputIndication*)
+      memAllocZ (pctxt, sizeof(H245UserInputIndication));
+
+   if(!indication->u.userInput)
+   {
+      OOTRACEERR3("Error: Memory - ooH245UserInputIndication_alphanumeric - "
+                  " userInput (%s, %s)\n", call->callType, call->callToken);
+      ooFreeH245Message(call, ph245msg);
+      return OO_FAILED;
+   }
+   indication->u.userInput->t = T_H245UserInputIndication_alphanumeric;
+   indication->u.userInput->u.alphanumeric = (ASN1GeneralString)
+                                              memAlloc(pctxt, strlen(data)+1);
+   if(!indication->u.userInput->u.alphanumeric)
+   {
+      OOTRACEERR3("Error: Memory - ooH245UserInputIndication-alphanumeric - "
+                  "alphanumeric (%s, %s).\n", call->callType, call->callToken);
+      ooFreeH245Message(call, ph245msg);
+      return OO_FAILED;
+   }
+   strcpy((char*)indication->u.userInput->u.alphanumeric, data);
+   OOTRACEDBGA3 ("Built UserInputIndication_alphanumeric (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   ret = ooSendH245Msg (call, ph245msg);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3
+         ("Error:Failed to enqueue UserInputIndication_alphanumeric "
+          "message to outbound queue.(%s, %s)\n", call->callType,
+          call->callToken);
+   }
+  
+   ooFreeH245Message (call, ph245msg);
+   return ret;
+}
+
+int ooSendH245UserInputIndication_signal
+   (OOH323CallData *call, const char *data)
+{
+   int ret=0;
+   H245IndicationMessage* indication=NULL;
+   H245Message *ph245msg=NULL;
+   OOCTXT *pctxt=&gH323ep.msgctxt;
+
+   ret = ooCreateH245Message
+      (&ph245msg, T_H245MultimediaSystemControlMessage_indication);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3("Error:H245 message creation failed for - H245UserInput"
+                  "Indication_signal (%s, %s)\n",call->callType,
+                  call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OOUserInputIndication;
+   indication = ph245msg->h245Msg.u.indication;
+
+   indication->t = T_H245IndicationMessage_userInput;
+   indication->u.userInput =
+      (H245UserInputIndication*)
+      memAllocZ (pctxt, sizeof(H245UserInputIndication));
+
+   if(!indication->u.userInput)
+   {
+      OOTRACEERR3("Error: Memory - ooH245UserInputIndication_signal - "
+                  " userInput (%s, %s)\n", call->callType, call->callToken);
+      ooFreeH245Message(call, ph245msg);
+      return OO_FAILED;
+   }
+   indication->u.userInput->t = T_H245UserInputIndication_signal;
+   indication->u.userInput->u.signal = (H245UserInputIndication_signal*)
+                      memAllocZ(pctxt, sizeof(H245UserInputIndication_signal));
+   indication->u.userInput->u.signal->signalType = (ASN1IA5String)
+                                              memAlloc(pctxt, strlen(data)+1);
+   if(!indication->u.userInput->u.signal ||
+      !indication->u.userInput->u.signal->signalType)
+   {
+      OOTRACEERR3("Error: Memory - ooH245UserInputIndication_signal - "
+                  "signal (%s, %s).\n", call->callType, call->callToken);
+      ooFreeH245Message(call, ph245msg);
+      return OO_FAILED;
+   }
+   strcpy((char*)indication->u.userInput->u.signal->signalType, data);
+   OOTRACEDBGA3 ("Built UserInputIndication_signal (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   ret = ooSendH245Msg (call, ph245msg);
+
+   if (ret != OO_OK) {
+      OOTRACEERR3
+         ("Error:Failed to enqueue UserInputIndication_signal "
           "message to outbound queue.(%s, %s)\n", call->callType,
           call->callToken);
    }

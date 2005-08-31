@@ -39,6 +39,7 @@ int osEpOnCallForwarded(ooCallData *call);
 int osEpOnCallCleared(ooCallData* call );
 int osEpOnAlerting(ooCallData* call);
 int osEpOpenLogicalChannels(ooCallData *call);
+int osEpOnReceivedDTMF(OOH323CallData *call, const char* dtmf);
 void * osEpHandleCommand(void*);
 
 static OOBOOL bActive;
@@ -84,6 +85,7 @@ static char CMD_USAGE[]={
    "\tc <ip:port/alias> - Place a call\n"
    "\ta                 - Answer call\n"
    "\tr                 - Reject call\n"
+   "\td                 - Send digit\n"
    "\tf <ip:port/alias> - Forward call\n"
    "\th                 - Hangup call\n"
    "\tq                 - Quit\n"
@@ -282,7 +284,12 @@ int main(int argc, char ** argv)
    h323Callbacks.onCallForwarded = osEpOnCallForwarded;
    h323Callbacks.onCallCleared = osEpOnCallCleared;
    h323Callbacks.openLogicalChannels=NULL;
+   h323Callbacks.onReceivedDTMF = osEpOnReceivedDTMF;
 
+   /*dtmf stuff */
+   ooH323EpEnableDTMFH245Alphanumeric();
+   ooH323EpEnableDTMFH245Signal();
+   ooH323EpEnableDTMFRFC2833(0);
 
    ooH323EpSetH323Callbacks(h323Callbacks);
 
@@ -432,6 +439,14 @@ int osEpStopTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
    printf("\nCMD>");  
    fflush(stdout);
    ooStopTransmitMic();
+   return OO_OK;
+}
+
+int osEpOnReceivedDTMF(OOH323CallData *call, const char* dtmf)
+{
+   printf("\n--->Received user input %s", dtmf);
+   printf("\nCMD>");
+   fflush(stdout);
    return OO_OK;
 }
 
@@ -636,6 +651,7 @@ void* osEpHandleCommand(void* dummy)
                bActive = TRUE;
             }
             break;
+
          case 'a':
             if(bActive && bRinging)
             {
@@ -648,6 +664,7 @@ void* osEpHandleCommand(void* dummy)
                printf("--->There is no active call in ringing status\n");
             }
             break;
+
          case 'r':
            if(bActive && bRinging){
               if(ooHangCall(callToken, OO_REASON_LOCAL_REJECTED)!= OO_OK)
@@ -661,6 +678,7 @@ void* osEpHandleCommand(void* dummy)
               printf("--->There is no active call in ringing status\n");
            }
            break;
+
          case 'f':
             if(bActive && !bRinging)
             {
@@ -691,6 +709,7 @@ void* osEpHandleCommand(void* dummy)
                printf("--->There is no established call to forward\n");
             }
             break;
+
          case 'h':
             if(bActive)
             {
@@ -704,6 +723,7 @@ void* osEpHandleCommand(void* dummy)
                printf("--->No active call to hang\n");
             }
             break;
+
          case 'q':
             if(bActive)
             {
@@ -711,6 +731,31 @@ void* osEpHandleCommand(void* dummy)
                ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
             }
             break;
+
+         case 'd':
+           if(bActive)
+           {
+              p++;
+              while((*p == ' ' || *p == '\t')&& p<command+cmdLen) p++;
+               if(p >= command + cmdLen || *p == '\n')
+               {
+                  printf("--->Invalid Command\n");
+                  printf("CMD USAGE:\n%s", CMD_USAGE);
+                  break;
+                }
+                i=0;
+                while(*p != ' ' && *p != '\t' && *p != '\n')
+                {
+                   dest[i++] = *p;
+                   p++;
+                }
+                dest[i]='\0';
+                ooSendDTMFDigit(callToken, dest);
+           }else {
+              printf("--->There is no established call\n");
+           }
+           break;
+          
          case 'i':
          default:
             printf("Invalid Command\n");

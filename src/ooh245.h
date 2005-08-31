@@ -254,6 +254,21 @@ EXTERN int ooSendEndSessionCommand(struct OOH323CallData *call);
 EXTERN int ooHandleH245Command
 (struct OOH323CallData *call, H245CommandMessage *command);
 
+
+/**
+ * This function is used to handle a received UserInput Indication message.
+ * It extracts the dtmf received through user-input message and calls endpoints
+ * onReceivedDTMF callback function, if such a function is registered by the
+ * endpoint.
+ * @param call         Handle to the call for which user-input indication
+ *                     message is received.
+ * @param indication   Handle to the received user-input indication message.
+ *
+ * @return             OO_OK, on success; OO_FAILED, on failure.
+ */
+EXTERN int ooOnReceivedUserInputIndication
+   (OOH323CallData *call, H245UserInputIndication *indication);
+
 /**
  * This function is called on receiving a TreminalCapabilitySetAck message.
  * If the MasterSlaveDetermination process is also over, this function
@@ -372,6 +387,28 @@ EXTERN int ooOpenLogicalChannel(struct OOH323CallData *call,
  */
 EXTERN int ooOpenChannel
 (struct OOH323CallData* call, ooH323EpCapability *epCap);
+
+/**
+ * This function is used to send dtmf digits as user input indication message
+ * contating alphanumeric string.
+ * @param call            Handle to the call for which dtmf has to be sent.
+ * @param data            DTMF data
+ *
+ * @return                OO_OK, on success; OO_FAILED, on failure.
+ */
+EXTERN int ooSendH245UserInputIndication_alphanumeric
+   (OOH323CallData *call, const char *data);
+
+/**
+ * This function is used to send dtmf digits as user input indication message
+ * contating dtmf signal type.
+ * @param call            Handle to the call for which dtmf has to be sent.
+ * @param data            DTMF data
+ *
+ * @return                OO_OK, on success; OO_FAILED, on failure.
+ */
+EXTERN int ooSendH245UserInputIndication_signal
+   (OOH323CallData *call, const char *data);
 
 /**
  * This function is used to request a remote end point to close a logical

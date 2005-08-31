@@ -159,6 +159,17 @@ EXTERN int ooQ931Decode
          OOTRACEDBGB2("      %s\n", ie->data);
          OOTRACEDBGB1("   }\n");
       }
+
+      if(ie->discriminator == Q931KeypadIE)
+      {
+         OOTRACEDBGB1("   Keypad IE = {\n");
+         OOTRACEDBGB2("      %s\n", ie->data);
+         OOTRACEDBGB1("   }\n");
+         if(gH323ep.h323Callbacks.onReceivedDTMF)
+         {
+            gH323ep.h323Callbacks.onReceivedDTMF(call, ie->data);
+         }
+      }
       /* Extract calling party number TODO:Give respect to presentation and
          screening indicators ;-) */
       if(ie->discriminator == Q931CallingPartyNumberIE)
@@ -352,7 +363,7 @@ int ooCreateQ931Message(Q931Message **q931msg, int msgType)
 {
    OOCTXT *pctxt = &gH323ep.msgctxt;
   
-   *q931msg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
+   *q931msg = (Q931Message*)memAllocZ(pctxt, sizeof(Q931Message));
                
    if(!*q931msg)
    {
@@ -657,6 +668,9 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    else if(pq931Msg->messageType == Q931ReleaseCompleteMsg){
       msgbuf[i++] = OOReleaseComplete;
    }
+   else if(pq931Msg->messageType == Q931InformationMsg){
+      msgbuf[i++] = OOInformationMessage;
+   }
    else if(pq931Msg->messageType == Q931FacilityMsg){
       msgbuf[i++] = OOFacility;
       msgbuf[i++] = pq931Msg->tunneledMsgType;
@@ -664,7 +678,8 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       msgbuf[i++] = pq931Msg->logicalChannelNo;
    }
    else{
-      OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType,
+                   call->callToken);
       return OO_FAILED;
    }
 
@@ -746,6 +761,15 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       memcpy(msgbuf+i, pq931Msg->calledPartyNumberIE->data,
                        pq931Msg->calledPartyNumberIE->length);
       i += pq931Msg->calledPartyNumberIE->length;
+   }
+  
+   /* Add keypad ie */
+   if(pq931Msg->keypadIE)
+   {
+      msgbuf[i++] = Q931KeypadIE;
+      msgbuf[i++] = pq931Msg->keypadIE->length;
+      memcpy(msgbuf+i, pq931Msg->keypadIE->data, pq931Msg->keypadIE->length);
+      i += pq931Msg->keypadIE->length;
    }
 
    /* Note: Have to fix this, though it works. Need to get rid of ie list.
@@ -2305,7 +2329,81 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    return ret;
 }
 
+
+
+int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data)
+{
+   int ret;   
+   H225Information_UUIE *information=NULL;
+   Q931Message *q931msg=NULL;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   ret = ooCreateQ931Message(&q931msg, Q931InformationMsg);
+   if(ret != OO_OK)
+   {     
+      OOTRACEERR3("Error: In allocating memory for - H225 Information message."
+                  "(%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   q931msg->callReference = call->callReference;
+
+   q931msg->userInfo = (H225H323_UserInformation*)memAllocZ(pctxt,
+                             sizeof(H225H323_UserInformation));
+   if(!q931msg->userInfo)
+   {
+      OOTRACEERR3("ERROR:Memory -  ooQ931SendDTMFAsKeypadIE - userInfo"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      memReset(&gH323ep.msgctxt);
+      return OO_FAILED;
+   }
+   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
+                                                              OO_M_TUNNELING);
+   q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
+         T_H225H323_UU_PDU_h323_message_body_information;
   
+   information = (H225Information_UUIE*)memAllocZ(pctxt,
+                                             sizeof(H225Information_UUIE));
+   if(!information)
+   {
+      OOTRACEERR3("ERROR:Memory -  ooQ931SendDTMFAsKeypadIE - information"
+                  "(%s, %s)\n", call->callType, call->callToken);
+      memReset(&gH323ep.msgctxt);
+      return OO_FAILED;
+   }
+   q931msg->userInfo->h323_uu_pdu.h323_message_body.u.information =
+                                                                  information;
+   information->m.callIdentifierPresent = 1;
+   information->callIdentifier.guid.numocts =
+                                   call->callIdentifier.guid.numocts;
+   memcpy(information->callIdentifier.guid.data,
+          call->callIdentifier.guid.data,
+          call->callIdentifier.guid.numocts);
+   information->protocolIdentifier = gProtocolID;
+  
+   /*Add keypad IE*/
+   ret = ooQ931SetKeypadIE(q931msg, data);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Creating keypad IE for (%s, %s)\n", call->callType,
+                   call->callToken);
+      memReset(&gH323ep.msgctxt);
+      return OO_FAILED;
+   }
+
+   ret=ooSendH225Msg(call, q931msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue Information message to outbound "
+                  "queue. (%s, %s)\n", call->callType, call->callToken);
+   }
+   memReset(&gH323ep.msgctxt);
+
+   return ret;
+
+}
+
 int ooH323ForwardCall(char* callToken, char *dest)
 {
    int ret=0;
@@ -2508,6 +2606,29 @@ int ooSetBearerCapabilityIE
 
    return OO_OK;
 }
+
+int ooQ931SetKeypadIE(Q931Message *pmsg, const char* data)
+{
+   unsigned len = 0;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   len = strlen(data);
+   pmsg->keypadIE = (Q931InformationElement*)
+                      memAlloc(pctxt, sizeof(Q931InformationElement)+len-1);
+   if(!pmsg->keypadIE)
+   {
+      OOTRACEERR1("Error:Memory - ooQ931SetKeypadIE - keypadIE\n");
+      return OO_FAILED;
+   }
+
+   pmsg->keypadIE->discriminator = Q931KeypadIE;
+   pmsg->keypadIE->length = len;
+   memcpy(pmsg->keypadIE->data, data, len);
+   return OO_OK;
+}
+
+
+
 
 int ooQ931SetCallingPartyNumberIE
    (Q931Message *pmsg, const char *number, unsigned plan, unsigned type,
@@ -3203,11 +3324,12 @@ int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
 
  
    /* e-164 */
-   /* strspn(dest, "1234567890*#") == strlen(dest)*/
+   /* strspn(dest, "1234567890*#,") == strlen(dest)*/
    /* Dialed digits test*/
    for(i=0; *(alias+i) != '\0'; i++)
    {
-      if(!isdigit(alias[i]))
+      if(!isdigit(alias[i]) && alias[i] != '#' && alias[i] != '*' &&
+         alias[i] != ',')
          break;
    }
    if(*(alias+i) == '\0')

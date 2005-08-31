@@ -557,6 +557,38 @@ int ooCallDisableDTMFRFC2833(OOH323CallData *call)
   return ooCapabilityDisableDTMFRFC2833(call);
 }
 
+
+int ooCallEnableDTMFH245Alphanumeric(OOH323CallData *call)
+{
+   return ooCapabilityEnableDTMFH245Alphanumeric(call);
+}
+
+int ooCallDisableDTMFH245Alphanumeric(OOH323CallData *call)
+{
+   return ooCapabilityDisableDTMFH245Alphanumeric(call);
+}
+
+int ooCallEnableDTMFH245Signal(OOH323CallData *call)
+{
+   return ooCapabilityEnableDTMFH245Signal(call);
+}
+
+int ooCallDisableDTMFH245Signal(OOH323CallData *call)
+{
+   return ooCapabilityDisableDTMFH245Signal(call);
+}
+
+int ooCallEnableDTMFQ931Keypad(OOH323CallData *call)
+{
+   return ooCapabilityEnableDTMFQ931Keypad(call);
+}
+
+int ooCallDisableDTMFQ931Keypad(OOH323CallData *call)
+{
+   return ooCapabilityDisableDTMFQ931Keypad(call);
+}
+
+
 OOH323CallData* ooFindCallByToken(char *callToken)
 {
    OOH323CallData *call;

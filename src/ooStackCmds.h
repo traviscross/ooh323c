@@ -35,6 +35,8 @@ extern "C" {
 #define EXTERN
 #endif /* MAKE_DLL */
 #endif /* EXTERN */
+
+
 /**
  * @defgroup stackcmds Stack Control Commands
  * @{
@@ -47,7 +49,9 @@ typedef enum OOStackCmdID {
    OO_CMD_ANSCALL,           /*!< Answer call */
    OO_CMD_FWDCALL,           /*!< Forward call */
    OO_CMD_HANGCALL,          /*!< Terminate call */
+   OO_CMD_SENDDIGIT,         /*!< Send dtmf */
    OO_CMD_STOPMONITOR        /*!< Stop the event monitor */
+  
 } OOStackCmdID;
 
 /**
@@ -103,6 +107,16 @@ EXTERN int ooForwardCall(char* callToken, char *dest);
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
+
+/**
+ * This command function can be used by an user application to send a DTMF
+ * sequence using H.245 UserInputIndication message.
+ * @param callToken  Unique token for the call
+ * @param alpha      Alphanumeric string reperesenting dtmf sequence
+ *
+ * @return           OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendDTMFDigit(char *callToken, char* alphanumeric);
 
 /**
  * This function is invoked from the main event handling loop to

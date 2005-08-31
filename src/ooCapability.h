@@ -55,9 +55,10 @@ typedef enum OOCapabilities{
 
 
 /*DTMF capabilities*/
-#define OO_CAP_DTMF_RFC2833 (1<<0)
-#define OO_CAP_DTMF_Q931    (1<<1)
-#define OO_CAP_DTMF_H245    (1<<2)
+#define OO_CAP_DTMF_RFC2833              (1<<0)
+#define OO_CAP_DTMF_Q931                 (1<<1)
+#define OO_CAP_DTMF_H245_alphanumeric    (1<<2)
+#define OO_CAP_DTMF_H245_signal          (1<<3)
 
 /**
  * This structure defines the preference order for capabilities.
@@ -208,6 +209,58 @@ EXTERN int ooCapabilityEnableDTMFRFC2833
 EXTERN int ooCapabilityDisableDTMFRFC2833(struct OOH323CallData *call);
 
 
+/**
+ * This function is used to enable support for H.245 based alphanumeric dtmf
+ * capability.
+ * @param call             Handle to call, if enabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityEnableDTMFH245Alphanumeric(struct OOH323CallData *call);
+
+/**
+ * This function is used to disable support for H.245 based alphanumeric dtmf
+ * capability.
+ * @param call             Handle to call, if disabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityDisableDTMFH245Alphanumeric
+                                             (struct OOH323CallData *call);
+
+/**
+ * This function is used to enable support for H.245 based signal dtmf
+ * capability.
+ * @param call             Handle to call, if enabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityEnableDTMFH245Signal(struct OOH323CallData *call);
+
+/**
+ * This function is used to disable support for H.245 based signal dtmf
+ * capability.
+ * @param call             Handle to call, if disabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityDisableDTMFH245Signal(struct OOH323CallData *call);
+
+/**
+ * This function is used to enable support for dtmf using Q.931 Keypad IE.
+ * @param call             Handle to call, if enabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityEnableDTMFQ931Keypad(struct OOH323CallData *call);
+
+/**
+ * This function is used to disable support for dtmf using Q.931 Keypad IE.
+ * @param call             Handle to call, if disabling for the call, else NULL
+ *                         for end-point.
+ * @return                 OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityDisableDTMFQ931Keypad(struct OOH323CallData *call);
 
 /**
  * This function is used to add simple capabilities which have only rxframes

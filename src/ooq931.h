@@ -95,7 +95,8 @@ enum Q931IECodes {
    Q931CallingPartyNumberIE = 0x6c,
    Q931CalledPartyNumberIE  = 0x70,
    Q931RedirectingNumberIE  = 0x74,
-   Q931UserUserIE           = 0x7e
+   Q931UserUserIE           = 0x7e,
+   Q931KeypadIE             = 0x2c
 };
 
 enum Q931InformationTransferCapability {
@@ -244,6 +245,7 @@ typedef struct Q931Message {
    Q931InformationElement *callingPartyNumberIE;
    Q931InformationElement *calledPartyNumberIE;
    Q931InformationElement *causeIE;
+   Q931InformationElement *keypadIE;
    H225H323_UserInformation *userInfo;
 } Q931Message;
 
@@ -622,6 +624,18 @@ int ooEncodeH225Message(struct OOH323CallData *call, Q931Message *pq931Msg,
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
 int ooCallEstbTimerExpired(void *data);
+
+
+
+/**
+ * This function is used to add a keypad IE to a Q931 message for sending dtmf.
+ * @param pmsg            Q931 message to which keypad ie has to be
+ *                        added.
+ * @param data            DTMF data to be sent.
+ *
+ * @return                OO_OK on success, OO_FAILED, on failure.
+ */
+EXTERN int ooQ931SetKeypadIE(Q931Message *pmsg, const char* data);
 
 /**
  * This function is used to add a bearer capability IE to a Q931 message.

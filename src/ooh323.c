@@ -29,6 +29,7 @@
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
+
 int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
 {
    int ret = OO_OK;
