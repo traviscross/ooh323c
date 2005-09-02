@@ -1399,7 +1399,7 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
    iPAddress1 = unicastAddr1->u.iPAddress;
 
    /* Set remote destination address for rtp session */
-   strcpy(call->remoteIP, remoteip);
+   //   strcpy(call->remoteIP, remoteip);
   
    /* Start channel here */
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,olcAck->forwardLogicalChannelNumber);
@@ -1416,7 +1416,8 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
    if(pLogicalChannel->sessionID == 0 && h2250lcap->m.sessionIDPresent)
       pLogicalChannel->sessionID = h2250lcap->sessionID;  
 
-   /* Populate ports for channel */
+   /* Populate ports &ip  for channel */
+   strcpy(pLogicalChannel->remoteIP, remoteip);  
    pLogicalChannel->remoteMediaPort = iPAddress->tsapIdentifier;
    pLogicalChannel->remoteMediaControlPort = iPAddress1->tsapIdentifier;
 
