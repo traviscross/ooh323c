@@ -1,5 +1,12 @@
 Release xx.aa
 
+Release 0.7.3
+1. Added H.245 based alphanumeric and signal DTMF support.
+2. Added DTMF support using Q.931 based keypad information element.
+3. Improved UsersGuide, with example of interaction between stack and
+   application program.
+4. Few minor bug fixes.
+        
 Release 0.7.2
 1. Interop issues with Xener gateway and couple of Cisco devices solved.
 2. Bearer capability IE changed to use PacketMode
