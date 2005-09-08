@@ -61,7 +61,7 @@ int ooPlayAudioBuffer(unsigned char * buff, long size)
 
 int ooGetMicAudioBuffer(unsigned char * buff, long size)
 {
-   int ret;
+   int i = 0, ret;
    ret = read(ghSoundDevice, buff, size);
    return ret;
 }

@@ -617,7 +617,7 @@ static int ooTransmitMicThreadFuncLnx()
    unsigned char sendBuf[252];
    short buffer[OORTPPACKETDATASIZE];
    int marker = 1;
-   int i;
+   unsigned int i;
    int bytesRead, ret;
    OOLOG2(1, "StartOf:TransmitMicThread");
   
@@ -654,22 +654,26 @@ static int ooTransmitMicThreadFuncLnx()
       gXmitChannel.timestamp += OORTPPACKETDATASIZE;
               
       /* Convert data into g711 ulaw and copy to sendBuf */
-          bytesRead = ooGetMicAudioBuffer((unsigned char*)buffer,
+      bytesRead = ooGetMicAudioBuffer((unsigned char*)buffer,
                                           OORTPPACKETDATASIZE*sizeof(short));
-      for(i=0; i<(bytesRead/sizeof(short)); i++)
-         sendBuf[12+i] = (unsigned char) linear2ulaw((short)buffer[i]);
-
-
-      /* transmit rtp packet */
-      ret = ooSocketSendTo(gXmitChannel.sock, sendBuf,
-                           (bytesRead/sizeof(short)+12),
-                           gXmitChannel.ip, gXmitChannel.port);
-      if(ret<0)
+      if(bytesRead > 0)
       {
-         OOLOG2(1, "ERROR: Failed to transmit rtp packet");
-         return -1;
+         for(i=0; i<(bytesRead/sizeof(short)); i++)
+            sendBuf[12+i] = (unsigned char) linear2ulaw((short)buffer[i]);
+
+
+         /* transmit rtp packet */
+         ret = ooSocketSendTo(gXmitChannel.sock, sendBuf,
+                                    (bytesRead/sizeof(short)+12),
+                                    gXmitChannel.ip, gXmitChannel.port);
+
+         if(ret<0)
+         {
+            OOLOG2(1, "ERROR: Failed to transmit rtp packet");
+            return -1;
+         }
+         ooSleep(5); /*sleep for 5 ms*/
       }
-      ooSleep(5); /*sleep for 5 ms*/
    }/*End of while loop*/
   
    gXmitThrdHdl = 0;
@@ -686,6 +690,7 @@ static int ooReceiveSpeakerThreadFuncLnx()
 {
    int ret = 0, i, j;
    char pcSndBuf[2048];
+   short psSndBuf[OORTPPACKETDATASIZE];
    struct timeval timeout;
    short c;
    fd_set readfds;
@@ -719,12 +724,15 @@ static int ooReceiveSpeakerThreadFuncLnx()
          j = 0;
          for( i =12; i < ret; i++)
          {                          
-            c = (short)ulaw2linear((unsigned char)(buffer[i]));
-            pcSndBuf[j++]= (unsigned char) ((c>>8) & 0xff);
-            pcSndBuf[j++] = (unsigned char) (c & 0xff);
+            psSndBuf[j++] = (short)ulaw2linear((unsigned char)(buffer[i]));
+            /*c = (short)ulaw2linear((unsigned char)(buffer[i]));
+             pcSndBuf[j++]= (unsigned char) ((c>>8) & 0xff);
+             pcSndBuf[j++] = (unsigned char) (c & 0xff);
+            */
          }
          /* Play the data buffer onto the speaker device*/
-         ooPlayAudioBuffer(pcSndBuf, j);
+         ooPlayAudioBuffer((char*)psSndBuf, j*sizeof(short));
+         /*        ooPlayAudioBuffer(pcSndBuf, j);*/
       }
    }
   
