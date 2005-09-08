@@ -116,7 +116,7 @@ EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendDTMFDigit(char *callToken, char* alphanumeric);
+EXTERN int ooSendDTMFDigit(char *callToken, char* alpha);
 
 /**
  * This function is invoked from the main event handling loop to
