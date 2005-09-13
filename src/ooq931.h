@@ -477,6 +477,17 @@ EXTERN int ooSendAlerting(struct OOH323CallData *call);
  */
 EXTERN int ooSendFacility(struct OOH323CallData *call);
 
+
+/**
+ * This function is used to send dtmf data as Q931 keypad information element
+ * as part of information message.
+ * @param call     Pointer to the call for dtmf data has to be sent.
+ * @param data     Dtmf data to be sent.
+ *
+ * @return         OO_OK, on success; OO_FAILED, on failure.
+ */
+EXTERN int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data);
+
 /**
  * This function is invoked to send a Connect message in response to received 
  * setup message.
