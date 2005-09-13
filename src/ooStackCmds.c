@@ -17,6 +17,7 @@
 #include "ooStackCmds.h"
 #include "ootrace.h"
 #include "ooq931.h"
+#include "ooh245.h"
 #include "ooh323ep.h"
 #include "oochannels.h"
 #include "ooCalls.h"

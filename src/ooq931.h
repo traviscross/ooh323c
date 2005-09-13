@@ -486,7 +486,8 @@ EXTERN int ooSendFacility(struct OOH323CallData *call);
  *
  * @return         OO_OK, on success; OO_FAILED, on failure.
  */
-EXTERN int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data);
+EXTERN int ooQ931SendDTMFAsKeyPadIE
+          (struct OOH323CallData *call, const char* data);
 
 /**
  * This function is invoked to send a Connect message in response to received 
