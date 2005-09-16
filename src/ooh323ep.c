@@ -116,13 +116,14 @@ int ooH323EpInitialize
 
    ooH323EpSetCallerID(DEFAULT_CALLERID);
 
-
+  
    gH323ep.myCaps = NULL;
    gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
    gH323ep.dtmfmode = 0;
    gH323ep.callingPartyNumber[0]='\0';    
    gH323ep.callMode = callMode;
+   gH323ep.isGateway = FALSE;
 #ifdef _WIN32
    InitializeCriticalSection(&gCmdMutex);
    InitializeCriticalSection(&gCallTokenMutex);
@@ -152,6 +153,12 @@ int ooH323EpInitialize
 #endif
    ooSetTraceThreshold(OOTRCLVLINFO);
    OO_SETFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
+   return OO_OK;
+}
+
+EXTERN int ooH323EpSetAsGateway()
+{
+   gH323ep.isGateway = TRUE;
    return OO_OK;
 }
 

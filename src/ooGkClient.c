@@ -646,6 +646,13 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    pRasAddress->ip.numocts = 4;
    pRasAddress->port = pGkClient->localRASPort;
    pGkReq->rasAddress.u.ipAddress = pRasAddress;
+
+   /* Pose as gateway or terminal as per config */
+   if(gH323ep.isGateway)
+      pGkReq->endpointType.m.gatewayPresent = TRUE;
+   else
+      pGkReq->endpointType.m.terminalPresent = TRUE;
+
    pGkReq->endpointType.m.nonStandardDataPresent=0;
    pGkReq->endpointType.m.vendorPresent=1;
 
@@ -925,6 +932,12 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    dListAppend(pctxt, &pRegReq->rasAddress,
                                        (void*)pTransportAddress);
   
+   /* Pose as gateway or terminal as per config */
+   if(gH323ep.isGateway)
+      pRegReq->terminalType.m.gatewayPresent = TRUE;
+   else
+      pRegReq->terminalType.m.terminalPresent = TRUE;
+
    pRegReq->terminalType.m.vendorPresent=TRUE;
    ooGkClientFillVendor(pGkClient, &pRegReq->terminalType.vendor );
  

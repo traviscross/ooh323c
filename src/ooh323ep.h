@@ -144,6 +144,7 @@ typedef struct OOH323EndPoint {
    struct ooGkClient *gkClient;
    DList stkCmdList;    /* stack command list */
    OOInterface *ifList; /* interface list for the host we are running on*/
+   OOBOOL isGateway;
 } OOH323EndPoint;
 
 #define ooEndPoint OOH323EndPoint
@@ -160,6 +161,14 @@ typedef struct OOH323EndPoint {
 EXTERN int ooH323EpInitialize
    (enum OOCallMode callMode, const char* tracefile);
 
+
+/**
+ * This function is used to represent the H.323 application endpoint as
+ * gateway, instead of an H.323 phone endpoint.
+ *
+ * @return               OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpSetAsGateway();
 
 /**
  * This function is used to assign a local ip address to be used for call

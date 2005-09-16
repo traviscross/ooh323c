@@ -891,7 +891,12 @@ int ooSendCallProceeding(OOH323CallData *call)
           call->callIdentifier.guid.numocts);
    callProceeding->protocolIdentifier = gProtocolID; 
 
-   callProceeding->destinationInfo.m.terminalPresent = TRUE;
+   /* Pose as Terminal or Gateway */
+   if(gH323ep.isGateway)
+      callProceeding->destinationInfo.m.gatewayPresent = TRUE;
+   else
+      callProceeding->destinationInfo.m.terminalPresent = TRUE;
+
    callProceeding->destinationInfo.m.vendorPresent = 1;
    vendor = &callProceeding->destinationInfo.vendor;
    if(gH323ep.productID)
@@ -1004,7 +1009,12 @@ int ooSendAlerting(OOH323CallData *call)
           call->callIdentifier.guid.numocts);
    alerting->protocolIdentifier = gProtocolID; 
 
-   alerting->destinationInfo.m.terminalPresent = TRUE;
+   /* Pose as Terminal or Gateway */
+   if(gH323ep.isGateway)
+      alerting->destinationInfo.m.gatewayPresent = TRUE;
+   else
+      alerting->destinationInfo.m.terminalPresent = TRUE;
+
    alerting->destinationInfo.m.vendorPresent = 1;
    vendor = &alerting->destinationInfo.vendor;
    if(gH323ep.productID)
@@ -1320,7 +1330,12 @@ int ooAcceptCall(OOH323CallData *call)
 
    connect->protocolIdentifier = gProtocolID; 
 
-   connect->destinationInfo.m.terminalPresent = TRUE;
+   /* Pose as Terminal or Gateway */
+   if(gH323ep.isGateway)
+      connect->destinationInfo.m.gatewayPresent = TRUE;
+   else
+      connect->destinationInfo.m.terminalPresent = TRUE;
+
   
    connect->destinationInfo.m.vendorPresent = 1;
    vendor = &connect->destinationInfo.vendor;
@@ -2013,7 +2028,11 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
 
    /* Populate the vendor information */
-   setup->sourceInfo.m.terminalPresent = TRUE;
+   if(gH323ep.isGateway)
+      setup->sourceInfo.m.gatewayPresent = TRUE;
+   else
+      setup->sourceInfo.m.terminalPresent = TRUE;
+
    setup->sourceInfo.m.vendorPresent=TRUE;
    setup->sourceInfo.vendor.vendor.t35CountryCode = gH323ep.t35CountryCode;
    setup->sourceInfo.vendor.vendor.t35Extension = gH323ep.t35Extension;
