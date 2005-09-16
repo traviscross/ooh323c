@@ -110,7 +110,7 @@ int ooMakeCall
    return OO_OK;
 }
 
-int ooAnswerCall(char *callToken)
+int ooAnswerCall(const char *callToken)
 {
    OOStackCommand *cmd;
 
@@ -160,7 +160,7 @@ int ooAnswerCall(char *callToken)
    return OO_OK;
 }
 
-int ooForwardCall(char* callToken, char *dest)
+int ooForwardCall(const char* callToken, char *dest)
 {
    OOStackCommand *cmd;
 
@@ -210,7 +210,7 @@ int ooForwardCall(char* callToken, char *dest)
 }
 
 
-int ooHangCall(char *callToken, OOCallClearReason reason)
+int ooHangCall(const char* callToken, OOCallClearReason reason)
 {
    OOStackCommand *cmd;
 
@@ -400,7 +400,7 @@ int ooStopMonitor()
    return OO_OK;
 }
 
-int ooSendDTMFDigit(char *callToken, char* dtmf)
+int ooSendDTMFDigit(const char *callToken, const char* dtmf)
 {
    OOStackCommand *cmd = NULL;
 

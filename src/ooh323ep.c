@@ -162,7 +162,7 @@ EXTERN int ooH323EpSetAsGateway()
    return OO_OK;
 }
 
-int ooH323EpSetLocalAddress(char * localip, int listenport)
+int ooH323EpSetLocalAddress(const char* localip, int listenport)
 {
    if(localip)
    {
@@ -179,7 +179,7 @@ int ooH323EpSetLocalAddress(char * localip, int listenport)
    return OO_OK;
 }
 
-int ooH323EpAddAliasH323ID(char *h323id)
+int ooH323EpAddAliasH323ID(const char *h323id)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
@@ -205,7 +205,7 @@ int ooH323EpAddAliasH323ID(char *h323id)
    return OO_OK;
 }
 
-int ooH323EpAddAliasDialedDigits(char * dialedDigits)
+int ooH323EpAddAliasDialedDigits(const char* dialedDigits)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
@@ -230,7 +230,7 @@ int ooH323EpAddAliasDialedDigits(char * dialedDigits)
    return OO_OK;
 }
 
-int ooH323EpAddAliasURLID(char * url)
+int ooH323EpAddAliasURLID(const char * url)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
@@ -255,7 +255,7 @@ int ooH323EpAddAliasURLID(char * url)
    return OO_OK;
 }
 
-int ooH323EpAddAliasEmailID(char * email)
+int ooH323EpAddAliasEmailID(const char * email)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
@@ -281,7 +281,7 @@ int ooH323EpAddAliasEmailID(char * email)
    return OO_OK;
 }
 
-int ooH323EpAddAliasTransportID(char * ipaddress)
+int ooH323EpAddAliasTransportID(const char * ipaddress)
 {
    ooAliases * psNewAlias=NULL;
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));

@@ -178,7 +178,7 @@ EXTERN int ooH323EpSetAsGateway();
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpSetLocalAddress(char * localip, int listenport);
+EXTERN int ooH323EpSetLocalAddress(const char* localip, int listenport);
 
 /**
  * This function is used to set the range of tcp ports the application will
@@ -224,7 +224,7 @@ EXTERN int ooH323EpSetTraceLevel(int traceLevel);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddAliasH323ID(char * h323id);
+EXTERN int ooH323EpAddAliasH323ID(const char* h323id);
 
 /**
  * This function is used to add the dialed digits alias for the
@@ -233,7 +233,7 @@ EXTERN int ooH323EpAddAliasH323ID(char * h323id);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddAliasDialedDigits(char * dialedDigits);
+EXTERN int ooH323EpAddAliasDialedDigits(const char* dialedDigits);
 
 /**
  * This function is used to add the url alias for the endpoint.
@@ -241,7 +241,7 @@ EXTERN int ooH323EpAddAliasDialedDigits(char * dialedDigits);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddAliasURLID(char * url);
+EXTERN int ooH323EpAddAliasURLID(const char* url);
 
 /**
  * This function is used to add an email id as an alias for the endpoint.
@@ -249,7 +249,7 @@ EXTERN int ooH323EpAddAliasURLID(char * url);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddAliasEmailID(char * email);
+EXTERN int ooH323EpAddAliasEmailID(const char* email);
 
 /**
  * This function is used to add an ip address as an alias.
@@ -257,7 +257,7 @@ EXTERN int ooH323EpAddAliasEmailID(char * email);
  *
  * @return               OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddAliasTransportID(char * ipaddress);
+EXTERN int ooH323EpAddAliasTransportID(const char* ipaddress);
 
 /**
  * This function is used to clear all the aliases used by the

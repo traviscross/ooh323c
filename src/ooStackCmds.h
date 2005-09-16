@@ -87,7 +87,7 @@ EXTERN int ooMakeCall
  *
  * @return            OO_OK, on success. OO_FAILED, otherwise.
  */
-EXTERN int ooAnswerCall(char *callToken);
+EXTERN int ooAnswerCall(const char *callToken);
 
 /**
  * This function is used to forward an existing call to third party.
@@ -97,7 +97,7 @@ EXTERN int ooAnswerCall(char *callToken);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooForwardCall(char* callToken, char *dest);
+EXTERN int ooForwardCall(const char* callToken, char *dest);
 
 /**
  * This function is used by an user application to terminate a call.
@@ -106,7 +106,7 @@ EXTERN int ooForwardCall(char* callToken, char *dest);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
+EXTERN int ooHangCall(const char* callToken, OOCallClearReason reason);
 
 /**
  * This command function can be used by an user application to send a DTMF
@@ -116,7 +116,7 @@ EXTERN int ooHangCall(char * callToken, OOCallClearReason reason);
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooSendDTMFDigit(char *callToken, char* alpha);
+EXTERN int ooSendDTMFDigit(const char *callToken, const char* alpha);
 
 /**
  * This function is invoked from the main event handling loop to
