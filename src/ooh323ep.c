@@ -415,6 +415,19 @@ int ooH323EpDisableAutoAnswer(void)
    return OO_OK;
 }
 
+int ooH323EpEnableManualRingback(void)
+{
+   OO_SETFLAG(gH323ep.flags, OO_M_MANUALRINGBACK);
+   return OO_OK;
+}
+
+
+int ooH323EpDisableManualRingback(void)
+{
+   OO_CLRFLAG(gH323ep.flags, OO_M_MANUALRINGBACK);
+   return OO_OK;
+}
+
 int ooH323EpEnableFastStart(void)
 {
    OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);

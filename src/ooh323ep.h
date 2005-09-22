@@ -315,6 +315,25 @@ EXTERN int ooH323EpEnableAutoAnswer(void);
 EXTERN int ooH323EpDisableAutoAnswer(void);
 
 /**
+ * This function is used to enable manual ringback. By default the stack sends
+ * alerting message automatically on behalf of the endpoint application.
+ * However, if endpoint application wants to do alerting user part first before
+ * sending out alerting message, it can enable this feature.
+ *
+ * @return          OO_OK on success, OO_FAILED on failure
+ */
+EXTERN int ooH323EpEnableManualRingback(void);
+
+/**
+ * This function is used to disable manual ringback. By default the
+ * manual ringback feature is disabled, i.e, the stack sends alerting on behalf
+ * of the application automatically.
+ *
+ * @return          OO_OK on success, OO_FAILED on failure
+ */
+EXTERN int ooH323EpDisableManualRingback(void);
+
+/**
  * This function is used to enable faststart.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.

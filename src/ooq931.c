@@ -1880,9 +1880,15 @@ int ooH323CallAdmitted(OOH323CallData *call)
    } else { /* An incoming call */
       if(gH323ep.h323Callbacks.onIncomingCall)
          gH323ep.h323Callbacks.onIncomingCall(call);
-      ooSendAlerting(call); /* Send alerting message */
-      if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
-         ooSendConnect(call); /* Send connect message - call accepted */
+
+      /* Check for manual ringback generation */
+      if(!OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
+      {
+         ooSendAlerting(call); /* Send alerting message */
+
+         if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
+            ooSendConnect(call); /* Send connect message - call accepted */
+      }
    }
   
    return OO_OK;

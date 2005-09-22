@@ -50,6 +50,7 @@ typedef enum OOStackCmdID {
    OO_CMD_FWDCALL,           /*!< Forward call */
    OO_CMD_HANGCALL,          /*!< Terminate call */
    OO_CMD_SENDDIGIT,         /*!< Send dtmf */
+   OO_CMD_MANUALRINGBACK,    /*!< Send Alerting - ringback */
    OO_CMD_STOPMONITOR        /*!< Stop the event monitor */
   
 } OOStackCmdID;
@@ -80,6 +81,16 @@ typedef struct OOStackCommand {
 EXTERN int ooMakeCall
    (const char* dest, char *callToken, size_t bufsiz, ooCallOptions *opts);
 
+
+
+/**
+ * This function is used to send a manual ringback message (alerting message)
+ * for a call. Effective only when manual-ringback is enabled.
+ * @param callToken    Unique token for the call.
+ *
+ * @return             OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooManualRingback(const char *callToken);
 
 /**
  * This function is used to answer a call

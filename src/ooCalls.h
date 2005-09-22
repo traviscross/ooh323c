@@ -51,7 +51,7 @@ extern "C" {
 #define OO_M_FASTSTARTANSWERED  0x04000000
 #define OO_M_FASTSTART          0x02000000
 #define OO_M_DISABLEGK          0x01000000
-
+#define OO_M_MANUALRINGBACK     0x10000000
 
 
 /**

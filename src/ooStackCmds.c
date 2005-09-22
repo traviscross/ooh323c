@@ -110,6 +110,56 @@ int ooMakeCall
    return OO_OK;
 }
 
+
+int ooManualRingback(const char *callToken)
+{
+   OOStackCommand *cmd;
+   if(!callToken)
+   {
+      OOTRACEERR1("Error: Invalid callToken passed to ooManulRingback\n");
+      return OO_FAILED;
+   }
+
+#ifdef _WIN32
+   EnterCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_lock(&gCmdMutex);
+#endif
+   cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
+   if(!cmd)
+   {
+      OOTRACEERR1("Error:Memory - ooManualRingback - cmd\n");
+      return OO_FAILED;
+   }
+   memset(cmd, 0, sizeof(OOStackCommand));
+   cmd->type = OO_CMD_MANUALRINGBACK;
+   cmd->param1 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
+   if(!cmd->param1)
+   {
+      OOTRACEERR1("Error:Memory - ooManualRingback - cmd->param1\n");
+      memFreePtr(&gH323ep.ctxt, cmd);
+      return OO_FAILED;
+   }
+   strcpy((char*)cmd->param1, callToken);
+  
+   dListAppend( &gH323ep.ctxt, &gH323ep.stkCmdList, cmd);
+  
+#ifdef HAVE_PIPE
+   if(write(gH323ep.cmdPipe[1], "c", 1)<0)
+   {
+      OOTRACEERR1("ERROR:Failed to write to command pipe\n");
+   }
+#endif
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
+   return OO_OK;
+}
+
 int ooAnswerCall(const char *callToken)
 {
    OOStackCommand *cmd;
@@ -288,6 +338,24 @@ int ooProcStackCmds()
 
                ooH323MakeCall ((char*)cmd->param1, (char*)cmd->param2,
                                (ooCallOptions*)cmd->param3);
+               dListRemove(&gH323ep.stkCmdList, pNode);
+               memFreePtr(&gH323ep.ctxt, pNode);
+               break;
+
+            case OO_CMD_MANUALRINGBACK:
+               if(gH323ep.gkClient &&
+                  gH323ep.gkClient->state != GkClientRegistered)
+               {
+                  OOTRACEWARN1("New answer call cmd is waiting for "
+                               "gatekeeper registration.\n");
+                  continue;
+               }
+               if(OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
+               {
+                  ooSendAlerting(ooFindCallByToken((char*)cmd->param1));
+                  if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
+                     ooSendConnect(ooFindCallByToken((char*)cmd->param1));
+               }
                dListRemove(&gH323ep.stkCmdList, pNode);
                memFreePtr(&gH323ep.ctxt, pNode);
                break;
