@@ -23,6 +23,8 @@
 #ifdef _WIN32
 #include <stdlib.h>
 #include <time.h>
+#include <process.h>
+#define getpid _getpid
 #endif
 
 /** Global endpoint structure */
@@ -658,7 +660,8 @@ int ooSendTermCapMsg(OOH323CallData *call)
 ASN1UINT ooGenerateStatusDeterminationNumber()
 {
    ASN1UINT statusDeterminationNumber;
-   ASN1UINT random_factor = (ASN1UINT)rand();
+   //   ASN1UINT random_factor = (ASN1UINT)rand();
+   ASN1UINT random_factor = getpid();
 
    srand((unsigned)time( NULL )+random_factor );
    statusDeterminationNumber = rand()%16777215;
