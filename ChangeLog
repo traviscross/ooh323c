@@ -1,5 +1,8 @@
 Release xx.aa
-
+1. ManualRingback support (Benni A. Aswin)
+2. Gateway/Endpoint config
+3.
+        
 Release 0.7.3
 1. Added H.245 based alphanumeric and signal DTMF support.
 2. Added DTMF support using Q.931 based keypad information element.
