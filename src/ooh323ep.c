@@ -41,6 +41,15 @@ OO_MUTEX gCallTokenMutex;
  */
 OO_MUTEX gCmdMutex;
 
+/**
+ * Context to allocate memory for stack commands.
+ */
+OOCTXT gCmdCtxt;
+
+
+DList gStkCmdList;
+
+
 extern DList g_TimerList;
 
 int ooH323EpInitialize
@@ -49,8 +58,10 @@ int ooH323EpInitialize
   
    memset(&gH323ep, 0, sizeof(ooEndPoint));
 
+   initContext(&(gCmdCtxt));
    initContext(&(gH323ep.ctxt));
    initContext(&(gH323ep.msgctxt));
+   dListInit(&gStkCmdList);
 
    if(tracefile)
    {
@@ -380,7 +391,7 @@ int ooH323EpDestroy(void)
       }
 
       freeContext(&(gH323ep.ctxt));
-
+      freeContext(&(gCmdCtxt));
 #ifdef _WIN32
       DeleteCriticalSection(&gCmdMutex);
       DeleteCriticalSection(&gCallTokenMutex);

@@ -82,6 +82,7 @@ typedef struct OOH323Ports {
  * endpoint created by an application
  */
 typedef struct OOH323EndPoint {
+  
    /**
     * This context should be used for allocation of memory for
     * items within the endpoint structure.
@@ -142,7 +143,7 @@ typedef struct OOH323EndPoint {
    ASN1UINT sessionTimeout;
    int cmdPipe[2];
    struct ooGkClient *gkClient;
-   DList stkCmdList;    /* stack command list */
+
    OOInterface *ifList; /* interface list for the host we are running on*/
    OOBOOL isGateway;
 } OOH323EndPoint;
