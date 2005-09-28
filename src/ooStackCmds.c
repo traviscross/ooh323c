@@ -27,20 +27,42 @@ extern OOH323EndPoint gH323ep;
 
 extern OO_MUTEX gCmdMutex;
 
-int ooMakeCall
-   (const char* dest, char* callToken, size_t bufsiz, ooCallOptions *opts)
+
+void ooAcquireCmdMutex()
 {
-   OOStackCommand *cmd;
-   int ret;
+
 #ifdef _WIN32
    EnterCriticalSection(&gCmdMutex);
 #else
    pthread_mutex_lock(&gCmdMutex);
 #endif
+
+}
+
+void ooReleaseCmdMutex()
+{
+
+#ifdef _WIN32
+   LeaveCriticalSection(&gCmdMutex);
+#else
+   pthread_mutex_unlock(&gCmdMutex);
+#endif
+
+}
+
+int ooMakeCall
+   (const char* dest, char* callToken, size_t bufsiz, ooCallOptions *opts)
+{
+   OOStackCommand *cmd;
+   int ret;
+
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*) memAlloc (&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooMakeCall - cmd\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL;
@@ -49,6 +71,7 @@ int ooMakeCall
    {
       OOTRACEERR1("ERROR:Memory - ooMakeCall - param1\n");
       memFreePtr(&gH323ep.ctxt, cmd);
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, dest);
@@ -59,11 +82,14 @@ int ooMakeCall
       OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
       memFreePtr(&gH323ep.ctxt, cmd->param1);
       memFreePtr(&gH323ep.ctxt, cmd);
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
 
-   if ((ret = ooGenerateCallToken (callToken, bufsiz)) != 0)
+   if ((ret = ooGenerateCallToken (callToken, bufsiz)) != 0){
+      ooReleaseCmdMutex();
       return ret;
+   }
 
    cmd->param2 = (void*) memAlloc(&gH323ep.ctxt, strlen(callToken)+1);
    if(!cmd->param2)
@@ -71,6 +97,7 @@ int ooMakeCall
       OOTRACEERR1("ERROR:Memory - ooMakeCall - param2\n");
       memFreePtr(&gH323ep.ctxt, cmd->param1);
       memFreePtr(&gH323ep.ctxt, cmd);
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
   
@@ -87,6 +114,7 @@ int ooMakeCall
          memFreePtr(&gH323ep.ctxt, cmd->param1);
          memFreePtr(&gH323ep.ctxt, cmd->param2);
          memFreePtr(&gH323ep.ctxt, cmd);
+         ooReleaseCmdMutex();
          return OO_FAILED;
       }
       memcpy((void*)cmd->param3, opts, sizeof(ooCallOptions));
@@ -101,11 +129,7 @@ int ooMakeCall
    }
 #endif
 
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }
@@ -120,15 +144,13 @@ int ooManualRingback(const char *callToken)
       return OO_FAILED;
    }
 
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooManualRingback - cmd\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(OOStackCommand));
@@ -138,6 +160,7 @@ int ooManualRingback(const char *callToken)
    {
       OOTRACEERR1("Error:Memory - ooManualRingback - cmd->param1\n");
       memFreePtr(&gH323ep.ctxt, cmd);
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -151,11 +174,7 @@ int ooManualRingback(const char *callToken)
    }
 #endif
 
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }
@@ -170,15 +189,13 @@ int ooAnswerCall(const char *callToken)
       return OO_FAILED;
    }
 
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooAnswerCall - cmd\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(OOStackCommand));
@@ -188,6 +205,7 @@ int ooAnswerCall(const char *callToken)
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Memory - ooAnswerCall - param1\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -201,11 +219,7 @@ int ooAnswerCall(const char *callToken)
    }
 #endif
 
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }
@@ -219,15 +233,14 @@ int ooForwardCall(const char* callToken, char *dest)
       OOTRACEERR1("ERROR: Invalid callToken/dest passed to ooForwardCall\n");
       return OO_FAILED;
    }
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
+
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooForwardCall - cmd\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(OOStackCommand));
@@ -238,6 +251,7 @@ int ooForwardCall(const char* callToken, char *dest)
    if(!cmd->param1 || !cmd->param2)
    {
       OOTRACEERR1("ERROR:Memory - ooForwardCall - param1/param2\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -250,11 +264,8 @@ int ooForwardCall(const char* callToken, char *dest)
       OOTRACEERR1("ERROR:Failed to write to command pipe\n");
    }
 #endif
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }
@@ -270,16 +281,14 @@ int ooHangCall(const char* callToken, OOCallClearReason reason)
       return OO_FAILED;
    }
 
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
- 
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - HangCall\n");
+      ooReleaseCmdMutex();
+
       return OO_FAILED;
    }
 
@@ -290,6 +299,7 @@ int ooHangCall(const char* callToken, OOCallClearReason reason)
    if(!cmd->param1 || !cmd->param2)
    {
       OOTRACEERR1("ERROR:Allocating memory for cmd param1/param2- HangCall\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -303,15 +313,46 @@ int ooHangCall(const char* callToken, OOCallClearReason reason)
       OOTRACEERR1("ERROR:Failed to write to command pipe\n");
    }
 #endif
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }
 
+/*
+int ooGetStackCmd(OOStackCommand *pCmd)
+{
+   OOStackCommand *cmd;
+   DListNode *pNode = NULL;
+   if (gH323ep.stkCmdList.count > 0)
+   {
+
+      if (0 != (pNode = dListFindByIndex(&gH323ep.stkCmdList, 0)))
+      {
+         cmd = (OOStackCommand*)pNode->data;
+         pCmd->type = cmd->type;
+         if(cmd->param1)
+           pCmd->param1 = (void*)memAlloc(&gH323ep.ctxt,
+        
+
+
+
+}
+
+
+int ooProcStackCmds()
+{
+   OOStackCommand cmd;
+   cmd.type = OO_CMD_NOOP;
+   ooGetStackCmd(&cmd);
+
+   if(cmd.type != OO_CMD_NOOP)
+   {
+  
+
+
+      }
+}
+*/
 int ooProcStackCmds()
 {
    OOH323CallData *call = NULL;
@@ -437,15 +478,15 @@ int ooProcStackCmds()
 int ooStopMonitor()
 {
    OOStackCommand *cmd;
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
+
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Allocating memory for command structure - StopMonitor\n");
+      ooReleaseCmdMutex();
+
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(OOStackCommand));
@@ -460,11 +501,8 @@ int ooStopMonitor()
    }
 #endif
   
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
+
    return OO_OK;
 }
 
@@ -478,15 +516,13 @@ int ooSendDTMFDigit(const char *callToken, const char* dtmf)
       return OO_FAILED;
    }
 
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
+   ooAcquireCmdMutex();
+
    cmd = (OOStackCommand*)memAlloc(&gH323ep.ctxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooSendDTMFDigit - cmd\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    memset(cmd, 0, sizeof(OOStackCommand));
@@ -497,6 +533,7 @@ int ooSendDTMFDigit(const char *callToken, const char* dtmf)
    if(!cmd->param1 || !cmd->param2)
    {
       OOTRACEERR1("ERROR:Memory - ooSendDTMFDigit - param1/param2\n");
+      ooReleaseCmdMutex();
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, callToken);
@@ -511,11 +548,7 @@ int ooSendDTMFDigit(const char *callToken, const char* dtmf)
    }
 #endif
 
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
+   ooReleaseCmdMutex();
 
    return OO_OK;
 }

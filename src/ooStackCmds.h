@@ -45,6 +45,7 @@ extern "C" {
  * This is an enumeration of stack command codes.
  */
 typedef enum OOStackCmdID {
+   OO_CMD_NOOP,
    OO_CMD_MAKECALL,          /*!< Make call */
    OO_CMD_ANSCALL,           /*!< Answer call */
    OO_CMD_FWDCALL,           /*!< Forward call */
