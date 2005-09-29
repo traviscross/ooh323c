@@ -633,29 +633,34 @@ int ooMonitorChannels()
             }
          }
       }
+
+      
+      //#ifdef _WIN32
+      //      EnterCriticalSection(&gCmdMutex);
+      //#else
+      //      pthread_mutex_lock(&gCmdMutex);
+      //#endif
      
-#ifdef _WIN32
-      EnterCriticalSection(&gCmdMutex);
-#else
-      pthread_mutex_lock(&gCmdMutex);
-#endif
       /* If gatekeeper is present, then we should not be processing
          any call related command till we are registered with the gk.
       */
 #ifdef HAVE_PIPE
+
       if(FD_ISSET(gH323ep.cmdPipe[0], &readfds))
       {
         read(gH323ep.cmdPipe[0], buf, 1);
       }
-#endif
 
-      ooProcStackCmds();
-
-#ifdef _WIN32
-      LeaveCriticalSection(&gCmdMutex);
-#else
-      pthread_mutex_unlock(&gCmdMutex);
 #endif
+      ooProcessStackCmds();
+      //      ooProcStackCmds();
+     
+      //#ifdef _WIN32
+      //      LeaveCriticalSection(&gCmdMutex);
+      //#else
+      //      pthread_mutex_unlock(&gCmdMutex);
+      //#endif
+     
       /* Manage ready descriptors after select */
 
       if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)

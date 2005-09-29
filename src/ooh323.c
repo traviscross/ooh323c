@@ -270,22 +270,22 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    /* Extract Remote IP address */
    if(!setup->m.sourceCallSignalAddressPresent)
    {
-      OOTRACEERR3("ERROR:Missing source call signal address in received setup "
-                  "(%s, %s)\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
+      OOTRACEWARN3("WARNING:Missing source call signal address in received "
+                   "setup (%s, %s)\n", call->callType, call->callToken);
+   }else{
 
-   if(setup->sourceCallSignalAddress.t != T_H225TransportAddress_ipAddress)
-   {
-      OOTRACEERR3("ERROR: Source call signalling address type not ip (%s, %s)"
-                  "\n", call->callType, call->callToken);
-      return OO_FAILED;
-   }
+      if(setup->sourceCallSignalAddress.t != T_H225TransportAddress_ipAddress)
+      {
+         OOTRACEERR3("ERROR: Source call signalling address type not ip "
+                     "(%s, %s)\n", call->callType, call->callToken);
+         return OO_FAILED;
+      }
 
-   ip = &setup->sourceCallSignalAddress.u.ipAddress->ip;
-   sprintf(call->remoteIP, "%d.%d.%d.%d", ip->data[0], ip->data[1],
-                                          ip->data[2], ip->data[3]);
-   call->remotePort =  setup->sourceCallSignalAddress.u.ipAddress->port;
+      ip = &setup->sourceCallSignalAddress.u.ipAddress->ip;
+      sprintf(call->remoteIP, "%d.%d.%d.%d", ip->data[0], ip->data[1],
+                                             ip->data[2], ip->data[3]);
+      call->remotePort =  setup->sourceCallSignalAddress.u.ipAddress->port;
+   }
   
    /* check for fast start */
   

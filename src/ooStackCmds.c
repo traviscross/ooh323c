@@ -59,13 +59,13 @@ int ooMakeCall
    OOStackCommand *cmd;
    int ret;
 
-   ooAcquireCmdMutex();
+   ooAcquireCmdMutex(); /* Acquire lock */
 
    cmd = (OOStackCommand*) memAlloc (&gCmdCtxt, sizeof(OOStackCommand));
    if(!cmd)
    {
       OOTRACEERR1("Error:Memory - ooMakeCall - cmd\n");
-      ooReleaseCmdMutex();
+      ooReleaseCmdMutex(); /* Release lock */
       return OO_FAILED;
    }
    cmd->type = OO_CMD_MAKECALL;
@@ -73,8 +73,8 @@ int ooMakeCall
    if(!cmd->param1)
    {
       OOTRACEERR1("ERROR:Memory - ooMakeCall - param1\n");
-      memFreePtr(&gCmdCtxt, cmd);
-      ooReleaseCmdMutex();
+      memFreePtr(&gCmdCtxt, cmd); /* free memory */
+      ooReleaseCmdMutex();  /* Release lock */
       return OO_FAILED;
    }
    strcpy((char*)cmd->param1, dest);
@@ -83,16 +83,16 @@ int ooMakeCall
    if(!callToken)
    {
       OOTRACEERR1("ERROR:Invalid 'callToken' parameter to 'ooMakeCall'\n");
-      memFreePtr(&gCmdCtxt, cmd->param1);
+      memFreePtr(&gCmdCtxt, cmd->param1); /* free memory */
       memFreePtr(&gCmdCtxt, cmd);
-      ooReleaseCmdMutex();
+      ooReleaseCmdMutex(); /* Release lock */
       return OO_FAILED;
    }
 
    if ((ret = ooGenerateCallToken (callToken, bufsiz)) != 0){
-      memFreePtr(&gCmdCtxt, cmd->param1);
+      memFreePtr(&gCmdCtxt, cmd->param1); /* free memory */
       memFreePtr(&gCmdCtxt, cmd);
-      ooReleaseCmdMutex();
+      ooReleaseCmdMutex(); /* Release lock */
       return ret;
    }
 
@@ -541,15 +541,20 @@ int ooProcessStackCmds()
 {
    OOStackCommand cmd;
    OOH323CallData *call = NULL;
+
+   memset(&cmd, 0, sizeof(OOStackCommand));
    cmd.type = OO_CMD_NOOP;
+
    if(ooGetStackCmd(&cmd) != OO_OK)
    {
       OOTRACEERR1("Error:Failed to retrieve stack command\n");
       return OO_FAILED;
    }
   
+
    if(cmd.type == OO_CMD_NOOP)
       return OO_OK;
+
 
    switch(cmd.type) {
       case OO_CMD_MAKECALL:
@@ -628,7 +633,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
 {
    OOStackCommand *cmd;
    DListNode *pNode = NULL;
-  
+
    ooAcquireCmdMutex(); /*Acquire lock */
    if (gStkCmdList.count > 0)
    {
@@ -647,6 +652,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
          switch(cmd->type)
          {
             case OO_CMD_MAKECALL:
+               OOTRACEDBGC1("Found MakeCall command\n");
                pCmd->type = cmd->type;
                pCmd->param1 = (void*)memAlloc(&gH323ep.ctxt, strlen((char*)cmd->param1)+1);
                pCmd->param2 = (void*)memAlloc(&gH323ep.ctxt, strlen((char*)cmd->param2)+1);
@@ -654,13 +660,14 @@ int ooGetStackCmd(OOStackCommand *pCmd)
                   pCmd->param3 = (void*)memAlloc(&gH323ep.ctxt, sizeof(ooCallOptions));
                if(!pCmd->param1 || !pCmd->param2 || (cmd->param3 && !pCmd->param3))
                {
-                  OOTRACEERR1("Error:Memory - ooGetStackCmd - params\n");
+                  OOTRACEERR1("Error:Memory - ooGetStackCmd(MakeCall) - params\n");
                   if(pCmd->param1)   memFreePtr(&gH323ep.ctxt, pCmd->param1);
                   if(pCmd->param2)   memFreePtr(&gH323ep.ctxt, pCmd->param2);
                   if(pCmd->param3)   memFreePtr(&gH323ep.ctxt, pCmd->param3);
                   ooReleaseCmdMutex(); /* Release lock */
                   return OO_FAILED;
                }
+
                strcpy((char*)pCmd->param1, (char*)cmd->param1);
                strcpy((char*)pCmd->param2, (char*)cmd->param2);
                if(pCmd->param3)
@@ -673,7 +680,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
                pCmd->param1 = (void*)memAlloc(&gH323ep.ctxt, strlen((char*)cmd->param1)+1);
                if(!pCmd->param1)
                {
-                  OOTRACEERR1("Error:Memory - ooGetStackCmd - params\n");
+                  OOTRACEERR1("Error:Memory - ooGetStackCmd(AnsCall/ManualRingback) - params\n");
                   ooReleaseCmdMutex();
                   return OO_FAILED; /* Release lock */
                }
@@ -687,7 +694,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
                pCmd->param2 = (void*)memAlloc(&gH323ep.ctxt, strlen((char*)cmd->param2)+1);
                if(!pCmd->param1 || !pCmd->param2)
                {
-                  OOTRACEERR1("Error:Memory - ooGetStackCmd - params\n");
+                  OOTRACEERR1("Error:Memory - ooGetStackCmd(FwdCall/SendDigit) - params\n");
                   if(pCmd->param1)   memFreePtr(&gH323ep.ctxt, pCmd->param1);
                   if(pCmd->param2)   memFreePtr(&gH323ep.ctxt, pCmd->param2);
                   ooReleaseCmdMutex(); /* Release lock */
@@ -703,7 +710,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
                pCmd->param2 = (void*)memAlloc(&gH323ep.ctxt, sizeof(OOCallClearReason));
                if(!pCmd->param1 || !pCmd->param2)
                {
-                  OOTRACEERR1("Error:Memory - ooGetStackCmd - params\n");
+                  OOTRACEERR1("Error:Memory - ooGetStackCmd(HangCall) - params\n");
                   if(pCmd->param1)   memFreePtr(&gH323ep.ctxt, pCmd->param1);
                   if(pCmd->param2)   memFreePtr(&gH323ep.ctxt, pCmd->param2);
                   ooReleaseCmdMutex(); /* Release lock */
@@ -722,6 +729,7 @@ int ooGetStackCmd(OOStackCommand *pCmd)
                
              
          }
+
          dListRemove(&gStkCmdList, pNode);
          memFreePtr(&gCmdCtxt, pNode); /* Release memory */
          if(cmd->param1) memFreePtr(&gCmdCtxt, cmd->param1);

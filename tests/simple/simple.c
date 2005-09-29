@@ -400,11 +400,11 @@ int main(int argc, char ** argv)
 /* Callback to start receive media channel */
 int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
-   printf("\n--->Starting Receive channel at %s:%d", call->localIP,
+   printf("\n--->Starting Receive channel at %s:%d", pChannel->localIP,
                                               pChannel->localRtpPort);
    printf("\nCMD>");
    fflush(stdout);
-   ooCreateReceiveRTPChannel(call->localIP,
+   ooCreateReceiveRTPChannel(pChannel->localIP,
                              pChannel->localRtpPort);
    ooStartReceiveAudioAndPlayback();
    return OO_OK;
@@ -414,10 +414,10 @@ int osEpStartReceiveChannel(ooCallData *call, ooLogicalChannel *pChannel)
 int osEpStartTransmitChannel(ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf("\n--->Starting transmit channel to %s:%d",
-          call->remoteIP, pChannel->remoteMediaPort);
+            pChannel->remoteIP, pChannel->remoteMediaPort);
    printf("\nCMD>");
    fflush(stdout);
-   ooCreateTransmitRTPChannel (call->remoteIP, pChannel->remoteMediaPort);
+   ooCreateTransmitRTPChannel (pChannel->remoteIP, pChannel->remoteMediaPort);
    ooStartTransmitMic();
    return OO_OK;
 }
