@@ -18,28 +18,12 @@
 #include "ooCalls.h"
 #include "ooCapability.h"
 #include "ooGkClient.h"
+#include "ooMutex.h"
 
 /** Global endpoint structure */
 ooEndPoint gH323ep;
 
-/**
- * Mutex to protect ooGenerateCallReference function.
- * This is required as this function will be called by
- * multiple threads trying to place calls using stack commands
- */
-OO_MUTEX gCallRefMutex;
 
-/**
- * Mutex to protect access to global call token variables.
- * This is required as these variables will be used by
- * multiple threads trying to place calls using stack commands
- */
-OO_MUTEX gCallTokenMutex;
-
-/**
- * Mutex to protect access to stack commands list
- */
-OO_MUTEX gCmdMutex;
 
 /**
  * Context to allocate memory for stack commands.
@@ -135,15 +119,11 @@ int ooH323EpInitialize
    gH323ep.callingPartyNumber[0]='\0';    
    gH323ep.callMode = callMode;
    gH323ep.isGateway = FALSE;
-#ifdef _WIN32
-   InitializeCriticalSection(&gCmdMutex);
-   InitializeCriticalSection(&gCallTokenMutex);
-   InitializeCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_init(&gCmdMutex, 0);
-   pthread_mutex_init(&gCallTokenMutex, 0);
-   pthread_mutex_init(&gCallRefMutex, 0);
-#endif
+
+   ooMutexInitCmdMutex();
+   ooMutexInitCallRefMutex();
+   ooMutexInitCallTokenMutex();
+
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
 
    gH323ep.callEstablishmentTimeout = DEFAULT_CALLESTB_TIMEOUT;
@@ -392,11 +372,10 @@ int ooH323EpDestroy(void)
 
       freeContext(&(gH323ep.ctxt));
       freeContext(&(gCmdCtxt));
-#ifdef _WIN32
-      DeleteCriticalSection(&gCmdMutex);
-      DeleteCriticalSection(&gCallTokenMutex);
-      DeleteCriticalSection(&gCallRefMutex);
-#endif
+
+      ooMutexDestroyCmdMutex();
+      ooMutexDestroyCallRefMutex();
+      ooMutexDestroyCallTokenMutex();
       OO_CLRFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
    }
    return OO_OK;

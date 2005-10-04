@@ -59,9 +59,7 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_PTHREAD_H
-#include <pthread.h>
-#endif
+
 
 #define OOH323C_VERSION "vxx.aa"
 
@@ -226,12 +224,7 @@ typedef enum OOCallMode {
 /** This macro tests a flag with a bit mask */
 #define OO_TESTFLAG(flags,mask) ((flags & mask) != 0)
 
-/* Define common mutex type */
-#ifdef _WIN32
-#define OO_MUTEX CRITICAL_SECTION
-#else
-#define OO_MUTEX pthread_mutex_t
-#endif
+
 
 /*TODO: Should add caller-id, callername etc. So that they can be changed per
   call basis*/

@@ -35,8 +35,6 @@
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-extern OO_MUTEX gCmdMutex;
-
 extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
@@ -477,6 +475,236 @@ int ooAcceptH245Connection(OOH323CallData *call)
    return OO_OK;
 }
 
+
+int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
+{
+   OOH323CallData *call=NULL;
+
+   if(gH323ep.gkClient && gH323ep.gkClient->rasSocket != 0)
+   {
+      FD_SET(gH323ep.gkClient->rasSocket, pReadfds );
+      if ( *nfds < (int)gH323ep.gkClient->rasSocket)
+         *nfds = (int)gH323ep.gkClient->rasSocket;
+   }
+   if(gH323ep.listener)
+   {
+      FD_SET(*(gH323ep.listener), pReadfds);
+      if(*nfds < (int)*(gH323ep.listener))
+         *nfds = *((int*)gH323ep.listener);
+   }
+
+#ifdef HAVE_PIPE
+   FD_SET(gH323ep.cmdPipe[0], pReadfds);
+   if ( *nfds < (int)gH323ep.cmdPipe[0])
+      *nfds = (int)gH323ep.cmdPipe[0];
+#endif
+     
+   if(gH323ep.callList)
+   {
+      call = gH323ep.callList;
+      while(call)
+      {
+         if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
+         {
+            FD_SET (call->pH225Channel->sock, pReadfds);
+            if (call->pH225Channel->outQueue.count > 0 ||
+               (OO_TESTFLAG (call->flags, OO_M_TUNNELING) &&
+                0 != call->pH245Channel &&
+                call->pH245Channel->outQueue.count>0))
+               FD_SET (call->pH225Channel->sock, pWritefds);
+            if(*nfds < (int)call->pH225Channel->sock)
+               *nfds = call->pH225Channel->sock;
+         }
+          
+         if (0 != call->pH245Channel &&  call->pH245Channel->sock != 0)
+         {
+            FD_SET(call->pH245Channel->sock, pReadfds);
+            if (call->pH245Channel->outQueue.count>0)
+               FD_SET(call->pH245Channel->sock, pWritefds);
+            if(*nfds < (int)call->pH245Channel->sock)
+               *nfds = call->pH245Channel->sock;
+         }
+         else if(call->h245listener)
+         {
+            OOTRACEINFO3("H.245 Listerner socket being monitored "
+                         "(%s, %s)\n", call->callType, call->callToken);
+             FD_SET(*(call->h245listener), pReadfds);
+             if(*nfds < (int)*(call->h245listener))
+               *nfds = *(call->h245listener);
+          }
+          call = call->next;
+           
+      }/* while(call) */
+   }/*if(gH323ep.callList) */
+
+
+   if(*nfds != 0) *nfds = *nfds+1;
+
+   return OO_OK;
+
+}
+
+int ooProcessFDSETsAndTimers(fd_set *pReadfds, fd_set *pWritefds, struct timeval *pToMin)
+{
+   OOH323CallData *call, *prev=NULL;
+   struct timeval toNext;
+#ifdef HAVE_PIPE  
+   char buf[2];
+#endif
+
+   /* Process gatekeeper client timers */
+   if(gH323ep.gkClient)
+   {  
+      ooTimerFireExpired(&gH323ep.gkClient->ctxt,
+                                        &gH323ep.gkClient->timerList);
+      if(ooTimerNextTimeout(&gH323ep.gkClient->timerList, &toNext))
+      {
+         if(ooCompareTimeouts(pToMin, &toNext)>0)
+         {
+            pToMin->tv_sec = toNext.tv_sec;
+            pToMin->tv_usec = toNext.tv_usec;
+         }
+      }
+      if(gH323ep.gkClient->state == GkClientFailed ||
+         gH323ep.gkClient->state == GkClientGkErr)
+      {
+         if(ooGkClientHandleClientOrGkFailure(gH323ep.gkClient)!=OO_OK)
+         {
+           //ooStopMonitorCalls(); //Function calling ooProcessFDSETsAndTimers is responsible for this.
+            return OO_FAILED;
+         }
+      }
+   }
+
+      
+   /* If gatekeeper is present, then we should not be processing
+      any call related command till we are registered with the gk.
+   */
+#ifdef HAVE_PIPE
+
+   if(FD_ISSET(gH323ep.cmdPipe[0], pReadfds))
+   {
+      read(gH323ep.cmdPipe[0], buf, 1);
+   }
+
+#endif
+   ooProcessStackCmds();
+     
+
+   /* Manage ready descriptors after select */
+
+   if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)
+   {
+      if(FD_ISSET( gH323ep.gkClient->rasSocket, pReadfds) )
+      {
+         ooGkClientReceive(gH323ep.gkClient);
+         if(gH323ep.gkClient->state == GkClientFailed ||
+            gH323ep.gkClient->state == GkClientGkErr)
+           ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
+      }
+   }
+
+   if(gH323ep.listener)
+   {
+      if(FD_ISSET(*(gH323ep.listener), pReadfds))
+      {
+         OOTRACEDBGA1("New connection at H225 receiver\n");
+         ooAcceptH225Connection();
+      }     
+   }
+     
+
+   if(gH323ep.callList)
+   {
+      call = gH323ep.callList;
+      while(call)
+      {
+         ooTimerFireExpired(call->pctxt, &call->timerList);
+         if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
+         {
+            if(FD_ISSET(call->pH225Channel->sock, pReadfds))
+            {
+               if(ooH2250Receive(call) != OO_OK)
+               {
+                  OOTRACEERR3("ERROR:Failed ooH2250Receive - Clearing call "
+                             "(%s, %s)\n", call->callType, call->callToken);
+                  if(call->callState < OO_CALL_CLEAR)
+                  {
+                     call->callEndReason = OO_REASON_INVALIDMESSAGE;
+                     call->callState = OO_CALL_CLEAR;
+                   }
+               }
+            }
+         }
+           
+       
+         if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
+         {
+            if(FD_ISSET(call->pH245Channel->sock, pReadfds))
+            {                          
+               ooH245Receive(call);
+            }
+         }
+           
+         if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
+         {
+            if(FD_ISSET(call->pH245Channel->sock, pWritefds))
+            {                          
+               if(call->pH245Channel->outQueue.count>0)
+                  ooSendMsg(call, OOH245MSG);
+            }
+         }
+         else if(call->h245listener)
+         {
+            if(FD_ISSET(*(call->h245listener), pReadfds))
+            {
+               OOTRACEDBGC3("Incoming H.245 connection (%s, %s)\n",
+                            call->callType, call->callToken);
+               ooAcceptH245Connection(call);
+            }                          
+         }
+
+         if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
+         {
+            if(FD_ISSET(call->pH225Channel->sock, pWritefds))
+            {
+               if(call->pH225Channel->outQueue.count>0)
+               {
+                  OOTRACEDBGC3("Sending H225 message (%s, %s)\n",
+                              call->callType, call->callToken);
+                  ooSendMsg(call, OOQ931MSG);
+               }
+               if(call->pH245Channel &&
+                  call->pH245Channel->outQueue.count>0 &&
+                  OO_TESTFLAG (call->flags, OO_M_TUNNELING))
+               {
+                  OOTRACEDBGC3("H245 message needs to be tunneled. "
+                               "(%s, %s)\n", call->callType,
+                               call->callToken);
+                  ooSendMsg(call, OOH245MSG);
+               }
+            }                               
+         }
+
+         if(ooTimerNextTimeout(&call->timerList, &toNext))
+         {
+            if(ooCompareTimeouts(pToMin, &toNext) > 0)
+            {
+               pToMin->tv_sec = toNext.tv_sec;
+               pToMin->tv_usec = toNext.tv_usec;
+            }
+         }
+         prev = call;
+         call = call->next;
+         if(prev->callState >= OO_CALL_CLEAR)
+            ooEndCall(prev);
+      }/* while(call) */
+   }/* if(gH323ep.callList) */
+
+   return OO_OK;
+
+}
+  
 int ooMonitorChannels()
 {
    int ret=0, nfds=0;
@@ -493,6 +721,7 @@ int ooMonitorChannels()
    toMin.tv_sec = 3;
    toMin.tv_usec = 0;
    ooH323EpPrintConfig();
+  
    if(gH323ep.gkClient)
    {
       ooGkClientPrintConfig(gH323ep.gkClient);
@@ -508,7 +737,8 @@ int ooMonitorChannels()
       FD_ZERO(&readfds);
       FD_ZERO(&writefds);
       nfds = 0;
-     
+      ooSetFDSETs(&readfds, &writefds, &nfds);
+#if 0     
       if(gH323ep.gkClient && gH323ep.gkClient->rasSocket != 0)
       {
          FD_SET(gH323ep.gkClient->rasSocket, &readfds );
@@ -560,12 +790,14 @@ int ooMonitorChannels()
                 FD_SET(*(call->h245listener), &readfds);
                 if(nfds < (int)*(call->h245listener))
                   nfds = *(call->h245listener);
-             }
-             call = call->next;
+            }
+            call = call->next;
            
          }/* while(call) */
       }/*if(gH323ep.callList) */
 
+      if(nfds != 0) nfds = nfds+1;
+#endif
 
       if(!gMonitor)
       {
@@ -573,7 +805,6 @@ int ooMonitorChannels()
          break;
       }
 
-      if(nfds != 0) nfds = nfds+1;
      
       if(nfds == 0)
 #ifdef _WIN32
@@ -610,7 +841,13 @@ int ooMonitorChannels()
          }
       }
 
+      if(ooProcessFDSETsAndTimers(&readfds, &writefds, &toMin) != OO_OK)
+      {
+         ooStopMonitorCalls();
+         continue;
+      }
 
+#if 0
       if(gH323ep.gkClient)
       {  
          ooTimerFireExpired(&gH323ep.gkClient->ctxt,
@@ -635,12 +872,6 @@ int ooMonitorChannels()
       }
 
       
-      //#ifdef _WIN32
-      //      EnterCriticalSection(&gCmdMutex);
-      //#else
-      //      pthread_mutex_lock(&gCmdMutex);
-      //#endif
-     
       /* If gatekeeper is present, then we should not be processing
          any call related command till we are registered with the gk.
       */
@@ -653,14 +884,8 @@ int ooMonitorChannels()
 
 #endif
       ooProcessStackCmds();
-      //      ooProcStackCmds();
      
-      //#ifdef _WIN32
-      //      LeaveCriticalSection(&gCmdMutex);
-      //#else
-      //      pthread_mutex_unlock(&gCmdMutex);
-      //#endif
-     
+
       /* Manage ready descriptors after select */
 
       if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)
@@ -771,6 +996,7 @@ int ooMonitorChannels()
                ooEndCall(prev);
          }/* while(call) */
       }/* if(gH323ep.callList) */
+#endif
    }/* while(1)*/
    return OO_OK;
 }

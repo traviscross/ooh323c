@@ -26,14 +26,13 @@
 #include "ooCapability.h"
 #include "ooGkClient.h"
 #include "ooUtils.h"
+#include "ooMutex.h"
 #include <time.h>
 
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-extern OO_MUTEX gCallRefMutex;
-extern OO_MUTEX gCallTokenMutex;
 
 static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
@@ -396,11 +395,7 @@ int ooGenerateCallToken (char *callToken, size_t size)
    char aCallToken[200];
    int  ret = 0;
 
-#ifdef _WIN32
-   EnterCriticalSection (&gCallTokenMutex);
-#else
-   pthread_mutex_lock (&gCallTokenMutex);
-#endif
+   ooMutexAcquireCallTokenMutex(); /* Acquire lock */
 
    sprintf (aCallToken, "ooh323c_%d", counter++);
 
@@ -413,11 +408,8 @@ int ooGenerateCallToken (char *callToken, size_t size)
       OOTRACEERR1 ("Error: Insufficient buffer size to generate call token");
       ret = OO_FAILED;
    }
-#ifdef _WIN32
-   LeaveCriticalSection(&gCallTokenMutex);
-#else
-   pthread_mutex_unlock(&gCallTokenMutex);
-#endif
+
+   ooMutexReleaseCallTokenMutex(); /* Release lock */
 
    return ret;
 }
@@ -431,12 +423,9 @@ ASN1USINT ooGenerateCallReference()
 {
    static ASN1USINT lastCallRef=0;
    ASN1USINT newCallRef=0;
-#ifdef _WIN32
-   EnterCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_lock(&gCallRefMutex);
-#endif
-  
+
+   ooMutexAcquireCallRefMutex(); /* Acquire lock */
+
    if(lastCallRef == 0)
    {
       /* Generate a new random callRef */
@@ -453,11 +442,9 @@ ASN1USINT ooGenerateCallReference()
       lastCallRef=1;
 
    newCallRef = lastCallRef;
-#ifdef _WIN32
-   LeaveCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_unlock(&gCallRefMutex);
-#endif
+
+   ooMutexReleaseCallRefMutex(); /* Release lock */
+
    OOTRACEDBGC2("Generated callRef %d\n", newCallRef);
    return newCallRef;
 }

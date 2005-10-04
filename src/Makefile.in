@@ -93,11 +93,11 @@ CFLAGS = @OOH323CFLAGS@
 
 lib_LIBRARIES = libooh323c.a
 #liboostk_la_LDFLAGS = -version-info 1:1:0
-libooh323c_a_SOURCES = ooUtils.c ooUtils.h ooGkClient.h ooGkClient.c context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c eventHandler.c eventHandler.h ooCalls.c ooCalls.h ooLogChan.c ooLogChan.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
+libooh323c_a_SOURCES = ooMutex.h ooMutex.c ooUtils.c ooUtils.h ooGkClient.h ooGkClient.c context.c ooCommon.h ooDateTime.h ooDateTime.c decode.c dlist.c encode.c errmgmt.c memheap.c memheap.h ooasn1.h  ootrace.h ootrace.c oochannels.c oochannels.h ooh245.c ooh245.h oohdr.h ooper.h ooports.c ooports.h ooq931.c ooq931.h ooCapability.c ooCapability.h ooSocket.c ooSocket.h ootypes.h perutil.c eventHandler.c eventHandler.h ooCalls.c ooCalls.h ooLogChan.c ooLogChan.h ooStackCmds.c ooStackCmds.h ooh323.c ooh323.h ooh323ep.c ooh323ep.h printHandler.c printHandler.h rtctype.c rtctype.h ooTimer.c ooTimer.h h323/H235-SECURITY-MESSAGESDec.c h323/H235-SECURITY-MESSAGESEnc.c h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.c h323/H323-MESSAGESDec.c h323/H323-MESSAGESEnc.c h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.c h323/MULTIMEDIA-SYSTEM-CONTROLDec.c h323/MULTIMEDIA-SYSTEM-CONTROLEnc.c h323/MULTIMEDIA-SYSTEM-CONTROL.h
 
 INCLUDES = -Ih323
 
-include_HEADERS = dlist.h ooUtils.h memheap.h ooCommon.h ooDateTime.h ooGkClient.h ooasn1.h oochannels.h ootrace.h ooh245.h ooports.h ooq931.h oohdr.h ooper.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCapability.h ooCalls.h ooLogChan.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h
+include_HEADERS = ooMutex.h dlist.h ooUtils.h memheap.h ooCommon.h ooDateTime.h ooGkClient.h ooasn1.h oochannels.h ootrace.h ooh245.h ooports.h ooq931.h oohdr.h ooper.h ooSocket.h ooTimer.h ootypes.h eventHandler.h ooCapability.h ooCalls.h ooLogChan.h ooStackCmds.h ooh323.h ooh323ep.h printHandler.h rtctype.h h323/H235-SECURITY-MESSAGES.h h323/H323-MESSAGES.h h323/MULTIMEDIA-SYSTEM-CONTROL.h
 
 EXTRA_DIST = oostk.dsp
 subdir = src
@@ -108,16 +108,16 @@ LIBRARIES = $(lib_LIBRARIES)
 
 libooh323c_a_AR = $(AR) cru
 libooh323c_a_LIBADD =
-am_libooh323c_a_OBJECTS = ooUtils.$(OBJEXT) ooGkClient.$(OBJEXT) \
-        context.$(OBJEXT) ooDateTime.$(OBJEXT) decode.$(OBJEXT) \
-        dlist.$(OBJEXT) encode.$(OBJEXT) errmgmt.$(OBJEXT) \
-        memheap.$(OBJEXT) ootrace.$(OBJEXT) oochannels.$(OBJEXT) \
-        ooh245.$(OBJEXT) ooports.$(OBJEXT) ooq931.$(OBJEXT) \
-        ooCapability.$(OBJEXT) ooSocket.$(OBJEXT) perutil.$(OBJEXT) \
-        eventHandler.$(OBJEXT) ooCalls.$(OBJEXT) ooLogChan.$(OBJEXT) \
-        ooStackCmds.$(OBJEXT) ooh323.$(OBJEXT) ooh323ep.$(OBJEXT) \
-        printHandler.$(OBJEXT) rtctype.$(OBJEXT) ooTimer.$(OBJEXT) \
-        H235-SECURITY-MESSAGESDec.$(OBJEXT) \
+am_libooh323c_a_OBJECTS = ooMutex.$(OBJEXT) ooUtils.$(OBJEXT) \
+        ooGkClient.$(OBJEXT) context.$(OBJEXT) ooDateTime.$(OBJEXT) \
+        decode.$(OBJEXT) dlist.$(OBJEXT) encode.$(OBJEXT) \
+        errmgmt.$(OBJEXT) memheap.$(OBJEXT) ootrace.$(OBJEXT) \
+        oochannels.$(OBJEXT) ooh245.$(OBJEXT) ooports.$(OBJEXT) \
+        ooq931.$(OBJEXT) ooCapability.$(OBJEXT) ooSocket.$(OBJEXT) \
+        perutil.$(OBJEXT) eventHandler.$(OBJEXT) ooCalls.$(OBJEXT) \
+        ooLogChan.$(OBJEXT) ooStackCmds.$(OBJEXT) ooh323.$(OBJEXT) \
+        ooh323ep.$(OBJEXT) printHandler.$(OBJEXT) rtctype.$(OBJEXT) \
+        ooTimer.$(OBJEXT) H235-SECURITY-MESSAGESDec.$(OBJEXT) \
         H235-SECURITY-MESSAGESEnc.$(OBJEXT) H323-MESSAGES.$(OBJEXT) \
         H323-MESSAGESDec.$(OBJEXT) H323-MESSAGESEnc.$(OBJEXT) \
         MULTIMEDIA-SYSTEM-CONTROL.$(OBJEXT) \
@@ -146,14 +146,14 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@    ./$(DEPDIR)/memheap.Po ./$(DEPDIR)/ooCalls.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/ooCapability.Po \
 @AMDEP_TRUE@    ./$(DEPDIR)/ooDateTime.Po ./$(DEPDIR)/ooGkClient.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooLogChan.Po ./$(DEPDIR)/ooSocket.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooStackCmds.Po ./$(DEPDIR)/ooTimer.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooUtils.Po ./$(DEPDIR)/oochannels.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooh245.Po ./$(DEPDIR)/ooh323.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooh323ep.Po ./$(DEPDIR)/ooports.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/ooq931.Po ./$(DEPDIR)/ootrace.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/perutil.Po ./$(DEPDIR)/printHandler.Po \
-@AMDEP_TRUE@    ./$(DEPDIR)/rtctype.Po
+@AMDEP_TRUE@    ./$(DEPDIR)/ooLogChan.Po ./$(DEPDIR)/ooMutex.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ooSocket.Po ./$(DEPDIR)/ooStackCmds.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ooTimer.Po ./$(DEPDIR)/ooUtils.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/oochannels.Po ./$(DEPDIR)/ooh245.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ooh323.Po ./$(DEPDIR)/ooh323ep.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ooports.Po ./$(DEPDIR)/ooq931.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/ootrace.Po ./$(DEPDIR)/perutil.Po \
+@AMDEP_TRUE@    ./$(DEPDIR)/printHandler.Po ./$(DEPDIR)/rtctype.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
         $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
@@ -249,6 +249,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooDateTime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooGkClient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooLogChan.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooMutex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooStackCmds.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ooTimer.Po@am__quote@
