@@ -13,154 +13,118 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
+#ifdef USE_THREADS
 #include "ooMutex.h"
+
+/**
+ * Mutex to protect ooGenerateCallReference function.
+ * This is required as this function will be called by
+ * multiple threads trying to place calls using stack commands
+ */
+static OO_MUTEX gCallRefMutex;
+
+/**
+ * Mutex to protect access to global call token variables.
+ * This is required as these variables will be used by
+ * multiple threads trying to place calls using stack commands
+ */
+static OO_MUTEX gCallTokenMutex;
+
+/**
+ * Mutex to protect access to stack commands list
+ */
+static OO_MUTEX gCmdMutex;
+
+static void ooInitMutex (OO_MUTEX* pmutex)
+{
+#ifdef _WIN32
+   InitializeCriticalSection (pmutex);
+#else
+   pthread_mutex_init (pmutex, 0);
+#endif
+}
+
+static void ooAcquireMutex (OO_MUTEX* pmutex)
+{
+#ifdef _WIN32
+   EnterCriticalSection (pmutex);
+#else
+   pthread_mutex_lock (pmutex);
+#endif
+}
+
+static void ooReleaseMutex (OO_MUTEX* pmutex)
+{
+#ifdef _WIN32
+   LeaveCriticalSection (pmutex);
+#else
+   pthread_mutex_unlock (pmutex);
+#endif
+}
 
 void ooMutexInitCmdMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   InitializeCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_init(&gCmdMutex, 0);
-#endif
-#endif
-
+   ooInitMutex (&gCmdMutex);
 }
 
 void ooMutexAcquireCmdMutex()
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   EnterCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_lock(&gCmdMutex);
-#endif
-#endif
-
+   ooAcquireMutex (&gCmdMutex);
 }
 
 void ooMutexReleaseCmdMutex()
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   LeaveCriticalSection(&gCmdMutex);
-#else
-   pthread_mutex_unlock(&gCmdMutex);
-#endif
-#endif
-
+   ooReleaseMutex (&gCmdMutex);
 }
 
 void ooMutexDestroyCmdMutex()
 {
-
-#ifdef USE_THREADS
 #ifdef _WIN32
   DeleteCriticalSection(&gCmdMutex);
 #endif
-#endif
-
 }
 
 void ooMutexInitCallRefMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   InitializeCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_init(&gCallRefMutex, 0);
-#endif
-#endif
-
+   ooInitMutex (&gCallRefMutex);
 }
 
 void ooMutexAcquireCallRefMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   EnterCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_lock(&gCallRefMutex);
-#endif
-#endif
-
+   ooAcquireMutex (&gCallRefMutex);
 }
 
 void ooMutexReleaseCallRefMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   LeaveCriticalSection(&gCallRefMutex);
-#else
-   pthread_mutex_unlock(&gCallRefMutex);
-#endif
-#endif
-
+   ooReleaseMutex (&gCallRefMutex);
 }
 
 void ooMutexDestroyCallRefMutex()
 {
-
-#ifdef USE_THREADS
 #ifdef _WIN32
    DeleteCriticalSection(&gCallRefMutex);
 #endif
-#endif
-
 }
 
 void ooMutexInitCallTokenMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   InitializeCriticalSection(&gCallTokenMutex);
-#else
-   pthread_mutex_init(&gCallTokenMutex, 0);
-#endif
-#endif
-
+   ooInitMutex (&gCallTokenMutex);
 }
 
 void ooMutexAcquireCallTokenMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   EnterCriticalSection(&gCallTokenMutex);
-#else
-   pthread_mutex_lock(&gCallTokenMutex);
-#endif
-#endif
-
+   ooAcquireMutex (&gCallTokenMutex);
 }
 
 void ooMutexReleaseCallTokenMutex(void)
 {
-
-#ifdef USE_THREADS
-#ifdef _WIN32
-   LeaveCriticalSection(&gCallTokenMutex);
-#else
-   pthread_mutex_unlock(&gCallTokenMutex);
-#endif
-#endif
-
+   ooReleaseMutex (&gCallTokenMutex);
 }
 
 void ooMutexDestroyCallTokenMutex(void)
 {
-
-#ifdef USE_THREADS
 #ifdef _WIN32
    DeleteCriticalSection(&gCallTokenMutex);
 #endif
-#endif
-
 }
+#endif

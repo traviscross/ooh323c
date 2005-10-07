@@ -13,13 +13,10 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
-
 /**
- * @file ooStackCmds.h
- * This file contains stack commands which an user application can use to make
- * call, hang call etc.
+ * @file ooMutex.h
+ * This file contains mutex lock structures and functions definitions.
  */
-
 #ifndef OO_MUTEX_H
 #define OO_MUTEX_H
 
@@ -43,35 +40,16 @@ extern "C" {
 #endif /* MAKE_DLL */
 #endif /* EXTERN */
 
-
-
 /* Define common mutex type */
-#ifdef _WIN32
+#if defined(_WIN32)
 #define OO_MUTEX CRITICAL_SECTION
-#else
+#elif defined(HAVE_PTHREAD_H)
 #define OO_MUTEX pthread_mutex_t
+#elif defined(USE_THREADS)
+#undef USE_THREADS
 #endif
 
-
-
-/**
- * Mutex to protect ooGenerateCallReference function.
- * This is required as this function will be called by
- * multiple threads trying to place calls using stack commands
- */
-OO_MUTEX gCallRefMutex;
-
-/**
- * Mutex to protect access to global call token variables.
- * This is required as these variables will be used by
- * multiple threads trying to place calls using stack commands
- */
-OO_MUTEX gCallTokenMutex;
-
-/**
- * Mutex to protect access to stack commands list
- */
-OO_MUTEX gCmdMutex;
+#ifdef USE_THREADS
 
 EXTERN void ooMutexInitCmdMutex(void);
 EXTERN void ooMutexAcquireCmdMutex(void);
@@ -88,7 +66,24 @@ EXTERN void ooMutexAcquireCallTokenMutex(void);
 EXTERN void ooMutexReleaseCallTokenMutex(void);
 EXTERN void ooMutexDestroyCallTokenMutex(void);
 
+#else
 
+#define ooMutexInitCmdMutex()
+#define ooMutexAcquireCmdMutex()
+#define ooMutexReleaseCmdMutex()
+#define ooMutexDestroyCmdMutex()
+
+#define ooMutexInitCallRefMutex()
+#define ooMutexAcquireCallRefMutex()
+#define ooMutexReleaseCallRefMutex()
+#define ooMutexDestroyCallRefMutex()
+
+#define ooMutexInitCallTokenMutex()
+#define ooMutexAcquireCallTokenMutex()
+#define ooMutexReleaseCallTokenMutex()
+#define ooMutexDestroyCallTokenMutex()
+
+#endif
 /**
  * @}
  */
