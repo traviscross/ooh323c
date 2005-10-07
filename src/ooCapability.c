@@ -2194,3 +2194,45 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
 
    return OO_OK;
 }
+
+const char* ooGetCapTypeText (OOCapabilities cap)
+{
+   static const char *capTypes[]={
+      "unknown",
+      "OO_NONSTANDARD",
+      "OO_G711ALAW64K",
+      "OO_G711ALAW56K",
+      "OO_G711ULAW64K",
+      "OO_G711ULAW56K",
+      "OO_G72264K",
+      "OO_G72256K",
+      "OO_G72248K",
+      "OO_G7231",
+      "OO_G728",
+      "OO_G729",
+      "OO_G729ANNEXA",
+      "OO_IS11172AUDIO",
+      "OO_IS13818AUDIO",
+      "OO_G729WANNEXB",
+      "OO_G729ANNEXAWANNEXB",
+      "OO_G7231ANNEXC",
+      "OO_GSMFULLRATE",
+      "OO_GSMHALFRATE",
+      "OO_GSMENHANCEDFULLRATE",
+      "OO_GENERICAUDIO",
+      "OO_G729EXTENSIONS",
+      "OO_VBD",
+      "OO_AUDIOTELEPHONYEVENT",
+      "OO_AUDIOTONE",
+      "OO_EXTELEM1",
+      "OO_VIDEO_BASE",
+      "OO_NONSTDVIDEO",
+      "OO_H261VIDEO",
+      "OO_H262VIDEO",
+      "OO_H263VIDEO",
+      "OO_IS11172VIDEO",  /* mpeg */
+      "OO_GENERICVIDEO",
+      "OO_EXTELEMVIDEO"
+   };
+   return ooUtilsGetText (cap, capTypes, OONUMBEROF(capTypes));
+}

@@ -110,51 +110,6 @@ extern "C" {
 #endif /* MAKE_DLL */
 #endif /* EXTERN */
 
-
-/**
- * This function is used to retrieve the description text for a reason
- * code.
- *
- * @param code     Reason code.
- * @return         The text description string.
- */
-const char* ooGetReasonCodeText (int code);
-
-/**
- * This function is used to retrieve the description text for a call
- * state.
- *
- * @param callState Call state.
- * @return         The text description string.
- */
-const char* ooGetCallStateText (int callState);
-
-/**
- * This function is used to retrieve the description text for a
- * message type.
- *
- * @param msgType  Message type.
- * @return         The text description string.
- */
-const char* ooGetMsgTypeText (int msgType);
-
-/**
- * This function is used to retrieve the text description for a capability
- * type.
- * @param cap     Capability
- * @return        The text description string.
- */
-const char* ooGetCapTypeText(int cap);
-
-/**
- * This function is used to retrieve the text description for a Q931 Cause
- * value in Cause IE.
- * @param val     Q931 Cause value
- * @return        The text description string
- */
-const char* ooGetQ931CauseValueText(int val);
-
-
 /**
  * This function is used to set the trace level.
  * @param traceLevel  New trace level. Various values are: OOTRCLVLERR,

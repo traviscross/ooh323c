@@ -101,6 +101,10 @@ typedef struct _OOMsgBuf {
 #define OOMIN(a,b)  (((a)<(b))?(a):(b))
 #endif
 
+/* Get count of number of items in an array */
+
+#define OONUMBEROF(items) (sizeof(items)/sizeof(items[0]))
+
 /* This is used for creating a Windows DLL.  Specify -DMAKE_DLL to      */
 /* compile code for inclusion in a DLL.                                 */
 

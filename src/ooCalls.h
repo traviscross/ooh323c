@@ -757,6 +757,24 @@ EXTERN unsigned ooCallGenerateSessionID
 EXTERN int ooCallH245ConnectionRetryTimerExpired(void *data);
 
 /**
+ * This function is used to retrieve the description text for a reason
+ * code.
+ *
+ * @param code     Reason code.
+ * @return         The text description string.
+ */
+EXTERN const char* ooGetReasonCodeText (OOUINT32 code);
+
+/**
+ * This function is used to retrieve the description text for a call
+ * state.
+ *
+ * @param callState Call state.
+ * @return         The text description string.
+ */
+EXTERN const char* ooGetCallStateText (OOCallState callState);
+
+/**
  * @}
  */
 

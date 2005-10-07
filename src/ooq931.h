@@ -737,6 +737,24 @@ EXTERN int ooQ931GetCauseAndReasonCodeFromCallClearReason
  */
 EXTERN OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
    (enum Q931CauseValues cause, unsigned reasonCode);
+
+/**
+ * This function is used to retrieve the description text for a
+ * message type.
+ *
+ * @param msgType  Message type.
+ * @return         The text description string.
+ */
+EXTERN const char* ooGetMsgTypeText (int msgType);
+
+/**
+ * This function is used to retrieve the text description for a Q931 Cause
+ * value in Cause IE.
+ * @param val     Q931 Cause value
+ * @return        The text description string
+ */
+EXTERN const char* ooGetQ931CauseValueText (int val);
+
 /**
  * @}
  */

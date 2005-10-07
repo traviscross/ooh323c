@@ -3394,3 +3394,102 @@ int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
                 psNewAlias->value);
    return OO_OK;
 }
+
+const char* ooGetMsgTypeText (int msgType)
+{
+   static const char *msgTypeText[]={
+      "OOQ931MSG",
+      "OOH245MSG",
+      "OOSetup",
+      "OOCallProceeding",
+      "OOAlert",
+      "OOConnect",
+      "OOReleaseComplete",
+      "OOFacility",
+      "OOMasterSlaveDetermination",
+      "OOMasterSlaveAck",
+      "OOMasterSlaveReject",
+      "OOMasterSlaveRelease",
+      "OOTerminalCapabilitySet",
+      "OOTerminalCapabilitySetAck",
+      "OOTerminalCapabilitySetReject",
+      "OOTerminalCapabilitySetRelease",
+      "OOOpenLogicalChannel",
+      "OOOpenLogicalChannelAck",
+      "OOOpenLogicalChannelReject",
+      "OOOpenLogicalChannelRelease",
+      "OOOpenLogicalChannelConfirm",
+      "OOCloseLogicalChannel",
+      "OOCloseLogicalChannelAck",
+      "OORequestChannelClose",
+      "OORequestChannelCloseAck",
+      "OORequestChannelCloseReject",
+      "OORequestChannelCloseRelease",
+      "OOEndSessionCommand"
+   };
+   int idx = msgType - OO_MSGTYPE_MIN;
+   return ooUtilsGetText (idx, msgTypeText, OONUMBEROF(msgTypeText));
+}
+
+const char* ooGetQ931CauseValueText(int val)
+{
+   switch(val)
+   {
+      case Q931UnallocatedNumber:  
+         return "Q931UnallocatedNumber";
+      case Q931NoRouteToNetwork:
+         return "Q931NoRouteToNetwork";
+      case Q931NoRouteToDestination:
+         return "Q931NoRouteToDestination";
+      case Q931ChannelUnacceptable:
+         return "Q931ChannelUnacceptable";
+      case Q931NormalCallClearing:
+         return "Q931NormalCallClearing";
+      case Q931UserBusy:
+         return "Q931UserBusy";
+      case Q931NoResponse:
+         return "Q931NoResponse";
+      case Q931NoAnswer:
+         return "Q931NoAnswer";
+      case Q931SubscriberAbsent:
+         return "Q931SubscriberAbsent";
+      case Q931CallRejected:
+         return "Q931CallRejected";
+      case Q931NumberChanged:
+         return "Q931NumberChanged";
+      case Q931Redirection:
+         return "Q931Redirection";
+      case Q931DestinationOutOfOrder:
+         return "Q931DestinationOutOfOrder";
+      case Q931InvalidNumberFormat:
+         return "Q931InvalidNumberFormat";
+      case Q931NormalUnspecified:
+         return "Q931NormalUnspecified";
+      case Q931StatusEnquiryResponse:
+         return "Q931StatusEnquiryResponse";
+      case Q931NoCircuitChannelAvailable:
+         return "Q931NoCircuitChannelAvailable";
+      case Q931NetworkOutOfOrder:
+         return "Q931NetworkOutOfOrder";
+      case Q931TemporaryFailure:
+         return "Q931TemporaryFailure";
+      case Q931Congestion:
+         return "Q931Congestion";
+      case Q931RequestedCircuitUnAvailable:
+         return "Q931RequestedCircuitUnavailable";
+      case Q931ResourcesUnavailable:
+         return "Q931ResourcesUnavailable";
+      case Q931IncompatibleDestination:
+         return "Q931IncompatibleDestination";
+      case Q931ProtocolErrorUnspecified:
+         return "Q931ProtocolErrorUnspecified";
+      case Q931RecoveryOnTimerExpiry:
+         return "Q931RecoveryOnTimerExpiry";
+      case Q931InvalidCallReference:
+         return "Q931InvaliedCallReference";
+      default:
+         return "Unsupported Cause Type";
+   }
+   return "Unsupported Cause Type";
+}
+

@@ -688,6 +688,14 @@ EXTERN int ooChangeCapPrefOrder(struct OOH323CallData *call, int cap, int pos);
  */
 EXTERN int ooPreppendCapToCapPrefs(struct OOH323CallData *call, int cap);
 
+/**
+ * This function is used to retrieve the text description for a capability
+ * type.
+ * @param cap     Capability
+ * @return        The text description string.
+ */
+EXTERN const char* ooGetCapTypeText (OOCapabilities cap);
+
 
 /**
  * @}

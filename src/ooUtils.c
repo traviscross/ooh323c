@@ -16,8 +16,12 @@
 
 #include "ooUtils.h"
 
+const char* ooUtilsGetText (OOUINT32 idx, const char** table, size_t tabsiz)
+{
+   return (idx < tabsiz) ? table[idx] : "?";
+}
 
-OOBOOL ooUtilsIsStrEmpty(char * str)
+OOBOOL ooUtilsIsStrEmpty (const char* str)
 {
    return (str == NULL || *str =='\0');
 }

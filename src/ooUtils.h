@@ -20,6 +20,25 @@
 #ifndef _OOUTILS_H_
 #define _OOUTILS_H_
 #include "ootypes.h"
-EXTERN OOBOOL ooUtilsIsStrEmpty(char * str);
+
+/**
+ * Get text from a text table for a given enumeration index.
+ *
+ * @param idx    Index of item in table
+ * @param table  The table containing the text items
+ * @param tabsiz Number of items in the table
+ * @return  Text for item or '?' if idx outside bounds of table
+ */
+EXTERN const char* ooUtilsGetText
+(OOUINT32 idx, const char** table, size_t tabsiz);
+
+/**
+ * Test if given string value is empty.  String is considered to empty
+ * if value is NULL or there are no characters in string (strlen == 0).
+ *
+ * @param str    String to test
+ * @return       TRUE if string empty; FALSE otherwise
+ */
+EXTERN OOBOOL ooUtilsIsStrEmpty (const char * str);
 
 #endif

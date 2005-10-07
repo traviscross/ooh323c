@@ -731,3 +731,50 @@ int ooCallH245ConnectionRetryTimerExpired(void *data)
 
    return OO_OK;
 }
+
+const char* ooGetReasonCodeText (OOUINT32 code)
+{
+   static const char* reasonCodeText[] = {
+      "OO_REASON_UNKNOWN",
+      "OO_REASON_INVALIDMESSAGE",
+      "OO_REASON_TRANSPORTFAILURE",
+      "OO_REASON_NOROUTE",
+      "OO_REASON_NOUSER",
+      "OO_REASON_NOBW",
+      "OO_REASON_GK_NOCALLEDUSER",
+      "OO_REASON_GK_NOCALLERUSER",
+      "OO_REASON_GK_NORESOURCES",
+      "OO_REASON_GK_UNREACHABLE",
+      "OO_REASON_GK_CLEARED",
+      "OO_REASON_NOCOMMON_CAPABILITIES",
+      "OO_REASON_REMOTE_FWDED",  
+      "OO_REASON_LOCAL_FWDED",
+      "OO_REASON_REMOTE_CLEARED",
+      "OO_REASON_LOCAL_CLEARED",
+      "OO_REASON_REMOTE_BUSY",
+      "OO_REASON_LOCAL_BUSY",
+      "OO_REASON_REMOTE_NOANSWER",
+      "OO_REASON_LOCAL_NOTANSWERED",
+      "OO_REASON_REMOTE_REJECTED",
+      "OO_REASON_LOCAL_REJECTED",
+      "OO_REASON_REMOTE_CONGESTED",
+      "OO_REASON_LOCAL_CONGESTED"
+   };
+   return ooUtilsGetText (code, reasonCodeText, OONUMBEROF(reasonCodeText));
+}
+
+const char* ooGetCallStateText (OOCallState callState)
+{
+   static const char* callStateText[] = {
+      "OO_CALL_CREATED",
+      "OO_CALL_WAITING_ADMISSION",
+      "OO_CALL_CONNECTING",
+      "OO_CALL_CONNECTED",
+      "OO_CALL_CLEAR",
+      "OO_CALL_CLEAR_RELEASERECVD",
+      "OO_CALL_CLEAR_RELEASESENT",
+      "OO_CALL_CLEARED"
+   };
+   return ooUtilsGetText (callState, callStateText, OONUMBEROF(callStateText));
+}
+
