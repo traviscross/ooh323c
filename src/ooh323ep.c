@@ -300,9 +300,16 @@ int ooH323EpAddAliasTransportID(const char * ipaddress)
 
 int ooH323EpClearAllAliases(void)
 {
+   ooAliases *pAlias = NULL, *pTemp;
    if(gH323ep.aliases)
    {
-      memFreePtr(&gH323ep.ctxt, gH323ep.aliases);
+      pAlias = gH323ep.aliases;
+      while(pAlias)
+      {
+         pTemp = pAlias;
+         pAlias = pAlias->next;
+         memFreePtr(&gH323ep.ctxt, pTemp);
+      }
       gH323ep.aliases = NULL;
    }
    return OO_OK;
