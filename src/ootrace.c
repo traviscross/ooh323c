@@ -17,6 +17,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "ootypes.h"
 #include "ootrace.h"
@@ -68,10 +69,9 @@ void ooTraceLogMessage(const char * logMessage)
   
 #else
    struct tm *ptime;
-   struct timeval systemTime;
    char dateString[10];
-   gettimeofday(&systemTime, NULL);
-   ptime = (struct tm*)localtime(&systemTime.tv_sec);
+   time_t t = time(NULL);
+   ptime = localtime(&t);
    strftime(timeString, 100, "%H:%M:%S", ptime);
    strftime(currtime, 3, "%H", ptime);
    if(lasttime>atoi(currtime))
@@ -87,9 +87,10 @@ void ooTraceLogMessage(const char * logMessage)
       fprintf(gH323ep.fptraceFile, "---------Date %d/%d/%d---------\n",
                       systemTime.wMonth, systemTime.wDay, systemTime.wYear);
    }
-   if(printTime)
-     fprintf(gH323ep.fptraceFile, "%s:%03d  %s", timeString,
-             systemTime.wMilliseconds, logMessage);
+   if(printTime) {
+      fprintf(gH323ep.fptraceFile, "%s:%03d  %s", timeString,
+              systemTime.wMilliseconds, logMessage);
+   }
    else
       fprintf(gH323ep.fptraceFile, "%s", logMessage);
   
@@ -102,9 +103,12 @@ void ooTraceLogMessage(const char * logMessage)
       fprintf(gH323ep.fptraceFile, "---------Date %s---------\n",
                   dateString);
    }
-   if(printTime)
+   if(printTime) {
+      struct timeval systemTime;
+      gettimeofday(&systemTime, NULL);
       fprintf(gH323ep.fptraceFile, "%s:%03d  %s", timeString,
-                  systemTime.tv_usec/1000, logMessage);
+              systemTime.tv_usec/1000, logMessage);
+   }
    else
       fprintf(gH323ep.fptraceFile, "%s", logMessage);
 
