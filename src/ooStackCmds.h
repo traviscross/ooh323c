@@ -134,7 +134,7 @@ EXTERN int ooSendDTMFDigit(const char *callToken, const char* alpha);
  * This function is invoked from the main event handling loop to
  * process queued stack commands.
  */
-EXTERN int ooProcStackCmds (void);
+EXTERN int ooProcessStackCmds (void);
 
 /**
  * This function is used by the user application to stop monitoring calls.

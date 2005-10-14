@@ -134,8 +134,6 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    H245OpenLogicalChannel* olc;
    ASN1OCTET msgbuf[MAXMSGLEN];
    H225TransportAddress_ipAddress_ip *ip = NULL;
-   DListNode* pNode=NULL;
-   H225AliasAddress *pAliasAddress=NULL;
    Q931InformationElement* pDisplayIE=NULL;
    OOAliases *pAlias=NULL;
 
@@ -451,7 +449,8 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
             pChannel = ooFindLogicalChannelByOLC(call, olc);
             if(!pChannel)
             {
-               OOTRACEERR4("ERROR: Logical Channel %d not found. (%s, %s)\n",
+               OOTRACEERR4("ERROR: Logical Channel %d not found, fast start. "
+                           "(%s, %s)\n",
                             olc->forwardLogicalChannelNumber, call->callType,
                             call->callToken);
                return OO_FAILED;
@@ -640,7 +639,8 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
             pChannel = ooFindLogicalChannelByOLC(call, olc);
             if(!pChannel)
             {
-               OOTRACEERR4("ERROR: Logical Channel %d not found. (%s, %s)\n",
+               OOTRACEERR4("ERROR: Logical Channel %d not found, fast start. "
+                           "(%s, %s)\n",
                             olc->forwardLogicalChannelNumber, call->callType,
                             call->callToken);
                return OO_FAILED;
@@ -820,6 +820,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                call->callEndReason = OO_REASON_LOCAL_CLEARED;
                call->callState = OO_CALL_CLEAR;
             }
+            finishPrint();
+            removeEventHandler(call->pctxt);
             return OO_FAILED;
          }
          memset(olc, 0, sizeof(H245OpenLogicalChannel));
@@ -838,6 +840,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                call->callEndReason = OO_REASON_INVALIDMESSAGE;
                call->callState = OO_CALL_CLEAR;
             }
+            finishPrint();
+            removeEventHandler(call->pctxt);
             return OO_FAILED;
          }
 
@@ -846,9 +850,12 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
          pChannel = ooFindLogicalChannelByOLC(call, olc);
          if(!pChannel)
          {
-            OOTRACEERR4("ERROR: Logical Channel %d not found. (%s, %s)\n",
+            OOTRACEERR4("ERROR: Logical Channel %d not found, fasts start "
+                        "answered. (%s, %s)\n",
                          olc->forwardLogicalChannelNumber, call->callType,
                          call->callToken);
+            finishPrint();
+            removeEventHandler(call->pctxt);
             return OO_FAILED;
          }
          if(pChannel->channelNo != olc->forwardLogicalChannelNumber)
@@ -877,6 +884,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
                            "forward Logical Channel Parameters found. (%s, %s)"
                            "\n", call->callType, call->callToken);
+               finishPrint();
+               removeEventHandler(call->pctxt);
                return OO_FAILED;
             }
             if(!h2250lcp->m.mediaChannelPresent)
@@ -884,6 +893,8 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
                            "reverse media channel information found. (%s, %s)"
                            "\n", call->callType, call->callToken);
+               finishPrint();
+               removeEventHandler(call->pctxt);
                return OO_FAILED;
             }
 
@@ -894,12 +905,16 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
             {
                OOTRACEERR3("ERROR:Unsupported media channel address type "
                            "(%s, %s)\n", call->callType, call->callToken);
+               finishPrint();
+               removeEventHandler(call->pctxt);
                return OO_FAILED;
             }
             if(!pChannel->chanCap->startTransmitChannel)
             {
                OOTRACEERR3("ERROR:No callback registered to start transmit "
                          "channel (%s, %s)\n",call->callType, call->callToken);
+               finishPrint();
+               removeEventHandler(call->pctxt);
                return OO_FAILED;
             }
             pChannel->chanCap->startTransmitChannel(call, pChannel);
@@ -1161,7 +1176,7 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
 {
    H225H323_UU_PDU * pH323UUPdu = NULL;
    H225Facility_UUIE * facility = NULL;
-   int i=0, ret;
+   int ret;
    H225TransportAddress_ipAddress_ip *ip = NULL;
    OOTRACEDBGC3("Received Facility Message.(%s, %s)\n", call->callType,
                                                         call->callToken);
@@ -1696,8 +1711,7 @@ OOAliases* ooH323GetAliasFromList(OOAliases *aliasList, int type, char *value)
 OOAliases* ooH323AddAliasToList
 (OOAliases **pAliasList, OOCTXT *pctxt, H225AliasAddress *pAliasAddress)
 {
-   int i=0,j=0,k=0;
-   DListNode* pNode=NULL;
+   int j=0,k=0;
    OOAliases *newAlias=NULL;
    H225TransportAddress *pTransportAddrss=NULL;
   

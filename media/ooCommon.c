@@ -16,6 +16,7 @@
 
 #include "ooCommon.h"
 #include "ooSock.h"
+#include <time.h>
 
 void ooLog(int level,const char * fmtspec, ...)
 {
@@ -68,7 +69,7 @@ void ooLog(int level,const char * fmtspec, ...)
       strftime(dateString, 10, "%D", ptime);
       fprintf(fpLog, "---------Date %s---------\n", dateString);
    }
-   fprintf(fpLog, "%s:%03d  %s\n", timeString,
+   fprintf(fpLog, "%s:%03ld  %s\n", timeString,
            systemTime.tv_usec/1000, logMessage);
 #endif
    fflush(fpLog);

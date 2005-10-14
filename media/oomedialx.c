@@ -30,7 +30,7 @@
 int ooOpenAudioDevice()
 {
   
-   int sampleSize, numChannels, rate, on =1;;
+   int sampleSize, numChannels, rate;
    ghSoundDevice = open("/dev/dsp", O_RDWR);
    if(ghSoundDevice == -1)
    {
@@ -61,7 +61,7 @@ int ooPlayAudioBuffer(unsigned char * buff, long size)
 
 int ooGetMicAudioBuffer(unsigned char * buff, long size)
 {
-   int i = 0, ret;
+   int ret;
    ret = read(ghSoundDevice, buff, size);
    return ret;
 }

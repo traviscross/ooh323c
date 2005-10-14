@@ -183,6 +183,8 @@ OOLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
    pChannel = call->logicalChans;
    while(pChannel)
    {
+      OOTRACEDBGC3("ooFindLogicalChannel, checking channel: %d:%s\n",
+                    pChannel->sessionID, pChannel->dir);
       if(pChannel->sessionID == sessionID)
       {
          if(!strcmp(pChannel->dir, dir))
@@ -243,7 +245,7 @@ int ooClearAllLogicalChannels(OOH323CallData *call)
 
 int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
 {
-   int ret = OO_OK;
+
    OOLogicalChannel *pLogicalChannel = NULL;
    ooH323EpCapability *epCap=NULL;
 
@@ -253,7 +255,8 @@ int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,channelNo);
    if(!pLogicalChannel)
    {
-      OOTRACEWARN4("Logical Channel %d doesn't exist (%s, %s)\n",
+      OOTRACEWARN4("Logical Channel %d doesn't exist, in clearLogicalChannel."
+                   " (%s, %s)\n",
                   channelNo, call->callType, call->callToken);
       return OO_OK;
    }

@@ -17,7 +17,7 @@
 #include "ootrace.h"
 #include "ooCalls.h"
 #include "ooh323ep.h"
-
+#include "ooUtils.h"
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
@@ -223,8 +223,8 @@ int ooCapabilityAddH263VideoCapability_helper(ooCallData *call,
                               cb_StopTransmitChannel stopTransmitChannel,
                               OOBOOL remote)
 {
-   int iRet=0;
-   ooH323EpCapability *epCap = NULL, *cur=NULL, *lHead=NULL;
+
+   ooH323EpCapability *epCap = NULL, *cur=NULL;
    OOH263CapParams *params=NULL;  
    OOCTXT *pctxt=NULL;
    char *pictureType = NULL;
@@ -257,7 +257,7 @@ int ooCapabilityAddH263VideoCapability_helper(ooCallData *call,
    if(cifMPI>0)
    {
       params->MPI = cifMPI;
-      params->picFormat, OO_PICFORMAT_CIF;
+      params->picFormat = OO_PICFORMAT_CIF;
       pictureType = "CIF";
    }
    if(cif4MPI>0)
@@ -347,8 +347,7 @@ int ooCapabilityAddSimpleCapability
     cb_StopTransmitChannel stopTransmitChannel,
     OOBOOL remote)
 {
-   int iRet=0;
-   ooH323EpCapability *epCap = NULL, *cur=NULL, *lHead=NULL;
+   ooH323EpCapability *epCap = NULL, *cur=NULL;
    OOCapParams *params=NULL;  
    OOCTXT *pctxt=NULL;
    if(!call) pctxt = &gH323ep.ctxt;
@@ -443,7 +442,7 @@ int ooCapabilityAddGSMCapability(OOH323CallData *call, int cap,
                                 cb_StopTransmitChannel stopTransmitChannel,
                                 OOBOOL remote)
 {
-   int iRet=0;
+
    ooH323EpCapability *epCap = NULL, *cur=NULL;
    OOGSMCapParams *params=NULL;  
    OOCTXT *pctxt = NULL;
@@ -968,7 +967,7 @@ OOBOOL ooCapabilityCheckCompatibility_H263Video
     H245VideoCapability *pVideoCap, int dir)
 {
    H245H263VideoCapability *pH263Cap = NULL;
-   unsigned cap = OO_H263VIDEO;
+
    OOH263CapParams *params = epCap->params;
    if(!pVideoCap->u.h263VideoCapability) 
    {
@@ -1826,7 +1825,7 @@ int ooChangeCapPrefOrder(OOH323CallData *call, int cap, int pos)
    /* Decrease Pref order */
    if(i < pos)
    {
-      for(i; i<pos; i++)
+      for( ; i<pos; i++)
          capPrefs->order[i] = capPrefs->order[i+1];
       capPrefs->order[i]=cap;
       return OO_OK;
@@ -1893,8 +1892,6 @@ int ooAddRemoteAudioCapability(OOH323CallData *call,
                                int dir)
 {
    int rxframes=0, txframes=0;
-   ASN1USINT audioUnitSize=0;
-   OOBOOL comfortNoise=FALSE, scrambled=FALSE;
  
    switch(audioCap->t)
    {

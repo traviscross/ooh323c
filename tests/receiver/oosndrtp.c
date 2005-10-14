@@ -380,8 +380,8 @@ int ooReleaseSndRTPPlugin()
 {
    int port;
    ooGetLocalIPAddress(context->localIP);
-   port = ooGetNextPort(context, OORTP);
-   /* Ensures that RTP port is an even one */
+   port = ooGetNextPort(context, OORTP);*/
+   // Ensures that RTP port is an even one
 /*   if((port & 1) == 1)
      port = ooGetNextPort(context, OORTP);
   

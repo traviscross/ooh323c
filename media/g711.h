@@ -16,9 +16,6 @@
 #ifndef _G711_H_
 #define _G711_H_
 
-static int search(int val,  /* changed from "short" *drago* */
-                  int* table,
-                  int size);
 
 int linear2alaw(int pcm_val);
 

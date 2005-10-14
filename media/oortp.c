@@ -14,15 +14,24 @@
  *
  *****************************************************************************/
 
+#include "ooCommon.h"
+#include <string.h>
 #include "oortp.h"
 #include "g711.h"
+#include <time.h>
 #ifdef _WIN32
 #include "ooWave.h"
-#include <time.h>
 #else
 #include "oomedialx.h"
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_PTHREAD_H
+#include <pthread.h>
+#endif
 
 /* Initialize the media plug-in */
 int ooInitializePlugin()
@@ -276,7 +285,7 @@ int ooStopTransmitWaveFile(int channelId)
 */  
 int ooStartTransmitMic(int channelId)
 {
-   int ret =0;
+
    OOLOG2(1, "StartOf:StartTransmitMic");
 #ifdef _WIN32
    ret = ooOpenMic(); /* Open the Mic device for read */
@@ -311,7 +320,7 @@ int ooStopTransmitMic(int channelId)
 */
 int ooStartReceiveAudioAndPlayback(int channelId)
 {
-   int ret = 0;
+
 #ifdef _WIN32
    WAVEFORMATEX waveFormat;
   
@@ -429,7 +438,7 @@ int ooReceiveSpeakerThreadFunc()
 /* Read the wave file and transmit wave file data
    as rtp packets on RTP transmit channel.
 */
-static int ooTransmitFileThreadFunc()
+int ooTransmitFileThreadFunc()
 {
    int DataTxed=0;
    long audioDataSize;
@@ -521,7 +530,7 @@ static int ooTransmitFileThreadFunc()
 /* Thread function to read data from microphone and transmit it
    as rtp packets.
 */
-static int ooTransmitMicThreadFunc()
+int ooTransmitMicThreadFunc()
 {
    unsigned char sendBuf[252];
    short* tempBuf;
@@ -529,8 +538,8 @@ static int ooTransmitMicThreadFunc()
    unsigned int i;
    int ret;
    OOLOG2(1, "StartOf:TransmitMicThread");
-   /*   ret = ooOpenMic();/* Open the Mic device*/
-   /*   if(ret < 0)
+   /*   ret = ooOpenMic();// Open the Mic device
+   if(ret < 0)
    {
       OOLOG2(1, "ERROR: Opening the Mic device");
       return -1;
@@ -612,7 +621,7 @@ static int ooTransmitMicThreadFunc()
 /* Thread function to read data from microphone and transmit it
    as rtp packets.
 */
-static int ooTransmitMicThreadFuncLnx()
+void* ooTransmitMicThreadFuncLnx(void *dummy)
 {
    unsigned char sendBuf[252];
    short buffer[OORTPPACKETDATASIZE];
@@ -670,7 +679,7 @@ static int ooTransmitMicThreadFuncLnx()
          if(ret<0)
          {
             OOLOG2(1, "ERROR: Failed to transmit rtp packet");
-            return -1;
+            return dummy;
          }
          ooSleep(5); /*sleep for 5 ms*/
       }
@@ -679,20 +688,18 @@ static int ooTransmitMicThreadFuncLnx()
    gXmitThrdHdl = 0;
    pthread_exit(0);
    OOLOG2(1, "EndOf:TransmitMicThread");
-   return 0;
+   return dummy;
 }
 
 /* Thread function to receive RTP data and play it onto the
    speaker device.
 */
 
-static int ooReceiveSpeakerThreadFuncLnx()
+void* ooReceiveSpeakerThreadFuncLnx(void *dummy)
 {
    int ret = 0, i, j;
-   char pcSndBuf[2048];
    short psSndBuf[OORTPPACKETDATASIZE];
    struct timeval timeout;
-   short c;
    fd_set readfds;
    char buffer[1024];
    OOLOG2(1, "StartOf:ReceiveSpeakerThread");
@@ -739,14 +746,14 @@ static int ooReceiveSpeakerThreadFuncLnx()
    gRecvThrdHdl = 0;
    pthread_exit(0);  
    OOLOG2(1, "EndOf:ReceiveSpeakerThread");
-   return 0;
+   return dummy;
 }
 
 
 /* Read the wave file and transmit wave file data
    as rtp packets on RTP transmit channel.
 */
-static int ooTransmitFileThreadFuncLnx()
+void* ooTransmitFileThreadFuncLnx(void *dummy)
 {
    int DataTxed=0;
    long audioDataSize;
@@ -806,7 +813,7 @@ static int ooTransmitFileThreadFuncLnx()
          if(ret<0)
          {
             OOLOG2(1, "ERROR: Failed to transmit rtp packet");
-            return -1;
+            return dummy;
          }
          ooSleep(2);/* Just slows down the transmit rate a bit */
       }
@@ -820,12 +827,12 @@ static int ooTransmitFileThreadFuncLnx()
    if(ret < 0)
    {
       OOLOG2(1, "ERROR: Failed to close the open wave file");
-      return -1;
+      return dummy;
    }
    gXmitThrdHdl = 0;
    pthread_exit(0);  
    OOLOG2(1, "EndOf:TransmitFileThread");
-   return 0;
+   return dummy;
 }
 
 #endif

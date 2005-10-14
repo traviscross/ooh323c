@@ -25,6 +25,7 @@
 #include "ooGkClient.h"
 #include "ooUtils.h"
 #include "ooLogChan.h"
+#include <ctype.h>
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
 #endif

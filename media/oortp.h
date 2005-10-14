@@ -205,23 +205,26 @@ EXTERN int ooStopReceiveAudioAndRecord(int channelId);
 /**
  * Internal helper function executed as a thread for wave
  * file transmission.
- * @return Completion status - 0 on success, -1 on failure.
+ * @return     Completion status - 0 on success, -1 on failure.
+
  */
-static int ooTransmitFileThreadFunc();
+int ooTransmitFileThreadFunc();
 
 /**
  * Internal helper function executed as a thread for microphone
  * data transmission.
- * @return Completion status - 0 on success, -1 on failure.
+ * @return     Completion status - 0 on success, -1 on failure.
+
  */
-static int ooTransmitMicThreadFunc();
+int ooTransmitMicThreadFunc();
 
 /**
  * Internal helper function executed as a thread for rtp stream
  * reception and playback.
  * @return     Completion status - 0 on success, -1 on failure.
+
  */
-static int ooReceiveSpeakerThreadFunc();
+int ooReceiveSpeakerThreadFunc();
 /*
  * @}
  */
@@ -234,25 +237,22 @@ static int ooReceiveSpeakerThreadFunc();
 /**
  * Internal helper function executed as a thread for microphone
  * data transmission.
- * @return Completion status - 0 on success, -1 on failure.
  */
-static int ooTransmitMicThreadFuncLnx();
+void* ooTransmitMicThreadFuncLnx(void *dummy);
 
 /**
  *
  * Internal helper function executed as a thread for rtp stream
  * reception and playback.
- * @return     Completion status - 0 on success, -1 on failure.
  */
-static int ooReceiveSpeakerThreadFuncLnx();
+void* ooReceiveSpeakerThreadFuncLnx(void *dummy);
 
 /**
  *
  * Internal helper function executed as a thread for wave
  * file transmission.
- * @return Completion status - 0 on success, -1 on failure.
  */
-static int ooTransmitFileThreadFuncLnx();
+void* ooTransmitFileThreadFuncLnx(void *dummy);
 /**
  * @}
  */

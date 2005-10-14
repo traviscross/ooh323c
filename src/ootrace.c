@@ -106,8 +106,8 @@ void ooTraceLogMessage(const char * logMessage)
    if(printTime) {
       struct timeval systemTime;
       gettimeofday(&systemTime, NULL);
-      fprintf(gH323ep.fptraceFile, "%s:%03d  %s", timeString,
-              systemTime.tv_usec/1000, logMessage);
+      fprintf(gH323ep.fptraceFile, "%s:%03ld  %s", timeString,
+               systemTime.tv_usec/1000, logMessage);
    }
    else
       fprintf(gH323ep.fptraceFile, "%s", logMessage);

@@ -506,7 +506,7 @@ int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr)
 
 int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp)
 {
-  int ret=0;
+
    struct sockaddr_in sin = {0};
 #ifdef _WIN32
    sin.sin_addr.s_addr = inet_addr(inetIp);
@@ -536,10 +536,10 @@ int ooSocketAddrToStr (OOIPADDR ipAddr, char* pbuf, int bufsize)
    if (bufsize < 8)
       return ASN_E_BUFOVFLW;
 
-   cnt += sprintf (buf1, "%d", (ipAddr >> 24) & 0xFF);
-   cnt += sprintf (buf2, "%d", (ipAddr >> 16) & 0xFF);
-   cnt += sprintf (buf3, "%d", (ipAddr >> 8) & 0xFF);
-   cnt += sprintf (buf4, "%d", ipAddr & 0xFF);
+   cnt += sprintf (buf1, "%lu", (ipAddr >> 24) & 0xFF);
+   cnt += sprintf (buf2, "%lu", (ipAddr >> 16) & 0xFF);
+   cnt += sprintf (buf3, "%lu", (ipAddr >> 8) & 0xFF);
+   cnt += sprintf (buf4, "%lu", ipAddr & 0xFF);
    if (bufsize < cnt + 4)
       return ASN_E_BUFOVFLW;
    sprintf (pbuf, "%s.%s.%s.%s", buf1, buf2, buf3, buf4);

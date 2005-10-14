@@ -39,7 +39,6 @@ static int onNewCallCreated (ooCallData* call);
 static int onCallEstablished(ooCallData *call);
 static int onCallCleared (ooCallData* call);
 static int onAlerting (ooCallData* call);
-static void* runtest (void*);
 static int callDurationTimerExpired (void *pdata);
 static int callIntervalTimerExpired(void *pdata);
 

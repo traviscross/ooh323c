@@ -22,10 +22,10 @@
 #include "ooTimer.h"
 #ifdef _WIN32
 #include <stdlib.h>
-#include <time.h>
 #include <process.h>
 #define getpid _getpid
 #endif
+#include <time.h>
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
@@ -225,9 +225,9 @@ int ooEncodeH245Message
 
 int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
 {
-   int iRet=0,  len=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
+   int iRet=0,  len=0, msgType=0, logicalChannelNo = 0;
    ASN1OCTET * encodebuf;
-   ASN1OCTET *msgptr=NULL;
+
 
    if(!call)
       return OO_FAILED;
@@ -321,7 +321,6 @@ int ooSendTermCapMsg(OOH323CallData *call)
    H245UserInputCapability *userInputCap = NULL;
    H245CapabilityTableEntry *entry=NULL;
    H245AlternativeCapabilitySet *altSet=NULL;
-   DListNode * curNode=NULL;
    H245CapabilityDescriptor *capDesc=NULL;
    H245Message *ph245msg=NULL;
    H245VideoCapability *videoCap=NULL;
@@ -660,10 +659,17 @@ int ooSendTermCapMsg(OOH323CallData *call)
 ASN1UINT ooGenerateStatusDeterminationNumber()
 {
    ASN1UINT statusDeterminationNumber;
-   //   ASN1UINT random_factor = (ASN1UINT)rand();
    ASN1UINT random_factor = getpid();
+   struct timeval tv;
+#ifdef _WIN32
+   SYSTEMTIME systemTime;
+   GetLocalTime(&systemTime);
+   srand((systemTme.wMilliseconds ^ systemTime.wSecond) + random_factor);
+#else
+   gettimeofday(&tv, NULL);
+   srand((tv.tv_usec ^ tv.tv_sec) + random_factor );
+#endif
 
-   srand((unsigned)time( NULL )+random_factor );
    statusDeterminationNumber = rand()%16777215;
    return statusDeterminationNumber;
 }
@@ -1679,7 +1685,7 @@ int ooOnReceivedTerminalCapabilitySetAck(OOH323CallData* call)
 int ooCloseAllLogicalChannels(OOH323CallData *call)
 {
    ooLogicalChannel *temp;
-   int outgoing=0;
+
    temp = call->logicalChans;
    while(temp)
    {
@@ -2018,8 +2024,6 @@ int ooOnReceivedCloseLogicalChannel(OOH323CallData *call,
                                     H245CloseLogicalChannel* clc)
 {
    int ret=0;
-   ooH323EpCapability *epCap=NULL;
-   ooLogicalChannel *pLogicalChannel=NULL;
    H245Message *ph245msg = NULL;
    OOCTXT *pctxt = NULL;
    H245CloseLogicalChannelAck * clcAck;
@@ -2079,7 +2083,7 @@ int ooOnReceivedCloseChannelAck(OOH323CallData* call,
                                 H245CloseLogicalChannelAck* clcAck)
 {
    int ret = OO_OK;
-   return OO_OK;
+   return ret;
 }
 
 int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
@@ -2402,7 +2406,6 @@ int ooOnReceivedUserInputIndication
 int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
 {
    int ret = 0,k;
-   OOCTXT *pctxt=NULL;
    H245TerminalCapabilitySet *tcs=NULL;
    DListNode *pNode=NULL;
    H245CapabilityTableEntry *capEntry = NULL;
@@ -2819,7 +2822,7 @@ int ooOpenLogicalChannels(OOH323CallData *call)
 /* CapType indicates whether to Open Audio or Video channel */
 int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
 {
-   ooH323EpCapability *epCap=NULL, *repCap=NULL;
+   ooH323EpCapability *epCap=NULL;
    int k=0;
 
    /* Check whether local endpoint has audio capability */
@@ -2922,7 +2925,6 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    int ret;
    H245Message *ph245msg = NULL;
    H245RequestMessage * request;
-   DListNode *curNode1 = NULL;
    OOCTXT *pctxt = NULL;
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp = NULL;
    H245AudioCapability *audioCap = NULL;
@@ -3092,8 +3094,6 @@ int ooBuildFastStartOLC
 {
    OOBOOL reverse=FALSE, forward=FALSE;
    unsigned sessionID=0;
-   H245AudioCapability *audioCap=NULL;
-   H245VideoCapability *videoCap = NULL;
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp=NULL;
    H245OpenLogicalChannel_reverseLogicalChannelParameters *rlcp=NULL;
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
@@ -3401,7 +3401,7 @@ int ooCloseLogicalChannelTimerExpired(void *pdata)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
    OOH323CallData *call = cbData->call;
-   ooLogicalChannel *pChannel = NULL;
+
    OOTRACEINFO3("CloseLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
 
@@ -3421,7 +3421,7 @@ int ooRequestChannelCloseTimerExpired(void *pdata)
    int ret = 0;
    ooTimerCallback *cbData = (ooTimerCallback*)pdata;
    OOH323CallData *call = cbData->call;
-   ooLogicalChannel *pChannel = NULL;
+
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
  

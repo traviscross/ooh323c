@@ -16,6 +16,7 @@
 
 #include "ooSock.h"
 #include <stdio.h>
+#include <string.h>
 #if defined(_WIN32_WCE)
 static int inited = 0;
 #define SEND_FLAGS     0
@@ -417,10 +418,10 @@ int ooSocketAddrToStr (OOIPADDR ipAddr, char* pbuf, int bufsize)
    if (bufsize < 8)
       return ASN_E_BUFOVFLW;
 
-   cnt += sprintf (buf1, "%d", (ipAddr >> 24) & 0xFF);
-   cnt += sprintf (buf2, "%d", (ipAddr >> 16) & 0xFF);
-   cnt += sprintf (buf3, "%d", (ipAddr >> 8) & 0xFF);
-   cnt += sprintf (buf4, "%d", ipAddr & 0xFF);
+   cnt += sprintf (buf1, "%u", (unsigned)((ipAddr >> 24) & 0xFF));
+   cnt += sprintf (buf2, "%u", (unsigned)((ipAddr >> 16) & 0xFF));
+   cnt += sprintf (buf3, "%u", (unsigned)((ipAddr >> 8) & 0xFF));
+   cnt += sprintf (buf4, "%u", (unsigned)(ipAddr & 0xFF));
    if (bufsize < cnt + 4)
       return ASN_E_BUFOVFLW;
    sprintf (pbuf, "%s.%s.%s.%s", buf1, buf2, buf3, buf4);

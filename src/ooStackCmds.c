@@ -31,7 +31,7 @@ extern DList gStkCmdList;
 
 extern OOCTXT gCmdCtxt;
 
-
+int ooGetStackCmd(OOStackCommand *pCmd);
 
 int ooMakeCall
    (const char* dest, char* callToken, size_t bufsiz, ooCallOptions *opts)

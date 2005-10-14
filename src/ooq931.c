@@ -28,7 +28,7 @@
 #include "ooUtils.h"
 #include "ooMutex.h"
 #include <time.h>
-
+#include <ctype.h>
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
@@ -496,7 +496,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
    ASN1OCTET msgbuf[1024];
    ASN1OCTET * msgptr=NULL;
    int  len;
-   ASN1BOOL aligned = TRUE, trace = FALSE;
+   ASN1BOOL aligned = TRUE;
    Q931InformationElement* ie=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
    /*   memset(msgbuf, 0, sizeof(msgbuf));*/
@@ -554,7 +554,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
 {
    DListNode* curNode;
    unsigned int i;
-   ASN1BOOL aligned=TRUE, trace=FALSE;
+   ASN1BOOL aligned=TRUE;
    int stat;
    Q931InformationElement *ie;
    OOCTXT *pctxt = &gH323ep.msgctxt;
@@ -633,10 +633,10 @@ static void ooQ931PrintMessage
 int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
                         char *msgbuf, int size)
 {
-   int len=0, encodeLen=0, i=0, j=0, ieLen=0;
+   int len=0, i=0, j=0, ieLen=0;
    int stat=0;
-   ASN1OCTET* encodeptr=NULL;
    DListNode* curNode=NULL;
+
    if(!msgbuf || size<200)
    {
       OOTRACEERR3("Error: Invalid message buffer/size for ooEncodeH245Message."
@@ -1115,7 +1115,6 @@ int ooSendFacility(OOH323CallData *call)
 int ooSendReleaseComplete(OOH323CallData *call)
 {
    int ret;  
-   Q931InformationElement* ie=NULL;
    Q931Message *q931msg=NULL;
    H225ReleaseComplete_UUIE *releaseComplete;
    enum Q931CauseValues cause = Q931ErrorInCauseIE;
@@ -1892,11 +1891,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
 
    H225TransportAddress_ipAddress *srcCallSignalIpAddress;
    ooH323EpCapability *epCap=NULL;
-   DListNode *curNode = NULL;
    OOCTXT *pctxt = NULL;
    H245OpenLogicalChannel *olc, printOlc;
    ASN1BOOL aligned = 1;
-   H225AliasAddress * pAliasAddress=NULL;
    ooAliases *pAlias = NULL;
 
    pctxt = &gH323ep.msgctxt;
@@ -2428,7 +2425,6 @@ int ooH323ForwardCall(char* callToken, char *dest)
    OOCTXT *pctxt = &gH323ep.msgctxt;
    OOH323CallData *call;
    char ip[30]="\0", *pcPort=NULL;
-   int port=0;
    H225TransportAddress_ipAddress *fwdCallSignalIpAddress;
 
    call= ooFindCallByToken(callToken);
@@ -2569,7 +2565,6 @@ int ooH323ForwardCall(char* callToken, char *dest)
 
 int ooH323HangCall(char * callToken, OOCallClearReason reason)
 {
-   int ret =0;
    OOH323CallData *call;
 
    call= ooFindCallByToken(callToken);
@@ -2912,7 +2907,6 @@ int ooParseDestination(OOH323CallData *call, char *dest)
 int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf, int h245Len,
                             int h245MsgType, int associatedChan)
 {
-   DListNode *pNode = NULL;
    Q931Message *pQ931Msg = NULL;
    H225H323_UU_PDU *pH323UUPDU = NULL;
    H225H323_UU_PDU_h245Control *pH245Control = NULL;
@@ -3216,7 +3210,7 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
 int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
                         ooAliases** aliasList)
 {
-   int ret=0, iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
+   int iEk=-1, iDon=-1, iTeen=-1, iChaar=-1, iPort = -1, i;
    ooAliases * psNewAlias = NULL;
    char *cAt = NULL, *host=NULL;
    char tmp[256], buf[30];
@@ -3253,7 +3247,7 @@ int ooParseDestination(OOCTXT *pctxt, char *dest, char* parsedIP, unsigned len,
    /* alias@host */
    strncpy(tmp, dest, sizeof(tmp)-1);
    tmp[sizeof(tmp)-1]='\0';
-   if(host=strchr(tmp, '@'))
+   if((host=strchr(tmp, '@')) != NULL)
    {
       *host = '\0';
       host++;
