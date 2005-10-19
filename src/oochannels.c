@@ -39,6 +39,8 @@ extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
 
+extern OOSOCKET cmdSock;
+
 int ooCreateH245Listener(OOH323CallData *call)
 {
    int ret=0;
@@ -544,7 +546,8 @@ int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
 
 }
 
-int ooProcessFDSETsAndTimers(fd_set *pReadfds, fd_set *pWritefds, struct timeval *pToMin)
+int ooProcessFDSETsAndTimers
+   (fd_set *pReadfds, fd_set *pWritefds, struct timeval *pToMin)
 {
    OOH323CallData *call, *prev=NULL;
    struct timeval toNext;

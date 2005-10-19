@@ -108,19 +108,31 @@ void printuIntValue (ASN1UINT value)
 
 void printBitStrValue (ASN1UINT numbits, const ASN1OCTET* data)
 {
+#ifdef __MINGW32__
+   char s[numbits + 8];
+   indent ();
+   OOTRACEDBGB2("%s\n", bitStrToString (numbits, data, s, numbits+8));
+#else
    char* s = (char*)malloc(numbits + 8);
    indent ();
    OOTRACEDBGB2("%s\n", bitStrToString (numbits, data, s, numbits+8));
    free(s);
+#endif
 }
 
 void printOctStrValue (ASN1UINT numocts, const ASN1OCTET* data)
 {
    int bufsiz = (numocts * 2) + 8;
+#ifdef __MINGW32__
+   char s[bufsiz];
+   indent ();
+   OOTRACEDBGB2 ("%s\n", octStrToString (numocts, data, s, bufsiz));
+#else
    char* s = (char*)malloc(bufsiz);
    indent ();
    OOTRACEDBGB2 ("%s\n", octStrToString (numocts, data, s, bufsiz));
    free(s);
+#endif
 }
 
 void printCharStrValue (const char* value)
