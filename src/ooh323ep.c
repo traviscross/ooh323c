@@ -121,7 +121,6 @@ int ooH323EpInitialize
    gH323ep.isGateway = FALSE;
 
    ooMutexInitCmdMutex();
-   ooMutexInitCallRefMutex();
    ooMutexInitCallTokenMutex();
 
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
@@ -144,6 +143,7 @@ int ooH323EpInitialize
 #endif
    ooSetTraceThreshold(OOTRCLVLINFO);
    OO_SETFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
+
    return OO_OK;
 }
 
@@ -381,7 +381,6 @@ int ooH323EpDestroy(void)
       freeContext(&(gCmdCtxt));
 
       ooMutexDestroyCmdMutex();
-      ooMutexDestroyCallRefMutex();
       ooMutexDestroyCallTokenMutex();
       OO_CLRFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
    }

@@ -16,12 +16,6 @@
 #ifdef USE_THREADS
 #include "ooMutex.h"
 
-/**
- * Mutex to protect ooGenerateCallReference function.
- * This is required as this function will be called by
- * multiple threads trying to place calls using stack commands
- */
-static OO_MUTEX gCallRefMutex;
 
 /**
  * Mutex to protect access to global call token variables.
@@ -81,28 +75,6 @@ void ooMutexDestroyCmdMutex()
 {
 #ifdef _WIN32
   DeleteCriticalSection(&gCmdMutex);
-#endif
-}
-
-void ooMutexInitCallRefMutex(void)
-{
-   ooInitMutex (&gCallRefMutex);
-}
-
-void ooMutexAcquireCallRefMutex(void)
-{
-   ooAcquireMutex (&gCallRefMutex);
-}
-
-void ooMutexReleaseCallRefMutex(void)
-{
-   ooReleaseMutex (&gCallRefMutex);
-}
-
-void ooMutexDestroyCallRefMutex()
-{
-#ifdef _WIN32
-   DeleteCriticalSection(&gCallRefMutex);
 #endif
 }
 

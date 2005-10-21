@@ -56,11 +56,6 @@ EXTERN void ooMutexAcquireCmdMutex(void);
 EXTERN void ooMutexReleaseCmdMutex(void);
 EXTERN void ooMutexDestroyCmdMutex(void);
 
-EXTERN void ooMutexInitCallRefMutex(void);
-EXTERN void ooMutexAcquireCallRefMutex(void);
-EXTERN void ooMutexReleaseCallRefMutex(void);
-EXTERN void ooMutexDestroyCallRefMutex(void);
-
 EXTERN void ooMutexInitCallTokenMutex(void);
 EXTERN void ooMutexAcquireCallTokenMutex(void);
 EXTERN void ooMutexReleaseCallTokenMutex(void);
@@ -72,11 +67,6 @@ EXTERN void ooMutexDestroyCallTokenMutex(void);
 #define ooMutexAcquireCmdMutex()
 #define ooMutexReleaseCmdMutex()
 #define ooMutexDestroyCmdMutex()
-
-#define ooMutexInitCallRefMutex()
-#define ooMutexAcquireCallRefMutex()
-#define ooMutexReleaseCallRefMutex()
-#define ooMutexDestroyCallRefMutex()
 
 #define ooMutexInitCallTokenMutex()
 #define ooMutexAcquireCallTokenMutex()

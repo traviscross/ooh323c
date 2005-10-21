@@ -424,7 +424,6 @@ ASN1USINT ooGenerateCallReference()
    static ASN1USINT lastCallRef=0;
    ASN1USINT newCallRef=0;
 
-   ooMutexAcquireCallRefMutex(); /* Acquire lock */
 
    if(lastCallRef == 0)
    {
@@ -443,7 +442,6 @@ ASN1USINT ooGenerateCallReference()
 
    newCallRef = lastCallRef;
 
-   ooMutexReleaseCallRefMutex(); /* Release lock */
 
    OOTRACEDBGC2("Generated callRef %d\n", newCallRef);
    return newCallRef;

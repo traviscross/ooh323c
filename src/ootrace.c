@@ -61,7 +61,8 @@ void ooTraceLogMessage(const char * logMessage)
   
    SYSTEMTIME systemTime;
    GetLocalTime(&systemTime);
-   GetTimeFormat(LOCALE_SYSTEM_DEFAULT,0, &systemTime, "HH':'mm':'ss", timeString, 100);
+   GetTimeFormat(LOCALE_SYSTEM_DEFAULT,0, &systemTime, "HH':'mm':'ss",
+                                                              timeString, 100);
    GetTimeFormat(LOCALE_SYSTEM_DEFAULT,0, &systemTime, "H", currtime, 3);
    if(lasttime> atoi(currtime))
       printDate=1;
