@@ -664,7 +664,7 @@ ASN1UINT ooGenerateStatusDeterminationNumber()
 #ifdef _WIN32
    SYSTEMTIME systemTime;
    GetLocalTime(&systemTime);
-   srand((systemTme.wMilliseconds ^ systemTime.wSecond) + random_factor);
+   srand((systemTime.wMilliseconds ^ systemTime.wSecond) + random_factor);
 #else
    gettimeofday(&tv, NULL);
    srand((tv.tv_usec ^ tv.tv_sec) + random_factor );
