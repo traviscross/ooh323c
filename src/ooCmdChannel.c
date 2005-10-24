@@ -145,7 +145,7 @@ int ooReadAndProcessStackCommand()
 
    for(i=0; (i+sizeof(OOStackCommand)) <= recvLen; i += sizeof(OOStackCommand))
    {
-      memcpy(&cmd, (void*)buffer+i, sizeof(OOStackCommand));
+      memcpy(&cmd, buffer+i, sizeof(OOStackCommand));
 
       if(cmd.type == OO_CMD_NOOP)
          continue;
