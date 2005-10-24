@@ -112,6 +112,10 @@ int main(int argc, char ** argv)
 
    ooH323EpSetLocalAddress(gLocalIp, port);
 
+   /* Create the command listener.
+   */
+   ooH323EpCreateCmdListener(7878);
+
    h323Callbacks.onNewCallCreated = NULL;
    h323Callbacks.onAlerting = osEpOnAlerting;
    h323Callbacks.onIncomingCall = osEpOnIncomingCall;

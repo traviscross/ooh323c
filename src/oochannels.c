@@ -27,10 +27,8 @@
 #include "ooTimer.h"
 #include "ooh323ep.h"
 #include "ooStackCmds.h"
+#include "ooCmdChannel.h"
 
-#ifdef HAVE_PTHREAD_H
-#include <pthread.h>
-#endif
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
@@ -39,7 +37,6 @@ extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
 
-extern OOSOCKET cmdSock;
 
 int ooCreateH245Listener(OOH323CallData *call)
 {
@@ -495,11 +492,20 @@ int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
          *nfds = *((int*)gH323ep.listener);
    }
 
-#ifdef HAVE_PIPE
-   FD_SET(gH323ep.cmdPipe[0], pReadfds);
-   if ( *nfds < (int)gH323ep.cmdPipe[0])
-      *nfds = (int)gH323ep.cmdPipe[0];
-#endif
+   if(gH323ep.cmdListener)
+   {
+      FD_SET(gH323ep.cmdListener, pReadfds);
+      if(*nfds < (int)gH323ep.cmdListener)
+         *nfds = (int)gH323ep.cmdListener;
+   }
+   if(gH323ep.cmdSock)
+   {
+      FD_SET(gH323ep.cmdSock, pReadfds);
+      if(*nfds < (int)gH323ep.cmdSock)
+         *nfds = (int)gH323ep.cmdSock;
+   }
+
+
      
    if(gH323ep.callList)
    {
@@ -551,9 +557,6 @@ int ooProcessFDSETsAndTimers
 {
    OOH323CallData *call, *prev=NULL;
    struct timeval toNext;
-#ifdef HAVE_PIPE  
-   char buf[2];
-#endif
 
    /* Process gatekeeper client timers */
    if(gH323ep.gkClient)
@@ -579,20 +582,25 @@ int ooProcessFDSETsAndTimers
       }
    }
 
-      
-   /* If gatekeeper is present, then we should not be processing
-      any call related command till we are registered with the gk.
-   */
-#ifdef HAVE_PIPE
 
-   if(FD_ISSET(gH323ep.cmdPipe[0], pReadfds))
+   if(gH323ep.cmdListener)
    {
-      read(gH323ep.cmdPipe[0], buf, 1);
+      if(FD_ISSET(gH323ep.cmdListener, pReadfds))
+      {
+         if(ooAcceptCmdConnection() != OO_OK){
+            OOTRACEERR1("Error:Failed to accept command connection\n");
+            return OO_FAILED;
+         }
+      }
    }
 
-#endif
-   ooProcessStackCmds();
-     
+   if(gH323ep.cmdSock)
+   {
+      if(FD_ISSET(gH323ep.cmdSock, pReadfds))
+      {
+        ooReadAndProcessStackCommand();
+      }
+   }
 
    /* Manage ready descriptors after select */
 
@@ -1689,6 +1697,10 @@ int ooStopMonitorCalls()
    if(gMonitor)
    {
       OOTRACEINFO1("Doing ooStopMonitorCalls\n");
+      if(gH323ep.cmdSock)
+      {
+         ooCloseCmdConnection();
+      }
 
       if(gH323ep.callList)
       {

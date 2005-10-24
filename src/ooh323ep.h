@@ -66,6 +66,7 @@ struct OOCapPrefs;
 #define RTPPORTSEND   14230  /*!< Ending RTP port number   */
 
 
+
  
 /**
  * This structure is used to define the port ranges to be used
@@ -146,6 +147,9 @@ typedef struct OOH323EndPoint {
 
    OOInterface *ifList; /* interface list for the host we are running on*/
    OOBOOL isGateway;
+   OOSOCKET cmdListener;
+   OOSOCKET cmdSock;
+  int cmdPort; /* default 7575 */
 } OOH323EndPoint;
 
 #define ooEndPoint OOH323EndPoint
@@ -162,6 +166,18 @@ typedef struct OOH323EndPoint {
 EXTERN int ooH323EpInitialize
    (enum OOCallMode callMode, const char* tracefile);
 
+
+
+/**
+ * This function is used to create a command listener for the endpoint.
+ * Before any command is issued to the endpoint, command listener must be
+ * created.
+ * @param cmdport          Port number on which command listener waits for
+ *                         incoming requests.
+ *
+ * @return                 OO_OK, on success; OO_FAILED, on failure
+ */
+EXTERN int ooH323EpCreateCmdListener(int cmdPort);
 
 /**
  * This function is used to represent the H.323 application endpoint as

@@ -26,7 +26,6 @@
 #include "ooCapability.h"
 #include "ooGkClient.h"
 #include "ooUtils.h"
-#include "ooMutex.h"
 #include <time.h>
 #include <ctype.h>
 
@@ -395,8 +394,6 @@ int ooGenerateCallToken (char *callToken, size_t size)
    char aCallToken[200];
    int  ret = 0;
 
-   ooMutexAcquireCallTokenMutex(); /* Acquire lock */
-
    sprintf (aCallToken, "ooh323c_%d", counter++);
 
    if (counter > OO_MAX_CALL_TOKEN)
@@ -409,7 +406,6 @@ int ooGenerateCallToken (char *callToken, size_t size)
       ret = OO_FAILED;
    }
 
-   ooMutexReleaseCallTokenMutex(); /* Release lock */
 
    return ret;
 }

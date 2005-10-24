@@ -37,10 +37,23 @@ extern "C" {
 #endif /* EXTERN */
 
 
+
 /**
  * @defgroup stackcmds Stack Control Commands
  * @{
  */
+
+/**
+ * This is an enumeration of Stack Command return codes.
+ */
+typedef enum OOStkCmdStat{
+  OO_STKCMD_SUCCESS,
+  OO_STKCMD_MEMERR,
+  OO_STKCMD_INVALIDPARAM,
+  OO_STKCMD_WRITEERR,
+  OO_STKCMD_CONNECTIONERR
+}OOStkCmdStat;
+
 /**
  * This is an enumeration of stack command codes.
  */
@@ -77,9 +90,9 @@ typedef struct OOStackCommand {
  * @param opts        These are call specific options and if passed a non-null
  *                    value, will override global endpoint options.
  *
- * @return            OO_OK, on success. OO_FAILED, on failure.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooMakeCall
+EXTERN OOStkCmdStat ooMakeCall
    (const char* dest, char *callToken, size_t bufsiz, ooCallOptions *opts);
 
 
@@ -89,17 +102,17 @@ EXTERN int ooMakeCall
  * for a call. Effective only when manual-ringback is enabled.
  * @param callToken    Unique token for the call.
  *
- * @return             OO_OK, on success; OO_FAILED, on failure
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooManualRingback(const char *callToken);
+EXTERN OOStkCmdStat ooManualRingback(const char *callToken);
 
 /**
  * This function is used to answer a call
  * @param callToken   Unique token for the call
  *
- * @return            OO_OK, on success. OO_FAILED, otherwise.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooAnswerCall(const char *callToken);
+EXTERN OOStkCmdStat ooAnswerCall(const char *callToken);
 
 /**
  * This function is used to forward an existing call to third party.
@@ -107,18 +120,18 @@ EXTERN int ooAnswerCall(const char *callToken);
  * @param dest        Address to which the call has to be forwarded. Can be
  *                    IP:PORT or alias.
  *
- * @return            OO_OK, on success. OO_FAILED, on failure.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooForwardCall(const char* callToken, char *dest);
+EXTERN OOStkCmdStat ooForwardCall(const char* callToken, char *dest);
 
 /**
  * This function is used by an user application to terminate a call.
  * @param callToken   The uinque token for the call.
  * @param reason      Reason for hanging call.
  *
- * @return            OO_OK, on success. OO_FAILED, on failure.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooHangCall(const char* callToken, OOCallClearReason reason);
+EXTERN OOStkCmdStat ooHangCall(const char* callToken, OOCallClearReason reason);
 
 /**
  * This command function can be used by an user application to send a DTMF
@@ -126,23 +139,27 @@ EXTERN int ooHangCall(const char* callToken, OOCallClearReason reason);
  * @param callToken  Unique token for the call
  * @param alpha      Alphanumeric string reperesenting dtmf sequence
  *
- * @return           OO_OK, on success. OO_FAILED, on failure.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooSendDTMFDigit(const char *callToken, const char* alpha);
+EXTERN OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* alpha);
 
-/**
- * This function is invoked from the main event handling loop to
- * process queued stack commands.
- */
-EXTERN int ooProcessStackCmds (void);
 
 /**
  * This function is used by the user application to stop monitoring calls.
  *
- * @return            OO_OK, on success. OO_FAILED, on failure.
+ * @return            Returns OOStkCmdStat value indication success or failure.
  */
-EXTERN int ooStopMonitor(void);
+EXTERN OOStkCmdStat ooStopMonitor(void);
 
+
+/**
+ * This function is used by application to obtain the text description for
+ * failure of tsack command.
+ * @param stat       Status code returned by stack command api.
+ *
+ * @return           Text description corresponding to the code.
+ */
+EXTERN const char* ooGetStkCmdStatusCodeTxt(OOStkCmdStat stat);
 /**
  * @}
  */

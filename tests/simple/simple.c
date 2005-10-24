@@ -255,6 +255,8 @@ int main(int argc, char ** argv)
       ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
+   /* CmdListener should always be created after local address is set*/
+   ooH323EpCreateCmdListener(0);
 
    if(bAutoAnswer)
       ooH323EpEnableAutoAnswer();
@@ -374,6 +376,8 @@ int main(int argc, char ** argv)
       ooMakeCall(dest, callToken, sizeof(callToken), NULL); /* Make call */
       bActive = TRUE;
    }
+
+  
 #ifdef _WIN32
    threadHdl = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)osEpHandleCommand,
                             0, 0, 0);
@@ -584,7 +588,7 @@ void* osEpHandleCommand(void* dummy)
 {
    int cmdLen, i=0;
    char command[256], *p=NULL, dest[256], ch=0;
-
+   OOStkCmdStat stat;
    gCmdThrd = TRUE;
 #ifndef _WIN32
    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
@@ -644,9 +648,11 @@ void* osEpHandleCommand(void* dummy)
             }
             dest[i]='\0';
 
-            if(ooMakeCall(dest, callToken, sizeof(callToken), NULL)!= OO_OK)
+            if((stat = ooMakeCall(dest, callToken, sizeof(callToken), NULL)) !=
+                                                      OO_STKCMD_SUCCESS)
             {
                printf("--->Failed to place a call to %s \n",dest);
+               printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
             }else{
                printf("--->Calling %s \n", dest);
                bActive = TRUE;
@@ -656,10 +662,11 @@ void* osEpHandleCommand(void* dummy)
          case 'a':
             if(bActive && bRinging)
             {
-               if(ooAnswerCall(callToken)==OO_OK)
+               if((stat = ooAnswerCall(callToken)) == OO_STKCMD_SUCCESS)
                   bRinging = FALSE;
                else{
                   printf("--->Failed to answer the call %s\n", callToken);
+                  printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
                }
             }else{
                printf("--->There is no active call in ringing status\n");
@@ -668,9 +675,11 @@ void* osEpHandleCommand(void* dummy)
 
          case 'r':
            if(bActive && bRinging){
-              if(ooHangCall(callToken, OO_REASON_LOCAL_REJECTED)!= OO_OK)
+              if((stat = ooHangCall(callToken, OO_REASON_LOCAL_REJECTED)) !=
+                                                           OO_STKCMD_SUCCESS)
               {
                  printf("--->Failed to reject call %s\n", callToken);
+                 printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
               }else{
                  bRinging = FALSE;
               }
@@ -699,10 +708,12 @@ void* osEpHandleCommand(void* dummy)
                 }
                 dest[i]='\0';
 
-                if(ooForwardCall(callToken, dest)!= OO_OK)
+                if((stat = ooForwardCall(callToken, dest)) !=
+                                                          OO_STKCMD_SUCCESS)
                 {
                    printf("--->Failed to forward call %s to %s\n", callToken,
                                                                    dest);
+                   printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
                 }else{
                    printf("--->Forwarding Call to %s \n", dest);
                 }
@@ -714,9 +725,11 @@ void* osEpHandleCommand(void* dummy)
          case 'h':
             if(bActive)
             {
-               if(ooHangCall(callToken, OO_REASON_LOCAL_CLEARED)!= OO_OK)
+               if((stat = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED)) !=
+                                                                   OO_OK)
                {
                   printf("--->Failed to hang call %s\n", callToken);
+                  printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
                }else{
                   printf("--->Hanging call %s\n", callToken);
                }
@@ -729,7 +742,12 @@ void* osEpHandleCommand(void* dummy)
             if(bActive)
             {
                printf("--->Hanging Active Call %s\n", callToken);
-               ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
+               if((stat = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED)) !=
+                                                           OO_STKCMD_SUCCESS)
+               {
+                  printf("--->Failed to hang call %s\n", callToken);
+                  printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
+               }
             }
             break;
 
@@ -751,7 +769,12 @@ void* osEpHandleCommand(void* dummy)
                    p++;
                 }
                 dest[i]='\0';
-                ooSendDTMFDigit(callToken, dest);
+                if((stat = ooSendDTMFDigit(callToken, dest)) !=
+                                                            OO_STKCMD_SUCCESS)
+                {
+                   printf("--->Failed to send DTMF digits\n");
+                   printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
+                }
            }else {
               printf("--->There is no established call\n");
            }

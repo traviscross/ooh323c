@@ -52,13 +52,13 @@ int osEpOnCallCleared(OOH323CallData* call );
 int osEpOnNewCallCreated(OOH323CallData* call );
 static OOBOOL bActive=FALSE;
 static char gPlayFile[100];
-char callToken[20];
+char gCallToken[20];
 static char gLocalIp[20];
+char gDest[256];
 
 int main(int argc, char ** argv)
 {
    int ret=0, x=0;
-   char dest[256];
    OOH323CALLBACKS h323Callbacks;
 
 #ifdef _WIN32
@@ -72,7 +72,7 @@ int main(int argc, char ** argv)
 #endif
    gPlayFile[0]='\0';
    gLocalIp[0]='\0';
-   dest[0]='\0';
+   gDest[0]='\0';
    /* Parse arguments */
    if(argc == 1)
    {
@@ -93,8 +93,8 @@ int main(int argc, char ** argv)
          strncpy(gLocalIp, argv[x], sizeof(gLocalIp)-1);
          gLocalIp[sizeof(gLocalIp)-1]='\0';
       }else{
-         strncpy(dest, argv[x], sizeof(dest)-1);
-         dest[sizeof(dest)-1]='\0';
+         strncpy(gDest, argv[x], sizeof(gDest)-1);
+         gDest[sizeof(gDest)-1]='\0';
       }
    }
 
@@ -117,8 +117,8 @@ int main(int argc, char ** argv)
       return -1;
    }
 
-   if(ooUtilsIsStrEmpty(dest))
-      strcpy(dest, gLocalIp);
+   if(ooUtilsIsStrEmpty(gDest))
+      strcpy(gDest, gLocalIp);
 
    /* Initialize H323 endpoint */
    ret = ooH323EpInitialize(OO_CALLMODE_AUDIOTX, "player.log");
@@ -130,6 +130,7 @@ int main(int argc, char ** argv)
 
    ooH323EpSetLocalAddress(gLocalIp, 0);
 
+   ooH323EpCreateCmdListener(0);
    /* Register callbacks */
 
    h323Callbacks.onNewCallCreated = osEpOnNewCallCreated;
@@ -168,8 +169,7 @@ int main(int argc, char ** argv)
   
   
 
-    ooMakeCall (dest, callToken, sizeof(callToken), NULL); /* make call*/
-    bActive = TRUE;
+
    /* This thread is created to monitor user input on stdin while stack is
       monitoring sockets. Required for windows as windows does not allow
       file handles(i.e. stdin in this case) to be monitored by select.
@@ -216,13 +216,21 @@ void* osEpHandleCommand(void *dummy)
 {
    int ret;
    char command[20];
+   OOStkCmdStat stat;
+
+   if((stat = ooMakeCall (gDest, gCallToken, sizeof(gCallToken), NULL)) != OO_STKCMD_SUCCESS)
+   {
+      printf("Failed to place a call - %s\n", ooGetStkCmdStatusCodeTxt(stat));
+      return dummy;
+   }
+   bActive = TRUE;
    printf("Hit <ENTER> to hang call\n");
    memset(command, 0, sizeof(command));
    fgets(command, 20, stdin);
    if(bActive)
    {
       printf("Hanging up call\n");
-      ret = ooHangCall(callToken, OO_REASON_LOCAL_CLEARED);
+      ret = ooHangCall(gCallToken, OO_REASON_LOCAL_CLEARED);
       printf("Hit <ENTER> to quit\n");
       fgets(command, 20, stdin);
    }
@@ -258,7 +266,7 @@ int osEpOnNewCallCreated(OOH323CallData* call )
    mediaInfo.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo);
     
-   strcpy(callToken, call->callToken);
+   strcpy(gCallToken, call->callToken);
   
    return OO_OK;
 }

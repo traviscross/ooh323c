@@ -18,22 +18,14 @@
 #include "ooCalls.h"
 #include "ooCapability.h"
 #include "ooGkClient.h"
-#include "ooMutex.h"
-
+#include "ooStackCmds.h"
+#include "ooCmdChannel.h"
 /** Global endpoint structure */
 ooEndPoint gH323ep;
 
 
-
-/**
- * Context to allocate memory for stack commands.
- */
-OOCTXT gCmdCtxt;
-
-
-DList gStkCmdList;
-
-
+extern int gCmdPort;
+extern char gCmdIP[20];
 extern DList g_TimerList;
 
 int ooH323EpInitialize
@@ -42,10 +34,8 @@ int ooH323EpInitialize
   
    memset(&gH323ep, 0, sizeof(ooEndPoint));
 
-   initContext(&(gCmdCtxt));
    initContext(&(gH323ep.ctxt));
    initContext(&(gH323ep.msgctxt));
-   dListInit(&gStkCmdList);
 
    if(tracefile)
    {
@@ -120,9 +110,6 @@ int ooH323EpInitialize
    gH323ep.callMode = callMode;
    gH323ep.isGateway = FALSE;
 
-   ooMutexInitCmdMutex();
-   ooMutexInitCallTokenMutex();
-
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
 
    gH323ep.callEstablishmentTimeout = DEFAULT_CALLESTB_TIMEOUT;
@@ -135,15 +122,13 @@ int ooH323EpInitialize
 
    gH323ep.sessionTimeout = DEFAULT_ENDSESSION_TIMEOUT;
    gH323ep.ifList = NULL;
-#ifdef HAVE_PIPE
-   if(pipe(gH323ep.cmdPipe)<0){
-      OOTRACEERR1("Error:Failed to create command pipe\n");
-      return OO_FAILED;
-   }
-#endif
+
    ooSetTraceThreshold(OOTRCLVLINFO);
    OO_SETFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
 
+   gH323ep.cmdListener = 0;
+   gH323ep.cmdSock = 0;
+   gH323ep.cmdPort = OO_DEFAULT_CMDLISTENER_PORT;
    return OO_OK;
 }
 
@@ -153,12 +138,13 @@ EXTERN int ooH323EpSetAsGateway()
    return OO_OK;
 }
 
+
 int ooH323EpSetLocalAddress(const char* localip, int listenport)
 {
    if(localip)
    {
-      memset(gH323ep.signallingIP, 0, sizeof(gH323ep.signallingIP));
       strcpy(gH323ep.signallingIP, localip);
+      strcpy(gCmdIP, localip);
       OOTRACEINFO2("Signalling IP address is set to %s\n", localip);
    }
   
@@ -167,6 +153,19 @@ int ooH323EpSetLocalAddress(const char* localip, int listenport)
       gH323ep.listenPort = listenport;
       OOTRACEINFO2("Listen port number is set to %d\n", listenport);
    }
+   return OO_OK;
+}
+
+int ooH323EpCreateCmdListener(int cmdPort)
+{
+   if(cmdPort != 0)
+   {
+      gH323ep.cmdPort = cmdPort;
+      gCmdPort = cmdPort;
+   }
+   if(ooCreateCmdListener() != OO_OK)
+      return OO_FAILED;
+
    return OO_OK;
 }
 
@@ -202,7 +201,8 @@ int ooH323EpAddAliasDialedDigits(const char* dialedDigits)
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for new DialedDigits alias\n");
+      OOTRACEERR1("Error: Failed to allocate memory for new DialedDigits "
+                  "alias\n");
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_dialedDigits;
@@ -210,7 +210,8 @@ int ooH323EpAddAliasDialedDigits(const char* dialedDigits)
    psNewAlias->value = (char*) memAlloc(&gH323ep.ctxt, strlen(dialedDigits)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for the new DialedDigits alias value\n");
+      OOTRACEERR1("Error: Failed to allocate memory for the new DialedDigits"
+                  " alias value\n");
       memFreePtr(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
@@ -235,7 +236,8 @@ int ooH323EpAddAliasURLID(const char * url)
    psNewAlias->value = (char*) memAlloc(&gH323ep.ctxt, strlen(url)+1);
    if(!psNewAlias->value)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for the new URL-ID alias value\n");
+      OOTRACEERR1("Error: Failed to allocate memory for the new URL-ID alias"
+                  " value\n");
       memFreePtr(&gH323ep.ctxt, psNewAlias);
       return OO_FAILED;
    }
@@ -278,7 +280,8 @@ int ooH323EpAddAliasTransportID(const char * ipaddress)
    psNewAlias = (ooAliases*)memAlloc(&gH323ep.ctxt, sizeof(ooAliases));
    if(!psNewAlias)
    {
-      OOTRACEERR1("Error: Failed to allocate memory for new Transport-ID alias\n");
+      OOTRACEERR1("Error: Failed to allocate memory for new Transport-ID "
+                  "alias\n");
       return OO_FAILED;
    }
    psNewAlias->type = T_H225AliasAddress_transportID;
@@ -378,10 +381,7 @@ int ooH323EpDestroy(void)
       }
 
       freeContext(&(gH323ep.ctxt));
-      freeContext(&(gCmdCtxt));
 
-      ooMutexDestroyCmdMutex();
-      ooMutexDestroyCallTokenMutex();
       OO_CLRFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
    }
    return OO_OK;
