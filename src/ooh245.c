@@ -660,12 +660,13 @@ ASN1UINT ooGenerateStatusDeterminationNumber()
 {
    ASN1UINT statusDeterminationNumber;
    ASN1UINT random_factor = getpid();
-   struct timeval tv;
+
 #ifdef _WIN32
    SYSTEMTIME systemTime;
    GetLocalTime(&systemTime);
    srand((systemTime.wMilliseconds ^ systemTime.wSecond) + random_factor);
 #else
+   struct timeval tv;
    gettimeofday(&tv, NULL);
    srand((tv.tv_usec ^ tv.tv_sec) + random_factor );
 #endif
