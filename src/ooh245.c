@@ -3100,7 +3100,7 @@ int ooBuildFastStartOLC
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
    H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
-
+   unsigned session_id = 0;
    ooLogicalChannel *pLogicalChannel = NULL;
    int outgoing=FALSE;
 
@@ -3111,8 +3111,9 @@ int ooBuildFastStartOLC
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for Receive  Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
+      session_id = ooCallGenerateSessionID(call, epCap->capType, "receive");
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                 olc->forwardLogicalChannelNumber, 1,
+                                 olc->forwardLogicalChannelNumber, session_id,
                                  "receive", epCap);
       if(outgoing)
          reverse = TRUE;
@@ -3123,8 +3124,9 @@ int ooBuildFastStartOLC
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for transmit Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
+      session_id = ooCallGenerateSessionID(call, epCap->capType, "transmit");
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                  olc->forwardLogicalChannelNumber, 1,
+                                  olc->forwardLogicalChannelNumber, session_id,
                                   "transmit", epCap);
       if(outgoing)
          forward = TRUE;
@@ -3517,15 +3519,16 @@ int ooPrepareFastStartResponseOLC
    H245H2250LogicalChannelParameters *pH2250lcp1=NULL, *pH2250lcp2=NULL;
    H245UnicastAddress *pUnicastAddrs=NULL, *pUniAddrs=NULL;
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
-
+   unsigned session_id = 0;
    ooLogicalChannel *pLogicalChannel = NULL;
   
    if(dir & OORX)
    {
       OOTRACEDBGA3("ooPrepareFastStartResponseOLC for Receive  Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
+      session_id = ooCallGenerateSessionID(call, epCap->capType, "receive");
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                 olc->forwardLogicalChannelNumber, 1,
+                                 olc->forwardLogicalChannelNumber, session_id,
                                  "receive", epCap);
       forward = TRUE;
    }
@@ -3533,8 +3536,9 @@ int ooPrepareFastStartResponseOLC
    {
       OOTRACEDBGA3("ooPrepareFastStartResponseOLC for transmit Capability "
                    "(%s, %s)\n", call->callType, call->callToken);
+      session_id = ooCallGenerateSessionID(call, epCap->capType, "transmit");
       pLogicalChannel = ooAddNewLogicalChannel(call,
-                                  olc->forwardLogicalChannelNumber, 1,
+                                  olc->forwardLogicalChannelNumber, session_id,
                                   "transmit", epCap);
       reverse = TRUE;
    }
