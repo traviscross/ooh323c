@@ -399,7 +399,7 @@ int ooGenerateCallToken (char *callToken, size_t size)
    if (counter > OO_MAX_CALL_TOKEN)
       counter = 1;
 
-   if (strlen (aCallToken) < size)
+   if ((strlen(aCallToken)+1) < size)
       strcpy (callToken, aCallToken);
    else {
       OOTRACEERR1 ("Error: Insufficient buffer size to generate call token");

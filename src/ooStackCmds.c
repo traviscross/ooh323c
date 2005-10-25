@@ -33,7 +33,7 @@ int ooGenerateOutgoingCallToken (char *callToken, size_t size)
    if (counter > OO_MAX_CALL_TOKEN)
       counter = 1;
 
-   if (strlen (aCallToken) < size)
+   if ((strlen(aCallToken)+1) < size)
       strcpy (callToken, aCallToken);
    else {
       ret = OO_FAILED;
@@ -97,7 +97,12 @@ OOStkCmdStat ooMakeCall
    }
 
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
+      free(cmd.param2);
+      if(cmd.param3) free(cmd.param3);
       return OO_STKCMD_WRITEERR;
+   }
 
    return OO_STKCMD_SUCCESS;
 }
@@ -127,7 +132,10 @@ OOStkCmdStat ooManualRingback(const char *callToken)
    strcpy((char*)cmd.param1, callToken);
   
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
       return OO_STKCMD_WRITEERR;
+   }
 
    return OO_STKCMD_SUCCESS;
 }
@@ -158,7 +166,10 @@ OOStkCmdStat ooAnswerCall(const char *callToken)
    strcpy((char*)cmd.param1, callToken);
   
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
       return OO_STKCMD_WRITEERR;
+   }
 
    return OO_STKCMD_SUCCESS;
 }
@@ -193,7 +204,11 @@ OOStkCmdStat ooForwardCall(const char* callToken, char *dest)
    strcpy((char*)cmd.param2, dest);
 
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
+      free(cmd.param2);
       return OO_STKCMD_WRITEERR;
+   }
 
    return OO_STKCMD_SUCCESS;
 }
@@ -228,7 +243,11 @@ OOStkCmdStat ooHangCall(const char* callToken, OOCallClearReason reason)
    *((OOCallClearReason*)cmd.param2) = reason;
 
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
+      free(cmd.param2);
       return OO_STKCMD_WRITEERR;
+   }
   
    return OO_STKCMD_SUCCESS;
 }
@@ -283,7 +302,11 @@ OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* dtmf)
    strcpy((char*)cmd.param2, dtmf);
   
    if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
+      free(cmd.param2);
       return OO_STKCMD_WRITEERR;
+   }
 
    return OO_STKCMD_SUCCESS;
 }
