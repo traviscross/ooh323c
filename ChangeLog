@@ -1,4 +1,4 @@
-Release xx.aa
+Release 0.8
 1. ManualRingback support (Benni A. Aswin)
 2. Gateway/Endpoint config
 3. Fixed lot of warning messages generated while compiling with -Wall option.
