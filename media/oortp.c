@@ -285,14 +285,14 @@ int ooStopTransmitWaveFile(int channelId)
 */  
 int ooStartTransmitMic(int channelId)
 {
-   int ret;
+   int ret = 0;
    OOLOG2(1, "StartOf:StartTransmitMic");
 #ifdef _WIN32
    ret = ooOpenMic(); /* Open the Mic device for read */
    if( ret < 0)
    {
       OOLOG2(1, "ERROR: Failed to open the Mic device");
-      return -1;
+      return ret;
    }
    /* Start thread which will read data from Mic, and transmit it as RTP
       packets.
@@ -303,7 +303,7 @@ int ooStartTransmitMic(int channelId)
    pthread_create(&gXmitThrdHdl, NULL, ooTransmitMicThreadFuncLnx, 0);
 #endif
    OOLOG2(1, "EndOf:StartTransmitMic");
-   return 0;
+   return ret;
 }
 
 /* Stop the transmit Mic thread */
@@ -320,8 +320,9 @@ int ooStopTransmitMic(int channelId)
 */
 int ooStartReceiveAudioAndPlayback(int channelId)
 {
-
+ 
 #ifdef _WIN32
+   int ret;
    WAVEFORMATEX waveFormat;
   
    /* Wave format of the audio to be played.*/
