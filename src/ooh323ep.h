@@ -172,7 +172,7 @@ EXTERN int ooH323EpInitialize
  * This function is used to create a command listener for the endpoint.
  * Before any command is issued to the endpoint, command listener must be
  * created.
- * @param cmdport          Port number on which command listener waits for
+ * @param cmdPort          Port number on which command listener waits for
  *                         incoming requests.
  *
  * @return                 OO_OK, on success; OO_FAILED, on failure
