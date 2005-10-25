@@ -285,7 +285,7 @@ int ooStopTransmitWaveFile(int channelId)
 */  
 int ooStartTransmitMic(int channelId)
 {
-
+   int ret;
    OOLOG2(1, "StartOf:StartTransmitMic");
 #ifdef _WIN32
    ret = ooOpenMic(); /* Open the Mic device for read */
