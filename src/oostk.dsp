@@ -157,6 +157,10 @@ SOURCE=.\oochannels.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ooCmdChannel.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ooDateTime.c
 # End Source File
 # Begin Source File
@@ -258,6 +262,10 @@ SOURCE=.\ooCapability.h
 # Begin Source File
 
 SOURCE=.\oochannels.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ooCmdChannel.h
 # End Source File
 # Begin Source File
 
