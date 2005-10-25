@@ -62,13 +62,16 @@ int ooCreateCmdListener()
 int ooCreateCmdConnection()
 {
    int ret=0;
-
+   OOInterface *cur=NULL;
    if((ret=ooSocketCreate (&gCmdChan))!=ASN_OK)
    {
       return OO_FAILED;
    }
    else
    {
+
+     //TODO:Need to add support for multihomed to work with channel driver
+
       /*
          bind socket to a port before connecting. Thus avoiding
          implicit bind done by a connect call. Avoided on windows as
@@ -143,7 +146,7 @@ int ooReadAndProcessStackCommand()
       return OO_FAILED;
    }
 
-   for(i=0; (i+sizeof(OOStackCommand)) <= recvLen; i += sizeof(OOStackCommand))
+   for(i=0; (int)(i+sizeof(OOStackCommand)) <= recvLen; i += sizeof(OOStackCommand))
    {
       memcpy(&cmd, buffer+i, sizeof(OOStackCommand));
 
