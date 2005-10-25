@@ -1,7 +1,15 @@
 Release xx.aa
 1. ManualRingback support (Benni A. Aswin)
 2. Gateway/Endpoint config
-3.
+3. Fixed lot of warning messages generated while compiling with -Wall option.
+   (Thanks to Ben Greear for this).
+4. Removed all mutexes from code and used sockets to communicate with stack
+   thread. From threading perspective this means, stack executes in a single
+   thread including callbacks. As long as applications have only one thread
+   issuing commands to stack thread, they don't have to worry about threading
+   and if application has multiple threads issuing stack commands then they
+   have to protect those calls using mutexes.
+5. Few bug fixes.
         
 Release 0.7.3
 1. Added H.245 based alphanumeric and signal DTMF support.

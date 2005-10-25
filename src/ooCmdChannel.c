@@ -62,7 +62,6 @@ int ooCreateCmdListener()
 int ooCreateCmdConnection()
 {
    int ret=0;
-   OOInterface *cur=NULL;
    if((ret=ooSocketCreate (&gCmdChan))!=ASN_OK)
    {
       return OO_FAILED;

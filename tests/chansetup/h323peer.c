@@ -97,7 +97,7 @@ int main (int argc, char** argv)
    char *pcPort =NULL, *gkIP=NULL, *token=NULL;
    unsigned char trace_level = 0;
    enum RasGatekeeperMode gkMode = RasNoGatekeeper;
-
+   int cmdPort = 0;
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
 #endif
@@ -311,6 +311,11 @@ int main (int argc, char** argv)
 
    ooH323EpSetLocalAddress(localIPAddr, localPort);
 
+   /* Make sure that multiple instances of h323peer use separate cmdPort*/
+   srand(getpid());
+   cmdPort = 7575 + rand()%100;
+   ooH323EpCreateCmdListener(cmdPort);
+
    /* Register callbacks */
    h323Callbacks.onNewCallCreated = onNewCallCreated;
    h323Callbacks.onAlerting = onAlerting;
@@ -489,32 +494,44 @@ int onCallEstablished(ooCallData *call)
 static int onCallCleared (ooCallData* call)
 {
   char callToken[20];
+  OOStkCmdStat stat;
   printf ("onCallCleared -(call end reason  %s ) -- %s\n",ooGetReasonCodeText(call->callEndReason), call->callToken);
    if(gInterval == 0 && !bListen)
    {
       if(gCallCounter < gCalls)
       {
-         ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
-         gCallCounter++;
+         if((stat = ooMakeCall (gDest, callToken, sizeof(callToken), NULL))==
+                                                      OO_STKCMD_SUCCESS)
+         {
+            gCallCounter++;
+            return OO_OK;
+         }else{
+            printf("ooMake call failed - %s\n", ooGetStkCmdStatusCodeTxt(stat));
+         }
+
+
       }
-      else{
-         printf("Issuing StopMonitor command\n");
-         ooStopMonitor();
-      }
+      printf("Issuing StopMonitor command\n");
+      ooStopMonitor();
    }
    return OO_OK;
 }
 
 static int callDurationTimerExpired (void *pdata)
 {
+   OOStkCmdStat stat;
    printf("callDurationTimerExpired - %s\n", (char*)pdata);
-   ooHangCall((char*)pdata, OO_REASON_LOCAL_CLEARED);
+   if((stat = ooHangCall((char*)pdata, OO_REASON_LOCAL_CLEARED)) != OO_STKCMD_SUCCESS)
+   {
+      printf("ooHangCall failed - %s\n", ooGetStkCmdStatusCodeTxt(stat));
+   }
    free(pdata);
    return OO_OK;
 }
 
 static int callIntervalTimerExpired(void *pdata)
 {
+   OOStkCmdStat stat;
    char callToken[20];
    char *token=NULL;
    OOTimer* pTimer = NULL;
@@ -522,15 +539,21 @@ static int callIntervalTimerExpired(void *pdata)
    memset(callToken, 0, sizeof(callToken));
    if (gCallCounter < gCalls)
    {
-      ooMakeCall (gDest, callToken, sizeof(callToken), NULL); /* Make call */
-        if( ( token = (char*)malloc(strlen(callToken)+1)) == NULL)
-        {
-                printf("\nmalloc failed\n");
-                return 1;
-        }
-      strcpy(token, callToken);
-        pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval, token, FALSE);
-      gCallCounter++;
+      if((stat = ooMakeCall (gDest, callToken, sizeof(callToken), NULL)) == OO_STKCMD_SUCCESS) /* Make call */
+      {
+         if( ( token = (char*)malloc(strlen(callToken)+1)) == NULL)
+         {
+            printf("\nmalloc failed\n");
+            return -1;
+         }
+         strcpy(token, callToken);
+         pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval, token, FALSE);
+         gCallCounter++;
+      }else{
+         printf("ooMakeCall failed - %s\n", ooGetStkCmdStatusCodeTxt(stat));
+         return -1;
+      }
+     
    }
 
    return OO_OK;

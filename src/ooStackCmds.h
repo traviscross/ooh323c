@@ -145,7 +145,7 @@ EXTERN OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* alpha);
 
 
 /**
- * This function is used by the user application to stop monitoring calls.
+ * This function is used by the user application to stop stack thread.
  *
  * @return            Returns OOStkCmdStat value indication success or failure.
  */
