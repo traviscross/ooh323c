@@ -571,7 +571,7 @@ EXTERN int ooH323MakeCall_helper(struct OOH323CallData *call);
 
 /**
  * This function is used to parse the destination
- * @param pctxt     Handle to context to be used for memory allocation
+ * @param call      Handle to related call.
  * @param dest      Destination string to be parsed.
  * @param parsedIP  Pointer to buffer in which parsed ip:port will be returned.
  * @param len       Length of the buffer passed.
@@ -579,8 +579,9 @@ EXTERN int ooH323MakeCall_helper(struct OOH323CallData *call);
  *
  * @return          OO_OK, on success. OO_FAILED, on failure.
  */
-int ooParseDestination(OOCTXT* pctxt, char *dest, char *parsedIP, unsigned len,
-                       OOAliases** aliasList);
+int ooParseDestination
+   (struct OOH323CallData *call, char *dest, char *parsedIP, unsigned len,
+    OOAliases** aliasList);
 
 /**
  * This function is used to generate a new call token
