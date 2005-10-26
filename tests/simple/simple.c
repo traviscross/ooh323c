@@ -256,7 +256,11 @@ int main(int argc, char ** argv)
   
    ooH323EpSetLocalAddress(ourip, ourport);
    /* CmdListener should always be created after local address is set*/
-   ooH323EpCreateCmdListener(0);
+   if(ooH323EpCreateCmdListener(0) != OO_OK)
+   {
+      printf("Failed to initialize Command Listener\n");
+      return -1; 
+   }
 
    if(bAutoAnswer)
       ooH323EpEnableAutoAnswer();
