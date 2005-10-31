@@ -372,6 +372,12 @@ int ooH323EpDestroy(void)
          gH323ep.listener = NULL;  
       }
 
+      if(gH323ep.cmdListener != 0)
+      {
+         ooSocketClose(gH323ep.cmdListener);
+         gH323ep.cmdListener = 0;
+      }
+
       ooGkClientDestroy(); 
 
       if(gH323ep.fptraceFile)
