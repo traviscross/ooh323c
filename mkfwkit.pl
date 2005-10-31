@@ -79,6 +79,7 @@ if($ARGV[0] eq "unix") {
 print "Copying ooh323c docs\n";
 mkdir ("ooh323c-${version}/doc", 0777);
 mkdir ("ooh323c-${version}/doc/html", 0777);
+mkdir ("ooh323c-${version}/doc/images", 0777);
 print `cp -f -r ./doc/H323Introduction.PDF ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/ooH323cUsersGuide.pdf ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/footer.shtml ./ooh323c-${version}/doc/.`;
@@ -86,6 +87,8 @@ print `cp -f -r ./doc/header.shtml ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/stylesheet.css ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/html/* ./ooh323c-${version}/doc/html`;
 print `rm -rf ./ooh323c-${version}/doc/html/CVS`;
+print `cp -f -r ./doc/html/images/* ./ooh323c-${version}/doc/html/images`;
+print `rm -rf ./ooh323c-${version}/doc/html/images/CVS`;
 
 
 #oomedia docs
