@@ -68,9 +68,6 @@ int ooCreateCmdConnection()
    }
    else
    {
-
-     //TODO:Need to add support for multihomed to work with channel driver
-
       /*
          bind socket to a port before connecting. Thus avoiding
          implicit bind done by a connect call. Avoided on windows as
