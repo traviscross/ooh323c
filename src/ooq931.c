@@ -26,6 +26,7 @@
 #include "ooCapability.h"
 #include "ooGkClient.h"
 #include "ooUtils.h"
+#include "ootypes.h"
 #include <time.h>
 #include <ctype.h>
 

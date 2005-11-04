@@ -28,7 +28,7 @@
 #include "ooh323ep.h"
 #include "ooStackCmds.h"
 #include "ooCmdChannel.h"
-
+#include "ootypes.h"
 
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
