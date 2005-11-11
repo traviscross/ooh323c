@@ -26,3 +26,15 @@ OOBOOL ooUtilsIsStrEmpty (const char* str)
    return (str == NULL || *str =='\0');
 }
 
+
+OOBOOL ooIsDigitString(const char* str)
+{
+   int i = 0;
+   if(str == NULL || *str =='\0') { return FALSE; }
+   while(*(str+i) != '\0')
+   {
+      if(!isdigit(*(str+i))) { return FALSE; }
+      i++;
+   }
+   return TRUE;
+}

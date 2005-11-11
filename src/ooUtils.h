@@ -41,4 +41,13 @@ EXTERN const char* ooUtilsGetText
  */
 EXTERN OOBOOL ooUtilsIsStrEmpty (const char * str);
 
+
+/**
+ * Test if given string value is digit string. 
+ *
+ * @param str    String to test
+ * @return       TRUE if string contains all digits; FALSE otherwise
+ */
+EXTERN OOBOOL ooIsDigitString(const char* str);
+
 #endif

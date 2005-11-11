@@ -503,7 +503,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
        
    if(!q931msg->userInfo)
    {
-      OOTRACEERR1("ERROR:No User-User IE to encode\n");
+      OOTRACEERR1("ERROR: No User-User IE to encode\n");
       return OO_FAILED;
    }
 
@@ -515,7 +515,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
       OOTRACEDBGC1("UserInfo encoding - successful\n");
    }
    else{
-      OOTRACEERR1("Error: UserInfo encoding failed\n");
+      OOTRACEERR1("ERROR: UserInfo encoding failed\n");
       return OO_FAILED;
    }
    msgptr = encodeGetMsgPtr(pctxt, &len);
@@ -525,7 +525,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
                                      sizeof(*ie) - sizeof(ie->data) + len);
    if(ie == NULL)
    {
-      OOTRACEERR1("Error:Memory -  ooEncodeUUIE - ie\n");
+      OOTRACEERR1("Error: Memory -  ooEncodeUUIE - ie\n");
       return OO_FAILED;
    }
    ie->discriminator = Q931UserUserIE;
