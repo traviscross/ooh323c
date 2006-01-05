@@ -78,27 +78,27 @@ if($ARGV[0] eq "unix") {
 
 print "Copying ooh323c docs\n";
 mkdir ("ooh323c-${version}/doc", 0777);
-mkdir ("ooh323c-${version}/doc/html", 0777);
-mkdir ("ooh323c-${version}/doc/images", 0777);
+mkdir ("ooh323c-${version}/doc/h323stk/", 0777);
+mkdir ("ooh323c-${version}/doc/h323stk/images", 0777);
 print `cp -f -r ./doc/H323Introduction.PDF ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/ooH323cUsersGuide.pdf ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/footer.shtml ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/header.shtml ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/stylesheet.css ./ooh323c-${version}/doc/.`;
-print `cp -f -r ./doc/html/* ./ooh323c-${version}/doc/html`;
-print `rm -rf ./ooh323c-${version}/doc/html/CVS`;
-print `cp -f -r ./doc/html/images/* ./ooh323c-${version}/doc/html/images`;
-print `rm -rf ./ooh323c-${version}/doc/html/images/CVS`;
+if ($ARGV[0] eq "src") {
+   print `cp -f -r ./doc/footer.shtml ./ooh323c-${version}/doc/.`;
+   print `cp -f -r ./doc/header.shtml ./ooh323c-${version}/doc/.`;
+   print `cp -f -r ./doc/stylesheet.css ./ooh323c-${version}/doc/.`;
+}
+print `cp -f -r ./doc/h323stk/* ./ooh323c-${version}/doc/h323stk`;
+print `rm -rf ./ooh323c-${version}/doc/h323stk/CVS`;
+print `cp -f -r ./doc/h323stk/images/* ./ooh323c-${version}/doc/h323stk/images`;
+print `rm -rf ./ooh323c-${version}/doc/h323stk/images/CVS`;
 
 
 #oomedia docs
 print "Copying media docs\n";
-mkdir ("ooh323c-${version}/media", 0777);
-mkdir ("ooh323c-${version}/media/doc", 0777);
-mkdir ("ooh323c-${version}/media/doc/html", 0777);
-print `cp -f -r ./media/doc/MediaLibRef0.2.PDF ./ooh323c-${version}/media/doc/.`;
-print `cp -f -r ./media/doc/html/* ./ooh323c-${version}/media/doc/html/.`;
-print `rm -rf ./ooh323c-${version}/media/doc/html/CVS`;
+mkdir ("ooh323c-${version}/doc/media", 0777);
+print `cp -f -r ./media/doc/MediaLibRef0.2.PDF ./ooh323c-${version}/doc/.`;
+print `cp -f -r ./doc/media/* ./ooh323c-${version}/doc/media/.`;
+print `rm -rf ./ooh323c-${version}/doc/media/CVS`;
 
 #specs
 print "Copying specs\n";
@@ -194,17 +194,17 @@ if ($ARGV[0] eq "unix") {
 if ($ARGV[0] eq "win") {
    print "Copying windows binaries\n";
    mkdir ("ooh323c-${version}/lib", 0777);
-   print `cp -f ./lib/ooh323c_a.lib ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/ooh323c.dll ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/ooh323c.lib ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/oomedia.dll ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/oomedia.lib ./ooh323c-${version}/lib/.`;
-   print `cp -f ./tests/simple/simple.exe ./ooh323c-${version}/tests/simple/.`;
-   print `cp -f ./tests/player/ooPlayer.exe ./ooh323c-${version}/tests/player/.`;
+   #print `cp -f ./lib/release/ooh323c_a.lib ./ooh323c-${version}/lib/.`;
+   #print `cp -f ./lib/release/ooh323c.dll ./ooh323c-${version}/lib/.`;
+   print `cp -f ./lib/release/ooh323c.lib ./ooh323c-${version}/lib/.`;
+   print `cp -f ./lib/release/oomedia.dll ./ooh323c-${version}/lib/.`;
+   print `cp -f ./lib/release/oomedia.lib ./ooh323c-${version}/lib/.`;
+   print `cp -f ./tests/simple/release/simple.exe ./ooh323c-${version}/tests/simple/.`;
+   print `cp -f ./tests/player/release/ooPlayer.exe ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.wav ./ooh323c-${version}/tests/player`;
    print `cp -f ./tests/player/states.wav ./ooh323c-${version}/tests/player`;
-   print `cp -f ./tests/receiver/ooReceiver.exe ./ooh323c-${version}/tests/receiver/.`;
-   print `cp -f ./tests/chansetup/h323peer.exe ./ooh323c-${version}/tests/chansetup/.`;
+   print `cp -f ./tests/receiver/release/ooReceiver.exe ./ooh323c-${version}/tests/receiver/.`;
+   print `cp -f ./tests/chansetup/release/h323peer.exe ./ooh323c-${version}/tests/chansetup/.`;
 }
 
 if($ARGV[0] eq "src") {
@@ -213,8 +213,19 @@ if($ARGV[0] eq "src") {
    `mv ooh323c-${version}-temp ooh323c-${version}`;
  }
 
-`tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
-`gzip ooh323c-${version}.tar`;
+if ($ARGV[0] eq "win") {
+   `zip ooh323c-$version.zip -r ooh323c-$version`;
+   #`mv ooh323c-$version.zip ooh323c-${version}w32.zip`;
+}
+if ($ARGV[0] eq "unix") {
+   `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
+   `gzip ooh323c-${version}.tar`;
+   `mv ooh323c-${version}.tar.gz ooh323c-${version}lnx.tar.gz`;
+}
+if ($ARGV[0] eq "src") {
+   `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
+   `gzip ooh323c-${version}.tar`;
+}
 #`rm -rf ooh323c`;
 
 
