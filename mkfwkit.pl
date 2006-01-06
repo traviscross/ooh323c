@@ -24,7 +24,6 @@ print "Preparing ", $ARGV[0], " kit\n";
 $version = $ARGV[1];
 
 
-print `rm -f ooh323c-${version}.tar.gz`;
 print `rm -rf ooh323c-${version}`;
 mkdir ("ooh323c-${version}", 0777);
 print "Copying top level ooh323c dir\n";
@@ -181,8 +180,8 @@ if ($ARGV[0] eq "src") {
 if ($ARGV[0] eq "unix") {
    print "Copying linux binaries\n";
    mkdir ("ooh323c-${version}/lib", 0777);
-   print `cp -f ./lib/libooh323c.a ./ooh323c-${version}/lib/.`;
-   print `cp -f ./lib/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/liboomedia.so`;
+   print `cp -f ./src/libooh323c.a ./ooh323c-${version}/lib/.`;
+   print `cp -f ./media/.libs/liboomedia.so.1.0.1 ./ooh323c-${version}/lib/liboomedia.so`;
    print `cp -f ./tests/simple/simple ./ooh323c-${version}/tests/simple/.`;
    print `cp -f ./tests/player/ooPlayer ./ooh323c-${version}/tests/player/.`;
    print `cp -f ./tests/player/space.raw ./ooh323c-${version}/tests/player/space.raw`;
@@ -214,15 +213,19 @@ if($ARGV[0] eq "src") {
  }
 
 if ($ARGV[0] eq "win") {
+   print `rm -f ooh323c-${version}.zip`;
    `zip ooh323c-$version.zip -r ooh323c-$version`;
    #`mv ooh323c-$version.zip ooh323c-${version}w32.zip`;
 }
 if ($ARGV[0] eq "unix") {
+   print `rm -f ooh323c-${version}.tar.gz`;
+   print `rm -f ooh323c-${version}lnx.tar.gz`;
    `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
    `gzip ooh323c-${version}.tar`;
    `mv ooh323c-${version}.tar.gz ooh323c-${version}lnx.tar.gz`;
 }
 if ($ARGV[0] eq "src") {
+   print `rm -f ooh323c-${version}.tar.gz`;
    `tar -cvf ooh323c-${version}.tar ooh323c-${version}`;
    `gzip ooh323c-${version}.tar`;
 }
