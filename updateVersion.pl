@@ -28,6 +28,7 @@ if(-e '${ooh323cdir}/config.h') {
    updateVersion("${ooh323cdir}/config.h", $version);
 }
 updateVersion("${ooh323cdir}/doc/Doxyfile", $version);
+updateVersion("${ooh323cdir}/doc/MediaLibDoxyfile", $version);
 updateVersion("${ooh323cdir}/README", $version);
 updateVersion("${ooh323cdir}/README.win32.txt", $version);
 updateVersion("${ooh323cdir}/README.unix", $version);
