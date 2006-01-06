@@ -1,3 +1,9 @@
+Release 0.8.1
+1. Fixed bug causing dialed digits alias being set as a char string.
+2. Added close for cmdListener
+3. Fixed called party number set.
+4. Other minor FreeBSD support updates.
+
 Release 0.8
 1. ManualRingback support (Benni A. Aswin)
 2. Gateway/Endpoint config
