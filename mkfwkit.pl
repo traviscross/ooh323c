@@ -79,7 +79,7 @@ print "Copying ooh323c docs\n";
 mkdir ("ooh323c-${version}/doc", 0777);
 mkdir ("ooh323c-${version}/doc/h323stk/", 0777);
 mkdir ("ooh323c-${version}/doc/h323stk/images", 0777);
-print `cp -f -r ./doc/H323Introduction.PDF ./ooh323c-${version}/doc/.`;
+print `cp -f -r ./doc/H323Introduction.pdf ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/ooH323cUsersGuide.pdf ./ooh323c-${version}/doc/.`;
 if ($ARGV[0] eq "src") {
    print `cp -f -r ./doc/footer.shtml ./ooh323c-${version}/doc/.`;
@@ -95,7 +95,7 @@ print `rm -rf ./ooh323c-${version}/doc/h323stk/images/CVS`;
 #oomedia docs
 print "Copying media docs\n";
 mkdir ("ooh323c-${version}/doc/media", 0777);
-print `cp -f -r ./media/doc/MediaLibRef0.2.PDF ./ooh323c-${version}/doc/.`;
+print `cp -f -r ./media/doc/MediaLibRef0.2.pdf ./ooh323c-${version}/doc/.`;
 print `cp -f -r ./doc/media/* ./ooh323c-${version}/doc/media/.`;
 print `rm -rf ./ooh323c-${version}/doc/media/CVS`;
 
