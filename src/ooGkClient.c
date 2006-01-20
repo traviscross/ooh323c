@@ -87,7 +87,8 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
       {
          OOTRACEINFO2("Using local RAS Ip address %s\n", cur->addr);
          strcpy(pGkClient->localRASIP, cur->addr);
-      }else{
+      }
+      else{
          OOTRACEERR1("Error:Failed to assign a local RAS IP address\n");
          return OO_FAILED;
       }
@@ -153,10 +154,11 @@ void ooGkClientPrintConfig(ooGkClient *pGkClient)
       OOTRACEINFO1("\tGatekeeper mode - UseSpecificGatekeeper\n");
       OOTRACEINFO3("\tGatekeeper To Use - %s:%d\n", pGkClient->gkRasIP,
                                                     pGkClient->gkRasPort);
-   }else if(pGkClient->gkMode == RasDiscoverGatekeeper)
-   {
+   }
+   else if(pGkClient->gkMode == RasDiscoverGatekeeper) {
       OOTRACEINFO1("\tGatekeeper mode - UseSpecificGatekeeper\n");
-   }else{
+   }
+   else {
       OOTRACEERR1("Invalid GatekeeperMode\n");
    }
 }
@@ -227,11 +229,11 @@ int ooGkClientSetGkMode(ooGkClient *pGkClient, enum RasGatekeeperMode eGkMode,
 
       OOTRACEINFO3("Gatekeeper IP:port set to - %s:%d\n",
                     szGkAddr,  pGkClient->gkRasPort);
-   }else if(eGkMode == RasDiscoverGatekeeper)
-   {
+   }
+   else if(eGkMode == RasDiscoverGatekeeper) {
       OOTRACEINFO1("Gatekeeper Mode - RasDiscoverGatekeeper\n");
-   }else if(eGkMode == RasNoGatekeeper)
-   {
+   }
+   else if(eGkMode == RasNoGatekeeper) {
       OOTRACEINFO1("Gatekeeper Mode - RasNoGatekeeper\n");
    }
    return OO_OK;
@@ -567,16 +569,17 @@ int ooGkClientSendMsg(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
          OOTRACEERR1("Error sending RAS message\n");
          return OO_FAILED;
       }
-   }else if(pGkClient->gkMode == RasDiscoverGatekeeper &&
-            !pGkClient->discoveryComplete)
-   {
+   }
+   else if(pGkClient->gkMode == RasDiscoverGatekeeper &&
+           !pGkClient->discoveryComplete) {
       if(ASN_OK != ooSocketSendTo(pGkClient->rasSocket, msgPtr, iLen,
                                        MULTICAST_GKADDRESS, MULTICAST_GKPORT))
       {
          OOTRACEERR1("Error sending multicast RAS message\n" );
          return OO_FAILED;
       }
-   }else {/* should never go here */
+   }
+   else {/* should never go here */
       OOTRACEERR1("Error: GkClient in invalid state.\n");
       return OO_FAILED;
    }
@@ -1072,7 +1075,8 @@ int ooGkClientHandleRegistrationConfirm
    {
       ooGkClientUpdateRegisteredAliases(pGkClient,
                                    &pRegistrationConfirm->terminalAlias, TRUE);
-   }else{/* Everything registered*/
+   }
+   else{/* Everything registered*/
      ooGkClientUpdateRegisteredAliases(pGkClient, NULL, TRUE);
    }
 
@@ -1109,7 +1113,8 @@ int ooGkClientHandleRegistrationConfirm
          return OO_FAILED;
       }   
      
-   }else{
+   }
+   else{
       pGkClient->regTimeout = 0;
       OOTRACEINFO1("Gatekeeper does not support KeepAlive.\n");
    }
@@ -1379,7 +1384,8 @@ int ooGkClientHandleUnregistrationRequest
       OOTRACEINFO1("Gatekeeper requested a list of aliases be unregistered\n");
       ooGkClientUpdateRegisteredAliases(pGkClient,
                                 &punregistrationRequest->endpointAlias, FALSE);
-   }else{
+   }
+   else{
 
       OOTRACEINFO1("Gatekeeper requested a all aliases to be unregistered\n");
       ooGkClientUpdateRegisteredAliases(pGkClient, NULL, FALSE);
@@ -1521,7 +1527,8 @@ int ooGkClientSendAdmissionRequest
          pAdmReq->srcCallSignalAddress.t = T_H225TransportAddress_ipAddress;
          pAdmReq->srcCallSignalAddress.u.ipAddress = pIpAddressRemote;
       }
-   }else {
+   }
+   else {
       pAdmReq->m.srcCallSignalAddressPresent = TRUE;
       pAdmReq->srcCallSignalAddress.t = T_H225TransportAddress_ipAddress;
       pAdmReq->srcCallSignalAddress.u.ipAddress = pIpAddressLocal;
@@ -1574,7 +1581,8 @@ int ooGkClientSendAdmissionRequest
          destAliases = gH323ep.aliases;
 
       srcAliases = call->remoteAliases;
-   }else {
+   }
+   else {
       if(call->ourAliases)
          srcAliases = call->ourAliases;
       else
@@ -1590,7 +1598,7 @@ int ooGkClientSendAdmissionRequest
       if(OO_OK != ooPopulateAliasList(&pGkClient->msgCtxt, destAliases,
                                       &pAdmReq->destinationInfo))
       {
-        OOTRACEERR1("Error:Failed to populate destination aliases - "
+         OOTRACEERR1("Error:Failed to populate destination aliases - "
                     "ARQ message\n");
          pGkClient->state = GkClientFailed;
          memReset(pctxt);
@@ -1672,7 +1680,8 @@ int ooGkClientSendAdmissionRequest
       pCallAdmInfo->retries = 0;
       pCallAdmInfo->requestSeqNum = pAdmReq->requestSeqNum;
       dListAppend(&pGkClient->ctxt, &pGkClient->callsPendingList,pCallAdmInfo);
-   }else{
+   }
+   else{
       for(x=0; x<pGkClient->callsPendingList.count; x++)
       {
          pNode = dListFindByIndex(&pGkClient->callsPendingList, x);
@@ -1855,7 +1864,8 @@ int ooGkClientHandleAdmissionReject
                    " be matched with any pending call.\n",
                    pAdmissionReject->requestSeqNum);
       return OO_OK;
-   }else{
+   }
+   else{
       call = pCallAdmInfo->call;
       dListRemove(&pGkClient->callsPendingList, pNode);
       memFreePtr(&pGkClient->ctxt, pCallAdmInfo);
@@ -2218,8 +2228,8 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
                   "GkClient\n");
       ooGkClientDestroy();
       return OO_FAILED;
-   }else if(pGkClient->state == GkClientGkErr)
-   {
+   }
+   else if(pGkClient->state == GkClientGkErr) {
       OOTRACEERR1("Error: Gatekeeper error. Either Gk not responding or "
                   "Gk sending invalid messages\n");
       if(pGkClient->gkMode == RasUseSpecificGatekeeper)
@@ -2228,11 +2238,12 @@ int ooGkClientHandleClientOrGkFailure(ooGkClient *pGkClient)
                      "Gk mode is UseSpecifcGatekeeper\n");
          ooGkClientDestroy();
          return OO_FAILED;
-      }else{
-        OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient. NEED"
+      }
+      else{
+         OOTRACEERR1("Error: Gatekeeper error detected. Closing GkClient. NEED"
                     " to implement recovery by rediscovering another gk\n");
-        ooGkClientDestroy();
-        return OO_FAILED;
+         ooGkClientDestroy();
+         return OO_FAILED;
       }
    }
 
@@ -2303,7 +2314,8 @@ int ooGkClientUpdateRegisteredAliases
          if(pAlias)
          {
             pAlias->registered = registered?TRUE:FALSE;
-         }else{
+         }
+         else{
             bAdd = registered?TRUE:FALSE;
          }
          break;
@@ -2322,7 +2334,8 @@ int ooGkClientUpdateRegisteredAliases
          if(pAlias)
          {
             pAlias->registered = registered?TRUE:FALSE;
-         }else{
+         }
+         else{
             bAdd = registered?TRUE:FALSE;
          }
          break;
@@ -2333,7 +2346,8 @@ int ooGkClientUpdateRegisteredAliases
          if(pAlias)
          {
             pAlias->registered = registered?TRUE:FALSE;
-         }else{
+         }
+         else{
             bAdd = registered?TRUE:FALSE;
          }
          break;
@@ -2358,7 +2372,8 @@ int ooGkClientUpdateRegisteredAliases
          if(pAlias)
          {
             pAlias->registered = registered?TRUE:FALSE;
-         }else{
+         }
+         else{
             bAdd = registered?TRUE:FALSE;
          }
          break;
@@ -2369,7 +2384,8 @@ int ooGkClientUpdateRegisteredAliases
          if(pAlias)
          {
             pAlias->registered = registered?TRUE:FALSE;
-         }else{
+         }
+         else{
             bAdd = registered?TRUE:FALSE;
          }
          break;

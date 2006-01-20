@@ -52,7 +52,7 @@ OOStkCmdStat ooMakeCall
       return OO_STKCMD_INVALIDPARAM;
  
 
-    /* Generate call token*/
+   /* Generate call token*/
    if (ooGenerateOutgoingCallToken (callToken, bufsiz) != OO_OK){
       return OO_STKCMD_INVALIDPARAM;
    }
@@ -85,7 +85,8 @@ OOStkCmdStat ooMakeCall
    if(!opts)
    {
       cmd.param3 = 0;
-   }else {
+   }
+   else {
       cmd.param3 = (void*) malloc(sizeof(ooCallOptions));
       if(!cmd.param3)
       {

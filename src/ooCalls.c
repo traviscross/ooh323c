@@ -52,11 +52,13 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    sprintf(call->callToken, "%s", callToken);
    sprintf(call->callType, "%s", type);
    call->callReference = 0;
-   if(gH323ep.callerid){
+   if(gH323ep.callerid) {
      strncpy(call->ourCallerId, gH323ep.callerid, sizeof(call->ourCallerId)-1);
      call->ourCallerId[sizeof(call->ourCallerId)-1] = '\0';
-   }else
+   }
+   else {
       call->ourCallerId[0] = '\0';
+   }
   
    memset(&call->callIdentifier, 0, sizeof(H225CallIdentifier));
    memset(&call->confIdentifier, 0, sizeof(H225ConferenceIdentifier));
@@ -84,17 +86,20 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    if(!strcmp(call->callType, "incoming"))
    {
       call->callingPartyNumber = NULL;
-   }else{     
+   }
+   else{     
       if(ooUtilsIsStrEmpty(gH323ep.callingPartyNumber))
       {
          call->callingPartyNumber = NULL;
-      }else{
+      }
+      else{
          call->callingPartyNumber = (char*) memAlloc(call->pctxt,
                                          strlen(gH323ep.callingPartyNumber)+1);
          if(call->callingPartyNumber)
          {
             strcpy(call->callingPartyNumber, gH323ep.callingPartyNumber);
-         }else{
+         }
+         else{
             OOTRACEERR3("Error:Memory - ooCreateCall - callingPartyNumber"
                         ".(%s, %s)\n", call->callType, call->callToken);
             freeContext(pctxt);
@@ -199,7 +204,8 @@ int ooEndCall(OOH323CallData *call)
    if(!call->pH225Channel || call->pH225Channel->sock ==0)
    {
       call->callState = OO_CALL_CLEARED;
-   }else{
+   }
+   else{
       if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))  
       {
          if(call->callState == OO_CALL_CLEAR ||
@@ -299,7 +305,8 @@ int ooCleanCall(OOH323CallData *call)
          OOTRACEERR3("Error:Failed to forward call (%s, %s)\n", call->callType,
                      call->callToken);
       }
-   }else {
+   }
+   else {
       if(gH323ep.h323Callbacks.onCallCleared)
          gH323ep.h323Callbacks.onCallCleared(call);
    }
@@ -328,7 +335,8 @@ int ooCallSetCallingPartyNumber(OOH323CallData *call, const char *number)
    if(call->callingPartyNumber)
    {
      strcpy(call->callingPartyNumber, number);
-   }else{
+   }
+   else{
       OOTRACEERR3("Error:Memory - ooCallSetCallingPartyNumber - "
                   "callingPartyNumber.(%s, %s)\n", call->callType,
                   call->callToken);
@@ -366,7 +374,8 @@ int ooCallSetCalledPartyNumber(OOH323CallData *call, const char *number)
    if(call->calledPartyNumber)
    {
      strcpy(call->calledPartyNumber, number);
-   }else{
+   }
+   else{
       OOTRACEERR3("Error:Memory - ooCallSetCalledPartyNumber - "
                   "calledPartyNumber.(%s, %s)\n", call->callType,
                   call->callToken);
@@ -424,7 +433,8 @@ int ooCallAddAlias
    {
       psNewAlias->next = call->ourAliases;
       call->ourAliases = psNewAlias;
-   }else {
+   }
+   else {
      psNewAlias->next = call->remoteAliases;
      call->remoteAliases = psNewAlias;
    }
@@ -686,7 +696,7 @@ unsigned ooCallGenerateSessionID
          if(call->masterSlaveState == OO_MasterSlave_Master)
             sessionID = call->nextSessionID++;
          else{
-           OOTRACEDBGC4("Session id for %s channel of type audio has to be "
+            OOTRACEDBGC4("Session id for %s channel of type audio has to be "
                         "provided by remote.(%s, %s)\n", dir, call->callType,
                          call->callToken);
             sessionID = 0; /* Will be assigned by remote */

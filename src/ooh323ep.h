@@ -475,7 +475,7 @@ EXTERN int ooH323EpAddG7231Capability(int cap, int txframes, int rxframes,
                               cb_StartReceiveChannel startReceiveChannel,
                               cb_StartTransmitChannel startTransmitChannel,
                               cb_StopReceiveChannel stopReceiveChannel,
-                               cb_StopTransmitChannel stopTransmitChannel);
+                              cb_StopTransmitChannel stopTransmitChannel);
 
 /**
  * This function is used to add G711 capability to the H323 endpoint.

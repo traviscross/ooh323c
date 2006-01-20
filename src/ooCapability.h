@@ -487,8 +487,8 @@ EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH263
  */
 
 ASN1BOOL ooCapabilityCheckCompatibility(struct OOH323CallData *call,
-                                ooH323EpCapability *epCap,
-                                H245DataType *dataType, int dir);
+                                        ooH323EpCapability *epCap,
+                                        H245DataType *dataType, int dir);
 
 
 /**

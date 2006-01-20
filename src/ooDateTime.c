@@ -24,7 +24,7 @@ int gettimeofday (struct timeval *tv, struct timezone *tz)
 {
    struct _timeb currSysTime;
    _ftime(&currSysTime);
-        
+
    tv->tv_sec = currSysTime.time;
    tv->tv_usec = currSysTime.millitm * 1000;
 

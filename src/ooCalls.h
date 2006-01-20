@@ -111,9 +111,9 @@ typedef struct OOCallFwdData {
  * a particular call.
  */
 typedef struct OOH323Channel {
-   OOSOCKET     sock;      /*!< Socket connection for the channel */
-   int          port;      /*!< Port assigned to the channel */
-   DList        outQueue;  /*!< Output message queue */
+   OOSOCKET sock;      /*!< Socket connection for the channel */
+   int      port;      /*!< Port assigned to the channel */
+   DList    outQueue;  /*!< Output message queue */
 } OOH323Channel;
 
 /**

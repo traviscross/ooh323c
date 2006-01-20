@@ -215,8 +215,8 @@ int ooSendH225Msg(OOH323CallData *call, Q931Message *msg)
       dListFreeAll(call->pctxt, &call->pH225Channel->outQueue);
       dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
       // ooSendMsg(call, OOQ931MSG);
-   }else{
-
+   }
+   else{
       dListAppend (call->pctxt, &call->pH225Channel->outQueue, encodebuf);
 
       OOTRACEDBGC4("Queued H225 messages %d. (%s, %s)\n",
@@ -289,14 +289,14 @@ int ooCreateH225Connection(OOH323CallData *call)
          /* If multihomed, get ip from socket */
          if(!strcmp(call->localIP, "0.0.0.0"))
          {
-            OOTRACEDBGA3("Determining ip address for outgoing call in "
+            OOTRACEDBGA3("Determining IP address for outgoing call in "
                          "multihomed mode. (%s, %s)\n", call->callType,
                           call->callToken);
             ret = ooSocketGetIpAndPort(channelSocket, call->localIP, 20,
                                        &call->pH225Channel->port);
             if(ret != ASN_OK)
             {
-               OOTRACEERR3("Error:Failed to retrieve local ip and port from "
+               OOTRACEERR3("ERROR:Failed to retrieve local ip and port from "
                            "socket for multihomed mode.(%s, %s)\n",
                             call->callType, call->callToken);
                if(call->callState < OO_CALL_CLEAR)
@@ -576,7 +576,7 @@ int ooProcessFDSETsAndTimers
       {
          if(ooGkClientHandleClientOrGkFailure(gH323ep.gkClient)!=OO_OK)
          {
-           //ooStopMonitorCalls(); //Function calling ooProcessFDSETsAndTimers is responsible for this.
+            //ooStopMonitorCalls(); //Function calling ooProcessFDSETsAndTimers is responsible for this.
             return OO_FAILED;
          }
       }
@@ -610,8 +610,9 @@ int ooProcessFDSETsAndTimers
       {
          ooGkClientReceive(gH323ep.gkClient);
          if(gH323ep.gkClient->state == GkClientFailed ||
-            gH323ep.gkClient->state == GkClientGkErr)
-           ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
+            gH323ep.gkClient->state == GkClientGkErr) {
+            ooGkClientHandleClientOrGkFailure(gH323ep.gkClient);
+         }
       }
    }
 
@@ -643,12 +644,12 @@ int ooProcessFDSETsAndTimers
                   {
                      call->callEndReason = OO_REASON_INVALIDMESSAGE;
                      call->callState = OO_CALL_CLEAR;
-                   }
+                  }
                }
             }
          }
-           
-       
+
+
          if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
          {
             if(FD_ISSET(call->pH245Channel->sock, pReadfds))
@@ -925,17 +926,17 @@ int ooH2250Receive(OOH323CallData *call)
    setEventHandler (pctxt, &printHandler);
 
    ret = ooQ931Decode (call, pmsg, len, message);
-   if(ret != OO_OK)
-   {
+   if(ret != OO_OK) {
       OOTRACEERR3("Error:Failed to decode received H.2250 message. (%s, %s)\n",
                    call->callType, call->callToken);
    }
    OOTRACEDBGC3("Decoded Q931 message (%s, %s)\n", call->callType,
-                                                             call->callToken);
+                call->callToken);
    finishPrint();
    removeEventHandler(pctxt);
-   if(ret == OO_OK)
+   if(ret == OO_OK) {
       ooHandleH2250Message(call, pmsg);
+   }
    return ret;
 }
 
@@ -1135,7 +1136,8 @@ int ooSendMsg(OOH323CallData *call, int type)
          len = len<<8;
          len = (len | msgptr[7]);
          msgToSend = msgptr+4;
-        }else {
+      }
+      else {
          len = msgptr[3];
          len = len<<8;
          len = (len | msgptr[4]);
@@ -1230,7 +1232,7 @@ int ooSendMsg(OOH323CallData *call, int type)
          OOTRACEDBGC4("Sending %s H245 message over H.245 channel. "
                       "(%s, %s)\n", ooGetMsgTypeText(msgType),
                       call->callType, call->callToken);
-         
+
          ret = ooSocketSend(call->pH245Channel->sock, msgptr+5, len);
          if(ret == ASN_OK)
          {
@@ -1251,13 +1253,14 @@ int ooSendMsg(OOH323CallData *call, int type)
             }
             return OO_FAILED;
          }
-      }else if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
+      }
+      else if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)) {
          OOTRACEDBGC4("Sending %s H245 message as a tunneled message."
                       "(%s, %s)\n", ooGetMsgTypeText(msgType),
                       call->callType, call->callToken);
-         
+
          ret = ooSendAsTunneledMessage
-            (call, msgptr+5,len,msgType, logicalChannelNo);
+                  (call, msgptr+5,len,msgType, logicalChannelNo);
 
          if(ret != OO_OK)
          {
@@ -1604,7 +1607,8 @@ int ooOnSendMsg
             memFreePtr(call->pctxt, cbData);
             return OO_FAILED;
          }
-      }else{
+      }
+      else{
          ooCloseH245Connection(call);
       }
       break;

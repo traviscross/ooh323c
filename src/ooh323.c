@@ -79,7 +79,8 @@ int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
       OOTRACEWARN3("WARN: ReleaseComplete UUIE not found in received "
                   "ReleaseComplete message - %s "
                   "%s\n", call->callType, call->callToken);
-   }else{
+   }
+   else{
 
       if(releaseComplete->m.reasonPresent)
       {
@@ -98,7 +99,7 @@ int ooOnReceivedReleaseComplete(OOH323CallData *call, Q931Message *q931Msg)
        OO_TESTFLAG (call->flags, OO_M_TUNNELING) )
    {
       OOTRACEDBGB3("Handling tunneled messages in ReleaseComplete. (%s, %s)\n",
-                        call->callType, call->callToken);
+                   call->callType, call->callToken);
       ret = ooHandleTunneledH245Messages
                     (call, &q931Msg->userInfo->h323_uu_pdu);
       OOTRACEDBGB3("Finished handling tunneled messages in ReleaseComplete."
@@ -178,8 +179,8 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
          pAlias = call->remoteAliases;
          while(pAlias)
          {
-           if(pAlias->type ==  T_H225AliasAddress_dialedDigits)
-           {
+            if(pAlias->type ==  T_H225AliasAddress_dialedDigits)
+            {
               if(!call->callingPartyNumber)
               {
                  call->callingPartyNumber = (char*)memAlloc(call->pctxt,
@@ -192,7 +193,6 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
               break;
            }
            pAlias = pAlias->next;
-                    
          }
       }
    }
@@ -209,8 +209,8 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
          pAlias = call->ourAliases;
          while(pAlias)
          {
-           if(pAlias->type == T_H225AliasAddress_dialedDigits)
-           {
+            if(pAlias->type == T_H225AliasAddress_dialedDigits)
+            {
               if(!call->calledPartyNumber)
               {
                  call->calledPartyNumber = (char*)memAlloc(call->pctxt,
@@ -221,8 +221,8 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
                  }
               }
               break;
-           }
-           pAlias = pAlias->next;
+            }
+            pAlias = pAlias->next;
          }
       }
    }
@@ -243,11 +243,12 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
             OOTRACEINFO3("Call has tunneling active (%s,%s)\n", call->callType,
                           call->callToken);
          }
-        else
-           OOTRACEINFO3("ERROR:Remote endpoint wants to use h245Tunneling, "
+         else
+            OOTRACEINFO3("ERROR:Remote endpoint wants to use h245Tunneling, "
                         "local endpoint has it disabled (%s,%s)\n",
                         call->callType, call->callToken);
-      }else {
+      }
+      else {
          if(OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING))
          {
             OOTRACEINFO3("Tunneling disabled by remote endpoint. (%s, %s)\n",
@@ -270,7 +271,8 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    {
       OOTRACEWARN3("WARNING:Missing source call signal address in received "
                    "setup (%s, %s)\n", call->callType, call->callToken);
-   }else{
+   }
+   else{
 
       if(setup->sourceCallSignalAddress.t != T_H225TransportAddress_ipAddress)
       {
@@ -396,7 +398,8 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
       }
       return OO_FAILED;
    }
-   /*Handle fast-start */
+
+   /* Handle fast-start */
    if(OO_TESTFLAG (call->flags, OO_M_FASTSTART))
    {
       if(callProceeding->m.fastStartPresent)
@@ -807,7 +810,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
       for(i=0; i<(int)connect->fastStart.n; i++)
       {
          olc = NULL;
-         /*         memset(msgbuf, 0, sizeof(msgbuf));*/
+         /* memset(msgbuf, 0, sizeof(msgbuf));*/
          olc = (H245OpenLogicalChannel*)memAlloc(call->pctxt,
                                               sizeof(H245OpenLogicalChannel));
          if(!olc)
@@ -994,9 +997,11 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
       OOTRACEDBGB3("Finished tunneled messages in Connect. (%s, %s)\n",
                     call->callType, call->callToken);
 
-      /*Send TCS as call established and no capability exchange has yet
+      /*
+        Send TCS as call established and no capability exchange has yet
         started. This will be true only when separate h245 connection is not
-        established and tunneling is being used.*/
+        established and tunneling is being used.
+      */
       if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
       {
          /*Start terminal capability exchange and master slave determination */
@@ -1032,7 +1037,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
    int type = q931Msg->messageType;
    switch(type)
    {
-      case Q931SetupMsg: /* Setup message is received */
+      case Q931SetupMsg: /* SETUP message is received */
          OOTRACEINFO3("Received SETUP message (%s, %s)\n", call->callType,
                        call->callToken);
          ooOnReceivedSetup(call, q931Msg);
@@ -1060,14 +1065,16 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
                ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call,
                                                     FALSE);
                call->callState = OO_CALL_WAITING_ADMISSION;
-            }else{
+            }
+            else{
                /* TODO: Should send Release complete with reject reason */
                OOTRACEERR1("Error:Ignoring incoming call as not yet"
                            "registered with Gk\n");
             }
          }
-         else
+         else {
             ret = ooH323CallAdmitted (call);
+         }
          break;
       case Q931CallProceedingMsg:/* Call proceeding message is received */
          OOTRACEINFO3("H.225 Call Proceeding message received (%s, %s)\n",
@@ -1203,7 +1210,7 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
          if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
          {
             OOTRACEDBGB3("Handling tunneled messages in Facility. (%s, %s)\n",
-                        call->callType, call->callToken);
+               call->callType, call->callToken);
             ooHandleTunneledH245Messages(call, pH323UUPdu);
             OOTRACEDBGB3("Finished handling tunneled messages in Facility."
                          "(%s, %s)\n",call->callType, call->callToken);
@@ -1211,7 +1218,7 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
          else
          {
             OOTRACEERR3("ERROR:Tunneled H.245 message received in facility. "
-                     "Tunneling is disabled at local for this call (%s, %s)\n",
+                        "Tunneling is disabled at local for this call (%s, %s)\n",
                         call->callType, call->callToken);
             return OO_FAILED;
          }
@@ -1277,8 +1284,8 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
 
          if(facility->m.alternativeAliasAddressPresent)
          {
-           ooH323RetrieveAliases(call, &facility->alternativeAliasAddress,
-                                                &call->pCallFwdData->aliases);
+            ooH323RetrieveAliases(call, &facility->alternativeAliasAddress,
+                                  &call->pCallFwdData->aliases);
          }
          /* Now we have to clear the current call and make a new call to
             fwded location*/
@@ -1286,7 +1293,8 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
          {
             call->callState = OO_CALL_CLEAR;
             call->callEndReason = OO_REASON_REMOTE_FWDED;
-         }else{
+         }
+         else{
             OOTRACEERR3("Error:Can't forward call as it is being cleared."
                         " (%s, %s)\n", call->callType, call->callToken);
            return OO_OK;
@@ -1682,23 +1690,21 @@ OOAliases* ooH323GetAliasFromList(OOAliases *aliasList, int type, char *value)
 
    while(pAlias)
    {
-     if(type != 0 && value)/* Search by type and value */
-      {
+     if(type != 0 && value) { /* Search by type and value */
          if(pAlias->type == type && !strcmp(pAlias->value, value))
          {
             return pAlias;
          }
-      }else if(type != 0 && !value)/* search by type */
-      {
+      }
+      else if(type != 0 && !value) {/* search by type */
          if(pAlias->type == type)
             return pAlias;
       }
-      else if(type == 0 && value) /* search by value */
-      {
+      else if(type == 0 && value) {/* search by value */
          if(!strcmp(pAlias->value, value))
             return pAlias;
       }
-      else{
+      else {
          OOTRACEDBGC1("No criteria to search the alias list\n");
          return NULL;
       }

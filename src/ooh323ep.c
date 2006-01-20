@@ -46,7 +46,8 @@ int ooH323EpInitialize
          return OO_FAILED;
       }
       strcpy(gH323ep.traceFile, tracefile);
-   }else{
+   }
+   else{
       strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);     
    }
 
@@ -697,7 +698,8 @@ int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks)
    if(gH323ep.gkClient)
    {
       return ooGkClientSetCallbacks(gH323ep.gkClient, gkClientCallbacks);
-   }else{
+   }
+   else{
       OOTRACEERR1("Error:Gk Client hasn't been initialized yet\n");
       return OO_FAILED;
    }

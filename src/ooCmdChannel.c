@@ -153,7 +153,8 @@ int ooReadAndProcessStackCommand()
       {
          OOTRACEINFO1("Ignoring stack command as Gk Client is not registered"
                       " yet\n");
-      }else {
+      }
+      else {
          switch(cmd.type) {
             case OO_CMD_MAKECALL:
                OOTRACEINFO2("Processing MakeCall command %s\n",

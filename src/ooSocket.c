@@ -694,7 +694,8 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
          {
             *ifList = pIf;
             pIf = NULL;
-         }else{
+         }
+         else{
             pIf->next = *ifList;
             *ifList = pIf;
             pIf=NULL;

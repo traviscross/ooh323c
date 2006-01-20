@@ -102,7 +102,7 @@ void ooTraceLogMessage(const char * logMessage)
       printDate = 0;
       strftime(dateString, 10, "%D", ptime);
       fprintf(gH323ep.fptraceFile, "---------Date %s---------\n",
-                  dateString);
+              dateString);
    }
    if(printTime) {
       struct timeval systemTime;

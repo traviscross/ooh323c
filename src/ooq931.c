@@ -183,7 +183,8 @@ EXTERN int ooQ931Decode
             OOTRACEDBGB2("      %s\n", number);
             if(!call->callingPartyNumber)
                ooCallSetCallingPartyNumber(call, number);
-         }else{
+         }
+         else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
                            call->callType, call->callToken);
          }
@@ -201,7 +202,8 @@ EXTERN int ooQ931Decode
             OOTRACEDBGB2("      %s\n", number);
             if(!call->calledPartyNumber)
                ooCallSetCalledPartyNumber(call, number);
-         }else{
+         }
+         else{
             OOTRACEERR3("Error:Calling party number too long. (%s, %s)\n",
                            call->callType, call->callToken);
          }
@@ -615,7 +617,7 @@ static void ooQ931PrintMessage
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n",
-                  call->callType, call->callToken);
+                 call->callType, call->callToken);
    }
    finishPrint();
    removeEventHandler(pctxt);
@@ -783,7 +785,8 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
 
          i += ieLen;
         
-      }else
+      }
+      else
       {
          OOTRACEWARN1("Warning: Only UUIE is supported currently\n");
          return OO_FAILED;
@@ -798,7 +801,8 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       len = i-1;
       msgbuf[3] = (len >> 8);
       msgbuf[4] = len;        /* including tpkt header */
-   }else{
+   }
+   else{
       len = i-4;
       msgbuf[6] = (len >> 8);
       msgbuf[7] = len;
@@ -1101,7 +1105,7 @@ int ooSendFacility(OOH323CallData *call)
    {
       OOTRACEERR3
          ("Error:Failed to enqueue Facility message to outbound "
-          "queue.(%s, %s)\n", call->callType, call->callToken);
+         "queue.(%s, %s)\n", call->callType, call->callToken);
    }
    memReset (&gH323ep.msgctxt);
    return ret;
@@ -1370,10 +1374,10 @@ int ooAcceptCall(OOH323CallData *call)
             continue;
          }
 
-         /* Forward Channel - remote transmits - local receives */
          if(olc->forwardLogicalChannelParameters.dataType.t !=
                                                    T_H245DataType_nullData)
          {
+            /* Forward Channel - remote transmits - local receives */
             OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
                           call->callToken);
@@ -1424,7 +1428,8 @@ int ooAcceptCall(OOH323CallData *call)
             }
          }
          else if(olc->m.reverseLogicalChannelParametersPresent)
-         {/* Reverse channel - remote receives - local transmits */
+         {
+            /* Reverse channel - remote receives - local transmits */
             OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
                           olc->forwardLogicalChannelNumber, call->callType,
                           call->callToken);
@@ -1458,7 +1463,8 @@ int ooAcceptCall(OOH323CallData *call)
                epCap = NULL;
                continue;
             }
-             /* Extract the remote media endpoint address */
+           
+            /* Extract the remote media endpoint address */
             h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
             if(!h2250lcp)
             {
@@ -1506,7 +1512,8 @@ int ooAcceptCall(OOH323CallData *call)
          }
 
          if(dir & OOTX)
-         {  /* According to the spec if we are accepting olc for transmission
+         { 
+            /* According to the spec if we are accepting olc for transmission
                from called endpoint to calling endpoint, called endpoint should
                insert a unqiue forwardLogicalChannelNumber into olc
             */
@@ -1519,7 +1526,7 @@ int ooAcceptCall(OOH323CallData *call)
          ooPrepareFastStartResponseOLC(call, olc, epCap, pctxt, dir);
         
          pChannel = ooFindLogicalChannelByLogicalChannelNo
-            (call, olc->forwardLogicalChannelNumber);
+                      (call, olc->forwardLogicalChannelNumber);
   
          if(dir & OORX)
          {
@@ -1608,7 +1615,8 @@ int ooAcceptCall(OOH323CallData *call)
          connect->m.fastStartPresent = TRUE;
          connect->fastStart.n = j;
          connect->fastStart.elem = pFS;
-      }else{
+      }
+      else{
          OOTRACEINFO3("None of the faststart elements received in setup can be"
                       " supported, rejecting faststart.(%s, %s)\n",
                       call->callType, call->callToken);
@@ -1635,7 +1643,7 @@ int ooAcceptCall(OOH323CallData *call)
       {
          OOTRACEERR3("Error:Memory - ooAcceptCall - h245IpAddr"
                      "(%s, %s)\n", call->callType, call->callToken);
-        return OO_FAILED;
+         return OO_FAILED;
       }
       ooSocketConvertIpToNwAddr(call->localIP, h245IpAddr->ip.data);
       h245IpAddr->ip.numocts=4;
@@ -1740,8 +1748,9 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
       ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, fwdedCall, FALSE);
       fwdedCall->callState = OO_CALL_WAITING_ADMISSION;
    }
-   else
+   else {
       ret = ooH323CallAdmitted (fwdedCall);
+   }
 
    return OO_OK;
 
@@ -1799,8 +1808,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    }
   
    /* Check whether we have ip address */
-   if(!ooUtilsIsStrEmpty(tmp))
-   {
+   if(!ooUtilsIsStrEmpty(tmp)) {
       ip = tmp;
       port = strchr(tmp, ':');
       *port = '\0';
@@ -1813,8 +1821,9 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    call->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&call->callIdentifier);
    call->confIdentifier.numocts = 16;
-   for (i = 0; i < 16; i++)
+   for (i = 0; i < 16; i++) {
       call->confIdentifier.data[i] = i+1;
+   }
      
 
    if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
@@ -1824,8 +1833,10 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
       ret = ooGkClientSendAdmissionRequest(gH323ep.gkClient, call, FALSE);
       call->callState = OO_CALL_WAITING_ADMISSION;
    }
-   else
+   else {
+      /* Send as H225 message to calling endpoint */
       ret = ooH323CallAdmitted (call);
+   }
 
    return OO_OK;
 }
@@ -1842,8 +1853,7 @@ int ooH323CallAdmitted(OOH323CallData *call)
       return OO_FAILED;
    }
 
-   if(!strcmp(call->callType, "outgoing"))
-   {
+   if(!strcmp(call->callType, "outgoing")) {
       ret = ooCreateH225Connection(call);
       if(ret != OO_OK)
       {
@@ -1858,17 +1868,22 @@ int ooH323CallAdmitted(OOH323CallData *call)
       }
      
       ret = ooH323MakeCall_helper(call);
-   } else { /* An incoming call */
-      if(gH323ep.h323Callbacks.onIncomingCall)
+   }
+   else {
+      /* incoming call */
+      if(gH323ep.h323Callbacks.onIncomingCall) {
+         /* Incoming call callback function */
          gH323ep.h323Callbacks.onIncomingCall(call);
+      }
 
       /* Check for manual ringback generation */
       if(!OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
       {
          ooSendAlerting(call); /* Send alerting message */
 
-         if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
+         if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER)) {
             ooSendConnect(call); /* Send connect message - call accepted */
+         }
       }
    }
   
@@ -1961,7 +1976,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    if(!setup)
    {
       OOTRACEERR3("Error:Memory -  ooH323MakeCall_helper - setup (%s, %s)\n",
-                  call->callType, call->callToken);
+                 call->callType, call->callToken);
       return OO_FAILED;
    }
    memset (setup, 0, sizeof(H225Setup_UUIE));
@@ -2110,8 +2125,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                       k, ooGetCapTypeText(call->capPrefs.order[k]),
                       call->callType, call->callToken);
 
-         if(call->ourCaps)
-         {
+         if(call->ourCaps) {
             epCap = call->ourCaps;
             OOTRACEDBGC3("Using call specific capabilities in faststart of "
                          "setup message. (%s, %s)\n", call->callType,
@@ -2551,7 +2565,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
    {
       OOTRACEERR3
          ("Error:Failed to enqueue Forward Facility message to outbound "
-          "queue.(%s, %s)\n", call->callType, call->callToken);
+         "queue.(%s, %s)\n", call->callType, call->callToken);
    }
    call->callEndReason = OO_REASON_LOCAL_FWDED;
    memReset (&gH323ep.msgctxt);
@@ -2821,7 +2835,7 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf,
                  "outbound queue.(%s, %s)\n", call->callType, call->callToken);
    }
 
-   /* can't do memReset here because if we are sending H.245 message as a
+   /* Can't do memReset here because if we are sending H.245 message as a
       response to received tunneled h.245 message, we can't reset unless the \
       main received H225 message processing is finished. Rule. No reset when
       tunneling
@@ -2936,7 +2950,7 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
    switch(cause)
    {
       case Q931NormalCallClearing:
-        return OO_REASON_REMOTE_CLEARED;
+         return OO_REASON_REMOTE_CLEARED;
 
       case Q931UserBusy:
          return OO_REASON_REMOTE_BUSY;
@@ -2967,7 +2981,7 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
       case Q931NumberChanged:
       case Q931UnallocatedNumber:
       case Q931SubscriberAbsent:
-        return OO_REASON_NOUSER;
+         return OO_REASON_NOUSER;
       case Q931ChannelUnacceptable:
       case Q931DestinationOutOfOrder:
       case Q931InvalidNumberFormat:
@@ -2993,11 +3007,11 @@ enum OOCallClearReason ooGetCallClearReasonFromCauseAndReasonCode
             case T_H225ReleaseCompleteReason_facilityCallDeflection:
                return OO_REASON_REMOTE_FWDED;
             case T_H225ReleaseCompleteReason_calledPartyNotRegistered:
-              return OO_REASON_GK_NOCALLEDUSER;
+               return OO_REASON_GK_NOCALLEDUSER;
             case T_H225ReleaseCompleteReason_callerNotRegistered:
-              return OO_REASON_GK_NOCALLERUSER;
+               return OO_REASON_GK_NOCALLERUSER;
             case T_H225ReleaseCompleteReason_gatewayResources:
-              return OO_REASON_GK_NORESOURCES;
+               return OO_REASON_GK_NORESOURCES;
             case T_H225ReleaseCompleteReason_unreachableGatekeeper:
                return OO_REASON_GK_UNREACHABLE;
             case T_H225ReleaseCompleteReason_invalidRevision:
@@ -3187,7 +3201,7 @@ int ooParseDestination
       psNewAlias->next = *aliasList;
       *aliasList = psNewAlias;
       OOTRACEINFO2("Destination is parsed as dialed digits %s\n",
-                   psNewAlias->value);
+                  psNewAlias->value);
       /* Also set called party number */
       if(!call->calledPartyNumber)
       {
@@ -3218,7 +3232,7 @@ int ooParseDestination
    psNewAlias->next = *aliasList;
    *aliasList = psNewAlias;
    OOTRACEINFO2("Destination for new call is parsed as h323-id %s \n",
-                psNewAlias->value);
+               psNewAlias->value);
    return OO_OK;
 }
 

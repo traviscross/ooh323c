@@ -27,7 +27,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
    OOLogicalChannel *pNewChannel=NULL, *pChannel=NULL;
    OOMediaInfo *pMediaInfo = NULL;
    OOTRACEDBGC5("Adding new media channel for cap %d dir %s (%s, %s)\n",
-                epCap->cap, dir, call->callType, call->callToken);
+               epCap->cap, dir, call->callType, call->callToken);
    /* Create a new logical channel entry */
    pNewChannel = (OOLogicalChannel*)memAlloc(call->pctxt,
                                                      sizeof(OOLogicalChannel));
@@ -53,7 +53,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
       proposed channels with same session ID. However, most applications
       use same media port for transmit and receive of audio streams. Infact,
       testing of OpenH323 based asterisk assumed that same ports are used.
-      Hence we first search for existing media ports for smae session and use
+      Hence we first search for existing media ports for same session and use
       them. This should take care of all cases.
    */
    if(call->mediaInfo)
@@ -73,7 +73,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
    if(pMediaInfo)
    {
       OOTRACEDBGC3("Using configured media info (%s, %s)\n", call->callType,
-                  call->callToken);
+                   call->callToken);
       pNewChannel->localRtpPort = pMediaInfo->lMediaPort;
       pNewChannel->localRtcpPort = pMediaInfo->lMediaCntrlPort;
       /* If user application has not specified a specific ip and is using
@@ -83,9 +83,10 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
          strcpy(pNewChannel->localIP, call->localIP);
       else
          strcpy(pNewChannel->localIP, pMediaInfo->lMediaIP);
-   }else{
+   }
+   else{
       OOTRACEDBGC3("Using default media info (%s, %s)\n", call->callType,
-                  call->callToken);
+                   call->callToken);
       pNewChannel->localRtpPort = ooGetNextPort (OORTP);
 
       /* Ensures that RTP port is an even one */
@@ -98,8 +99,9 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
   
    /* Add new channel to the list */
    pNewChannel->next = NULL;
-   if(!call->logicalChans)
+   if(!call->logicalChans) {
       call->logicalChans = pNewChannel;
+   }
    else{
       pChannel = call->logicalChans;
       while(pChannel->next)  pChannel = pChannel->next;
@@ -192,13 +194,16 @@ OOLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
             if(!strcmp(dir, "receive"))
             {
                if(ooCapabilityCheckCompatibility(call, pChannel->chanCap,
-                                         dataType, OORX))
+                                                 dataType, OORX)) {
                   return pChannel;
-            }else if(!strcmp(dir, "transmit"))
+               }
+            }
+            else if(!strcmp(dir, "transmit"))
             {
                if(ooCapabilityCheckCompatibility(call, pChannel->chanCap,
-                                         dataType, OOTX))
+                                                 dataType, OOTX)) {
                   return pChannel;
+               }
             }
          }
       }
@@ -250,7 +255,7 @@ int ooClearLogicalChannel(OOH323CallData *call, int channelNo)
    ooH323EpCapability *epCap=NULL;
 
    OOTRACEDBGC4("Clearing logical channel number %d. (%s, %s)\n", channelNo,
-                call->callType, call->callToken);
+                 call->callType, call->callToken);
 
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,channelNo);
    if(!pLogicalChannel)
@@ -332,16 +337,17 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
    return OO_FAILED;
 }
 
+/*
+Change the state of the channel as established and close all other
+channels with same session IDs. This is useful for handling fastStart,
+as the endpoint can open multiple logical channels for same sessionID.
+Once the remote endpoint confirms it's selection, all other channels for
+the same sessionID must be closed.
+*/
 int ooOnLogicalChannelEstablished
    (OOH323CallData *call, OOLogicalChannel * pChannel)
 {
    OOLogicalChannel * temp = NULL, *prev=NULL;
-   /* Change the state of the channel as established and close all other
-      channels with same session IDs. This is useful for handling fastStart,
-      as the endpoint can open multiple logical channels for same sessionID.
-      Once the remote endpoint confirms it's selection, all other channels for
-      the same sessionID must be closed.
-   */
    OOTRACEDBGC3("In ooOnLogicalChannelEstablished (%s, %s)\n",
                 call->callType, call->callToken);
    pChannel->state = OO_LOGICALCHAN_ESTABLISHED;
@@ -359,6 +365,6 @@ int ooOnLogicalChannelEstablished
       else
          temp = temp->next;
    }
-   return OO_OK;  
+   return OO_OK;
 }
 

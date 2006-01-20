@@ -252,7 +252,7 @@ EXTERN int ooGkClientStart(ooGkClient *pGkClient);
  * @param eGkMode   Gatekeeper mode selected. One of the following:
  *                    - RasNoGatekeeper (DEFAULT), No Gatekeeper.             
  *                    - RasDiscoverGatekeeper, to discover a gatekeeper
- *                      automatically.                                        
+ *                      automatically.
  *                    - RasUseSpecificGatekeeper, to use a specific gatekeeper.
  * @param szGkAddr  Gatekeeper address (only when using specific gatekeeper).
  * @param iGkPort   Gatekeeper RAS port
