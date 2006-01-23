@@ -960,7 +960,7 @@ int ooH245Receive(OOH323CallData *call)
       message boundary. Has to be done at channel level, as channels
       know the message formats and can determine boundaries
    */
-   if(recvLen<=0)
+   if(recvLen<=0 && call->h245SessionState != OO_H245SESSION_PAUSED)
    {
       if(recvLen == 0)
          OOTRACEINFO3("Closing H.245 channels as remote end point closed H.245"
@@ -977,6 +977,33 @@ int ooH245Receive(OOH323CallData *call)
          call->callState = OO_CALL_CLEAR;
       }
       return OO_FAILED;
+   }
+   if(call->h245SessionState == OO_H245SESSION_PAUSED)
+   {
+      ooLogicalChannel *temp;
+
+      OOTRACEINFO3("Call Paused, closing logical channels"
+                    " (%s, %s)\n", call->callType, call->callToken);
+
+      temp = call->logicalChans;
+      while(temp)
+      {
+         if(temp->state == OO_LOGICALCHAN_ESTABLISHED)
+         {
+            /* Sending closelogicalchannel only for outgoing channels*/
+            if(!strcmp(temp->dir, "transmit"))
+            {
+               ooSendCloseLogicalChannel(call, temp);
+            }
+         }
+         temp = temp->next;
+      }
+      call->masterSlaveState = OO_MasterSlave_Idle;
+      call->callState = OO_CALL_PAUSED;
+      call->localTermCapState = OO_LocalTermCapExchange_Idle;
+      call->remoteTermCapState = OO_RemoteTermCapExchange_Idle;
+      call->h245SessionState = OO_H245SESSION_IDLE;
+      call->logicalChans = NULL;
    }
    OOTRACEDBGC1("Receiving H245 message\n");
    if(recvLen != 4)
@@ -1482,17 +1509,20 @@ int ooOnSendMsg
                       "(%s, %s)\n", call->callType, call->callToken);
       break;
    case OOTerminalCapabilitySet:
-      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)){
+      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING)) {
          /* If session isn't marked active yet, do it. possible in case of
             tunneling */
-         if(call->h245SessionState == OO_H245SESSION_IDLE)
+         if(call->h245SessionState == OO_H245SESSION_IDLE ||
+            call->h245SessionState == OO_H245SESSION_PAUSED) {
             call->h245SessionState = OO_H245SESSION_ACTIVE;
+         }
          OOTRACEINFO3("Tunneled Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
       }
-      else
+      else {
          OOTRACEINFO3("Sent Message - TerminalCapabilitySet (%s, %s)\n",
                        call->callType, call->callToken);
+      }
       /* Start TCS timer */
       cbData = (ooTimerCallback*) memAlloc(call->pctxt,
                                                      sizeof(ooTimerCallback));

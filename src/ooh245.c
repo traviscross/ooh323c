@@ -270,7 +270,6 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
          ooSendMsg(call, OOH245MSG);
       }
       else{
-
          dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
          OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
          call->pH245Channel->outQueue.count,
@@ -659,9 +658,10 @@ int ooSendTermCapMsg(OOH323CallData *call)
       OOTRACEERR3("Error:Failed to enqueue TCS message to outbound queue. "
                   "(%s, %s)\n", call->callType, call->callToken);
    }
-   else
+   else {
       call->localTermCapState = OO_LocalTermCapSetSent;
-  
+   }
+
    ooFreeH245Message(call,ph245msg);
 
    return ret;
@@ -2407,7 +2407,7 @@ int ooOnReceivedUserInputIndication
          gH323ep.h323Callbacks.onReceivedDTMF(call,indication->u.alphanumeric);
    }
    else if((indication->t == T_H245UserInputIndication_signal) &&
-      (call->dtmfmode & OO_CAP_DTMF_H245_signal)) {
+           (call->dtmfmode & OO_CAP_DTMF_H245_signal)) {
       if(gH323ep.h323Callbacks.onReceivedDTMF)
          gH323ep.h323Callbacks.onReceivedDTMF(call,
                                              indication->u.signal->signalType);
@@ -2439,35 +2439,39 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
  
    if(!tcs->m.capabilityTablePresent)
    {
-      OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",
-                   call->callType, call->callToken);
-      ooSendTerminalCapabilitySetReject(call, tcs->sequenceNumber,
-                         T_H245TerminalCapabilitySetReject_cause_unspecified);
-      return OO_OK;
+      // OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",
+      OOTRACEWARN3("Empty TCS found.  Pausing call...(%s, %s)\n",
+                    call->callType, call->callToken);
+      call->h245SessionState = OO_H245SESSION_PAUSED;
+      //ooSendTerminalCapabilitySetReject(call, tcs->sequenceNumber,
+      //                   T_H245TerminalCapabilitySetReject_cause_unspecified);
+      //return OO_OK;
    }
    call->remoteTermCapSeqNo = tcs->sequenceNumber;
 
-   for(k=0; k<(int)tcs->capabilityTable.count; k++)
-   {
-      pNode = dListFindByIndex(&tcs->capabilityTable, k);
-      if(pNode)
+   if(tcs->m.capabilityTablePresent) {
+      for(k=0; k<(int)tcs->capabilityTable.count; k++)
       {
-         OOTRACEDBGC4("Processing CapabilityTable Entry %d (%s, %s)\n", k,
-                       call->callType, call->callToken);
-         capEntry = (H245CapabilityTableEntry*) pNode->data;
-         if(capEntry->m.capabilityPresent){
-            ret =  ooAddRemoteCapability(call, &capEntry->capability);
-            if(ret != OO_OK)
-            {
-               OOTRACEERR4("Error:Failed to process remote capability in "
-                           "capability table at index %d. (%s, %s)\n",
-                            k, call->callType, call->callToken);
+         pNode = dListFindByIndex(&tcs->capabilityTable, k);
+         if(pNode)
+         {
+            OOTRACEDBGC4("Processing CapabilityTable Entry %d (%s, %s)\n",
+                          k, call->callType, call->callToken);
+            capEntry = (H245CapabilityTableEntry*) pNode->data;
+            if(capEntry->m.capabilityPresent){
+               ret =  ooAddRemoteCapability(call, &capEntry->capability);
+               if(ret != OO_OK)
+               {
+                  OOTRACEERR4("Error:Failed to process remote capability in "
+                              "capability table at index %d. (%s, %s)\n",
+                               k, call->callType, call->callToken);
+               }
+               ooCapabilityUpdateJointCapabilities(call, &capEntry->capability);
             }
-            ooCapabilityUpdateJointCapabilities(call, &capEntry->capability);
          }
+         pNode = NULL;
+         capEntry=NULL;
       }
-      pNode = NULL;
-      capEntry=NULL;
    }
 
   
@@ -3475,12 +3479,12 @@ int ooSessionTimerExpired(void *pdata)
                  call->callToken);
 
    if(call->h245SessionState != OO_H245SESSION_IDLE &&
-      call->h245SessionState != OO_H245SESSION_CLOSED) 
-   {
+      call->h245SessionState != OO_H245SESSION_CLOSED &&
+      call->h245SessionState != OO_H245SESSION_PAUSED) {
+
       ret = ooCloseH245Connection(call);
   
-      if(ret != OO_OK)
-      {
+      if(ret != OO_OK) {
          OOTRACEERR3("Error:Failed to close H.245 connection (%s, %s)\n",
                      call->callType, call->callToken);
       }

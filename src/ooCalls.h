@@ -62,6 +62,7 @@ typedef enum {
    OO_CALL_WAITING_ADMISSION,     /*!< Call waiting for admission by GK */
    OO_CALL_CONNECTING,            /*!< Call in process of connecting */
    OO_CALL_CONNECTED,             /*!< Call currently connected. */
+   OO_CALL_PAUSED,                /*!< Call Paused for hold/transfer. */
    OO_CALL_CLEAR,                 /*!< Call marked for clearing */
    OO_CALL_CLEAR_RELEASERECVD,    /*!< Release command received. */
    OO_CALL_CLEAR_RELEASESENT,     /*!< Release sent */
@@ -73,6 +74,7 @@ typedef enum {
  */
 typedef enum {
    OO_H245SESSION_IDLE,
+   OO_H245SESSION_PAUSED,
    OO_H245SESSION_ACTIVE,
    OO_H245SESSION_ENDSENT,
    OO_H245SESSION_ENDRECVD,

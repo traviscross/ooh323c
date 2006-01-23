@@ -780,6 +780,7 @@ const char* ooGetCallStateText (OOCallState callState)
       "OO_CALL_WAITING_ADMISSION",
       "OO_CALL_CONNECTING",
       "OO_CALL_CONNECTED",
+      "OO_CALL_PAUSED",
       "OO_CALL_CLEAR",
       "OO_CALL_CLEAR_RELEASERECVD",
       "OO_CALL_CLEAR_RELEASESENT",
