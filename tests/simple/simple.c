@@ -130,54 +130,51 @@ int main(int argc, char ** argv)
    /* parse args */
    for(x=1; x<argc; x++)
    {
-      if(!strcmp(argv[x], "--listen"))
-      {
+      if(!strcmp(argv[x], "--listen")) {
          if(!bDestFound)
             bListen=TRUE;
-         else{
+         else {
             printf("USAGE:\n%s",USAGE);
             return -1;
          }
-      }else if(!strcmp(argv[x], "--no-faststart"))
-      {
+      }
+      else if(!strcmp(argv[x], "--no-faststart")) {
          bFastStart = FALSE;
-      }else if(!strcmp(argv[x], "--no-tunneling"))
-      {
+      }
+      else if(!strcmp(argv[x], "--no-tunneling")) {
          bTunneling = FALSE;
-      }else if(!strcmp(argv[x], "--help"))
-      {
-         printf("USAGE:\n%s",USAGE);
+      }
+      else if(!strcmp(argv[x], "--help")) {
+              printf("USAGE:\n%s",USAGE);
          return 0;
-      }else if(!strcmp(argv[x], "--user"))
-      {
+      }
+      else if(!strcmp(argv[x], "--user")) {
          x++;
          strncpy(user, argv[x], sizeof(user)-1);
          user[sizeof(user)-1]='\0';
-      }else if(!strcmp(argv[x], "--user-number"))
-      {
+      }
+      else if(!strcmp(argv[x], "--user-number")) {
          x++;
          strncpy(user_num, argv[x], sizeof(user_num)-1);
          user_num[sizeof(user_num)-1]='\0';
       }
-      else if(!strcmp(argv[x], "--h323id"))
-      {
+      else if(!strcmp(argv[x], "--h323id")){
          x++;
          strncpy(h323id, argv[x], sizeof(h323id)-1);
          h323id[sizeof(h323id)-1]='\0';
       }
-      else if(!strcmp(argv[x], "--e164"))
-      {
+      else if(!strcmp(argv[x], "--e164")) {
          x++;
          strncpy(e164, argv[x], sizeof(e164)-1);
          e164[sizeof(e164)-1]='\0';
-      }else if(!strcmp(argv[x], "--auto-answer"))
-      {
+      }
+      else if(!strcmp(argv[x], "--auto-answer")) {
          bAutoAnswer = TRUE;
-      }else if(!strcmp(argv[x], "--gk-discover"))
-      {
+      }
+      else if(!strcmp(argv[x], "--gk-discover")) {
          gkMode = RasDiscoverGatekeeper;
-      }else if(!strcmp(argv[x], "--gk"))
-      {
+      }
+      else if(!strcmp(argv[x], "--gk")) {
          x++;
          strncpy(tmp, argv[x], sizeof(tmp)-1);
          tmp[sizeof(tmp)-1]='\0';
@@ -190,24 +187,25 @@ int main(int argc, char ** argv)
          }
          gkIP = tmp;
          gkMode = RasUseSpecificGatekeeper;
-      }else if(!strcmp(argv[x], "-t"))
-      {
+      }
+      else if(!strcmp(argv[x], "-t")) {
          trace_level++;
-      }else if(!strcmp(argv[x], "--use-ip"))
-      {
+      }
+      else if(!strcmp(argv[x], "--use-ip")) {
          x++;
          strncpy(ourip, argv[x], sizeof(ourip)-1);
          ourip[sizeof(ourip)-1]='\0';
-      }else if(!strcmp(argv[x],"--use-port"))
-      {
+      }
+      else if(!strcmp(argv[x],"--use-port")) {
          x++;
          ourport = atoi(argv[x]);
-      }else if(!bDestFound && !bListen)
-      {
+      }
+      else if(!bDestFound && !bListen) {
          strncpy(dest, argv[x], sizeof(dest)-1);
          bDestFound=TRUE;
-      }else {
-         printf("USAGE:\n%s",USAGE);
+      }
+      else {
+              printf("USAGE:\n%s",USAGE);
          return -1;
       }
    }
@@ -347,9 +345,9 @@ int main(int argc, char ** argv)
      printf("\tUser Number: %s\n", user_num);
 
    if(gkMode == RasNoGatekeeper)
-     printf("\tGatekeeper: Not Used\n");
+      printf("\tGatekeeper: Not Used\n");
    else if(gkMode == RasDiscoverGatekeeper)
-     printf("\tGatekeeper: Discover Gatekeeper\n");
+      printf("\tGatekeeper: Discover Gatekeeper\n");
    else if(gkMode == RasUseSpecificGatekeeper)
    {
       char gkAddr[60];
@@ -479,10 +477,8 @@ int osEpOnAlerting(ooCallData* call)
 /* on incoming call callback */
 int osEpOnIncomingCall(ooCallData* call )
 {
-
    if(!bActive){
       bActive = TRUE;
-    
    }
    else{
       ooHangCall(call->callToken, OO_REASON_LOCAL_BUSY);
@@ -521,6 +517,7 @@ int osEpOnNewCallCreated(ooCallData* call )
 
    return OO_OK;
 }
+
 /* Callback when we are being forwarded to another destination by remote
    endpoint.
 */
@@ -535,7 +532,7 @@ int osEpOnCallForwarded(ooCallData *call)
 
    if(call->pCallFwdData->aliases)
    {
-     printf("(alias - %s)", call->pCallFwdData->aliases->value);
+      printf("(alias - %s)", call->pCallFwdData->aliases->value);
    }
    printf("\nCMD>");
    fflush(stdout);
@@ -625,8 +622,9 @@ void* osEpHandleCommand(void* dummy)
          continue;
       } 
       ch = tolower(*p);
-      if(*(p+1) != ' ' && *(p+1) != '\t' && *(p+1) != '\n')
-        ch ='i'; /* invalid command */
+      if(*(p+1) != ' ' && *(p+1) != '\t' && *(p+1) != '\n') {
+              ch ='i'; /* invalid command */
+      }
       switch(ch)
       {
          case 'c':
@@ -657,7 +655,8 @@ void* osEpHandleCommand(void* dummy)
             {
                printf("--->Failed to place a call to %s \n",dest);
                printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
-            }else{
+            }
+            else{
                printf("--->Calling %s \n", dest);
                bActive = TRUE;
             }
@@ -666,32 +665,35 @@ void* osEpHandleCommand(void* dummy)
          case 'a':
             if(bActive && bRinging)
             {
-               if((stat = ooAnswerCall(callToken)) == OO_STKCMD_SUCCESS)
+               if((stat = ooAnswerCall(callToken)) == OO_STKCMD_SUCCESS) {
                   bRinging = FALSE;
+               }
                else{
                   printf("--->Failed to answer the call %s\n", callToken);
                   printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
                }
-            }else{
-               printf("--->There is no active call in ringing status\n");
             }
+            else{
+               printf("--->There is no active call in ringing status\n");
+                 }
             break;
 
          case 'r':
-           if(bActive && bRinging){
+                 if(bActive && bRinging){
               if((stat = ooHangCall(callToken, OO_REASON_LOCAL_REJECTED)) !=
                                                            OO_STKCMD_SUCCESS)
               {
                  printf("--->Failed to reject call %s\n", callToken);
                  printf("    Reason: %s\n", ooGetStkCmdStatusCodeTxt(stat));
-              }else{
+              }
+              else{
                  bRinging = FALSE;
               }
-           }
-           else{
+                 }
+            else{
               printf("--->There is no active call in ringing status\n");
-           }
-           break;
+            }
+            break;
 
          case 'f':
             if(bActive && !bRinging)
@@ -724,7 +726,7 @@ void* osEpHandleCommand(void* dummy)
             }else{
                printf("--->There is no established call to forward\n");
             }
-            break;
+                 break;
 
          case 'h':
             if(bActive)
@@ -756,8 +758,7 @@ void* osEpHandleCommand(void* dummy)
             break;
 
          case 'd':
-           if(bActive)
-           {
+                 if(bActive) {
               p++;
               while((*p == ' ' || *p == '\t')&& p<command+cmdLen) p++;
                if(p >= command + cmdLen || *p == '\n')

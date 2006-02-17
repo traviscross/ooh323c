@@ -729,8 +729,7 @@ int ooMonitorChannels()
    toMin.tv_usec = 0;
    ooH323EpPrintConfig();
   
-   if(gH323ep.gkClient)
-   {
+   if(gH323ep.gkClient) {
       ooGkClientPrintConfig(gH323ep.gkClient);
       if(OO_OK != ooGkClientStart(gH323ep.gkClient))
       {
@@ -746,8 +745,7 @@ int ooMonitorChannels()
       nfds = 0;
       ooSetFDSETs(&readfds, &writefds, &nfds);
 
-      if(!gMonitor)
-      {
+      if(!gMonitor) {
          OOTRACEINFO1("Ending Monitor thread\n");
          break;
       }
@@ -921,8 +919,6 @@ int ooH2250Receive(OOH323CallData *call)
                 call->callType, call->callToken);
 
    initializePrintHandler(&printHandler, "Received H.2250 Message");
-
-   /* Set event handler */
    setEventHandler (pctxt, &printHandler);
 
    ret = ooQ931Decode (call, pmsg, len, message);

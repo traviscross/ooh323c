@@ -769,7 +769,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
       }
       return OO_FAILED;
    }
-   /* Retrieve the connect message from the user-user IE */
+   /* Retrieve the connect message from the user-user IE & Q.931 header */
    connect = q931Msg->userInfo->h323_uu_pdu.h323_message_body.u.connect;
    if(connect == NULL)
    {
@@ -1076,7 +1076,9 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
             ret = ooH323CallAdmitted (call);
          }
          break;
-      case Q931CallProceedingMsg:/* Call proceeding message is received */
+
+
+      case Q931CallProceedingMsg: /* CALL PROCEEDING message is received */
          OOTRACEINFO3("H.225 Call Proceeding message received (%s, %s)\n",
                       call->callType, call->callToken);
          ooOnReceivedCallProceeding(call, q931Msg);
