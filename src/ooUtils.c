@@ -27,14 +27,14 @@ OOBOOL ooUtilsIsStrEmpty (const char* str)
 }
 
 
-OOBOOL ooIsDigitString(const char* str)
+OOBOOL ooIsDailedDigit(const char* str)
 {
-   int i = 0;
    if(str == NULL || *str =='\0') { return FALSE; }
-   while(*(str+i) != '\0')
+   while(*str != '\0')
    {
-      if(!isdigit(*(str+i))) { return FALSE; }
-      i++;
+      if(!isdigit(*str) &&
+         *str != '#' && *str != '*' && *str != ',') { return FALSE; }
+      str++;
    }
    return TRUE;
 }
