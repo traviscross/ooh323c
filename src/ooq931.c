@@ -1695,7 +1695,7 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
    OOH323CallData *fwdedCall=NULL;
    OOCTXT *pctxt;
    ooAliases *pNewAlias=NULL, *alias=NULL;
-   int i=0, ret = OO_OK;
+   int i=0, irand=0, ret = OO_OK;
    /* Note: We keep same callToken, for new call which is going
       to replace an existing call, thus treating it as a single call.*/
 
@@ -1737,8 +1737,10 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
    fwdedCall->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&fwdedCall->callIdentifier);
    fwdedCall->confIdentifier.numocts = 16;
-   for (i = 0; i < 16; i++)
-      fwdedCall->confIdentifier.data[i] = i+1;
+   irand = rand();
+   for (i = 0; i < 16; i++) {
+      fwdedCall->confIdentifier.data[i] = irand++;
+   }
      
 
    if(gH323ep.gkClient && !OO_TESTFLAG(fwdedCall->flags, OO_M_DISABLEGK))
@@ -1760,7 +1762,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 {
    OOCTXT *pctxt;
    OOH323CallData *call;
-   int ret=0, i=0;
+   int ret=0, i=0, irand=0;
    char tmp[30]="\0";
    char *ip=NULL, *port = NULL;
 
@@ -1821,8 +1823,9 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    call->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&call->callIdentifier);
    call->confIdentifier.numocts = 16;
+   irand = rand();
    for (i = 0; i < 16; i++) {
-      call->confIdentifier.data[i] = i+1;
+      call->confIdentifier.data[i] = irand++;
    }
      
 

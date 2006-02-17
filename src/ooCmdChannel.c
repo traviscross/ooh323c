@@ -161,7 +161,7 @@ int ooReadAndProcessStackCommand()
                                     (char*)cmd.param2);
 
                ooH323MakeCall ((char*)cmd.param1, (char*)cmd.param2,
-                                                 (ooCallOptions*)cmd.param3);
+                               (ooCallOptions*)cmd.param3);
                break;
 
             case OO_CMD_MANUALRINGBACK:
