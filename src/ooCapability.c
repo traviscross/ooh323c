@@ -876,7 +876,7 @@ struct H245AudioCapability* ooCapabilityCreateSimpleCapability
    return NULL;
 }
 
-/*Used for g711 ulaw/alaw, g729, g729a, g7231 */
+/* Used for g711 ulaw/alaw, g729, g729a, g7231 */
 ASN1BOOL ooCapabilityCheckCompatibility_Simple
    (OOH323CallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
@@ -916,18 +916,31 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       return FALSE;
    }
 
+   if(cap != epCap->cap) { return FALSE; }
+
    /* can we receive this capability */
    if(dir & OORX)
    {
-      if(((OOCapParams*)epCap->params)->rxframes >= noofframes)
+      if(((OOCapParams*)epCap->params)->rxframes >= noofframes) {
          return TRUE;
+      }
+      ///else {
+      ///  not supported, as already told other ep our max. receive rate
+      ///  our ep can't receive more rate than it
+      ///  return FALSE;
+      ///}
    }
 
    /* Can we transmit compatible stream */
    if(dir & OOTX)
    {
-      if(((OOCapParams*)epCap->params)->txframes <= noofframes)
+      if(((OOCapParams*)epCap->params)->txframes <= noofframes) {
          return TRUE;
+      }
+      ///else {
+      ///   TODO: reduce our ep transmission rate, as peer EP has low receive
+      ///   cap, than return TRUE
+      ///}
    }
    return FALSE;
 
@@ -1183,7 +1196,7 @@ OOBOOL ooCapabilityCheckCompatibility_Video
 /*
    Note: In faststart if we sent transmit rate (x>y) and remote
          can receive only y, then we can't reduce our transmit rate
- */
+*/
 OOBOOL ooCapabilityCheckCompatibility
    (struct OOH323CallData *call, ooH323EpCapability* epCap,
     H245DataType* dataType, int dir)
