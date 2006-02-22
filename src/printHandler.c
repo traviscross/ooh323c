@@ -26,6 +26,8 @@
 #include "rtctype.h"
 #include "ootrace.h"
 
+EventHandler printHandler;
+
 static const char* pVarName;
 static int gIndentSpaces;
 

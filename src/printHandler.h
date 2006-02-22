@@ -25,7 +25,7 @@
 
 #include "eventHandler.h"
 
-EventHandler printHandler;
+extern EventHandler printHandler;
 
 void initializePrintHandler(EventHandler *printHandler, char * varname);
 void finishPrint();
