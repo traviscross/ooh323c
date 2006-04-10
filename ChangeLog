@@ -1,3 +1,13 @@
+Release 0.8.2
+1. Used rand number for conference id, Thanks to Patrick Jordan
+   (Fixes mapping all calls from the same origin number to the destination
+   of the first call for H323 gatekeeper (Quintum Voicemaster))
+2. Fixed bug for codec type comparision, Thanks to Legostayev Denis
+3. Fixed "#*," digits bug for dialedDigit & callerID,
+   Thanks to Vlasis Hatzistavrou
+4. Added ETC for call hold, Thanks to Dan Austin
+5. Fixed bug in cleared call manual ring back causing core dump
+
 Release 0.8.1
 1. Fixed bug causing dialed digits alias being set as a char string.
 2. Added close for cmdListener
