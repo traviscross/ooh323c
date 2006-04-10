@@ -7,7 +7,7 @@ BEGIN
 -- Top level Messages
 -- ===================================================================================
 
-MultimediaSystemControlMessage  ::=CHOICE
+MultimediaSystemControlMessage  ::= CHOICE
 {
         request RequestMessage,
         response        ResponseMessage,

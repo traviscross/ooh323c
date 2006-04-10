@@ -130,7 +130,7 @@ int ooWriteStackCommand(OOStackCommand *cmd)
 
 int ooReadAndProcessStackCommand()
 {
-   OOH323CallData *call = NULL;  
+   OOH323CallData *pCall = NULL;  
    unsigned char buffer[MAXMSGLEN];
    int i, recvLen = 0;
    OOStackCommand cmd;
@@ -167,16 +167,33 @@ int ooReadAndProcessStackCommand()
             case OO_CMD_MANUALRINGBACK:
                if(OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
                {
-                  ooSendAlerting(ooFindCallByToken((char*)cmd.param1));
-                  if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))
-                     ooSendConnect(ooFindCallByToken((char*)cmd.param1));
+                  pCall = ooFindCallByToken((char*)cmd.param1);
+                  if(!pCall) {
+                     OOTRACEINFO2("Call \"%s\" does not exist\n",
+                                  (char*)cmd.param1);
+                     OOTRACEINFO1("Call migth be cleared/closed\n");
+                  }
+                  else {
+                     ooSendAlerting(ooFindCallByToken((char*)cmd.param1));
+                     if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER)) {
+                        ooSendConnect(ooFindCallByToken((char*)cmd.param1));
+                     }
+                  }
                }
                break;
 
             case OO_CMD_ANSCALL:
-               OOTRACEINFO2("Processing Answer Call command for %s\n",
-                            (char*)cmd.param1);
-               ooSendConnect(ooFindCallByToken((char*)cmd.param1));
+               pCall = ooFindCallByToken((char*)cmd.param1);
+               if(!pCall) {
+                  OOTRACEINFO2("Call \"%s\" does not exist\n",
+                               (char*)cmd.param1);
+                  OOTRACEINFO1("Call might be cleared/closed\n");
+               }
+               else {
+                  OOTRACEINFO2("Processing Answer Call command for %s\n",
+                               (char*)cmd.param1);
+                  ooSendConnect(pCall);
+               }
                break;
 
             case OO_CMD_FWDCALL:
@@ -187,27 +204,29 @@ int ooReadAndProcessStackCommand()
 
             case OO_CMD_HANGCALL:
                OOTRACEINFO2("Processing Hang call command %s\n",
-                                   (char*)cmd.param1);
+                             (char*)cmd.param1);
                ooH323HangCall((char*)cmd.param1,
-                                          *(OOCallClearReason*)cmd.param2);
+                              *(OOCallClearReason*)cmd.param2);
                break;
          
             case OO_CMD_SENDDIGIT:
-               call = ooFindCallByToken((char*)cmd.param1);
-               if(!call)
-               {
-                  OOTRACEERR2("Error:Invalid calltoken %s\n",
-                                                         (char*)cmd.param1);
+               pCall = ooFindCallByToken((char*)cmd.param1);
+               if(!pCall) {
+                  OOTRACEERR2("ERROR:Invalid calltoken %s\n",
+                              (char*)cmd.param1);
                   break;
                }
-               if(call->jointDtmfMode & OO_CAP_DTMF_H245_alphanumeric)
-                  ooSendH245UserInputIndication_alphanumeric(call,
-                                                      (const char*)cmd.param2);
-               else if(call->jointDtmfMode & OO_CAP_DTMF_H245_signal)
-                  ooSendH245UserInputIndication_signal(call,
-                                                  (const char*)cmd.param2);
-               else
-                  ooQ931SendDTMFAsKeyPadIE(call, (const char*)cmd.param2);
+               if(pCall->jointDtmfMode & OO_CAP_DTMF_H245_alphanumeric) {
+                  ooSendH245UserInputIndication_alphanumeric(
+                     pCall, (const char*)cmd.param2);
+               }
+               else if(pCall->jointDtmfMode & OO_CAP_DTMF_H245_signal) {
+                  ooSendH245UserInputIndication_signal(
+                     pCall, (const char*)cmd.param2);
+               }
+               else {
+                  ooQ931SendDTMFAsKeyPadIE(pCall, (const char*)cmd.param2);
+               }
 
                break;
 

@@ -562,7 +562,7 @@ int ooProcessFDSETsAndTimers
    if(gH323ep.gkClient)
    {  
       ooTimerFireExpired(&gH323ep.gkClient->ctxt,
-                                        &gH323ep.gkClient->timerList);
+                         &gH323ep.gkClient->timerList);
       if(ooTimerNextTimeout(&gH323ep.gkClient->timerList, &toNext))
       {
          if(ooCompareTimeouts(pToMin, &toNext)>0)
@@ -594,11 +594,9 @@ int ooProcessFDSETsAndTimers
       }
    }
 
-   if(gH323ep.cmdSock)
-   {
-      if(FD_ISSET(gH323ep.cmdSock, pReadfds))
-      {
-        ooReadAndProcessStackCommand();
+   if(gH323ep.cmdSock) {
+      if(FD_ISSET(gH323ep.cmdSock, pReadfds)) {
+         ooReadAndProcessStackCommand();
       }
    }
 

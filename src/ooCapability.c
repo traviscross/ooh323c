@@ -918,7 +918,7 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
 
    if(cap != epCap->cap) { return FALSE; }
 
-   /* can we receive this capability */
+   /* Can we receive this capability */
    if(dir & OORX)
    {
       if(((OOCapParams*)epCap->params)->rxframes >= noofframes) {
