@@ -594,6 +594,17 @@ int ooH323EpAddG711Capability(int cap, int txframes, int rxframes, int dir,
                             stopReceiveChannel, stopTransmitChannel, FALSE);
 }
 
+int ooH323EpAddG728Capability(int cap, int txframes, int rxframes, int dir,
+                              cb_StartReceiveChannel startReceiveChannel,
+                              cb_StartTransmitChannel startTransmitChannel,
+                              cb_StopReceiveChannel stopReceiveChannel,
+                              cb_StopTransmitChannel stopTransmitChannel)
+{
+   return ooCapabilityAddSimpleCapability(NULL, cap, txframes, rxframes, FALSE,
+                               dir, startReceiveChannel, startTransmitChannel,
+                               stopReceiveChannel, stopTransmitChannel, FALSE);
+}
+
 int ooH323EpAddG729Capability(int cap, int txframes, int rxframes, int dir,
                               cb_StartReceiveChannel startReceiveChannel,
                               cb_StartTransmitChannel startTransmitChannel,

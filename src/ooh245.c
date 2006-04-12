@@ -2924,6 +2924,8 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
    case OO_G711ALAW56K:
    case OO_G711ULAW64K:
    case OO_G711ULAW56K:
+   /*case OO_G726:*/
+   case OO_G728:
    case OO_G729:
    case OO_G729A:
    case OO_G7231:

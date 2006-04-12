@@ -348,7 +348,7 @@ int ooCapabilityAddH263VideoCapability_helper(ooCallData *call,
    return OO_OK;
 }
 
-/* Used for g711 ulaw/alaw, g729 and g7231 */
+/* Used for g711 ulaw/alaw, g728, g729 and g7231 */
 int ooCapabilityAddSimpleCapability
    (OOH323CallData *call, int cap, int txframes,
     int rxframes, OOBOOL silenceSuppression, int dir,
@@ -609,6 +609,8 @@ struct H245AudioCapability* ooCapabilityCreateAudioCapability
    case OO_G711ALAW56K:
    case OO_G711ULAW64K:
    case OO_G711ULAW56K:
+   /*case OO_G726:*/
+   case OO_G728:
    case OO_G729:
    case OO_G729A:
    case OO_G7231:
@@ -786,7 +788,7 @@ struct H245AudioCapability* ooCapabilityCreateGSMFullRateCapability
    return pAudio;
 }
 
-/* This is used for g711 ulaw/alaw, g729, g729A, g7231*/
+/* This is used for g711 ulaw/alaw, g728, g729, g729A, g7231*/
 struct H245AudioCapability* ooCapabilityCreateSimpleCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir)
 {
@@ -838,6 +840,20 @@ struct H245AudioCapability* ooCapabilityCreateSimpleCapability
       else
          pAudio->u.g711Ulaw64k = params->txframes;
       return pAudio;
+   /*case OO_G726:
+      pAudio->t = T_H245AudioCapability_g726;
+      if(dir & OORX)
+         pAudio->u.g726 = params->rxframes;
+      else
+         pAudio->u.g726 = params->txframes;
+      return pAudio;*/
+   case OO_G728:
+      pAudio->t = T_H245AudioCapability_g728;
+      if(dir & OORX)
+         pAudio->u.g728 = params->rxframes;
+      else
+         pAudio->u.g728 = params->txframes;
+      return pAudio;
    case OO_G729:
       pAudio->t = T_H245AudioCapability_g729;
       if(dir & OORX)
@@ -876,7 +892,7 @@ struct H245AudioCapability* ooCapabilityCreateSimpleCapability
    return NULL;
 }
 
-/* Used for g711 ulaw/alaw, g729, g729a, g7231 */
+/* Used for g711 ulaw/alaw, g728, g729, g729a, g7231 */
 ASN1BOOL ooCapabilityCheckCompatibility_Simple
    (OOH323CallData *call, ooH323EpCapability* epCap,
     H245AudioCapability* audioCap, int dir)
@@ -899,6 +915,14 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
    case T_H245AudioCapability_g711Alaw56k:
       cap = OO_G711ALAW56K;
       noofframes = audioCap->u.g711Alaw56k;
+      break;
+   /*case T_H245AudioCapability_g726:
+      cap = OO_G726;
+      noofframes = audioCap->u.g726;
+      break;*/
+   case T_H245AudioCapability_g728:
+      cap = OO_G728;
+      noofframes = audioCap->u.g728;
       break;
    case T_H245AudioCapability_g729:
       cap = OO_G729;
@@ -1165,6 +1189,8 @@ OOBOOL ooCapabilityCheckCompatibility_Audio
    case T_H245AudioCapability_g711Ulaw64k:
    case T_H245AudioCapability_g711Alaw64k:
    case T_H245AudioCapability_g711Alaw56k:
+   /*case T_H245AudioCapability_g726:*/
+   case T_H245AudioCapability_g728:
    case T_H245AudioCapability_g729:
    case T_H245AudioCapability_g729AnnexA:
    case T_H245AudioCapability_g7231:
@@ -1245,6 +1271,8 @@ ASN1BOOL ooCheckCompatibility
    case OO_G711ALAW56K:
    case OO_G711ULAW64K:
    case OO_G711ULAW56K:
+   /*case OO_G726:*/
+   case OO_G728:
    case OO_G729:
    case OO_G729A:
    case OO_G7231:
@@ -1402,7 +1430,7 @@ ooH323EpCapability* ooIsAudioDataTypeGSMSupported
 
 }
 
-/* used for g711 ulaw/alaw, g729, g729a, g7231 */
+/* used for g711 ulaw/alaw, g728, g729, g729a, g7231 */
 ooH323EpCapability* ooIsAudioDataTypeSimpleSupported
    (OOH323CallData *call, H245AudioCapability* audioCap, int dir)
 {
@@ -1417,30 +1445,47 @@ ooH323EpCapability* ooIsAudioDataTypeSimpleSupported
          framesPerPkt = audioCap->u.g711Alaw64k;
          cap = OO_G711ALAW64K;
          break;
+
       case T_H245AudioCapability_g711Alaw56k:
          framesPerPkt = audioCap->u.g711Alaw56k;
          cap = OO_G711ALAW56K;
          break;
+
       case T_H245AudioCapability_g711Ulaw56k:
          framesPerPkt = audioCap->u.g711Ulaw56k;
          cap = OO_G711ULAW56K;
          break;
+
       case T_H245AudioCapability_g711Ulaw64k:
          framesPerPkt = audioCap->u.g711Ulaw64k;
          cap = OO_G711ULAW64K;
          break;
+
+/*      case T_H245AudioCapability_g726:
+         framesPerPkt = audioCap->u.g726;
+         cap = OO_G726;
+         break;
+*/
+      case T_H245AudioCapability_g728:
+         framesPerPkt = audioCap->u.g728;
+         cap = OO_G728;
+         break;
+
       case T_H245AudioCapability_g729:
          framesPerPkt = audioCap->u.g729;
          cap = OO_G729;
          break;
+
       case T_H245AudioCapability_g729AnnexA:
          framesPerPkt = audioCap->u.g729AnnexA;
          cap = OO_G729A;
          break;
+
       case T_H245AudioCapability_g7231:
          framesPerPkt = audioCap->u.g7231->maxAl_sduAudioFrames;
          cap = OO_G7231;
          break;
+
       default:
          return NULL;
    }
@@ -1565,6 +1610,8 @@ ooH323EpCapability* ooIsAudioDataTypeSupported
       case T_H245AudioCapability_g711Alaw56k:
       case T_H245AudioCapability_g711Ulaw56k:
       case T_H245AudioCapability_g711Ulaw64k:
+      /*case T_H245AudioCapability_g726:*/
+      case T_H245AudioCapability_g728:
       case T_H245AudioCapability_g729:
       case T_H245AudioCapability_g729AnnexA:
       case T_H245AudioCapability_g7231:
@@ -1973,6 +2020,27 @@ int ooAddRemoteAudioCapability(OOH323CallData *call,
       }
       return ooCapabilityAddSimpleCapability(call, OO_G711ULAW56K, txframes,
                            rxframes, FALSE, dir, NULL, NULL, NULL, NULL, TRUE);
+
+/*   case T_H245AudioCapability_g726:
+      if(dir&OOTX) txframes = audioCap->u.g726;
+      else if(dir&OORX) rxframes = audioCap->u.g726;
+      else{
+         txframes = audioCap->u.g726;
+         rxframes = audioCap->u.g726;
+      }
+      return ooCapabilityAddSimpleCapability(call, OO_G726, txframes,
+                           rxframes, FALSE, dir, NULL, NULL, NULL, NULL, TRUE);
+*/
+   case T_H245AudioCapability_g728:
+      if(dir&OOTX) txframes = audioCap->u.g728;
+      else if(dir&OORX) rxframes = audioCap->u.g728;
+      else{
+         txframes = audioCap->u.g728;
+         rxframes = audioCap->u.g728;
+      }
+      return ooCapabilityAddSimpleCapability(call, OO_G728, txframes,
+                           rxframes, FALSE, dir, NULL, NULL, NULL, NULL, TRUE);
+
    case T_H245AudioCapability_g729:
       if(dir&OOTX) txframes = audioCap->u.g729;
       else if(dir&OORX) rxframes = audioCap->u.g729;

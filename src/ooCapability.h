@@ -279,7 +279,8 @@ EXTERN int ooCapabilityDisableDTMFQ931Keypad(struct OOH323CallData *call);
 
 /**
  * This function is used to add simple capabilities which have only rxframes
- * and txframes parameters to the endpoint or call.(ex. G711, G729)
+ * and txframes parameters to the endpoint or call.(ex. G711, G728, G723.1,
+ * G729)
  * @param call                 Handle to a call. If this is not Null, then
  *                             capability is added to call's remote enpoint
  *                             capability list, else it is added to local H323
@@ -564,8 +565,9 @@ struct H245AudioCapability* ooCapabilityCreateGSMFullRateCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 /**
- * This function is used to create a simple(g711, g729) audio capability
- * structure.
+ * This function is used to create a simple(g711, g728, g723.1, g729) audio
+ * capability structure.
+ *
  * @param epCap       Handle to the endpoint capability
  * @param pctxt       Handle to OOCTXT which will be used to allocate memory
  *                    for new audio capability.
