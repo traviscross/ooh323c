@@ -1,8 +1,9 @@
-Copyright (C) 2004-2005 by Objective Systems, Inc.
+Copyright (C) 2004-2006 by Objective Systems, Inc.
 
 Objective Open H.323 README
 
 Introduction
+============
 
 Thank you for downloading the Objective Open H.323 software. This
 package contains a simple H.323 stack developed in C.  The ASN.1
@@ -19,6 +20,7 @@ license for more details.
 
 
 Features
+========
 
 Features supported in this package include the following:
 
@@ -66,12 +68,13 @@ Features supported in this package include the following:
 
 
 Getting Started
+===============
 
 This section describes how to build the complete package on Linux and
 Windows systems respectively.
   
 Building on Linux:
- 
+----------------- 
 1. Change directory to the package root directory.
 
         cd ooh323c-xx.aa
@@ -118,7 +121,8 @@ Building on Linux:
    been run using --prefix as described in step 2.
 
 
-Building on Windows
+Building on Windows:
+-------------------
 
 The package includes Visual Studio 6 based workspace and project files.
 
@@ -144,16 +148,18 @@ The package includes Visual Studio 6 based workspace and project files.
 
 
 Sample Programs
+===============
 
-To run the sample programs, first make sure the path to the media shared
-object library (liboomedia.so) is set in LD_LIBRARY_PATH:
+To run the sample programs,
+        On Linux, make sure the path to the media shared object library
+        (liboomedia.so) is set in LD_LIBRARY_PATH:
 
         LD_LIBRARY_PATH=<install-dir>/lib
         export LD_LIBRARY_PATH
 
-On Windows, make sure the path to the media plug-in library DLL
-(oomedia.dll) is in your PATH.  The DLL is located in the
-ooh323c-xx.aa\lib\release and ooh323c-xx.aa\lib\debug directories.
+        On Windows, make sure the path to the media plug-in library DLL
+        (oomedia.dll) is in your PATH.  The DLL is located in the
+        ooh323c-xx.aa\lib\release and ooh323c-xx.aa\lib\debug directories.
 
 The sample programs are locates in the 'tests' subdirectory.  The following
 programs are available:
@@ -262,6 +268,7 @@ To run the stack test application chansetup
 
 
 Reporting Problems:
+==================
 
 Report problems you encounter by sending E-mail to
 ooh323c-devel@lists.sourceforge.net.

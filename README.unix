@@ -1,8 +1,9 @@
-Copyright (C) 2004-2005 by Objective Systems, Inc.
+Copyright (C) 2004-2006 by Objective Systems, Inc.
 
 Objective Open H.323 README
 
 Introduction
+============
 
 Thank you for downloading the Objective Open H.323 software. This
 package contains linux binaries of  H.323 stack developed in C. 
@@ -19,6 +20,7 @@ license for more details.
 
 
 Features
+========
 
 Features supported in this package include the following:
 
@@ -66,7 +68,8 @@ Features supported in this package include the following:
 
 
 Getting Started
-----------------
+===============
+
 Sample Programs
 
 To run the sample programs, first make sure the path to the media shared
@@ -174,8 +177,10 @@ To run the stack test application chansetup
 
 
 Reporting Problems:
+==================
 
-Report problems you encounter by sending E-mail to ooh323c-devel@lists.sourceforge.net.
+Report problems you encounter by sending E-mail to
+ooh323c-devel@lists.sourceforge.net.
 
 If you have any further questions or comments on what you would like to
 see in the product or what is difficult to use or understand, please
