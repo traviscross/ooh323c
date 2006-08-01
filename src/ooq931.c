@@ -2317,7 +2317,12 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                                call->callIdentifier.guid.numocts);
   
    setup->m.mediaWaitForConnectPresent = TRUE;
-   setup->mediaWaitForConnect = FALSE;
+   if(OO_TESTFLAG(call->flags, OO_M_MEDIAWAITFORCONN)) {
+      setup->mediaWaitForConnect = TRUE;
+   }
+   else {
+      setup->mediaWaitForConnect = FALSE;
+   }
    setup->m.canOverlapSendPresent = TRUE;
    setup->canOverlapSend = FALSE;
 

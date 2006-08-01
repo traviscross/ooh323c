@@ -431,6 +431,18 @@ int ooH323EpDisableManualRingback(void)
    return OO_OK;
 }
 
+int ooH323EpEnableMediaWaitForConnect(void)
+{
+   OO_SETFLAG(gH323ep.flags, OO_M_MEDIAWAITFORCONN);
+   return OO_OK;
+}
+
+int ooH323EpDisableMediaWaitForConnect(void)
+{
+   OO_CLRFLAG(gH323ep.flags, OO_M_MEDIAWAITFORCONN);
+   return OO_OK;
+}
+
 int ooH323EpEnableFastStart(void)
 {
    OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);
@@ -539,6 +551,14 @@ void ooH323EpPrintConfig(void)
    }
    else{
       OOTRACEINFO1("\tH245 Tunneling - enabled\n");
+   }
+
+   if(!OO_TESTFLAG(gH323ep.flags, OO_M_MEDIAWAITFORCONN))
+   {
+      OOTRACEINFO1("\tMediaWaitForConnect - disabled\n");
+   }
+   else{
+      OOTRACEINFO1("\tMediaWaitForConnect - enabled\n");
    }
 
    if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER))

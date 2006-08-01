@@ -351,6 +351,20 @@ EXTERN int ooH323EpEnableManualRingback(void);
 EXTERN int ooH323EpDisableManualRingback(void);
 
 /**
+ * This function is used to enable MediaWaitForConnect.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpDisableMediaWaitForConnect(void);
+
+/**
+ * This function is used to disable MediaWaitForConnect.
+ *
+ * @return            OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpDisableMediaWaitForConnect(void);
+
+/**
  * This function is used to enable faststart.
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.

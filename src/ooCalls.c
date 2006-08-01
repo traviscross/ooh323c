@@ -78,6 +78,8 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    if (OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
       OO_SETFLAG (call->flags, OO_M_FASTSTART);
 
+   if (OO_TESTFLAG(gH323ep.flags, OO_M_MEDIAWAITFORCONN))
+      OO_SETFLAG (call->flags, OO_M_MEDIAWAITFORCONN);
   
    call->callState = OO_CALL_CREATED;
    call->callEndReason = OO_REASON_UNKNOWN;
