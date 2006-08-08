@@ -1,13 +1,21 @@
+CVS version:
+1. Added MediaWaitForConnect configuration option (Thanks to Tim King,
+        for solving PSTN call ring problem)
+2. Changed CallingPartyNumber IE to disable the CLI screening. (Thanks to
+   Tim King)
+3. Added fast start response in ALERTING message for early audio. Solves the
+        problem to listening PSTN ring or announcements.
+
 Release 0.8.2
 1. Used rand number for conference id, Thanks to Patrick Jordan
    (Fixes mapping all calls from the same origin number to the destination
    of the first call for H323 gatekeeper (Quintum Voicemaster))
-2. Fixed bug for codec type comparision, Thanks to Legostayev Denis
+2. Fixed bug for codec type comparison, Thanks to Legostayev Denis
 3. Fixed "#*," digits bug for dialedDigit & callerID, Thanks to Vlasis
    Hatzistavrou
 4. Added ETC for call hold, Thanks to Dan Austin
 5. Fixed bug causing core dump for manual ringback in cleared call
-6. Added G.728 audio codec negotation support, Thanks to Aleksandar Sutic
+6. Added G.728 audio codec negotiation support, Thanks to Aleksandar Sutic
 
 Release 0.8.1
 1. Fixed bug causing dialed digits alias being set as a char string.
