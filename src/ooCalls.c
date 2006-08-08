@@ -145,7 +145,9 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    call->nextSessionID = 4; /* 1,2,3 are reserved for audio, video and data */
    dListInit(&call->timerList);
    call->msdRetries = 0;
+   call->pFastStartRes = NULL;
    call->usrData = NULL;
+
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,
                  call->callToken);
    /* Add new call to calllist */

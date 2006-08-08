@@ -948,11 +948,11 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       if(((OOCapParams*)epCap->params)->rxframes >= noofframes) {
          return TRUE;
       }
-      ///else {
-      ///  not supported, as already told other ep our max. receive rate
-      ///  our ep can't receive more rate than it
-      ///  return FALSE;
-      ///}
+      //else {
+      //  not supported, as already told other ep our max. receive rate
+      //  our ep can't receive more rate than it
+      //  return FALSE;
+      //}
    }
 
    /* Can we transmit compatible stream */
@@ -961,10 +961,10 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       if(((OOCapParams*)epCap->params)->txframes <= noofframes) {
          return TRUE;
       }
-      ///else {
-      ///   TODO: reduce our ep transmission rate, as peer EP has low receive
-      ///   cap, than return TRUE
-      ///}
+      //else {
+      //   TODO: reduce our ep transmission rate, as peer EP has low receive
+      //   cap, than return TRUE
+      //}
    }
    return FALSE;
 

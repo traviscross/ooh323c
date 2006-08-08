@@ -40,19 +40,18 @@ extern "C" {
    disables use of gk for specific call.
 */
 
+#define OO_M_ENDSESSION_BUILT   ASN1UINTCNT(0x00800000)
+#define OO_M_RELEASE_BUILT      ASN1UINTCNT(0x00400000)
+#define OO_M_FASTSTARTANSWERED  ASN1UINTCNT(0x04000000)
 
-
-#define OO_M_ENDPOINTCREATED    0x00010000
-#define OO_M_ENDSESSION_BUILT   0x00800000
-#define OO_M_RELEASE_BUILT      0x00400000
-#define OO_M_GKROUTED           0x00200000
-#define OO_M_AUTOANSWER         0x00100000
-#define OO_M_TUNNELING          0x08000000
-#define OO_M_FASTSTARTANSWERED  0x04000000
-#define OO_M_MEDIAWAITFORCONN   0x03000000
-#define OO_M_FASTSTART          0x02000000
-#define OO_M_DISABLEGK          0x01000000
-#define OO_M_MANUALRINGBACK     0x10000000
+#define OO_M_ENDPOINTCREATED    ASN1UINTCNT(0x00010000)
+#define OO_M_GKROUTED           ASN1UINTCNT(0x00200000)
+#define OO_M_AUTOANSWER         ASN1UINTCNT(0x00100000)
+#define OO_M_TUNNELING          ASN1UINTCNT(0x08000000)
+#define OO_M_MEDIAWAITFORCONN   ASN1UINTCNT(0x03000000)
+#define OO_M_FASTSTART          ASN1UINTCNT(0x02000000)
+#define OO_M_DISABLEGK          ASN1UINTCNT(0x01000000)
+#define OO_M_MANUALRINGBACK     ASN1UINTCNT(0x10000000)
 
 
 /**
@@ -120,6 +119,16 @@ typedef struct OOH323Channel {
 } OOH323Channel;
 
 /**
+ * Structure to store information on fast start response (H.225) to
+ * reply same answer in CALL PROCEEDING, ALERTING & CONNECT.
+ */
+typedef struct EXTERN FastStartResponse {
+   ASN1UINT n;
+   ASN1DynOctStr *elem;
+} FastStartResponse;
+
+
+/**
  * This structure is used to maintain all information on an active call.
  * A list of these structures is maintained within the global endpoint
  * structure.
@@ -175,6 +184,7 @@ typedef struct OOH323CallData {
    unsigned             nextSessionID; /* Note by default 1 is audio session, 2 is video and 3 is data, from 3 onwards master decides*/
    DList                timerList;
    ASN1UINT             msdRetries;
+   FastStartResponse    *pFastStartRes; /* fast start response */
    void                 *usrData; /*!<User can set this to user specific data*/
    struct OOH323CallData* next;
    struct OOH323CallData* prev;

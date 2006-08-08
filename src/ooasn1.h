@@ -32,41 +32,6 @@
  * @defgroup cruntime C Runtime Common Functions
  * @{
  */
-/* Tagging Value and Mask Constants */
-
-/* tag class value constants */
-
-#define TV_UNIV         0       /* universal                    */
-#define TV_APPL         1       /* application-wide             */
-#define TV_CTXT         2       /* context-specific             */
-#define TV_PRIV         3       /* private-use                  */
-
-/* tag form value constants */
-
-#define TV_PRIM         0       /* primitive                    */
-#define TV_CONS         1       /* constructor                  */
-
-/* tag mask values - these can be logically or'd together to    */
-/* form tags compatible with the ASNTAG structure..             */
-
-#define TM_UNIV         0x00000000  /* universal class          */
-#define TM_APPL         0x40000000  /* application-wide class   */
-#define TM_CTXT         0x80000000  /* context-specific class   */
-#define TM_PRIV         0xC0000000  /* private-use class        */
-
-#define TM_PRIM         0x00000000  /* primitive form           */
-#define TM_CONS         0x20000000  /* constructor form         */
-#define TM_IDCODE       0x1FFFFFFF  /* ID code mask             */
-
-#define ASN_K_BADTAG    0xFFFFFFFF  /* invalid tag code         */
-#define ASN_K_NOTAG     0xFFFFFFFF  /* no tag input parameter   */
-
-#define TM_CLASS        0xC0    /* class mask                   */
-#define TM_FORM         0x20    /* form mask                    */
-#define TM_CLASS_FORM   0xE0    /* class/form mask              */
-#define TM_B_IDCODE     0x1F    /* id code mask (byte)          */
-
-#define MINMSGLEN       8       /* minimum message length               */
 
 /* Error Code Constants */
 
@@ -257,6 +222,8 @@ typedef void*           ASN1ANY;
 #define ASN1UINT_MAX    4294967295U
 #define ASN1INT_MAX     ((ASN1INT)2147483647L)
 #define ASN1INT_MIN     ((ASN1INT)(-ASN1INT_MAX-1))
+
+#define ASN1UINTCNT(val) val##u
 
 
 #ifndef ASN1INT64

@@ -720,6 +720,15 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       i += pq931Msg->causeIE->length;
    }
      
+   /*Add progress indicator IE
+   if(pq931Msg->messageType == Q931AlertingMsg || pq931Msg->messageType == Q931CallProceedingMsg)
+   {
+      msgbuf[i++] = Q931ProgressIndicatorIE;
+      msgbuf[i++] = 2; //Length is 2 octet
+      msgbuf[i++] = 0x80; //PI=8
+      msgbuf[i++] = 0x88;
+  }*/
+
    /*Add display ie. */
    if(!ooUtilsIsStrEmpty(call->ourCallerId))
    {
@@ -816,6 +825,371 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
 #endif
    return OO_OK;
 }
+
+int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
+   ASN1UINT *fsCount, ASN1DynOctStr **fsElem)
+{
+   OOCTXT *pctxt = &gH323ep.msgctxt;  
+   int ret = 0, i=0, j=0, remoteMediaPort=0, remoteMediaControlPort = 0, dir=0;
+   char remoteMediaIP[20], remoteMediaControlIP[20];
+   DListNode *pNode = NULL;
+   H245OpenLogicalChannel *olc = NULL, printOlc;
+   ooH323EpCapability *epCap = NULL;
+   ASN1DynOctStr *pFS=NULL;
+   H245H2250LogicalChannelParameters *h2250lcp = NULL; 
+   ooLogicalChannel* pChannel;
+
+
+   if(pCall->pFastStartRes) {
+      ASN1UINT k = 0;
+      ASN1OCTET* pData;
+
+      /* copy the stored fast start response to structure */
+      *fsCount = pCall->pFastStartRes->n;
+      *fsElem = (ASN1DynOctStr*)
+         memAlloc(pctxt, pCall->pFastStartRes->n * sizeof(ASN1DynOctStr));
+
+      for(k = 0; k < pCall->pFastStartRes->n; k ++) {
+         (*fsElem)[k].numocts = pCall->pFastStartRes->elem[k].numocts;
+         pData = (ASN1OCTET*) memAlloc(
+            pctxt, (*fsElem)[k].numocts * sizeof(ASN1OCTET));
+         memcpy(pData,
+            pCall->pFastStartRes->elem[k].data,
+            pCall->pFastStartRes->elem[k].numocts);
+         (*fsElem)[k].data = pData;
+      }
+
+      /* free the stored fast start response */
+      if(pQ931msg->messageType == Q931ConnectMsg) {
+         for(k = 0; k < pCall->pFastStartRes->n; k ++) {
+            memFreePtr(pCall->pctxt, pCall->pFastStartRes->elem[k].data);
+         }
+         memFreePtr(pCall->pctxt, pCall->pFastStartRes->elem);
+         memFreePtr(pCall->pctxt, pCall->pFastStartRes);
+         pCall->pFastStartRes = NULL;
+      }
+
+      return ASN_OK;
+   }
+  
+     
+   /* If fast start supported and remote endpoint has sent faststart element */
+   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) &&
+      pCall->remoteFastStartOLCs.count>0)
+   {
+      pFS = (ASN1DynOctStr*)memAlloc(pctxt,
+                        pCall->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
+      if(!pFS)
+      {
+         OOTRACEERR3("Error:Memory - ooSetFastStartResponse - pFS (%s, %s)\n",
+                      pCall->callType, pCall->callToken);   
+         return OO_FAILED;
+      }
+      memset(pFS, 0, pCall->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
+
+      /* Go though all the proposed channels */
+      for(i=0, j=0; i<(int)pCall->remoteFastStartOLCs.count; i++)
+      {
+
+         pNode = dListFindByIndex(&pCall->remoteFastStartOLCs, i);
+         olc = (H245OpenLogicalChannel*)pNode->data;
+
+         /* Don't support both direction channel */
+         if(olc->forwardLogicalChannelParameters.dataType.t !=
+                                                   T_H245DataType_nullData &&
+            olc->m.reverseLogicalChannelParametersPresent)
+         {
+            OOTRACEINFO3("Ignoring bidirectional OLC as it is not supported."
+                         "(%s, %s)\n", pCall->callType, pCall->callToken);
+            continue;
+         }
+
+         /* Check forward logic channel */
+         if(olc->forwardLogicalChannelParameters.dataType.t !=
+                                                   T_H245DataType_nullData)
+         {
+            /* Forward Channel - remote transmits - local receives */
+            OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
+                          olc->forwardLogicalChannelNumber, pCall->callType,
+                          pCall->callToken);
+            dir = OORX;
+            epCap = ooIsDataTypeSupported(pCall,
+                                &olc->forwardLogicalChannelParameters.dataType,
+                                OORX);
+           
+            if(!epCap) { continue; } /* Not Supported Channel */
+
+            OOTRACEINFO1("Receive Channel data type supported\n");
+            if(olc->forwardLogicalChannelParameters.multiplexParameters.t !=
+               T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+            {
+               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
+                           "channel %d (%s, %s)\n",
+                           olc->forwardLogicalChannelNumber,
+                           pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               continue;
+            }
+            h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+
+            /* Check session is Not already established */
+            if(ooIsSessionEstablished(pCall, olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "receive"))
+            {
+
+               OOTRACEINFO4("Receive channel with sessionID %d already "
+                            "established.(%s, %s)\n", olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID,
+                            pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               continue;
+            }
+
+            /* Extract mediaControlChannel info, if supplied */
+            if(h2250lcp->m.mediaControlChannelPresent)
+            {
+               if(OO_OK != ooGetIpPortFromH245TransportAddress(pCall,
+                                &h2250lcp->mediaControlChannel,
+                                remoteMediaControlIP, &remoteMediaControlPort))
+               {
+                  OOTRACEERR3("Error: Invalid media control channel address "
+                              "(%s, %s)\n", pCall->callType, pCall->callToken);
+                  memFreePtr(pCall->pctxt, epCap);
+                  epCap = NULL;
+                  continue;
+               }
+            }
+         }
+         /* Check reverse logical channel */
+         else if(olc->m.reverseLogicalChannelParametersPresent)
+         {
+            /* Reverse channel - remote receives - local transmits */
+            OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
+                          olc->forwardLogicalChannelNumber, pCall->callType,
+                          pCall->callToken);
+            dir = OOTX;
+            epCap = ooIsDataTypeSupported(pCall,
+                                &olc->reverseLogicalChannelParameters.dataType,
+                                OOTX);
+
+            if(!epCap) { continue; } /* Capability not supported */
+
+            OOTRACEINFO1("Transmit Channel data type supported\n");
+
+            if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
+               T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
+            {
+               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
+                           "channel %d (%s, %s)\n",
+                           olc->forwardLogicalChannelNumber,
+                           pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               continue;
+            }
+
+            /* Check session is not established */
+            if(ooIsSessionEstablished(pCall, olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "transmit"))
+            {
+
+               OOTRACEINFO4("Transmit session with sessionID %d already "
+                            "established.(%s, %s)\n", olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, pCall->callType, pCall->callToken);
+
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               continue;
+            }
+           
+            /* Extract the remote media endpoint address */
+            h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
+            if(!h2250lcp)
+            {
+               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
+                           "reverse Logical Channel Parameters found. "
+                           "(%s, %s)\n", pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               return OO_FAILED;
+            }
+           
+            /* Reverse Channel info will be always present, crash proof */
+            if(!h2250lcp->m.mediaChannelPresent)
+            {
+               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
+                           "reverse media channel information found. "
+                           "(%s, %s)\n", pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               return OO_FAILED;
+            }
+
+            /* Get IP, PORT of reverse channel */
+            if(OO_OK != ooGetIpPortFromH245TransportAddress(pCall,
+                                &h2250lcp->mediaChannel,
+                                remoteMediaIP, &remoteMediaPort))
+            {
+               OOTRACEERR3("Error: Invalid media  channel address "
+                           "(%s, %s)\n", pCall->callType, pCall->callToken);
+               memFreePtr(pCall->pctxt, epCap);
+               epCap = NULL;
+               continue;
+            }
+
+            /* Extract mediaControlChannel info, if supplied */
+            if(h2250lcp->m.mediaControlChannelPresent)
+            {
+               if(OO_OK != ooGetIpPortFromH245TransportAddress(pCall,
+                                &h2250lcp->mediaControlChannel,
+                                remoteMediaControlIP, &remoteMediaControlPort))
+               {
+                  OOTRACEERR3("Error: Invalid media control channel address "
+                              "(%s, %s)\n", pCall->callType, pCall->callToken);
+                  memFreePtr(pCall->pctxt, epCap);
+                  epCap = NULL;
+                  continue;
+               }
+            }
+         }
+
+         if(dir & OOTX)
+         { 
+            /* According to the spec if we are accepting olc for transmission
+               from called endpoint to calling endpoint, called endpoint should
+               insert a unqiue forwardLogicalChannelNumber into olc
+            */
+            olc->forwardLogicalChannelNumber =  pCall->logicalChanNoCur++;
+            if(pCall->logicalChanNoCur > pCall->logicalChanNoMax)
+               pCall->logicalChanNoCur = pCall->logicalChanNoBase;
+         }
+
+        
+         ooPrepareFastStartResponseOLC(pCall, olc, epCap, pctxt, dir);
+        
+         pChannel = ooFindLogicalChannelByLogicalChannelNo
+                      (pCall, olc->forwardLogicalChannelNumber);
+  
+         /* start receive and tramsmit channel listening */
+         if(dir & OORX)
+         {
+            strcpy(pChannel->remoteIP, remoteMediaControlIP);
+            pChannel->remoteMediaControlPort = remoteMediaControlPort;
+            if(epCap->startReceiveChannel)
+            {  
+               epCap->startReceiveChannel(pCall, pChannel);     
+               OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                        pCall->callType, pCall->callToken);
+            }
+            else{
+               OOTRACEERR4("ERROR:No callback registered to start receive %s"
+                          " channel (%s, %s)\n",
+                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
+                           pCall->callType, pCall->callToken);
+               return OO_FAILED;
+            }
+         }
+         if(dir & OOTX)
+         {
+            pChannel->remoteMediaPort = remoteMediaPort;
+            strcpy(pChannel->remoteIP, remoteMediaIP);
+            pChannel->remoteMediaControlPort = remoteMediaControlPort;
+
+            if(epCap->startTransmitChannel)
+            {  
+               epCap->startTransmitChannel(pCall, pChannel);     
+               OOTRACEINFO3("Transmit channel of type audio started "
+                            "(%s, %s)\n", pCall->callType, pCall->callToken);
+               /*OO_SETFLAG (pCall->flags, OO_M_AUDIO);*/
+            }
+            else{
+               OOTRACEERR3("ERROR:No callback registered to start transmit"
+                           " audio channel (%s, %s)\n", pCall->callType,
+                           pCall->callToken);
+               return OO_FAILED;
+            }
+         }
+
+         /* Encode fast start element */
+         setPERBuffer(pctxt, NULL, 0, 1);
+         if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
+         {
+            OOTRACEERR3("ERROR:Encoding of olc failed for faststart "
+                        "(%s, %s)\n", pCall->callType, pCall->callToken);
+            ooFreeQ931Message(pQ931msg);
+            if(pCall->callState < OO_CALL_CLEAR)
+            {
+               pCall->callEndReason = OO_REASON_LOCAL_CLEARED;
+               pCall->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+         pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
+
+
+         /* start print call */
+         setPERBuffer(pctxt,  (char*)pFS[j].data, pFS[j].numocts, 1);
+         initializePrintHandler(&printHandler, "FastStart Element");
+         setEventHandler (pctxt, &printHandler);
+         memset(&printOlc, 0, sizeof(printOlc));
+         ret = asn1PD_H245OpenLogicalChannel(pctxt, &(printOlc));
+         if(ret != ASN_OK)
+         {
+            OOTRACEERR3("Error: Failed decoding FastStart Element (%s, %s)\n",
+                        pCall->callType, pCall->callToken);
+            ooFreeQ931Message(pQ931msg);
+            if(pCall->callState < OO_CALL_CLEAR)
+            {
+               pCall->callEndReason = OO_REASON_LOCAL_CLEARED;
+               pCall->callState = OO_CALL_CLEAR;
+            }
+            return OO_FAILED;
+         }
+         finishPrint();
+         removeEventHandler(pctxt);
+         /* end print call */
+
+         olc = NULL;
+         j++;
+         epCap = NULL;
+      }
+      OOTRACEDBGA4("Added %d fast start elements to message "
+                   "(%s, %s)\n",  j, pCall->callType, pCall->callToken);
+      if(j != 0)
+      {
+         ASN1UINT k = 0;
+         ASN1OCTET* pData;
+         //*fsPresent = TRUE;
+         *fsCount = j;
+         *fsElem = pFS;
+
+         /* save the fast start response for later use in ALERTING, CONNECT */
+         pCall->pFastStartRes = (FastStartResponse*)
+            memAlloc(pCall->pctxt, sizeof(FastStartResponse));
+         pCall->pFastStartRes->n = j;
+         pCall->pFastStartRes->elem = (ASN1DynOctStr*) memAlloc(pCall->pctxt,
+            pCall->pFastStartRes->n * sizeof(ASN1DynOctStr));
+
+         for(k = 0; k < pCall->pFastStartRes->n; k ++) {
+            pCall->pFastStartRes->elem[k].numocts = (*fsElem)[k].numocts;
+            pData = (ASN1OCTET*) memAlloc(pCall->pctxt,
+               pCall->pFastStartRes->elem[k].numocts * sizeof(ASN1OCTET));
+            memcpy(pData, (*fsElem)[k].data, (*fsElem)[k].numocts);
+            pCall->pFastStartRes->elem[k].data = pData;
+         }
+      }
+      else{
+         OOTRACEINFO3("None of the faststart elements received in setup can be"
+                      " supported, rejecting faststart.(%s, %s)\n",
+                      pCall->callType, pCall->callToken);
+         //*fsPresent = FALSE;
+         OO_CLRFLAG(pCall->flags, OO_M_FASTSTART);
+         OOTRACEDBGC3("Faststart for pCall is disabled by local endpoint."
+                      "(%s, %s)\n", pCall->callType, pCall->callToken);
+      }
+   }
+   return ASN_OK;
+}
+
 
 /*
 
@@ -1024,6 +1398,15 @@ int ooSendAlerting(OOH323CallData *call)
    vendor->vendor.t35Extension = gH323ep.t35Extension;
    vendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
   
+   ret = ooSetFastStartResponse(call, q931msg,
+      &alerting->fastStart.n, &alerting->fastStart.elem);
+   if(ret != ASN_OK) { return ret; }
+   if(alerting->fastStart.n > 0) {
+      alerting->m.fastStartPresent = TRUE;
+   }
+   else {
+      alerting->m.fastStartPresent = FALSE;
+   }
 
    OOTRACEDBGA3("Built Alerting (%s, %s)\n", call->callType, call->callToken);
   
@@ -1211,19 +1594,12 @@ int ooSendConnect(OOH323CallData *call)
 /*TODO: Need to clean logical channel in case of failure after creating one */
 int ooAcceptCall(OOH323CallData *call)
 {
-   int ret = 0, i=0, j=0, remoteMediaPort=0, remoteMediaControlPort = 0, dir=0;
-   char remoteMediaIP[20], remoteMediaControlIP[20];
+   int ret = 0, i=0;
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
    H225VendorIdentifier *vendor;
    Q931Message *q931msg=NULL;
-   DListNode *pNode = NULL;
-   H245OpenLogicalChannel *olc = NULL, printOlc;
-   ooH323EpCapability *epCap = NULL;
-   ASN1DynOctStr *pFS=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;  
-   H245H2250LogicalChannelParameters *h2250lcp = NULL; 
-   ooLogicalChannel* pChannel;
 
    ret = ooCreateQ931Message(&q931msg, Q931ConnectMsg);
    if(ret != OO_OK)
@@ -1344,287 +1720,15 @@ int ooAcceptCall(OOH323CallData *call)
       strncpy(vendor->versionId.data, gH323ep.versionID,
                                                    vendor->versionId.numocts);
    }
-   /* If fast start supported and remote endpoint has sent faststart element */
-   if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) &&
-      call->remoteFastStartOLCs.count>0)
-   {
-      pFS = (ASN1DynOctStr*)memAlloc(pctxt,
-                        call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
-      if(!pFS)
-      {
-         OOTRACEERR3("Error:Memory - ooAcceptCall - pFS (%s, %s)\n",
-                      call->callType, call->callToken);   
-         return OO_FAILED;
-      }
-      memset(pFS, 0, call->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
 
-
-      for(i=0, j=0; i<(int)call->remoteFastStartOLCs.count; i++)
-      {
-
-         pNode = dListFindByIndex(&call->remoteFastStartOLCs, i);
-         olc = (H245OpenLogicalChannel*)pNode->data;
-
-         if(olc->forwardLogicalChannelParameters.dataType.t !=
-                                                   T_H245DataType_nullData &&
-            olc->m.reverseLogicalChannelParametersPresent)
-         {
-            OOTRACEINFO3("Ignoring bidirectional OLC as it is not supported."
-                         "(%s, %s)\n", call->callType, call->callToken);
-            continue;
-         }
-
-         if(olc->forwardLogicalChannelParameters.dataType.t !=
-                                                   T_H245DataType_nullData)
-         {
-            /* Forward Channel - remote transmits - local receives */
-            OOTRACEDBGC4("Processing received forward olc %d (%s, %s)\n",
-                          olc->forwardLogicalChannelNumber, call->callType,
-                          call->callToken);
-            dir = OORX;
-            epCap = ooIsDataTypeSupported(call,
-                                &olc->forwardLogicalChannelParameters.dataType,
-                                OORX);
-            if(!epCap)
-               continue;
-            OOTRACEINFO1("Receive Channel data type supported\n");
-            if(olc->forwardLogicalChannelParameters.multiplexParameters.t !=
-               T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
-            {
-               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
-                           "channel %d (%s, %s)\n",
-                           olc->forwardLogicalChannelNumber,
-                           call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               continue;
-            }
-            h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
-
-            if(ooIsSessionEstablished(call, olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "receive"))
-            {
-
-               OOTRACEINFO4("Receive channel with sessionID %d already "
-                            "established.(%s, %s)\n", olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID,
-                            call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               continue;
-            }
-
-            /* Extract mediaControlChannel info, if supplied */
-            if(h2250lcp->m.mediaControlChannelPresent)
-            {
-               if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
-                                &h2250lcp->mediaControlChannel,
-                                remoteMediaControlIP, &remoteMediaControlPort))
-               {
-                  OOTRACEERR3("Error: Invalid media control channel address "
-                              "(%s, %s)\n", call->callType, call->callToken);
-                  memFreePtr(call->pctxt, epCap);
-                  epCap = NULL;
-                  continue;
-               }
-            }
-         }
-         else if(olc->m.reverseLogicalChannelParametersPresent)
-         {
-            /* Reverse channel - remote receives - local transmits */
-            OOTRACEDBGC4("Processing received reverse olc %d (%s, %s)\n",
-                          olc->forwardLogicalChannelNumber, call->callType,
-                          call->callToken);
-            dir = OOTX;
-            epCap = ooIsDataTypeSupported(call,
-                                &olc->reverseLogicalChannelParameters.dataType,
-                                OOTX);
-            if(!epCap)
-               continue;
-
-            OOTRACEINFO1("Transmit Channel data type supported\n");
-
-            if(olc->reverseLogicalChannelParameters.multiplexParameters.t !=
-               T_H245OpenLogicalChannel_reverseLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters)
-            {
-               OOTRACEERR4("ERROR:Unknown multiplex parameter type for "
-                           "channel %d (%s, %s)\n",
-                           olc->forwardLogicalChannelNumber,
-                           call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               continue;
-            }
-            if(ooIsSessionEstablished(call, olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, "transmit"))
-            {
-
-               OOTRACEINFO4("Transmit session with sessionID %d already "
-                            "established.(%s, %s)\n", olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters->sessionID, call->callType, call->callToken);
-
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               continue;
-            }
-           
-            /* Extract the remote media endpoint address */
-            h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
-            if(!h2250lcp)
-            {
-               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
-                           "reverse Logical Channel Parameters found. "
-                           "(%s, %s)\n", call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               return OO_FAILED;
-            }
-            if(!h2250lcp->m.mediaChannelPresent)
-            {
-               OOTRACEERR3("ERROR:Invalid OLC received in fast start. No "
-                           "reverse media channel information found. "
-                           "(%s, %s)\n", call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               return OO_FAILED;
-            }
-            if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
-                                &h2250lcp->mediaChannel,
-                                remoteMediaIP, &remoteMediaPort))
-            {
-               OOTRACEERR3("Error: Invalid media  channel address "
-                           "(%s, %s)\n", call->callType, call->callToken);
-               memFreePtr(call->pctxt, epCap);
-               epCap = NULL;
-               continue;
-            }
-
-            /* Extract mediaControlChannel info, if supplied */
-            if(h2250lcp->m.mediaControlChannelPresent)
-            {
-               if(OO_OK != ooGetIpPortFromH245TransportAddress(call,
-                                &h2250lcp->mediaControlChannel,
-                                remoteMediaControlIP, &remoteMediaControlPort))
-               {
-                  OOTRACEERR3("Error: Invalid media control channel address "
-                              "(%s, %s)\n", call->callType, call->callToken);
-                  memFreePtr(call->pctxt, epCap);
-                  epCap = NULL;
-                  continue;
-               }
-            }
-         }
-
-         if(dir & OOTX)
-         { 
-            /* According to the spec if we are accepting olc for transmission
-               from called endpoint to calling endpoint, called endpoint should
-               insert a unqiue forwardLogicalChannelNumber into olc
-            */
-            olc->forwardLogicalChannelNumber =  call->logicalChanNoCur++;
-            if(call->logicalChanNoCur > call->logicalChanNoMax)
-               call->logicalChanNoCur = call->logicalChanNoBase;
-         }
-
-        
-         ooPrepareFastStartResponseOLC(call, olc, epCap, pctxt, dir);
-        
-         pChannel = ooFindLogicalChannelByLogicalChannelNo
-                      (call, olc->forwardLogicalChannelNumber);
-  
-         if(dir & OORX)
-         {
-            strcpy(pChannel->remoteIP, remoteMediaControlIP);
-            pChannel->remoteMediaControlPort = remoteMediaControlPort;
-            if(epCap->startReceiveChannel)
-            {  
-               epCap->startReceiveChannel(call, pChannel);     
-               OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
-                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
-                        call->callType, call->callToken);
-            }
-            else{
-               OOTRACEERR4("ERROR:No callback registered to start receive %s"
-                          " channel (%s, %s)\n",
-                        (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
-                           call->callType, call->callToken);
-               return OO_FAILED;
-            }
-         }
-         if(dir & OOTX)
-         {
-            pChannel->remoteMediaPort = remoteMediaPort;
-            strcpy(pChannel->remoteIP, remoteMediaIP);
-            pChannel->remoteMediaControlPort = remoteMediaControlPort;
-
-            if(epCap->startTransmitChannel)
-            {  
-               epCap->startTransmitChannel(call, pChannel);     
-               OOTRACEINFO3("Transmit channel of type audio started "
-                            "(%s, %s)\n", call->callType, call->callToken);
-               /*OO_SETFLAG (call->flags, OO_M_AUDIO);*/
-            }
-            else{
-               OOTRACEERR3("ERROR:No callback registered to start transmit"
-                           " audio channel (%s, %s)\n", call->callType,
-                           call->callToken);
-               return OO_FAILED;
-            }
-         }
-         /* Do not specify msg buffer let automatic allocation work */
-         setPERBuffer(pctxt, NULL, 0, 1);
-         if(asn1PE_H245OpenLogicalChannel(pctxt, olc) != ASN_OK)
-         {
-            OOTRACEERR3("ERROR:Encoding of olc failed for faststart "
-                        "(%s, %s)\n", call->callType, call->callToken);
-            ooFreeQ931Message(q931msg);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_REASON_LOCAL_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
-         }
-         pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
-
-         /* Dump faststart element in logfile for debugging purpose */
-         setPERBuffer(pctxt,  (char*)pFS[j].data, pFS[j].numocts, 1);
-         initializePrintHandler(&printHandler, "FastStart Element");
-         setEventHandler (pctxt, &printHandler);
-         memset(&printOlc, 0, sizeof(printOlc));
-         ret = asn1PD_H245OpenLogicalChannel(pctxt, &(printOlc));
-         if(ret != ASN_OK)
-         {
-            OOTRACEERR3("Error: Failed decoding FastStart Element (%s, %s)\n",
-                        call->callType, call->callToken);
-            ooFreeQ931Message(q931msg);
-            if(call->callState < OO_CALL_CLEAR)
-            {
-               call->callEndReason = OO_REASON_LOCAL_CLEARED;
-               call->callState = OO_CALL_CLEAR;
-            }
-            return OO_FAILED;
-         }
-         finishPrint();
-         removeEventHandler(pctxt);
-
-         olc = NULL;
-         j++;
-         epCap = NULL;
-      }
-      OOTRACEDBGA4("Added %d fast start elements to CONNECT message "
-                   "(%s, %s)\n",  j, call->callType, call->callToken);
-      if(j != 0)
-      {
-         connect->m.fastStartPresent = TRUE;
-         connect->fastStart.n = j;
-         connect->fastStart.elem = pFS;
-      }
-      else{
-         OOTRACEINFO3("None of the faststart elements received in setup can be"
-                      " supported, rejecting faststart.(%s, %s)\n",
-                      call->callType, call->callToken);
-         connect->m.fastStartPresent = FALSE;
-         OO_CLRFLAG(call->flags, OO_M_FASTSTART);
-         OOTRACEDBGC3("Faststart for call is disabled by local endpoint."
-                      "(%s, %s)\n", call->callType, call->callToken);
-      }
+   ret = ooSetFastStartResponse(call, q931msg,
+      &connect->fastStart.n, &connect->fastStart.elem);
+   if(ret != ASN_OK) { return ret; }
+   if(connect->fastStart.n > 0) {
+      connect->m.fastStartPresent = TRUE;
+   }
+   else {
+      connect->m.fastStartPresent = FALSE;
    }
 
    /* Add h245 listener address. Do not add H245 listener address in case
