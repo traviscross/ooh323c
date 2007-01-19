@@ -528,7 +528,14 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
-   if(callProceeding->m.h245AddressPresent)
+   if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
+      q931Msg->userInfo->h323_uu_pdu.h245Tunneling &&
+      callProceeding->m.h245AddressPresent) {
+      OOTRACEINFO3("Tunneling and h245address provided."
+                   "Using Tunneling for H.245 messages (%s, %s)\n",
+                   call->callType, call->callToken);
+   }
+   else if(callProceeding->m.h245AddressPresent)
    {
       if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
       {
@@ -718,7 +725,14 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
-   if(alerting->m.h245AddressPresent)
+   if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
+      q931Msg->userInfo->h323_uu_pdu.h245Tunneling &&
+      alerting->m.h245AddressPresent) {
+      OOTRACEINFO3("Tunneling and h245address provided."
+                   "Giving preference to Tunneling (%s, %s)\n",
+                   call->callType, call->callToken);
+   }
+   else if(alerting->m.h245AddressPresent)
    {
       if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
       {
@@ -933,7 +947,14 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
-   if(connect->m.h245AddressPresent)
+   if(q931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent &&
+      q931Msg->userInfo->h323_uu_pdu.h245Tunneling &&
+      connect->m.h245AddressPresent) {
+      OOTRACEINFO3("Tunneling and h245address provided."
+                   "Giving preference to Tunneling (%s, %s)\n",
+                   call->callType, call->callToken);
+   }
+   else if(connect->m.h245AddressPresent)
    {
       if (OO_TESTFLAG (call->flags, OO_M_TUNNELING))
       {
