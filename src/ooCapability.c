@@ -898,6 +898,9 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
     H245AudioCapability* audioCap, int dir)
 {
    int noofframes=0, cap;
+
+   OOTRACEDBGC2("Comparing channel with codec type: %d\n", audioCap->t);
+
    switch(audioCap->t)
    {
    case T_H245AudioCapability_g711Ulaw56k:
@@ -940,11 +943,15 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       return FALSE;
    }
 
+   OOTRACEDBGC3("Comparing codecs: channel's=%d, requested=%d\n",
+      epCap->cap, cap);
    if(cap != epCap->cap) { return FALSE; }
 
    /* Can we receive this capability */
    if(dir & OORX)
    {
+      OOTRACEDBGC3("Comparing RX frame rate: channel's=%d, requested=%d\n",
+         ((OOCapParams*)epCap->params)->rxframes, noofframes);
       if(((OOCapParams*)epCap->params)->rxframes >= noofframes) {
          return TRUE;
       }
@@ -958,6 +965,8 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
    /* Can we transmit compatible stream */
    if(dir & OOTX)
    {
+      OOTRACEDBGC3("Comparing TX frame rate: channel's=%d, requested=%d\n",
+         ((OOCapParams*)epCap->params)->txframes, noofframes);
       if(((OOCapParams*)epCap->params)->txframes <= noofframes) {
          return TRUE;
       }
@@ -1690,7 +1699,7 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
   
    if(!cur) return NULL;
   
-   OOTRACEDBGC4("Found matching simple audio capability type %s. Comparing"
+   OOTRACEDBGC4("Found matching H.263 video capability type %s. Comparing"
                 " other parameters. (%s, %s)\n", ooGetCapTypeText(cap),
                 call->callType, call->callToken);  
    if(dir & OORX)

@@ -191,6 +191,8 @@ OOLogicalChannel * ooFindLogicalChannel(OOH323CallData *call, int sessionID,
       {
          if(!strcmp(pChannel->dir, dir))
          {
+            OOTRACEDBGC3("ooFindLogicalChannel, comparing channel: %d:%s\n",
+                          pChannel->sessionID, pChannel->dir);
             if(!strcmp(dir, "receive"))
             {
                if(ooCapabilityCheckCompatibility(call, pChannel->chanCap,

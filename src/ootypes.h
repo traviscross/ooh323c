@@ -216,13 +216,13 @@ typedef enum OOCallMode {
  * Flag macros - these operate on bit mask flags using mask values
  */
 /** This macro sets a flag within a bit mask */
-#define OO_SETFLAG(flags,mask) (flags |= mask)
+#define OO_SETFLAG(flags,mask) (flags |= (ASN1UINT)mask)
 
 /** This macro clears a flag within a bit mask */
-#define OO_CLRFLAG(flags,mask) (flags &= ~mask)
+#define OO_CLRFLAG(flags,mask) (flags &= ~(ASN1UINT)mask)
 
 /** This macro tests a flag with a bit mask */
-#define OO_TESTFLAG(flags,mask) ((flags & mask) != 0)
+#define OO_TESTFLAG(flags,mask) (((ASN1UINT)flags & (ASN1UINT)mask) != 0)
 
 
 
