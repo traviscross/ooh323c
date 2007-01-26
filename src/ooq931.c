@@ -2035,13 +2035,13 @@ int ooH323MakeCall_helper(OOH323CallData *call)
       return OO_FAILED;
    }
 
-   /* Set calling party number  Q931 IE */
+   /* Set calling party number Q931 IE */
    if(call->callingPartyNumber)
      ooQ931SetCallingPartyNumberIE(q931msg,
-                            (const char*)call->callingPartyNumber, 1, 0, 1, 1);
+                            (const char*)call->callingPartyNumber, 1, 0, 0, 0);
   
 
-   /* Set called party number Q931 ie */
+   /* Set called party number Q931 IE */
    if(call->calledPartyNumber)
       ooQ931SetCalledPartyNumberIE(q931msg,
                             (const char*)call->calledPartyNumber, 1, 0);
