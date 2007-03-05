@@ -250,13 +250,13 @@ int main (int argc, char** argv)
 
    if (!strcmp (localIPAddr, "127.0.0.1")) {
       printf ("Failed to determine local IP address, "
-              "please specify as command line option\n");
+         "please specify as command line option\n");
       printf ("USAGE:\n%s", USAGE);
       return -1;
    }
 
    sprintf(logfile, "h323peer_%d", getpid());      
-          
+     
    /* Initialize the H323 endpoint - faststart and tunneling enabled */
    printf ("Using:\n"
            "\tCalls to make : %d\n"
@@ -291,7 +291,7 @@ int main (int argc, char** argv)
 
    if(!ooUtilsIsStrEmpty(user))
       ooH323EpSetCallerID(user);
-        
+  
 
    if(!ooUtilsIsStrEmpty(h323id))
       ooH323EpAddAliasH323ID(h323id);
@@ -366,7 +366,7 @@ int main (int argc, char** argv)
          {
             printf("malloc failed\n");
             return 1;
-         }                                                                      
+         }
          strcpy(token, callToken);
          pTimer = ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
                                  token, FALSE);
@@ -388,10 +388,10 @@ int main (int argc, char** argv)
 static int startReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf ("Starting receive channel at %s:%d - %s\n",
-           call->localIP, pChannel->localRtpPort, call->callToken);
+      call->localIP, pChannel->localRtpPort, call->callToken);
 
-   /* TODO: user would add application specific logic here to start     */
-   /* the media receive channel..                                       */
+   /* TODO: user would add application specific logic here to start   */
+   /* the media receive channel..               */
 
    return OO_OK;
 }
@@ -403,7 +403,7 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    OOTimer* timer = NULL;
    char *token=NULL;
    printf ("Starting transmit channel to %s:%d - %s\n",
-           call->remoteIP, pChannel->remoteMediaPort, call->callToken);
+      call->remoteIP, pChannel->remoteMediaPort, call->callToken);
    if(gCalls != 0)
    {
       token = (char*)malloc(strlen(call->callToken)+1);
@@ -412,8 +412,8 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
                                token, FALSE);
 
    }
-   /* TODO: user would add application specific logic here to start     */
-   /* the media transmit channel..                                      */
+   /* TODO: user would add application specific logic here to start   */
+   /* the media transmit channel..               */
 
    return OO_OK;
 }
@@ -424,8 +424,8 @@ static int stopReceiveChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf ("Stopping receive channel - %s\n", call->callToken);
 
-   /* TODO: user would add application specific logic here to stop      */
-   /* the media receive channel..                                       */
+   /* TODO: user would add application specific logic here to stop   */
+   /* the media receive channel..               */
 
    return OO_OK;
 }
@@ -436,8 +436,8 @@ static int stopTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
 {
    printf ("Stopping transmit channel - %s\n", call->callToken);
 
-   /* TODO: user would add application specific logic here to stop      */
-   /* the media transmit channel..                                      */
+   /* TODO: user would add application specific logic here to stop   */
+   /* the media transmit channel..               */
 
    return OO_OK;
 }
@@ -448,8 +448,8 @@ static int onAlerting (ooCallData* call)
 {
    printf ("onAlerting - %s\n", call->callToken);
 
-   /* TODO: user would add application specific logic here to handle    */
-   /* an H.225 alerting message..                                       */
+   /* TODO: user would add application specific logic here to handle   */
+   /* an H.225 alerting message..               */
 
    return OO_OK;
 }
@@ -460,11 +460,11 @@ static int onIncomingCall (ooCallData* call)
 {
 
    if(bListen)
-         printf("onIncomingCall from\"%s\"(%s) ---- %s\n",
+      printf("onIncomingCall from\"%s\"(%s) ---- %s\n",
              (call->remoteDisplayName)?call->remoteDisplayName:"Unknown Name",
            call->callingPartyNumber?call->callingPartyNumber:"Unknown Number",call->callToken);
-   /* TODO: user would add application specific logic here to handle    */
-   /* an incoming call request..                                        */
+   /* TODO: user would add application specific logic here to handle   */
+   /* an incoming call request..               */
 
    return OO_OK;
 }
@@ -475,8 +475,8 @@ static int onNewCallCreated (ooCallData* call)
 {
    printf ("onNewCallCreated - %s\n", call->callToken);
 
-   /* TODO: user would add application specific logic here to handle    */
-   /* outgoing call admitted..                                          */
+   /* TODO: user would add application specific logic here to handle   */
+   /* outgoing call admitted..                  */
 
    return OO_OK;
 }
@@ -549,7 +549,8 @@ static int callIntervalTimerExpired(void *pdata)
          strcpy(token, callToken);
          pTimer =  ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval, token, FALSE);
          gCallCounter++;
-      }else{
+      }
+      else{
          printf("ooMakeCall failed - %s\n", ooGetStkCmdStatusCodeTxt(stat));
          return -1;
       }
