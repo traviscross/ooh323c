@@ -1,6 +1,8 @@
 CVS
 1. Updated log information for "H.225 Information" message
-        Thanks to Andrew Maksimov
+        (Thanks to Andrew Maksimov)
+2. Fixed bug in keepalive Regstration Message(RRQ) for endpoint identifier value
+   (Thanks to Mike Tuby)
 
 Release 0.8.3
 1. Added MediaWaitForConnect configuration option (Thanks to Tim King,

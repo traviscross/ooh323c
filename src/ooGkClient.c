@@ -981,6 +981,37 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    pRegReq->discoveryComplete= pGkClient->discoveryComplete;
    pRegReq->m.keepAlivePresent=TRUE;
    pRegReq->keepAlive= keepAlive;
+
+   /*
+    * Cisco Gatekeeper re-registration fix.  Thanks to Mike Tubby (mike@tubby.org) 28feb2007
+    * Without this patch initial registration works, but re-registration fails!
+    *
+    * For light-weight re-registration, keepalive is set true
+    * GK needs rasAddress, keepAlive, endpointIdentifier, gatekeeperIdentifier,
+    * tokens, and timeToLive
+    * GK will ignore all other params if KeepAlive is set.
+    *
+    */
+   if(keepAlive) {
+      /* KeepAlive, re-registration message...
+         allocate storage for endpoint-identifier, and populate it from what the
+         GK told us from the previous RCF. Only allocate on the first pass thru here */
+      pRegReq->endpointIdentifier.data =
+           (ASN116BITCHAR*)memAlloc(pctxt, pGkClient->gkId.nchars*sizeof(ASN116BITCHAR));
+      if (pRegReq->endpointIdentifier.data) {
+         pRegReq->endpointIdentifier.nchars = pGkClient->endpointId.nchars;
+         pRegReq->m.endpointIdentifierPresent = TRUE;
+         memcpy(pRegReq->endpointIdentifier.data, pGkClient->endpointId.data, pGkClient->endpointId.nchars*sizeof(ASN116BITCHAR));
+         OOTRACEINFO1("Sending RRQ for re-registration (with EndpointID)\n");
+      }
+      else {
+         OOTRACEERR1("Error: Failed to allocate memory for EndpointIdentifier in RRQ \n");
+         memReset(pctxt);
+         pGkClient->state = GkClientFailed;
+         return OO_FAILED;
+      }
+   }
+
    pRegReq->m.timeToLivePresent = TRUE;
    pRegReq->timeToLive = pGkClient->regTimeout;
 
