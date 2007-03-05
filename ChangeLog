@@ -1,3 +1,7 @@
+CVS
+1. Updated log information for "H.225 Information" message
+        Thanks to Andrew Maksimov
+
 Release 0.8.3
 1. Added MediaWaitForConnect configuration option (Thanks to Tim King,
         for solving PSTN call ring problem)

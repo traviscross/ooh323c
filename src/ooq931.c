@@ -3359,7 +3359,7 @@ const char* ooGetMsgTypeText (int msgType)
       "OOConnect",
       "OOReleaseComplete",
       "OOFacility",
-      "OOFacility",
+      "OOInformation",
       "OOMasterSlaveDetermination",
       "OOMasterSlaveAck",
       "OOMasterSlaveReject",
