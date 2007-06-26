@@ -1237,18 +1237,24 @@ int ooSendCallProceeding(OOH323CallData *call)
       return OO_FAILED;
    }
    memset(callProceeding, 0, sizeof(H225CallProceeding_UUIE));
-   q931msg->userInfo->h323_uu_pdu.h323_message_body.u.callProceeding = callProceeding;
+   q931msg->userInfo->
+      h323_uu_pdu.h323_message_body.u.callProceeding = callProceeding;
    callProceeding->m.multipleCallsPresent = 1;
    callProceeding->m.maintainConnectionPresent = 1;
    callProceeding->multipleCalls = FALSE;
    callProceeding->maintainConnection = FALSE;
 
-   callProceeding->m.callIdentifierPresent = 1;
-   callProceeding->callIdentifier.guid.numocts =
-                                   call->callIdentifier.guid.numocts;
-   memcpy(callProceeding->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
+   if (call->callIdentifier.guid.numocts > 0) {
+      callProceeding->m.callIdentifierPresent = 1;
+      callProceeding->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy(callProceeding->callIdentifier.guid.data,
+             call->callIdentifier.guid.data,
+             call->callIdentifier.guid.numocts);
+   }
+   else callProceeding->m.callIdentifierPresent = 0;
+
    callProceeding->protocolIdentifier = gProtocolID; 
 
    /* Pose as Terminal or Gateway */
@@ -1355,18 +1361,21 @@ int ooSendAlerting(OOH323CallData *call)
    }
    alerting->m.presentationIndicatorPresent = TRUE;
    alerting->presentationIndicator.t =
-                             T_H225PresentationIndicator_presentationAllowed;
+      T_H225PresentationIndicator_presentationAllowed;
    alerting->m.screeningIndicatorPresent = TRUE;
    alerting->screeningIndicator = userProvidedNotScreened;
 
+   if (call->callIdentifier.guid.numocts > 0) {
+      alerting->m.callIdentifierPresent = 1;
+      alerting->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
 
+      memcpy (alerting->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else alerting->m.callIdentifierPresent = 0;
 
-   alerting->m.callIdentifierPresent = 1;
-   alerting->callIdentifier.guid.numocts =
-                                   call->callIdentifier.guid.numocts;
-   memcpy(alerting->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
    alerting->protocolIdentifier = gProtocolID; 
 
    /* Pose as Terminal or Gateway */
@@ -1473,12 +1482,18 @@ int ooSendFacility(OOH323CallData *call)
 
    /* Populate Facility UUIE */
    facility->protocolIdentifier = gProtocolID; 
-   facility->m.callIdentifierPresent = 1;
-   facility->callIdentifier.guid.numocts =
-                                   call->callIdentifier.guid.numocts;
-   memcpy(facility->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
+
+   if (call->callIdentifier.guid.numocts > 0) {
+      facility->m.callIdentifierPresent = 1;
+      facility->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy(facility->callIdentifier.guid.data,
+             call->callIdentifier.guid.data,
+             call->callIdentifier.guid.numocts);
+   }
+   else facility->m.callIdentifierPresent = 0;
+
    facility->reason.t = T_H225FacilityReason_transportedInformation;
    OOTRACEDBGA3("Built Facility message to send (%s, %s)\n", call->callType,
                  call->callToken);
@@ -1556,22 +1571,30 @@ int ooSendReleaseComplete(OOH323CallData *call)
 
    /* Add user-user ie */
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=TRUE;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
+
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
-           T_H225H323_UU_PDU_h323_message_body_releaseComplete;
+      T_H225H323_UU_PDU_h323_message_body_releaseComplete;
   
-   q931msg->userInfo->h323_uu_pdu.h323_message_body.u.releaseComplete =
-                                                             releaseComplete;
-   releaseComplete->m.callIdentifierPresent = 1;
-   releaseComplete->protocolIdentifier = gProtocolID;
-   releaseComplete->callIdentifier.guid.numocts =
-           call->callIdentifier.guid.numocts;
-   memcpy(releaseComplete->callIdentifier.guid.data,
-                                  call->callIdentifier.guid.data,
-                                  call->callIdentifier.guid.numocts);
+   q931msg->userInfo->h323_uu_pdu.
+      h323_message_body.u.releaseComplete = releaseComplete;
+
+   if (call->callIdentifier.guid.numocts > 0) {
+      releaseComplete->m.callIdentifierPresent = 1;
+      releaseComplete->protocolIdentifier = gProtocolID;
+      releaseComplete->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy (releaseComplete->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else releaseComplete->m.callIdentifierPresent = 0;
 
    OOTRACEDBGA3("Built Release Complete message (%s, %s)\n",
                 call->callType, call->callToken);
+
    /* Send H225 message */  
    ret = ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
@@ -1655,20 +1678,25 @@ int ooAcceptCall(OOH323CallData *call)
    connect->multipleCalls = FALSE;
    connect->maintainConnection = FALSE;
   
-  
    connect->conferenceID.numocts = 16;
    for (i = 0; i < 16; i++)
       connect->conferenceID.data[i] = i + 1;
 
-   connect->m.callIdentifierPresent = 1;
-   connect->callIdentifier.guid.numocts =
-                                 call->callIdentifier.guid.numocts;
-   memcpy(connect->callIdentifier.guid.data, call->callIdentifier.guid.data,
-                                         call->callIdentifier.guid.numocts);
-  
+   if (call->callIdentifier.guid.numocts > 0) {
+      connect->m.callIdentifierPresent = 1;
+      connect->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy (connect->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else connect->m.callIdentifierPresent = 0;
+
    connect->conferenceID.numocts = call->confIdentifier.numocts;
    memcpy(connect->conferenceID.data, call->confIdentifier.data,
           call->confIdentifier.numocts);
+
    /* Populate alias addresses */
    connect->m.connectedAddressPresent = TRUE;
    if(call->ourAliases)
@@ -2414,12 +2442,16 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    setup->callType.t = T_H225CallType_pointToPoint;
 
    /* Populate optional fields */
-   setup->m.callIdentifierPresent = TRUE;
-   /*ooGenerateCallIdentifier(&setup->callIdentifier);*/
-   setup->callIdentifier.guid.numocts = call->callIdentifier.guid.numocts;
-   memcpy(setup->callIdentifier.guid.data, call->callIdentifier.guid.data,
-                               call->callIdentifier.guid.numocts);
-  
+     
+   if (call->callIdentifier.guid.numocts > 0) {
+      setup->m.callIdentifierPresent = TRUE;
+      setup->callIdentifier.guid.numocts = call->callIdentifier.guid.numocts;
+      memcpy (setup->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else setup->m.callIdentifierPresent = FALSE;
+
    setup->m.mediaWaitForConnectPresent = TRUE;
    if(OO_TESTFLAG(call->flags, OO_M_MEDIAWAITFORCONN)) {
       setup->mediaWaitForConnect = TRUE;
@@ -2508,12 +2540,17 @@ int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data)
    }
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.information =
                                                                   information;
-   information->m.callIdentifierPresent = 1;
-   information->callIdentifier.guid.numocts =
-                                   call->callIdentifier.guid.numocts;
-   memcpy(information->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
+   if (call->callIdentifier.guid.numocts > 0) {
+      information->m.callIdentifierPresent = 1;
+      information->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy (information->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else information->m.callIdentifierPresent = 0;
+
    information->protocolIdentifier = gProtocolID;
   
    /*Add keypad IE*/
@@ -2628,13 +2665,17 @@ int ooH323ForwardCall(char* callToken, char *dest)
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
   
    facility->protocolIdentifier = gProtocolID; 
-   facility->m.callIdentifierPresent = 1;
-   facility->callIdentifier.guid.numocts =
-      call->callIdentifier.guid.numocts;
 
-   memcpy(facility->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
+   if (call->callIdentifier.guid.numocts > 0) {
+      facility->m.callIdentifierPresent = 1;
+      facility->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy (facility->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+   else facility->m.callIdentifierPresent = 0;
 
    facility->reason.t = T_H225FacilityReason_callForwarded;
   
@@ -2905,15 +2946,20 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf,
    }
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
+
    /* Populate Facility UUIE */
    facility->protocolIdentifier = gProtocolID; 
-   facility->m.callIdentifierPresent = 1;
-   facility->callIdentifier.guid.numocts =
-      call->callIdentifier.guid.numocts;
 
-   memcpy(facility->callIdentifier.guid.data,
-          call->callIdentifier.guid.data,
-          call->callIdentifier.guid.numocts);
+   if (call->callIdentifier.guid.numocts > 0) {
+      facility->m.callIdentifierPresent = 1;
+      facility->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy(facility->callIdentifier.guid.data,
+             call->callIdentifier.guid.data,
+             call->callIdentifier.guid.numocts);
+   }
+   else facility->m.callIdentifierPresent = 0;
 
    facility->reason.t = T_H225FacilityReason_transportedInformation;
 
@@ -3446,4 +3492,3 @@ const char* ooGetQ931CauseValueText(int val)
    }
    return "Unsupported Cause Type";
 }
-
