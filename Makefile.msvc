@@ -1,10 +1,5 @@
-OOH323CCONF = .\config.msvc
-!include $(OOH323CCONF)
-OOH323C_MAJOR_VERSION=0 #Should be part of configure script
-OOH323C_MINOR_VERSION=7
-
 LIBDIR=.\lib
-
+INTDIR=.\win32
 
 #intermediate files
 
@@ -73,9 +68,9 @@ DLLOPTSD= /LDd /MDd
 
 
 # The linker and its options.
-LD = link.exe
-LDFLAGS = /nologo /subsystem:console /VERSION:$(OOH323C_MAJOR_VERSION).$(OOH323C_MINOR_VERSION)
-LDFLAGS= $(LDFLAGS)  /incremental:no /OPT:NOREF
+LD = cl.exe
+LDFLAGS = /nologo /link
+LDFLAGS= $(LDFLAGS) /subsystem:console /incremental:no /OPT:NOREF
 LIBS = ws2_32.lib
 
 #Archiver and its options
@@ -93,7 +88,7 @@ ooh323c: $(LIBDIR)\$(OOH323C_DLL)
 
 ### Build dynamic library ###
 $(LIBDIR)\$(OOH323C_DLL): $(LIBDIR) $(OOH323COBJS) 
-	$(LD) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOH323C_IMP) /OUT:$(LIBDIR)\$(OOH323C_DLL) $(OOH323COBJS) $(LIBS)
+	$(LD) $(OOH323COBJS) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOH323C_IMP) /OUT:$(LIBDIR)\$(OOH323C_DLL) $(LIBS)
 
 $(OOH323COBJS): $(OOH323C_OBJDIR)
 	@echo -  Compiling stack library (release)
@@ -154,7 +149,7 @@ media: $(LIBDIR)\$(OOMEDIA_DLL)
 
 $(LIBDIR)\$(OOMEDIA_DLL): $(LIBDIR) $(OOMEDIAOBJS) 
 	@echo - Linking oomedia shared library
-	$(LD) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOMEDIA_IMP) /OUT:$(LIBDIR)\$(OOMEDIA_DLL) $(OOMEDIAOBJS) $(LIBS) winmm.lib 
+	$(LD) $(OOMEDIAOBJS) $(LDFLAGS) /DLL /IMPLIB:$(LIBDIR)\$(OOMEDIA_IMP) /OUT:$(LIBDIR)\$(OOMEDIA_DLL) $(LIBS) winmm.lib 
 
 $(OOMEDIAOBJS): $(OOMEDIA_OBJDIR)
 	@echo - Compiling media library
