@@ -447,12 +447,11 @@ ASN1USINT ooGenerateCallReference()
 }
 
 
-int ooGenerateCallIdentifier(H225CallIdentifier *callid)
+static int genGloballyUniqueID (ASN1OCTET guid[16])
 {
    ASN1INT64 timestamp;
-   int i=0;
+   int i;
 #ifdef _WIN32
-  
    SYSTEMTIME systemTime;
    GetLocalTime(&systemTime);
    SystemTimeToFileTime(&systemTime, (LPFILETIME)&timestamp);
@@ -461,22 +460,25 @@ int ooGenerateCallIdentifier(H225CallIdentifier *callid)
    gettimeofday(&systemTime, NULL);
    timestamp = systemTime.tv_sec * 10000000 + systemTime.tv_usec*10;
 #endif
-
-   callid->guid.numocts = 16;
-   callid->guid.data[0] = 'o';
-   callid->guid.data[1] = 'o';
-   callid->guid.data[2] = 'h';
-   callid->guid.data[3] = '3';
-   callid->guid.data[4] = '2';
-   callid->guid.data[5] = '3';
-   callid->guid.data[6] = 'c';
-   callid->guid.data[7] = '-';
+   guid[0] = 'o';
+   guid[1] = 'o';
+   guid[2] = 'h';
+   guid[3] = '3';
+   guid[4] = '2';
+   guid[5] = '3';
+   guid[6] = 'c';
+   guid[7] = '-';
 
    for (i = 8; i < 16; i++)
-       callid->guid.data[i] = (ASN1OCTET)((timestamp>>((i-8+1)*8))&0xff);
+       guid[i] = (ASN1OCTET)((timestamp>>((i-8+1)*8))&0xff);
 
-   return OO_OK;
+   return 0;
+}
 
+int ooGenerateCallIdentifier(H225CallIdentifier *callid)
+{
+   callid->guid.numocts = 16;
+   return genGloballyUniqueID (callid->guid.data);
 }
 
 int ooFreeQ931Message(Q931Message *q931Msg)
@@ -1679,8 +1681,7 @@ int ooAcceptCall(OOH323CallData *call)
    connect->maintainConnection = FALSE;
   
    connect->conferenceID.numocts = 16;
-   for (i = 0; i < 16; i++)
-      connect->conferenceID.data[i] = i + 1;
+   genGloballyUniqueID (connect->conferenceID.data);
 
    if (call->callIdentifier.guid.numocts > 0) {
       connect->m.callIdentifierPresent = 1;
@@ -1869,11 +1870,7 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
    fwdedCall->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&fwdedCall->callIdentifier);
    fwdedCall->confIdentifier.numocts = 16;
-   irand = rand();
-   for (i = 0; i < 16; i++) {
-      fwdedCall->confIdentifier.data[i] = irand++;
-   }
-     
+   genGloballyUniqueID (fwdedCall->confIdentifier.data);
 
    if(gH323ep.gkClient && !OO_TESTFLAG(fwdedCall->flags, OO_M_DISABLEGK))
    {
@@ -1955,11 +1952,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    call->callReference = ooGenerateCallReference();
    ooGenerateCallIdentifier(&call->callIdentifier);
    call->confIdentifier.numocts = 16;
-   irand = rand();
-   for (i = 0; i < 16; i++) {
-      call->confIdentifier.data[i] = irand++;
-   }
-     
+   genGloballyUniqueID (call->confIdentifier.data);
 
    if(gH323ep.gkClient && !OO_TESTFLAG(call->flags, OO_M_DISABLEGK))
    {
