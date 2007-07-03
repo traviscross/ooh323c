@@ -1,16 +1,21 @@
 CVS
 1. Updated log information for "H.225 Information" message
-        (Thanks to Andrew Maksimov)
-2. Fixed bug in keepalive Regstration Message(RRQ) for endpoint identifier value
-   (Thanks to Mike Tuby)
+   (thanks to Andrew Maksimov)
+2. Fixed bug in keepalive Regstration Message(RRQ) for endpoint identifier
+   value (thanks to Mike Tubby)
+3. Fixed handling of empty call identifier values.  Optional field now
+   omitted from encoded messages).
+4. Modified generation of conference ID value to create a more unique
+   identifier.
+5. Fixed multiple problems with Makefile.msvc for building on Windows.
 
 Release 0.8.3
 1. Added MediaWaitForConnect configuration option (Thanks to Tim King,
-        for solving PSTN call ring problem)
+   for solving PSTN call ring problem)
 2. Changed CallingPartyNumber IE to disable the CLI screening. (Thanks to
    Tim King)
 3. Added fast start response in ALERTING message for early audio. Solves the
-        problem to listening PSTN ring or announcements.
+   problem to listening PSTN ring or announcements.
 
 Release 0.8.2
 1. Used rand number for conference id, Thanks to Patrick Jordan
