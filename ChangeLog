@@ -8,6 +8,7 @@ CVS
 4. Modified generation of conference ID value to create a more unique
    identifier.
 5. Fixed multiple problems with Makefile.msvc for building on Windows.
+6. Changed default T35 country code and manufacturer code to assigned values.
 
 Release 0.8.3
 1. Added MediaWaitForConnect configuration option (Thanks to Tim King,
