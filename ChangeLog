@@ -1,4 +1,7 @@
 CVS
+No current changes.
+
+Release 0.8.4
 1. Updated log information for "H.225 Information" message
    (thanks to Andrew Maksimov)
 2. Fixed bug in keepalive Regstration Message(RRQ) for endpoint identifier
