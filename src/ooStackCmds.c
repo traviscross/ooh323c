@@ -270,6 +270,8 @@ OOStkCmdStat ooStopMonitor()
    if(ooWriteStackCommand(&cmd) != OO_OK)
       return OO_STKCMD_WRITEERR;
 
+   gCmdChan = 0;
+
    return OO_STKCMD_SUCCESS;
 }
 

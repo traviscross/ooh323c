@@ -863,6 +863,18 @@ int ooH2250Receive(OOH323CallData *call)
    /* Remaining message length is length - tpkt length */
    len = len - 4;
 
+   /* Check if temporary message buffer has enough space for the whole message */
+   if (len > MAXMSGLEN) {
+      OOTRACEERR4("Error: Message too long - %d bytes (%s, %s)\n",
+                  len, call->callType, call->callToken);
+      if (call->callState < OO_CALL_CLEAR) {
+         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
+         call->callState = OO_CALL_CLEAR;
+      }
+      return OO_FAILED;
+   }
+
+ 
    /* Now read actual Q931 message body. We should make sure that we
       receive complete message as indicated by len. If we don't then there
       is something wrong. The loop below receives message, then checks whether

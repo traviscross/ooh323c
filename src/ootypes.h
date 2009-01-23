@@ -61,7 +61,7 @@
 
 
 
-#define OOH323C_VERSION "v0.8.3"
+#define OOH323C_VERSION "v0.8.4"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL
@@ -194,7 +194,7 @@ typedef enum OOCallClearReason {
 #define OO_H245CONNECT_TIMER (1<<7)
 
 /** Maximum length for received messages */
-#define MAXMSGLEN 4096
+#define MAXMSGLEN 16384
 
 /** Maximum length of a filename */
 #define MAXFILENAME 256
