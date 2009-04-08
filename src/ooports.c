@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -82,7 +82,7 @@ int ooBindPort (OOH323PortType type, OOSOCKET socket, char *ip)
    }
 }
 
-#ifdef _WIN32       
+#ifdef _WIN32
 int ooBindOSAllocatedPort(OOSOCKET socket, char *ip)
 {
    OOIPADDR ipAddrs;
@@ -97,7 +97,7 @@ int ooBindOSAllocatedPort(OOSOCKET socket, char *ip)
       if(ret == ASN_OK)
       {
          return name.sin_port;
-        
+
       }
    }
 

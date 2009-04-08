@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -106,7 +106,7 @@ void ooTimerFireExpired (OOCTXT* pctxt, DList *pList)
       if (ooTimerExpired (pTimer)) {
          /*
           * Re-register before calling callback function in case it is
-          * a long duration callback.                                  
+          * a long duration callback.
           */
          if (pTimer->reRegister) ooTimerReset (pctxt, pList, pTimer);
 
@@ -149,7 +149,7 @@ struct timeval* ooTimerNextTimeout (DList *pList, struct timeval* ptimeout)
    ooGetTimeOfDay (&tvstr, 0);
 
    ptimeout->tv_sec =
-      OOMAX ((int) 0, (int) (ptimer->expireTime.tv_sec - tvstr.tv_sec));  
+      OOMAX ((int) 0, (int) (ptimer->expireTime.tv_sec - tvstr.tv_sec));
 
    ptimeout->tv_usec = ptimer->expireTime.tv_usec - tvstr.tv_usec;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -31,7 +31,7 @@ extern DList g_TimerList;
 int ooH323EpInitialize
    (enum OOCallMode callMode, const char* tracefile)
 {
-  
+
    memset(&gH323ep, 0, sizeof(ooEndPoint));
 
    initContext(&(gH323ep.ctxt));
@@ -48,7 +48,7 @@ int ooH323EpInitialize
       strcpy(gH323ep.traceFile, tracefile);
    }
    else{
-      strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);     
+      strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);
    }
 
    gH323ep.fptraceFile = fopen(gH323ep.traceFile, "w");
@@ -74,12 +74,12 @@ int ooH323EpInitialize
    gH323ep.rtpPorts.start = RTPPORTSSTART;
    gH323ep.rtpPorts.max = RTPPORTSEND;
    gH323ep.rtpPorts.current = RTPPORTSSTART;
-  
+
    OO_SETFLAG(gH323ep.flags, OO_M_FASTSTART);
    OO_SETFLAG(gH323ep.flags, OO_M_TUNNELING);
    OO_SETFLAG(gH323ep.flags, OO_M_AUTOANSWER);
    OO_CLRFLAG(gH323ep.flags, OO_M_GKROUTED);
-  
+
    gH323ep.aliases = NULL;
 
    gH323ep.termType = DEFAULT_TERMTYPE;
@@ -102,12 +102,12 @@ int ooH323EpInitialize
 
    ooH323EpSetCallerID(DEFAULT_CALLERID);
 
-  
+
    gH323ep.myCaps = NULL;
    gH323ep.noOfCaps = 0;
    gH323ep.callList = NULL;
    gH323ep.dtmfmode = 0;
-   gH323ep.callingPartyNumber[0]='\0';    
+   gH323ep.callingPartyNumber[0]='\0';
    gH323ep.callMode = callMode;
    gH323ep.isGateway = FALSE;
 
@@ -148,7 +148,7 @@ int ooH323EpSetLocalAddress(const char* localip, int listenport)
       strcpy(gCmdIP, localip);
       OOTRACEINFO2("Signalling IP address is set to %s\n", localip);
    }
-  
+
    if(listenport)
    {
       gH323ep.listenPort = listenport;
@@ -329,7 +329,7 @@ int ooH323EpSetH225MsgCallbacks(OOH225MsgCallbacks h225Callbacks)
 
    return OO_OK;
 }
-   
+
 int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks)
 {
    gH323ep.h323Callbacks.onNewCallCreated = h323Callbacks.onNewCallCreated;
@@ -370,7 +370,7 @@ int ooH323EpDestroy(void)
       if(gH323ep.listener)
       {
          ooSocketClose(*(gH323ep.listener));
-         gH323ep.listener = NULL;  
+         gH323ep.listener = NULL;
       }
 
       if(gH323ep.cmdListener != 0)
@@ -379,7 +379,7 @@ int ooH323EpDestroy(void)
          gH323ep.cmdListener = 0;
       }
 
-      ooGkClientDestroy(); 
+      ooGkClientDestroy();
 
       if(gH323ep.fptraceFile)
       {
@@ -534,7 +534,7 @@ int ooH323EpSetTraceLevel(int traceLevel)
 void ooH323EpPrintConfig(void)
 {
    OOTRACEINFO1("H.323 Endpoint Configuration is as follows:\n");
-  
+
    OOTRACEINFO2("\tTrace File: %s\n", gH323ep.traceFile);
 
    if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
@@ -565,7 +565,7 @@ void ooH323EpPrintConfig(void)
       OOTRACEINFO1("\tAutoAnswer - enabled\n");
    else
       OOTRACEINFO1("\tAutoAnswer - disabled\n");
-    
+
    OOTRACEINFO2("\tTerminal Type - %d\n", gH323ep.termType);
 
    OOTRACEINFO2("\tT35 CountryCode - %d\n", gH323ep.t35CountryCode);
@@ -575,7 +575,7 @@ void ooH323EpPrintConfig(void)
    OOTRACEINFO2("\tManufacturer Code - %d\n", gH323ep.manufacturerCode);
 
    OOTRACEINFO2("\tProductID - %s\n", gH323ep.productID);
-  
+
    OOTRACEINFO2("\tVersionID - %s\n", gH323ep.versionID);
 
    OOTRACEINFO2("\tLocal signalling IP address - %s\n", gH323ep.signallingIP);
@@ -586,7 +586,7 @@ void ooH323EpPrintConfig(void)
 
 
    OOTRACEINFO2("\tCall Establishment Timeout - %d seconds\n",
-                                          gH323ep.callEstablishmentTimeout);  
+                                          gH323ep.callEstablishmentTimeout);
 
    OOTRACEINFO2("\tMasterSlaveDetermination Timeout - %d seconds\n",
                    gH323ep.msdTimeout);
@@ -599,7 +599,7 @@ void ooH323EpPrintConfig(void)
 
    OOTRACEINFO2("\tSession Timeout - %d seconds\n", gH323ep.sessionTimeout);
 
-   return;  
+   return;
 }
 
 
@@ -758,7 +758,7 @@ int ooH323EpSetTCPPortRange(int base, int max)
       return OO_FAILED;
    }
    gH323ep.tcpPorts.current = gH323ep.tcpPorts.start;
-       
+
    OOTRACEINFO1("TCP port range initialize - successful\n");
    return OO_OK;
 }
@@ -773,16 +773,16 @@ int ooH323EpSetUDPPortRange(int base, int max)
       gH323ep.udpPorts.max = 65500;
    else
       gH323ep.udpPorts.max = max;
-       
+
    if(gH323ep.udpPorts.max<gH323ep.udpPorts.start)
    {
       OOTRACEERR1("Error: Failed to set udp ports- Max port number"
                   " less than Start port number\n");
       return OO_FAILED;
    }
-       
+
    gH323ep.udpPorts.current = gH323ep.udpPorts.start;
-       
+
    OOTRACEINFO1("UDP port range initialize - successful\n");
 
    return OO_OK;
@@ -798,14 +798,14 @@ int ooH323EpSetRTPPortRange(int base, int max)
       gH323ep.rtpPorts.max = 65500;
    else
       gH323ep.rtpPorts.max = max;
-       
+
    if(gH323ep.rtpPorts.max<gH323ep.rtpPorts.start)
    {
       OOTRACEERR1("Error: Failed to set rtp ports- Max port number"
                   " less than Start port number\n");
       return OO_FAILED;
    }
-       
+
    gH323ep.rtpPorts.current = gH323ep.rtpPorts.start;
    OOTRACEINFO1("RTP port range initialize - successful\n");
    return OO_OK;

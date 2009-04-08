@@ -1,4 +1,4 @@
-CFLAGS= @OOH323CFLAGS@
+AM_CFLAGS= @OOH323CFLAGS@
 noinst_PROGRAMS = h323peer
 h323peer_SOURCES = h323peer.c
 INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323

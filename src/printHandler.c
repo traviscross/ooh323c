@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -208,10 +208,10 @@ void printRealValue (double value)
    OOTRACEDBGB2 ("%f\n", value);
 }
 
-void printEnumValue (ASN1UINT value)
+void printEnumValue (ASN1UINT value, const char* text)
 {
    indent ();
-   OOTRACEDBGB2 ("%u\n", value);
+   OOTRACEDBGB3 ("%s(%u)\n", text, value);
 }
 
 void printOpenTypeValue (ASN1UINT numocts, const ASN1OCTET* data)

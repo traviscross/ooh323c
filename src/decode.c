@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -59,7 +59,7 @@ int decodeBits (OOCTXT* pctxt, ASN1UINT* pvalue, ASN1UINT nbits)
       /* Check if buffer contains number of bits requested */
 
       int nbytes = (((nbits - pctxt->buffer.bitOffset) + 7) / 8);
-     
+
       if ((pctxt->buffer.byteIndex + nbytes) >= pctxt->buffer.size) {
          return LOG_ASN1ERR (pctxt, ASN_E_ENDOFBUF);
       }
@@ -128,6 +128,21 @@ int decodeBitString
    }
 
    return ASN_OK;
+}
+
+int decodeBitString32
+(OOCTXT* pctxt, ASN1BitStr32* pvalue, ASN1UINT lower, ASN1UINT upper)
+{
+   Asn1SizeCnst lsize1;
+   lsize1.extended = FALSE;
+   lsize1.lower = lower;
+   lsize1.upper = upper;
+   lsize1.next = 0;
+
+   addSizeConstraint (pctxt, &lsize1);
+
+   return decodeBitString
+      (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
 }
 
 int decodeBMPString
@@ -258,11 +273,7 @@ int decodeConsUInt8
    ASN1UINT adjusted_value;
    int stat = ASN_OK;
 
-   /* Check for special case: if lower is 0 and upper is ASN1UINT_MAX,  */
-   /* set range to ASN1UINT_MAX; otherwise to upper - lower + 1         */
-
-   range_value = (lower == 0 && upper == ASN1UINT_MAX) ?
-      ASN1UINT_MAX : upper - lower + 1;
+   range_value = upper - lower + 1;
 
    if (lower != upper) {
       ASN1UINT range_bitcnt;
@@ -281,6 +292,8 @@ int decodeConsUInt8
 
          range_bitcnt = 8;
       }
+      else return ASN_E_TOOBIG;
+
       stat = decodeBits (pctxt, &adjusted_value, range_bitcnt);
       if (stat == ASN_OK) {
          value = adjusted_value + lower;
@@ -418,7 +431,7 @@ int decodeDynBitString (OOCTXT* pctxt, ASN1DynBitStr* pBitStr)
     * copy the bit string value into a dynamic memory buffer;
     * otherwise, store the pointer to the value in the decode
     * buffer in the data pointer argument. */
-  
+
    if (pctxt->flags & ASN1FASTCOPY) {
       /* check is it possible to do optimized decoding */
 
@@ -440,7 +453,7 @@ int decodeDynBitString (OOCTXT* pctxt, ASN1DynBitStr* pBitStr)
 
       if (bit == 0 && stat == ASN_OK) {
          ASN1UINT bitcnt;
-        
+
          stat = decodeLength (pctxt, &bitcnt);
          if (stat != 0) return LOG_ASN1ERR (pctxt, stat);
 
@@ -453,7 +466,7 @@ int decodeDynBitString (OOCTXT* pctxt, ASN1DynBitStr* pBitStr)
          }
          else
             pBitStr->data = 0;
-  
+
          return stat;
       }
    }
@@ -467,13 +480,13 @@ int decodeDynBitString (OOCTXT* pctxt, ASN1DynBitStr* pBitStr)
    }
 
    nocts = (nbits + 7) / 8;
-     
+
    /* Allocate memory for the target string */
 
    if (nocts > 0) {
       ptmp = (ASN1OCTET*) ASN1MALLOC (pctxt, nocts);
       if (0 == ptmp) return LOG_ASN1ERR (pctxt, ASN_E_NOMEM);
-     
+
       /* Call static bit string decode function */
 
       stat = decodeBitString (pctxt, &pBitStr->numbits, ptmp, nocts);
@@ -485,8 +498,7 @@ int decodeDynBitString (OOCTXT* pctxt, ASN1DynBitStr* pBitStr)
 
 int decodeDynOctetString (OOCTXT* pctxt, ASN1DynOctStr* pOctStr)
 {
-   ASN1OCTET* ptmp;
-   int nocts, stat;
+   int stat = 0;
 
    /* If "fast copy" option is not set (ASN1FASTCOPY) or if constructed,
     * copy the octet string value into a dynamic memory buffer;
@@ -514,44 +526,48 @@ int decodeDynOctetString (OOCTXT* pctxt, ASN1DynOctStr* pOctStr)
 
       if (bit == 0 && stat == ASN_OK) {
          ASN1UINT octcnt;
-        
+
          stat = decodeLength (pctxt, &octcnt);
          if (stat != 0) return LOG_ASN1ERR (pctxt, stat);
 
-         pOctStr->numocts = octcnt;
-         if (octcnt > 0) {
-            pOctStr->data = ASN1BUFPTR (pctxt);
-
-            stat = moveBitCursor (pctxt, octcnt * 8);
-            if (stat != ASN_OK) return LOG_ASN1ERR (pctxt, stat);
+         if (0 != pOctStr) {
+            pOctStr->numocts = octcnt;
+            pOctStr->data = (octcnt > 0) ? ASN1BUFPTR (pctxt) : 0;
          }
-         else
-            pOctStr->data = 0;
-        
+
+         if (octcnt > 0) {
+            stat = moveBitCursor (pctxt, octcnt * 8);
+            if (stat != 0) return stat;
+         }
+
          return stat;
       }
    }
-  
-   nocts = getComponentLength (pctxt, 8);
 
-   if (nocts < 0) return LOG_ASN1ERR (pctxt, nocts);
-   else if (nocts == 0) {
-      pOctStr->numocts = 0;
-      ptmp = 0;
+   if (0 != pOctStr) {
+      ASN1OCTET* ptmp;
+      int nocts = getComponentLength (pctxt, 8);
+
+      if (nocts < 0) return LOG_ASN1ERR (pctxt, nocts);
+      else if (nocts == 0) {
+         pOctStr->numocts = 0;
+         pOctStr->data = 0;
+      }
+      else {
+        /* Allocate memory for the target string */
+        ptmp = (ASN1OCTET*) ASN1MALLOC (pctxt, nocts);
+        if (0 == ptmp) return LOG_ASN1ERR (pctxt, ASN_E_NOMEM);
+
+        /* Call static octet string decode function */
+        stat = decodeOctetString (pctxt, &pOctStr->numocts, ptmp, nocts);
+
+        pOctStr->data = ptmp;
+      }
    }
-
-   /* Allocate memory for the target string */
-
    else {
-      ptmp = (ASN1OCTET*) ASN1MALLOC (pctxt, nocts);
-      if (0 == ptmp) return LOG_ASN1ERR (pctxt, ASN_E_NOMEM);
+      /* Call decodeOctetString with no buffer to skip field */
+      stat = decodeOctetString (pctxt, 0, 0, 0);
    }
-
-   /* Call static octet string decode function */
-
-   stat = decodeOctetString (pctxt, &pOctStr->numocts, ptmp, nocts);
-
-   pOctStr->data = ptmp;
 
    return stat;
 }
@@ -773,16 +789,16 @@ static int decodeOctets
 int decodeOctetString
 (OOCTXT* pctxt, ASN1UINT* numocts_p, ASN1OCTET* buffer, ASN1UINT bufsiz)
 {
-   ASN1UINT octcnt;
+  ASN1UINT octcnt, numocts = 0;
    int lstat, octidx = 0, stat;
    Asn1SizeCnst* pSizeList = pctxt->pSizeConstraint;
 
-   for (*numocts_p = 0;;) {
+   for (;;) {
       lstat = decodeLength (pctxt, &octcnt);
       if (lstat < 0) return LOG_ASN1ERR (pctxt, lstat);
 
       if (octcnt > 0) {
-         *numocts_p += octcnt;
+         numocts += octcnt;
 
          if (TRUE) {
             ASN1BOOL doAlign;
@@ -797,8 +813,13 @@ int decodeOctetString
             }
          }
 
-         stat = decodeOctets (pctxt, &buffer[octidx],
-                           bufsiz - octidx, (octcnt * 8));
+         if (0 != buffer) {
+           stat = decodeOctets (pctxt, &buffer[octidx],
+                                bufsiz - octidx, (octcnt * 8));
+         }
+         else {
+           stat = moveBitCursor (pctxt, (octcnt * 8));
+         }
 
          if (stat != ASN_OK) return LOG_ASN1ERR (pctxt, stat);
       }
@@ -809,20 +830,30 @@ int decodeOctetString
       else break;
    }
 
+   if (0 != numocts_p) *numocts_p = numocts;
+
    return ASN_OK;
 }
 
 int decodeOpenType
 (OOCTXT* pctxt, const ASN1OCTET** object_p2, ASN1UINT* numocts_p)
 {
-   ASN1DynOctStr octStr;
    int stat;
 
-   stat = decodeDynOctetString (pctxt, &octStr);
-   if (stat == ASN_OK) {
-      *numocts_p = octStr.numocts;
-      *object_p2 = octStr.data;
+   if (0 != object_p2) {
+     ASN1DynOctStr octStr;
+
+     stat = decodeDynOctetString (pctxt, &octStr);
+     if (stat == ASN_OK) {
+       *numocts_p = octStr.numocts;
+       *object_p2 = octStr.data;
+     }
    }
+   else {
+      /* If no buffer given, skip field */
+      stat = decodeDynOctetString (pctxt, 0);
+   }
+
 
    return stat;
 }
@@ -880,7 +911,7 @@ int decodeSemiConsUnsigned (OOCTXT* pctxt, ASN1UINT* pvalue, ASN1UINT lower)
    stat = decodeLength (pctxt, &nbytes);
    if (stat < 0) return LOG_ASN1ERR (pctxt, stat);
 
-  
+
    if (nbytes > 0) {
       stat = decodeByteAlign (pctxt);
       if (stat != ASN_OK) return LOG_ASN1ERR (pctxt, stat);
@@ -1045,6 +1076,6 @@ int moveBitCursor (OOCTXT* pctxt, int bitOffset)
    if (pctxt->buffer.byteIndex > pctxt->buffer.size) {
       return (ASN_E_ENDOFBUF);
    }
-     
+
    return ASN_OK;
 }

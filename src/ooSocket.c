@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -57,7 +57,9 @@ static HMODULE ws32 = 0;
 #define closesocket close
 #endif
 
-
+#if defined (_WIN32)
+typedef int socklen_t;
+#endif
 
 int ooSocketsInit ()
 {
@@ -69,7 +71,7 @@ int ooSocketsInit ()
    if (inited) return ASN_OK;
 
    wVersionRequested = MAKEWORD( 1, 1 );
-   
+
    err = WSAStartup (wVersionRequested, &wsaData);
    if ( err != 0 ) {
       /* Tell the user that we could not find a usable */
@@ -87,58 +89,58 @@ int ooSocketsInit ()
 //   ws32 = LoadLibrary ("WSOCK32.DLL");
   ws32 = LoadLibrary ("WS2_32.DLL");
    if (ws32 == NULL) return ASN_E_NOTINIT;
-  
+
    wsaStartup = (LPFN_WSASTARTUP) GetProcAddress (ws32, "WSAStartup");
    if (wsaStartup == NULL) return ASN_E_NOTINIT;
-  
+
    send = (LPFN_SEND) GetProcAddress (ws32, "send");
    if (send == NULL) return ASN_E_NOTINIT;
-  
+
    socket = (LPFN_SOCKET) GetProcAddress (ws32, "socket");
    if (socket == NULL) return ASN_E_NOTINIT;
-  
+
    setsockopt = (LPFN_SETSOCKOPT) GetProcAddress (ws32, "setsockopt");
    if (setsockopt == NULL) return ASN_E_NOTINIT;
-  
+
    bind = (LPFN_BIND) GetProcAddress (ws32, "bind");
    if (bind == NULL) return ASN_E_NOTINIT;
-  
+
    htonl = (LPFN_HTONL) GetProcAddress (ws32, "htonl");
    if (htonl == NULL) return ASN_E_NOTINIT;
-  
+
    htons = (LPFN_HTONS) GetProcAddress (ws32, "htons");
    if (htons == NULL) return ASN_E_NOTINIT;
-  
+
    connect = (LPFN_CONNECT) GetProcAddress (ws32, "connect");
    if (connect == NULL) return ASN_E_NOTINIT;
-  
+
    listen = (LPFN_LISTEN) GetProcAddress (ws32, "listen");
    if (listen == NULL) return ASN_E_NOTINIT;
-  
+
    accept = (LPFN_ACCEPT) GetProcAddress (ws32, "accept");
    if (accept == NULL) return ASN_E_NOTINIT;
-  
+
    inet_addr = (LPFN_INET_ADDR) GetProcAddress (ws32, "inet_addr");
    if (inet_addr == NULL) return ASN_E_NOTINIT;
-  
+
    ntohl = (LPFN_NTOHL) GetProcAddress (ws32, "ntohl");
    if (ntohl == NULL) return ASN_E_NOTINIT;
-  
+
    ntohs = (LPFN_NTOHS) GetProcAddress (ws32, "ntohs");
    if (ntohs == NULL) return ASN_E_NOTINIT;
-  
+
    recv = (LPFN_RECV) GetProcAddress (ws32, "recv");
    if (recv == NULL) return ASN_E_NOTINIT;
-  
+
    shutdown = (LPFN_SHUTDOWN) GetProcAddress (ws32, "shutdown");
    if (shutdown == NULL) return ASN_E_NOTINIT;
-  
+
    closesocket = (LPFN_CLOSESOCKET) GetProcAddress (ws32, "closesocket");
    if (closesocket == NULL) return ASN_E_NOTINIT;
 
    getsockname = (LPFN_GETSOCKNAME) GetProcAddress (ws32, "getsockname");
    if (getsockname == NULL) return ASN_E_NOTINIT;
-  
+
    ioctlsocket = (LPFN_IOCTLSOCKET) GetProcAddress(ws32, "ioctlsocket");
    if(ioctlsocket == NULL) return ASN_E_NOTINIT;
 
@@ -159,15 +161,15 @@ int ooSocketsInit ()
 
    gethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress (ws32, "gethostbyname");
    if (gethostbyname == NULL) return ASN_E_NOTINIT;
-  
+
    WSAGetLastError = (LPFN_WSAGETLASTERROR) GetProcAddress (ws32,
                                                            "WSAGetLastError");
    if (WSAGetLastError == NULL) return ASN_E_NOTINIT;
 
    WSACleanup = (LPFN_WSACLEANUP) GetProcAddress (ws32, "WSACleanup");
    if (WSACleanup == NULL) return ASN_E_NOTINIT;
-  
-     
+
+
    if (wsaStartup (MAKEWORD(1, 1), &wsaData) == -1) return ASN_E_NOTINIT;
 #endif
    return ASN_OK;
@@ -188,7 +190,7 @@ int ooSocketCreate (OOSOCKET* psocket)
    OOSOCKET sock = socket (AF_INET,
                              SOCK_STREAM,
                              0);
- 
+
    if (sock == OOSOCKET_INVALID){
       OOTRACEERR1("Error:Failed to create TCP socket\n");
       return ASN_E_INVSOCKET;
@@ -282,9 +284,12 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
 int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
 {
    int ret;
-   ret = getsockname(socket, (struct sockaddr*)name, size);
-   if(ret == 0)
+   socklen_t addrlen;
+   ret = getsockname(socket, (struct sockaddr*)name, &addrlen);
+   if(ret == 0) {
+      if (0 != size) *size = (int)addrlen;
       return ASN_OK;
+   }
    else{
       OOTRACEERR1("Error:ooSocketGetSockName - getsockname\n");
       return ASN_E_INVSOCKET;
@@ -306,13 +311,13 @@ int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port)
    host = inet_ntoa(addr.sin_addr);
 
    if(host && strlen(host) < (unsigned)len)
-      strcpy(ip, host);  
+      strcpy(ip, host);
    else{
      OOTRACEERR1("Error:Insufficient buffer for ip address - "
                  "ooSocketGetIpAndPort\n");
       return -1;
    }
-  
+
    *port = addr.sin_port;
 
    return ASN_OK;
@@ -357,7 +362,7 @@ int ooSocketConnect (OOSOCKET socket, const char* host, int port)
    {
       return ASN_E_INVSOCKET;
    }
-  
+
    memset (&m_addr, 0, sizeof (m_addr));
 
    m_addr.sin_family = AF_INET;
@@ -379,7 +384,7 @@ int ooSocketConnect (OOSOCKET socket, const char* host, int port)
 int ooSocketSend (OOSOCKET socket, const ASN1OCTET* pdata, ASN1UINT size)
 {
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
-  
+
    if (send (socket, (const char*) pdata, size, SEND_FLAGS) == -1)
       return ASN_E_INVSOCKET;
    return ASN_OK;
@@ -390,7 +395,7 @@ int ooSocketSendTo(OOSOCKET socket, const ASN1OCTET* pdata, ASN1UINT size,
 {
    struct sockaddr_in m_addr;
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
-  
+
    memset (&m_addr, 0, sizeof (m_addr));
 
    m_addr.sin_family = AF_INET;
@@ -429,13 +434,14 @@ int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize,
                       char* remotehost, ASN1UINT hostBufLen, int * remoteport)
 {
    struct sockaddr_in m_addr;
-   int len, addrlen;
+   socklen_t addrlen;
+   int len;
    char * host=NULL;
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
    addrlen = sizeof(m_addr);
 
    memset (&m_addr, 0, sizeof (m_addr));
-     
+
    if ((len = recvfrom (socket, (char*) pbuf, bufsize, 0,
                         (struct sockaddr*)&m_addr, &addrlen)) == -1)
       return ASN_E_INVSOCKET;
@@ -456,7 +462,7 @@ int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize,
 int ooSocketSelect(int nfds, fd_set *readfds, fd_set *writefds,
                      fd_set *exceptfds, struct timeval * timeout)
 {
-   int ret;  
+   int ret;
 #if defined (_WIN32)
   ret = select(nfds, readfds, writefds, exceptfds,
              (const struct timeval *) timeout);
@@ -483,7 +489,7 @@ int ooGetLocalIPAddress(char * pIPAddrs)
          return -1; /* Need to define a return value if made part of rtsrc */
       memcpy(&addr, phost->h_addr_list[0], sizeof(struct in_addr));
       strcpy(pIPAddrs, inet_ntoa(addr));
-    
+
    }
    else{
       return -1;
@@ -504,7 +510,8 @@ int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr)
    return ASN_OK;
 }
 
-int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp)
+int ooSocketConvertIpToNwAddr
+(const char* inetIp, ASN1OCTET* netIp, size_t bufsiz)
 {
 
    struct sockaddr_in sin = {0};
@@ -521,11 +528,13 @@ int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp)
       OOTRACEERR1("Error:Failed to convert address\n");
       return -1;
    }
- 
+
 #endif
-  
-   memcpy(netIp, (char*)&sin.sin_addr.s_addr, sizeof(unsigned long));
-   return ASN_OK;
+   if (bufsiz >= sizeof(unsigned long)) {
+     memcpy (netIp, (char*)&sin.sin_addr.s_addr, sizeof(unsigned long));
+     return ASN_OK;
+   }
+   else return ASN_E_BUFOVFLW;
 }
 
 int ooSocketAddrToStr (OOIPADDR ipAddr, char* pbuf, int bufsize)
@@ -580,7 +589,7 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
    if(ooSocketCreateUDP(&sock)!= ASN_OK)
    {
       OOTRACEERR1("Error:Failed to create udp socket - "
-                  "ooSocketGetInterfaceList\n");  
+                  "ooSocketGetInterfaceList\n");
       return -1;
    }
 #ifdef SIOCGIFNUM
@@ -609,7 +618,7 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
       for (ifName = ifc.ifc_req; (void*)ifName < ifEndList; ifName++) {
          char *pName=NULL;
          char addr[50], mask[50];
-        
+
          pIf = (struct OOInterface*)memAlloc(pctxt, sizeof(struct OOInterface));
          pName = (char*)memAlloc(pctxt, strlen(ifName->ifr_name)+1);
          if(!pIf)
@@ -619,8 +628,8 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
             return -1;
          }
          OOTRACEDBGA2("\tInterface name: %s\n", ifName->ifr_name);
-        
-        
+
+
          strcpy(ifReq.ifr_name, ifName->ifr_name);
          strcpy(pName, ifName->ifr_name);
          pIf->name = pName;
@@ -662,7 +671,7 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
             return -1;
          }
          strcpy(pIf->addr, addr);
-        
+
 #ifdef ifr_netmask
          if (ioctl(sock, SIOCGIFNETMASK, &ifReq) < 0)
          {
@@ -714,7 +723,7 @@ int ooSocketGetInterfaceList(OOCTXT *pctxt, OOInterface **ifList)
 */
       }
 
-   } 
+   }
    return ASN_OK;
 }
 #endif

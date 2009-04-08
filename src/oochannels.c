@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -37,6 +37,10 @@ extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
 
+/* TEMPORARY!!! */
+extern ASN1OCTET* g_H225Message;
+extern size_t g_H225MessageLen;
+/* end temp */
 
 int ooCreateH245Listener(OOH323CallData *call)
 {
@@ -67,7 +71,7 @@ int ooCreateH245Listener(OOH323CallData *call)
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-  
+
    OOTRACEINFO4("H245 listener creation - successful(port %d) (%s, %s)\n",
                 *(call->h245listenport),call->callType, call->callToken);
    return OO_OK;
@@ -111,7 +115,7 @@ int ooCreateH245Connection(OOH323CallData *call)
       OOTRACEINFO5("Trying to connect to remote endpoint to setup H245 "
                    "connection %s:%d(%s, %s)\n", call->remoteIP,
                     call->remoteH245Port, call->callType, call->callToken);
-             
+
       if((ret=ooSocketConnect(channelSocket, call->remoteIP,
                               call->remoteH245Port))==ASN_OK)
       {
@@ -221,7 +225,7 @@ int ooSendH225Msg(OOH323CallData *call, Q931Message *msg)
 
       OOTRACEDBGC4("Queued H225 messages %d. (%s, %s)\n",
                                      call->pH225Channel->outQueue.count,
-                                     call->callType, call->callToken); 
+                                     call->callType, call->callToken);
    }
    return OO_OK;
 }
@@ -255,7 +259,7 @@ int ooCreateH225Connection(OOH323CallData *call)
 #else
       ret = ooBindOSAllocatedPort(channelSocket, call->localIP);
 #endif
-     
+
       if(ret == OO_FAILED)
       {
          OOTRACEERR3("Error:Unable to bind to a TCP port (%s, %s)\n",
@@ -363,7 +367,7 @@ int ooCreateH323Listener()
    {
       gH323ep.listener = (OOSOCKET*)memAlloc(&gH323ep.ctxt,sizeof(OOSOCKET));
       *(gH323ep.listener) = channelSocket;
-         
+
       ooSocketListen(channelSocket,20); /*listen on socket*/
       OOTRACEINFO1("H323 listener creation - successful\n");
       return OO_OK;
@@ -377,7 +381,7 @@ int ooCreateH323Listener()
 
 
 
-int ooAcceptH225Connection()   
+int ooAcceptH225Connection()
 {
    OOH323CallData * call;
    int ret;
@@ -470,7 +474,7 @@ int ooAcceptH245Connection(OOH323CallData *call)
       OOTRACEERR3("ERROR:Sending Master-slave determination message "
                   "(%s, %s)\n", call->callType, call->callToken);
       return ret;
-   }  
+   }
    return OO_OK;
 }
 
@@ -506,7 +510,7 @@ int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
    }
 
 
-     
+
    if(gH323ep.callList)
    {
       call = gH323ep.callList;
@@ -523,7 +527,7 @@ int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
             if(*nfds < (int)call->pH225Channel->sock)
                *nfds = call->pH225Channel->sock;
          }
-          
+
          if (0 != call->pH245Channel &&  call->pH245Channel->sock != 0)
          {
             FD_SET(call->pH245Channel->sock, pReadfds);
@@ -541,7 +545,7 @@ int ooSetFDSETs(fd_set *pReadfds, fd_set *pWritefds, int *nfds)
                *nfds = *(call->h245listener);
           }
           call = call->next;
-           
+
       }/* while(call) */
    }/*if(gH323ep.callList) */
 
@@ -560,7 +564,7 @@ int ooProcessFDSETsAndTimers
 
    /* Process gatekeeper client timers */
    if(gH323ep.gkClient)
-   {  
+   {
       ooTimerFireExpired(&gH323ep.gkClient->ctxt,
                          &gH323ep.gkClient->timerList);
       if(ooTimerNextTimeout(&gH323ep.gkClient->timerList, &toNext))
@@ -620,9 +624,9 @@ int ooProcessFDSETsAndTimers
       {
          OOTRACEDBGA1("New connection at H225 receiver\n");
          ooAcceptH225Connection();
-      }     
+      }
    }
-     
+
 
    if(gH323ep.callList)
    {
@@ -651,15 +655,15 @@ int ooProcessFDSETsAndTimers
          if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
          {
             if(FD_ISSET(call->pH245Channel->sock, pReadfds))
-            {                          
+            {
                ooH245Receive(call);
             }
          }
-           
+
          if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
          {
             if(FD_ISSET(call->pH245Channel->sock, pWritefds))
-            {                          
+            {
                if(call->pH245Channel->outQueue.count>0)
                   ooSendMsg(call, OOH245MSG);
             }
@@ -671,7 +675,7 @@ int ooProcessFDSETsAndTimers
                OOTRACEDBGC3("Incoming H.245 connection (%s, %s)\n",
                             call->callType, call->callToken);
                ooAcceptH245Connection(call);
-            }                          
+            }
          }
 
          if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
@@ -693,7 +697,7 @@ int ooProcessFDSETsAndTimers
                                call->callToken);
                   ooSendMsg(call, OOH245MSG);
                }
-            }                               
+            }
          }
 
          if(ooTimerNextTimeout(&call->timerList, &toNext))
@@ -714,7 +718,7 @@ int ooProcessFDSETsAndTimers
    return OO_OK;
 
 }
-  
+
 int ooMonitorChannels()
 {
    int ret=0, nfds=0;
@@ -726,7 +730,7 @@ int ooMonitorChannels()
    toMin.tv_sec = 3;
    toMin.tv_usec = 0;
    ooH323EpPrintConfig();
-  
+
    if(gH323ep.gkClient) {
       ooGkClientPrintConfig(gH323ep.gkClient);
       if(OO_OK != ooGkClientStart(gH323ep.gkClient))
@@ -735,7 +739,7 @@ int ooMonitorChannels()
          ooGkClientDestroy();
       }
    }
-  
+
    while(1)
    {
       FD_ZERO(&readfds);
@@ -748,7 +752,7 @@ int ooMonitorChannels()
          break;
       }
 
-     
+
       if(nfds == 0)
 #ifdef _WIN32
          Sleep(10);
@@ -762,10 +766,10 @@ int ooMonitorChannels()
       else
          ret = ooSocketSelect(nfds, &readfds, &writefds,
                            NULL, &toMin);
-     
+
       if(ret == -1)
       {
-        
+
          OOTRACEERR1("Error in select ...exiting\n");
          exit(-1);
       }
@@ -773,7 +777,7 @@ int ooMonitorChannels()
       toMin.tv_sec = 0;
       toMin.tv_usec = 100000; /* 100ms*/
       /*This is for test application. Not part of actual stack */
- 
+
       ooTimerFireExpired(&gH323ep.ctxt, &g_TimerList);
       if(ooTimerNextTimeout(&g_TimerList, &toNext))
       {
@@ -804,7 +808,7 @@ int ooH2250Receive(OOH323CallData *call)
    struct timeval timeout;
    fd_set readfds;
 
-  
+
    pmsg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
    if(!pmsg)
    {
@@ -831,13 +835,13 @@ int ooH2250Receive(OOH323CallData *call)
          if(call->callState < OO_CALL_CLEAR)
             call->callEndReason = OO_REASON_TRANSPORTFAILURE;
          call->callState = OO_CALL_CLEARED;
-        
+
       }
       ooFreeQ931Message(pmsg);
       return OO_OK;
    }
    OOTRACEDBGC3("Receiving H.2250 message (%s, %s)\n",
-                call->callType, call->callToken);  
+                call->callType, call->callToken);
    /* Since we are working with TCP, need to determine the
       message boundary. Has to be done at channel level, as channels
       know the message formats and can determine boundaries
@@ -856,25 +860,13 @@ int ooH2250Receive(OOH323CallData *call)
       return OO_FAILED;
    }
 
-  
+
    len = message[2];
    len = len<<8;
    len = len | message[3];
    /* Remaining message length is length - tpkt length */
    len = len - 4;
 
-   /* Check if temporary message buffer has enough space for the whole message */
-   if (len > MAXMSGLEN) {
-      OOTRACEERR4("Error: Message too long - %d bytes (%s, %s)\n",
-                  len, call->callType, call->callToken);
-      if (call->callState < OO_CALL_CLEAR) {
-         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
-   }
-
- 
    /* Now read actual Q931 message body. We should make sure that we
       receive complete message as indicated by len. If we don't then there
       is something wrong. The loop below receives message, then checks whether
@@ -889,7 +881,7 @@ int ooH2250Receive(OOH323CallData *call)
       total = total + recvLen;
 
       if(total == len) break; /* Complete message is received */
-     
+
       FD_ZERO(&readfds);
       FD_SET(call->pH225Channel->sock, &readfds);
       timeout.tv_sec = 3;
@@ -957,7 +949,7 @@ int ooH245Receive(OOH323CallData *call)
    OOCTXT *pctxt = &gH323ep.msgctxt;
    struct timeval timeout;
    fd_set readfds;
-  
+
    pmsg = (H245Message*)memAlloc(pctxt, sizeof(H245Message));
 
    /* First read just TPKT header which is four bytes */
@@ -1126,7 +1118,7 @@ int ooH245Receive(OOH323CallData *call)
                              channel number(0, when no channel is associated),
                              next two octets - total length of the message.
                              Note, no tpkt header is present in this case.
-                           
+
 */
 int ooSendMsg(OOH323CallData *call, int type)
 {
@@ -1134,7 +1126,7 @@ int ooSendMsg(OOH323CallData *call, int type)
    int len=0, ret=0, msgType=0, tunneledMsgType=0, logicalChannelNo = 0;
    DListNode * p_msgNode=NULL;
    ASN1OCTET *msgptr, *msgToSend=NULL;
-  
+
 
 
    if(call->callState == OO_CALL_CLEARED)
@@ -1181,7 +1173,7 @@ int ooSendMsg(OOH323CallData *call, int type)
       dListRemove(&(call->pH225Channel->outQueue), p_msgNode);
       if(p_msgNode)
          memFreePtr(call->pctxt, p_msgNode);
-     
+
       /*TODO: This is not required ideally. We will see for some time and if
          we don't face any problems we will delete this code */
 #if 0
@@ -1196,8 +1188,8 @@ int ooSendMsg(OOH323CallData *call, int type)
          call->callState = OO_CALL_CLEARED;
          return OO_OK;
       }
-#endif    
-      /* Send message out via TCP */     
+#endif
+      /* Send message out via TCP */
       ret = ooSocketSend(call->pH225Channel->sock, msgToSend, len);
       if(ret == ASN_OK)
       {
@@ -1259,7 +1251,7 @@ int ooSendMsg(OOH323CallData *call, int type)
          }
          return OO_OK;
       }
-     
+
       if (0 != call->pH245Channel && 0 != call->pH245Channel->sock)
       {
          OOTRACEDBGC4("Sending %s H245 message over H.245 channel. "
@@ -1315,7 +1307,7 @@ int ooSendMsg(OOH323CallData *call, int type)
    OOTRACEWARN3("ERROR:Unknown message type - message not Sent (%s, %s)\n",
                 call->callType, call->callToken);
    return OO_FAILED;
-}      
+}
 
 int ooCloseH245Connection(OOH323CallData *call)
 {
@@ -1460,7 +1452,7 @@ int ooOnSendMsg
          ooOnSendMsg(call, tunneledMsgType, 0, associatedChan);
       }
 
-     
+
       break;
    case OOMasterSlaveDetermination:
      if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
@@ -1594,7 +1586,7 @@ int ooOnSendMsg
          memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
-     
+
       break;
    case OOOpenLogicalChannelAck:
       if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
@@ -1676,7 +1668,7 @@ int ooOnSendMsg
          memFreePtr(call->pctxt, cbData);
          return OO_FAILED;
       }
-     
+
       break;
    case OOCloseLogicalChannelAck:
       if(OO_TESTFLAG (call->flags, OO_M_TUNNELING))
@@ -1723,7 +1715,7 @@ int ooOnSendMsg
          OOTRACEINFO3("Sent Message - RequestChannelCloseAck (%s, %s)\n",
                        call->callType, call->callToken);
       break;
-  
+
    default:
      ;
    }
@@ -1757,7 +1749,7 @@ int ooStopMonitorCalls()
          }
          gH323ep.callList = NULL;
       }
-      OOTRACEINFO1("Stopping listener for incoming calls\n");  
+      OOTRACEINFO1("Stopping listener for incoming calls\n");
       if(gH323ep.listener)
       {
          ooSocketClose(*(gH323ep.listener));
@@ -1788,7 +1780,7 @@ OOBOOL ooChannelsIsConnectionOK(OOH323CallData *call, OOSOCKET sock)
    nfds++;
 
    ret = ooSocketSelect(nfds, &readfds, NULL, NULL, &to);
-     
+
    if(ret == -1)
    {
       OOTRACEERR3("Error in select ...broken pipe check(%s, %s)\n",
@@ -1798,7 +1790,7 @@ OOBOOL ooChannelsIsConnectionOK(OOH323CallData *call, OOSOCKET sock)
 
    if(FD_ISSET(sock, &readfds))
    {
-      char buf[2];     
+      ASN1OCTET buf[2];
       if(ooSocketRecvPeek(sock, buf, 2) == 0)
       {
          OOTRACEWARN3("Broken pipe detected. (%s, %s)", call->callType,
@@ -1810,4 +1802,4 @@ OOBOOL ooChannelsIsConnectionOK(OOH323CallData *call, OOSOCKET sock)
       }
    }
    return TRUE;
-} 
+}

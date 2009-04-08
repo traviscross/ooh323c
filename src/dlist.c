@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -49,6 +49,11 @@ DListNode* dListAppend (OOCTXT* pctxt, DList* pList, void* pData)
 }
 
 DListNode* dListAppendNode (OOCTXT* pctxt, DList* pList, void* pData)
+{
+  return dListAppendNode2 (pList, pData);
+}
+
+DListNode* dListAppendNode2 (DList* pList, void* pData)
 {
    DListNode* pListNode =
       (DListNode*) (((char*)pData) - sizeof(DListNode));
@@ -106,7 +111,7 @@ void dListFreeAll (OOCTXT* pctxt, DList* pList)
 
    for (pNode = pList->head; pNode != 0; pNode = pNextNode) {
       pNextNode = pNode->next;
-     
+
       memFreePtr (pctxt, pNode->data);
       memFreePtr (pctxt, pNode);
    }
@@ -143,7 +148,7 @@ void dListFindAndRemove(DList* pList, void *data)
    if(pNode)
       dListRemove(pList, pNode);
 }
-   
+
 DListNode* dListFindByIndex (DList* pList, int index)
 {
    DListNode* curNode;
@@ -162,7 +167,7 @@ DListNode* dListInsertBefore
 (OOCTXT* pctxt, DList* pList, DListNode* node, const void* pData)
 {
    DListNode* pListNode = (DListNode*) memAlloc (pctxt, sizeof(DListNode));
- 
+
    if (0 != pListNode) {
       pListNode->data = (void*)pData;
 

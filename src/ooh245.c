@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -155,12 +155,12 @@ static void ooPrintH245Message
       OOTRACEERR1 (errGetText (&ctxt));
    }
    finishPrint();
-   freeContext(&ctxt);  
+   freeContext(&ctxt);
 }
 #endif
 
 int ooEncodeH245Message
-   (OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size)
+   (OOH323CallData *call, H245Message *ph245Msg, ASN1OCTET* msgbuf, size_t size)
 {
    int len=0, encodeLen=0, i=0;
    int stat=0;
@@ -183,7 +183,7 @@ int ooEncodeH245Message
    /* This will contain the total length of the encoded message */
    msgbuf[i++] = 0;
    msgbuf[i++] = 0;
-  
+
    if(!OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
       /* Populate message buffer to be returned */
@@ -195,7 +195,7 @@ int ooEncodeH245Message
       /* 2nd octet of length, will be populated once len is determined */
       msgbuf[i++] = 0;
    }
-  
+
    setPERBuffer (pctxt, msgbuf+i, (size-i), TRUE);
 
    stat = asn1PE_H245MultimediaSystemControlMessage (&gH323ep.msgctxt,
@@ -207,7 +207,7 @@ int ooEncodeH245Message
       OOTRACEERR1 (errGetText (&gH323ep.msgctxt));
       return OO_FAILED;
    }
-  
+
    encodePtr = encodeGetMsgPtr(pctxt, &encodeLen);
    len +=encodeLen;
    msgbuf[3] = (len>>8);
@@ -250,7 +250,7 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
    }
    if(!call->pH245Channel)
    {
-      call->pH245Channel = 
+      call->pH245Channel =
               (OOH323Channel*) memAllocZ (call->pctxt, sizeof(OOH323Channel));
       if(!call->pH245Channel)
       {
@@ -261,7 +261,7 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
       }
    }
 
-   /* We need to send EndSessionCommand immediately.*/     
+   /* We need to send EndSessionCommand immediately.*/
    if(!OO_TESTFLAG(call->flags, OO_M_TUNNELING)){
       if(encodebuf[0]== OOEndSessionCommand) /* High priority message */
       {
@@ -273,7 +273,7 @@ int ooSendH245Msg(OOH323CallData *call, H245Message *msg)
          dListAppend (call->pctxt, &call->pH245Channel->outQueue, encodebuf);
          OOTRACEDBGC4("Queued H245 messages %d. (%s, %s)\n",
          call->pH245Channel->outQueue.count,
-         call->callType, call->callToken);  
+         call->callType, call->callToken);
       }
    }
    else{
@@ -333,7 +333,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       return OO_OK;
    }
 
-   ret = ooCreateH245Message(&ph245msg, 
+   ret = ooCreateH245Message(&ph245msg,
                              T_H245MultimediaSystemControlMessage_request);
 
    if(ret == OO_FAILED)
@@ -354,7 +354,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-  
+
    request->t = T_H245RequestMessage_terminalCapabilitySet;
    request->u.terminalCapabilitySet = (H245TerminalCapabilitySet*)
                   memAlloc(pctxt, sizeof(H245TerminalCapabilitySet));
@@ -363,7 +363,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
    termCap->m.multiplexCapabilityPresent = 0;
    termCap->m.capabilityTablePresent = 1;
    termCap->m.capabilityDescriptorsPresent = 1;
-   termCap->sequenceNumber = ++(call->localTermCapSeqNo); 
+   termCap->sequenceNumber = ++(call->localTermCapSeqNo);
    termCap->protocolIdentifier = gh245ProtocolID; /* protocol id */
 
    /* Add audio Capabilities */
@@ -420,7 +420,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
                             "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
                             call->callType, call->callToken);
                continue;
-            }    
+            }
          }
          else{
             OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
@@ -478,7 +478,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
                             "(%s, %s)\n", ooGetCapTypeText(epCap->cap),
                            call->callType, call->callToken);
                continue;
-            }    
+            }
          }
          else{
             OOTRACEWARN3("Warn:Capability is not RX/TX/RXANDTX. Symmetric "
@@ -532,13 +532,13 @@ int ooSendTermCapMsg(OOH323CallData *call)
             ooFreeH245Message(call, ph245msg);
             return OO_FAILED;
          }
-           
+
          memset(entry, 0, sizeof(H245CapabilityTableEntry));
          entry->m.capabilityPresent = 1;
 
          entry->capability.t = T_H245Capability_receiveRTPAudioTelephonyEventCapability;
          entry->capability.u.receiveRTPAudioTelephonyEventCapability = ateCap;
-     
+
          entry->capabilityTableEntryNumber = i+1;
          dListAppend(pctxt , &(termCap->capabilityTable), entry);
 
@@ -566,13 +566,13 @@ int ooSendTermCapMsg(OOH323CallData *call)
             ooFreeH245Message(call, ph245msg);
             return OO_FAILED;
          }
-           
+
          memset(entry, 0, sizeof(H245CapabilityTableEntry));
          entry->m.capabilityPresent = 1;
 
          entry->capability.t = T_H245Capability_receiveUserInputCapability;
          entry->capability.u.receiveUserInputCapability = userInputCap;
-     
+
          entry->capabilityTableEntryNumber = i+1;
          dListAppend(pctxt , &(termCap->capabilityTable), entry);
 
@@ -600,13 +600,13 @@ int ooSendTermCapMsg(OOH323CallData *call)
             ooFreeH245Message(call, ph245msg);
             return OO_FAILED;
          }
-           
+
          memset(entry, 0, sizeof(H245CapabilityTableEntry));
          entry->m.capabilityPresent = 1;
 
          entry->capability.t = T_H245Capability_receiveUserInputCapability;
          entry->capability.u.receiveUserInputCapability = userInputCap;
-     
+
          entry->capabilityTableEntryNumber = i+1;
          dListAppend(pctxt , &(termCap->capabilityTable), entry);
 
@@ -614,7 +614,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       }
    }
 
-         
+
    /*TODO:Add Video and Data capabilities, if required*/
    if(i==0)
    {
@@ -623,7 +623,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       ooFreeH245Message(call,ph245msg);
       return OO_FAILED;
    }
-     
+
    /* Define capability descriptior */
    capDesc = (H245CapabilityDescriptor*)
              memAlloc(pctxt, sizeof(H245CapabilityDescriptor));
@@ -643,7 +643,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
       memset(altSet, 0, sizeof(H245AlternativeCapabilitySet));
       altSet->n = 1;
       altSet->elem[0] = j+1;
-  
+
       dListAppend(pctxt, &(capDesc->simultaneousCapabilities), altSet);
    }
 
@@ -702,9 +702,9 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
       case OOMasterSlaveDetermination:
          OOTRACEINFO3("Master Slave Determination received (%s, %s)\n",
                        call->callType, call->callToken);
-        
+
          masterSlave = (H245MasterSlaveDetermination*)pmsg;
-        
+
          if(masterSlave->terminalType < gH323ep.termType)
          {
             ooSendMasterSlaveDeterminationAck(call, "slave");
@@ -724,14 +724,14 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
          /* Since term types are same, master slave determination will
             be done based on statusdetermination number
          */
-        
+
          OOTRACEDBGA3("Determining master-slave based on StatusDetermination"
                       "Number (%s, %s)\n", call->callType, call->callToken);
          if(call->masterSlaveState == OO_MasterSlave_DetermineSent)
             statusDeterminationNumber = call->statusDeterminationNumber;
          else
             statusDeterminationNumber = ooGenerateStatusDeterminationNumber();
-        
+
          if(masterSlave->statusDeterminationNumber <
                        statusDeterminationNumber)
          {
@@ -780,7 +780,7 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
                              call->callType, call->callToken);
             }
          }
-        
+
          if(call->localTermCapState == OO_LocalTermCapSetAckRecvd &&
             call->remoteTermCapState == OO_RemoteTermCapSetAckSent)
          {
@@ -808,7 +808,7 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
           OOTRACEWARN3("Warn:Unhandled Master Slave message received - %s - "
                        "%s\n", call->callType, call->callToken);
    }
-   return OO_OK;     
+   return OO_OK;
 }
 
 int ooSendMasterSlaveDetermination(OOH323CallData *call)
@@ -841,9 +841,9 @@ int ooSendMasterSlaveDetermination(OOH323CallData *call)
    request->u.masterSlaveDetermination = (H245MasterSlaveDetermination*)
             ASN1MALLOC(pctxt, sizeof(H245MasterSlaveDetermination));
 
-  
+
    pMasterSlave = request->u.masterSlaveDetermination;
-   memset(pMasterSlave, 0, sizeof(H245MasterSlaveDetermination));  
+   memset(pMasterSlave, 0, sizeof(H245MasterSlaveDetermination));
    pMasterSlave->terminalType = gH323ep.termType;
    pMasterSlave->statusDeterminationNumber =
                        ooGenerateStatusDeterminationNumber();
@@ -861,7 +861,7 @@ int ooSendMasterSlaveDetermination(OOH323CallData *call)
    }
    else
       call->masterSlaveState = OO_MasterSlave_DetermineSent;
-  
+
    ooFreeH245Message(call, ph245msg);
 
    return ret;
@@ -898,7 +898,7 @@ int ooSendMasterSlaveDeterminationAck(OOH323CallData* call,
    else
       response->u.masterSlaveDeterminationAck->decision.t =
                          T_H245MasterSlaveDeterminationAck_decision_slave;
-  
+
    OOTRACEDBGA3("Built MasterSlave determination Ack (%s, %s)\n",
                 call->callType, call->callToken);
    ret = ooSendH245Msg(call, ph245msg);
@@ -908,7 +908,7 @@ int ooSendMasterSlaveDeterminationAck(OOH323CallData* call,
                   " to outbound queue. (%s, %s)\n", call->callType,
                   call->callToken);
    }
-  
+
    ooFreeH245Message(call, ph245msg);
    return ret;
 }
@@ -952,7 +952,7 @@ int ooSendMasterSlaveDeterminationReject (OOH323CallData* call)
           "message to outbound queue.(%s, %s)\n", call->callType,
           call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
 
    return ret;
@@ -1001,7 +1001,7 @@ int ooSendMasterSlaveDeterminationRelease(OOH323CallData * call)
         "message to outbound queue.(%s, %s)\n", call->callType,
         call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
    return ret;
 }
@@ -1035,7 +1035,7 @@ int ooHandleOpenLogicalChannel(OOH323CallData* call,
 
    H245OpenLogicalChannel_forwardLogicalChannelParameters *flcp =
     &(olc->forwardLogicalChannelParameters);
-  
+
 #if 0
    if(!call->logicalChans)
       ooOpenLogicalChannels(call);
@@ -1125,9 +1125,9 @@ int ooHandleOpenLogicalChannel(OOH323CallData* call,
       ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
              T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
    }
-  
+
    return OO_OK;
-}      
+}
 
 /*TODO: Need to clean logical channel in case of failure after creating one */
 int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
@@ -1187,7 +1187,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
    memset(response, 0, sizeof(H245ResponseMessage));
    response->t = T_H245ResponseMessage_openLogicalChannelAck;
    response->u.openLogicalChannelAck = (H245OpenLogicalChannelAck*)
-                   memAlloc(pctxt, sizeof(H245OpenLogicalChannelAck));  
+                   memAlloc(pctxt, sizeof(H245OpenLogicalChannelAck));
    olcAck = response->u.openLogicalChannelAck;
    memset(olcAck, 0, sizeof(H245OpenLogicalChannelAck));
    olcAck->forwardLogicalChannelNumber = olc->forwardLogicalChannelNumber;
@@ -1210,7 +1210,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
       h2250lcap->sessionID = ooCallGenerateSessionID(call, epCap->capType, "receive");
    else
       h2250lcap->sessionID = h2250lcp->sessionID;
-  
+
    h2250lcap->mediaChannel.t =
                          T_H245TransportAddress_unicastAddress;
    h2250lcap->mediaChannel.u.unicastAddress =  (H245UnicastAddress*)
@@ -1233,7 +1233,8 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(call->localIP, iPAddress->network.data);
+   ooSocketConvertIpToNwAddr
+     (call->localIP, iPAddress->network.data, sizeof(iPAddress->network.data));
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -1252,7 +1253,8 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
    iPAddress1 = unicastAddrs1->u.iPAddress;
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
-   ooSocketConvertIpToNwAddr(call->localIP, iPAddress1->network.data);
+   ooSocketConvertIpToNwAddr
+     (call->localIP, iPAddress1->network.data, sizeof(iPAddress1->network.data));
 
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -1271,7 +1273,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
 
    if(epCap->startReceiveChannel)
    {
-      epCap->startReceiveChannel(call, pLogicalChannel);     
+      epCap->startReceiveChannel(call, pLogicalChannel);
       OOTRACEINFO6("Receive channel of type %s started at %s:%d(%s, %s)\n",
                     ooGetCapTypeText(epCap->cap), call->localIP,
                     pLogicalChannel->localRtpPort, call->callType,
@@ -1335,7 +1337,7 @@ int ooSendOpenLogicalChannelReject
          "message to outbound queue.(%s, %s)\n", call->callType,
          call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
 
    return ret;
@@ -1379,7 +1381,7 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
                   call->callToken);
       return OO_FAILED;
    }
-  
+
    unicastAddr = h2250lcap->mediaChannel.u.unicastAddress;
    if(unicastAddr->t != T_H245UnicastAddress_iPAddress)
    {
@@ -1389,12 +1391,12 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
       return OO_FAILED;
    }
    iPAddress = unicastAddr->u.iPAddress;
-  
+
    sprintf(remoteip,"%d.%d.%d.%d", iPAddress->network.data[0],
                                   iPAddress->network.data[1],
                                   iPAddress->network.data[2],
                                   iPAddress->network.data[3]);
-  
+
    /* Extract media control channel address */
    if(h2250lcap->m.mediaControlChannelPresent != 1)
    {
@@ -1410,7 +1412,7 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
                    call->callType, call->callToken);
       return OO_FAILED;
    }
-  
+
    unicastAddr1 = h2250lcap->mediaControlChannel.u.unicastAddress;
    if(unicastAddr1->t != T_H245UnicastAddress_iPAddress)
    {
@@ -1423,7 +1425,7 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
 
    /* Set remote destination address for rtp session */
    //   strcpy(call->remoteIP, remoteip);
-  
+
    /* Start channel here */
    pLogicalChannel = ooFindLogicalChannelByLogicalChannelNo(call,olcAck->forwardLogicalChannelNumber);
    if(!pLogicalChannel)
@@ -1437,10 +1439,10 @@ int ooOnReceivedOpenLogicalChannelAck(OOH323CallData *call,
    /* Update session id if we were waiting for remote to assign one and remote
       did assign one. */
    if(pLogicalChannel->sessionID == 0 && h2250lcap->m.sessionIDPresent)
-      pLogicalChannel->sessionID = h2250lcap->sessionID;  
+      pLogicalChannel->sessionID = h2250lcap->sessionID;
 
    /* Populate ports &ip  for channel */
-   strcpy(pLogicalChannel->remoteIP, remoteip);  
+   strcpy(pLogicalChannel->remoteIP, remoteip);
    pLogicalChannel->remoteMediaPort = iPAddress->tsapIdentifier;
    pLogicalChannel->remoteMediaControlPort = iPAddress1->tsapIdentifier;
 
@@ -1647,8 +1649,8 @@ int ooHandleH245Command(OOH323CallData *call,
             ooSendEndSessionCommand(call);
 #endif
          }
-           
-           
+
+
          break;
       case T_H245CommandMessage_sendTerminalCapabilitySet:
          OOTRACEWARN3("Warning: Received command Send terminal capability set "
@@ -1664,7 +1666,7 @@ int ooHandleH245Command(OOH323CallData *call,
                       "(%s, %s)\n", call->callType, call->callToken);
    }
    OOTRACEDBGC3("Handling H.245 command message done. (%s, %s)\n",
-                 call->callType, call->callToken);  
+                 call->callType, call->callToken);
    return OO_OK;
 }
 
@@ -1674,7 +1676,7 @@ int ooOnReceivedTerminalCapabilitySetAck(OOH323CallData* call)
    call->localTermCapState = OO_LocalTermCapSetAckRecvd;
    if(call->remoteTermCapState != OO_RemoteTermCapSetAckSent)
       return OO_OK;
-  
+
    if(call->masterSlaveState == OO_MasterSlave_Master ||
        call->masterSlaveState == OO_MasterSlave_Slave)
    {
@@ -1693,7 +1695,7 @@ int ooOnReceivedTerminalCapabilitySetAck(OOH323CallData* call)
       }
 #endif
    }
-     
+
    return OO_OK;
 }
 
@@ -1727,7 +1729,7 @@ int ooSendCloseLogicalChannel(OOH323CallData *call, ooLogicalChannel *logicalCha
    OOCTXT *pctxt;
    H245RequestMessage *request;
    H245CloseLogicalChannel* clc;
-  
+
    ret = ooCreateH245Message(&ph245msg,
                              T_H245MultimediaSystemControlMessage_request);
    if(ret != OO_OK)
@@ -1769,7 +1771,7 @@ int ooSendCloseLogicalChannel(OOH323CallData *call, ooLogicalChannel *logicalCha
      error++;
    }
    ooFreeH245Message(call, ph245msg);
-  
+
    /* Stop the media transmission */
    OOTRACEINFO4("Closing logical channel %d (%s, %s)\n",
                 clc->forwardLogicalChannelNumber, call->callType,
@@ -1823,7 +1825,7 @@ int ooSendRequestCloseLogicalChannel(OOH323CallData *call,
    rclc = request->u.requestChannelClose;
    memset(rclc, 0, sizeof(H245RequestChannelClose));
    rclc->forwardLogicalChannelNumber = logicalChan->channelNo;
-  
+
    rclc->m.reasonPresent = 1;
    rclc->reason.t = T_H245RequestChannelClose_reason_unknown;
 
@@ -1889,7 +1891,7 @@ int ooSendRequestChannelCloseRelease(OOH323CallData *call, int channelNum)
 }
 
 
-  
+
 int ooOnReceivedRequestChannelClose(OOH323CallData *call,
                                     H245RequestChannelClose *rclc)
 {
@@ -1955,7 +1957,7 @@ int ooOnReceivedRequestChannelClose(OOH323CallData *call,
    }
 
    ooFreeH245Message(call, ph245msg);
-  
+
    /* Send Close Logical Channel*/
    ret = ooSendCloseLogicalChannel(call, lChannel);
    if(ret != OO_OK)
@@ -2013,7 +2015,7 @@ int ooOnReceivedRequestChannelCloseReject
       OOTRACEDBGA4("Remote endpoint has rejected request to close logical "
                    "channel %d - cause propriatory. (%s, %s)\n",
                    rccReject->forwardLogicalChannelNumber, call->callType,
-                   call->callToken);  
+                   call->callToken);
       break;
    default:
       OOTRACEDBGA4("Remote endpoint has rejected request to close logical "
@@ -2043,10 +2045,10 @@ int ooOnReceivedCloseLogicalChannel(OOH323CallData *call,
    OOCTXT *pctxt = NULL;
    H245CloseLogicalChannelAck * clcAck;
    H245ResponseMessage *response;
-  
+
    OOTRACEINFO4("Closing logical channel number %d (%s, %s)\n",
       clc->forwardLogicalChannelNumber, call->callType, call->callToken);
-  
+
    ret = ooClearLogicalChannel(call, clc->forwardLogicalChannelNumber);
    if(ret != OO_OK)
    {
@@ -2110,15 +2112,15 @@ int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
    /* There are four major types of H.245 messages that can be received.
       Request/Response/Command/Indication. Each one of them need to be
       handled separately.
-   */  
+   */
    H245RequestMessage *request = NULL;
    H245ResponseMessage *response = NULL;
    H245CommandMessage *command = NULL;
    H245IndicationMessage *indication = NULL;
-  
+
    OOTRACEDBGC3("Handling H245 message. (%s, %s)\n", call->callType,
                  call->callToken);
-  
+
    switch(pH245->h245Msg.t)
    {
       /* H.245 Request message is received */
@@ -2436,7 +2438,7 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
                          T_H245TerminalCapabilitySetReject_cause_unspecified);
       return OO_OK;
    }
- 
+
    if(!tcs->m.capabilityTablePresent)
    {
       // OOTRACEWARN3("Warn:Ignoring TCS as no capability table present(%s, %s)\n",
@@ -2474,11 +2476,11 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
       }
    }
 
-  
+
    /* Update remoteTermCapSetState */
    call->remoteTermCapState = OO_RemoteTermCapSetRecvd;
 
-   ooH245AcknowledgeTerminalCapabilitySet(call);  
+   ooH245AcknowledgeTerminalCapabilitySet(call);
 
    /* If we haven't yet send TCS then send it now */
    if(call->localTermCapState == OO_LocalTermCapExchange_Idle)
@@ -2540,7 +2542,7 @@ int ooSendTerminalCapabilitySetReject
    memset(response, 0, sizeof(H245ResponseMessage));
    pctxt = &gH323ep.msgctxt;
    response->t = T_H245ResponseMessage_terminalCapabilitySetReject;
-  
+
    response->u.terminalCapabilitySetReject = (H245TerminalCapabilitySetReject*)
                    ASN1MALLOC(pctxt, sizeof(H245TerminalCapabilitySetReject));
 
@@ -2583,7 +2585,7 @@ int ooH245AcknowledgeTerminalCapabilitySet(OOH323CallData *call)
    memset(response, 0, sizeof(H245ResponseMessage));
    pctxt = &gH323ep.msgctxt;
    response->t = T_H245ResponseMessage_terminalCapabilitySetAck;
-  
+
    response->u.terminalCapabilitySetAck = (H245TerminalCapabilitySetAck*)
                    ASN1MALLOC(pctxt, sizeof(H245TerminalCapabilitySetAck));
 
@@ -2650,7 +2652,7 @@ int ooSendTerminalCapabilitySetRelease(OOH323CallData * call)
          "message to outbound queue.(%s, %s)\n", call->callType,
          call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
    return ret;
 }
@@ -2710,7 +2712,7 @@ int ooSendH245UserInputIndication_alphanumeric
           "message to outbound queue.(%s, %s)\n", call->callType,
           call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
    return ret;
 }
@@ -2772,7 +2774,7 @@ int ooSendH245UserInputIndication_signal
           "message to outbound queue.(%s, %s)\n", call->callType,
           call->callToken);
    }
-  
+
    ooFreeH245Message (call, ph245msg);
    return ret;
 }
@@ -2804,7 +2806,7 @@ int ooOpenLogicalChannels(OOH323CallData *call)
          }
       // }
    }
-  
+
    if(gH323ep.callMode == OO_CALLMODE_VIDEOCALL)
    {
      /*      if (!OO_TESTFLAG (call->flags, OO_M_AUDIOSESSION))
@@ -2854,7 +2856,7 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
                   " (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-  
+
    /* Go through local endpoints capabilities sequentially, and find out the
       first one which has a match in the remote endpoints receive capabilities.
    */
@@ -2915,7 +2917,7 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
                   call->callToken);
          return OO_FAILED;
       }
-      
+
    }
 
    switch(epCap->cap)
@@ -2936,7 +2938,7 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
    case OO_GSMHALFRATE:
    case OO_GSMENHANCEDFULLRATE:
 
-     
+
    default:
       OOTRACEERR3("ERROR:Unknown Audio Capability type (%s, %s)\n",
                    call->callType, call->callToken);
@@ -2958,7 +2960,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    H245UnicastAddress_iPAddress *iPAddress = NULL;
    unsigned session_id=0;
    ooLogicalChannel *pLogicalChannel = NULL;
-  
+
    OOTRACEDBGC4("Doing Open Channel for %s. (%s, %s)\n",
                  ooGetCapTypeText(epCap->cap), call->callType,
                  call->callToken);
@@ -2998,14 +3000,14 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    request->u.openLogicalChannel->forwardLogicalChannelNumber =
                                                  ph245msg->logicalChannelNo;
 
-  
+
    session_id = ooCallGenerateSessionID(call, epCap->capType, "transmit");
 
 
    pLogicalChannel = ooAddNewLogicalChannel(call,
                    request->u.openLogicalChannel->forwardLogicalChannelNumber,
                    session_id, "transmit", epCap);
-  
+
    if(!pLogicalChannel)
    {
       OOTRACEERR3("ERROR:Failed to add new logical channel entry (%s, %s)\n",
@@ -3034,12 +3036,12 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
          ooFreeH245Message(call, ph245msg);
          return OO_FAILED;
       }
-  
+
       flcp->dataType.u.audioData = audioCap;
    }
    else if(epCap->capType == OO_CAP_TYPE_VIDEO)
    {
-      flcp->dataType.t = T_H245DataType_videoData;     
+      flcp->dataType.t = T_H245DataType_videoData;
       videoCap = ooCapabilityCreateVideoCapability(epCap, pctxt, OOTX);
       if(!videoCap)
       {
@@ -3050,7 +3052,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
          ooFreeH245Message(call, ph245msg);
          return OO_FAILED;
       }
-  
+
       flcp->dataType.u.videoData = videoCap;
    }
    else{
@@ -3058,7 +3060,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
       return OO_FAILED;
    }
 
- 
+
    flcp->multiplexParameters.t =
       T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
    flcp->multiplexParameters.u.h2250LogicalChannelParameters =
@@ -3073,7 +3075,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    h2250lcp->mediaGuaranteedDelivery = 0;
    h2250lcp->silenceSuppression = 0;
    h2250lcp->m.mediaControlChannelPresent = 1;
-  
+
    h2250lcp->mediaControlChannel.t =
                                  T_H245TransportAddress_unicastAddress;
    h2250lcp->mediaControlChannel.u.unicastAddress =  (H245UnicastAddress*)
@@ -3087,7 +3089,9 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    iPAddress = unicastAddrs->u.iPAddress;
    memset(iPAddress, 0, sizeof(H245UnicastAddress_iPAddress));
 
-   ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,iPAddress->network.data);
+   ooSocketConvertIpToNwAddr
+     (pLogicalChannel->localIP, iPAddress->network.data,
+      sizeof(iPAddress->network.data));
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -3103,7 +3107,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
                  call->callToken);
    }
    ooFreeH245Message(call, ph245msg);
- 
+
     return ret;
 }
 
@@ -3127,9 +3131,9 @@ int ooBuildFastStartOLC
    ooLogicalChannel *pLogicalChannel = NULL;
    int outgoing=FALSE;
 
-   if(!strcmp(call->callType, "outgoing"))  
+   if(!strcmp(call->callType, "outgoing"))
       outgoing = TRUE;
-  
+
    if(dir & OORX)
    {
       OOTRACEDBGA3("Building OpenLogicalChannel for Receive  Capability "
@@ -3192,9 +3196,9 @@ int ooBuildFastStartOLC
                                     sizeof(H245H2250LogicalChannelParameters));
       memset(pH2250lcp1, 0, sizeof(H245H2250LogicalChannelParameters));
       flcp->multiplexParameters.t = T_H245OpenLogicalChannel_forwardLogicalChannelParameters_multiplexParameters_h2250LogicalChannelParameters;
-     
+
       flcp->multiplexParameters.u.h2250LogicalChannelParameters = pH2250lcp1;
-         
+
       pH2250lcp1->sessionID = sessionID;
       if(!outgoing)
       {
@@ -3210,9 +3214,10 @@ int ooBuildFastStartOLC
                                          sizeof(H245UnicastAddress_iPAddress));
          memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
          pUniAddrs->u.iPAddress = pUniIpAddrs;
-    
-         ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                pUniIpAddrs->network.data);
+
+         ooSocketConvertIpToNwAddr
+           (pLogicalChannel->localIP, pUniIpAddrs->network.data,
+            sizeof(pUniIpAddrs->network.data));
 
          pUniIpAddrs->network.numocts = 4;
          pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -3229,17 +3234,18 @@ int ooBuildFastStartOLC
                                          sizeof(H245UnicastAddress_iPAddress));
       memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUnicastAddrs->u.iPAddress = pIpAddrs;
-    
-       ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                      pIpAddrs->network.data);
+
+       ooSocketConvertIpToNwAddr
+         (pLogicalChannel->localIP, pIpAddrs->network.data,
+          sizeof(pIpAddrs->network.data));
 
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
       if(!outgoing)
       {
          if(epCap->startReceiveChannel)
-         {  
-            epCap->startReceiveChannel(call, pLogicalChannel);     
+         {
+            epCap->startReceiveChannel(call, pLogicalChannel);
             OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
                         (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
                         call->callType, call->callToken);
@@ -3268,14 +3274,14 @@ int ooBuildFastStartOLC
       if(epCap->capType == OO_CAP_TYPE_AUDIO) {
          sessionID = 1;
          rlcp->dataType.t = T_H245DataType_audioData;
- 
+
          rlcp->dataType.u.audioData = ooCapabilityCreateAudioCapability(epCap,
                                                                    pctxt, dir);
       }
       else if(epCap->capType == OO_CAP_TYPE_VIDEO)  {
          sessionID = 2;
          rlcp->dataType.t = T_H245DataType_videoData;
- 
+
          rlcp->dataType.u.videoData = ooCapabilityCreateVideoCapability(epCap,
                                                                    pctxt, dir);
       }
@@ -3297,15 +3303,16 @@ int ooBuildFastStartOLC
                                                   sizeof(H245UnicastAddress));
          memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
          pH2250lcp2->mediaChannel.u.unicastAddress =  pUnicastAddrs;
-     
+
          pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
          pIpAddrs = (H245UnicastAddress_iPAddress*) memAlloc(pctxt,
                                          sizeof(H245UnicastAddress_iPAddress));
          memset(pIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
-         pUnicastAddrs->u.iPAddress = pIpAddrs;     
+         pUnicastAddrs->u.iPAddress = pIpAddrs;
 
-         ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                       pIpAddrs->network.data);
+         ooSocketConvertIpToNwAddr
+           (pLogicalChannel->localIP, pIpAddrs->network.data,
+            sizeof(pIpAddrs->network.data));
 
          pIpAddrs->network.numocts = 4;
          pIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -3314,21 +3321,23 @@ int ooBuildFastStartOLC
       pH2250lcp2->mediaControlChannel.t =
                                  T_H245TransportAddress_unicastAddress;
       pUniAddrs = (H245UnicastAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress));
-     
+
       memset(pUniAddrs, 0, sizeof(H245UnicastAddress));
       pH2250lcp2->mediaControlChannel.u.unicastAddress =  pUniAddrs;
 
-     
+
       pUniAddrs->t = T_H245UnicastAddress_iPAddress;
       pUniIpAddrs = (H245UnicastAddress_iPAddress*) ASN1MALLOC(pctxt, sizeof(H245UnicastAddress_iPAddress));
       memset(pUniIpAddrs, 0, sizeof(H245UnicastAddress_iPAddress));
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
-      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                    pUniIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr
+        (pLogicalChannel->localIP, pUniIpAddrs->network.data,
+         sizeof(pUniIpAddrs->network.data));
+
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
-         
+
       /*
          In case of fast start, the local endpoint need to be ready to
          receive all the media types proposed in the fast connect, before
@@ -3338,7 +3347,7 @@ int ooBuildFastStartOLC
       {
          if(epCap->startReceiveChannel)
          {
-            epCap->startReceiveChannel(call, pLogicalChannel);     
+            epCap->startReceiveChannel(call, pLogicalChannel);
             OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
                          (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
                           call->callType, call->callToken);
@@ -3364,7 +3373,7 @@ int ooBuildFastStartOLC
       /* Call is "outgoing */
       pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
    }
-  
+
    return OO_OK;
 }
 
@@ -3386,7 +3395,7 @@ int ooMSDTimerExpired(void *data)
 
    return OO_OK;
 }
-  
+
 int ooTCSTimerExpired(void *data)
 {
    ooTimerCallback *cbData = (ooTimerCallback*)data;
@@ -3415,7 +3424,7 @@ int ooOpenLogicalChannelTimerExpired(void *pdata)
                                                cbData->channelNumber);
    if(pChannel)
       ooSendCloseLogicalChannel(call, pChannel);
-  
+
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
@@ -3434,7 +3443,7 @@ int ooCloseLogicalChannelTimerExpired(void *pdata)
                  call->callToken);
 
    ooClearLogicalChannel(call, cbData->channelNumber);
-  
+
    if(call->callState < OO_CALL_CLEAR)
    {
       call->callState = OO_CALL_CLEAR;
@@ -3452,7 +3461,7 @@ int ooRequestChannelCloseTimerExpired(void *pdata)
 
    OOTRACEINFO3("OpenLogicalChannelTimer expired. (%s, %s)\n", call->callType,
                  call->callToken);
- 
+
    ooSendRequestChannelCloseRelease(call, cbData->channelNumber);
 
    ret = ooClearLogicalChannel(call, cbData->channelNumber);
@@ -3485,7 +3494,7 @@ int ooSessionTimerExpired(void *pdata)
       call->h245SessionState != OO_H245SESSION_PAUSED) {
 
       ret = ooCloseH245Connection(call);
-  
+
       if(ret != OO_OK) {
          OOTRACEERR3("Error:Failed to close H.245 connection (%s, %s)\n",
                      call->callType, call->callToken);
@@ -3496,7 +3505,7 @@ int ooSessionTimerExpired(void *pdata)
 
    if(call->callState == OO_CALL_CLEAR_RELEASESENT)
       call->callState = OO_CALL_CLEARED;
-  
+
    return OO_OK;
 }
 
@@ -3514,7 +3523,7 @@ int ooGetIpPortFromH245TransportAddress
                            "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-     
+
    unicastAddress = h245Address->u.unicastAddress;
    if(unicastAddress->t != T_H245UnicastAddress_iPAddress)
    {
@@ -3546,7 +3555,7 @@ int ooPrepareFastStartResponseOLC
    H245UnicastAddress_iPAddress *pIpAddrs=NULL, *pUniIpAddrs=NULL;
    unsigned session_id = 0;
    ooLogicalChannel *pLogicalChannel = NULL;
-  
+
    if(dir & OORX)
    {
       OOTRACEDBGA3("ooPrepareFastStartResponseOLC for Receive  Capability "
@@ -3585,7 +3594,7 @@ int ooPrepareFastStartResponseOLC
       flcp = &(olc->forwardLogicalChannelParameters);
 
       pH2250lcp1 = flcp->multiplexParameters.u.h2250LogicalChannelParameters;
-         
+
 
       pH2250lcp1->m.mediaChannelPresent = 1;
       pH2250lcp1->mediaChannel.t = T_H245TransportAddress_unicastAddress;
@@ -3604,9 +3613,10 @@ int ooPrepareFastStartResponseOLC
       pH2250lcp1->mediaChannel.u.unicastAddress =  pUniAddrs;
       pUniAddrs->t = T_H245UnicastAddress_iPAddress;
       pUniAddrs->u.iPAddress = pUniIpAddrs;
-    
-      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                    pUniIpAddrs->network.data);
+
+      ooSocketConvertIpToNwAddr
+        (pLogicalChannel->localIP, pUniIpAddrs->network.data,
+         sizeof(pUniIpAddrs->network.data));
 
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -3628,11 +3638,12 @@ int ooPrepareFastStartResponseOLC
       memset(pUnicastAddrs, 0, sizeof(H245UnicastAddress));
       pH2250lcp1->mediaControlChannel.u.unicastAddress =  pUnicastAddrs;
       pUnicastAddrs->t = T_H245UnicastAddress_iPAddress;
-     
+
       pUnicastAddrs->u.iPAddress = pIpAddrs;
-    
-      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                       pIpAddrs->network.data);
+
+      ooSocketConvertIpToNwAddr
+        (pLogicalChannel->localIP, pIpAddrs->network.data,
+         sizeof(pIpAddrs->network.data));
 
       pIpAddrs->network.numocts = 4;
       pIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
@@ -3665,16 +3676,18 @@ int ooPrepareFastStartResponseOLC
       }
 
       pH2250lcp2->mediaControlChannel.u.unicastAddress =  pUniAddrs;
-     
+
       pUniAddrs->t = T_H245UnicastAddress_iPAddress;
 
       pUniAddrs->u.iPAddress = pUniIpAddrs;
 
-      ooSocketConvertIpToNwAddr(pLogicalChannel->localIP,
-                                                    pUniIpAddrs->network.data);
+      ooSocketConvertIpToNwAddr
+        (pLogicalChannel->localIP, pUniIpAddrs->network.data,
+         sizeof(pUniIpAddrs->network.data));
+
       pUniIpAddrs->network.numocts = 4;
       pUniIpAddrs->tsapIdentifier = pLogicalChannel->localRtcpPort;
-         
+
    }
 
    pLogicalChannel->state = OO_LOGICALCHAN_ESTABLISHED;

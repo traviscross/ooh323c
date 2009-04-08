@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -14,7 +14,7 @@
  *
  *****************************************************************************/
 /**
-   @file printHandler.h 
+   @file printHandler.h
    This is an implementation of a simple print handler.  It outputs
    the fields of an encoded PER message to stdout in a structured output
    format..
@@ -41,7 +41,7 @@ void printCharStrValue (const char* value);
 void printCharStr16BitValue (ASN1UINT nchars, ASN116BITCHAR* data);
 void printNullValue ();
 void printOidValue (ASN1UINT numSubIds, ASN1UINT* pSubIds);
-void printEnumValue (ASN1UINT value);
+void printEnumValue (ASN1UINT value, const char* text);
 void printOpenTypeValue (ASN1UINT numocts, const ASN1OCTET* data);
 
 #endif

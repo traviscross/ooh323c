@@ -1,10 +1,13 @@
 AUTOMAKE_OPTIONS = gnu
-CFLAGS = @OOH323CFLAGS@
+AM_CFLAGS = @OOH323CFLAGS@
 
-lib_LTLIBRARIES = liboomedia.la
-liboomedia_la_LDFLAGS = -version-info 1:1:0
-liboomedia_la_SOURCES = g711.c g711.h ooCommon.c ooCommon.h oomedialx.c oomedialx.h oortp.c oortp.h ooSock.c ooSock.h
-liboomedia_la_LIBADD = -lpthread
+# commented out due to problems with libtool
+#lib_LTLIBRARIES = liboomedia.la
+#liboomedia_la_LDFLAGS = -version-info 1:1:0
+#liboomedia_la_SOURCES = g711.c g711.h ooCommon.c ooCommon.h oomedialx.c oomedialx.h oortp.c oortp.h ooSock.c ooSock.h
+#liboomedia_la_LIBADD = -lpthread
+lib_LIBRARIES = liboomedia.a
+liboomedia_a_SOURCES = g711.c g711.h ooCommon.c ooCommon.h oomedialx.c oomedialx.h oortp.c oortp.h ooSock.c ooSock.h
 
 EXTRA_DIST= doc oomedia.dsp ooWave.c ooWave.h
 

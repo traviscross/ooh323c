@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -50,7 +50,7 @@ OOStkCmdStat ooMakeCall
 
    if(!callToken)
       return OO_STKCMD_INVALIDPARAM;
- 
+
 
    /* Generate call token*/
    if (ooGenerateOutgoingCallToken (callToken, bufsiz) != OO_OK){
@@ -72,14 +72,14 @@ OOStkCmdStat ooMakeCall
    }
    strcpy((char*)cmd.param1, dest);
 
- 
+
    cmd.param2 = (void*) malloc(strlen(callToken)+1);
    if(!cmd.param2)
    {
       free(cmd.param1);
       return OO_STKCMD_MEMERR;
    }
-  
+
    strcpy((char*)cmd.param2, callToken);
 
    if(!opts)
@@ -131,7 +131,7 @@ OOStkCmdStat ooManualRingback(const char *callToken)
       return OO_STKCMD_MEMERR;
    }
    strcpy((char*)cmd.param1, callToken);
-  
+
    if(ooWriteStackCommand(&cmd) != OO_OK)
    {
       free(cmd.param1);
@@ -165,7 +165,7 @@ OOStkCmdStat ooAnswerCall(const char *callToken)
       return OO_STKCMD_MEMERR;
    }
    strcpy((char*)cmd.param1, callToken);
-  
+
    if(ooWriteStackCommand(&cmd) != OO_OK)
    {
       free(cmd.param1);
@@ -249,7 +249,7 @@ OOStkCmdStat ooHangCall(const char* callToken, OOCallClearReason reason)
       free(cmd.param2);
       return OO_STKCMD_WRITEERR;
    }
-  
+
    return OO_STKCMD_SUCCESS;
 }
 
@@ -266,7 +266,7 @@ OOStkCmdStat ooStopMonitor()
 
    memset(&cmd, 0, sizeof(OOStackCommand));
    cmd.type = OO_CMD_STOPMONITOR;
-  
+
    if(ooWriteStackCommand(&cmd) != OO_OK)
       return OO_STKCMD_WRITEERR;
 
@@ -303,7 +303,7 @@ OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* dtmf)
    }
    strcpy((char*)cmd.param1, callToken);
    strcpy((char*)cmd.param2, dtmf);
-  
+
    if(ooWriteStackCommand(&cmd) != OO_OK)
    {
       free(cmd.param1);

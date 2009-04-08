@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -84,6 +84,15 @@ typedef struct _OOMsgBuf {
    OOBOOL   dynamic;    /* pdata is dynamic (allocated with OOMEMALLOC) */
 } OOMsgBuf;
 
+/* Enumerated item descriptor */
+
+typedef struct OOEnumItem {
+   const char* name;
+   OOINT32     value;
+   OOUINT16    namelen;
+   OOUINT16    transidx;
+} OOEnumItem;
+
 /* Memory allocation and free function definitions.  These definitions  */
 /* can be changed if a non-standard allocation/free function is to be   */
 /* used..                                                               */
@@ -117,6 +126,9 @@ typedef struct _OOMsgBuf {
 #define EXTERN
 #endif /* _DLL */
 #endif /* EXTERN */
+
+EXTERN OOINT32 lookupEnum
+(const char* strValue, size_t strValueSize, const OOEnumItem enumTable[], OOUINT16 enumTableSize);
 
 /**
  * @}

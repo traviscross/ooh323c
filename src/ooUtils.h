@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -43,11 +43,11 @@ EXTERN OOBOOL ooUtilsIsStrEmpty (const char * str);
 
 
 /**
- * Test if given string value is digit string. 
+ * Test if given string value is digit string.
  *
  * @param str    String to test
  * @return       TRUE if string contains all digits; FALSE otherwise
  */
-EXTERN OOBOOL ooIsDailedDigit(const char* str);
+EXTERN OOBOOL ooIsDialedDigit (const char* str);
 
 #endif

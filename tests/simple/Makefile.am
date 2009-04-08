@@ -1,4 +1,4 @@
-CFLAGS= @OOH323CFLAGS@
+AM_CFLAGS= @OOH323CFLAGS@
 noinst_PROGRAMS = simple
 simple_SOURCES = simple.c oosndrtp.c oosndrtp.h
 INCLUDES = -I$(top_builddir)/src -I$(top_builddir)/src/h323

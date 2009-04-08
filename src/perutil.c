@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -173,7 +173,7 @@ int checkSizeConstraint(OOCTXT* pctxt, int size)
    /* bit..                                                             */
 
    if (isExtendableSize(pctxt->pSizeConstraint)) {
-      stat = DE_BIT (pctxt, &extbit);
+      stat = DECODEBIT (pctxt, &extbit);
       if (stat != ASN_OK) return LOG_ASN1ERR (pctxt, stat);
    }
    else extbit = 0;

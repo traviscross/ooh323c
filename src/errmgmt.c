@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -172,7 +172,7 @@ char* errFmtMsg (ASN1ErrInfo* pErrInfo, char* bufp)
       }
       else
          strcpy (bufp, "unrecognized completion status");
-   }   
+   }
    else strcpy (bufp, "normal completion status");
 
    return (bufp);

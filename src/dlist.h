@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -79,7 +79,9 @@ EXTERN DListNode* dListAppend
 (struct OOCTXT* pctxt, DList* pList, void* pData);
 
 EXTERN DListNode* dListAppendNode
-(struct OOCTXT* pctxt, DList* pList, void* pData);
+(struct OOCTXT* , DList* pList, void* pData);
+
+EXTERN DListNode* dListAppendNode2 (DList* pList, void* pData);
 
 /**
  * This function delete the head item from the list and returns a pointer
@@ -197,6 +199,18 @@ void dListFindAndRemove(DList* pList, void* data);
 /**
  * @}
  */
+/* This rounds node size up to a 64-bit boundary to fix alignment issues */
+#define DLISTNODESIZE ((sizeof(DListNode)+7)&(~7))
+
+#define dListAllocNodeAndData(pctxt,type,ppnode,ppdata) do { \
+*ppnode = (DListNode*) \
+memAlloc (pctxt, sizeof(type)+DLISTNODESIZE); \
+if (0 != *ppnode) { \
+(*ppnode)->data = (void*)((char*)(*ppnode)+DLISTNODESIZE); \
+*ppdata = (type*)((*ppnode)->data); \
+} else { *ppdata = 0; } \
+} while (0)
+
 #ifdef __cplusplus
 }
 #endif

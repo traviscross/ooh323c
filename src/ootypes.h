@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -61,7 +61,7 @@
 
 
 
-#define OOH323C_VERSION "v0.8.4"
+#define OOH323C_VERSION "v0.9.0"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL
@@ -120,7 +120,7 @@ typedef enum OOCallClearReason {
    OO_REASON_GK_UNREACHABLE,
    OO_REASON_GK_CLEARED,
    OO_REASON_NOCOMMON_CAPABILITIES,
-   OO_REASON_REMOTE_FWDED,  
+   OO_REASON_REMOTE_FWDED,
    OO_REASON_LOCAL_FWDED,
    OO_REASON_REMOTE_CLEARED,
    OO_REASON_LOCAL_CLEARED,

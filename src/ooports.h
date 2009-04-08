@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -80,7 +80,7 @@ EXTERN int ooBindPort (OOH323PortType type, OOSOCKET socket, char *ip);
  *                  socket is bound and in case of failure just returns
  *                  a negative value.
  */
-#ifdef _WIN32       
+#ifdef _WIN32
 EXTERN int ooBindOSAllocatedPort(OOSOCKET socket, char *ip);
 #endif
 

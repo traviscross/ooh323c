@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -83,7 +83,7 @@ int ooCreateCmdConnection()
 #else
       ret = ooBindOSAllocatedPort(gCmdChan, gCmdIP);
 #endif
-     
+
       if(ret == OO_FAILED)
       {
          return OO_FAILED;
@@ -107,7 +107,7 @@ int ooCloseCmdConnection()
    return OO_OK;
 }
 
-int ooAcceptCmdConnection()   
+int ooAcceptCmdConnection()
 {
    int ret;
 
@@ -118,22 +118,22 @@ int ooAcceptCmdConnection()
       OOTRACEERR1("Error:Accepting CMD connection\n");
       return OO_FAILED;
    }
-   OOTRACEINFO1("Cmd connection accepted\n");  
+   OOTRACEINFO1("Cmd connection accepted\n");
    return OO_OK;
 }
 
 int ooWriteStackCommand(OOStackCommand *cmd)
 {
-   if(ASN_OK != ooSocketSend(gCmdChan, (char*)cmd, sizeof(OOStackCommand)))
+   if(0 != ooSocketSend(gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand)))
       return OO_FAILED;
-  
+
    return OO_OK;
 }
 
 
 int ooReadAndProcessStackCommand()
 {
-   OOH323CallData *pCall = NULL;  
+   OOH323CallData *pCall = NULL;
    unsigned char buffer[MAXMSGLEN];
    int i, recvLen = 0;
    OOStackCommand cmd;
@@ -212,7 +212,7 @@ int ooReadAndProcessStackCommand()
                ooH323HangCall((char*)cmd.param1,
                               *(OOCallClearReason*)cmd.param2);
                break;
-         
+
             case OO_CMD_SENDDIGIT:
                pCall = ooFindCallByToken((char*)cmd.param1);
                if(!pCall) {
@@ -250,4 +250,4 @@ int ooReadAndProcessStackCommand()
 
    return OO_OK;
 }
-  
+

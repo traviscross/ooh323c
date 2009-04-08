@@ -1,4 +1,4 @@
-CFLAGS = @OOH323CFLAGS@
+AM_CFLAGS = @OOH323CFLAGS@
 
 noinst_PROGRAMS = ooPlayer
 ooPlayer_SOURCES = ooPlayer.c ooPlayer.h oosndrtp.c oosndrtp.h

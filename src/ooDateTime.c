@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -68,7 +68,7 @@ static uint64 calcEpocOffset() {
 
 // Gets high resolution by spinning up to 15ms.  Don't call this often!!!
 static uint64 getRawCurMsSpin() {
-   FILETIME tm;  
+   FILETIME tm;
    uint64 t_now;
 
    static uint64 epocOffset = 0;
@@ -120,7 +120,7 @@ int gettimeofday(struct timeval* tv, void* null) {
       baselineMs = getRawCurMsSpin();
       tickBaseline = timeGetTime();
    }
-  
+
    uint64 now_ms = (baselineMs + (curTicks - tickBaseline));
    *tv = oo_ms_to_tv(now_ms);
    return 0;

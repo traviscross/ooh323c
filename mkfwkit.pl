@@ -109,6 +109,7 @@ if ($ARGV[0] eq "src") {
    print "Copying ooh323c sources\n";
    mkdir ("ooh323c-${version}/src", 0777);
    mkdir ("ooh323c-${version}/src/h323", 0777);
+   mkdir ("ooh323c-${version}/src/h323_v6", 0777);
    print `cp -f ./src/Makefile.am ./ooh323c-${version}/src/Makefile.am`;
    print `cp -f ./src/Makefile.in ./ooh323c-${version}/src/Makefile.in`;
    print `cp -f ./src/oostk.dsp ./ooh323c-${version}/src/oostk.dsp`;
@@ -116,6 +117,8 @@ if ($ARGV[0] eq "src") {
    print `cp -f ./src/*.c ./ooh323c-${version}/src`;
    print `cp -f ./src/h323/*.h ./ooh323c-${version}/src/h323`;
    print `cp -f ./src/h323/*.c ./ooh323c-${version}/src/h323`;
+   print `cp -f ./src/h323_v6/*.h ./ooh323c-${version}/src/h323_v6`;
+   print `cp -f ./src/h323_v6/*.c ./ooh323c-${version}/src/h323_v6`;
 }
 
 

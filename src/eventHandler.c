@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -106,10 +106,10 @@ void invokeOidValue (OOCTXT* pctxt, ASN1UINT numSubIds, ASN1UINT* pSubIds)
    }
 }
 
-void invokeEnumValue (OOCTXT* pctxt, ASN1UINT value)
+void invokeEnumValue (OOCTXT* pctxt, ASN1UINT value, const char* text)
 {
    if (0 != pctxt->pEventHandler) {
-      pctxt->pEventHandler->enumValue (value);
+     pctxt->pEventHandler->enumValue (value, text);
    }
 }
 

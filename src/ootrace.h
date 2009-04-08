@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -125,7 +125,7 @@ EXTERN void ooSetTraceThreshold(OOUINT32 traceLevel);
  *
  * @param traceLevel  Trace level for the message.
  * @param fmtspec     Printf style format spec.
- * @param ...         Printf style variable list of arguments             
+ * @param ...         Printf style variable list of arguments
  *
  * @return            - none
  */

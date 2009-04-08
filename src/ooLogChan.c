@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -37,7 +37,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
                   "(%s, %s)\n", call->callType, call->callToken);
       return NULL;
    }
-  
+
    memset(pNewChannel, 0, sizeof(OOLogicalChannel));
    pNewChannel->channelNo = channelNo;
    pNewChannel->sessionID = sessionID;
@@ -69,7 +69,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
          pMediaInfo = pMediaInfo->next;
       }
    }
-   
+
    if(pMediaInfo)
    {
       OOTRACEDBGC3("Using configured media info (%s, %s)\n", call->callType,
@@ -96,7 +96,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
       pNewChannel->localRtcpPort = ooGetNextPort (OORTP);
       strcpy(pNewChannel->localIP, call->localIP);
    }
-  
+
    /* Add new channel to the list */
    pNewChannel->next = NULL;
    if(!call->logicalChans) {
@@ -107,7 +107,7 @@ OOLogicalChannel* ooAddNewLogicalChannel(OOH323CallData *call, int channelNo,
       while(pChannel->next)  pChannel = pChannel->next;
       pChannel->next = pNewChannel;
    }
-  
+
    /* increment logical channels */
    call->noOfLogicalChannels++;
    OOTRACEINFO3("Created new logical channel entry (%s, %s)\n", call->callType,
@@ -236,7 +236,7 @@ int ooClearAllLogicalChannels(OOH323CallData *call)
 
    OOTRACEINFO3("Clearing all logical channels (%s, %s)\n", call->callType,
                  call->callToken);
-  
+
    temp = call->logicalChans;
    while(temp)
    {
@@ -333,7 +333,7 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
       prev = temp;
       temp = temp->next;
    }
-  
+
    OOTRACEERR4("ERROR:Remove Logical Channel - Channel %d not found "
                   "(%s, %s)\n", ChannelNo, call->callType, call->callToken);
    return OO_FAILED;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -67,7 +67,7 @@ struct OOCapPrefs;
 
 
 
- 
+
 /**
  * This structure is used to define the port ranges to be used
  * by the application.
@@ -83,7 +83,7 @@ typedef struct OOH323Ports {
  * endpoint created by an application
  */
 typedef struct OOH323EndPoint {
-  
+
    /**
     * This context should be used for allocation of memory for
     * items within the endpoint structure.
@@ -107,7 +107,7 @@ typedef struct OOH323EndPoint {
 
    /** Range of port numbers to be used for RTP connections */
    OOH323Ports rtpPorts;
- 
+
    ASN1UINT  flags;
 
    int termType; /* 50 - Terminal entity with No MC,
@@ -203,7 +203,7 @@ EXTERN int ooH323EpSetLocalAddress(const char* localip, int listenport);
  * @param base           Starting port number for the range
  * @param max            Ending port number for the range.
  *
- * @return               OO_OK, on success. OO_FAILED, on failure.   
+ * @return               OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetTCPPortRange(int base, int max);
 
@@ -213,7 +213,7 @@ EXTERN int ooH323EpSetTCPPortRange(int base, int max);
  * @param base           Starting port number for the range
  * @param max            Ending port number for the range.
  *
- * @return               OO_OK, on success. OO_FAILED, on failure.   
+ * @return               OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetUDPPortRange(int base, int max);
 
@@ -223,7 +223,7 @@ EXTERN int ooH323EpSetUDPPortRange(int base, int max);
  * @param base           Starting port number for the range
  * @param max            Ending port number for the range.
  *
- * @return               OO_OK, on success. OO_FAILED, on failure.   
+ * @return               OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetRTPPortRange(int base, int max);
 

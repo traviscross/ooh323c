@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -420,7 +420,7 @@ int ooCapabilityAddH263VideoCapability_helper(struct OOH323CallData *call,
                               OOBOOL remote);
 
 /**
- * This function is used to add a audio capability to calls remote 
+ * This function is used to add a audio capability to calls remote
  * capability list.
  * @param call                Handle to the call.
  * @param audioCap            Handle to the remote endpoint's audio capability.
@@ -451,7 +451,7 @@ int ooAddRemoteCapability(struct OOH323CallData *call, H245Capability *cap);
  * @param call           Handle to the call
  * @param cap            Remote cap which will be tested for compatibility.
  *
- * @return               returns OO_OK, if updated else OO_FAILED; 
+ * @return               returns OO_OK, if updated else OO_FAILED;
  */
 EXTERN int ooCapabilityUpdateJointCapabilities
    (struct OOH323CallData* call, H245Capability *cap);
@@ -467,7 +467,7 @@ EXTERN int ooCapabilityUpdateJointCapabilities
  *                       compatibility.
  * @param dir            Direction of the capability
  *
- * @return               returns OO_OK, if updated else OO_FAILED; 
+ * @return               returns OO_OK, if updated else OO_FAILED;
  */
 EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
    (struct OOH323CallData *call, H245VideoCapability *videoCap, int dir);
@@ -483,7 +483,7 @@ EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
  *                       compatibility.
  * @param dir            Direction of the H263 capability
  *
- * @return               returns OO_OK, if updated else OO_FAILED; 
+ * @return               returns OO_OK, if updated else OO_FAILED;
  */
 EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH263
    (struct OOH323CallData *call, H245H263VideoCapability *pH263Cap, int dir);

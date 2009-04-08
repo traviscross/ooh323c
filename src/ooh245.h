@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -67,7 +67,7 @@ typedef struct H245Message {
  *                  (Request/Response/Command/Indication)
  *
  * @return          Completion status of operation: 0 (OO_OK) = success,
- *                  negative return value is error.        
+ *                  negative return value is error.
  */
 EXTERN int ooCreateH245Message(H245Message **msg, int type);
 
@@ -77,7 +77,7 @@ EXTERN int ooCreateH245Message(H245Message **msg, int type);
  * @param call      Handle to the call
  * @param pmsg      Pointer to an H245 message structure.
  *
- * @return          OO_OK, on success. OO_FAILED, on failure        
+ * @return          OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooFreeH245Message(struct OOH323CallData *call, H245Message *pmsg);
 
@@ -113,7 +113,7 @@ EXTERN int ooGetOutgoingH245Msgbuf(struct OOH323CallData *call,
  * @param call      Pointer to a call for which TerminalCapabilitySet message
  *                  will be sent.
  *
- * @return          OO_OK, on success. OO_FAILED, on failure. 
+ * @return          OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooSendTermCapMsg(struct OOH323CallData *call);
 
@@ -198,7 +198,7 @@ EXTERN int ooHandleOpenLogicalChannel
  * @param call        Pointer to cll for which OLC was received.
  * @param olc         The received OpenLogicalChannel message.
  *
- * @return            OO_OK, on success. OO_FAILED, on failure.        
+ * @return            OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooHandleOpenLogicalChannel_helper
 (struct OOH323CallData *call, H245OpenLogicalChannel*olc);
@@ -516,7 +516,7 @@ EXTERN int ooPrepareFastStartResponseOLC
  * @return                OO_OK, on success. OO_FAILED, on failure
  */
 EXTERN int ooEncodeH245Message
-(struct OOH323CallData *call, H245Message *ph245Msg, char *msgbuf, int size);
+(struct OOH323CallData *call, H245Message *ph245Msg, ASN1OCTET *msgbuf, size_t size);
 
 /**
  * This function is used to send a master-slave determination release message.

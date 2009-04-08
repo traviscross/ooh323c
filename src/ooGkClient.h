@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2005 by Page Iberica, S.A.
- * Copyright (C) 2005 by Objective Systems, Inc.
+ * Copyright (C) 2009 by Page Iberica, S.A.
+ * Copyright (C) 2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -110,7 +110,7 @@ enum OOGkClientState {
    GkClientGkErr,/*Gk is not responding, in discover mode can look for new GK*/
    GkClientFailed
 };
-  
+
 
 typedef struct RasGatekeeperInfo
 {
@@ -250,7 +250,7 @@ EXTERN int ooGkClientStart(ooGkClient *pGkClient);
  * This function is invoked to set a gatekeeper mode.
  * @param pGkClient Handle to gatekeeper client.
  * @param eGkMode   Gatekeeper mode selected. One of the following:
- *                    - RasNoGatekeeper (DEFAULT), No Gatekeeper.             
+ *                    - RasNoGatekeeper (DEFAULT), No Gatekeeper.
  *                    - RasDiscoverGatekeeper, to discover a gatekeeper
  *                      automatically.
  *                    - RasUseSpecificGatekeeper, to use a specific gatekeeper.

@@ -1,4 +1,4 @@
-Copyright (C) 2004-2006 by Objective Systems, Inc.
+Copyright (C) 2004-2009 by Objective Systems, Inc.
 
 Objective Open H.323 README
 
@@ -73,7 +73,7 @@ Getting Started
 Sample Programs
 
 To run the sample programs, make sure the path to the media plug-in library
- (oomedia.dll) is in your PATH.  The DLL is located in the ooh323c-0.8.4\lib
+ (oomedia.dll) is in your PATH.  The DLL is located in the ooh323c-0.9.0\lib
 directory.
 
 The sample programs are locates in the 'tests' subdirectory.  The following

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -187,7 +187,7 @@ typedef void (*OidValue) (ASN1UINT numSubIds, ASN1UINT* pSubIds) ;
  * @param value        - Parsed enumerated value
  * @return             - none
  */
-typedef void (*EnumValue) (ASN1UINT value) ;
+typedef void (*EnumValue) (ASN1UINT value, const char* text) ;
 
 /**
  * This is a function pointer for a callback function which is invoked from
@@ -268,7 +268,7 @@ EXTERN void invokeNullValue (OOCTXT* pctxt);
 EXTERN void invokeOidValue
 (OOCTXT* pctxt, ASN1UINT numSubIds, ASN1UINT* pSubIds);
 
-EXTERN void invokeEnumValue (OOCTXT* pctxt, ASN1UINT value);
+EXTERN void invokeEnumValue (OOCTXT* pctxt, ASN1UINT value, const char* text);
 
 EXTERN void invokeOpenTypeValue
 (OOCTXT* pctxt, ASN1UINT numocts, const ASN1OCTET* data);

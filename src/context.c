@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -71,7 +71,7 @@ int initSubContext (OOCTXT* pctxt, OOCTXT* psrc)
 void freeContext (OOCTXT* pctxt)
 {
    ASN1BOOL saveBuf = (pctxt->flags & ASN1SAVEBUF) != 0;
-  
+
    if (pctxt->buffer.dynamic && pctxt->buffer.data) {
       if (saveBuf) {
          memHeapMarkSaved (&pctxt->pMsgMemHeap, pctxt->buffer.data, TRUE);
@@ -122,7 +122,7 @@ int setPERBuffer (OOCTXT* pctxt,
    int stat = initContextBuffer (pctxt, bufaddr, bufsiz);
    if(stat != ASN_OK) return stat;
 
-  
+
    return ASN_OK;
 }
 

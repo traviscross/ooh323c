@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -58,7 +58,7 @@ typedef struct OOLogicalChannel {
    int  localRtpPort;
    int  localRtcpPort;
    char localIP[20];
-   OOLogicalChannelState state;        
+   OOLogicalChannelState state;
    struct ooH323EpCapability *chanCap;
    struct OOLogicalChannel *next;
 } OOLogicalChannel;
@@ -89,7 +89,7 @@ EXTERN ooLogicalChannel* ooAddNewLogicalChannel
  * @param channelNo     Forward Logical Channel number for the logical channel
  *
  * @return              Pointer to the logical channel if found, NULL
- *                      otherwise.  
+ *                      otherwise.
  */
 EXTERN ooLogicalChannel* ooFindLogicalChannelByLogicalChannelNo
 (struct OOH323CallData *call, int channelNo);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -48,11 +48,11 @@ extern "C" {
 #define OO_MAX_CALL_TOKEN 9999
 
 /* Q.931 packet must be at least 5 bytes long */
-#define Q931_E_TOOSHORT         (-1001) 
+#define Q931_E_TOOSHORT         (-1001)
 /* callReference field must be 2 bytes long */
-#define Q931_E_INVCALLREF       (-1002) 
+#define Q931_E_INVCALLREF       (-1002)
 /* invalid length of message */
-#define Q931_E_INVLENGTH        (-1003) 
+#define Q931_E_INVLENGTH        (-1003)
 
 enum Q931MsgTypes {
    Q931NationalEscapeMsg  = 0x00,
@@ -240,7 +240,7 @@ typedef struct Q931Message {
    ASN1UINT tunneledMsgType;  /* The H245 message this message is tunneling*/
    ASN1INT  logicalChannelNo; /* channel number associated with tunneled */
                               /* message, 0 if no channel */
-   DList ies;   
+   DList ies;
    Q931InformationElement *bearerCapabilityIE;
    Q931InformationElement *callingPartyNumberIE;
    Q931InformationElement *calledPartyNumberIE;
@@ -342,7 +342,7 @@ EXTERN int ooQ931Decode
  * ies. It decodes the User-User ie and populates the userInfo field of the
  * message.
  * @param q931Msg    Pointer to the message whose User-User ie has to be
- *                   decoded.   
+ *                   decoded.
  *
  * @return           OO_OK, on success. OO_FAILED, on failure.
  */
@@ -439,7 +439,7 @@ EXTERN int ooGetOutgoingQ931Msgbuf
  * the currently active call.
  *
  * @param call    Pointer to the call for which ReleaseComplete message have
- *                to be sent. 
+ *                to be sent.
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
@@ -450,18 +450,18 @@ EXTERN int ooSendReleaseComplete(struct OOH323CallData *call);
  * received setup message.
  *
  * @param call    Pointer to the call for which CallProceeding message have to
- *                be sent. 
+ *                be sent.
  *
  * @return        Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooSendCallProceeding(struct OOH323CallData *call);
 
 /**
- * This function is invoked to send alerting message in response to received 
+ * This function is invoked to send alerting message in response to received
  * setup message.
  *
  * @param call     Pointer to the call for which Alerting message have to be
- *                 sent. 
+ *                 sent.
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
@@ -471,7 +471,7 @@ EXTERN int ooSendAlerting(struct OOH323CallData *call);
  * This function is invoked to send Facility message.
  *
  * @param call     Pointer to the call for which Facility message have to be
- *                 sent. 
+ *                 sent.
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
@@ -490,11 +490,11 @@ EXTERN int ooQ931SendDTMFAsKeyPadIE
           (struct OOH323CallData *call, const char* data);
 
 /**
- * This function is invoked to send a Connect message in response to received 
+ * This function is invoked to send a Connect message in response to received
  * setup message.
  *
  * @param call      Pointer to the call for which connect message has to be
- *                  sent. 
+ *                  sent.
  *
  * @return          Completion status - 0 on success, -1 on failure
  */
@@ -625,7 +625,7 @@ EXTERN int ooSendAsTunneledMessage
  * @return                OO_OK, on success. OO_FAILED, on failure.
  */
 int ooEncodeH225Message(struct OOH323CallData *call, Q931Message *pq931Msg,
-                        char *msgbuf, int size);
+                        ASN1OCTET* msgbuf, size_t size);
 
 /**
  * This is a callback function which is called when there is no CONNECT

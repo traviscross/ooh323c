@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -156,7 +156,7 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    memcpy(call->callIdentifier.guid.data, setup->callIdentifier.guid.data,
           setup->callIdentifier.guid.numocts);
    call->callIdentifier.guid.numocts = setup->callIdentifier.guid.numocts;
-  
+
    memcpy(call->confIdentifier.data, setup->conferenceID.data,
           setup->conferenceID.numocts);
    call->confIdentifier.numocts = setup->conferenceID.numocts;
@@ -165,9 +165,12 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    pDisplayIE = ooQ931GetIE(q931Msg, Q931DisplayIE);
    if(pDisplayIE)
    {
-      call->remoteDisplayName = (ASN1OCTET*) memAlloc(call->pctxt,
-                                 pDisplayIE->length*sizeof(ASN1OCTET)+1);
-      strcpy(call->remoteDisplayName, pDisplayIE->data);
+      call->remoteDisplayName = (char*) memAllocZ
+        (call->pctxt, pDisplayIE->length + 1);
+
+      strncpy
+        (call->remoteDisplayName, (const char*)pDisplayIE->data,
+         pDisplayIE->length);
    }
    /*Extract Remote Aliases, if present*/
    if(setup->m.sourceAddressPresent)
@@ -199,7 +202,7 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
    /* Extract, aliases used for us, if present. Also,
       Populate calledPartyNumber from dialedDigits, if not yet populated using
       calledPartyNumber Q931 IE.
-   */     
+   */
    if(setup->m.destinationAddressPresent)
    {
       if(setup->destinationAddress.count>0)
@@ -265,7 +268,7 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
       }
       OO_CLRFLAG (call->flags, OO_M_TUNNELING);
    }
-  
+
    /* Extract Remote IP address */
    if(!setup->m.sourceCallSignalAddressPresent)
    {
@@ -286,9 +289,9 @@ int ooOnReceivedSetup(OOH323CallData *call, Q931Message *q931Msg)
                                              ip->data[2], ip->data[3]);
       call->remotePort =  setup->sourceCallSignalAddress.u.ipAddress->port;
    }
-  
+
    /* check for fast start */
-  
+
    if(setup->m.fastStartPresent)
    {
       if(!OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART))
@@ -374,7 +377,7 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
    H245OpenLogicalChannel* olc;
    ASN1OCTET msgbuf[MAXMSGLEN];
    ooLogicalChannel * pChannel = NULL;
-   H245H2250LogicalChannelParameters * h2250lcp = NULL; 
+   H245H2250LogicalChannelParameters * h2250lcp = NULL;
    int i=0, ret=0;
 
    if(!q931Msg->userInfo)
@@ -478,7 +481,7 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
                               call->callToken);
                   continue;
                }
-           
+
                /* Extract the remote media endpoint address */
                h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
                if(!h2250lcp)
@@ -498,14 +501,14 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
                ret = ooGetIpPortFromH245TransportAddress(call,
                                    &h2250lcp->mediaChannel, pChannel->remoteIP,
                                    &pChannel->remoteMediaPort);
-              
+
                if(ret != OO_OK)
                {
                   OOTRACEERR3("ERROR:Unsupported media channel address type "
                               "(%s, %s)\n", call->callType, call->callToken);
                   return OO_FAILED;
                }
-      
+
                if(!pChannel->chanCap->startTransmitChannel)
                {
                   OOTRACEERR3("ERROR:No callback registered to start transmit "
@@ -524,7 +527,7 @@ int ooOnReceivedCallProceeding(OOH323CallData *call, Q931Message *q931Msg)
          removeEventHandler(call->pctxt);
          OO_SETFLAG(call->flags, OO_M_FASTSTARTANSWERED);
       }
-     
+
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
@@ -571,7 +574,7 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
    H245OpenLogicalChannel* olc;
    ASN1OCTET msgbuf[MAXMSGLEN];
    ooLogicalChannel * pChannel = NULL;
-   H245H2250LogicalChannelParameters * h2250lcp = NULL; 
+   H245H2250LogicalChannelParameters * h2250lcp = NULL;
    int i=0, ret=0;
 
 
@@ -675,7 +678,7 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
                               call->callToken);
                   continue;
                }
-           
+
                /* Extract the remote media endpoint address */
                h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
                if(!h2250lcp)
@@ -695,14 +698,14 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
                ret = ooGetIpPortFromH245TransportAddress(call,
                                    &h2250lcp->mediaChannel, pChannel->remoteIP,
                                    &pChannel->remoteMediaPort);
-              
+
                if(ret != OO_OK)
                {
                   OOTRACEERR3("ERROR:Unsupported media channel address type "
                               "(%s, %s)\n", call->callType, call->callToken);
                   return OO_FAILED;
                }
-      
+
                if(!pChannel->chanCap->startTransmitChannel)
                {
                   OOTRACEERR3("ERROR:No callback registered to start transmit "
@@ -721,7 +724,7 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
          removeEventHandler(call->pctxt);
          OO_SETFLAG(call->flags, OO_M_FASTSTARTANSWERED);
       }
-     
+
    }
 
    /* Retrieve the H.245 control channel address from the connect msg */
@@ -760,7 +763,7 @@ int ooOnReceivedAlerting(OOH323CallData *call, Q931Message *q931Msg)
    }
    return OO_OK;
 }
-  
+
 
 int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
 {
@@ -769,7 +772,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
    H245OpenLogicalChannel* olc;
    ASN1OCTET msgbuf[MAXMSGLEN];
    ooLogicalChannel * pChannel = NULL;
-   H245H2250LogicalChannelParameters * h2250lcp = NULL; 
+   H245H2250LogicalChannelParameters * h2250lcp = NULL;
 
    if(!q931Msg->userInfo)
    {
@@ -893,7 +896,7 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
                            call->callType, call->callToken);
                continue;
             }
-           
+
             /* Extract the remote media endpoint address */
             h2250lcp = olc->forwardLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
             if(!h2250lcp)
@@ -1042,11 +1045,11 @@ int ooOnReceivedSignalConnect(OOH323CallData* call, Q931Message *q931Msg)
             OOTRACEERR3("ERROR:Sending Master-slave determination message "
                      "(%s, %s)\n", call->callType, call->callToken);
             return ret;
-         }  
+         }
       }
 
    }
-   return OO_OK; 
+   return OO_OK;
 }
 
 int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
@@ -1071,9 +1074,9 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
             is done.
          */
          ooFreeQ931Message(q931Msg);
-        
+
          ooSendCallProceeding(call);/* Send call proceeding message*/
-        
+
          /* DISABLEGK is used to selectively disable gatekeeper use. For
             incoming calls DISABLEGK can be set in onReceivedSetup callback by
             application. Very useful in pbx applications where gk is used only
@@ -1159,7 +1162,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
                       call->callType, call->callToken);
 
          ooOnReceivedReleaseComplete(call, q931Msg);
-        
+
          ooFreeQ931Message(q931Msg);
          break;
       case Q931FacilityMsg:
@@ -1294,14 +1297,14 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
             {
                OOTRACEERR3("ERROR: Source call signalling address type not ip "
                            "(%s, %s)\n", call->callType, call->callToken);
-          
+
                return OO_FAILED;
             }
 
             ip = &facility->alternativeAddress.u.ipAddress->ip;
             sprintf(call->pCallFwdData->ip, "%d.%d.%d.%d", ip->data[0],
                                        ip->data[1], ip->data[2], ip->data[3]);
-            call->pCallFwdData->port = 
+            call->pCallFwdData->port =
                                facility->alternativeAddress.u.ipAddress->port;
          }
 
@@ -1335,7 +1338,7 @@ int ooOnReceivedFacility(OOH323CallData *call, Q931Message * pQ931Msg)
       OOTRACEDBGB3("Finished handling tunneled messages in empty Facility "
                    "message. (%s, %s)\n", call->callType, call->callToken);
    }
-  
+
    return OO_OK;
 }
 
@@ -1344,7 +1347,7 @@ int ooHandleStartH245FacilityMessage
 {
    H225TransportAddress_ipAddress *ipAddress = NULL;
    int ret;
-  
+
    /* Extract H245 address */
    if(!facility->m.h245AddressPresent)
    {
@@ -1365,7 +1368,7 @@ int ooHandleStartH245FacilityMessage
                   "address found. (%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-  
+
    sprintf(call->remoteIP, "%d.%d.%d.%d", ipAddress->ip.data[0],
                                           ipAddress->ip.data[1],
                                           ipAddress->ip.data[2],
@@ -1392,11 +1395,11 @@ int ooHandleTunneledH245Messages
    H245Message *pmsg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
    int ret=0,i=0;
-  
+
    OOTRACEDBGC3("Checking for tunneled H.245 messages (%s, %s)\n",
                  call->callType, call->callToken);
 
-   /* Check whether there are tunneled messages */ 
+   /* Check whether there are tunneled messages */
    if(pH323UUPdu->m.h245TunnelingPresent)
    {
       if(pH323UUPdu->h245Tunneling)
@@ -1419,7 +1422,7 @@ int ooHandleTunneledH245Messages
 
             setPERBuffer(pctxt,
                          (ASN1OCTET*)pH323UUPdu->h245Control.elem[i].data,
-                         pH323UUPdu->h245Control.elem[i].numocts, 1); 
+                         pH323UUPdu->h245Control.elem[i].numocts, 1);
 
             initializePrintHandler(&printHandler, "Tunneled H.245 Message");
             memset(pmsg, 0, sizeof(H245Message));
@@ -1466,7 +1469,7 @@ int ooH323RetrieveAliases
    /* check for aliases */
    if(pAddresses->count<=0)
       return OO_OK;
-  
+
    for(i=0; i<(int)pAddresses->count; i++)
    {
       pNode = dListFindByIndex (pAddresses, i);
@@ -1498,7 +1501,7 @@ int ooH323RetrieveAliases
             OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
                         "newAlias->value(dialedDigits) (%s, %s)\n",
                          call->callType, call->callToken);
-            memFreePtr(call->pctxt, newAlias); 
+            memFreePtr(call->pctxt, newAlias);
             return OO_FAILED;
          }
 
@@ -1515,7 +1518,7 @@ int ooH323RetrieveAliases
             OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
                         "newAlias->value(h323id) (%s, %s)\n", call->callType,
                          call->callToken);
-            memFreePtr(call->pctxt, newAlias); 
+            memFreePtr(call->pctxt, newAlias);
             return OO_FAILED;
          }
 
@@ -1527,7 +1530,7 @@ int ooH323RetrieveAliases
             }
          }
          newAlias->value[k] = '\0';
-         break;  
+         break;
       case T_H225AliasAddress_url_ID:
          newAlias->type = T_H225AliasAddress_url_ID;
          newAlias->value = (char*)memAlloc(call->pctxt,
@@ -1537,7 +1540,7 @@ int ooH323RetrieveAliases
             OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
                         "newAlias->value(urlid) (%s, %s)\n", call->callType,
                          call->callToken);
-            memFreePtr(call->pctxt, newAlias); 
+            memFreePtr(call->pctxt, newAlias);
             return OO_FAILED;
          }
 
@@ -1575,7 +1578,7 @@ int ooH323RetrieveAliases
             OOTRACEERR3("ERROR:Memory - ooH323RetrieveAliases - "
                         "newAlias->value(emailid) (%s, %s)\n", call->callType,
                          call->callToken);
-            memFreePtr(call->pctxt, newAlias); 
+            memFreePtr(call->pctxt, newAlias);
             return OO_FAILED;
          }
 
@@ -1594,7 +1597,7 @@ int ooH323RetrieveAliases
       *aliasList = newAlias;
 
       newAlias = NULL;
-    
+
      pAliasAddress = NULL;
      pNode = NULL;
    }/* endof: for */
@@ -1644,7 +1647,7 @@ int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
             pAliasEntry->u.h323_ID.nchars = strlen(pAlias->value);
             pAliasEntry->u.h323_ID.data = (ASN116BITCHAR*)memAllocZ
                      (pctxt, strlen(pAlias->value)*sizeof(ASN116BITCHAR));
-           
+
             if(!pAliasEntry->u.h323_ID.data)
             {
                OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - h323_id\n");
@@ -1662,7 +1665,7 @@ int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
             if(!pAliasEntry->u.url_ID)
             {
                OOTRACEERR1("ERROR:Memory - ooPopulateAliasList - url_id\n");
-               memFreePtr(pctxt, pAliasEntry);              
+               memFreePtr(pctxt, pAliasEntry);
                return OO_FAILED;
             }
             strcpy((char*)pAliasEntry->u.url_ID, pAlias->value);
@@ -1683,14 +1686,14 @@ int ooPopulateAliasList(OOCTXT *pctxt, OOAliases *pAliases,
             break;
          default:
             OOTRACEERR1("ERROR: Unhandled alias type\n");
-            bValid = FALSE;                 
+            bValid = FALSE;
          }
-        
+
          if(bValid)
             dListAppend( pctxt, pAliasList, (void*)pAliasEntry );
          else
             memFreePtr(pctxt, pAliasEntry);
-        
+
          pAlias = pAlias->next;
       }
    }
@@ -1743,7 +1746,7 @@ OOAliases* ooH323AddAliasToList
    int j=0,k=0;
    OOAliases *newAlias=NULL;
    H225TransportAddress *pTransportAddrss=NULL;
-  
+
    newAlias = (OOAliases*) memAlloc(pctxt, sizeof(OOAliases));
    if(!newAlias)
    {
@@ -1772,7 +1775,7 @@ OOAliases* ooH323AddAliasToList
          }
       }
       newAlias->value[k] = '\0';
-      break;  
+      break;
    case T_H225AliasAddress_url_ID:
       newAlias->type = T_H225AliasAddress_url_ID;
       newAlias->value = (char*)memAlloc(pctxt,

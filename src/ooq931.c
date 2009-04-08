@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -64,13 +64,13 @@ EXTERN int ooQ931Decode
    if(msg->fromDestination)
       OOTRACEDBGB1("   from = destination\n");
    else
-      OOTRACEDBGB1("   from = originator\n");  
+      OOTRACEDBGB1("   from = originator\n");
 
 
    msg->messageType = data[4];
    OOTRACEDBGB2("   messageType = %x\n", msg->messageType);
 
-  
+
    /* Have preamble, start getting the informationElements into buffers */
    offset = 5;
    while (offset < length) {
@@ -166,7 +166,7 @@ EXTERN int ooQ931Decode
          OOTRACEDBGB1("   }\n");
          if(gH323ep.h323Callbacks.onReceivedDTMF)
          {
-            gH323ep.h323Callbacks.onReceivedDTMF(call, ie->data);
+           gH323ep.h323Callbacks.onReceivedDTMF(call, (char*)ie->data);
          }
       }
       /* Extract calling party number TODO:Give respect to presentation and
@@ -224,7 +224,7 @@ EXTERN int ooQ931Decode
       if (rv != ASN_OK)
          return rv;
    }
-  
+
    /*cisco router sends Q931Notify without UU ie,
      we just ignore notify message as of now as handling is optional for
      end point*/
@@ -367,9 +367,9 @@ EXTERN void ooQ931Print (const Q931Message* q931msg) {
 int ooCreateQ931Message(Q931Message **q931msg, int msgType)
 {
    OOCTXT *pctxt = &gH323ep.msgctxt;
-  
+
    *q931msg = (Q931Message*)memAllocZ(pctxt, sizeof(Q931Message));
-               
+
    if(!*q931msg)
    {
       OOTRACEERR1("Error:Memory -  ooCreateQ931Message - q931msg\n");
@@ -504,7 +504,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
       OOTRACEERR1("ERROR: Invalid Q931 message in add user-user IE\n");
       return OO_FAILED;
    }
-       
+
    if(!q931msg->userInfo)
    {
       OOTRACEERR1("ERROR: No User-User IE to encode\n");
@@ -512,7 +512,7 @@ int ooEncodeUUIE(Q931Message *q931msg)
    }
 
    setPERBuffer(pctxt, msgbuf, sizeof(msgbuf), aligned);
-  
+
    if(asn1PE_H225H323_UserInformation (pctxt,
                                            q931msg->userInfo)==ASN_OK)
    {
@@ -562,7 +562,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
       OOTRACEERR1("Error: ooDecodeUUIE failed - NULL q931 message\n");
       return OO_FAILED;
    }
-       
+
    /* Search for UserUser IE */
    for(i = 0, curNode = q931Msg->ies.head; i < q931Msg->ies.count;
                                              i++, curNode = curNode->next)
@@ -576,7 +576,7 @@ int ooDecodeUUIE(Q931Message *q931Msg)
       OOTRACEERR1("No UserUser IE found in ooDecodeUUIE\n");
       return OO_FAILED;
    }
-       
+
    /* Decode user-user ie */
    q931Msg->userInfo = (H225H323_UserInformation *) memAlloc(pctxt,
                                              sizeof(H225H323_UserInformation));
@@ -630,7 +630,7 @@ static void ooQ931PrintMessage
 
 
 int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
-                        char *msgbuf, int size)
+                        ASN1OCTET* msgbuf, size_t size)
 {
    int len=0, i=0, j=0, ieLen=0;
    int stat=0;
@@ -680,7 +680,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
                    call->callToken);
       return OO_FAILED;
    }
-  
+
    msgbuf[i++] = 3; /* TPKT version */
    msgbuf[i++] = 0; /* TPKT resevred */
    /* 1st octet of length, will be populated once len is determined */
@@ -696,7 +696,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    else
       i++;   /* fromOriginator*/
 
- 
+
    msgbuf[i++] = pq931Msg->callReference; /* populate 2nd octet */
    msgbuf[i++] = pq931Msg->messageType; /* type of q931 message */
 
@@ -705,13 +705,13 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    */
    /* Add bearer IE */
    if(pq931Msg->bearerCapabilityIE)
-   {  
+   {
       msgbuf[i++] = Q931BearerCapabilityIE; /* ie discriminator */
       msgbuf[i++] = pq931Msg->bearerCapabilityIE->length;
       memcpy(msgbuf+i, pq931Msg->bearerCapabilityIE->data,
                        pq931Msg->bearerCapabilityIE->length);
       i += pq931Msg->bearerCapabilityIE->length;
-   }  
+   }
 
    /* Add cause IE */
    if(pq931Msg->causeIE)
@@ -721,7 +721,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       memcpy(msgbuf+i, pq931Msg->causeIE->data, pq931Msg->causeIE->length);
       i += pq931Msg->causeIE->length;
    }
-     
+
    /*Add progress indicator IE
    if(pq931Msg->messageType == Q931AlertingMsg || pq931Msg->messageType == Q931CallProceedingMsg)
    {
@@ -761,7 +761,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
                        pq931Msg->calledPartyNumberIE->length);
       i += pq931Msg->calledPartyNumberIE->length;
    }
-  
+
    /* Add keypad ie */
    if(pq931Msg->keypadIE)
    {
@@ -778,12 +778,12 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    for(j = 0, curNode = pq931Msg->ies.head; j < (int)pq931Msg->ies.count; j++)
    {
       Q931InformationElement *ie = (Q931InformationElement*) curNode->data;
-         
+
       ieLen = ie->length;
 
       /* Add the ie discriminator in message buffer */
       msgbuf[i++] = ie->discriminator;
-         
+
       /* For user-user IE, we have to add protocol discriminator */
       if (ie->discriminator == Q931UserUserIE)
       {
@@ -795,7 +795,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
          memcpy((msgbuf + i), ie->data, ieLen);
 
          i += ieLen;
-        
+
       }
       else
       {
@@ -804,7 +804,7 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       }
    }
    //   len = i+1-4; /* complete message length */
-  
+
 
    /* Tpkt length octets populated with total length of the message */
    if(msgbuf[0] != OOFacility)
@@ -818,12 +818,12 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       msgbuf[6] = (len >> 8);
       msgbuf[7] = len;
    }
- 
+
 #ifndef _COMPACT
    if(msgbuf[0] != OOFacility)
-      ooQ931PrintMessage (call, msgbuf+5, len-4);
+     ooQ931PrintMessage (call, (ASN1OCTET*)msgbuf+5, len-4);
    else
-      ooQ931PrintMessage (call, msgbuf+8, len-4);
+     ooQ931PrintMessage (call, (ASN1OCTET*)msgbuf+8, len-4);
 #endif
    return OO_OK;
 }
@@ -831,14 +831,14 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
 int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
    ASN1UINT *fsCount, ASN1DynOctStr **fsElem)
 {
-   OOCTXT *pctxt = &gH323ep.msgctxt;  
+   OOCTXT *pctxt = &gH323ep.msgctxt;
    int ret = 0, i=0, j=0, remoteMediaPort=0, remoteMediaControlPort = 0, dir=0;
    char remoteMediaIP[20], remoteMediaControlIP[20];
    DListNode *pNode = NULL;
    H245OpenLogicalChannel *olc = NULL, printOlc;
    ooH323EpCapability *epCap = NULL;
    ASN1DynOctStr *pFS=NULL;
-   H245H2250LogicalChannelParameters *h2250lcp = NULL; 
+   H245H2250LogicalChannelParameters *h2250lcp = NULL;
    ooLogicalChannel* pChannel;
 
 
@@ -873,8 +873,8 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
 
       return ASN_OK;
    }
-  
-     
+
+
    /* If fast start supported and remote endpoint has sent faststart element */
    if(OO_TESTFLAG(gH323ep.flags, OO_M_FASTSTART) &&
       pCall->remoteFastStartOLCs.count>0)
@@ -884,7 +884,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
       if(!pFS)
       {
          OOTRACEERR3("Error:Memory - ooSetFastStartResponse - pFS (%s, %s)\n",
-                      pCall->callType, pCall->callToken);   
+                      pCall->callType, pCall->callToken);
          return OO_FAILED;
       }
       memset(pFS, 0, pCall->remoteFastStartOLCs.count*sizeof(ASN1DynOctStr));
@@ -918,7 +918,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
             epCap = ooIsDataTypeSupported(pCall,
                                 &olc->forwardLogicalChannelParameters.dataType,
                                 OORX);
-           
+
             if(!epCap) { continue; } /* Not Supported Channel */
 
             OOTRACEINFO1("Receive Channel data type supported\n");
@@ -1001,7 +1001,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
                epCap = NULL;
                continue;
             }
-           
+
             /* Extract the remote media endpoint address */
             h2250lcp = olc->reverseLogicalChannelParameters.multiplexParameters.u.h2250LogicalChannelParameters;
             if(!h2250lcp)
@@ -1013,7 +1013,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
                epCap = NULL;
                return OO_FAILED;
             }
-           
+
             /* Reverse Channel info will be always present, crash proof */
             if(!h2250lcp->m.mediaChannelPresent)
             {
@@ -1054,7 +1054,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
          }
 
          if(dir & OOTX)
-         { 
+         {
             /* According to the spec if we are accepting olc for transmission
                from called endpoint to calling endpoint, called endpoint should
                insert a unqiue forwardLogicalChannelNumber into olc
@@ -1064,20 +1064,20 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
                pCall->logicalChanNoCur = pCall->logicalChanNoBase;
          }
 
-        
+
          ooPrepareFastStartResponseOLC(pCall, olc, epCap, pctxt, dir);
-        
+
          pChannel = ooFindLogicalChannelByLogicalChannelNo
                       (pCall, olc->forwardLogicalChannelNumber);
-  
+
          /* start receive and tramsmit channel listening */
          if(dir & OORX)
          {
             strcpy(pChannel->remoteIP, remoteMediaControlIP);
             pChannel->remoteMediaControlPort = remoteMediaControlPort;
             if(epCap->startReceiveChannel)
-            {  
-               epCap->startReceiveChannel(pCall, pChannel);     
+            {
+               epCap->startReceiveChannel(pCall, pChannel);
                OOTRACEINFO4("Receive channel of type %s started (%s, %s)\n",
                         (epCap->capType == OO_CAP_TYPE_AUDIO)?"audio":"video",
                         pCall->callType, pCall->callToken);
@@ -1097,8 +1097,8 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
             pChannel->remoteMediaControlPort = remoteMediaControlPort;
 
             if(epCap->startTransmitChannel)
-            {  
-               epCap->startTransmitChannel(pCall, pChannel);     
+            {
+               epCap->startTransmitChannel(pCall, pChannel);
                OOTRACEINFO3("Transmit channel of type audio started "
                             "(%s, %s)\n", pCall->callType, pCall->callToken);
                /*OO_SETFLAG (pCall->flags, OO_M_AUDIO);*/
@@ -1125,11 +1125,11 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
             }
             return OO_FAILED;
          }
-         pFS[j].data = encodeGetMsgPtr(pctxt, &(pFS[j].numocts));
+         pFS[j].data = encodeGetMsgPtr(pctxt, (int*)&(pFS[j].numocts));
 
 
          /* start print call */
-         setPERBuffer(pctxt,  (char*)pFS[j].data, pFS[j].numocts, 1);
+         setPERBuffer(pctxt, (ASN1OCTET*)pFS[j].data, pFS[j].numocts, 1);
          initializePrintHandler(&printHandler, "FastStart Element");
          setEventHandler (pctxt, &printHandler);
          memset(&printOlc, 0, sizeof(printOlc));
@@ -1199,7 +1199,7 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
 
 int ooSendCallProceeding(OOH323CallData *call)
 {
-   int ret;   
+   int ret;
    H225VendorIdentifier *vendor;
    H225CallProceeding_UUIE *callProceeding;
    Q931Message *q931msg=NULL;
@@ -1209,12 +1209,12 @@ int ooSendCallProceeding(OOH323CallData *call)
                  call->callToken);
    ret = ooCreateQ931Message(&q931msg, Q931CallProceedingMsg);
    if(ret != OO_OK)
-   {     
+   {
       OOTRACEERR1("Error: In allocating memory for - H225 Call "
                            "Proceeding message\n");
       return OO_FAILED;
    }
-  
+
    q931msg->callReference = call->callReference;
 
    q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
@@ -1230,7 +1230,7 @@ int ooSendCallProceeding(OOH323CallData *call)
                                    OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_callProceeding;
-  
+
    callProceeding = (H225CallProceeding_UUIE*)memAlloc(pctxt,
                                              sizeof(H225CallProceeding_UUIE));
    if(!callProceeding)
@@ -1257,7 +1257,7 @@ int ooSendCallProceeding(OOH323CallData *call)
    }
    else callProceeding->m.callIdentifierPresent = 0;
 
-   callProceeding->protocolIdentifier = gProtocolID; 
+   callProceeding->protocolIdentifier = gProtocolID;
 
    /* Pose as Terminal or Gateway */
    if(gH323ep.isGateway)
@@ -1272,7 +1272,7 @@ int ooSendCallProceeding(OOH323CallData *call)
       vendor->m.productIdPresent = 1;
       vendor->productId.numocts = ASN1MIN(strlen(gH323ep.productID),
                                     sizeof(vendor->productId.data));
-      strncpy(vendor->productId.data, gH323ep.productID,
+      strncpy((char*)vendor->productId.data, gH323ep.productID,
               vendor->productId.numocts);
    }
    if(gH323ep.versionID)
@@ -1280,16 +1280,16 @@ int ooSendCallProceeding(OOH323CallData *call)
       vendor->m.versionIdPresent = 1;
       vendor->versionId.numocts = ASN1MIN(strlen(gH323ep.versionID),
                                      sizeof(vendor->versionId.data));
-      strncpy(vendor->versionId.data, gH323ep.versionID,
+      strncpy((char*)vendor->versionId.data, gH323ep.versionID,
               vendor->versionId.numocts);
    }
 
    vendor->vendor.t35CountryCode = gH323ep.t35CountryCode;
    vendor->vendor.t35Extension = gH323ep.t35Extension;
    vendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
-     
+
    OOTRACEDBGA3("Built Call Proceeding(%s, %s)\n", call->callType,
-                 call->callToken);  
+                 call->callToken);
    ret = ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
@@ -1303,7 +1303,7 @@ int ooSendCallProceeding(OOH323CallData *call)
 
 int ooSendAlerting(OOH323CallData *call)
 {
-   int ret;   
+   int ret;
    H225Alerting_UUIE *alerting;
    H225VendorIdentifier *vendor;
    Q931Message *q931msg=NULL;
@@ -1311,7 +1311,7 @@ int ooSendAlerting(OOH323CallData *call)
 
    ret = ooCreateQ931Message(&q931msg, Q931AlertingMsg);
    if(ret != OO_OK)
-   {     
+   {
       OOTRACEERR1("Error: In allocating memory for - H225 "
                   "Alerting message\n");
       return OO_FAILED;
@@ -1332,7 +1332,7 @@ int ooSendAlerting(OOH323CallData *call)
                                                               OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_alerting;
-  
+
    alerting = (H225Alerting_UUIE*)memAlloc(pctxt,
                                              sizeof(H225Alerting_UUIE));
    if(!alerting)
@@ -1378,7 +1378,7 @@ int ooSendAlerting(OOH323CallData *call)
    }
    else alerting->m.callIdentifierPresent = 0;
 
-   alerting->protocolIdentifier = gProtocolID; 
+   alerting->protocolIdentifier = gProtocolID;
 
    /* Pose as Terminal or Gateway */
    if(gH323ep.isGateway)
@@ -1393,22 +1393,22 @@ int ooSendAlerting(OOH323CallData *call)
       vendor->m.productIdPresent = 1;
       vendor->productId.numocts = ASN1MIN(strlen(gH323ep.productID),
                                         sizeof(vendor->productId.data));
-      strncpy(vendor->productId.data, gH323ep.productID,
-                                        vendor->productId.numocts);
+      strncpy((char*)vendor->productId.data, gH323ep.productID,
+              vendor->productId.numocts);
    }
    if(gH323ep.versionID)
    {
       vendor->m.versionIdPresent = 1;
       vendor->versionId.numocts = ASN1MIN(strlen(gH323ep.versionID),
                                         sizeof(vendor->versionId.data));
-      strncpy(vendor->versionId.data, gH323ep.versionID,
+      strncpy((char*)vendor->versionId.data, gH323ep.versionID,
               vendor->versionId.numocts);
    }
-     
+
    vendor->vendor.t35CountryCode = gH323ep.t35CountryCode;
    vendor->vendor.t35Extension = gH323ep.t35Extension;
    vendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
-  
+
    ret = ooSetFastStartResponse(call, q931msg,
       &alerting->fastStart.n, &alerting->fastStart.elem);
    if(ret != ASN_OK) { return ret; }
@@ -1420,7 +1420,7 @@ int ooSendAlerting(OOH323CallData *call)
    }
 
    OOTRACEDBGA3("Built Alerting (%s, %s)\n", call->callType, call->callToken);
-  
+
    ret = ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
@@ -1469,7 +1469,7 @@ int ooSendFacility(OOH323CallData *call)
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
       T_H225H323_UU_PDU_h323_message_body_facility;
-  
+
    facility = (H225Facility_UUIE*)
       memAllocZ (pctxt, sizeof(H225Facility_UUIE));
 
@@ -1483,7 +1483,7 @@ int ooSendFacility(OOH323CallData *call)
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
 
    /* Populate Facility UUIE */
-   facility->protocolIdentifier = gProtocolID; 
+   facility->protocolIdentifier = gProtocolID;
 
    if (call->callIdentifier.guid.numocts > 0) {
       facility->m.callIdentifierPresent = 1;
@@ -1513,18 +1513,18 @@ int ooSendFacility(OOH323CallData *call)
 
 int ooSendReleaseComplete(OOH323CallData *call)
 {
-   int ret;  
+   int ret;
    Q931Message *q931msg=NULL;
    H225ReleaseComplete_UUIE *releaseComplete;
    enum Q931CauseValues cause = Q931ErrorInCauseIE;
    unsigned h225ReasonCode = T_H225ReleaseCompleteReason_undefinedReason;
 
-   OOCTXT *pctxt = &gH323ep.msgctxt;  
+   OOCTXT *pctxt = &gH323ep.msgctxt;
    OOTRACEDBGA3("Building Release Complete message to send(%s, %s)\n",
                 call->callType, call->callToken);
    ret = ooCreateQ931Message(&q931msg, Q931ReleaseCompleteMsg);
    if(ret != OO_OK)
-   {     
+   {
       OOTRACEERR3("Error: In ooCreateQ931Message - H225 Release Complete "
                   "message(%s, %s)\n", call->callType, call->callToken);
       if(call->callState < OO_CALL_CLEAR)
@@ -1560,13 +1560,13 @@ int ooSendReleaseComplete(OOH323CallData *call)
                                                               OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_releaseComplete;
-  
+
    /* Get cause value and h225 reason code corresponding to OOCallClearReason*/
    ooQ931GetCauseAndReasonCodeFromCallClearReason(call->callEndReason,
                                                      &cause, &h225ReasonCode);
    /* Set Cause IE */
    ooQ931SetCauseIE(q931msg, cause, 0, 0);
-  
+
    /* Set H225 releaseComplete reasonCode */
    releaseComplete->m.reasonPresent = TRUE;
    releaseComplete->reason.t = h225ReasonCode;
@@ -1578,7 +1578,7 @@ int ooSendReleaseComplete(OOH323CallData *call)
 
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
       T_H225H323_UU_PDU_h323_message_body_releaseComplete;
-  
+
    q931msg->userInfo->h323_uu_pdu.
       h323_message_body.u.releaseComplete = releaseComplete;
 
@@ -1597,7 +1597,7 @@ int ooSendReleaseComplete(OOH323CallData *call)
    OOTRACEDBGA3("Built Release Complete message (%s, %s)\n",
                 call->callType, call->callToken);
 
-   /* Send H225 message */  
+   /* Send H225 message */
    ret = ooSendH225Msg(call, q931msg);
    if(ret != OO_OK)
    {
@@ -1619,16 +1619,16 @@ int ooSendConnect(OOH323CallData *call)
 /*TODO: Need to clean logical channel in case of failure after creating one */
 int ooAcceptCall(OOH323CallData *call)
 {
-   int ret = 0, i=0;
+   int ret = 0;
    H225Connect_UUIE *connect;
    H225TransportAddress_ipAddress *h245IpAddr;
    H225VendorIdentifier *vendor;
    Q931Message *q931msg=NULL;
-   OOCTXT *pctxt = &gH323ep.msgctxt;  
+   OOCTXT *pctxt = &gH323ep.msgctxt;
 
    ret = ooCreateQ931Message(&q931msg, Q931ConnectMsg);
    if(ret != OO_OK)
-   {     
+   {
       OOTRACEERR1("Error: In allocating memory for - H225 "
                   "Connect message\n");
       return OO_FAILED;
@@ -1654,7 +1654,7 @@ int ooAcceptCall(OOH323CallData *call)
    {
       OOTRACEERR1("ERROR:Memory - ooAcceptCall - userInfo\n");
       return OO_FAILED;
-   }  
+   }
 
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=TRUE;
 
@@ -1663,7 +1663,7 @@ int ooAcceptCall(OOH323CallData *call)
 
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
       T_H225H323_UU_PDU_h323_message_body_connect;
-  
+
    connect = (H225Connect_UUIE*)
       memAllocZ (pctxt, sizeof(H225Connect_UUIE));
 
@@ -1679,7 +1679,7 @@ int ooAcceptCall(OOH323CallData *call)
    connect->m.maintainConnectionPresent = 1;
    connect->multipleCalls = FALSE;
    connect->maintainConnection = FALSE;
-  
+
    connect->conferenceID.numocts = 16;
    genGloballyUniqueID (connect->conferenceID.data);
 
@@ -1718,7 +1718,7 @@ int ooAcceptCall(OOH323CallData *call)
    connect->m.screeningIndicatorPresent = TRUE;
    connect->screeningIndicator = userProvidedNotScreened;
 
-   connect->protocolIdentifier = gProtocolID; 
+   connect->protocolIdentifier = gProtocolID;
 
    /* Pose as Terminal or Gateway */
    if(gH323ep.isGateway)
@@ -1726,10 +1726,10 @@ int ooAcceptCall(OOH323CallData *call)
    else
       connect->destinationInfo.m.terminalPresent = TRUE;
 
-  
+
    connect->destinationInfo.m.vendorPresent = 1;
    vendor = &connect->destinationInfo.vendor;
-     
+
    vendor->vendor.t35CountryCode = gH323ep.t35CountryCode;
    vendor->vendor.t35Extension = gH323ep.t35Extension;
    vendor->vendor.manufacturerCode = gH323ep.manufacturerCode;
@@ -1738,16 +1738,16 @@ int ooAcceptCall(OOH323CallData *call)
       vendor->m.productIdPresent = 1;
       vendor->productId.numocts = ASN1MIN(strlen(gH323ep.productID),
                                             sizeof(vendor->productId.data));
-      strncpy(vendor->productId.data, gH323ep.productID,
-                                                   vendor->productId.numocts);
+      strncpy((char*)vendor->productId.data, gH323ep.productID,
+              vendor->productId.numocts);
    }
    if(gH323ep.versionID)
    {
       vendor->m.versionIdPresent = 1;
       vendor->versionId.numocts = ASN1MIN(strlen(gH323ep.versionID),
                                            sizeof(vendor->versionId.data));
-      strncpy(vendor->versionId.data, gH323ep.versionID,
-                                                   vendor->versionId.numocts);
+      strncpy((char*)vendor->versionId.data, gH323ep.versionID,
+              vendor->versionId.numocts);
    }
 
    ret = ooSetFastStartResponse(call, q931msg,
@@ -1769,7 +1769,7 @@ int ooAcceptCall(OOH323CallData *call)
       ooCreateH245Listener(call); /* First create an H.245 listener */
       connect->m.h245AddressPresent = TRUE;
       connect->h245Address.t = T_H225TransportAddress_ipAddress;
-  
+
       h245IpAddr = (H225TransportAddress_ipAddress*)
          memAllocZ (pctxt, sizeof(H225TransportAddress_ipAddress));
       if(!h245IpAddr)
@@ -1778,7 +1778,8 @@ int ooAcceptCall(OOH323CallData *call)
                      "(%s, %s)\n", call->callType, call->callToken);
          return OO_FAILED;
       }
-      ooSocketConvertIpToNwAddr(call->localIP, h245IpAddr->ip.data);
+      ooSocketConvertIpToNwAddr
+        (call->localIP, h245IpAddr->ip.data, sizeof(h245IpAddr->ip.data));
       h245IpAddr->ip.numocts=4;
       h245IpAddr->port = *(call->h245listenport);
       connect->h245Address.u.ipAddress = h245IpAddr;
@@ -1817,7 +1818,7 @@ int ooAcceptCall(OOH323CallData *call)
          OOTRACEERR3("ERROR:Sending Master-slave determination message "
                   "(%s, %s)\n", call->callType, call->callToken);
          return ret;
-      }  
+      }
    }
 #endif
    return OO_OK;
@@ -1828,7 +1829,7 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
    OOH323CallData *fwdedCall=NULL;
    OOCTXT *pctxt;
    ooAliases *pNewAlias=NULL, *alias=NULL;
-   int i=0, irand=0, ret = OO_OK;
+   int ret = OO_OK;
    /* Note: We keep same callToken, for new call which is going
       to replace an existing call, thus treating it as a single call.*/
 
@@ -1842,7 +1843,7 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
       strcpy(fwdedCall->remoteIP, call->pCallFwdData->ip);
    }
    fwdedCall->remotePort = call->pCallFwdData->port;
-  
+
    if(call->pCallFwdData->aliases)
    {
       alias = call->pCallFwdData->aliases;
@@ -1891,7 +1892,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 {
    OOCTXT *pctxt;
    OOH323CallData *call;
-   int ret=0, i=0, irand=0;
+   int ret=0;
    char tmp[30]="\0";
    char *ip=NULL, *port = NULL;
 
@@ -1937,7 +1938,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
       ooCleanCall(call);
       return OO_FAILED;
    }
-  
+
    /* Check whether we have ip address */
    if(!ooUtilsIsStrEmpty(tmp)) {
       ip = tmp;
@@ -1973,7 +1974,7 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
 int ooH323CallAdmitted(OOH323CallData *call)
 {
    int ret=0;
-     
+
    if(!call)
    {
       /* Call not supplied. Must locate it in list */
@@ -1994,7 +1995,7 @@ int ooH323CallAdmitted(OOH323CallData *call)
          }
          return OO_FAILED;
       }
-     
+
       ret = ooH323MakeCall_helper(call);
    }
    else {
@@ -2014,7 +2015,7 @@ int ooH323CallAdmitted(OOH323CallData *call)
          }
       }
    }
-  
+
    return OO_OK;
 }
 
@@ -2035,7 +2036,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    ooAliases *pAlias = NULL;
 
    pctxt = &gH323ep.msgctxt;
-    
+
    ret = ooCreateQ931Message(&q931msg, Q931SetupMsg);
    if(ret != OO_OK)
    {
@@ -2060,7 +2061,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    if(call->callingPartyNumber)
      ooQ931SetCallingPartyNumberIE(q931msg,
                             (const char*)call->callingPartyNumber, 1, 0, 0, 0);
-  
+
 
    /* Set called party number Q931 IE */
    if(call->calledPartyNumber)
@@ -2109,11 +2110,11 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
    memset (setup, 0, sizeof(H225Setup_UUIE));
    setup->protocolIdentifier = gProtocolID;
-  
+
    /* Populate Alias Address.*/
 
    if(call->ourAliases || gH323ep.aliases)
-   {  
+   {
       setup->m.sourceAddressPresent = TRUE;
       if(call->ourAliases)
          ret = ooPopulateAliasList(pctxt, call->ourAliases,
@@ -2165,7 +2166,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    setup->sourceInfo.vendor.vendor.t35CountryCode = gH323ep.t35CountryCode;
    setup->sourceInfo.vendor.vendor.t35Extension = gH323ep.t35Extension;
    setup->sourceInfo.vendor.vendor.manufacturerCode= gH323ep.manufacturerCode;
-  
+
    if(gH323ep.productID)
    {
       setup->sourceInfo.vendor.m.productIdPresent=TRUE;
@@ -2177,7 +2178,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
    else
       setup->sourceInfo.vendor.m.productIdPresent=FALSE;
-  
+
    if(gH323ep.versionID)
    {
       setup->sourceInfo.vendor.m.versionIdPresent=TRUE;
@@ -2189,7 +2190,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
    else
       setup->sourceInfo.vendor.m.versionIdPresent=FALSE;
-  
+
    setup->sourceInfo.mc = FALSE;
    setup->sourceInfo.undefinedNode = FALSE;
 
@@ -2204,7 +2205,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                  call->callToken);
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(call->remoteIP, destCallSignalIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr
+     (call->remoteIP, destCallSignalIpAddress->ip.data,
+      sizeof(destCallSignalIpAddress->ip.data));
 
    destCallSignalIpAddress->ip.numocts=4;
    destCallSignalIpAddress->port = call->remotePort;
@@ -2223,7 +2226,9 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(call->localIP, srcCallSignalIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr
+     (call->localIP, srcCallSignalIpAddress->ip.data,
+      sizeof(srcCallSignalIpAddress->ip.data));
 
    srcCallSignalIpAddress->ip.numocts=4;
    srcCallSignalIpAddress->port= call->pH225Channel->port;
@@ -2304,7 +2309,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
-       
+
             ooBuildFastStartOLC(call, olc, epCap, pctxt, OORX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
@@ -2320,11 +2325,11 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                }
                return OO_FAILED;
             }
-            pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+            pFS[i].data = encodeGetMsgPtr(pctxt, (int*)&(pFS[i].numocts));
 
 
             /* Dump faststart element in logfile for debugging purpose */
-            setPERBuffer(pctxt,  (char*)pFS[i].data, pFS[i].numocts, 1);
+            setPERBuffer (pctxt, (ASN1OCTET*)pFS[i].data, pFS[i].numocts, 1);
             initializePrintHandler(&printHandler, "FastStart Element");
             setEventHandler (pctxt, &printHandler);
             memset(&printOlc, 0, sizeof(printOlc));
@@ -2372,7 +2377,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
-       
+
             ooBuildFastStartOLC(call, olc, epCap, pctxt, OOTX);
             /* Do not specify msg buffer let automatic allocation work */
             setPERBuffer(pctxt, NULL, 0, aligned);
@@ -2388,10 +2393,10 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                }
                return OO_FAILED;
             }
-            pFS[i].data = encodeGetMsgPtr(pctxt, &(pFS[i].numocts));
+            pFS[i].data = encodeGetMsgPtr(pctxt, (int*)&(pFS[i].numocts));
 
             /* Dump faststart element in logfile for debugging purpose */
-            setPERBuffer(pctxt,  (char*)pFS[i].data, pFS[i].numocts, 1);
+            setPERBuffer (pctxt, (ASN1OCTET*)pFS[i].data, pFS[i].numocts, 1);
             initializePrintHandler(&printHandler, "FastStart Element");
             setEventHandler (pctxt, &printHandler);
             memset(&printOlc, 0, sizeof(printOlc));
@@ -2435,7 +2440,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    setup->callType.t = T_H225CallType_pointToPoint;
 
    /* Populate optional fields */
-     
+
    if (call->callIdentifier.guid.numocts > 0) {
       setup->m.callIdentifierPresent = TRUE;
       setup->callIdentifier.guid.numocts = call->callIdentifier.guid.numocts;
@@ -2456,12 +2461,12 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    setup->canOverlapSend = FALSE;
 
    /* Populate the userInfo structure with the setup UUIE */
-  
+
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_setup;
    q931msg->userInfo->h323_uu_pdu.h323_message_body.u.setup = setup;
    q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-  
+
    q931msg->userInfo->h323_uu_pdu.h245Tunneling =
       OO_TESTFLAG (call->flags, OO_M_TUNNELING);
 
@@ -2473,7 +2478,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
 
    OOTRACEDBGA3("Built SETUP message (%s, %s)\n", call->callType,
                  call->callToken);
-  
+
    /* H225 message callback */
    if(gH323ep.h225Callbacks.onBuiltSetup)
       gH323ep.h225Callbacks.onBuiltSetup(call, q931msg);
@@ -2492,14 +2497,14 @@ int ooH323MakeCall_helper(OOH323CallData *call)
 
 int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data)
 {
-   int ret;   
+   int ret;
    H225Information_UUIE *information=NULL;
    Q931Message *q931msg=NULL;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
    ret = ooCreateQ931Message(&q931msg, Q931InformationMsg);
    if(ret != OO_OK)
-   {     
+   {
       OOTRACEERR3("Error: In allocating memory for - H225 Information message."
                   "(%s, %s)\n", call->callType, call->callToken);
       return OO_FAILED;
@@ -2521,7 +2526,7 @@ int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data)
                                                               OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_information;
-  
+
    information = (H225Information_UUIE*)memAllocZ(pctxt,
                                              sizeof(H225Information_UUIE));
    if(!information)
@@ -2545,7 +2550,7 @@ int ooQ931SendDTMFAsKeyPadIE(OOH323CallData *call, const char* data)
    else information->m.callIdentifierPresent = 0;
 
    information->protocolIdentifier = gProtocolID;
-  
+
    /*Add keypad IE*/
    ret = ooQ931SetKeypadIE(q931msg, data);
    if(ret != OO_OK)
@@ -2644,7 +2649,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
       T_H225H323_UU_PDU_h323_message_body_facility;
-  
+
    facility = (H225Facility_UUIE*)
       memAllocZ (pctxt, sizeof(H225Facility_UUIE));
 
@@ -2656,8 +2661,8 @@ int ooH323ForwardCall(char* callToken, char *dest)
    }
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
-  
-   facility->protocolIdentifier = gProtocolID; 
+
+   facility->protocolIdentifier = gProtocolID;
 
    if (call->callIdentifier.guid.numocts > 0) {
       facility->m.callIdentifierPresent = 1;
@@ -2671,7 +2676,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
    else facility->m.callIdentifierPresent = 0;
 
    facility->reason.t = T_H225FacilityReason_callForwarded;
-  
+
    if(!ooUtilsIsStrEmpty(call->pCallFwdData->ip))
    {
       facility->m.alternativeAddressPresent = TRUE;
@@ -2684,8 +2689,9 @@ int ooH323ForwardCall(char* callToken, char *dest)
                      "(%s, %s)\n", call->callType, call->callToken);
          return OO_FAILED;
       }
-      ooSocketConvertIpToNwAddr(call->pCallFwdData->ip,
-                                          fwdCallSignalIpAddress->ip.data);
+      ooSocketConvertIpToNwAddr
+        (call->pCallFwdData->ip, fwdCallSignalIpAddress->ip.data,
+         sizeof(fwdCallSignalIpAddress->ip.data));
 
       fwdCallSignalIpAddress->ip.numocts=4;
       fwdCallSignalIpAddress->port = call->pCallFwdData->port;
@@ -2693,7 +2699,7 @@ int ooH323ForwardCall(char* callToken, char *dest)
    }
 
    if(call->pCallFwdData->aliases)
-   {   
+   {
       facility->m.alternativeAliasAddressPresent = TRUE;
       ret = ooPopulateAliasList(pctxt, call->pCallFwdData->aliases,
                                         &facility->alternativeAliasAddress);
@@ -2767,7 +2773,7 @@ int ooSetBearerCapabilityIE
    pmsg->bearerCapabilityIE->data[0] = (ASN1OCTET)(0x80 | ((codingStandard&3) << 5) | (capability&31));
 
    pmsg->bearerCapabilityIE->data[1] = (0x80 | ((transferMode & 3) << 5) | (transferRate & 31));
-  
+
    pmsg->bearerCapabilityIE->data[2] = (0x80 | (1<<5) | userInfoLayer1);
 
    return OO_OK;
@@ -2879,7 +2885,7 @@ int ooQ931SetCauseIE
    pmsg->causeIE->data[0] = (0x80 | ((coding & 0x03) <<5) | (location & 0x0F));
 
    pmsg->causeIE->data[1] = (0x80 | cause);
- 
+
    return OO_OK;
 }
 
@@ -2926,7 +2932,7 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf,
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_facility;
-  
+
    facility = (H225Facility_UUIE*)
       memAllocZ (pctxt, sizeof(H225Facility_UUIE));
 
@@ -2941,7 +2947,7 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf,
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.u.facility = facility;
 
    /* Populate Facility UUIE */
-   facility->protocolIdentifier = gProtocolID; 
+   facility->protocolIdentifier = gProtocolID;
 
    if (call->callIdentifier.guid.numocts > 0) {
       facility->m.callIdentifierPresent = 1;
@@ -2978,7 +2984,7 @@ int ooSendAsTunneledMessage(OOH323CallData *call, ASN1OCTET* msgbuf,
    pQ931Msg->tunneledMsgType = h245MsgType;
    pQ931Msg->logicalChannelNo = associatedChan;
 
-  
+
    ret = ooSendH225Msg(call, pQ931Msg);
    if(ret != OO_OK)
    {
@@ -3005,7 +3011,7 @@ int ooCallEstbTimerExpired(void *data)
    memFreePtr(call->pctxt, cbData);
    if(call->callState < OO_CALL_CLEAR){
       call->callState = OO_CALL_CLEAR;
-      call->callEndReason = OO_REASON_LOCAL_CLEARED;     
+      call->callEndReason = OO_REASON_LOCAL_CLEARED;
    }
 
    return OO_OK;
@@ -3033,7 +3039,7 @@ int ooQ931GetCauseAndReasonCodeFromCallClearReason
       break;
    case OO_REASON_GK_NOCALLERUSER:
       *reasonCode = T_H225ReleaseCompleteReason_callerNotRegistered;
-      *cause = Q931SubscriberAbsent;     
+      *cause = Q931SubscriberAbsent;
       break;
    case OO_REASON_GK_UNREACHABLE:
       *reasonCode = T_H225ReleaseCompleteReason_unreachableGatekeeper;
@@ -3083,7 +3089,7 @@ int ooQ931GetCauseAndReasonCodeFromCallClearReason
       *cause = Q931NoRouteToDestination;
       break;
    case OO_REASON_NOUSER:
-      *reasonCode = T_H225ReleaseCompleteReason_undefinedReason;     
+      *reasonCode = T_H225ReleaseCompleteReason_undefinedReason;
       *cause = Q931SubscriberAbsent;
       break;
    case OO_REASON_UNKNOWN:
@@ -3206,10 +3212,10 @@ int ooParseDestination
    parsedIP[0] = '\0';
 
    OOTRACEINFO2("Parsing destination %s\n", dest);
- 
+
    /* Test for an IP address:Note that only supports dotted IPv4.
       IPv6 won't pass the test and so will numeric IP representation*/
-  
+
    sscanf(dest, "%d.%d.%d.%d:%d", &iEk, &iDon, &iTeen, &iChaar, &iPort);
    if((iEk > 0            && iEk <= 255)    &&
       (iDon >= 0          && iDon <= 255)   &&
@@ -3227,7 +3233,7 @@ int ooParseDestination
                      "ooParseDestination\n");
          return OO_FAILED;
       }
-        
+
       strcpy(parsedIP, buf);
       return OO_OK;
    }
@@ -3320,7 +3326,7 @@ int ooParseDestination
       }
    }
 
- 
+
    /* e-164 */
    /* strspn(dest, "1234567890*#,") == strlen(dest)*/
    /* Dialed digits test*/
@@ -3428,7 +3434,7 @@ const char* ooGetQ931CauseValueText(int val)
 {
    switch(val)
    {
-      case Q931UnallocatedNumber:  
+      case Q931UnallocatedNumber:
          return "Q931UnallocatedNumber";
       case Q931NoRouteToNetwork:
          return "Q931NoRouteToNetwork";

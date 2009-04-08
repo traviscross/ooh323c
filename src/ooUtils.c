@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -14,7 +14,9 @@
  *
  *****************************************************************************/
 
+#include <ctype.h>
 #include "ooUtils.h"
+#include "ooCommon.h"
 
 const char* ooUtilsGetText (OOUINT32 idx, const char** table, size_t tabsiz)
 {
@@ -27,7 +29,7 @@ OOBOOL ooUtilsIsStrEmpty (const char* str)
 }
 
 
-OOBOOL ooIsDailedDigit(const char* str)
+OOBOOL ooIsDialedDigit (const char* str)
 {
    if(str == NULL || *str =='\0') { return FALSE; }
    while(*str != '\0')
@@ -37,4 +39,41 @@ OOBOOL ooIsDailedDigit(const char* str)
       str++;
    }
    return TRUE;
+}
+
+OOINT32 lookupEnum
+(const char* strValue, size_t strValueSize, const OOEnumItem enumTable[], OOUINT16 enumTableSize)
+{
+   size_t lower = 0;
+   size_t upper = enumTableSize - 1;
+   size_t middle;
+   int    cmpRes;
+
+   if (strValueSize == (size_t)-1) {
+      strValueSize = strlen (strValue);
+   }
+
+   while (lower < upper && upper != (size_t)-1) {
+      middle = (lower + upper)/2;
+
+      cmpRes = strncmp (enumTable[middle].name, strValue, strValueSize);
+
+      if (cmpRes == 0)
+         cmpRes = (int)enumTable[middle].namelen - (int)strValueSize;
+
+      if (cmpRes == 0) { /* equal */
+         return (int)middle;
+      }
+      if (cmpRes < 0)
+         lower = middle+1;
+      else
+         upper = middle-1;
+   }
+
+   if (lower == upper && (size_t)enumTable[lower].namelen == strValueSize &&
+       strncmp (enumTable[lower].name, strValue, strValueSize) == 0) {
+      return (int)lower;
+   }
+
+   return ASN_E_INVENUM;
 }

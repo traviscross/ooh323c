@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2005 by Objective Systems, Inc.
+ * Copyright (C) 2004-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -59,7 +59,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    else {
       call->ourCallerId[0] = '\0';
    }
-  
+
    memset(&call->callIdentifier, 0, sizeof(H225CallIdentifier));
    memset(&call->confIdentifier, 0, sizeof(H225ConferenceIdentifier));
 
@@ -80,7 +80,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
 
    if (OO_TESTFLAG(gH323ep.flags, OO_M_MEDIAWAITFORCONN))
       OO_SETFLAG (call->flags, OO_M_MEDIAWAITFORCONN);
-  
+
    call->callState = OO_CALL_CREATED;
    call->callEndReason = OO_REASON_UNKNOWN;
    call->pCallFwdData = NULL;
@@ -89,7 +89,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    {
       call->callingPartyNumber = NULL;
    }
-   else{     
+   else{
       if(ooUtilsIsStrEmpty(gH323ep.callingPartyNumber))
       {
          call->callingPartyNumber = NULL;
@@ -136,7 +136,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    dListInit(&call->remoteFastStartOLCs);
    call->remoteTermCapSeqNo =0;
    call->localTermCapSeqNo = 0;
-   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(OOCapPrefs));   
+   memcpy(&call->capPrefs, &gH323ep.capPrefs, sizeof(OOCapPrefs));
    call->logicalChans = NULL;
    call->noOfLogicalChannels = 0;
    call->logicalChanNoBase = 1001;
@@ -210,7 +210,7 @@ int ooEndCall(OOH323CallData *call)
       call->callState = OO_CALL_CLEARED;
    }
    else{
-      if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))  
+      if(!OO_TESTFLAG(call->flags, OO_M_RELEASE_BUILT))
       {
          if(call->callState == OO_CALL_CLEAR ||
             call->callState == OO_CALL_CLEAR_RELEASERECVD)
@@ -220,7 +220,7 @@ int ooEndCall(OOH323CallData *call)
          }
       }
    }
-     
+
    return OO_OK;
 }
 
@@ -259,7 +259,7 @@ int ooCleanCall(OOH323CallData *call)
    /* First clean all the logical channels, if not already cleaned. */
    if(call->logicalChans)
       ooClearAllLogicalChannels(call);
-  
+
    /* Close H.245 connection, if not already closed */
    if(call->h245SessionState != OO_H245SESSION_CLOSED)
       ooCloseH245Connection(call);
@@ -276,7 +276,7 @@ int ooCleanCall(OOH323CallData *call)
    {
       ooCloseH245Listener(call);
    }
-  
+
    /* Close H225 connection, if not already closed. */
    if (0 != call->pH225Channel && 0 != call->pH225Channel->sock)
    {
@@ -364,7 +364,7 @@ int ooCallGetCallingPartyNumber(OOH323CallData *call, char *buffer, int len)
          return OO_OK;
       }
    }
-  
+
    return OO_FAILED;
 }
 
@@ -398,7 +398,7 @@ int ooCallGetCalledPartyNumber(OOH323CallData *call, char *buffer, int len)
          return OO_OK;
       }
    }
-  
+
    return OO_FAILED;
 }
 
@@ -650,7 +650,7 @@ OOH323CallData* ooFindCallByToken(char *callToken)
       else
          call = call->next;
    }
-  
+
    if(!call)
    {
       OOTRACEERR2("ERROR:Call with token %s not found\n", callToken);
@@ -787,7 +787,7 @@ const char* ooGetReasonCodeText (OOUINT32 code)
       "OO_REASON_GK_UNREACHABLE",
       "OO_REASON_GK_CLEARED",
       "OO_REASON_NOCOMMON_CAPABILITIES",
-      "OO_REASON_REMOTE_FWDED",  
+      "OO_REASON_REMOTE_FWDED",
       "OO_REASON_LOCAL_FWDED",
       "OO_REASON_REMOTE_CLEARED",
       "OO_REASON_LOCAL_CLEARED",

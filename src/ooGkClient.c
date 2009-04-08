@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2005 by Page Iberica, S.A.
- * Copyright (C) 2005 by Objective Systems, Inc.
+ * Copyright (C) 2009 by Page Iberica, S.A.
+ * Copyright (C) 2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -93,14 +93,14 @@ int ooGkClientInit(enum RasGatekeeperMode eGkMode,
          return OO_FAILED;
       }
    }
-#endif  
+#endif
    if(OO_OK != ooGkClientSetGkMode(pGkClient, eGkMode, szGkAddr, iGkPort))
    {
       OOTRACEERR1("Error:Failed to set Gk mode\n");
       memReset(&gH323ep.ctxt);
       return OO_FAILED;
    }
- 
+
    /* Create default parameter set */
    pGkClient->grqTimeout = DEFAULT_GRQ_TIMEOUT;
    pGkClient->rrqTimeout = DEFAULT_RRQ_TIMEOUT;
@@ -138,7 +138,7 @@ int ooGkClientReInit(ooGkClient *pGkClient)
    pGkClient->rrqRetries = 0;
    pGkClient->grqRetries = 0;
    pGkClient->requestSeqNum = 0;
-  
+
    dListFreeAll(&pGkClient->ctxt, &pGkClient->callsPendingList);
    dListFreeAll(&pGkClient->ctxt, &pGkClient->callsAdmittedList);
    dListFreeAll(&pGkClient->ctxt, &pGkClient->timerList);
@@ -193,7 +193,7 @@ int ooGkClientStart(ooGkClient *pGkClient)
       OOTRACEERR1("Error: GkClient Channel Creation failed\n");
       return OO_FAILED;
    }
-  
+
    pGkClient->discoveryComplete = FALSE;
    iRet = ooGkClientSendGRQ(pGkClient);
    if(iRet != OO_OK)
@@ -204,7 +204,7 @@ int ooGkClientStart(ooGkClient *pGkClient)
    }
    return OO_OK;
 }
-  
+
 
 int ooGkClientSetGkMode(ooGkClient *pGkClient, enum RasGatekeeperMode eGkMode,
                         char *szGkAddr, int iGkPort )
@@ -239,7 +239,7 @@ int ooGkClientSetGkMode(ooGkClient *pGkClient, enum RasGatekeeperMode eGkMode,
    return OO_OK;
 }
 
-  
+
 /**
  * Create the RAS channel (socket).
  *
@@ -348,7 +348,7 @@ void ooGkClientFillVendor
       memcpy(pVendor->versionId.data, gH323ep.versionID,
                                                  pVendor->versionId.numocts);
    }
-}  
+}
 
 
 int ooGkClientReceive(ooGkClient *pGkClient)
@@ -360,7 +360,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
    OOCTXT *pctxt=NULL;
    H225RasMessage *pRasMsg=NULL;
    int iRet=OO_OK;
-  
+
    pctxt = &pGkClient->msgCtxt;
 
    recvLen = ooSocketRecvFrom(pGkClient->rasSocket, recvBuf, 1024, remoteHost,
@@ -371,7 +371,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
       return OO_FAILED;
    }
    OOTRACEDBGA1("GkClient Received RAS Message\n");
- 
+
    /* Verify the gk */
    if(pGkClient->discoveryComplete)
    {
@@ -390,7 +390,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
       memReset(pctxt);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
-   }     
+   }
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
    {
@@ -439,7 +439,7 @@ int ooGkClientReceive(ooGkClient *pGkClient)
 
 int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
 {
-   int iRet = OO_OK;  
+   int iRet = OO_OK;
    switch( pRasMsg->t)
    {
    case T_H225RasMessage_gatekeeperConfirm:
@@ -452,9 +452,9 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
       iRet = ooGkClientHandleGatekeeperReject(pGkClient,
                                               pRasMsg->u.gatekeeperReject);
       break;
-   case T_H225RasMessage_registrationConfirm:  
+   case T_H225RasMessage_registrationConfirm:
       OOTRACEINFO1("Registration Confirm (RCF) message received\n");
-      iRet = ooGkClientHandleRegistrationConfirm(pGkClient, 
+      iRet = ooGkClientHandleRegistrationConfirm(pGkClient,
                                               pRasMsg->u.registrationConfirm );
       break;
    case T_H225RasMessage_registrationReject:
@@ -462,7 +462,7 @@ int ooGkClientHandleRASMessage(ooGkClient *pGkClient, H225RasMessage *pRasMsg)
       iRet = ooGkClientHandleRegistrationReject(pGkClient,
                                                 pRasMsg->u.registrationReject);
       break;
-   case T_H225RasMessage_infoRequest: 
+   case T_H225RasMessage_infoRequest:
       //ooRasSendIRR( psRasMsg->sMessage.u.infoRequest->requestSeqNum );
       break;
    case T_H225RasMessage_admissionConfirm:
@@ -600,7 +600,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    OOCTXT *pctxt = &pGkClient->msgCtxt;
    ooGkClientTimerCb *cbData=NULL;
 
-  
+
 
    /* Allocate memory for RAS message */
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
@@ -643,8 +643,8 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
       return OO_FAILED;
    }
 
-
-   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pRasAddress->ip.data);
+   ooSocketConvertIpToNwAddr
+     (pGkClient->localRASIP, pRasAddress->ip.data, sizeof(pRasAddress->ip.data));
 
    pRasAddress->ip.numocts = 4;
    pRasAddress->port = pGkClient->localRASPort;
@@ -692,7 +692,7 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    cbData->pGkClient = pGkClient;
    if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
                      &ooGkClientGRQTimerExpired, pGkClient->grqTimeout,
-                     cbData, FALSE))     
+                     cbData, FALSE))
    {
       OOTRACEERR1("Error:Unable to create GRQ timer.\n ");
       memFreePtr(&pGkClient->ctxt, cbData);
@@ -801,7 +801,7 @@ int ooGkClientHandleGatekeeperConfirm
       OOTRACEINFO1("Ignoring message and will retransmit GRQ after timeout\n");
       return OO_FAILED;
    }
-  
+
    /* Extract Gatekeeper's RAS address */
    if(pGatekeeperConfirm->rasAddress.t != T_H225TransportAddress_ipAddress)
    {
@@ -816,7 +816,7 @@ int ooGkClientHandleGatekeeperConfirm
                                               pRasAddress->ip.data[2],
                                               pRasAddress->ip.data[3]);
    pGkClient->gkRasPort = pRasAddress->port;
-  
+
    pGkClient->discoveryComplete = TRUE;
    pGkClient->state = GkClientDiscovered;
    OOTRACEINFO1("Gatekeeper Confirmed\n");
@@ -881,7 +881,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    memset(pRegReq, 0, sizeof(H225RegistrationRequest));
    pRasMsg->t = T_H225RasMessage_registrationRequest;
    pRasMsg->u.registrationRequest = pRegReq;
-  
+
    pRegReq->protocolIdentifier = gProtocolID;
    pRegReq->m.nonStandardDataPresent=0;
    /* Populate CallSignal Address List*/
@@ -899,10 +899,11 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr
+     (pGkClient->localRASIP, pIpAddress->ip.data, sizeof(pIpAddress->ip.data));
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
-  
+
    dListInit(&pRegReq->callSignalAddress);
    dListAppend(pctxt, &pRegReq->callSignalAddress,
                                        (void*)pTransportAddress);
@@ -925,16 +926,17 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
 
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-  
-   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
+
+   ooSocketConvertIpToNwAddr
+     (pGkClient->localRASIP, pIpAddress->ip.data, sizeof(pIpAddress->ip.data));
 
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = pGkClient->localRASPort;
-  
+
    dListInit(&pRegReq->rasAddress);
    dListAppend(pctxt, &pRegReq->rasAddress,
                                        (void*)pTransportAddress);
-  
+
    /* Pose as gateway or terminal as per config */
    if(gH323ep.isGateway)
       pRegReq->terminalType.m.gatewayPresent = TRUE;
@@ -943,7 +945,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
 
    pRegReq->terminalType.m.vendorPresent=TRUE;
    ooGkClientFillVendor(pGkClient, &pRegReq->terminalType.vendor );
- 
+
    pRegReq->m.terminalAliasPresent=TRUE;
    if(OO_OK != ooPopulateAliasList(pctxt, gH323ep.aliases,
                                       &pRegReq->terminalAlias))
@@ -953,7 +955,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-  
+
    pRegReq->m.gatekeeperIdentifierPresent=TRUE;
    pRegReq->gatekeeperIdentifier.nchars = pGkClient->gkId.nchars;
    pRegReq->gatekeeperIdentifier.data = (ASN116BITCHAR*)memAlloc
@@ -968,16 +970,16 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    }
    memcpy(pRegReq->gatekeeperIdentifier.data, pGkClient->gkId.data,
                                 pGkClient->gkId.nchars*sizeof(ASN116BITCHAR));
-  
+
    ooGkClientFillVendor(pGkClient, &pRegReq->endpointVendor);
-  
+
    pRegReq->m.willSupplyUUIEsPresent=TRUE;
    pRegReq->willSupplyUUIEs=FALSE;
 
    pRegReq->requestSeqNum = pGkClient->requestSeqNum++;
    if(!pRegReq->requestSeqNum)
       pRegReq->requestSeqNum = pGkClient->requestSeqNum++;
-  
+
    pRegReq->discoveryComplete= pGkClient->discoveryComplete;
    pRegReq->m.keepAlivePresent=TRUE;
    pRegReq->keepAlive= keepAlive;
@@ -1037,14 +1039,14 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
    cbData->pGkClient = pGkClient;
    if(!ooTimerCreate(&pGkClient->ctxt, &pGkClient->timerList,
                      &ooGkClientRRQTimerExpired, pGkClient->rrqTimeout,
-                     cbData, FALSE))     
+                     cbData, FALSE))
    {
       OOTRACEERR1("Error:Unable to create GRQ timer.\n ");
       memFreePtr(&pGkClient->ctxt, cbData);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-  
+
    return OO_OK;
 }
 
@@ -1075,11 +1077,11 @@ int ooGkClientHandleRegistrationConfirm
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-  
+
    memcpy(pGkClient->endpointId.data,
           pRegistrationConfirm->endpointIdentifier.data,
           sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
-  
+
    /* Extract CallSignalling Address */
    for(i=0; i<(int)pRegistrationConfirm->callSignalAddress.count; i++)
    {
@@ -1100,7 +1102,7 @@ int ooGkClientHandleRegistrationConfirm
                             pCallSigAddr->u.ipAddress->ip.data[3]);
       pGkClient->gkCallSignallingPort = pCallSigAddr->u.ipAddress->port;
    }
-  
+
    /* Update list of registered aliases*/
    if(pRegistrationConfirm->m.terminalAliasPresent)
    {
@@ -1142,8 +1144,8 @@ int ooGkClientHandleRegistrationConfirm
          memFreePtr(&pGkClient->ctxt, cbData);
          pGkClient->state = GkClientFailed;
          return OO_FAILED;
-      }   
-     
+      }
+
    }
    else{
       pGkClient->regTimeout = 0;
@@ -1319,7 +1321,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    if(!pUnregReq->requestSeqNum)
       pUnregReq->requestSeqNum = pGkClient->requestSeqNum++;
 
-  
+
 
  /* Populate CallSignal Address List*/
    pTransportAddress = (H225TransportAddress*) memAlloc(pctxt,
@@ -1336,10 +1338,11 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    }
    pTransportAddress->t = T_H225TransportAddress_ipAddress;
    pTransportAddress->u.ipAddress = pIpAddress;
-   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddress->ip.data);
+   ooSocketConvertIpToNwAddr
+     (pGkClient->localRASIP, pIpAddress->ip.data, sizeof(pIpAddress->ip.data));
    pIpAddress->ip.numocts = 4;
    pIpAddress->port = gH323ep.listenPort;
-  
+
    dListInit(&pUnregReq->callSignalAddress);
    dListAppend(pctxt, &pUnregReq->callSignalAddress,
                                        (void*)pTransportAddress);
@@ -1375,7 +1378,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    }
    memcpy((void*)pUnregReq->gatekeeperIdentifier.data,
           (void*)pGkClient->gkId.data,
-          sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);  
+          sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);
 
    /* Check whether specific aliases are to be unregistered*/
    if(aliases)
@@ -1384,7 +1387,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
       ooPopulateAliasList(pctxt, aliases, &pUnregReq->endpointAlias);
    }
 
- 
+
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
    if(iRet != OO_OK)
    {
@@ -1397,7 +1400,7 @@ int ooGkClientSendURQ(ooGkClient *pGkClient, ooAliases *aliases)
    OOTRACEINFO1("Unregistration Request message sent.\n");
 
    return OO_OK;
-}              
+}
 
 
 
@@ -1445,7 +1448,7 @@ int ooGkClientHandleUnregistrationRequest
 int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient, unsigned reqNo)
 {
    int iRet = OO_OK;
-   OOCTXT *pctxt = &pGkClient->msgCtxt;  
+   OOCTXT *pctxt = &pGkClient->msgCtxt;
    H225RasMessage *pRasMsg=NULL;
    H225UnregistrationConfirm *pUCF=NULL;
 
@@ -1461,9 +1464,9 @@ int ooGkClientSendUnregistrationConfirm(ooGkClient *pGkClient, unsigned reqNo)
    pRasMsg->t = T_H225RasMessage_unregistrationConfirm;
    pRasMsg->u.unregistrationConfirm = pUCF;
    memset(pUCF, 0, sizeof(H225UnregistrationConfirm));
-  
+
    pUCF->requestSeqNum = reqNo;
-  
+
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
    if(iRet != OO_OK)
    {
@@ -1497,7 +1500,7 @@ int ooGkClientSendAdmissionRequest
    pctxt = &pGkClient->msgCtxt;
 
    OOTRACEDBGA3("Building Admission Request for call (%s, %s)\n",
-                 call->callType, call->callToken);  
+                 call->callType, call->callToken);
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
    {
@@ -1519,7 +1522,7 @@ int ooGkClientSendAdmissionRequest
    }
    memset(pAdmReq, 0, sizeof(H225AdmissionRequest));
    pRasMsg->u.admissionRequest = pAdmReq;
-  
+
    /* Populate call signalling addresses */
    pIpAddressLocal = (H225TransportAddress_ipAddress*)memAlloc(pctxt,
                                      sizeof(H225TransportAddress_ipAddress));
@@ -1535,14 +1538,18 @@ int ooGkClientSendAdmissionRequest
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   ooSocketConvertIpToNwAddr(pGkClient->localRASIP, pIpAddressLocal->ip.data);
+   ooSocketConvertIpToNwAddr
+     (pGkClient->localRASIP, pIpAddressLocal->ip.data,
+      sizeof(pIpAddressLocal->ip.data));
 
    pIpAddressLocal->ip.numocts = 4;
    pIpAddressLocal->port = gH323ep.listenPort;
 
    if(!ooUtilsIsStrEmpty(call->remoteIP))
    {
-      ooSocketConvertIpToNwAddr(call->remoteIP, pIpAddressRemote->ip.data);
+      ooSocketConvertIpToNwAddr
+        (call->remoteIP, pIpAddressRemote->ip.data,
+         sizeof(pIpAddressRemote->ip.data));
       pIpAddressRemote->ip.numocts = 4;
       pIpAddressRemote->port = call->remotePort;
    }
@@ -1578,7 +1585,7 @@ int ooGkClientSendAdmissionRequest
 
    /* Populate call type - For now only PointToPoint supported*/
    pAdmReq->callType.t = T_H225CallType_pointToPoint;
-  
+
    /* Add call model to message*/
    pAdmReq->m.callModelPresent = 1;
    if(OO_TESTFLAG(call->flags, OO_M_GKROUTED))
@@ -1646,16 +1653,16 @@ int ooGkClientSendAdmissionRequest
       {
          OOTRACEERR1("Error:Failed to populate source aliases -ARQ message\n");
          memReset(pctxt);
-         pGkClient->state = GkClientFailed;     
+         pGkClient->state = GkClientFailed;
          return OO_FAILED;
       }
    }
-  
+
    /* Populate bandwidth*/
    pAdmReq->bandWidth = DEFAULT_BW_REQUEST;
    /* Populate call Reference */
    pAdmReq->callReferenceValue = call->callReference;
-  
+
    /* populate conferenceID */
    memcpy((void*)&pAdmReq->conferenceID, (void*)&call->confIdentifier,
                                          sizeof(H225ConferenceIdentifier));
@@ -1724,7 +1731,7 @@ int ooGkClientSendAdmissionRequest
          }
       }
    }
-  
+
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
    if(iRet != OO_OK)
    {
@@ -1736,7 +1743,7 @@ int ooGkClientSendAdmissionRequest
    OOTRACEINFO3("Admission Request message sent for (%s, %s)\n",
                  call->callType, call->callToken);
    memReset(pctxt);
-   
+
    /* Add ARQ timer */
    cbData = (ooGkClientTimerCb*) memAlloc
                                (&pGkClient->ctxt, sizeof(ooGkClientTimerCb));
@@ -1758,8 +1765,8 @@ int ooGkClientSendAdmissionRequest
       memFreePtr(&pGkClient->ctxt, cbData);
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
-   }   
-  
+   }
+
    return OO_OK;
 }
 
@@ -1798,7 +1805,7 @@ int ooGkClientHandleAdmissionConfirm
             return OO_FAILED;
          }
          ipAddress = pAdmissionConfirm->destCallSignalAddress.u.ipAddress;
-        
+
          sprintf(ip, "%d.%d.%d.%d", ipAddress->ip.data[0],
                                     ipAddress->ip.data[1],
                                     ipAddress->ip.data[2],
@@ -1817,7 +1824,7 @@ int ooGkClientHandleAdmissionConfirm
                OO_CLRFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED);
             }
          }
-        
+
          if(pAdmissionConfirm->callModel.t == T_H225CallModel_gatekeeperRouted)
          {
             if(!OO_TESTFLAG(pCallAdmInfo->call->flags, OO_M_GKROUTED))
@@ -1847,10 +1854,10 @@ int ooGkClientHandleAdmissionConfirm
                   break;
                }
             }
-         }      
+         }
          OOTRACEINFO3("Admission Confirm message received for (%s, %s)\n",
                        pCallAdmInfo->call->callType,
-                       pCallAdmInfo->call->callToken); 
+                       pCallAdmInfo->call->callToken);
          ooH323CallAdmitted( pCallAdmInfo->call);
          dListRemove(&pGkClient->callsPendingList, pNode);
          dListAppend(&pGkClient->ctxt, &pGkClient->callsAdmittedList,
@@ -1906,7 +1913,7 @@ int ooGkClientHandleAdmissionReject
    OOTRACEINFO4("Admission Reject message received with reason code %d for "
                 "(%s, %s)\n", pAdmissionReject->rejectReason.t, call->callType,
                  call->callToken);
-  
+
    call->callState = OO_CALL_CLEAR;
 
    switch(pAdmissionReject->rejectReason.t)
@@ -1948,20 +1955,20 @@ int ooGkClientHandleAdmissionReject
          break;
    }
 
-   return OO_OK;  
+   return OO_OK;
 }
 
 /**
  * This function is invoked to request call disengage to gatekeeper.
  *
- * @param   szCallToken    Call token.    
+ * @param   szCallToken    Call token.
  *
  * @return  Completion status - 0 on success, -1 on failure
  */
 
 int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
 {
-   int iRet = 0;  
+   int iRet = 0;
    unsigned int x;
    H225RasMessage *pRasMsg=NULL;
    OOCTXT *pctxt = NULL;
@@ -1994,12 +2001,12 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
 
    memset(pDRQ, 0, sizeof(H225DisengageRequest));
    pRasMsg->u.disengageRequest = pDRQ;
-  
+
    pDRQ->requestSeqNum = pGkClient->requestSeqNum++;
    if(!pDRQ->requestSeqNum )
       pDRQ->requestSeqNum = pGkClient->requestSeqNum++;
-  
-  
+
+
    pDRQ->endpointIdentifier.nchars = pGkClient->endpointId.nchars;
    pDRQ->endpointIdentifier.data = (ASN116BITCHAR*)memAlloc(pctxt,
                            sizeof(ASN116BITCHAR)*pGkClient->endpointId.nchars);
@@ -2019,7 +2026,7 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
                                          sizeof(H225ConferenceIdentifier));
 
    pDRQ->callReferenceValue = call->callReference;
-  
+
    pDRQ->disengageReason.t = T_H225DisengageReason_normalDrop;
 
    pDRQ->m.answeredCallPresent = 1;
@@ -2057,9 +2064,9 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
       pGkClient->state = GkClientFailed;
       return OO_FAILED;
    }
-   pDRQ->terminationCause.u.releaseCompleteCauseIE->numocts =
-                                                         strlen("Call Ended");
-   strcpy(pDRQ->terminationCause.u.releaseCompleteCauseIE->data, "Call Ended");
+   pDRQ->terminationCause.u.releaseCompleteCauseIE->numocts = 10;
+   strcpy ((char*)pDRQ->terminationCause.u.releaseCompleteCauseIE->data,
+           "Call Ended");
 
    iRet = ooGkClientSendMsg(pGkClient, pRasMsg);
    if(iRet != OO_OK)
@@ -2067,7 +2074,7 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
       OOTRACEERR1("Error: Failed to send DRQ message\n");
       pGkClient->state = GkClientFailed;
    }
-  
+
 
 
    /* Search call in admitted calls list */
@@ -2084,7 +2091,7 @@ int ooGkClientSendDisengageRequest(ooGkClient *pGkClient, OOH323CallData *call)
       }
    }
    return iRet;
-}    
+}
 
 int ooGkClientHandleDisengageConfirm
    (ooGkClient *pGkClient, H225DisengageConfirm *pDCF)
@@ -2099,14 +2106,14 @@ int ooGkClientRRQTimerExpired(void*pdata)
    ooGkClientTimerCb *cbData = (ooGkClientTimerCb*)pdata;
    ooGkClient *pGkClient = cbData->pGkClient;
    OOTRACEDBGA1("Gatekeeper client RRQ timer expired.\n");
-  
+
    if(pGkClient->rrqRetries < OO_MAX_RRQ_RETRIES)
    {
-      ret = ooGkClientSendRRQ(pGkClient, 0);     
+      ret = ooGkClientSendRRQ(pGkClient, 0);
       if(ret != OO_OK)
       {
          OOTRACEERR1("Error:Failed to send RRQ message\n");
-        
+
          return OO_FAILED;
       }
       pGkClient->rrqRetries++;
@@ -2127,11 +2134,11 @@ int ooGkClientGRQTimerExpired(void* pdata)
 
    OOTRACEDBGA1("Gatekeeper client GRQ timer expired.\n");
 
-   memFreePtr(&pGkClient->ctxt, cbData);  
+   memFreePtr(&pGkClient->ctxt, cbData);
 
    if(pGkClient->grqRetries < OO_MAX_GRQ_RETRIES)
    {
-      ret = ooGkClientSendGRQ(pGkClient);     
+      ret = ooGkClientSendGRQ(pGkClient);
       if(ret != OO_OK)
       {
          OOTRACEERR1("Error:Failed to send GRQ message\n");
@@ -2146,15 +2153,15 @@ int ooGkClientGRQTimerExpired(void* pdata)
    pGkClient->state = GkClientGkErr;
    return OO_FAILED;
 }
-  
+
 int ooGkClientREGTimerExpired(void *pdata)
 {
    int ret=0;
    ooGkClientTimerCb *cbData = (ooGkClientTimerCb*)pdata;
    ooGkClient *pGkClient = cbData->pGkClient;
    OOTRACEDBGA1("Gatekeeper client additive registration timer expired\n");
-   memFreePtr(&pGkClient->ctxt, cbData);  
-   ret = ooGkClientSendRRQ(pGkClient, TRUE);     
+   memFreePtr(&pGkClient->ctxt, cbData);
+   ret = ooGkClientSendRRQ(pGkClient, TRUE);
    if(ret != OO_OK)
    {
       OOTRACEERR1("Error:Failed to send Additive RRQ message\n");
@@ -2172,11 +2179,11 @@ int ooGkClientARQTimerExpired(void* pdata)
    RasCallAdmissionInfo *pAdmInfo = cbData->pAdmInfo;
 
    OOTRACEDBGA1("Gatekeeper client ARQ timer expired.\n");
-   memFreePtr(&pGkClient->ctxt, cbData);  
+   memFreePtr(&pGkClient->ctxt, cbData);
 
    if(pAdmInfo->retries < OO_MAX_ARQ_RETRIES)
    {
-      ret = ooGkClientSendAdmissionRequest(pGkClient, pAdmInfo->call, TRUE);     
+      ret = ooGkClientSendAdmissionRequest(pGkClient, pAdmInfo->call, TRUE);
       if(ret != OO_OK)
       {
          OOTRACEERR1("Error:Failed to send ARQ message\n");
@@ -2306,7 +2313,7 @@ int ooGkClientUpdateRegisteredAliases
    {
      /* All aliases registered/unregistsred */
       pAlias = gH323ep.aliases;
-     
+
       while(pAlias)
       {
          pAlias->registered = registered?TRUE:FALSE;
@@ -2329,7 +2336,7 @@ int ooGkClientUpdateRegisteredAliases
          continue;
       }
       pAliasAddress = (H225AliasAddress*)pNode->data;
-     
+
       if(!pAliasAddress){
          OOTRACEERR1("Error:Invalid alias list passed to "
                      "ooGkClientUpdateRegisteredAliases\n");
@@ -2389,7 +2396,7 @@ int ooGkClientUpdateRegisteredAliases
             OOTRACEERR1("Error:Alias transportID not IP address\n");
             break;
          }
-        
+
          sprintf(value, "%d.%d.%d.%d:%d",
                           pTransportAddrss->u.ipAddress->ip.data[0],
                           pTransportAddrss->u.ipAddress->ip.data[1],

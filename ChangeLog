@@ -1,11 +1,18 @@
-CVS
-1. Fixed version number. (thanks to Matej Kral)
-2. Increased maximum message buffer size to avoid segmentation faults.
+Release 0.9.0
+* Updated specs to H.323 version 6 and regenerated codecs.  This also
+   fixed a bug in open extension decoding.
+* Fixed version number. (thanks to Matej Kral)
+* Increased maximum message buffer size to avoid segmentation faults.
    (thanks to Matej Kral)
-3. Fixed a bug preventing the stack from being restarted. (thanks to Matej
+* Fixed a bug preventing the stack from being restarted. (thanks to Matej
    Kral)
-4. Call monitors can now be stopped even if the stack is not registered with
+* Call monitors can now be stopped even if the stack is not registered with
    the GateKeeper.  (thanks to Matej Kral)
+* Fixed a bug in large message tracing in which a crash would occur is
+   message was too large (thanks to Matej Kral).
+* Fixed a bug in copying remote display name in which it was not properly
+   null-terminated (thanks to Matej Kral).
+* Fixed numerous compilation warnings.
 
 Release 0.8.4
 1. Updated log information for "H.225 Information" message

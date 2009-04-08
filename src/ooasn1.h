@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -268,6 +268,11 @@ typedef struct {        /* generic bit string structure (dynamic) */
    const ASN1OCTET* data;
 } ASN1DynBitStr;
 
+typedef struct {  /* fixed-size bit string that can hold up to 32 bits */
+   ASN1UINT     numbits;
+   ASN1OCTET    data[4];
+} ASN1BitStr32;
+
 typedef struct {                /* generic sequence of structure        */
    ASN1UINT     n;
    void*        elem;
@@ -532,18 +537,6 @@ extern EXTERN OOCTXT g_ctxt;
 #define ASN1CRTFREE   ASN1MEMFREEPTR
 
 /* Function prototypes */
-
-#define DE_INCRBITIDX(pctxt) \
-((--(pctxt)->buffer.bitOffset < 0) ? \
-((++(pctxt)->buffer.byteIndex >= (pctxt)->buffer.size) ? ASN_E_ENDOFBUF : \
-((pctxt)->buffer.bitOffset = 7, ASN_OK)) : ASN_OK)
-
-
-#define DE_BIT(pctxt,pvalue) \
-((DE_INCRBITIDX (pctxt) != ASN_OK) ? ASN_E_ENDOFBUF : ((pvalue) ? \
-((*(pvalue) = (((pctxt)->buffer.data[(pctxt)->buffer.byteIndex]) & \
-(1 << (pctxt)->buffer.bitOffset)) != 0), ASN_OK) : ASN_OK ))
-
 
 #define encodeIA5String(pctxt,value,permCharSet) \
 encodeConstrainedStringEx (pctxt, value, permCharSet, 8, 7, 7)
@@ -833,6 +826,30 @@ memHeapAlloc(&(pctxt)->pTypeMemHeap,nbytes)
 memHeapAllocZ(&(pctxt)->pTypeMemHeap,nbytes)
 
 /**
+ * Allocate type.  This macro allocates memory to hold a variable of the
+ * given type.
+ *
+ * @param pctxt - Pointer to a context block
+ * @param ctype - Name of C typedef
+ * @return - Pointer to allocated memory or NULL if insufficient memory
+ *   was available to fulfill the request.
+ */
+#define memAllocType(pctxt,ctype) \
+(ctype*)memHeapAlloc(&(pctxt)->pTypeMemHeap,sizeof(ctype))
+
+/**
+ * Allocate type and zero memory.  This macro allocates memory to hold a
+ * variable of the given type and initializes the allocated memory to zero.
+ *
+ * @param pctxt - Pointer to a context block
+ * @param ctype - Name of C typedef
+ * @return - Pointer to allocated memory or NULL if insufficient memory
+ *   was available to fulfill the request.
+ */
+#define memAllocTypeZ(pctxt,ctype) \
+(ctype*)memHeapAllocZ(&(pctxt)->pTypeMemHeap,sizeof(ctype))
+
+/**
  * Reallocate memory.  This macro reallocates a memory block (either
  * expands or contracts) to the given number of bytes.  It is
  * similar to the C \c realloc run-time function.
@@ -850,7 +867,7 @@ memHeapAllocZ(&(pctxt)->pTypeMemHeap,nbytes)
 memHeapRealloc(&(pctxt)->pTypeMemHeap, (void*)mem_p, nbytes)
 
 /**
- * Free memory pointer.  This macro frees memory at the given pointer. 
+ * Free memory pointer.  This macro frees memory at the given pointer.
  * The memory must have been allocated using the memHeapAlloc (or similar)
  * macros or the mem memory allocation macros.  This macro is
  * similar to the C \c free function.
@@ -1004,9 +1021,9 @@ EXTERN void memSetStaticBuf (void* memHeapBuf, ASN1UINT blkSize);
 ((pctxt)->buffer.bitOffset = 7, ASN_OK)) : ASN_OK)
 
 #define DECODEBIT(pctxt,pvalue) \
-((INCRBITIDX (pctxt) != ASN_OK) ? ASN_E_ENDOFBUF : ((pvalue) ? \
+((INCRBITIDX (pctxt) != ASN_OK) ? ASN_E_ENDOFBUF : \
 ((*(pvalue) = (((pctxt)->buffer.data[(pctxt)->buffer.byteIndex]) & \
-(1 << (pctxt)->buffer.bitOffset)) != 0), ASN_OK) : ASN_OK ))
+(1 << (pctxt)->buffer.bitOffset)) != 0), ASN_OK))
 
 /*
 #define SETCHARSET(csetvar, canset, abits, ubits) \
@@ -1059,6 +1076,9 @@ EXTERN int decodeBits
 EXTERN int decodeBitString
 (OOCTXT* pctxt, ASN1UINT* numbits_p, ASN1OCTET* buffer,
  ASN1UINT bufsiz);
+
+EXTERN int decodeBitString32
+(OOCTXT* pctxt, ASN1BitStr32* pvalue, ASN1UINT lower, ASN1UINT upper);
 
 /**
  * This function will decode a variable of the ASN.1 BMP character string. This
@@ -1443,6 +1463,9 @@ EXTERN int encodeBits
 EXTERN int encodeBitString
 (OOCTXT* pctxt, ASN1UINT numocts, const ASN1OCTET* data);
 
+EXTERN int encodeBitString32
+(OOCTXT* pctxt, ASN1BitStr32* pvalue, ASN1UINT lower, ASN1UINT upper);
+
 /**
  * This function will encode a variable of the ASN.1 BMP character string. This
  * differs from the encode routines for the character strings previously
@@ -1644,7 +1667,7 @@ EXTERN int encodeObjectIdentifier (OOCTXT* pctxt, ASN1OBJID* pvalue);
  *
  *  @return           Status of operation
  */
-EXTERN int encodebitsFromOctet (OOCTXT* pctxt, ASN1OCTET value, ASN1UINT nbits);
+EXTERN int encodeBitsFromOctet (OOCTXT* pctxt, ASN1OCTET value, ASN1UINT nbits);
 
 /**
  * This fuction will encode an array of octets. The Octets will be encoded
@@ -1774,6 +1797,8 @@ EXTERN int encodeSemiConsUnsigned
  */
 #define encodeUnconsInteger(pctxt,value) \
 encodeSemiConsInteger(pctxt,value,ASN1INT_MIN)
+
+EXTERN int encodeUnconsUnsigned (OOCTXT* pctxt, ASN1UINT value);
 
 EXTERN int encodeVarWidthCharString (OOCTXT* pctxt, const char* value);
 

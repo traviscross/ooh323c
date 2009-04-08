@@ -27,6 +27,9 @@
 #include <process.h>
 #define getpid _getpid
 #endif
+/* TEMPORARY!!! */
+ASN1OCTET* g_H225Message;
+
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
 
@@ -42,16 +45,18 @@ static int onAlerting (ooCallData* call);
 static int callDurationTimerExpired (void *pdata);
 static int callIntervalTimerExpired(void *pdata);
 
+static int readFile
+(const char* filePath, unsigned char** ppMsgBuf, size_t* pLength);
 
 static char USAGE[]={
    "Listen to incoming calls\n"
    "\th323peer [options] --listen\n"
    "Make test calls\n"
    "\th323peer [options] <remote>\n"
-   "\t                    remote => Remote endpoint to callip:[port]\n"
+   "\t                    remote => Remote endpoint to call ip:[port]\n"
    "\n\n"
    "options:\n"
-   "Common Options for listen and Make call modes\n"
+   "Common Options for listen and make call modes\n"
    "\t--help                    -  To display usage information\n"
    "\t--use-ip <ip>             -  local ip to use\n"
    "\t--use-port <port>         -  local port to use\n"
@@ -76,6 +81,9 @@ static char USAGE[]={
    "\t-duration <call duration> -  Duration of each call in seconds\n"
    "\t-interval <interval>      -  Interval between successive calls \n"
    "\t                             in seconds\n"
+   "\t-file <filename>          -  Send information contained in file.\n"
+   "\t                             File must contain binary Q.931 message.\n"
+   "\t-offset <number>          -  Byte offset in file from which to start.\n"
 };
 /* globals */
 static int gCalls = 0;
@@ -97,6 +105,8 @@ int main (int argc, char** argv)
    char *pcPort =NULL, *gkIP=NULL, *token=NULL;
    unsigned char trace_level = 0;
    enum RasGatekeeperMode gkMode = RasNoGatekeeper;
+   const char* filename = 0;
+   int offset = 0;
    int cmdPort = 0;
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
@@ -147,6 +157,12 @@ int main (int argc, char** argv)
       else if(!strcmp(argv[x], "-interval")) {
          x++;
          gInterval = atoi(argv[x]);
+      }
+      else if(!strcmp(argv[x], "-file")) {
+         filename = argv[++x];
+      }
+      else if(!strcmp(argv[x], "-offset")) {
+         offset = atoi (argv[++x]);
       }
       else if(!strcmp(argv[x], "--gk-discover")){
          gkMode = RasDiscoverGatekeeper;
@@ -281,7 +297,6 @@ int main (int argc, char** argv)
    if(!bTunneling)
       ooH323EpDisableH245Tunneling();
 
-
    if(trace_level == 1)
       ooH323EpSetTraceLevel(OOTRCLVLDBGA);
    else if(trace_level == 2)
@@ -329,7 +344,8 @@ int main (int argc, char** argv)
 
 
    /* Add audio capability */
-   ooH323EpAddG711Capability (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
+   ooH323EpAddG711Capability
+      (OO_G711ULAW64K,30, 240, OORXANDTX, &startReceiveChannel,
        &startTransmitChannel, &stopReceiveChannel, &stopTransmitChannel);
 
    if(gkMode != RasNoGatekeeper)
@@ -358,18 +374,37 @@ int main (int argc, char** argv)
 
    if(bDestFound)
    {
-      ooMakeCall (gDest, callToken, sizeof(callToken), NULL); /* Make call */
+      if (0 != filename) {
+         /* Send canned Q.931 message from file */
+         unsigned char* msgbuf;
+         size_t   msglen;
+         int      stat;
+
+         stat = readFile (filename, &msgbuf, &msglen);
+         if (0 != stat) {
+            printf ("Read file %s failed.\n", filename);
+            return stat;
+         }
+
+         g_H225Message = &msgbuf[offset];
+      }
+      else {
+         g_H225Message = 0;
+      }
+
+      /* Make call */
+      ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
       gCallCounter++;
-      if(gInterval != 0)
-      {
-         if( (token = (char * )malloc( strlen( callToken) + 1)) == NULL )             
-         {
+      if (gInterval != 0) {
+         if( (token = (char * )malloc( strlen( callToken) + 1)) == NULL ) {
             printf("malloc failed\n");
             return 1;
          }
          strcpy(token, callToken);
-         pTimer = ooTimerCreate(&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
-                                 token, FALSE);
+
+         pTimer = ooTimerCreate
+            (&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
+             token, FALSE);
       }
    }
 
@@ -408,8 +443,9 @@ static int startTransmitChannel (ooCallData *call, ooLogicalChannel *pChannel)
    {
       token = (char*)malloc(strlen(call->callToken)+1);
       strcpy(token, call->callToken);
-      timer =  ooTimerCreate (&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
-                               token, FALSE);
+      timer =  ooTimerCreate
+         (&gH323ep.ctxt, NULL, callDurationTimerExpired, gDuration,
+          token, FALSE);
 
    }
    /* TODO: user would add application specific logic here to start   */
@@ -459,10 +495,11 @@ static int onAlerting (ooCallData* call)
 static int onIncomingCall (ooCallData* call)
 {
 
-   if(bListen)
-      printf("onIncomingCall from\"%s\"(%s) ---- %s\n",
-             (call->remoteDisplayName)?call->remoteDisplayName:"Unknown Name",
-           call->callingPartyNumber?call->callingPartyNumber:"Unknown Number",call->callToken);
+   if (bListen)
+      printf
+         ("onIncomingCall from\"%s\"(%s) ---- %s\n",
+          (call->remoteDisplayName)?call->remoteDisplayName:"Unknown Name",
+          call->callingPartyNumber?call->callingPartyNumber:"Unknown Number",call->callToken);
    /* TODO: user would add application specific logic here to handle   */
    /* an incoming call request..               */
 
@@ -560,3 +597,41 @@ static int callIntervalTimerExpired(void *pdata)
    return OO_OK;
 }
 
+static int readFile
+(const char* filePath, unsigned char** ppMsgBuf, size_t* pLength)
+{
+   FILE* fp = fopen (filePath, "rb");
+   unsigned char* msgbuf;
+   if (0 != fp) {
+      long len;
+      size_t len2;
+      fseek (fp, 0L, SEEK_END);
+      if ((len = ftell(fp)) != -1L) {
+         msgbuf = (unsigned char*) malloc (len);
+         if (msgbuf == NULL) {
+            fclose (fp);
+            return -1;
+         }
+         fseek (fp, 0L, SEEK_SET);
+
+         len2 = fread (msgbuf, 1, (size_t)len, fp);
+         fclose (fp);
+
+         if ((long)len2 != len) {
+            free (msgbuf);
+            return -2;
+         }
+
+         *ppMsgBuf = msgbuf;
+         *pLength = len2;
+
+         return 0;
+      }
+      else {
+         fclose (fp);
+         return -3;
+      }
+   }
+   else
+      return -4;
+}

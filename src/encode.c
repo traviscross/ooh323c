@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -129,13 +129,13 @@ int encodeBitsFromOctet (OOCTXT* pctxt, ASN1OCTET value, ASN1UINT nbits)
    int lshift = pctxt->buffer.bitOffset;
    int rshift = 8 - pctxt->buffer.bitOffset;
    int stat = ASN_OK;
-   ASN1OCTET mask;
 
    if (nbits == 0) return ASN_OK;
 
    /* Mask off unused bits from the end of the value */
 
    if (nbits < 8) {
+      ASN1OCTET mask;
       switch (nbits) {
       case 1: mask = 0x80; break;
       case 2: mask = 0xC0; break;
@@ -144,7 +144,7 @@ int encodeBitsFromOctet (OOCTXT* pctxt, ASN1OCTET value, ASN1UINT nbits)
       case 5: mask = 0xF8; break;
       case 6: mask = 0xFC; break;
       case 7: mask = 0xFE; break;
-      default:;
+      default: mask = 0xFF;
       }
       value &= mask;
    }
@@ -215,6 +215,19 @@ int encodeBitString (OOCTXT* pctxt, ASN1UINT numbits, const ASN1OCTET* data)
    }
 
    return ASN_OK;
+}
+
+int encodeBitString32
+(OOCTXT* pctxt, ASN1BitStr32* pvalue, ASN1UINT lower, ASN1UINT upper)
+{
+   Asn1SizeCnst lsize1;
+   lsize1.extended = FALSE;
+   lsize1.lower = lower;
+   lsize1.upper = upper;
+   lsize1.next = 0;
+
+   addSizeConstraint (pctxt, &lsize1);
+   return encodeBitString (pctxt, pvalue->numbits, pvalue->data);
 }
 
 int encodeBMPString
@@ -293,7 +306,7 @@ int encodeConsInteger
    else {
       range_value = upper + abs(lower);
       adjusted_value = value + abs(lower);
-   }     
+   }
 
    if (range_value != ASN1UINT_MAX) { range_value += 1; }
 
@@ -452,7 +465,7 @@ int encodeExpandBuffer (OOCTXT* pctxt, ASN1UINT nbytes)
 
       pctxt->buffer.data = (ASN1OCTET*) memHeapRealloc
          (&pctxt->pMsgMemHeap, pctxt->buffer.data, pctxt->buffer.size);
-     
+
       if (!pctxt->buffer.data) return (ASN_E_NOMEM);
 
       return (ASN_OK);
@@ -574,7 +587,7 @@ int encodeObjectIdentifier (OOCTXT* pctxt, ASN1OBJID* pvalue)
       return LOG_ASN1ERR (pctxt, ASN_E_INVOBJID);
 
    /* Passed checks, encode object identifier */
-  
+
    /* Munge first two sub ID's and encode */
 
    temp = ((pvalue->subid[0] * 40) + pvalue->subid[1]);
@@ -589,63 +602,6 @@ int encodeObjectIdentifier (OOCTXT* pctxt, ASN1OBJID* pvalue)
    }
 
    return ASN_OK;
-}
-
-int encodebitsFromOctet (OOCTXT* pctxt, ASN1OCTET value, ASN1UINT nbits)
-{
-   int lshift = pctxt->buffer.bitOffset;
-   int rshift = 8 - pctxt->buffer.bitOffset;
-   int stat = ASN_OK;
-   ASN1OCTET mask;
-
-   if (nbits == 0) return ASN_OK;
-
-   /* Mask off unused bits from the end of the value */
-
-   if (nbits < 8) {
-      switch (nbits) {
-      case 1: mask = 0x80; break;
-      case 2: mask = 0xC0; break;
-      case 3: mask = 0xE0; break;
-      case 4: mask = 0xF0; break;
-      case 5: mask = 0xF8; break;
-      case 6: mask = 0xFC; break;
-      case 7: mask = 0xFE; break;
-      default:;
-      }
-      value &= mask;
-   }
-
-   /* If we are on a byte boundary, we can do a direct assignment */
-
-   if (pctxt->buffer.bitOffset == 8) {
-      pctxt->buffer.data[pctxt->buffer.byteIndex] = value;
-      if (nbits == 8) {
-         pctxt->buffer.byteIndex++;
-         pctxt->buffer.data[pctxt->buffer.byteIndex] = 0;
-      }
-      else
-         pctxt->buffer.bitOffset -= nbits;
-   }
-
-   /* Otherwise, need to set some bits in the first octet and   */
-   /* possibly some bits in the following octet..               */
-
-   else {
-      pctxt->buffer.data[pctxt->buffer.byteIndex] |=
-         (ASN1OCTET)(value >> rshift);
-
-      pctxt->buffer.bitOffset -= nbits;
-
-      if (pctxt->buffer.bitOffset < 0) {
-         pctxt->buffer.byteIndex++;
-         pctxt->buffer.data[pctxt->buffer.byteIndex] =
-            (ASN1OCTET)(value << lshift);
-         pctxt->buffer.bitOffset += 8;
-      }
-   }
-
-   return stat;
 }
 
 int encodeOctets (OOCTXT* pctxt, const ASN1OCTET* pvalue, ASN1UINT nbits)
@@ -825,7 +781,7 @@ int encodeSemiConsInteger (OOCTXT* pctxt, ASN1INT value, ASN1INT lower)
 
    if (lower > ASN1INT_MIN)
       value -= lower;
-  
+
    /* Calculate signed number value length */
 
    for ( ; shift > 0; shift -= 8) {
@@ -881,14 +837,14 @@ int encodeSemiConsUnsigned (OOCTXT* pctxt, ASN1UINT value, ASN1UINT lower)
    if ((stat = encodeLength (pctxt, nbytes)) < 0) {
       return stat;
    }
-  
+
    if ((stat = encodeByteAlign (pctxt)) != ASN_OK)
       return stat;
-  
+
    /* Encode additional zero byte if necessary */
 
    if (nbytes > sizeof(value)) {
-      stat = encodebitsFromOctet (pctxt, 0, 8);
+      stat = encodeBitsFromOctet (pctxt, 0, 8);
       if (stat != ASN_OK) return (stat);
    }
 
@@ -926,6 +882,52 @@ int encodeSmallNonNegWholeNumber (OOCTXT* pctxt, ASN1UINT value)
    }
 
    return stat;
+}
+
+int encodeUnconsUnsigned (OOCTXT* pctxt, ASN1UINT value)
+{
+   int nbytes, stat;
+   int shift = ((sizeof(value) - 1) * 8) - 1;
+   ASN1UINT mask = 1UL << ((sizeof(value) * 8) - 1);
+   ASN1UINT tempValue;
+
+   /* Calculate unsigned number value length */
+
+   for ( ; shift > 0; shift -= 8) {
+      tempValue = (value >> shift) & 0x1ff;
+
+      if (tempValue == 0) continue;
+      else break;
+   }
+
+   nbytes = (shift + 9) / 8;
+
+   /* If MS bit in unsigned number is set, add an extra zero byte */
+
+   if ((value & mask) != 0) nbytes++;
+
+   /* Encode length */
+
+   if ((stat = encodeLength (pctxt, nbytes)) < 0) {
+     return stat;
+   }
+
+   stat = encodeByteAlign (pctxt);
+   if (stat != ASN_OK) return LOG_ASN1ERR (pctxt, stat);
+
+   /* Encode additional zero byte if necessary */
+
+   if ((value & mask) != 0) {
+      stat = encodeBitsFromOctet (pctxt, 0, 8);
+      if (stat != 0) return LOG_ASN1ERR (pctxt, stat);
+   }
+
+   /* Encode unsigned value as a signed number */
+
+   stat = encode2sCompBinInt (pctxt, (OOINT32)value);
+   if (stat != 0) return LOG_ASN1ERR (pctxt, stat);
+
+   return 0;
 }
 
 int encodeVarWidthCharString (OOCTXT* pctxt, const char* value)

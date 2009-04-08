@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2005 by Objective Systems, Inc.
+ * Copyright (C) 1997-2009 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -261,7 +261,7 @@ EXTERN int ooSocketRecv (OOSOCKET socket, ASN1OCTET* pbuf,
  * 'recvfrom' socket function for further details.
  *
  * @param socket       The socket's handle created by call to ooSocketCreate
- *                    
+ *
  * @param pbuf         Pointer to the buffer for the incoming data.
  * @param bufsize      Length of the buffer.
  * @param remotehost   Pointer to a buffer in which remote ip address
@@ -327,7 +327,7 @@ EXTERN int ooSocketSendTo(OOSOCKET socket, const ASN1OCTET* pdata,
  *                     returns.
  * @return             Completion status of operation: 0 (ASN_OK) = success,
  *                     negative return value is error.
- */                                                      
+ */
 EXTERN int ooSocketSelect(int nfds, fd_set *readfds, fd_set *writefds,
                             fd_set *exceptfds, struct timeval * timeout);
 
@@ -352,11 +352,11 @@ EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
  *                     following format: "NNN.NNN.NNN.NNN", where NNN is a
  *                     number in the range (0..255).
  * @param netIp        Buffer in which the converted address will be returned.
-
+ * @param bufsiz       Size of buffer to receive converted address.
  * @return             Completion status of operation: 0 (ASN_OK) = success,
  *                     negative return value is error.
  */
-EXTERN int ooSocketConvertIpToNwAddr(char *inetIp, char *netIp);
+  EXTERN int ooSocketConvertIpToNwAddr (const char* inetIp, ASN1OCTET* netIp, size_t bufsiz);
 
 /**
  * This function retrives the IP address of the local host.
