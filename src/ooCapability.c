@@ -932,7 +932,7 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       noofframes = audioCap->u.g729;
       break;
    case T_H245AudioCapability_g729AnnexA:
-      cap = OO_G729;
+      cap = OO_G729A;
       noofframes = audioCap->u.g729AnnexA;
       break;
    case T_H245AudioCapability_g7231:
@@ -943,7 +943,7 @@ ASN1BOOL ooCapabilityCheckCompatibility_Simple
       return FALSE;
    }
 
-   OOTRACEDBGC3("Comparing codecs: channel's=%d, requested=%d\n",
+   OOTRACEDBGC3("Comparing codecs: current=%d, requested=%d\n",
       epCap->cap, cap);
    if(cap != epCap->cap) { return FALSE; }
 

@@ -117,15 +117,15 @@ SOURCE=".\h323\H235-SECURITY-MESSAGESEnc.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\H323-MESSAGES.c"
+SOURCE=".\h323_v6\H323-MESSAGES.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\H323-MESSAGESDec.c"
+SOURCE=".\h323_v6\H323-MESSAGESDec.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\H323-MESSAGESEnc.c"
+SOURCE=".\h323_v6\H323-MESSAGESEnc.c"
 # End Source File
 # Begin Source File
 
@@ -133,15 +133,15 @@ SOURCE=.\memheap.c
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROL.c"
+SOURCE=".\h323_v6\MULTIMEDIA-SYSTEM-CONTROL.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROLDec.c"
+SOURCE=".\h323_v6\MULTIMEDIA-SYSTEM-CONTROLDec.c"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROLEnc.c"
+SOURCE=".\h323_v6\MULTIMEDIA-SYSTEM-CONTROLEnc.c"
 # End Source File
 # Begin Source File
 
@@ -237,7 +237,7 @@ SOURCE=".\h323\H235-SECURITY-MESSAGES.h"
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\H323-MESSAGES.h"
+SOURCE=".\h323_v6\H323-MESSAGES.h"
 # End Source File
 # Begin Source File
 
@@ -245,7 +245,7 @@ SOURCE=.\memheap.h
 # End Source File
 # Begin Source File
 
-SOURCE=".\h323\MULTIMEDIA-SYSTEM-CONTROL.h"
+SOURCE=".\h323_v6\MULTIMEDIA-SYSTEM-CONTROL.h"
 # End Source File
 # Begin Source File
 

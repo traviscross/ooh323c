@@ -122,131 +122,112 @@ int ooAcceptCmdConnection()
    return OO_OK;
 }
 
-int ooWriteStackCommand(OOStackCommand *cmd)
+int ooWriteStackCommand (OOStackCommand *cmd)
 {
-   if(0 != ooSocketSend(gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand)))
-      return OO_FAILED;
-
-   return OO_OK;
+   return (0 == ooSocketSend
+           (gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand))) ?
+      OO_OK : OO_FAILED;
 }
 
-
-int ooReadAndProcessStackCommand()
+int ooProcessStackCommand (OOStackCommand* pcmd)
 {
    OOH323CallData *pCall = NULL;
-   unsigned char buffer[MAXMSGLEN];
-   int i, recvLen = 0;
-   OOStackCommand cmd;
-   memset(&cmd, 0, sizeof(OOStackCommand));
-   recvLen = ooSocketRecv (gH323ep.cmdSock, buffer, MAXMSGLEN);
-   if(recvLen <= 0)
+
+   if (pcmd->type == OO_CMD_NOOP) return 0;
+
+   if (gH323ep.gkClient && gH323ep.gkClient->state != GkClientRegistered
+       && pcmd->type != OO_CMD_STOPMONITOR)
    {
-      OOTRACEERR1("Error:Failed to read CMD message\n");
-      return OO_FAILED;
+      OOTRACEINFO1
+         ("Ignoring stack command as Gk Client is not registered yet\n");
+      return 0;
    }
 
-   for(i=0; (int)(i+sizeof(OOStackCommand)) <= recvLen; i += sizeof(OOStackCommand))
-   {
-      memcpy(&cmd, buffer+i, sizeof(OOStackCommand));
+   switch (pcmd->type) {
+   case OO_CMD_MAKECALL:
+      OOTRACEINFO2("Processing MakeCall command %s\n", (char*)pcmd->param2);
 
-      if(cmd.type == OO_CMD_NOOP)
-         continue;
+      ooH323MakeCall ((char*)pcmd->param1, (char*)pcmd->param2,
+                      (ooCallOptions*)pcmd->param3);
 
-      if(gH323ep.gkClient && gH323ep.gkClient->state != GkClientRegistered
-         && cmd.type != OO_CMD_STOPMONITOR)
+      break;
+
+   case OO_CMD_MANUALRINGBACK:
+      if(OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
       {
-         OOTRACEINFO1("Ignoring stack command as Gk Client is not registered"
-                      " yet\n");
-      }
-      else {
-         switch(cmd.type) {
-            case OO_CMD_MAKECALL:
-               OOTRACEINFO2("Processing MakeCall command %s\n",
-                                    (char*)cmd.param2);
-
-               ooH323MakeCall ((char*)cmd.param1, (char*)cmd.param2,
-                               (ooCallOptions*)cmd.param3);
-               break;
-
-            case OO_CMD_MANUALRINGBACK:
-               if(OO_TESTFLAG(gH323ep.flags, OO_M_MANUALRINGBACK))
-               {
-                  pCall = ooFindCallByToken((char*)cmd.param1);
-                  if(!pCall) {
-                     OOTRACEINFO2("Call \"%s\" does not exist\n",
-                                  (char*)cmd.param1);
-                     OOTRACEINFO1("Call migth be cleared/closed\n");
-                  }
-                  else {
-                     ooSendAlerting(ooFindCallByToken((char*)cmd.param1));
-                     if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER)) {
-                        ooSendConnect(ooFindCallByToken((char*)cmd.param1));
-                     }
-                  }
-               }
-               break;
-
-            case OO_CMD_ANSCALL:
-               pCall = ooFindCallByToken((char*)cmd.param1);
-               if(!pCall) {
-                  OOTRACEINFO2("Call \"%s\" does not exist\n",
-                               (char*)cmd.param1);
-                  OOTRACEINFO1("Call might be cleared/closed\n");
-               }
-               else {
-                  OOTRACEINFO2("Processing Answer Call command for %s\n",
-                               (char*)cmd.param1);
-                  ooSendConnect(pCall);
-               }
-               break;
-
-            case OO_CMD_FWDCALL:
-               OOTRACEINFO3("Forwarding call %s to %s\n", (char*)cmd.param1,
-                                                          (char*)cmd.param2);
-               ooH323ForwardCall((char*)cmd.param1, (char*)cmd.param2);
-               break;
-
-            case OO_CMD_HANGCALL:
-               OOTRACEINFO2("Processing Hang call command %s\n",
-                             (char*)cmd.param1);
-               ooH323HangCall((char*)cmd.param1,
-                              *(OOCallClearReason*)cmd.param2);
-               break;
-
-            case OO_CMD_SENDDIGIT:
-               pCall = ooFindCallByToken((char*)cmd.param1);
-               if(!pCall) {
-                  OOTRACEERR2("ERROR:Invalid calltoken %s\n",
-                              (char*)cmd.param1);
-                  break;
-               }
-               if(pCall->jointDtmfMode & OO_CAP_DTMF_H245_alphanumeric) {
-                  ooSendH245UserInputIndication_alphanumeric(
-                     pCall, (const char*)cmd.param2);
-               }
-               else if(pCall->jointDtmfMode & OO_CAP_DTMF_H245_signal) {
-                  ooSendH245UserInputIndication_signal(
-                     pCall, (const char*)cmd.param2);
-               }
-               else {
-                  ooQ931SendDTMFAsKeyPadIE(pCall, (const char*)cmd.param2);
-               }
-
-               break;
-
-            case OO_CMD_STOPMONITOR:
-               OOTRACEINFO1("Processing StopMonitor command\n");
-               ooStopMonitorCalls();
-               break;
-
-            default: OOTRACEERR1("ERROR:Unknown command\n");
+         pCall = ooFindCallByToken((char*)pcmd->param1);
+         if(!pCall) {
+            OOTRACEINFO2("Call \"%s\" does not exist\n", (char*)pcmd->param1);
+            OOTRACEINFO1("Call may be cleared/closed\n");
+         }
+         else {
+            ooSendAlerting (ooFindCallByToken((char*)pcmd->param1));
+            if(OO_TESTFLAG(gH323ep.flags, OO_M_AUTOANSWER)) {
+               ooSendConnect(ooFindCallByToken((char*)pcmd->param1));
+            }
          }
       }
-      if(cmd.param1) free(cmd.param1);
-      if(cmd.param2) free(cmd.param2);
-      if(cmd.param3) free(cmd.param3);
+      break;
+
+   case OO_CMD_ANSCALL:
+      pCall = ooFindCallByToken((char*)pcmd->param1);
+      if(!pCall) {
+         OOTRACEINFO2("Call \"%s\" does not exist\n", (char*)pcmd->param1);
+         OOTRACEINFO1("Call might be cleared/closed\n");
+      }
+      else {
+         OOTRACEINFO2("Processing Answer Call command for %s\n",
+                      (char*)pcmd->param1);
+         ooSendConnect(pCall);
+      }
+      break;
+
+   case OO_CMD_FWDCALL:
+      OOTRACEINFO3("Forwarding call %s to %s\n",
+                   (char*)pcmd->param1, (char*)pcmd->param2);
+
+      ooH323ForwardCall((char*)pcmd->param1, (char*)pcmd->param2);
+
+      break;
+
+   case OO_CMD_HANGCALL:
+      OOTRACEINFO2("Processing hang call command %s\n", (char*)pcmd->param1);
+
+      ooH323HangCall((char*)pcmd->param1, *(OOCallClearReason*)pcmd->param2);
+
+      break;
+
+   case OO_CMD_SENDDIGIT:
+      pCall = ooFindCallByToken((char*)pcmd->param1);
+      if (!pCall) {
+         OOTRACEERR2("ERROR:Invalid calltoken %s\n", (char*)pcmd->param1);
+         break;
+      }
+      if (pCall->jointDtmfMode & OO_CAP_DTMF_H245_alphanumeric) {
+         ooSendH245UserInputIndication_alphanumeric
+            (pCall, (const char*)pcmd->param2);
+      }
+      else if (pCall->jointDtmfMode & OO_CAP_DTMF_H245_signal) {
+         ooSendH245UserInputIndication_signal
+            (pCall, (const char*)pcmd->param2);
+      }
+      else {
+         ooQ931SendDTMFAsKeyPadIE(pCall, (const char*)pcmd->param2);
+      }
+
+      break;
+
+   case OO_CMD_STOPMONITOR:
+      OOTRACEINFO1 ("Processing StopMonitor command\n");
+      ooStopMonitorCalls();
+      break;
+
+   default: OOTRACEERR2 ("ERROR: unknown command %d\n", pcmd->type);
    }
 
+   if (0 != pcmd->param1) free (pcmd->param1);
+   if (0 != pcmd->param2) free (pcmd->param2);
+   if (0 != pcmd->param3) free (pcmd->param3);
 
    return OO_OK;
 }

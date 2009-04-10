@@ -50,16 +50,30 @@ DListNode* dListAppend (OOCTXT* pctxt, DList* pList, void* pData)
 
 DListNode* dListAppendNode (OOCTXT* pctxt, DList* pList, void* pData)
 {
-  return dListAppendNode2 (pList, pData);
-}
-
-DListNode* dListAppendNode2 (DList* pList, void* pData)
-{
    DListNode* pListNode =
       (DListNode*) (((char*)pData) - sizeof(DListNode));
 
    if (0 != pListNode) {
       pListNode->data = pData;
+      pListNode->next = (DListNode*) 0;
+      if (0 != pList->tail) {
+         pList->tail->next = pListNode;
+         pListNode->prev = pList->tail;
+      }
+      if (0 == pList->head) {
+         pList->head = pListNode;
+         pListNode->prev = (DListNode*) 0;
+      }
+      pList->tail = pListNode;
+      pList->count++;
+   }
+
+   return pListNode;
+}
+
+DListNode* dListAppendNode2 (DList* pList, DListNode* pListNode)
+{
+   if (0 != pListNode) {
       pListNode->next = (DListNode*) 0;
       if (0 != pList->tail) {
          pList->tail->next = pListNode;

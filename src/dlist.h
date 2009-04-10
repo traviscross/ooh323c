@@ -81,7 +81,7 @@ EXTERN DListNode* dListAppend
 EXTERN DListNode* dListAppendNode
 (struct OOCTXT* , DList* pList, void* pData);
 
-EXTERN DListNode* dListAppendNode2 (DList* pList, void* pData);
+EXTERN DListNode* dListAppendNode2 (DList* pList, DListNode* pListNode);
 
 /**
  * This function delete the head item from the list and returns a pointer

@@ -85,16 +85,15 @@ EXTERN int ooCloseCmdConnection();
  *
  * @return          OO_OK, on success; OO_FAILED, on failure
  */
-EXTERN int ooWriteStackCommand(OOStackCommand *cmd);
+EXTERN int ooWriteStackCommand (OOStackCommand *cmd);
 
 /**
- * This function is used by stack thread to read and process stack commands
- * received over command channel.
+ * This function is used to process a stack command received on the
+ * command channel.
  *
  * @return          OO_OK, on success; OO_FAILED, on failure
  */
-EXTERN int ooReadAndProcessStackCommand();
-
+EXTERN int ooProcessStackCommand (OOStackCommand* pcmd);
 
 /**
  * @}

@@ -37,10 +37,6 @@ extern DList g_TimerList;
 
 static OOBOOL gMonitor = FALSE;
 
-/* TEMPORARY!!! */
-extern ASN1OCTET* g_H225Message;
-extern size_t g_H225MessageLen;
-/* end temp */
 
 int ooCreateH245Listener(OOH323CallData *call)
 {
@@ -598,12 +594,6 @@ int ooProcessFDSETsAndTimers
       }
    }
 
-   if(gH323ep.cmdSock) {
-      if(FD_ISSET(gH323ep.cmdSock, pReadfds)) {
-         ooReadAndProcessStackCommand();
-      }
-   }
-
    /* Manage ready descriptors after select */
 
    if(0 != gH323ep.gkClient && 0 != gH323ep.gkClient->rasSocket)
@@ -724,6 +714,8 @@ int ooMonitorChannels()
    int ret=0, nfds=0;
    struct timeval toMin, toNext;
    fd_set readfds, writefds;
+   ASN1OCTET stackCmd[sizeof(OOStackCommand)];
+   int recvLen, stkCmdIdx = 0;
 
    gMonitor = TRUE;
 
@@ -788,6 +780,30 @@ int ooMonitorChannels()
          }
       }
 
+      /* Read and process stack command */
+      if (0 != gH323ep.cmdSock && FD_ISSET (gH323ep.cmdSock, &readfds)) {
+         ASN1UINT nbytesToRead = sizeof(OOStackCommand) - stkCmdIdx;
+
+         recvLen = ooSocketRecv
+            (gH323ep.cmdSock, &stackCmd[stkCmdIdx], nbytesToRead);
+
+         if (recvLen < 0) {
+            OOTRACEERR1 ("ERROR: Failed to read CMD message\n");
+            ooStopMonitorCalls();
+            continue;
+         }
+         else if ((ASN1UINT)recvLen == nbytesToRead) {
+            /* Received complete stack command */
+            ooProcessStackCommand ((OOStackCommand*)stackCmd);
+
+            stkCmdIdx = 0;
+         }
+         else {
+            /* Received partial command */
+            stkCmdIdx += recvLen;
+         }
+      }
+
       if(ooProcessFDSETsAndTimers(&readfds, &writefds, &toMin) != OO_OK)
       {
          ooStopMonitorCalls();
@@ -798,28 +814,32 @@ int ooMonitorChannels()
    return OO_OK;
 }
 
+static int clearCall
+(OOH323CallData* call, OOCallClearReason reason, ASN1OCTET* pmsgbuf)
+{
+   if (0 != pmsgbuf) { memFreePtr (&gH323ep.msgctxt, pmsgbuf); }
+
+   if (call->callState < OO_CALL_CLEAR) {
+      call->callEndReason = reason;
+      call->callState = OO_CALL_CLEAR;
+   }
+
+   return OO_FAILED;
+}
+
 int ooH2250Receive(OOH323CallData *call)
 {
    int  recvLen=0, total=0, ret=0;
-   ASN1OCTET message[MAXMSGLEN], message1[MAXMSGLEN];
+   ASN1OCTET msglenbuf[4];
+   ASN1OCTET* pmsgbuf;
    int len;
    Q931Message *pmsg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
    struct timeval timeout;
    fd_set readfds;
 
-
-   pmsg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
-   if(!pmsg)
-   {
-      OOTRACEERR3("ERROR:Failed to allocate memory for incoming H.2250 message"
-                  " (%s, %s)\n", call->callType, call->callToken);
-      memReset(&gH323ep.msgctxt);
-      return OO_FAILED;
-   }
-   memset(pmsg, 0, sizeof(Q931Message));
    /* First read just TPKT header which is four bytes */
-   recvLen = ooSocketRecv (call->pH225Channel->sock, message, 4);
+   recvLen = ooSocketRecv (call->pH225Channel->sock, msglenbuf, 4);
    if(recvLen <= 0)
    {
       if(recvLen == 0)
@@ -834,10 +854,9 @@ int ooH2250Receive(OOH323CallData *call)
       {
          if(call->callState < OO_CALL_CLEAR)
             call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-         call->callState = OO_CALL_CLEARED;
 
+         call->callState = OO_CALL_CLEARED;
       }
-      ooFreeQ931Message(pmsg);
       return OO_OK;
    }
    OOTRACEDBGC3("Receiving H.2250 message (%s, %s)\n",
@@ -851,21 +870,25 @@ int ooH2250Receive(OOH323CallData *call)
       OOTRACEERR4("Error: Reading TPKT header for H225 message "
                   "recvLen= %d (%s, %s)\n", recvLen, call->callType,
                   call->callToken);
-      ooFreeQ931Message(pmsg);
-      if(call->callState < OO_CALL_CLEAR)
-      {
-         call->callEndReason = OO_REASON_INVALIDMESSAGE;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
+
+      return clearCall (call, OO_REASON_INVALIDMESSAGE, 0);
    }
 
-
-   len = message[2];
-   len = len<<8;
-   len = len | message[3];
+   len = msglenbuf[2];
+   len = len << 8;
+   len = len | msglenbuf[3];
    /* Remaining message length is length - tpkt length */
    len = len - 4;
+
+   OOTRACEDBGC2 ("H.2250 message length is %d\n", len);
+
+   pmsgbuf = (ASN1OCTET*) memAlloc (pctxt, len);
+   if (0 == pmsgbuf) {
+      OOTRACEERR3 ("ERROR: Failed to allocate memory for incoming H.2250 "
+                   "message (%s, %s)\n", call->callType, call->callToken);
+      memReset (&gH323ep.msgctxt);
+      return OO_FAILED;
+   }
 
    /* Now read actual Q931 message body. We should make sure that we
       receive complete message as indicated by len. If we don't then there
@@ -876,9 +899,10 @@ int ooH2250Receive(OOH323CallData *call)
    */
    while(total < len)
    {
-      recvLen = ooSocketRecv (call->pH225Channel->sock, message1, len-total);
-      memcpy(message+total, message1, recvLen);
-      total = total + recvLen;
+      recvLen = ooSocketRecv
+         (call->pH225Channel->sock, pmsgbuf + total, len - total);
+
+      total += recvLen;
 
       if(total == len) break; /* Complete message is received */
 
@@ -893,13 +917,8 @@ int ooH2250Receive(OOH323CallData *call)
          OOTRACEERR3("Error in select while receiving H.2250 message - "
                      "clearing call (%s, %s)\n", call->callType,
                      call->callToken);
-         ooFreeQ931Message(pmsg);
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
+
+         return clearCall (call, OO_REASON_TRANSPORTFAILURE, pmsgbuf);
       }
       /* If remaining part of the message is not received in 3 seconds
          exit */
@@ -907,23 +926,28 @@ int ooH2250Receive(OOH323CallData *call)
       {
          OOTRACEERR3("Error: Incomplete H.2250 message received - clearing "
                      "call (%s, %s)\n", call->callType, call->callToken);
-         ooFreeQ931Message(pmsg);
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_REASON_INVALIDMESSAGE;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
+
+         return clearCall (call, OO_REASON_INVALIDMESSAGE, pmsgbuf);
       }
    }
 
    OOTRACEDBGC3("Received Q.931 message: (%s, %s)\n",
                 call->callType, call->callToken);
 
-   initializePrintHandler(&printHandler, "Received H.2250 Message");
+   initializePrintHandler (&printHandler, "Received H.2250 Message");
    setEventHandler (pctxt, &printHandler);
 
-   ret = ooQ931Decode (call, pmsg, len, message);
+   pmsg = (Q931Message*)memAlloc(pctxt, sizeof(Q931Message));
+   if(!pmsg)
+   {
+      OOTRACEERR3("ERROR: Failed to allocate memory for Q.931 message "
+                  "structure (%s, %s)\n", call->callType, call->callToken);
+      memReset(&gH323ep.msgctxt);
+      return OO_FAILED;
+   }
+   memset(pmsg, 0, sizeof(Q931Message));
+
+   ret = ooQ931Decode (call, pmsg, len, pmsgbuf);
    if(ret != OO_OK) {
       OOTRACEERR3("Error:Failed to decode received H.2250 message. (%s, %s)\n",
                    call->callType, call->callToken);
@@ -935,6 +959,9 @@ int ooH2250Receive(OOH323CallData *call)
    if(ret == OO_OK) {
       ooHandleH2250Message(call, pmsg);
    }
+
+   memFreePtr (pctxt, pmsgbuf);
+
    return ret;
 }
 
@@ -943,8 +970,8 @@ int ooH2250Receive(OOH323CallData *call)
 int ooH245Receive(OOH323CallData *call)
 {
    int  recvLen, ret, len, total=0;
-   ASN1OCTET message[MAXMSGLEN], message1[MAXMSGLEN];
-   ASN1BOOL aligned = TRUE;
+   ASN1OCTET msglenbuf[4];
+   ASN1OCTET* pmsgbuf;
    H245Message *pmsg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
    struct timeval timeout;
@@ -953,7 +980,8 @@ int ooH245Receive(OOH323CallData *call)
    pmsg = (H245Message*)memAlloc(pctxt, sizeof(H245Message));
 
    /* First read just TPKT header which is four bytes */
-   recvLen = ooSocketRecv (call->pH245Channel->sock, message, 4);
+   recvLen = ooSocketRecv (call->pH245Channel->sock, msglenbuf, 4);
+
    /* Since we are working with TCP, need to determine the
       message boundary. Has to be done at channel level, as channels
       know the message formats and can determine boundaries
@@ -969,13 +997,9 @@ int ooH245Receive(OOH323CallData *call)
 
       ooCloseH245Connection(call);
       ooFreeH245Message(call, pmsg);
-      if(call->callState < OO_CALL_CLEAR)
-      {
-         call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
+      return clearCall (call, OO_REASON_TRANSPORTFAILURE, 0);
    }
+
    if(call->h245SessionState == OO_H245SESSION_PAUSED)
    {
       ooLogicalChannel *temp;
@@ -1003,25 +1027,33 @@ int ooH245Receive(OOH323CallData *call)
       call->h245SessionState = OO_H245SESSION_IDLE;
       call->logicalChans = NULL;
    }
+
    OOTRACEDBGC1("Receiving H245 message\n");
+
    if(recvLen != 4)
    {
-      OOTRACEERR3("Error: Reading TPKT header for H245 message (%s, %s)\n",
+      OOTRACEERR3("ERROR: Reading TPKT header for H245 message (%s, %s)\n",
                   call->callType, call->callToken);
       ooFreeH245Message(call, pmsg);
-      if(call->callState < OO_CALL_CLEAR)
-      {
-         call->callEndReason = OO_REASON_INVALIDMESSAGE;
-         call->callState = OO_CALL_CLEAR;
-      }
-      return OO_FAILED;
+      return clearCall (call, OO_REASON_INVALIDMESSAGE, 0);
    }
 
-   len = message[2];
-   len = len<<8;
-   len = (len | message[3]);
+   len = msglenbuf[2];
+   len = len << 8;
+   len = (len | msglenbuf[3]);
    /* Remaining message length is length - tpkt length */
    len = len - 4;
+
+   OOTRACEDBGC2 ("H.245 message length is %d\n", len);
+
+   pmsgbuf = (ASN1OCTET*) memAlloc (pctxt, len);
+   if (0 == pmsgbuf) {
+      OOTRACEERR3 ("ERROR: Failed to allocate memory for incoming H.245 "
+                   "message (%s, %s)\n", call->callType, call->callToken);
+      memReset (&gH323ep.msgctxt);
+      return clearCall (call, OO_REASON_INVALIDMESSAGE, 0);
+   }
+
    /* Now read actual H245 message body. We should make sure that we
       receive complete message as indicated by len. If we don't then there
       is something wrong. The loop below receives message, then checks whether
@@ -1031,10 +1063,12 @@ int ooH245Receive(OOH323CallData *call)
    */
    while(total < len)
    {
-      recvLen = ooSocketRecv (call->pH245Channel->sock, message1, len-total);
-      memcpy(message+total, message1, recvLen);
-      total = total + recvLen;
+      recvLen = ooSocketRecv
+         (call->pH245Channel->sock, pmsgbuf + total, len - total);
+
+      total += recvLen;
       if(total == len) break; /* Complete message is received */
+
       FD_ZERO(&readfds);
       FD_SET(call->pH245Channel->sock, &readfds);
       timeout.tv_sec = 3;
@@ -1045,13 +1079,8 @@ int ooH245Receive(OOH323CallData *call)
       {
          OOTRACEERR3("Error in select...H245 Receive-Clearing call (%s, %s)\n",
                      call->callType, call->callToken);
-         ooFreeH245Message(call, pmsg);
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
+         ooFreeH245Message (call, pmsg);
+         return clearCall (call, OO_REASON_TRANSPORTFAILURE, 0);
       }
       /* If remaining part of the message is not received in 3 seconds
          exit */
@@ -1060,18 +1089,13 @@ int ooH245Receive(OOH323CallData *call)
          OOTRACEERR3("Error: Incomplete h245 message received (%s, %s)\n",
                      call->callType, call->callToken);
          ooFreeH245Message(call, pmsg);
-         if(call->callState < OO_CALL_CLEAR)
-         {
-            call->callEndReason = OO_REASON_TRANSPORTFAILURE;
-            call->callState = OO_CALL_CLEAR;
-         }
-         return OO_FAILED;
+         return clearCall (call, OO_REASON_TRANSPORTFAILURE, 0);
       }
    }
 
    OOTRACEDBGC3("Complete H245 message received (%s, %s)\n",
                  call->callType, call->callToken);
-   setPERBuffer(pctxt, message, recvLen, aligned);
+   setPERBuffer(pctxt, pmsgbuf, recvLen, TRUE);
    initializePrintHandler(&printHandler, "Received H.245 Message");
 
    /* Set event handler */
@@ -1087,7 +1111,10 @@ int ooH245Receive(OOH323CallData *call)
    }
    finishPrint();
    removeEventHandler(pctxt);
+   memFreePtr (pctxt, pmsgbuf);
+
    ooHandleH245Message(call, pmsg);
+
    return OO_OK;
 }
 
