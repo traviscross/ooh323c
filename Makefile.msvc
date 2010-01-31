@@ -92,8 +92,8 @@ $(LIBDIR)\$(OOH323C_DLL): $(LIBDIR) $(OOH323COBJS)
 
 $(OOH323COBJS): $(OOH323C_OBJDIR)
 	@echo -  Compiling stack library (release)
-	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(SRCDIR)/*.c 	
-	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(H323DIR)/*.c	
+	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(SRCDIR)/*.c 
+	$(CC) $(CFLAGS) /D "MAKE_DLL" /Fo$(OOH323C_OBJDIR)\ $(H323DIR)/*.c
 
 
 ### Build static library ###
