@@ -20,13 +20,14 @@
 #include "ooh323ep.h"
 #include "ooCalls.h"
 #include "ooCapability.h"
+#include "ooConfig.h"
 #include "ooStackCmds.h"
 #include "oosndrtp.h"
 #include "ooGkClient.h"
 #include "ooUtils.h"
 #include "ooLogChan.h"
 #include <ctype.h>
-#ifdef HAVE_PTHREAD_H
+#ifndef _WIN32
 #include <pthread.h>
 #endif
 
@@ -76,6 +77,8 @@ static char USAGE[]={
    "                         calls.(default-1720)\n"
    "--no-faststart         - Disable fast start(default - enabled)\n"
    "--no-tunneling         - Disable H245 Tunneling\n" 
+   "--config <filename>    - Read Asterisk h323.conf configuration file\n"
+   "--mediadll <path>      - Full path to media DLL or shared object file\n"
    "-t                     - Trace. Use multiple times to increase\n"
    "                         trace level\n"
    "--help                 - Prints this usage message\n"
@@ -93,7 +96,7 @@ static char CMD_USAGE[]={
    "\thelp              - Help\n"
 };
 
-int main(int argc, char ** argv)
+int main (int argc, char ** argv)
 {
    int ret=0, x;
    char h323id[50], e164[50], user[50], user_num[50], dest[256], tmp[40];
@@ -101,13 +104,16 @@ int main(int argc, char ** argv)
    OOBOOL bListen=FALSE, bDestFound=FALSE, bFastStart=TRUE, bTunneling=TRUE;
    OOH323CALLBACKS h323Callbacks;
    enum RasGatekeeperMode gkMode = RasNoGatekeeper;
+   const char* configFile = 0;
    char *gkIP=NULL, *pcPort=NULL;
    int gkPort=0;
 
 #ifdef _WIN32
    HANDLE threadHdl;
+   const char* mediadll = "../../lib/oomedia.dll";
 #else
    pthread_t threadHdl;
+   const char* mediadll = "liboomedia.so";
 #endif
 
 #ifdef _WIN32
@@ -196,16 +202,24 @@ int main(int argc, char ** argv)
          strncpy(ourip, argv[x], sizeof(ourip)-1);
          ourip[sizeof(ourip)-1]='\0';
       }
-      else if(!strcmp(argv[x],"--use-port")) {
+      else if(!strcmp(argv[x], "--use-port")) {
          x++;
          ourport = atoi(argv[x]);
+      }
+      else if(!strcmp(argv[x], "--config")) {
+         x++;
+         configFile = (const char*) argv[x];
+      }
+      else if(!strcmp(argv[x], "--mediadll")) {
+         x++;
+         mediadll = (const char*) argv[x];
       }
       else if(!bDestFound && !bListen) {
          strncpy(dest, argv[x], sizeof(dest)-1);
          bDestFound=TRUE;
       }
       else {
-              printf("USAGE:\n%s",USAGE);
+         printf ("USAGE:\n%s", USAGE);
          return -1;
       }
    }
@@ -215,6 +229,7 @@ int main(int argc, char ** argv)
       printf("USAGE:\n%s",USAGE);
       return -1;
    }
+
    /* Determine ourip if not specified by user */
    if(ooUtilsIsStrEmpty(ourip))
    {
@@ -229,7 +244,12 @@ int main(int argc, char ** argv)
       return -1;
    }
       
-          
+   /* If user specified local IP address as destination, convert to
+      real IP address */
+   if (!strcmp (dest, "127.0.0.1")) {
+      ooGetLocalIPAddress (dest);
+   }
+
    /* Initialize the H323 endpoint - faststart and tunneling enabled*/
    ret = ooH323EpInitialize(OO_CALLMODE_AUDIOCALL, "simple.log");
    if(ret != OO_OK)
@@ -238,7 +258,28 @@ int main(int argc, char ** argv)
       return -1;
    }
 
+   /* Read configuration file */
+   if (0 != configFile) {
+      OOConfigFile config;
+      ret = ooConfigInit (&config);
+      if (0 == ret) {
+         ret = ooConfigFileRead (configFile, &config);
+      }
+      if (0 == ret) {
+         /* ooConfigPrint (&config); */
 
+         /* Apply configuration to H.323 endpoint */
+         ooH323EpApplyConfig (&config);
+
+         ooConfigDestroy (&config);
+      }
+      else {
+         printf ("Configuration initialization failed; status = %d\n", ret);
+         return ret;
+      }
+   }
+
+   /* Command-line opts overrule config file settings */
    if(!bFastStart)
       ooH323EpDisableFastStart();
 
@@ -314,21 +355,12 @@ int main(int argc, char ** argv)
 
   
    /* Load media plug-in*/
-#ifdef _WIN32
-   ret = ooLoadSndRTPPlugin("oomedia.dll");
+   ret = ooLoadSndRTPPlugin ((char*)mediadll);
    if(ret != OO_OK)
    {
-      printf("Failed to load the media plug-in library - oomedia.dll\n");
-      exit(0);
+      printf ("Failed to load the media plug-in library - %s\n", mediadll);
+      exit (0);
    }
-#else
-   ret = ooLoadSndRTPPlugin("liboomedia.so");
-   if(ret != OO_OK)
-   {
-      printf("Failed to load the media plug-in library - liboomedia.so\n");
-      exit(0);
-   }
-#endif
 
    /* Print config */
    printf("Endpoint configuration:\n");

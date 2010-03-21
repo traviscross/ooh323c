@@ -204,7 +204,7 @@ void dListFindAndRemove(DList* pList, void* data);
 
 #define dListAllocNodeAndData(pctxt,type,ppnode,ppdata) do { \
 *ppnode = (DListNode*) \
-memAlloc (pctxt, sizeof(type)+DLISTNODESIZE); \
+memAllocZ (pctxt, sizeof(type)+DLISTNODESIZE); \
 if (0 != *ppnode) { \
 (*ppnode)->data = (void*)((char*)(*ppnode)+DLISTNODESIZE); \
 *ppdata = (type*)((*ppnode)->data); \

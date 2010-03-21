@@ -16,7 +16,6 @@
 #ifndef _G711_H_
 #define _G711_H_
 
-
 int linear2alaw(int pcm_val);
 
 int alaw2linear(int a_val);
@@ -24,15 +23,5 @@ int alaw2linear(int a_val);
 int linear2ulaw( int pcm_val);
 
 int ulaw2linear( int u_val);
-
-#if 0
-
-/* A-law to u-law conversion */
-static int alaw2ulaw (int aval);
-
-static int ulaw2alaw (int uval);
-
-#endif
-
 
 #endif

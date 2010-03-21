@@ -15,6 +15,8 @@
  *****************************************************************************/
 
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "ooUtils.h"
 #include "ooCommon.h"
 
@@ -42,7 +44,8 @@ OOBOOL ooIsDialedDigit (const char* str)
 }
 
 OOINT32 lookupEnum
-(const char* strValue, size_t strValueSize, const OOEnumItem enumTable[], OOUINT16 enumTableSize)
+(const char* strValue, size_t strValueSize,
+ const OOEnumItem enumTable[], OOUINT16 enumTableSize)
 {
    size_t lower = 0;
    size_t upper = enumTableSize - 1;
@@ -77,3 +80,25 @@ OOINT32 lookupEnum
 
    return ASN_E_INVENUM;
 }
+
+int ooUtilsTextToBool (const char* str, OOBOOL* pbool)
+{
+   if (0 == pbool) return OO_FAILED;
+
+   if (!strcasecmp (str, "true") ||
+       !strcasecmp (str, "yes")  ||
+       !strcasecmp (str, "1")) {
+      *pbool = TRUE;
+      return OO_OK;
+   }
+   else if (!strcasecmp (str, "false") ||
+            !strcasecmp (str, "no")  ||
+            !strcasecmp (str, "0")) {
+      *pbool = FALSE;
+      return OO_OK;
+   }
+   else {
+      return OO_FAILED;
+   }
+}
+

@@ -683,7 +683,7 @@ ASN1UINT ooGenerateStatusDeterminationNumber()
    srand((tv.tv_usec ^ tv.tv_sec) + random_factor );
 #endif
 
-   statusDeterminationNumber = rand()%16777215;
+   statusDeterminationNumber = rand()%16777216;
    return statusDeterminationNumber;
 }
 /* TODO: Should Send MasterSlave Release when no response from
@@ -696,6 +696,7 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
    H245MasterSlaveDetermination *masterSlave;
    H245MasterSlaveDeterminationAck *masterSlaveAck;
    ASN1UINT statusDeterminationNumber;
+   ASN1UINT diff;
 
    switch(msgType)
    {
@@ -732,31 +733,29 @@ int ooHandleMasterSlave(OOH323CallData *call, void * pmsg,
          else
             statusDeterminationNumber = ooGenerateStatusDeterminationNumber();
 
-         if(masterSlave->statusDeterminationNumber <
-                       statusDeterminationNumber)
-         {
-            ooSendMasterSlaveDeterminationAck(call, "slave");
-            call->masterSlaveState =  OO_MasterSlave_Master;
-            OOTRACEINFO3("MasterSlaveDetermination done - Master(%s, %s)\n",
-                             call->callType, call->callToken);
-            return OO_OK;
-         }
-         if(masterSlave->statusDeterminationNumber >
-                         statusDeterminationNumber)
-         {
-            ooSendMasterSlaveDeterminationAck(call, "master");
-            call->masterSlaveState =  OO_MasterSlave_Slave;
-            OOTRACEINFO3("MasterSlaveDetermination done - Slave(%s, %s)\n",
-                             call->callType, call->callToken);
-            return OO_OK;
-         }
-         if(masterSlave->statusDeterminationNumber ==
-                         statusDeterminationNumber)
+         diff = (masterSlave->statusDeterminationNumber -
+                 statusDeterminationNumber) & 0xFFFFFFu;
+
+         if (diff == 0 || diff == 0x800000u)
          {
             ooSendMasterSlaveDeterminationReject (call);
 
             OOTRACEERR3("ERROR:MasterSlaveDetermination failed- identical "
                         "numbers (%s, %s)\n", call->callType, call->callToken);
+         }
+         else if(diff < 0x800000u)
+         {
+            ooSendMasterSlaveDeterminationAck(call, "slave");
+            call->masterSlaveState =  OO_MasterSlave_Master;
+            OOTRACEINFO3("MasterSlaveDetermination done - Master(%s, %s)\n",
+                             call->callType, call->callToken);
+         }
+         else
+         {
+            ooSendMasterSlaveDeterminationAck(call, "master");
+            call->masterSlaveState =  OO_MasterSlave_Slave;
+            OOTRACEINFO3("MasterSlaveDetermination done - Slave(%s, %s)\n",
+                             call->callType, call->callToken);
          }
          break;
 

@@ -9,6 +9,7 @@ memheap$(OBJ) \
 ooCalls$(OBJ) \
 ooCapability$(OBJ) \
 ooCmdChannel$(OBJ) \
+ooConfig$(OBJ) \
 ooDateTime$(OBJ) \
 ooGkClient$(OBJ) \
 ooLogChan$(OBJ) \

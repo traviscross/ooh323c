@@ -2,7 +2,7 @@
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
-         <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-                $date.<BR> $projectname, $projectnumber </FONT></CENTER></td>
+  <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
+    $date.<BR> $projectname, $projectnumber </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

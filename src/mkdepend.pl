@@ -25,7 +25,7 @@ close (OUTFILE);
 sub procObjectsFile {
     local $srcdir = shift;
     local $objects_fname = "$srcdir/objects.mk";
-    open (INFILE, $objects_fname) || die ("could not open $fname: $!");
+    open (INFILE, $objects_fname) || die ("could not open $objects_fname: $!");
 
     while (<INFILE>) {
         if (/([\w\-]+)\$\(OBJ\)/) {

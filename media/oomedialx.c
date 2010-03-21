@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 by Objective Systems, Inc.
+ * Copyright (C) 2004-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -14,7 +14,7 @@
  *
  *****************************************************************************/
 
-
+#ifndef _WIN32
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -43,7 +43,6 @@ int ooOpenAudioDevice()
    /*   ioctl(context->ooSoundDevice, SOUND_PCM_WRITE_BITS, &sampleSize);*/
    ioctl(ghSoundDevice, SOUND_PCM_READ_CHANNELS, &numChannels);
    ioctl(ghSoundDevice, SOUND_PCM_READ_RATE, &rate);
-
    /*   ioctl(context->ooSoundDevice, FIONBIO, &on);*/
    OOLOG5(1, "Sampe size %d bits, channels %d, rate %d",
           sampleSize, numChannels, rate);
@@ -97,4 +96,4 @@ int ooCloseWaveFile()
    return ret;
 }
 
-
+#endif

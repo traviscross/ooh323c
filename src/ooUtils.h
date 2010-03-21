@@ -41,7 +41,6 @@ EXTERN const char* ooUtilsGetText
  */
 EXTERN OOBOOL ooUtilsIsStrEmpty (const char * str);
 
-
 /**
  * Test if given string value is digit string.
  *
@@ -49,5 +48,18 @@ EXTERN OOBOOL ooUtilsIsStrEmpty (const char * str);
  * @return       TRUE if string contains all digits; FALSE otherwise
  */
 EXTERN OOBOOL ooIsDialedDigit (const char* str);
+
+/**
+ * This function converts a text string to a boolean value.  The values
+ * "true", "yes", and "1" are interpreted to be true and "false", "no",
+ * and "0" to be false.  The string comparsion is case-insensitive,
+ * therefore TRUE, trUe, etc. will all be interpreted to be true.
+ *
+ * @param str    String value to test.
+ * @param pbool  Pointer to boolean result value.
+ * @return       OO_OK (0) if boolean value could be determined; OO_FAILED
+ *                 if invalid text was provided.
+ */
+EXTERN int ooUtilsTextToBool (const char* str, OOBOOL* pbool);
 
 #endif

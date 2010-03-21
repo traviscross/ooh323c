@@ -65,6 +65,7 @@ extern "C" {
 typedef unsigned __int64 OOSOCKET; /**< Socket's handle */
 #elif defined (_WIN32)
 typedef unsigned int OOSOCKET; /**< Socket's handle */
+typedef int socklen_t;
 #else
 typedef int OOSOCKET;          /**< Socket's handle */
 #endif
@@ -368,10 +369,8 @@ EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
  */
 EXTERN int ooGetLocalIPAddress(char * pIPAddrs);
 
-
-EXTERN int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name,
-                                                      int *size);
-
+EXTERN int ooSocketGetSockName
+(OOSOCKET socket, struct sockaddr_in *name, socklen_t* size);
 
 EXTERN long ooSocketHTONL(long val);
 

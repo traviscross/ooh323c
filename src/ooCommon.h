@@ -128,7 +128,12 @@ typedef struct OOEnumItem {
 #endif /* EXTERN */
 
 EXTERN OOINT32 lookupEnum
-(const char* strValue, size_t strValueSize, const OOEnumItem enumTable[], OOUINT16 enumTableSize);
+(const char* strValue, size_t strValueSize, const OOEnumItem enumTable[],
+ OOUINT16 enumTableSize);
+
+#if defined(_WIN32) || defined(_WIN64)
+#define strcasecmp _stricmp
+#endif
 
 /**
  * @}

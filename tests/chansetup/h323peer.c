@@ -27,8 +27,6 @@
 #include <process.h>
 #define getpid _getpid
 #endif
-/* TEMPORARY!!! */
-ASN1OCTET* g_H225Message;
 
 /** Global endpoint structure */
 extern ooEndPoint gH323ep;
@@ -47,6 +45,12 @@ static int callIntervalTimerExpired(void *pdata);
 
 static int readFile
 (const char* filePath, unsigned char** ppMsgBuf, size_t* pLength);
+
+int ooGenerateOutgoingCallToken (char *callToken, size_t size);
+
+int ooParseDestination
+   (struct OOH323CallData *call, char *dest, char* parsedIP, unsigned len,
+    ooAliases** aliasList);
 
 static char USAGE[]={
    "Listen to incoming calls\n"
@@ -108,6 +112,7 @@ int main (int argc, char** argv)
    const char* filename = 0;
    int offset = 0;
    int cmdPort = 0;
+   int stat = 0;
 #ifdef _WIN32
    ooSocketsInit (); /* Initialize the windows socket api  */
 #endif
@@ -376,7 +381,9 @@ int main (int argc, char** argv)
    {
       if (0 != filename) {
          /* Send canned Q.931 message from file */
+         OOH323CallData* call;
          unsigned char* msgbuf;
+         char     tmp[30];
          size_t   msglen;
          int      stat;
 
@@ -385,26 +392,51 @@ int main (int argc, char** argv)
             printf ("Read file %s failed.\n", filename);
             return stat;
          }
+         ooGenerateOutgoingCallToken (callToken, sizeof(callToken));
 
-         g_H225Message = &msgbuf[offset];
+         call = ooCreateCall ("outgoing", callToken);
+
+         tmp[0] = '\0';
+         ooParseDestination (call, gDest, tmp, 30, &call->remoteAliases);
+
+         if (!ooUtilsIsStrEmpty(tmp)) {
+            char* ip = tmp;
+            char* port = strchr(tmp, ':');
+            *port = '\0'; port++;
+            strcpy(call->remoteIP, ip);
+            call->remotePort = atoi(port);
+         }
+
+         stat = ooCreateH225Connection (call);
+         if (0 != stat) {
+            printf ("ooCreateH225Connection failed, stat = %d.\n", stat);
+            return stat;
+         }
+
+         stat = ooSocketSend (call->pH225Channel->sock, msgbuf, msglen);
+         if (0 != stat) {
+            printf ("ooSocketSend failed, stat = %d.\n", stat);
+         }
       }
       else {
-         g_H225Message = 0;
-      }
-
-      /* Make call */
-      ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
-      gCallCounter++;
-      if (gInterval != 0) {
-         if( (token = (char * )malloc( strlen( callToken) + 1)) == NULL ) {
-            printf("malloc failed\n");
-            return 1;
+         /* Make call */
+         stat = ooMakeCall (gDest, callToken, sizeof(callToken), NULL);
+         if (0 != stat) {
+            printf ("ooMakeCall failed; status = %d\n", stat);
+            return stat;
          }
-         strcpy(token, callToken);
+         gCallCounter++;
+         if (gInterval != 0) {
+            if( (token = (char * )malloc( strlen( callToken) + 1)) == NULL ) {
+               printf("malloc failed\n");
+               return 1;
+            }
+            strcpy(token, callToken);
 
-         pTimer = ooTimerCreate
-            (&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
-             token, FALSE);
+            pTimer = ooTimerCreate
+               (&gH323ep.ctxt, NULL, callIntervalTimerExpired, gInterval,
+                token, FALSE);
+         }
       }
    }
 

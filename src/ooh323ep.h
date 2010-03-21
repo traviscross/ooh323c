@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2009 by Objective Systems, Inc.
+ * Copyright (C) 2004-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -21,6 +21,7 @@
 #define OO_H323EP_H_
 #include "ooCapability.h"
 #include "ooCalls.h"
+#include "ooConfig.h"
 #include "ooGkClient.h"
 #include "ooports.h"
 #include "ooq931.h"
@@ -64,9 +65,6 @@ struct OOCapPrefs;
 #define UDPPORTSEND   13230  /*!< Ending UDP port number   */
 #define RTPPORTSSTART 14030  /*!< Starting RTP port number */
 #define RTPPORTSEND   14230  /*!< Ending RTP port number   */
-
-
-
 
 /**
  * This structure is used to define the port ranges to be used
@@ -149,7 +147,14 @@ typedef struct OOH323EndPoint {
    OOBOOL isGateway;
    OOSOCKET cmdListener;
    OOSOCKET cmdSock;
-  int cmdPort; /* default 7575 */
+   int cmdPort; /* default 7575 */
+
+   /**
+    * Configured Q.931 transport capability is used to set the Q.931
+    * bearer capability IE.
+    */
+   enum Q931InformationTransferCapability bearercap;
+
 } OOH323EndPoint;
 
 #define ooEndPoint OOH323EndPoint
@@ -166,7 +171,14 @@ typedef struct OOH323EndPoint {
 EXTERN int ooH323EpInitialize
    (enum OOCallMode callMode, const char* tracefile);
 
-
+/**
+ * This function applies configuration parameters to the global H.323
+ * endpoint variable.
+ *
+ * @param config        Pointer to configuration structure.
+ * @return              OO_OK (0) on success or OO_FAILED on failure
+ */
+EXTERN int ooH323EpApplyConfig (const OOConfigFile* pconfig);
 
 /**
  * This function is used to create a command listener for the endpoint.
@@ -638,6 +650,18 @@ EXTERN int ooH323EpDisableDTMFH245Signal();
  * @return                       OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooH323EpSetGkClientCallbacks(OOGKCLIENTCALLBACKS gkClientCallbacks);
+
+/**
+ * This function is used to set the bearer capability that will be used
+ * to create the Q.931 bearer capability IE.
+ *
+ * @param configText             Configuration text value.  Currently, the
+ *                               only two supported values are
+ *                               'unrestricted_digital' and 'speech'.
+ *
+ * @return                       OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpSetBearerCap (const char* configText);
 
 /**
  * @}

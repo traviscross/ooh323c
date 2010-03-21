@@ -1,0 +1,423 @@
+H4501-Supplementary-ServiceAPDU-Structure
+{
+   itu-t recommendation h 450 1 version1(0) h4501-facility-information-structure(2)
+}
+
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+   IMPORTS AliasAddress FROM H323-MESSAGES -- see H.225.0 V2
+   OPERATION, ROS{}, InvokeId FROM Remote-Operations-Apdus
+   {
+      itu-t recommendation h 450 1 version1(0) remote-operations-apdus(11)
+   };
+
+   H4501SupplementaryService ::= SEQUENCE
+   {
+      networkFacilityExtension NetworkFacilityExtension OPTIONAL, -- see 8.1
+      interpretationApdu InterpretationApdu OPTIONAL, -- see 8.2
+      serviceApdu ServiceApdus, -- H.450.x supplementary services
+      ...
+   }
+
+   NetworkFacilityExtension ::= SEQUENCE
+   {
+      sourceEntity EntityType,
+      sourceEntityAddress AddressInformation OPTIONAL,
+      destinationEntity EntityType,
+      destinationEntityAddress AddressInformation OPTIONAL,
+      ...
+   }
+
+   EntityType ::= CHOICE
+   {
+      endpoint NULL,
+      anyEntity NULL,
+      ...
+   }
+
+   AddressInformation ::= AliasAddress
+
+   InterpretationApdu ::= CHOICE
+   {
+      discardAnyUnrecognizedInvokePdu NULL,
+      clearCallIfAnyInvokePduNotRecognized NULL,
+      -- this value also applies to Call independent signalling connections
+      rejectAnyUnrecognizedInvokePdu NULL,
+      -- this coding is implied by the absence of an interpretation APDU.
+      ...
+   }
+
+   ServiceApdus ::= CHOICE
+   {
+      rosApdus SEQUENCE SIZE (1..MAX) OF ROS{{InvokeIdSet}, {OperationSet}, {OperationSet}},
+      -- see 8.3; other alternatives may be defined in future versions
+      ...
+   }
+
+   InvokeIdSet INTEGER ::=
+   {
+      InvokeIDs,
+      ...
+   }
+
+   InvokeIDs ::= INTEGER (0..65535)
+
+   OperationSet OPERATION ::=
+   {
+      ...
+   }
+   -- actual values are defined by individual supplementary service specifications
+   -- (e.g. H.450.x or manufacturer specific)
+
+END -- of H4501- Supplementary-ServiceAPDU-Structure
+
+Remote-Operations-Apdus
+{
+   itu-t recommendation h 450 1 version1(0) remote-operations-apdus(11)
+}
+
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+   -- exports everything
+   IMPORTS OPERATION, ERROR FROM Remote-Operations-Information-Objects
+   {
+      joint-iso-itu-t remote-operations(4) informationObjects(5) version1(0)
+   };
+
+   ROS {InvokeId:InvokeIdSet, OPERATION:Invokable, OPERATION:Returnable} ::= CHOICE
+   {
+      invoke [1] Invoke {{InvokeIdSet}, {Invokable}},
+      returnResult [2] ReturnResult {{Returnable}},
+      returnError [3] ReturnError {{Errors{{Returnable}}}},
+      reject [4] Reject
+   }
+   (CONSTRAINED BY { -- must conform to the above definition -- }
+   ! RejectProblem : general-unrecognizedPDU)
+
+   Invoke {InvokeId:InvokeIdSet, OPERATION:Operations} ::= SEQUENCE
+   {
+      invokeId InvokeId (InvokeIdSet)
+      (CONSTRAINED BY {-- must be unambiguous --}
+      ! RejectProblem : invoke-duplicateInvocation),
+      linkedId InvokeId
+      (CONSTRAINED BY {-- must identify an outstanding operation -- }
+      ! RejectProblem : invoke-unrecognizedLinkedId)
+      (CONSTRAINED BY {-- which has one or more linked operations-- }
+      ! RejectProblem : invoke-linkedResponseUnexpected)
+      OPTIONAL,
+      opcode OPERATION.&operationCode
+      ({Operations}
+      ! RejectProblem : invoke-unrecognizedOperation),
+      argument OPERATION.&ArgumentType
+      ({Operations} {@opcode}
+      ! RejectProblem : invoke-mistypedArgument)
+      OPTIONAL
+   }
+   (CONSTRAINED BY { -- must conform to the above definition -- }
+   ! RejectProblem : general-mistypedPDU)
+   (
+      WITH COMPONENTS
+      {
+         ...,
+         linkedId ABSENT
+      }
+      |
+      WITH COMPONENTS
+      {
+         ...,
+         linkedId PRESENT,
+         opcode
+         (CONSTRAINED BY {-- must be in the &Linked field of the associated operation -- }
+         ! RejectProblem : invoke-unexpectedLinkedOperation)
+      }
+   )
+
+   ReturnResult {OPERATION:Operations}::= SEQUENCE
+   {
+      invokeId InvokeId
+      (CONSTRAINED BY {-- must be that for an outstanding operation -- }
+      ! RejectProblem : returnResult-unrecognizedInvocation)
+      (CONSTRAINED BY {-- which returns a result --}
+      ! RejectProblem : returnResult-resultResponseUnexpected),
+      result SEQUENCE
+      {
+         opcode OPERATION.&operationCode
+         ({Operations})(CONSTRAINED BY {-- identified by invokeId --}
+         ! RejectProblem : returnResult-unrecognizedInvocation),
+         result OPERATION.&ResultType
+         ({Operations} {@.opcode}
+         ! RejectProblem : returnResult-mistypedResult)
+      }
+      OPTIONAL
+   }
+   (CONSTRAINED BY { -- must conform to the above definition -- }
+   ! RejectProblem : general-mistypedPDU)
+   ReturnError {ERROR:Errors} ::= SEQUENCE
+   {
+      invokeId InvokeId
+      (CONSTRAINED BY {-- must be that for an outstanding operation -- }
+      ! RejectProblem : returnError-unrecognizedInvocation)
+      (CONSTRAINED BY {-- which returns an error --}
+      ! RejectProblem : returnError-errorResponseUnexpected),
+      errcode ERROR.&errorCode
+      ({Errors}
+      ! RejectProblem : returnError-unrecognizedError)
+      (CONSTRAINED BY
+      {--must be in the &Errors field of the associated operation --}
+      ! RejectProblem : returnError-unexpectedError),
+      parameter ERROR.&ParameterType
+      ({Errors}{@errcode}
+      ! RejectProblem : returnError-mistypedParameter) OPTIONAL
+   }
+   (CONSTRAINED BY { -- must conform to the above definition -- }
+   ! RejectProblem : general-mistypedPDU)
+   Reject ::= SEQUENCE
+   {
+      invokeId InvokeId,
+      problem CHOICE
+      {
+         general GeneralProblem,
+         invoke InvokeProblem,
+         returnResult ReturnResultProblem,
+         returnError ReturnErrorProblem
+      }
+   }
+   (CONSTRAINED BY { -- must conform to the above definition -- }
+   ! RejectProblem : general-mistypedPDU)
+   GeneralProblem ::= INTEGER
+
+   {
+      unrecognizedComponent (0),
+      mistypedComponent (1),
+      badlyStructuredComponent (2)
+   }
+   InvokeProblem ::= INTEGER
+   {
+      duplicateInvocation (0),
+      unrecognizedOperation (1),
+      mistypedArgument (2),
+      resourceLimitation (3),
+      releaseInProgress (4),
+      unrecognizedLinkedId (5),
+      linkedResponseUnexpected (6),
+      unexpectedLinkedOperation (7)
+   }
+   ReturnResultProblem ::= INTEGER
+   {
+      unrecognizedInvocation (0),
+      resultResponseUnexpected (1),
+      mistypedResult (2)
+   }
+   ReturnErrorProblem ::= INTEGER
+   {
+      unrecognizedInvocation (0),
+      errorResponseUnexpected (1),
+      unrecognizedError (2),
+      unexpectedError (3),
+      mistypedParameter (4)
+   }
+   RejectProblem ::= INTEGER
+   {
+      general-unrecognizedPDU (0),
+      general-mistypedPDU (1),
+      general-badlyStructuredPDU (2),
+      invoke-duplicateInvocation (10),
+      invoke-unrecognizedOperation (11),
+      invoke-mistypedArgument (12),
+      invoke-resourceLimitation (13),
+      invoke-releaseInProgress (14),
+      invoke-unrecognizedLinkedId (15),
+      invoke-linkedResponseUnexpected (16),
+      invoke-unexpectedLinkedOperation (17),
+      returnResult-unrecognizedInvocation (20),
+      returnResult-resultResponseUnexpected (21),
+      returnResult-mistypedResult (22),
+      returnError-unrecognizedInvocation (30),
+      returnError-errorResponseUnexpected (31),
+      returnError-unrecognizedError (32),
+      returnError-unexpectedError (33),
+      returnError-mistypedParameter (34)
+   }
+   InvokeId ::= INTEGER
+   Errors {OPERATION:Operations} ERROR ::= {Operations.&Errors}
+
+END -- end of Remote-Operations-Apdus definitions
+
+Addressing-Data-Elements
+{
+   itu-t recommendation h 450 1 version1(0) addressing-data-elements(9)
+}
+
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+   IMPORTS AliasAddress, PartyNumber FROM H323-MESSAGES; -- see H.225.0
+
+   PresentedAddressScreened ::= CHOICE
+   {
+      presentationAllowedAddress AddressScreened,
+      presentationRestricted NULL,
+      numberNotAvailableDueToInterworking NULL,
+      presentationRestrictedAddress AddressScreened,
+      ...
+   }
+
+   PresentedAddressUnscreened ::= CHOICE
+   {
+      presentationAllowedAddress Address,
+      presentationRestricted NULL,
+      numberNotAvailableDueToInterworking NULL,
+      presentationRestrictedAddress Address,
+      ...
+   }
+
+   PresentedNumberScreened ::= CHOICE
+   {
+      presentationAllowedAddress NumberScreened,
+      presentationRestricted NULL,
+      numberNotAvailableDueToInterworking NULL,
+      presentationRestrictedAddress NumberScreened,
+      ...
+   }
+
+   PresentedNumberUnscreened ::= CHOICE
+   {
+      presentationAllowedAddress PartyNumber,
+      presentationRestricted NULL,
+      numberNotAvailableDueToInterworking NULL,
+      presentationRestrictedAddress PartyNumber,
+      ...
+   }
+
+   AddressScreened ::= SEQUENCE
+   {
+      partyNumber PartyNumber,
+      screeningIndicator ScreeningIndicator,
+      partySubaddress PartySubaddress OPTIONAL,
+      ...
+   }
+
+   NumberScreened ::= SEQUENCE
+   {
+      partyNumber PartyNumber,
+      screeningIndicator ScreeningIndicator,
+      ...
+   }
+
+   Address ::= SEQUENCE
+   {
+      partyNumber PartyNumber,
+      partySubaddress PartySubaddress OPTIONAL,
+      ...
+   }
+
+   -- PartyNumber defined in Recommendation H.225.0
+   -- PublicPartyNumber defined in Recommendation H.225.0
+   -- PrivatePartyNumber defined in Recommendation H.225.0
+   -- NumberDigits defined in Recommendation H.225.0
+   -- PublicTypeOfNumber defined in Recommendation H.225.0
+   -- PrivateTypeOfNumber defined in Recommendation H.225.0
+
+   EndpointAddress ::= SEQUENCE
+   {
+      destinationAddress SEQUENCE OF AliasAddress,
+      -- multiple alias addresses may be used to address the same H.323 endpoint
+      remoteExtensionAddress AliasAddress OPTIONAL,
+      ...
+   }
+
+   PartySubaddress ::= CHOICE
+   {
+      userSpecifiedSubaddress UserSpecifiedSubaddress,
+      -- not recommended.
+      nsapSubaddress NSAPSubaddress,
+      -- according to Recommendation X.213.
+      ...
+   }
+
+   UserSpecifiedSubaddress ::= SEQUENCE
+   {
+      subaddressInformation SubaddressInformation,
+      oddCountIndicator BOOLEAN OPTIONAL,
+      -- used when the coding of subaddress is BCD
+      ...
+   }
+
+   NSAPSubaddress ::= OCTET STRING (SIZE(1..20))
+   -- specified according to X.213. Some networks may
+   -- limit the subaddress value to some other length
+   -- e.g. 4 octets
+
+   SubaddressInformation ::= OCTET STRING (SIZE(1..20))
+   -- coded according to user requirements. Some networks
+   -- may limit the subaddress value to some other length
+   -- e.g. 4 octets
+
+   ScreeningIndicator ::= ENUMERATED
+   {
+      userProvidedNotScreened (0),
+      -- number was provided by a remote user
+      -- , and has not been screened by a gatekeeper
+      userProvidedVerifiedAndPassed (1),
+      -- number was provided by a user
+      -- equipment (or by a remote network), and has
+      -- been screened by a gatekeeper
+      userProvidedVerifiedAndFailed (2),
+      -- not used, value reserved.
+      networkProvided (3),
+      -- number was provided by a gatekeeper
+      ...
+   }
+
+   PresentationAllowedIndicator ::= BOOLEAN
+
+END -- of Addressing-Data-Elements
+
+H225-generic-parameters-definition
+{
+   itu-t recommendation h 450 1 version1(0) h225-generic-parameters(6)
+}
+
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+   H225InformationElement ::= OCTET STRING
+
+END -- of H225 Generic parameters definition
+
+Manufacturer-specific-service-extension-definition
+{
+   itu-t recommendation h 450 1 version1(0) msi-definition (18)
+}
+
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+   EXTENSION ::= CLASS
+   {
+      &ArgumentType,
+      &extensionId OBJECT IDENTIFIER
+   }
+   WITH SYNTAX
+   {
+      ARGUMENT &ArgumentType
+      IDENTIFIER &extensionId
+   }
+
+   Extension {EXTENSION:ExtensionSet} ::= SEQUENCE
+   {
+      extensionId EXTENSION.&extensionId
+      ({ExtensionSet}),
+      extensionArgument EXTENSION.&ArgumentType
+      ({ExtensionSet}{@extensionId})
+   }
+
+   -- ExtensionSet is a set of objects of class EXTENSION.
+   -- Actual values of ExtensionSet are defined by the individual manufacturers.
+   -- Element extensionId is constrained to be the identifier of an object from that set.
+   -- Element extensionArgument is constrained to be the argument type for that particular
+   -- object.
+
+END -- of Manufacturer-specific-service-extension-definition
+

@@ -43,4 +43,3 @@ int osEpOnIncomingCall (struct OOH323CallData* call );
 int osEpOnAlerting (struct OOH323CallData* call );
 
 #endif
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2009 by Objective Systems, Inc.
+ * Copyright (C) 1997-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -35,8 +35,6 @@ static LPFN_NTOHL ntohl;
 static LPFN_NTOHS ntohs;
 static LPFN_RECV recv;
 static LPFN_SHUTDOWN shutdown;
-
-
 static LPFN_IOCTLSOCKET ioctlsocket;
 static LPFN_SENDTO sendto;
 static LPFN_INET_NTOA inet_ntoa;
@@ -55,10 +53,6 @@ static HMODULE ws32 = 0;
 #define SEND_FLAGS     0
 #define SHUTDOWN_FLAGS SHUT_RDWR
 #define closesocket close
-#endif
-
-#if defined (_WIN32)
-typedef int socklen_t;
 #endif
 
 int ooSocketsInit ()
@@ -281,30 +275,35 @@ int ooSocketBind (OOSOCKET socket, OOIPADDR addr, int port)
 }
 
 
-int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name, int *size)
+int ooSocketGetSockName
+(OOSOCKET socket, struct sockaddr_in *name, socklen_t* size)
 {
    int ret;
-   socklen_t addrlen;
-   ret = getsockname(socket, (struct sockaddr*)name, &addrlen);
-   if(ret == 0) {
-      if (0 != size) *size = (int)addrlen;
+   ret = getsockname(socket, (struct sockaddr*)name, size);
+   if (ret == 0) {
       return ASN_OK;
    }
-   else{
-      OOTRACEERR1("Error:ooSocketGetSockName - getsockname\n");
+   else {
+#if defined (_WIN32)
+      int winLastError = WSAGetLastError();
+      OOTRACEERR1 ("Error: ooSocketGetSockName - getsockname\n");
+      OOTRACEERR2 ("Windows last error code = %d\n", winLastError);
+#else
+      perror ("getsockname");
+      OOTRACEERR1 ("Error: ooSocketGetSockName - getsockname\n");
+#endif
+
       return ASN_E_INVSOCKET;
    }
 }
 
 int ooSocketGetIpAndPort(OOSOCKET socket, char *ip, int len, int *port)
 {
-   int ret=ASN_OK, size;
    struct sockaddr_in addr;
+   socklen_t size = sizeof(addr);
    char *host=NULL;
 
-   size = sizeof(addr);
-
-   ret = ooSocketGetSockName(socket, &addr, &size);
+   int ret = ooSocketGetSockName(socket, &addr, &size);
    if(ret != 0)
       return ASN_E_INVSOCKET;
 

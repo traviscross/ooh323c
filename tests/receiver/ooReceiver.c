@@ -134,7 +134,7 @@ int main(int argc, char ** argv)
 
    /* Load media plug-in*/
 #ifdef _WIN32
-   ret = ooLoadSndRTPPlugin("oomedia.dll");
+   ret = ooLoadSndRTPPlugin ("../../lib/oomedia.dll");
    if(ret != OO_OK)
    {
       printf("\n Failed to load the media plug-in library - oomedia.dll\n");

@@ -1636,13 +1636,21 @@ int ooAcceptCall(OOH323CallData *call)
    q931msg->callReference = call->callReference;
 
    /* Set bearer capability */
-   if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
-                       Q931TransferUnrestrictedDigital, Q931TransferPacketMode,
-                       Q931TransferRatePacketMode, Q931UserInfoLayer1G722G725))
-     //                          Q931TransferSpeech, Q931TransferCircuitMode,
-     //                   Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
-   {
-      OOTRACEERR3("Error: Failed to set bearer capability ie. (%s, %s)\n",
+
+   if (gH323ep.bearercap == Q931TransferUnrestrictedDigital) {
+      ret = ooSetBearerCapabilityIE
+         (q931msg, Q931CCITTStd, Q931TransferUnrestrictedDigital,
+          Q931TransferPacketMode, Q931TransferPacketMode,
+          Q931UserInfoLayer1G722G725);
+   }
+   else {
+      ret = ooSetBearerCapabilityIE
+         (q931msg, Q931CCITTStd, Q931TransferSpeech, Q931TransferCircuitMode,
+          Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw);
+   }
+
+   if (ret != OO_OK) {
+      OOTRACEERR3 ("ERROR: Failed to set bearer capability IE. (%s, %s)\n",
                    call->callType, call->callToken);
       return OO_FAILED;
    }
@@ -2047,12 +2055,21 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    q931msg->callReference = call->callReference;
 
    /* Set bearer capability */
-   if(OO_OK != ooSetBearerCapabilityIE(q931msg, Q931CCITTStd,
-                          Q931TransferUnrestrictedDigital, Q931TransferPacketMode,
-                          Q931TransferRatePacketMode, Q931UserInfoLayer1G722G725))
-//                        Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw))
-   {
-      OOTRACEERR3("Error: Failed to set bearer capability ie.(%s, %s)\n",
+
+   if (gH323ep.bearercap == Q931TransferUnrestrictedDigital) {
+      ret = ooSetBearerCapabilityIE
+         (q931msg, Q931CCITTStd, Q931TransferUnrestrictedDigital,
+          Q931TransferPacketMode, Q931TransferPacketMode,
+          Q931UserInfoLayer1G722G725);
+   }
+   else {
+      ret = ooSetBearerCapabilityIE
+         (q931msg, Q931CCITTStd, Q931TransferSpeech, Q931TransferCircuitMode,
+          Q931TransferRate64Kbps, Q931UserInfoLayer1G711ULaw);
+   }
+
+   if (ret != OO_OK) {
+      OOTRACEERR3 ("ERROR: Failed to set bearer capability IE. (%s, %s)\n",
                    call->callType, call->callToken);
       return OO_FAILED;
    }

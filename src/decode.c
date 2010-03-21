@@ -550,8 +550,8 @@ int decodeDynOctetString (OOCTXT* pctxt, ASN1DynOctStr* pOctStr)
 
       if (nocts < 0) return LOG_ASN1ERR (pctxt, nocts);
       else if (nocts == 0) {
-         pOctStr->numocts = 0;
-         pOctStr->data = 0;
+        pOctStr->numocts = 0;
+        pOctStr->data = 0;
       }
       else {
         /* Allocate memory for the target string */

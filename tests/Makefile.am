@@ -1,3 +1,0 @@
-AUTOMAKE_OPTIONS = gnu
-
-SUBDIRS = . chansetup @OOTESTSDIRS@

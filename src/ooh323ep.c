@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2009 by Objective Systems, Inc.
+ * Copyright (C) 2004-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -13,6 +13,8 @@
  * maintain this copyright notice.
  *
  *****************************************************************************/
+
+#include <string.h>
 #include "ooh323ep.h"
 #include "ootrace.h"
 #include "ooCalls.h"
@@ -20,35 +22,44 @@
 #include "ooGkClient.h"
 #include "ooStackCmds.h"
 #include "ooCmdChannel.h"
+#include "ooUtils.h"
+
 /** Global endpoint structure */
 ooEndPoint gH323ep;
-
 
 extern int gCmdPort;
 extern char gCmdIP[20];
 extern DList g_TimerList;
 
+static int setTraceFilename (const char* tracefile)
+{
+   if (!ooUtilsIsStrEmpty (tracefile)) {
+      strncpy (gH323ep.traceFile, tracefile, MAXFILENAME-1);
+      gH323ep.traceFile[MAXFILENAME-1] = '\0';
+      if (strlen (tracefile)>= MAXFILENAME) {
+         printf ("ERROR: File name longer than allowed maximum %d\n",
+                 MAXFILENAME-1);
+
+         return OO_FAILED;
+      }
+   }
+   else {
+      strcpy (gH323ep.traceFile, DEFAULT_TRACEFILE);
+   }
+
+   return 0;
+}
+
 int ooH323EpInitialize
    (enum OOCallMode callMode, const char* tracefile)
 {
-
    memset(&gH323ep, 0, sizeof(ooEndPoint));
 
    initContext(&(gH323ep.ctxt));
    initContext(&(gH323ep.msgctxt));
 
-   if(tracefile)
-   {
-      if(strlen(tracefile)>= MAXFILENAME)
-      {
-         printf("Error:File name longer than allowed maximum %d\n",
-                 MAXFILENAME-1);
-         return OO_FAILED;
-      }
-      strcpy(gH323ep.traceFile, tracefile);
-   }
-   else{
-      strcpy(gH323ep.traceFile, DEFAULT_TRACEFILE);
+   if (0 != setTraceFilename (tracefile)) {
+      return OO_FAILED;
    }
 
    gH323ep.fptraceFile = fopen(gH323ep.traceFile, "w");
@@ -110,6 +121,7 @@ int ooH323EpInitialize
    gH323ep.callingPartyNumber[0]='\0';
    gH323ep.callMode = callMode;
    gH323ep.isGateway = FALSE;
+   gH323ep.bearercap = Q931TransferUnrestrictedDigital;
 
    dListInit(&g_TimerList);/* This is for test application chansetup only*/
 
@@ -133,12 +145,196 @@ int ooH323EpInitialize
    return OO_OK;
 }
 
-EXTERN int ooH323EpSetAsGateway()
+static int h323EpConfigSetFlag (const OOConfigNVP* pnvp, unsigned mask)
+{
+   OOBOOL bvalue;
+   if (0 == ooUtilsTextToBool (pnvp->value, &bvalue)) {
+      if (bvalue) {
+         OO_SETFLAG (gH323ep.flags, mask);
+      }
+      else {
+         OO_CLRFLAG (gH323ep.flags, mask);
+      }
+   }
+   else {
+      OOTRACEERR3 ("ERROR: invalid value %s specified for %s\n",
+                   pnvp->value, pnvp->name);
+      return OO_FAILED;
+   }
+
+   return 0;
+}
+
+int ooH323EpApplyConfig (const OOConfigFile* pconfig)
+{
+   /* Note: this assumes the end point has already been initialized */
+   OOConfigSection* pConfigSect;
+   DListNode* pnode = pconfig->sections.head;
+
+   /* Clear existing aliases.  List will be rebuilt from config. */
+   ooH323EpClearAllAliases();
+
+   while (0 != pnode) {
+      pConfigSect = (OOConfigSection*) pnode->data;
+
+      if (0 != pConfigSect) {
+         OOConfigNVP* pnvp;
+         DListNode* pnode2 = pConfigSect->nameValuePairs.head;
+
+         if (!strcasecmp (pConfigSect->sectionName, "general")) {
+            /* global variables section */
+            while (0 != pnode2) {
+               pnvp = (OOConfigNVP*) pnode2->data;
+
+               /* trace/log file */
+               if (!strcasecmp (pnvp->name, "logfile")) {
+                  if (0 != setTraceFilename (pnvp->value)) {
+                     return OO_FAILED;
+                  }
+                  /* Close existing trace file before opening new one */
+                  if (0 != gH323ep.fptraceFile) {
+                     fclose (gH323ep.fptraceFile);
+                  }
+                  gH323ep.fptraceFile = fopen (gH323ep.traceFile, "w");
+                  if (0 == gH323ep.fptraceFile) {
+                     printf ("ERROR: Failed to open trace file %s for write.\n",
+                             gH323ep.traceFile);
+                     return OO_FAILED;
+                  }
+               }
+
+               /* listen port */
+               else if (!strcasecmp (pnvp->name, "port")) {
+                  gH323ep.listenPort = (int)strtol (pnvp->value, NULL, 10);
+                  OOTRACEINFO2 ("Listen port number is set to %d\n",
+                                gH323ep.listenPort);
+               }
+
+               /* local IP address */
+               else if (!strcasecmp (pnvp->name, "bindaddr")) {
+                  strcpy (gH323ep.signallingIP, pnvp->value);
+                  strcpy (gCmdIP, pnvp->value);
+                  OOTRACEINFO2 ("Signalling IP address set to %s\n",
+                                gH323ep.signallingIP);
+               }
+
+               /* gateway */
+               else if (!strcasecmp (pnvp->name, "gateway")) {
+                  OOBOOL bvalue;
+                  if (0 == ooUtilsTextToBool (pnvp->value, &bvalue)) {
+                     gH323ep.isGateway = bvalue;
+                     OOTRACEINFO2 ("isGateway set to %d\n",
+                                   gH323ep.isGateway);
+                  }
+                  else {
+                     OOTRACEERR2 ("ERROR: invalid value %s specified for "
+                                  "gateway\n", pnvp->value);
+                  }
+               }
+
+               /* fast start */
+               else if (!strcasecmp (pnvp->name, "faststart")) {
+                  h323EpConfigSetFlag (pnvp, OO_M_FASTSTART);
+               }
+
+               /* media wait for connect */
+               else if (!strcasecmp (pnvp->name, "mediawaitforconnect")) {
+                  h323EpConfigSetFlag (pnvp, OO_M_MEDIAWAITFORCONN);
+               }
+
+               /* tunneling */
+               else if (!strcasecmp (pnvp->name, "h245tunneling")) {
+                  h323EpConfigSetFlag (pnvp, OO_M_TUNNELING);
+               }
+
+               /* H.323 ID alias */
+               else if (!strcasecmp (pnvp->name, "h323id")) {
+                  ooH323EpAddAliasH323ID (pnvp->value);
+               }
+
+               /* E.164 (dialed digits) alias */
+               else if (!strcasecmp (pnvp->name, "e164")) {
+                  ooH323EpAddAliasDialedDigits (pnvp->value);
+               }
+
+               /* EMail alias */
+               else if (!strcasecmp (pnvp->name, "email")) {
+                  ooH323EpAddAliasEmailID (pnvp->value);
+               }
+
+               /* Caller ID */
+               else if (!strcasecmp (pnvp->name, "callerid")) {
+                  ooH323EpSetCallerID (pnvp->value);
+               }
+
+               /* Gatekeeper */
+               else if (!strcasecmp (pnvp->name, "gatekeeper")) {
+                  if (!strcasecmp (pnvp->value, "DISABLE")) {
+                     ooGkClientDestroy();
+                  }
+                  else if (!strcasecmp (pnvp->value, "DISCOVER")) {
+                     ooGkClientInit (RasDiscoverGatekeeper, 0, 0);
+                  }
+                  else {
+                     ooGkClientInit (RasUseSpecificGatekeeper, pnvp->value, 0);
+                  }
+               }
+
+               /* DTMF mode */
+               else if (!strcasecmp (pnvp->name, "dtmfmode")) {
+                  if (!strcasecmp (pnvp->value, "rfc2833"))
+                     gH323ep.dtmfmode |= OO_CAP_DTMF_RFC2833;
+                  else if (!strcasecmp (pnvp->value, "q931keypad"))
+                     gH323ep.dtmfmode |= OO_CAP_DTMF_Q931;
+                  else if (!strcasecmp (pnvp->value, "h245alphanumeric"))
+                     gH323ep.dtmfmode |= OO_CAP_DTMF_H245_alphanumeric;
+                  else if (!strcasecmp (pnvp->value, "h245signal"))
+                     gH323ep.dtmfmode |= OO_CAP_DTMF_H245_signal;
+                  else {
+                     OOTRACEERR2 ("ERROR: invalid value %s specified for "
+                                  "dtmfmode\n", pnvp->value);
+                  }
+               }
+
+               /* Bearer capability */
+               else if (!strcasecmp (pnvp->name, "bearercap")) {
+                  ooH323EpSetBearerCap (pnvp->value);
+               }
+
+               pnode2 = pnode2->next;
+            }
+         }
+
+      }
+      pnode = pnode->next;
+   }
+
+   return OO_OK;
+}
+
+int ooH323EpSetBearerCap (const char* configText)
+{
+   if (!strcasecmp (configText, "unrestricted_digital") ||
+       !strcasecmp (configText, "unrestricteddigital")) {
+      gH323ep.bearercap = Q931TransferUnrestrictedDigital;
+   }
+   else if (!strcasecmp (configText, "speech")) {
+      gH323ep.bearercap = Q931TransferSpeech;
+   }
+   else {
+      OOTRACEERR2 ("ERROR: invalid/unsupported value %s specified for "
+                   "bearercap\n", configText);
+      return OO_FAILED;
+   }
+
+   return OO_OK;
+}
+
+int ooH323EpSetAsGateway()
 {
    gH323ep.isGateway = TRUE;
    return OO_OK;
 }
-
 
 int ooH323EpSetLocalAddress(const char* localip, int listenport)
 {
