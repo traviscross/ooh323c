@@ -40,17 +40,17 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="d80bc77169a2f57854ac14ea110cdb76"></a><!-- doxytag: member="ASN1BUFFER::data" ref="d80bc77169a2f57854ac14ea110cdb76" args="" -->
 <a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1BUFFER.shtml#d80bc77169a2f57854ac14ea110cdb76">data</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gfc7054a5afab3dcfa984cceda5a407e8"></a><!-- doxytag: member="ASN1BUFFER::byteIndex" ref="gfc7054a5afab3dcfa984cceda5a407e8" args="" -->
-<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gfc7054a5afab3dcfa984cceda5a407e8">byteIndex</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="fc7054a5afab3dcfa984cceda5a407e8"></a><!-- doxytag: member="ASN1BUFFER::byteIndex" ref="fc7054a5afab3dcfa984cceda5a407e8" args="" -->
+<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1BUFFER.shtml#fc7054a5afab3dcfa984cceda5a407e8">byteIndex</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g390b19bd1eb27527cc513b9dbf99dcf1"></a><!-- doxytag: member="ASN1BUFFER::size" ref="g390b19bd1eb27527cc513b9dbf99dcf1" args="" -->
-<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g390b19bd1eb27527cc513b9dbf99dcf1">size</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="390b19bd1eb27527cc513b9dbf99dcf1"></a><!-- doxytag: member="ASN1BUFFER::size" ref="390b19bd1eb27527cc513b9dbf99dcf1" args="" -->
+<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1BUFFER.shtml#390b19bd1eb27527cc513b9dbf99dcf1">size</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g0c7d885c798de4e40f3ccb7515a8fad2"></a><!-- doxytag: member="ASN1BUFFER::bitOffset" ref="g0c7d885c798de4e40f3ccb7515a8fad2" args="" -->
-<a class="el" href="group__cruntime.shtml#gc498cbabb6f34fdb447d5e02c5c7ab82">ASN1SINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g0c7d885c798de4e40f3ccb7515a8fad2">bitOffset</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0c7d885c798de4e40f3ccb7515a8fad2"></a><!-- doxytag: member="ASN1BUFFER::bitOffset" ref="0c7d885c798de4e40f3ccb7515a8fad2" args="" -->
+<a class="el" href="group__cruntime.shtml#gc498cbabb6f34fdb447d5e02c5c7ab82">ASN1SINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1BUFFER.shtml#0c7d885c798de4e40f3ccb7515a8fad2">bitOffset</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g129408f77803f77eb3a035ef3bbfaf8f"></a><!-- doxytag: member="ASN1BUFFER::dynamic" ref="g129408f77803f77eb3a035ef3bbfaf8f" args="" -->
-<a class="el" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g129408f77803f77eb3a035ef3bbfaf8f">dynamic</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="129408f77803f77eb3a035ef3bbfaf8f"></a><!-- doxytag: member="ASN1BUFFER::dynamic" ref="129408f77803f77eb3a035ef3bbfaf8f" args="" -->
+<a class="el" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1BUFFER.shtml#129408f77803f77eb3a035ef3bbfaf8f">dynamic</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -65,6 +65,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00355">355</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -582,7 +582,7 @@ int ooProcessFDSETsAndTimers
       }
    }
 
-
+#ifdef _WIN32
    if(gH323ep.cmdListener)
    {
       if(FD_ISSET(gH323ep.cmdListener, pReadfds))
@@ -593,6 +593,7 @@ int ooProcessFDSETsAndTimers
          }
       }
    }
+#endif
 
    /* Manage ready descriptors after select */
 
@@ -783,10 +784,12 @@ int ooMonitorChannels()
       /* Read and process stack command */
       if (0 != gH323ep.cmdSock && FD_ISSET (gH323ep.cmdSock, &readfds)) {
          ASN1UINT nbytesToRead = sizeof(OOStackCommand) - stkCmdIdx;
-
+#ifdef _WIN32
          recvLen = ooSocketRecv
             (gH323ep.cmdSock, &stackCmd[stkCmdIdx], nbytesToRead);
-
+#else
+         recvLen = read (gH323ep.cmdSock, &stackCmd[stkCmdIdx], nbytesToRead);
+#endif
          if (recvLen < 0) {
             OOTRACEERR1 ("ERROR: Failed to read CMD message\n");
             ooStopMonitorCalls();

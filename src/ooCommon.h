@@ -43,7 +43,7 @@
 #endif
 
 /**
- * @ingroup cruntime C Runtime Common Constant and Type Definitions.
+ * @addtogroup cruntime
  * @{
  */
 

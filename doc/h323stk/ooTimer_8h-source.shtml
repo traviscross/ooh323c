@@ -58,7 +58,7 @@
 <a name="l00030"></a><a class="code" href="struct__OOTimer.shtml">00030</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__OOTimer.shtml">_OOTimer</a> {
 <a name="l00031"></a><a class="code" href="struct__OOTimer.shtml#785eddcf84dd34ea4b3d34e6def04f71">00031</a>    <span class="keyword">struct </span>timeval expireTime, timeout;
 <a name="l00032"></a><a class="code" href="struct__OOTimer.shtml#aa3b60da1954fc9b497dcf4d36a94690">00032</a>    <span class="keywordtype">void</span>*        <a class="code" href="struct__OOTimer.shtml#aa3b60da1954fc9b497dcf4d36a94690">cbData</a>;
-<a name="l00033"></a><a class="code" href="struct__OOTimer.shtml#dcf3473eb6f93f7bddeb29d0a317cf86">00033</a>    <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>       <a class="code" href="struct__OOTimer.shtml#dcf3473eb6f93f7bddeb29d0a317cf86">reRegister</a>;
+<a name="l00033"></a><a class="code" href="struct__OOTimer.shtml#dcf3473eb6f93f7bddeb29d0a317cf86">00033</a>    <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>       <a class="code" href="struct__OOTimer.shtml#dcf3473eb6f93f7bddeb29d0a317cf86">reRegister</a>;
 <a name="l00034"></a>00034
 <a name="l00035"></a>00035    <span class="comment">/* Callback functions */</span>
 <a name="l00036"></a><a class="code" href="struct__OOTimer.shtml#a8162e82d75b13682cb46fc0672a3b3e">00036</a>    <a class="code" href="ooTimer_8h.shtml#42695a0ba0325ecda7231c8c03ac9662">OOTimerCbFunc</a> <a class="code" href="struct__OOTimer.shtml#a8162e82d75b13682cb46fc0672a3b3e">timeoutCB</a>;
@@ -68,23 +68,23 @@
 <a name="l00040"></a>00040 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
 <a name="l00041"></a>00041 <span class="preprocessor">#endif</span>
 <a name="l00042"></a>00042 <span class="preprocessor"></span>
-<a name="l00049"></a>00049 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#56c4016fa3d58a42297a3b8ad9576fe0">ooTimerComputeExpireTime</a> (<a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
+<a name="l00049"></a>00049 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#56c4016fa3d58a42297a3b8ad9576fe0">ooTimerComputeExpireTime</a> (<a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
 <a name="l00050"></a>00050
-<a name="l00062"></a>00062 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* <a class="code" href="ooTimer_8h.shtml#0aa795a169cd7fa33907f50c3432cb55">ooTimerCreate</a>
-<a name="l00063"></a>00063 (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList *pList, <a class="code" href="ooTimer_8h.shtml#42695a0ba0325ecda7231c8c03ac9662">OOTimerCbFunc</a> cb, <a class="code" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> deltaSecs, <span class="keywordtype">void</span> *data,
-<a name="l00064"></a>00064  <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> reRegister);
+<a name="l00062"></a>00062 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* <a class="code" href="ooTimer_8h.shtml#0aa795a169cd7fa33907f50c3432cb55">ooTimerCreate</a>
+<a name="l00063"></a>00063 (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList *pList, <a class="code" href="ooTimer_8h.shtml#42695a0ba0325ecda7231c8c03ac9662">OOTimerCbFunc</a> cb, <a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> deltaSecs, <span class="keywordtype">void</span> *data,
+<a name="l00064"></a>00064  <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> reRegister);
 <a name="l00065"></a>00065
-<a name="l00072"></a>00072 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#fd47e07b2ea1cba96a87548c54215c87">ooTimerDelete</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
+<a name="l00072"></a>00072 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#fd47e07b2ea1cba96a87548c54215c87">ooTimerDelete</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
 <a name="l00073"></a>00073
-<a name="l00080"></a>00080 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooTimer_8h.shtml#1e69e808886b23328a54849ff6683102">ooTimerExpired</a> (<a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
+<a name="l00080"></a>00080 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooTimer_8h.shtml#1e69e808886b23328a54849ff6683102">ooTimerExpired</a> (<a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
 <a name="l00081"></a>00081
-<a name="l00086"></a>00086 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#57c59c60ed009be763a1367f5cf61b60">ooTimerFireExpired</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList);
+<a name="l00086"></a>00086 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#57c59c60ed009be763a1367f5cf61b60">ooTimerFireExpired</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList);
 <a name="l00087"></a>00087
-<a name="l00096"></a>00096 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooTimer_8h.shtml#c86cde3d7fc3ee56279a72d146d89058">ooTimerInsertEntry</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
+<a name="l00096"></a>00096 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooTimer_8h.shtml#c86cde3d7fc3ee56279a72d146d89058">ooTimerInsertEntry</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
 <a name="l00097"></a>00097
-<a name="l00105"></a>00105 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">struct </span>timeval* <a class="code" href="ooTimer_8h.shtml#881b7a53aee755fa38fab9a2e32a4038">ooTimerNextTimeout</a> (DList* pList, <span class="keyword">struct</span> timeval* ptimeout);
+<a name="l00105"></a>00105 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">struct </span>timeval* <a class="code" href="ooTimer_8h.shtml#881b7a53aee755fa38fab9a2e32a4038">ooTimerNextTimeout</a> (DList* pList, <span class="keyword">struct</span> timeval* ptimeout);
 <a name="l00106"></a>00106
-<a name="l00114"></a>00114 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#02e5e34d7fe508a1907f046899c741b3">ooTimerReset</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
+<a name="l00114"></a>00114 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ooTimer_8h.shtml#02e5e34d7fe508a1907f046899c741b3">ooTimerReset</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, DList* pList, <a class="code" href="struct__OOTimer.shtml">OOTimer</a>* pTimer);
 <a name="l00115"></a>00115
 <a name="l00116"></a>00116
 <a name="l00124"></a>00124 <span class="keywordtype">int</span> <a class="code" href="ooTimer_8h.shtml#91b0e3ebda6619f81f05ebaf3001795e">ooCompareTimeouts</a>(<span class="keyword">struct</span> timeval *to1, <span class="keyword">struct</span> timeval *to2);
@@ -97,6 +97,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

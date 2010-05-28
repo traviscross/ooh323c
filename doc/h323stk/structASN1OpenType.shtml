@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e7a6759402263d5fbeaebb1e4e0c7baa"></a><!-- doxytag: member="ASN1OpenType::numocts" ref="e7a6759402263d5fbeaebb1e4e0c7baa" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1OpenType.shtml#e7a6759402263d5fbeaebb1e4e0c7baa">numocts</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ge37a248893849e23d544a52b6bf7bd1b"></a><!-- doxytag: member="ASN1OpenType::data" ref="ge37a248893849e23d544a52b6bf7bd1b" args="" -->
-const <a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#ge37a248893849e23d544a52b6bf7bd1b">data</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e37a248893849e23d544a52b6bf7bd1b"></a><!-- doxytag: member="ASN1OpenType::data" ref="e37a248893849e23d544a52b6bf7bd1b" args="" -->
+const <a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1OpenType.shtml#e37a248893849e23d544a52b6bf7bd1b">data</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00286">286</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

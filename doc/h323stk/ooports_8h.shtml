@@ -83,7 +83,6 @@ Get the next port of type TCP/UDP/RTP from the corresponding range.
 When max value for the range is reached, it starts again from the first port number of the range.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ep</em>&nbsp;</td><td>Reference to the H323 Endpoint structure. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>Type of the port to be retrieved(OOTCP/OOUDP/OORTP).</td></tr>
   </table>
 </dl>
@@ -127,7 +126,6 @@ Bind socket to a port within the port range specified by the application at the 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ep</em>&nbsp;</td><td>Reference to H323 Endpoint structure. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>Type of the port required for the socket. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>socket</em>&nbsp;</td><td>The socket to be bound. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ip</em>&nbsp;</td><td>Dotted Ip address to bind to.</td></tr>
@@ -142,6 +140,6 @@ Bind socket to a port within the port range specified by the application at the 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

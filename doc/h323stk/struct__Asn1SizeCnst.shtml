@@ -40,14 +40,14 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="851acfbbb290d23768211b9427c55f96"></a><!-- doxytag: member="_Asn1SizeCnst::extended" ref="851acfbbb290d23768211b9427c55f96" args="" -->
 <a class="el" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__Asn1SizeCnst.shtml#851acfbbb290d23768211b9427c55f96">extended</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gce812376be65b13218e3cbf70baa32da"></a><!-- doxytag: member="_Asn1SizeCnst::lower" ref="gce812376be65b13218e3cbf70baa32da" args="" -->
-<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gce812376be65b13218e3cbf70baa32da">lower</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ce812376be65b13218e3cbf70baa32da"></a><!-- doxytag: member="_Asn1SizeCnst::lower" ref="ce812376be65b13218e3cbf70baa32da" args="" -->
+<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__Asn1SizeCnst.shtml#ce812376be65b13218e3cbf70baa32da">lower</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gca2717bacf01fa040b4f29b65f07fa70"></a><!-- doxytag: member="_Asn1SizeCnst::upper" ref="gca2717bacf01fa040b4f29b65f07fa70" args="" -->
-<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gca2717bacf01fa040b4f29b65f07fa70">upper</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ca2717bacf01fa040b4f29b65f07fa70"></a><!-- doxytag: member="_Asn1SizeCnst::upper" ref="ca2717bacf01fa040b4f29b65f07fa70" args="" -->
+<a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__Asn1SizeCnst.shtml#ca2717bacf01fa040b4f29b65f07fa70">upper</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g30d1ed6056a2fe9e30d64c51326bdadf"></a><!-- doxytag: member="_Asn1SizeCnst::next" ref="g30d1ed6056a2fe9e30d64c51326bdadf" args="" -->
-<a class="el" href="struct__Asn1SizeCnst.shtml">_Asn1SizeCnst</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g30d1ed6056a2fe9e30d64c51326bdadf">next</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="30d1ed6056a2fe9e30d64c51326bdadf"></a><!-- doxytag: member="_Asn1SizeCnst::next" ref="30d1ed6056a2fe9e30d64c51326bdadf" args="" -->
+<a class="el" href="struct__Asn1SizeCnst.shtml">_Asn1SizeCnst</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__Asn1SizeCnst.shtml#30d1ed6056a2fe9e30d64c51326bdadf">next</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -62,6 +62,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00346">346</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

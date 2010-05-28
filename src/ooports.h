@@ -46,7 +46,6 @@ extern "C" {
  * When max value for the range is reached, it starts again from the
  * first port number of the range.
  *
- * @param ep         Reference to the H323 Endpoint structure.
  * @param type       Type of the port to be retrieved(OOTCP/OOUDP/OORTP).
  *
  * @return           The next port number for the specified type is returned.
@@ -57,7 +56,6 @@ EXTERN int ooGetNextPort (OOH323PortType type);
  * Bind socket to a port within the port range specified by the
  * application at the startup.
  *
- * @param ep        Reference to H323 Endpoint structure.
  * @param type      Type of the port required for the socket.
  * @param socket    The socket to be bound.
  * @param ip        Dotted Ip address to bind to.

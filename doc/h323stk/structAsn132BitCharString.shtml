@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8d202fc06fbf1e36b5497db2e9022ab6"></a><!-- doxytag: member="Asn132BitCharString::nchars" ref="8d202fc06fbf1e36b5497db2e9022ab6" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn132BitCharString.shtml#8d202fc06fbf1e36b5497db2e9022ab6">nchars</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g0481434dcf8738145c643aa4cf19abd7"></a><!-- doxytag: member="Asn132BitCharString::data" ref="g0481434dcf8738145c643aa4cf19abd7" args="" -->
-<a class="el" href="group__cruntime.shtml#g082754093d58eede858e2b740fcafeb4">ASN132BITCHAR</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g0481434dcf8738145c643aa4cf19abd7">data</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0481434dcf8738145c643aa4cf19abd7"></a><!-- doxytag: member="Asn132BitCharString::data" ref="0481434dcf8738145c643aa4cf19abd7" args="" -->
+<a class="el" href="group__cruntime.shtml#g082754093d58eede858e2b740fcafeb4">ASN132BITCHAR</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn132BitCharString.shtml#0481434dcf8738145c643aa4cf19abd7">data</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00298">298</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

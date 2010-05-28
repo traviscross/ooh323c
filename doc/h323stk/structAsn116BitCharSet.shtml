@@ -40,17 +40,17 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c2972f651a40d20b83231aa9c78fe993"></a><!-- doxytag: member="Asn116BitCharSet::charSet" ref="c2972f651a40d20b83231aa9c78fe993" args="" -->
 <a class="el" href="structAsn116BitCharString.shtml">Asn116BitCharString</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn116BitCharSet.shtml#c2972f651a40d20b83231aa9c78fe993">charSet</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g76da7fc487575dce24263af815ebc423"></a><!-- doxytag: member="Asn116BitCharSet::firstChar" ref="g76da7fc487575dce24263af815ebc423" args="" -->
-<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g76da7fc487575dce24263af815ebc423">firstChar</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="76da7fc487575dce24263af815ebc423"></a><!-- doxytag: member="Asn116BitCharSet::firstChar" ref="76da7fc487575dce24263af815ebc423" args="" -->
+<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn116BitCharSet.shtml#76da7fc487575dce24263af815ebc423">firstChar</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ga2fa87ca9cd21be6655abd37c7e5ded7"></a><!-- doxytag: member="Asn116BitCharSet::lastChar" ref="ga2fa87ca9cd21be6655abd37c7e5ded7" args="" -->
-<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#ga2fa87ca9cd21be6655abd37c7e5ded7">lastChar</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a2fa87ca9cd21be6655abd37c7e5ded7"></a><!-- doxytag: member="Asn116BitCharSet::lastChar" ref="a2fa87ca9cd21be6655abd37c7e5ded7" args="" -->
+<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn116BitCharSet.shtml#a2fa87ca9cd21be6655abd37c7e5ded7">lastChar</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g0b054e1dfb92986cccd60a8df1393a7d"></a><!-- doxytag: member="Asn116BitCharSet::unalignedBits" ref="g0b054e1dfb92986cccd60a8df1393a7d" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g0b054e1dfb92986cccd60a8df1393a7d">unalignedBits</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0b054e1dfb92986cccd60a8df1393a7d"></a><!-- doxytag: member="Asn116BitCharSet::unalignedBits" ref="0b054e1dfb92986cccd60a8df1393a7d" args="" -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn116BitCharSet.shtml#0b054e1dfb92986cccd60a8df1393a7d">unalignedBits</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g99fe0a22874edebec600b031920ca5fb"></a><!-- doxytag: member="Asn116BitCharSet::alignedBits" ref="g99fe0a22874edebec600b031920ca5fb" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g99fe0a22874edebec600b031920ca5fb">alignedBits</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="99fe0a22874edebec600b031920ca5fb"></a><!-- doxytag: member="Asn116BitCharSet::alignedBits" ref="99fe0a22874edebec600b031920ca5fb" args="" -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn116BitCharSet.shtml#99fe0a22874edebec600b031920ca5fb">alignedBits</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -65,6 +65,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00337">337</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

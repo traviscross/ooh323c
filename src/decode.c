@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1997-2009 by Objective Systems, Inc.
+ * Copyright (C) 1997-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -186,7 +186,7 @@ int decodeConstrainedStringEx
    ASN1UINT i, idx, len, nbits = abits;
 
    /* note: need to save size constraint for use in alignCharStr     */
-   /* because it will be cleared in decodeLength from the context..        */
+   /* because it will be cleared in decodeLength from the context..  */
    Asn1SizeCnst* psize = pctxt->pSizeConstraint;
 
    /* Decode length */
@@ -550,8 +550,9 @@ int decodeDynOctetString (OOCTXT* pctxt, ASN1DynOctStr* pOctStr)
 
       if (nocts < 0) return LOG_ASN1ERR (pctxt, nocts);
       else if (nocts == 0) {
-        pOctStr->numocts = 0;
-        pOctStr->data = 0;
+         pOctStr->numocts = 0;
+         pOctStr->data = 0;
+         pctxt->buffer.byteIndex++;
       }
       else {
         /* Allocate memory for the target string */

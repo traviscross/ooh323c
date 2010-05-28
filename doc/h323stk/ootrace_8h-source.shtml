@@ -138,9 +138,9 @@
 <a name="l00110"></a>00110 <span class="preprocessor"></span><span class="preprocessor">#endif </span><span class="comment">/* MAKE_DLL */</span>
 <a name="l00111"></a>00111 <span class="preprocessor">#endif </span><span class="comment">/* EXTERN */</span>
 <a name="l00112"></a>00112
-<a name="l00121"></a>00121 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#1e925e521df9ffb85a70adc1b8f6faf8">ooSetTraceThreshold</a>(<a class="code" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel);
+<a name="l00121"></a>00121 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#1e925e521df9ffb85a70adc1b8f6faf8">ooSetTraceThreshold</a>(<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel);
 <a name="l00122"></a>00122
-<a name="l00132"></a>00132 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a>(<a class="code" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, <span class="keyword">const</span> <span class="keywordtype">char</span> * fmtspec, ...);
+<a name="l00132"></a>00132 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a>(<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, <span class="keyword">const</span> <span class="keywordtype">char</span> * fmtspec, ...);
 <a name="l00133"></a>00133
 <a name="l00141"></a>00141 <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#0e22ffb7d4d0238441b39cc7e2b9f110">ooTraceLogMessage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * logMessage);
 <a name="l00142"></a>00142
@@ -156,6 +156,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -71,9 +71,9 @@
 <li>udpPorts
 : <a class="el" href="structOOH323EndPoint.shtml#f16d8b958f6afbbef7e6bf0c58e6614f">OOH323EndPoint</a>
 <li>unalignedBits
-: <a class="el" href="group__rtmem.shtml#g0b054e1dfb92986cccd60a8df1393a7d">Asn116BitCharSet</a>
+: <a class="el" href="structAsn116BitCharSet.shtml#0b054e1dfb92986cccd60a8df1393a7d">Asn116BitCharSet</a>
 <li>upper
-: <a class="el" href="group__rtmem.shtml#gca2717bacf01fa040b4f29b65f07fa70">_Asn1SizeCnst</a>
+: <a class="el" href="struct__Asn1SizeCnst.shtml#ca2717bacf01fa040b4f29b65f07fa70">_Asn1SizeCnst</a>
 <li>userInfo
 : <a class="el" href="structQ931Message.shtml#c853c5d30dda91161433b3417ce60c23">Q931Message</a>
 <li>usrData
@@ -86,6 +86,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

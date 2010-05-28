@@ -69,35 +69,35 @@
 <a name="l00041"></a>00041
 <a name="l00042"></a>00042 <span class="keyword">struct </span><a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>;
 <a name="l00043"></a>00043
-<a name="l00055"></a>00055 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g5721679edafddffc5cb6880a1c683a3a">ooOnReceivedSetup</a>
+<a name="l00055"></a>00055 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g5721679edafddffc5cb6880a1c683a3a">ooOnReceivedSetup</a>
 <a name="l00056"></a>00056 (<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="structQ931Message.shtml">Q931Message</a> *q931Msg);
 <a name="l00057"></a>00057
-<a name="l00067"></a>00067 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gdee4f4cfdfc006f4fc6e4628c77deb08">ooOnReceivedSignalConnect</a>
+<a name="l00067"></a>00067 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gdee4f4cfdfc006f4fc6e4628c77deb08">ooOnReceivedSignalConnect</a>
 <a name="l00068"></a>00068 (<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* call, <a class="code" href="structQ931Message.shtml">Q931Message</a> *q931Msg);
 <a name="l00069"></a>00069
-<a name="l00078"></a>00078 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gaf4c0df601ef9efdffce13a955e981d8">ooHandleH2250Message</a>
+<a name="l00078"></a>00078 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gaf4c0df601ef9efdffce13a955e981d8">ooHandleH2250Message</a>
 <a name="l00079"></a>00079 (<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="structQ931Message.shtml">Q931Message</a> *q931Msg);
 <a name="l00080"></a>00080
-<a name="l00088"></a>00088 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#ge65aee3ad1938672e34375233fa8e3e3">ooOnReceivedFacility</a>
+<a name="l00088"></a>00088 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#ge65aee3ad1938672e34375233fa8e3e3">ooOnReceivedFacility</a>
 <a name="l00089"></a>00089 (<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="structQ931Message.shtml">Q931Message</a> * pQ931Msg);
 <a name="l00090"></a>00090
-<a name="l00098"></a>00098 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g00ed11c2ab26cd1bd2fe6adc86cfba72">ooHandleTunneledH245Messages</a>(<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call,
+<a name="l00098"></a>00098 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g00ed11c2ab26cd1bd2fe6adc86cfba72">ooHandleTunneledH245Messages</a>(<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call,
 <a name="l00099"></a>00099                                         H225H323_UU_PDU * pH323UUPdu);
 <a name="l00100"></a>00100
-<a name="l00106"></a>00106 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g18c50aea56db024f7e29bdad416e37e4">ooHandleStartH245FacilityMessage</a>(<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call,
+<a name="l00106"></a>00106 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g18c50aea56db024f7e29bdad416e37e4">ooHandleStartH245FacilityMessage</a>(<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call,
 <a name="l00107"></a>00107                                             H225Facility_UUIE *facility);
 <a name="l00108"></a>00108
-<a name="l00120"></a>00120 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gac882fa043a67e10be1f3f97285e4422">ooH323RetrieveAliases</a>
+<a name="l00120"></a>00120 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gac882fa043a67e10be1f3f97285e4422">ooH323RetrieveAliases</a>
 <a name="l00121"></a>00121    (<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, H225_SeqOfH225AliasAddress *pAddresses,
 <a name="l00122"></a>00122     <a class="code" href="structOOAliases.shtml">OOAliases</a> **aliasList);
 <a name="l00123"></a>00123
-<a name="l00133"></a>00133 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g6b5c8286640c26f51cd88626379740fb">ooPopulateAliasList</a>(<a class="code" href="structOOCTXT.shtml">OOCTXT</a> *<a class="code" href="structOOH323CallData.shtml#b849033216095dec847b947b5a1d1177">pctxt</a>, <a class="code" href="structOOAliases.shtml">OOAliases</a> *pAliases,
+<a name="l00133"></a>00133 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#g6b5c8286640c26f51cd88626379740fb">ooPopulateAliasList</a>(<a class="code" href="structOOCTXT.shtml">OOCTXT</a> *<a class="code" href="structOOH323CallData.shtml#b849033216095dec847b947b5a1d1177">pctxt</a>, <a class="code" href="structOOAliases.shtml">OOAliases</a> *pAliases,
 <a name="l00134"></a>00134                                H225_SeqOfH225AliasAddress *pAliasList);
 <a name="l00135"></a>00135
-<a name="l00145"></a>00145 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOAliases.shtml">OOAliases</a>* <a class="code" href="group__q931.shtml#g010ed9e3a611a08646b8e1974d221667">ooH323GetAliasFromList</a>
+<a name="l00145"></a>00145 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOAliases.shtml">OOAliases</a>* <a class="code" href="group__q931.shtml#g010ed9e3a611a08646b8e1974d221667">ooH323GetAliasFromList</a>
 <a name="l00146"></a>00146                                (<a class="code" href="structOOAliases.shtml">OOAliases</a> *aliasList, <span class="keywordtype">int</span> type, <span class="keywordtype">char</span> *value);
 <a name="l00147"></a>00147
-<a name="l00157"></a>00157 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOAliases.shtml">OOAliases</a>* <a class="code" href="group__q931.shtml#g7c612e2682941978663ef273fd00f209">ooH323AddAliasToList</a>
+<a name="l00157"></a>00157 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOAliases.shtml">OOAliases</a>* <a class="code" href="group__q931.shtml#g7c612e2682941978663ef273fd00f209">ooH323AddAliasToList</a>
 <a name="l00158"></a>00158 (<a class="code" href="structOOAliases.shtml">OOAliases</a> **pAliasList, <a class="code" href="structOOCTXT.shtml">OOCTXT</a> *<a class="code" href="structOOH323CallData.shtml#b849033216095dec847b947b5a1d1177">pctxt</a>, H225AliasAddress *pAliasAddress);
 <a name="l00159"></a>00159
 <a name="l00172"></a>00172 <span class="keywordtype">int</span> <a class="code" href="group__q931.shtml#gc1f263c5b92788563ca89de147d48022">ooH323GetIpPortFromH225TransportAddress</a>(<span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call,
@@ -113,6 +113,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

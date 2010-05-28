@@ -76,7 +76,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__channels.shtml#g8eae1ac0d5c8242be6c187f1b7778be0">ooOnSendMsg</a> (struct <a class="el" href="structOOH323CallData.shtml">OOH323CallData</a> *call, int msgType, int tunneledMsgType, int associatedChan)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is called after a message is sent on the call's channel.  <a href="#g8eae1ac0d5c8242be6c187f1b7778be0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__channels.shtml#gc4077d8ccc4a79985e21a3a8d6cb29b7">ooChannelsIsConnectionOK</a> (<a class="el" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="el" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a> sock)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__channels.shtml#gc4077d8ccc4a79985e21a3a8d6cb29b7">ooChannelsIsConnectionOK</a> (<a class="el" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="el" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a> sock)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to check the status of tcp connection.  <a href="#gc4077d8ccc4a79985e21a3a8d6cb29b7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__channels.shtml#g8bc9a4bbd4b566e19dafbebcfd3476f9">ooCreateCmdListener</a> ()</td></tr>
@@ -576,7 +576,7 @@ It can be used to some followup action after message has been sent. <dl compact>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">EXTERN <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> ooChannelsIsConnectionOK           </td>
+          <td class="memname">EXTERN <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> ooChannelsIsConnectionOK           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structOOH323CallData.shtml">OOH323CallData</a> *&nbsp;</td>
           <td class="paramname"> <em>call</em>, </td>
@@ -750,6 +750,6 @@ This function is used to process a stack command received on the command channel
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

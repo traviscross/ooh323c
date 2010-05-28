@@ -50,6 +50,9 @@ static void logDateTime ()
       printDate=1;
    lasttime = atoi(currtime);
 
+   if (0 == gH323ep.fptraceFile) {
+      gH323ep.fptraceFile = stdout;
+   }
    if(printDate)
    {
       printDate = 0;
@@ -71,6 +74,9 @@ static void logDateTime ()
        printDate = 1;
    lasttime = atoi(currtime);
 
+   if (0 == gH323ep.fptraceFile) {
+      gH323ep.fptraceFile = stdout;
+   }
    if (printDate)
    {
       printDate = 0;

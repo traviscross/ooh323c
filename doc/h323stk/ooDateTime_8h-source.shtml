@@ -55,9 +55,9 @@
 <a name="l00027"></a>00027 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
 <a name="l00028"></a>00028 <span class="preprocessor">#endif</span>
 <a name="l00029"></a>00029 <span class="preprocessor"></span>
-<a name="l00040"></a>00040 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooDateTime_8h.shtml#f66023b2d0a045f25efad807ba8b9574">ooGetTimeOfDay</a> (<span class="keyword">struct</span> timeval *tv, <span class="keyword">struct</span> timezone *tz);
+<a name="l00040"></a>00040 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooDateTime_8h.shtml#f66023b2d0a045f25efad807ba8b9574">ooGetTimeOfDay</a> (<span class="keyword">struct</span> timeval *tv, <span class="keyword">struct</span> timezone *tz);
 <a name="l00041"></a>00041
-<a name="l00050"></a>00050 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">long</span> <a class="code" href="ooDateTime_8h.shtml#67586b9eea4c815e02ced6646f0cab71">ooGetTimeDiff</a>(<span class="keyword">struct</span> timeval *tv1, <span class="keyword">struct</span> timeval *tv2);
+<a name="l00050"></a>00050 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">long</span> <a class="code" href="ooDateTime_8h.shtml#67586b9eea4c815e02ced6646f0cab71">ooGetTimeDiff</a>(<span class="keyword">struct</span> timeval *tv1, <span class="keyword">struct</span> timeval *tv2);
 <a name="l00051"></a>00051 <span class="preprocessor">#ifdef __cplusplus</span>
 <a name="l00052"></a>00052 <span class="preprocessor"></span>}
 <a name="l00053"></a>00053 <span class="preprocessor">#endif</span>
@@ -67,6 +67,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

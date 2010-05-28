@@ -74,7 +74,7 @@ Here is a list of all documented struct and union fields with links to the struc
 : <a class="el" href="structOOH323EndPoint.shtml#0dadb9bab087a1128ca2b7c042c03333">OOH323EndPoint</a>
 , <a class="el" href="structOOCallFwdData.shtml#9473f841aa872f3e04ece4d2f2a3de01">OOCallFwdData</a>
 <li>alignedBits
-: <a class="el" href="group__rtmem.shtml#g99fe0a22874edebec600b031920ca5fb">Asn116BitCharSet</a>
+: <a class="el" href="structAsn116BitCharSet.shtml#99fe0a22874edebec600b031920ca5fb">Asn116BitCharSet</a>
 <li>arqTimeout
 : <a class="el" href="structooGkClient.shtml#1fd1febd38d5524dd923e53704b0ca79">ooGkClient</a>
 </ul>
@@ -83,6 +83,6 @@ Here is a list of all documented struct and union fields with links to the struc
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

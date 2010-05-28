@@ -69,13 +69,13 @@ Here is a list of all documented struct and union fields with links to the struc
 <p>
 <h3><a class="anchor" name="index_e">- e -</a></h3><ul>
 <li>elem
-: <a class="el" href="group__rtmem.shtml#ga6c22beabf193f662057829f74cbe2a2">ASN1SeqOf</a>
-, <a class="el" href="group__rtmem.shtml#g34602d8ca2f3936a94dd252ffd56c709">ASN1SeqOfOctStr</a>
+: <a class="el" href="structASN1SeqOf.shtml#a6c22beabf193f662057829f74cbe2a2">ASN1SeqOf</a>
+, <a class="el" href="structASN1SeqOfOctStr.shtml#34602d8ca2f3936a94dd252ffd56c709">ASN1SeqOfOctStr</a>
 , <a class="el" href="structFastStartResponse.shtml#8858b1a3587cdbc28a175ee2d4e148a3">FastStartResponse</a>
 <li>endpointId
 : <a class="el" href="structooGkClient.shtml#e7019ac1e72e174457f7e2c2ae4713d0">ooGkClient</a>
 <li>errInfo
-: <a class="el" href="group__rtmem.shtml#g69e8d8032b65a06cacbd4f01ea7b17c7">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#69e8d8032b65a06cacbd4f01ea7b17c7">OOCTXT</a>
 <li>extended
 : <a class="el" href="struct__Asn1SizeCnst.shtml#851acfbbb290d23768211b9427c55f96">_Asn1SizeCnst</a>
 </ul>
@@ -84,6 +84,6 @@ Here is a list of all documented struct and union fields with links to the struc
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

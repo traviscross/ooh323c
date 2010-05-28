@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2009 by Objective Systems, Inc.
+ * Copyright (C) 2004-2010 by Objective Systems, Inc.
  *
  * This software is furnished under an open source license and may be
  * used and copied only in accordance with the terms of this license.
@@ -61,7 +61,7 @@
 
 
 
-#define OOH323C_VERSION "v0.9.0"
+#define OOH323C_VERSION "v0.9.2"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL

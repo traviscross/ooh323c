@@ -49,14 +49,14 @@
 <a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#define _OOUTILS_H_</span>
 <a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#include "<a class="code" href="ootypes_8h.shtml">ootypes.h</a>"</span>
 <a name="l00023"></a>00023
-<a name="l00032"></a>00032 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="ooUtils_8h.shtml#bb0bf04fed781cb38fb69c288d91dc2d">ooUtilsGetText</a>
-<a name="l00033"></a>00033 (<a class="code" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> idx, <span class="keyword">const</span> <span class="keywordtype">char</span>** table, size_t tabsiz);
+<a name="l00032"></a>00032 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="ooUtils_8h.shtml#bb0bf04fed781cb38fb69c288d91dc2d">ooUtilsGetText</a>
+<a name="l00033"></a>00033 (<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> idx, <span class="keyword">const</span> <span class="keywordtype">char</span>** table, size_t tabsiz);
 <a name="l00034"></a>00034
-<a name="l00042"></a>00042 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooUtils_8h.shtml#dbd22c307ce89e062354c423cc2daa0b">ooUtilsIsStrEmpty</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * str);
+<a name="l00042"></a>00042 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooUtils_8h.shtml#dbd22c307ce89e062354c423cc2daa0b">ooUtilsIsStrEmpty</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * str);
 <a name="l00043"></a>00043
-<a name="l00050"></a>00050 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooUtils_8h.shtml#42dc5b02930f0db8fb418fcec8e18b3f">ooIsDialedDigit</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* str);
+<a name="l00050"></a>00050 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="ooUtils_8h.shtml#42dc5b02930f0db8fb418fcec8e18b3f">ooIsDialedDigit</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* str);
 <a name="l00051"></a>00051
-<a name="l00063"></a>00063 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooUtils_8h.shtml#8ccef2e11f09d470334731010cb89b86">ooUtilsTextToBool</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* str, <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>* pbool);
+<a name="l00063"></a>00063 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="ooUtils_8h.shtml#8ccef2e11f09d470334731010cb89b86">ooUtilsTextToBool</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* str, <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>* pbool);
 <a name="l00064"></a>00064
 <a name="l00065"></a>00065 <span class="preprocessor">#endif</span>
 </pre></div><!--END DOXYGEN -->
@@ -64,6 +64,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -152,9 +152,6 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struc
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="23fa02a2598105e5a31827c1c1bdd203"></a><!-- doxytag: member="OOH323EndPoint::sessionTimeout" ref="23fa02a2598105e5a31827c1c1bdd203" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#23fa02a2598105e5a31827c1c1bdd203">sessionTimeout</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6610682d6032da06b55beb77da0d391e"></a><!-- doxytag: member="OOH323EndPoint::cmdPipe" ref="6610682d6032da06b55beb77da0d391e" args="[2]" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#6610682d6032da06b55beb77da0d391e">cmdPipe</a> [2]</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="29d6fbb3b893732d9f43571515fe5d89"></a><!-- doxytag: member="OOH323EndPoint::gkClient" ref="29d6fbb3b893732d9f43571515fe5d89" args="" -->
 <a class="el" href="structooGkClient.shtml">ooGkClient</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#29d6fbb3b893732d9f43571515fe5d89">gkClient</a></td></tr>
 
@@ -162,16 +159,13 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struc
 <a class="el" href="structOOInterface.shtml">OOInterface</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#6c387be1cafa71d92160a7fc5a92e788">ifList</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="7bf9254371b7f6b350b0fa5f961e630f"></a><!-- doxytag: member="OOH323EndPoint::isGateway" ref="7bf9254371b7f6b350b0fa5f961e630f" args="" -->
-<a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">isGateway</a></td></tr>
+<a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">isGateway</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0f314916b9da175ef982a7ab74bb40bc"></a><!-- doxytag: member="OOH323EndPoint::cmdListener" ref="0f314916b9da175ef982a7ab74bb40bc" args="" -->
 <a class="el" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#0f314916b9da175ef982a7ab74bb40bc">cmdListener</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="adf6e536d99422a898ad4d7a73d7d978"></a><!-- doxytag: member="OOH323EndPoint::cmdSock" ref="adf6e536d99422a898ad4d7a73d7d978" args="" -->
 <a class="el" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#adf6e536d99422a898ad4d7a73d7d978">cmdSock</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f3df284c1ebfac602b1517a59a9ada8a"></a><!-- doxytag: member="OOH323EndPoint::cmdPort" ref="f3df284c1ebfac602b1517a59a9ada8a" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#f3df284c1ebfac602b1517a59a9ada8a">cmdPort</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="78fbd0eaea462172ac2047db23f4e7aa"></a><!-- doxytag: member="OOH323EndPoint::bearercap" ref="78fbd0eaea462172ac2047db23f4e7aa" args="" -->
 enum <a class="el" href="group__q931.shtml#ge90404998b0e17a023cd619f807f497e">Q931InformationTransferCapability</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOH323EndPoint.shtml#78fbd0eaea462172ac2047db23f4e7aa">bearercap</a></td></tr>
@@ -190,6 +184,6 @@ Definition at line <a class="el" href="ooh323ep_8h-source.shtml#l00083">83</a> o
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="289c717cdd60077f78738cce41dd890a"></a><!-- doxytag: member="ASN1SeqOf::n" ref="289c717cdd60077f78738cce41dd890a" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1SeqOf.shtml#289c717cdd60077f78738cce41dd890a">n</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ga6c22beabf193f662057829f74cbe2a2"></a><!-- doxytag: member="ASN1SeqOf::elem" ref="ga6c22beabf193f662057829f74cbe2a2" args="" -->
-void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#ga6c22beabf193f662057829f74cbe2a2">elem</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a6c22beabf193f662057829f74cbe2a2"></a><!-- doxytag: member="ASN1SeqOf::elem" ref="a6c22beabf193f662057829f74cbe2a2" args="" -->
+void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1SeqOf.shtml#a6c22beabf193f662057829f74cbe2a2">elem</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00276">276</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4467bad92ec9469f2738572386c3341a"></a><!-- doxytag: member="ASN1DynBitStr::numbits" ref="4467bad92ec9469f2738572386c3341a" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1DynBitStr.shtml#4467bad92ec9469f2738572386c3341a">numbits</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g24d94e4b2b231b2bff14680cc55b45f8"></a><!-- doxytag: member="ASN1DynBitStr::data" ref="g24d94e4b2b231b2bff14680cc55b45f8" args="" -->
-const <a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g24d94e4b2b231b2bff14680cc55b45f8">data</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="24d94e4b2b231b2bff14680cc55b45f8"></a><!-- doxytag: member="ASN1DynBitStr::data" ref="24d94e4b2b231b2bff14680cc55b45f8" args="" -->
+const <a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1DynBitStr.shtml#24d94e4b2b231b2bff14680cc55b45f8">data</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00266">266</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

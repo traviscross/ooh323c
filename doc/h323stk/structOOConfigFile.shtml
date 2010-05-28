@@ -41,7 +41,7 @@
 <a class="el" href="structOOCTXT.shtml">OOCTXT</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOConfigFile.shtml#f48c0bb384e5eb3477aae2b476e90db0">pctxt</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="7796d32ae8dcde66a8d0743d2f083a59"></a><!-- doxytag: member="OOConfigFile::bOwnContext" ref="7796d32ae8dcde66a8d0743d2f083a59" args="" -->
-<a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">bOwnContext</a></td></tr>
+<a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">bOwnContext</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="31a76d8772cb46bf4671a8cc04ffc50b"></a><!-- doxytag: member="OOConfigFile::sections" ref="31a76d8772cb46bf4671a8cc04ffc50b" args="" -->
 DList&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOConfigFile.shtml#31a76d8772cb46bf4671a8cc04ffc50b">sections</a></td></tr>
@@ -59,6 +59,6 @@ Definition at line <a class="el" href="ooConfig_8h-source.shtml#l00047">47</a> o
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

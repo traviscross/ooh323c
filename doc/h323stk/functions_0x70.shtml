@@ -79,20 +79,20 @@ Here is a list of all documented struct and union fields with links to the struc
 <li>params
 : <a class="el" href="structooH323EpCapability.shtml#af1f35c8f2341c51b868f72386083f7f">ooH323EpCapability</a>
 <li>parmcnt
-: <a class="el" href="group__rtmem.shtml#g54b794e97b60075552372decaacddedc">ASN1ErrInfo</a>
+: <a class="el" href="structASN1ErrInfo.shtml#54b794e97b60075552372decaacddedc">ASN1ErrInfo</a>
 <li>parms
-: <a class="el" href="group__rtmem.shtml#gde27333456e84e164cb5eefe982b77cd">ASN1ErrInfo</a>
+: <a class="el" href="structASN1ErrInfo.shtml#de27333456e84e164cb5eefe982b77cd">ASN1ErrInfo</a>
 <li>pCallFwdData
 : <a class="el" href="structOOH323CallData.shtml#711df9142ab131e6af84afb623b6c174">OOH323CallData</a>
 <li>pCharSet
-: <a class="el" href="group__rtmem.shtml#g42fdde15e8285327e92b134bd91b6738">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#42fdde15e8285327e92b134bd91b6738">OOCTXT</a>
 <li>pctxt
 : <a class="el" href="structOOConfigFile.shtml#f48c0bb384e5eb3477aae2b476e90db0">OOConfigFile</a>
 , <a class="el" href="structOOH323CallData.shtml#b849033216095dec847b947b5a1d1177">OOH323CallData</a>
 <li>pdata
 : <a class="el" href="struct__OOMsgBuf.shtml#06b6c541d53fb31217d1913b80c713df">_OOMsgBuf</a>
 <li>pEventHandler
-: <a class="el" href="group__rtmem.shtml#ga056fefa77a4acb061085773051d7d47">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#a056fefa77a4acb061085773051d7d47">OOCTXT</a>
 <li>pFastStartRes
 : <a class="el" href="structOOH323CallData.shtml#f35c4673a6c65ee7d3ff3ffe8a03cc15">OOH323CallData</a>
 <li>pGkClient
@@ -117,15 +117,15 @@ Here is a list of all documented struct and union fields with links to the struc
 <li>protocolDiscriminator
 : <a class="el" href="structQ931Message.shtml#c0cc8466b1b0cf24210e3ddad6cd6a0a">Q931Message</a>
 <li>pSizeConstraint
-: <a class="el" href="group__rtmem.shtml#g5adc5ed1d6c96401a0c30b88cb78225a">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#5adc5ed1d6c96401a0c30b88cb78225a">OOCTXT</a>
 <li>pTypeMemHeap
-: <a class="el" href="group__rtmem.shtml#gf23637a2c315cc97694ea0af0acb5766">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#f23637a2c315cc97694ea0af0acb5766">OOCTXT</a>
 </ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

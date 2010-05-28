@@ -2108,9 +2108,6 @@ int ooAddRemoteAudioCapability(OOH323CallData *call,
 }
 
 
-
-
-
 int ooCapabilityUpdateJointCapabilities
    (OOH323CallData* call, H245Capability *cap)
 {
@@ -2121,25 +2118,31 @@ int ooCapabilityUpdateJointCapabilities
    switch(cap->t)
    {
    case T_H245Capability_receiveAudioCapability:
-      epCap= ooIsAudioDataTypeSupported(call, cap->u.receiveAudioCapability,
-                                        OOTX);
+      epCap= ooIsAudioDataTypeSupported
+         (call, cap->u.receiveAudioCapability, OOTX);
       break;
+
    case T_H245Capability_transmitAudioCapability:
-      epCap = ooIsAudioDataTypeSupported(call, cap->u.transmitAudioCapability,
-                                        OORX);
+      epCap = ooIsAudioDataTypeSupported
+         (call, cap->u.transmitAudioCapability, OORX);
       break;
+
    case T_H245Capability_receiveAndTransmitAudioCapability:
-      epCap = NULL;
+      epCap = ooIsAudioDataTypeSupported
+         (call, cap->u.receiveAndTransmitAudioCapability, OORX | OOTX);
       break;
+
    case T_H245Capability_receiveVideoCapability:
-      return ooCapabilityUpdateJointCapabilitiesVideo(call,
-                                          cap->u.receiveVideoCapability, OOTX);
+      return ooCapabilityUpdateJointCapabilitiesVideo
+         (call, cap->u.receiveVideoCapability, OOTX);
+
    case T_H245Capability_transmitVideoCapability:
-      return ooCapabilityUpdateJointCapabilitiesVideo(call,
-                                         cap->u.transmitVideoCapability, OORX);
+      return ooCapabilityUpdateJointCapabilitiesVideo
+         (call, cap->u.transmitVideoCapability, OORX);
+
    case T_H245Capability_receiveUserInputCapability:
       if((cap->u.receiveUserInputCapability->t ==
-                                 T_H245UserInputCapability_basicString) &&
+          T_H245UserInputCapability_basicString) &&
          (call->dtmfmode & OO_CAP_DTMF_H245_alphanumeric))
       {
          call->jointDtmfMode |= OO_CAP_DTMF_H245_alphanumeric;
@@ -2152,7 +2155,25 @@ int ooCapabilityUpdateJointCapabilities
          call->jointDtmfMode |= OO_CAP_DTMF_H245_signal;
          return OO_OK;
       }
-      //break;
+      break;
+
+   case T_H245Capability_receiveAndTransmitUserInputCapability:
+      if((cap->u.receiveAndTransmitUserInputCapability->t ==
+          T_H245UserInputCapability_basicString) &&
+         (call->dtmfmode & OO_CAP_DTMF_H245_alphanumeric))
+      {
+         call->jointDtmfMode |= OO_CAP_DTMF_H245_alphanumeric;
+         return OO_OK;
+      }
+      else if((cap->u.receiveAndTransmitUserInputCapability->t ==
+               T_H245UserInputCapability_dtmf) &&
+               (call->dtmfmode & OO_CAP_DTMF_H245_signal))
+      {
+         call->jointDtmfMode |= OO_CAP_DTMF_H245_signal;
+         return OO_OK;
+      }
+      break;
+
    default:
      OOTRACEDBGA3("Unsupported cap type encountered. Ignoring. (%s, %s)\n",
                    call->callType, call->callToken);

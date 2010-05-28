@@ -144,10 +144,10 @@
 #define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#0e7fce16308962dab3247867e8c7da82">OOTRACEDBGC5</a>(a, b, c, d, e)&nbsp;&nbsp;&nbsp;ooTrace(OOTRCLVLDBGC,a,b,c,d,e)</td></tr>
 
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#1e925e521df9ffb85a70adc1b8f6faf8">ooSetTraceThreshold</a> (<a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#1e925e521df9ffb85a70adc1b8f6faf8">ooSetTraceThreshold</a> (<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the trace level.  <a href="#1e925e521df9ffb85a70adc1b8f6faf8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a> (<a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, const char *fmtspec,...)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a> (<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, const char *fmtspec,...)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to write the messages to the trace file.  <a href="#c2b1f1cda58cd2d529bd831410efaa73"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#0e22ffb7d4d0238441b39cc7e2b9f110">ooTraceLogMessage</a> (const char *logMessage)</td></tr>
@@ -173,7 +173,7 @@ Definition in file <a class="el" href="ootrace_8h-source.shtml">ootrace.h</a>.<h
         <tr>
           <td class="memname">EXTERN void ooSetTraceThreshold           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
           <td class="paramname"> <em>traceLevel</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -201,7 +201,7 @@ This function is used to set the trace level.
         <tr>
           <td class="memname">EXTERN void ooTrace           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
           <td class="paramname"> <em>traceLevel</em>, </td>
         </tr>
         <tr>
@@ -272,6 +272,6 @@ This function performs actual writing to file. <dl compact><dt><b>Parameters:</b
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

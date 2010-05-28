@@ -69,7 +69,7 @@
 <a name="l00046"></a>00046
 <a name="l00047"></a><a class="code" href="structOOConfigFile.shtml">00047</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structOOConfigFile.shtml">OOConfigFile</a> {
 <a name="l00048"></a><a class="code" href="structOOConfigFile.shtml#f48c0bb384e5eb3477aae2b476e90db0">00048</a>    <a class="code" href="structOOCTXT.shtml">OOCTXT</a>* <a class="code" href="structOOConfigFile.shtml#f48c0bb384e5eb3477aae2b476e90db0">pctxt</a>;
-<a name="l00049"></a><a class="code" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">00049</a>    <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>  <a class="code" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">bOwnContext</a>;
+<a name="l00049"></a><a class="code" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">00049</a>    <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>  <a class="code" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">bOwnContext</a>;
 <a name="l00050"></a><a class="code" href="structOOConfigFile.shtml#31a76d8772cb46bf4671a8cc04ffc50b">00050</a>    DList   <a class="code" href="structOOConfigFile.shtml#31a76d8772cb46bf4671a8cc04ffc50b">sections</a>;  <span class="comment">/* List of OOConfigSection */</span>
 <a name="l00051"></a>00051 } <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>;
 <a name="l00052"></a>00052
@@ -77,15 +77,15 @@
 <a name="l00054"></a>00054 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">"C"</span> {
 <a name="l00055"></a>00055 <span class="preprocessor">#endif</span>
 <a name="l00056"></a>00056 <span class="preprocessor"></span>
-<a name="l00065"></a>00065 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__ooConfig.shtml#g7a64dd6d0406e22bc5a7cf626a2b20e5">ooConfigInit</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00065"></a>00065 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__ooConfig.shtml#g7a64dd6d0406e22bc5a7cf626a2b20e5">ooConfigInit</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
 <a name="l00066"></a>00066
-<a name="l00075"></a>00075 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gd25b604c8d874906029fc3524b19bbdd">ooConfigCtxtInit</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00075"></a>00075 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gd25b604c8d874906029fc3524b19bbdd">ooConfigCtxtInit</a> (<a class="code" href="structOOCTXT.shtml">OOCTXT</a>* pctxt, <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
 <a name="l00076"></a>00076
-<a name="l00086"></a>00086 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__ooConfig.shtml#ga1537b2ec16856f506e358b81560d676">ooConfigFileRead</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* filename, <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00086"></a>00086 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__ooConfig.shtml#ga1537b2ec16856f506e358b81560d676">ooConfigFileRead</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* filename, <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
 <a name="l00087"></a>00087
-<a name="l00093"></a>00093 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gb126156cceec5fe331d422721f46f6ae">ooConfigDestroy</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00093"></a>00093 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gb126156cceec5fe331d422721f46f6ae">ooConfigDestroy</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
 <a name="l00094"></a>00094
-<a name="l00100"></a>00100 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gb113d4e677262921d0ef78e1aab9e322">ooConfigPrint</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00100"></a>00100 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__ooConfig.shtml#gb113d4e677262921d0ef78e1aab9e322">ooConfigPrint</a> (<a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
 <a name="l00101"></a>00101
 <a name="l00102"></a>00102 <span class="preprocessor">#ifdef __cplusplus</span>
 <a name="l00103"></a>00103 <span class="preprocessor"></span>}
@@ -97,6 +97,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

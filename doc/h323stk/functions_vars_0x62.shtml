@@ -73,25 +73,25 @@
 <li>bearerCapabilityIE
 : <a class="el" href="structQ931Message.shtml#e7c07eeba1fc1e70c5c50e15a10353bc">Q931Message</a>
 <li>bitOffset
-: <a class="el" href="group__rtmem.shtml#gf5e5f82a8241fe17a98afeebb425a5da">ASN1BUFSAVE</a>
-, <a class="el" href="group__rtmem.shtml#g0c7d885c798de4e40f3ccb7515a8fad2">ASN1BUFFER</a>
+: <a class="el" href="structASN1BUFSAVE.shtml#f5e5f82a8241fe17a98afeebb425a5da">ASN1BUFSAVE</a>
+, <a class="el" href="structASN1BUFFER.shtml#0c7d885c798de4e40f3ccb7515a8fad2">ASN1BUFFER</a>
 <li>bOwnContext
 : <a class="el" href="structOOConfigFile.shtml#7796d32ae8dcde66a8d0743d2f083a59">OOConfigFile</a>
 <li>buffer
-: <a class="el" href="group__rtmem.shtml#g93a4787053313eeda5672f6f9538bc85">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#93a4787053313eeda5672f6f9538bc85">OOCTXT</a>
 <li>bufsiz
 : <a class="el" href="struct__OOMsgBuf.shtml#89a983554879b6a011680cd60dd49035">_OOMsgBuf</a>
 <li>bw
 : <a class="el" href="structRasGatekeeperInfo.shtml#f8a192ca8531985490e43a781abb0acd">RasGatekeeperInfo</a>
 <li>byteIndex
 : <a class="el" href="structASN1BUFSAVE.shtml#bc2758fb121e31b7036698c7637d16ce">ASN1BUFSAVE</a>
-, <a class="el" href="group__rtmem.shtml#gfc7054a5afab3dcfa984cceda5a407e8">ASN1BUFFER</a>
+, <a class="el" href="structASN1BUFFER.shtml#fc7054a5afab3dcfa984cceda5a407e8">ASN1BUFFER</a>
 </ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

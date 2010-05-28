@@ -110,64 +110,64 @@
 <a name="l00093"></a>00093
 <a name="l00094"></a>00094
 <a name="l00095"></a>00095
-<a name="l00115"></a>00115 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g70585d13c0fcd9f1c822a4d3a677e7b5">ooSocketAccept</a> (OOSOCKET socket, OOSOCKET *pNewSocket,
+<a name="l00115"></a>00115 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g70585d13c0fcd9f1c822a4d3a677e7b5">ooSocketAccept</a> (OOSOCKET socket, OOSOCKET *pNewSocket,
 <a name="l00116"></a>00116                              OOIPADDR* destAddr, <span class="keywordtype">int</span>* destPort);
 <a name="l00117"></a>00117
-<a name="l00128"></a>00128 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g073f7657a3704774f17c2958a126b7e5">ooSocketAddrToStr</a> (OOIPADDR ipAddr, <span class="keywordtype">char</span>* pbuf, <span class="keywordtype">int</span> bufsize);
+<a name="l00128"></a>00128 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g073f7657a3704774f17c2958a126b7e5">ooSocketAddrToStr</a> (OOIPADDR ipAddr, <span class="keywordtype">char</span>* pbuf, <span class="keywordtype">int</span> bufsize);
 <a name="l00129"></a>00129
-<a name="l00143"></a>00143 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g4e0bcaadef706ef19a1a510c1a6e6093">ooSocketBind</a> (OOSOCKET socket, OOIPADDR <a class="code" href="structOOInterface.shtml#42a59e8b004d5a6bd67744a523ee2970">addr</a>, <span class="keywordtype">int</span> port);
+<a name="l00143"></a>00143 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g4e0bcaadef706ef19a1a510c1a6e6093">ooSocketBind</a> (OOSOCKET socket, OOIPADDR <a class="code" href="structOOInterface.shtml#42a59e8b004d5a6bd67744a523ee2970">addr</a>, <span class="keywordtype">int</span> port);
 <a name="l00144"></a>00144
-<a name="l00153"></a>00153 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g884e2bcaddccea44d10ae4d5c7c37a6d">ooSocketClose</a> (OOSOCKET socket);
+<a name="l00153"></a>00153 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g884e2bcaddccea44d10ae4d5c7c37a6d">ooSocketClose</a> (OOSOCKET socket);
 <a name="l00154"></a>00154
-<a name="l00170"></a>00170 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g3c20bdad8323b79086f57897950f036e">ooSocketConnect</a> (OOSOCKET socket, <span class="keyword">const</span> <span class="keywordtype">char</span>* host, <span class="keywordtype">int</span> port);
+<a name="l00170"></a>00170 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g3c20bdad8323b79086f57897950f036e">ooSocketConnect</a> (OOSOCKET socket, <span class="keyword">const</span> <span class="keywordtype">char</span>* host, <span class="keywordtype">int</span> port);
 <a name="l00171"></a>00171
-<a name="l00181"></a>00181 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g1d0a065068d19a250b6d79d509cf2293">ooSocketCreate</a> (OOSOCKET* psocket);
+<a name="l00181"></a>00181 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g1d0a065068d19a250b6d79d509cf2293">ooSocketCreate</a> (OOSOCKET* psocket);
 <a name="l00182"></a>00182
-<a name="l00191"></a>00191 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#gbefdd73a2c201a21cb7bfc2ebebec421">ooSocketCreateUDP</a> (OOSOCKET* psocket);
+<a name="l00191"></a>00191 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#gbefdd73a2c201a21cb7bfc2ebebec421">ooSocketCreateUDP</a> (OOSOCKET* psocket);
 <a name="l00192"></a>00192
-<a name="l00200"></a>00200 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g36b22c12194dfea3447bee4ade4d7965">ooSocketsInit</a> (<span class="keywordtype">void</span>);
+<a name="l00200"></a>00200 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g36b22c12194dfea3447bee4ade4d7965">ooSocketsInit</a> (<span class="keywordtype">void</span>);
 <a name="l00201"></a>00201
-<a name="l00209"></a>00209 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g53fc50eb5ea17e4e16a1a3104b9d16a5">ooSocketsCleanup</a> (<span class="keywordtype">void</span>);
+<a name="l00209"></a>00209 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g53fc50eb5ea17e4e16a1a3104b9d16a5">ooSocketsCleanup</a> (<span class="keywordtype">void</span>);
 <a name="l00210"></a>00210
-<a name="l00226"></a>00226 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#ga309e39a521a62f92c9f798800394e26">ooSocketListen</a> (OOSOCKET socket, <span class="keywordtype">int</span> maxConnection);
+<a name="l00226"></a>00226 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#ga309e39a521a62f92c9f798800394e26">ooSocketListen</a> (OOSOCKET socket, <span class="keywordtype">int</span> maxConnection);
 <a name="l00227"></a>00227
 <a name="l00228"></a>00228
-<a name="l00240"></a>00240 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#geb660d826f3e220f68f0b28d0a257641">ooSocketRecvPeek</a>
+<a name="l00240"></a>00240 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#geb660d826f3e220f68f0b28d0a257641">ooSocketRecvPeek</a>
 <a name="l00241"></a>00241    (OOSOCKET socket, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pbuf, <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> bufsize);
 <a name="l00242"></a>00242
-<a name="l00255"></a>00255 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g008f62868f2cea5fd3328994e970dcc6">ooSocketRecv</a> (OOSOCKET socket, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pbuf,
+<a name="l00255"></a>00255 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g008f62868f2cea5fd3328994e970dcc6">ooSocketRecv</a> (OOSOCKET socket, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pbuf,
 <a name="l00256"></a>00256                            <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> bufsize);
 <a name="l00257"></a>00257
-<a name="l00277"></a>00277 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g00c1cf6b2e2a615ba392e1bab4124300">ooSocketRecvFrom</a> (OOSOCKET socket, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pbuf,
+<a name="l00277"></a>00277 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g00c1cf6b2e2a615ba392e1bab4124300">ooSocketRecvFrom</a> (OOSOCKET socket, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pbuf,
 <a name="l00278"></a>00278                              <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> bufsize, <span class="keywordtype">char</span> * remotehost,
 <a name="l00279"></a>00279                              <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> hostBufLen, <span class="keywordtype">int</span> * remoteport);
-<a name="l00292"></a>00292 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g8ff89c24d93e0525a47c80a54796352b">ooSocketSend</a> (OOSOCKET socket, <span class="keyword">const</span> <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pdata,
+<a name="l00292"></a>00292 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g8ff89c24d93e0525a47c80a54796352b">ooSocketSend</a> (OOSOCKET socket, <span class="keyword">const</span> <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pdata,
 <a name="l00293"></a>00293                            <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> size);
 <a name="l00294"></a>00294
-<a name="l00311"></a>00311 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g53f9b4060e8382edb5bbf173e3644a21">ooSocketSendTo</a>(OOSOCKET socket, <span class="keyword">const</span> <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pdata,
+<a name="l00311"></a>00311 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g53f9b4060e8382edb5bbf173e3644a21">ooSocketSendTo</a>(OOSOCKET socket, <span class="keyword">const</span> <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* pdata,
 <a name="l00312"></a>00312                             <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> size, <span class="keyword">const</span> <span class="keywordtype">char</span>* remotehost,
 <a name="l00313"></a>00313                             <span class="keywordtype">int</span> remoteport);
 <a name="l00314"></a>00314
-<a name="l00332"></a>00332 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#gdb284237d446041a4b40ee50eff68fd9">ooSocketSelect</a>(<span class="keywordtype">int</span> nfds, fd_set *readfds, fd_set *writefds,
+<a name="l00332"></a>00332 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#gdb284237d446041a4b40ee50eff68fd9">ooSocketSelect</a>(<span class="keywordtype">int</span> nfds, fd_set *readfds, fd_set *writefds,
 <a name="l00333"></a>00333                             fd_set *exceptfds, <span class="keyword">struct</span> timeval * timeout);
 <a name="l00334"></a>00334
-<a name="l00347"></a>00347 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g42fc4b6ae48c54261f9937d3d4c4b037">ooSocketStrToAddr</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* pIPAddrStr, OOIPADDR* pIPAddr);
+<a name="l00347"></a>00347 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g42fc4b6ae48c54261f9937d3d4c4b037">ooSocketStrToAddr</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* pIPAddrStr, OOIPADDR* pIPAddr);
 <a name="l00348"></a>00348
-<a name="l00360"></a>00360   <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g9458075cfd8cffcc1fa87097f4e49f31">ooSocketConvertIpToNwAddr</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* inetIp, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* netIp, size_t bufsiz);
+<a name="l00360"></a>00360   <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g9458075cfd8cffcc1fa87097f4e49f31">ooSocketConvertIpToNwAddr</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* inetIp, <a class="code" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>* netIp, size_t bufsiz);
 <a name="l00361"></a>00361
-<a name="l00370"></a>00370 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g61ac370fef45630273b9541409cebd10">ooGetLocalIPAddress</a>(<span class="keywordtype">char</span> * pIPAddrs);
+<a name="l00370"></a>00370 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#g61ac370fef45630273b9541409cebd10">ooGetLocalIPAddress</a>(<span class="keywordtype">char</span> * pIPAddrs);
 <a name="l00371"></a>00371
-<a name="l00372"></a>00372 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> ooSocketGetSockName
+<a name="l00372"></a>00372 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> ooSocketGetSockName
 <a name="l00373"></a>00373 (OOSOCKET socket, <span class="keyword">struct</span> sockaddr_in *<a class="code" href="structOOInterface.shtml#073763a113627f924f5d92a83db0dc19">name</a>, socklen_t* size);
 <a name="l00374"></a>00374
-<a name="l00375"></a>00375 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">long</span> ooSocketHTONL(<span class="keywordtype">long</span> val);
+<a name="l00375"></a>00375 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">long</span> ooSocketHTONL(<span class="keywordtype">long</span> val);
 <a name="l00376"></a>00376
-<a name="l00377"></a>00377 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">short</span> ooSocketHTONS(<span class="keywordtype">short</span> val);
+<a name="l00377"></a>00377 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">short</span> ooSocketHTONS(<span class="keywordtype">short</span> val);
 <a name="l00378"></a>00378
-<a name="l00390"></a>00390 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#ga6e0a2cfdb9e70bcb633f287dd0e4ae2">ooSocketGetIpAndPort</a>(OOSOCKET socket, <span class="keywordtype">char</span> *ip, <span class="keywordtype">int</span> len, <span class="keywordtype">int</span> *port);
+<a name="l00390"></a>00390 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__sockets.shtml#ga6e0a2cfdb9e70bcb633f287dd0e4ae2">ooSocketGetIpAndPort</a>(OOSOCKET socket, <span class="keywordtype">char</span> *ip, <span class="keywordtype">int</span> len, <span class="keywordtype">int</span> *port);
 <a name="l00391"></a>00391
 <a name="l00392"></a>00392
-<a name="l00393"></a>00393 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> ooSocketGetInterfaceList(<a class="code" href="structOOCTXT.shtml">OOCTXT</a> *pctxt, <a class="code" href="structOOInterface.shtml">OOInterface</a> **ifList);
+<a name="l00393"></a>00393 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> ooSocketGetInterfaceList(<a class="code" href="structOOCTXT.shtml">OOCTXT</a> *pctxt, <a class="code" href="structOOInterface.shtml">OOInterface</a> **ifList);
 <a name="l00397"></a>00397 <span class="preprocessor">#ifdef __cplusplus</span>
 <a name="l00398"></a>00398 <span class="preprocessor"></span>}
 <a name="l00399"></a>00399 <span class="preprocessor">#endif</span>
@@ -179,6 +179,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

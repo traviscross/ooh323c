@@ -201,97 +201,97 @@
 <a name="l00209"></a>00209 <span class="keyword">struct </span><a class="code" href="structOOAliases.shtml">OOAliases</a>;
 <a name="l00210"></a>00210 <span class="keyword">struct </span><a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>;
 <a name="l00211"></a>00211
-<a name="l00223"></a>00223 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g0d5338b91dd874321d15cc358222ee38">ooGkClientInit</a>
+<a name="l00223"></a>00223 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g0d5338b91dd874321d15cc358222ee38">ooGkClientInit</a>
 <a name="l00224"></a>00224    (<span class="keyword">enum</span> <a class="code" href="group__gkclient.shtml#g36116031cecac25fbed511b63fa6b1ce">RasGatekeeperMode</a> eGkMode, <span class="keywordtype">char</span> *szGkAddr, <span class="keywordtype">int</span> iGkPort );
 <a name="l00225"></a>00225
-<a name="l00231"></a>00231 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__gkclient.shtml#g2d483948a708079230d3f2b394f3c09d">ooGkClientPrintConfig</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00231"></a>00231 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__gkclient.shtml#g2d483948a708079230d3f2b394f3c09d">ooGkClientPrintConfig</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00232"></a>00232
-<a name="l00239"></a>00239 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge3db28c3e4102a8fa69075531251fbe7">ooGkClientDestroy</a>(<span class="keywordtype">void</span>);
+<a name="l00239"></a>00239 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge3db28c3e4102a8fa69075531251fbe7">ooGkClientDestroy</a>(<span class="keywordtype">void</span>);
 <a name="l00240"></a>00240
-<a name="l00247"></a>00247 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g213921c435488f44fd3c7b3da865e3d8">ooGkClientStart</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00247"></a>00247 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g213921c435488f44fd3c7b3da865e3d8">ooGkClientStart</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00248"></a>00248
-<a name="l00262"></a>00262 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g5ae1668c8774820f926f0e2e91465f31">ooGkClientSetGkMode</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient,
+<a name="l00262"></a>00262 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g5ae1668c8774820f926f0e2e91465f31">ooGkClientSetGkMode</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient,
 <a name="l00263"></a>00263                                <span class="keyword">enum</span> <a class="code" href="group__gkclient.shtml#g36116031cecac25fbed511b63fa6b1ce">RasGatekeeperMode</a> eGkMode, <span class="keywordtype">char</span> *szGkAddr,
 <a name="l00264"></a>00264                                <span class="keywordtype">int</span> iGkPort );
 <a name="l00265"></a>00265
-<a name="l00273"></a>00273 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gec5045421b1b7c272649238638aebd2e">ooGkClientCreateChannel</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00273"></a>00273 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gec5045421b1b7c272649238638aebd2e">ooGkClientCreateChannel</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00274"></a>00274
-<a name="l00281"></a>00281 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g8f66715e303d1c9725d9191d2e1a795a">ooGkClientCloseChannel</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00281"></a>00281 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g8f66715e303d1c9725d9191d2e1a795a">ooGkClientCloseChannel</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00282"></a>00282
 <a name="l00283"></a>00283
-<a name="l00291"></a>00291 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__gkclient.shtml#g31fe6c625ee1d633af4d0b86dc646f32">ooGkClientRasFillVendor</a>
+<a name="l00291"></a>00291 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="group__gkclient.shtml#g31fe6c625ee1d633af4d0b86dc646f32">ooGkClientRasFillVendor</a>
 <a name="l00292"></a>00292    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225VendorIdentifier *psVendor);
 <a name="l00293"></a>00293
 <a name="l00294"></a>00294
-<a name="l00303"></a>00303 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g12e2e6b000af2b3886138bd8e1bd1886">ooGkClientReceive</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00303"></a>00303 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g12e2e6b000af2b3886138bd8e1bd1886">ooGkClientReceive</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00304"></a>00304
 <a name="l00305"></a>00305
-<a name="l00314"></a>00314 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g385fe7cae185ba64583cefb54a9bdd96">ooGkClientHandleRASMessage</a>
+<a name="l00314"></a>00314 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g385fe7cae185ba64583cefb54a9bdd96">ooGkClientHandleRASMessage</a>
 <a name="l00315"></a>00315    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225RasMessage *pRasMsg);
 <a name="l00316"></a>00316
 <a name="l00317"></a>00317
-<a name="l00325"></a>00325 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g6746eb089763bc35161a51e0a14136b5">ooGkClientSendMsg</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225RasMessage *pRasMsg);
+<a name="l00325"></a>00325 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g6746eb089763bc35161a51e0a14136b5">ooGkClientSendMsg</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225RasMessage *pRasMsg);
 <a name="l00326"></a>00326
 <a name="l00327"></a>00327
-<a name="l00335"></a>00335 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g9fa9d2d388203067149c9214fc0a0555">ooGkClientSendGRQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00335"></a>00335 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g9fa9d2d388203067149c9214fc0a0555">ooGkClientSendGRQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00336"></a>00336
 <a name="l00337"></a>00337
-<a name="l00345"></a>00345 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ga26e686dffb8bfeda8e789f1534e3a70">ooGkClientHandleGatekeeperReject</a>
+<a name="l00345"></a>00345 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ga26e686dffb8bfeda8e789f1534e3a70">ooGkClientHandleGatekeeperReject</a>
 <a name="l00346"></a>00346    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225GatekeeperReject *pGatekeeperReject);
 <a name="l00347"></a>00347
-<a name="l00355"></a>00355 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g822a3235e6c68742a9525cb176904202">ooGkClientHandleGatekeeperConfirm</a>
+<a name="l00355"></a>00355 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g822a3235e6c68742a9525cb176904202">ooGkClientHandleGatekeeperConfirm</a>
 <a name="l00356"></a>00356    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225GatekeeperConfirm *pGatekeeperConfirm);
 <a name="l00357"></a>00357
 <a name="l00358"></a>00358
-<a name="l00368"></a>00368 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g5e2a5b2154aef8ef26717557d30f8728">ooGkClientSendRRQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <a class="code" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a> keepAlive);
+<a name="l00368"></a>00368 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g5e2a5b2154aef8ef26717557d30f8728">ooGkClientSendRRQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <a class="code" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a> keepAlive);
 <a name="l00369"></a>00369
-<a name="l00377"></a>00377 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g3041d2fe36c733d5737050f985c0d438">ooGkClientHandleRegistrationConfirm</a>
+<a name="l00377"></a>00377 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g3041d2fe36c733d5737050f985c0d438">ooGkClientHandleRegistrationConfirm</a>
 <a name="l00378"></a>00378    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225RegistrationConfirm *pRegistrationConfirm);
 <a name="l00379"></a>00379
-<a name="l00387"></a>00387 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gf2ca42b56dab8f358cf850ef8577aef2">ooGkClientHandleRegistrationReject</a>
+<a name="l00387"></a>00387 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gf2ca42b56dab8f358cf850ef8577aef2">ooGkClientHandleRegistrationReject</a>
 <a name="l00388"></a>00388    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225RegistrationReject *pRegistrationReject);
 <a name="l00389"></a>00389
 <a name="l00390"></a>00390
-<a name="l00400"></a>00400 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gd98f2d81dfe82cbbe5caedaf3ea9d77e">ooGkClientSendURQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOAliases.shtml">OOAliases</a> *aliases);
+<a name="l00400"></a>00400 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gd98f2d81dfe82cbbe5caedaf3ea9d77e">ooGkClientSendURQ</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOAliases.shtml">OOAliases</a> *aliases);
 <a name="l00401"></a>00401
-<a name="l00409"></a>00409 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gc883f4025eff6c77f52683074358ca6c">ooGkClientHandleUnregistrationRequest</a>
+<a name="l00409"></a>00409 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gc883f4025eff6c77f52683074358ca6c">ooGkClientHandleUnregistrationRequest</a>
 <a name="l00410"></a>00410    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225UnregistrationRequest *punregistrationRequest);
 <a name="l00411"></a>00411
 <a name="l00412"></a>00412
-<a name="l00421"></a>00421 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g003d8aa78d73c8cc0442eb47d59a51a5">ooGkClientSendUnregistrationConfirm</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient,
+<a name="l00421"></a>00421 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g003d8aa78d73c8cc0442eb47d59a51a5">ooGkClientSendUnregistrationConfirm</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient,
 <a name="l00422"></a>00422                                                                <span class="keywordtype">unsigned</span> reqNo);
 <a name="l00423"></a>00423
-<a name="l00433"></a>00433 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g4f731933f8dc19f68c2d683d6cbcf327">ooGkClientSendAdmissionRequest</a>
+<a name="l00433"></a>00433 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g4f731933f8dc19f68c2d683d6cbcf327">ooGkClientSendAdmissionRequest</a>
 <a name="l00434"></a>00434    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a> retransmit);
 <a name="l00435"></a>00435
-<a name="l00443"></a>00443 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g9a8505ef069eb9184d508204deccab42">ooGkClientHandleAdmissionConfirm</a>
+<a name="l00443"></a>00443 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g9a8505ef069eb9184d508204deccab42">ooGkClientHandleAdmissionConfirm</a>
 <a name="l00444"></a>00444    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225AdmissionConfirm *pAdmissionConfirm);
 <a name="l00445"></a>00445
 <a name="l00446"></a>00446
-<a name="l00456"></a>00456 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge751063b19e92d5c23abcae8bd017035">ooGkClientHandleAdmissionReject</a>
+<a name="l00456"></a>00456 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge751063b19e92d5c23abcae8bd017035">ooGkClientHandleAdmissionReject</a>
 <a name="l00457"></a>00457    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225AdmissionReject *pAdmissionReject);
 <a name="l00458"></a>00458
-<a name="l00466"></a>00466 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#geead2b05bb04fa509798dfece719c133">ooGkClientSendDisengageRequest</a>
+<a name="l00466"></a>00466 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#geead2b05bb04fa509798dfece719c133">ooGkClientSendDisengageRequest</a>
 <a name="l00467"></a>00467    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00468"></a>00468
-<a name="l00476"></a>00476 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gba3bd7534578bb10445393f0b5366610">ooGkClientHandleDisengageConfirm</a>
+<a name="l00476"></a>00476 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gba3bd7534578bb10445393f0b5366610">ooGkClientHandleDisengageConfirm</a>
 <a name="l00477"></a>00477    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225DisengageConfirm *pDCF);
 <a name="l00478"></a>00478
-<a name="l00485"></a>00485 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g981da4d3912b2b8f17307e12c015c3ae">ooGkClientRRQTimerExpired</a>(<span class="keywordtype">void</span>*pdata);
+<a name="l00485"></a>00485 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g981da4d3912b2b8f17307e12c015c3ae">ooGkClientRRQTimerExpired</a>(<span class="keywordtype">void</span>*pdata);
 <a name="l00486"></a>00486
-<a name="l00493"></a>00493 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gf99eb99f6c049b2309f252c292a3c780">ooGkClientGRQTimerExpired</a>(<span class="keywordtype">void</span>* pdata);
+<a name="l00493"></a>00493 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gf99eb99f6c049b2309f252c292a3c780">ooGkClientGRQTimerExpired</a>(<span class="keywordtype">void</span>* pdata);
 <a name="l00494"></a>00494
-<a name="l00501"></a>00501 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge0f2570e3869ec8a768a7dd4925227cd">ooGkClientREGTimerExpired</a>(<span class="keywordtype">void</span> *pdata);
+<a name="l00501"></a>00501 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ge0f2570e3869ec8a768a7dd4925227cd">ooGkClientREGTimerExpired</a>(<span class="keywordtype">void</span> *pdata);
 <a name="l00502"></a>00502
-<a name="l00509"></a>00509 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gc7770bf405a8cb04955bb96f8f83d56d">ooGkClientARQTimerExpired</a>(<span class="keywordtype">void</span>* pdata);
+<a name="l00509"></a>00509 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gc7770bf405a8cb04955bb96f8f83d56d">ooGkClientARQTimerExpired</a>(<span class="keywordtype">void</span>* pdata);
 <a name="l00510"></a>00510
-<a name="l00518"></a>00518 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gfff5fb7d980b68671d1918a9b345df33">ooGkClientCleanCall</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00518"></a>00518 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gfff5fb7d980b68671d1918a9b345df33">ooGkClientCleanCall</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <span class="keyword">struct</span> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00519"></a>00519
-<a name="l00527"></a>00527 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gea8866285833c4d75ae0886a81cdcbc3">ooGkClientHandleClientOrGkFailure</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
+<a name="l00527"></a>00527 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#gea8866285833c4d75ae0886a81cdcbc3">ooGkClientHandleClientOrGkFailure</a>(<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient);
 <a name="l00528"></a>00528
-<a name="l00538"></a>00538 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g6dd194964a16fa11dacba159f79d314f">ooGkClientUpdateRegisteredAliases</a>
+<a name="l00538"></a>00538 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#g6dd194964a16fa11dacba159f79d314f">ooGkClientUpdateRegisteredAliases</a>
 <a name="l00539"></a>00539    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225_SeqOfH225AliasAddress *pAddresses,
-<a name="l00540"></a>00540     <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> registered);
+<a name="l00540"></a>00540     <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> registered);
 <a name="l00541"></a>00541
 <a name="l00550"></a>00550 <span class="keywordtype">int</span> <a class="code" href="group__gkclient.shtml#ga588c5c057a13b0cb6e7658c36d489be">ooGkClientSetCallbacks</a>
 <a name="l00551"></a>00551    (<a class="code" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <a class="code" href="structOOGKCLIENTCALLBACKS.shtml">OOGKCLIENTCALLBACKS</a> callbacks);
@@ -305,6 +305,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

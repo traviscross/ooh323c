@@ -40,29 +40,29 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4dbf9b67b86ef1f459b9059c1b530284"></a><!-- doxytag: member="OOCTXT::pMsgMemHeap" ref="4dbf9b67b86ef1f459b9059c1b530284" args="" -->
 void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#4dbf9b67b86ef1f459b9059c1b530284">pMsgMemHeap</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gf23637a2c315cc97694ea0af0acb5766"></a><!-- doxytag: member="OOCTXT::pTypeMemHeap" ref="gf23637a2c315cc97694ea0af0acb5766" args="" -->
-void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gf23637a2c315cc97694ea0af0acb5766">pTypeMemHeap</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f23637a2c315cc97694ea0af0acb5766"></a><!-- doxytag: member="OOCTXT::pTypeMemHeap" ref="f23637a2c315cc97694ea0af0acb5766" args="" -->
+void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#f23637a2c315cc97694ea0af0acb5766">pTypeMemHeap</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g93a4787053313eeda5672f6f9538bc85"></a><!-- doxytag: member="OOCTXT::buffer" ref="g93a4787053313eeda5672f6f9538bc85" args="" -->
-<a class="el" href="structASN1BUFFER.shtml">ASN1BUFFER</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g93a4787053313eeda5672f6f9538bc85">buffer</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="93a4787053313eeda5672f6f9538bc85"></a><!-- doxytag: member="OOCTXT::buffer" ref="93a4787053313eeda5672f6f9538bc85" args="" -->
+<a class="el" href="structASN1BUFFER.shtml">ASN1BUFFER</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#93a4787053313eeda5672f6f9538bc85">buffer</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g69e8d8032b65a06cacbd4f01ea7b17c7"></a><!-- doxytag: member="OOCTXT::errInfo" ref="g69e8d8032b65a06cacbd4f01ea7b17c7" args="" -->
-<a class="el" href="structASN1ErrInfo.shtml">ASN1ErrInfo</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g69e8d8032b65a06cacbd4f01ea7b17c7">errInfo</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="69e8d8032b65a06cacbd4f01ea7b17c7"></a><!-- doxytag: member="OOCTXT::errInfo" ref="69e8d8032b65a06cacbd4f01ea7b17c7" args="" -->
+<a class="el" href="structASN1ErrInfo.shtml">ASN1ErrInfo</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#69e8d8032b65a06cacbd4f01ea7b17c7">errInfo</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g5adc5ed1d6c96401a0c30b88cb78225a"></a><!-- doxytag: member="OOCTXT::pSizeConstraint" ref="g5adc5ed1d6c96401a0c30b88cb78225a" args="" -->
-<a class="el" href="struct__Asn1SizeCnst.shtml">Asn1SizeCnst</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g5adc5ed1d6c96401a0c30b88cb78225a">pSizeConstraint</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="5adc5ed1d6c96401a0c30b88cb78225a"></a><!-- doxytag: member="OOCTXT::pSizeConstraint" ref="5adc5ed1d6c96401a0c30b88cb78225a" args="" -->
+<a class="el" href="struct__Asn1SizeCnst.shtml">Asn1SizeCnst</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#5adc5ed1d6c96401a0c30b88cb78225a">pSizeConstraint</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g42fdde15e8285327e92b134bd91b6738"></a><!-- doxytag: member="OOCTXT::pCharSet" ref="g42fdde15e8285327e92b134bd91b6738" args="" -->
-const char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g42fdde15e8285327e92b134bd91b6738">pCharSet</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="42fdde15e8285327e92b134bd91b6738"></a><!-- doxytag: member="OOCTXT::pCharSet" ref="42fdde15e8285327e92b134bd91b6738" args="" -->
+const char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#42fdde15e8285327e92b134bd91b6738">pCharSet</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ga056fefa77a4acb061085773051d7d47"></a><!-- doxytag: member="OOCTXT::pEventHandler" ref="ga056fefa77a4acb061085773051d7d47" args="" -->
-EventHandler *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#ga056fefa77a4acb061085773051d7d47">pEventHandler</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a056fefa77a4acb061085773051d7d47"></a><!-- doxytag: member="OOCTXT::pEventHandler" ref="a056fefa77a4acb061085773051d7d47" args="" -->
+EventHandler *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#a056fefa77a4acb061085773051d7d47">pEventHandler</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gecf50fa915a26893f7d0200e95bee2a9"></a><!-- doxytag: member="OOCTXT::flags" ref="gecf50fa915a26893f7d0200e95bee2a9" args="" -->
-<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gecf50fa915a26893f7d0200e95bee2a9">flags</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ecf50fa915a26893f7d0200e95bee2a9"></a><!-- doxytag: member="OOCTXT::flags" ref="ecf50fa915a26893f7d0200e95bee2a9" args="" -->
+<a class="el" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#ecf50fa915a26893f7d0200e95bee2a9">flags</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gc524313f18e1390224648a4c3569e3f3"></a><!-- doxytag: member="OOCTXT::spare" ref="gc524313f18e1390224648a4c3569e3f3" args="[2]" -->
-<a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gc524313f18e1390224648a4c3569e3f3">spare</a> [2]</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c524313f18e1390224648a4c3569e3f3"></a><!-- doxytag: member="OOCTXT::spare" ref="c524313f18e1390224648a4c3569e3f3" args="[2]" -->
+<a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCTXT.shtml#c524313f18e1390224648a4c3569e3f3">spare</a> [2]</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -77,6 +77,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00404">404</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

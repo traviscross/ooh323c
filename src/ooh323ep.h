@@ -140,15 +140,16 @@ typedef struct OOH323EndPoint {
    ASN1UINT tcsTimeout;
    ASN1UINT logicalChannelTimeout;
    ASN1UINT sessionTimeout;
-   int cmdPipe[2];
+   /* int cmdPipe[2]; */
    struct ooGkClient *gkClient;
 
    OOInterface *ifList; /* interface list for the host we are running on*/
    OOBOOL isGateway;
    OOSOCKET cmdListener;
    OOSOCKET cmdSock;
+#ifdef _WIN32
    int cmdPort; /* default 7575 */
-
+#endif
    /**
     * Configured Q.931 transport capability is used to set the Q.931
     * bearer capability IE.
@@ -175,11 +176,12 @@ EXTERN int ooH323EpInitialize
  * This function applies configuration parameters to the global H.323
  * endpoint variable.
  *
- * @param config        Pointer to configuration structure.
+ * @param pconfig       Pointer to configuration structure.
  * @return              OO_OK (0) on success or OO_FAILED on failure
  */
 EXTERN int ooH323EpApplyConfig (const OOConfigFile* pconfig);
 
+#ifdef _WIN32
 /**
  * This function is used to create a command listener for the endpoint.
  * Before any command is issued to the endpoint, command listener must be
@@ -190,6 +192,7 @@ EXTERN int ooH323EpApplyConfig (const OOConfigFile* pconfig);
  * @return                 OO_OK, on success; OO_FAILED, on failure
  */
 EXTERN int ooH323EpCreateCmdListener(int cmdPort);
+#endif
 
 /**
  * This function is used to represent the H.323 application endpoint as
@@ -367,7 +370,7 @@ EXTERN int ooH323EpDisableManualRingback(void);
  *
  * @return            OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpDisableMediaWaitForConnect(void);
+EXTERN int ooH323EpEnableMediaWaitForConnect(void);
 
 /**
  * This function is used to disable MediaWaitForConnect.

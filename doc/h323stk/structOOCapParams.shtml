@@ -39,7 +39,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCapParams.shtml#99618987ca1e3d9df349174fa82cdd44">rxframes</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="66bbf9035af28e1afd4e9e9784021cdf"></a><!-- doxytag: member="OOCapParams::silenceSuppression" ref="66bbf9035af28e1afd4e9e9784021cdf" args="" -->
-<a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCapParams.shtml#66bbf9035af28e1afd4e9e9784021cdf">silenceSuppression</a></td></tr>
+<a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOCapParams.shtml#66bbf9035af28e1afd4e9e9784021cdf">silenceSuppression</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -89,6 +89,6 @@ Definition at line <a class="el" href="ooCapability_8h-source.shtml#l00089">89</
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

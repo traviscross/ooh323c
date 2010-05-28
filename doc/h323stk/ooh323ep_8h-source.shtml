@@ -144,166 +144,171 @@
 <a name="l00140"></a><a class="code" href="structOOH323EndPoint.shtml#aeda19feaba29fa43cee842ce20d8944">00140</a>    <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> <a class="code" href="structOOH323EndPoint.shtml#aeda19feaba29fa43cee842ce20d8944">tcsTimeout</a>;
 <a name="l00141"></a><a class="code" href="structOOH323EndPoint.shtml#1dcd601b5afb6f747e5f2d20cbfb326e">00141</a>    <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> <a class="code" href="structOOH323EndPoint.shtml#1dcd601b5afb6f747e5f2d20cbfb326e">logicalChannelTimeout</a>;
 <a name="l00142"></a><a class="code" href="structOOH323EndPoint.shtml#23fa02a2598105e5a31827c1c1bdd203">00142</a>    <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> <a class="code" href="structOOH323EndPoint.shtml#23fa02a2598105e5a31827c1c1bdd203">sessionTimeout</a>;
-<a name="l00143"></a><a class="code" href="structOOH323EndPoint.shtml#6610682d6032da06b55beb77da0d391e">00143</a>    <span class="keywordtype">int</span> <a class="code" href="structOOH323EndPoint.shtml#6610682d6032da06b55beb77da0d391e">cmdPipe</a>[2];
+<a name="l00143"></a>00143    <span class="comment">/* int cmdPipe[2]; */</span>
 <a name="l00144"></a><a class="code" href="structOOH323EndPoint.shtml#29d6fbb3b893732d9f43571515fe5d89">00144</a>    <span class="keyword">struct </span><a class="code" href="structooGkClient.shtml">ooGkClient</a> *<a class="code" href="structOOH323EndPoint.shtml#29d6fbb3b893732d9f43571515fe5d89">gkClient</a>;
 <a name="l00145"></a>00145
 <a name="l00146"></a><a class="code" href="structOOH323EndPoint.shtml#6c387be1cafa71d92160a7fc5a92e788">00146</a>    <a class="code" href="structOOInterface.shtml">OOInterface</a> *<a class="code" href="structOOH323EndPoint.shtml#6c387be1cafa71d92160a7fc5a92e788">ifList</a>; <span class="comment">/* interface list for the host we are running on*/</span>
-<a name="l00147"></a><a class="code" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">00147</a>    <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">isGateway</a>;
+<a name="l00147"></a><a class="code" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">00147</a>    <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="structOOH323EndPoint.shtml#7bf9254371b7f6b350b0fa5f961e630f">isGateway</a>;
 <a name="l00148"></a><a class="code" href="structOOH323EndPoint.shtml#0f314916b9da175ef982a7ab74bb40bc">00148</a>    <a class="code" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a> <a class="code" href="structOOH323EndPoint.shtml#0f314916b9da175ef982a7ab74bb40bc">cmdListener</a>;
 <a name="l00149"></a><a class="code" href="structOOH323EndPoint.shtml#adf6e536d99422a898ad4d7a73d7d978">00149</a>    <a class="code" href="group__sockets.shtml#g8b36278a51b06b41b9849d58cbc30d21">OOSOCKET</a> <a class="code" href="structOOH323EndPoint.shtml#adf6e536d99422a898ad4d7a73d7d978">cmdSock</a>;
-<a name="l00150"></a><a class="code" href="structOOH323EndPoint.shtml#f3df284c1ebfac602b1517a59a9ada8a">00150</a>    <span class="keywordtype">int</span> <a class="code" href="structOOH323EndPoint.shtml#f3df284c1ebfac602b1517a59a9ada8a">cmdPort</a>; <span class="comment">/* default 7575 */</span>
-<a name="l00151"></a>00151
-<a name="l00156"></a><a class="code" href="structOOH323EndPoint.shtml#78fbd0eaea462172ac2047db23f4e7aa">00156</a>    <span class="keyword">enum</span> <a class="code" href="group__q931.shtml#ge90404998b0e17a023cd619f807f497e">Q931InformationTransferCapability</a> <a class="code" href="structOOH323EndPoint.shtml#78fbd0eaea462172ac2047db23f4e7aa">bearercap</a>;
-<a name="l00157"></a>00157
-<a name="l00158"></a>00158 } <a class="code" href="structOOH323EndPoint.shtml">OOH323EndPoint</a>;
-<a name="l00159"></a>00159
-<a name="l00160"></a><a class="code" href="group__h323ep.shtml#gc54633ae6f3f1a0a47dd375beff523e7">00160</a> <span class="preprocessor">#define ooEndPoint OOH323EndPoint</span>
-<a name="l00161"></a>00161 <span class="preprocessor"></span>
-<a name="l00171"></a>00171 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g9beb2bdd6a005e656e7b91855d623024">ooH323EpInitialize</a>
-<a name="l00172"></a>00172    (<span class="keyword">enum</span> <a class="code" href="group__ootypes.shtml#g40e4bf189dea73f39d4d33036171047f">OOCallMode</a> callMode, <span class="keyword">const</span> <span class="keywordtype">char</span>* tracefile);
-<a name="l00173"></a>00173
-<a name="l00181"></a>00181 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb0dd39563b04c995f95eea2282b4f25a">ooH323EpApplyConfig</a> (<span class="keyword">const</span> <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
-<a name="l00182"></a>00182
-<a name="l00192"></a>00192 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gdf9e2a14284932b01b96e86362177e87">ooH323EpCreateCmdListener</a>(<span class="keywordtype">int</span> cmdPort);
-<a name="l00193"></a>00193
-<a name="l00200"></a>00200 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g8991026c13e646d7c6896ec82284c918">ooH323EpSetAsGateway</a>();
-<a name="l00201"></a>00201
-<a name="l00210"></a>00210 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#geefee4f09560701aa5eaf73705dc1ce3">ooH323EpSetLocalAddress</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* localip, <span class="keywordtype">int</span> listenport);
-<a name="l00211"></a>00211
-<a name="l00220"></a>00220 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g1557a3af1611ddc93f8bfc966f93a9c6">ooH323EpSetTCPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
-<a name="l00221"></a>00221
-<a name="l00230"></a>00230 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g5963a20114febb09eb62f705b053ae4f">ooH323EpSetUDPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
-<a name="l00231"></a>00231
-<a name="l00240"></a>00240 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g402dd23ab3664ee47bf3fcf5907a0137">ooH323EpSetRTPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
-<a name="l00241"></a>00241
-<a name="l00248"></a>00248 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g170352bd48d253961429a08707a9701b">ooH323EpSetTraceLevel</a>(<span class="keywordtype">int</span> traceLevel);
-<a name="l00249"></a>00249
-<a name="l00256"></a>00256 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g408fee6f03c4f96f9d3ffee70f1822e0">ooH323EpAddAliasH323ID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
-<a name="l00257"></a>00257
-<a name="l00265"></a>00265 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g06a5c6ca159f4a14bc8517e576b500e6">ooH323EpAddAliasDialedDigits</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* dialedDigits);
-<a name="l00266"></a>00266
-<a name="l00273"></a>00273 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g819f31676830b17210d4ff4556967d40">ooH323EpAddAliasURLID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* url);
-<a name="l00274"></a>00274
-<a name="l00281"></a>00281 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge452f1828e043597f249498b345885a0">ooH323EpAddAliasEmailID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* email);
-<a name="l00282"></a>00282
-<a name="l00289"></a>00289 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0a3e45f01be84bb2861f45af9a685478">ooH323EpAddAliasTransportID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* ipaddress);
-<a name="l00290"></a>00290
-<a name="l00297"></a>00297 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g199d6ed2351f9cb39ea09d8077ccce51">ooH323EpClearAllAliases</a>(<span class="keywordtype">void</span>);
-<a name="l00298"></a>00298
-<a name="l00306"></a>00306 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g86c22ecec670ee58c4068e5391cdfcc7">ooH323EpSetH225MsgCallbacks</a>(<a class="code" href="structOOH225MsgCallbacks.shtml">OOH225MsgCallbacks</a> h225Callbacks);
-<a name="l00307"></a>00307
-<a name="l00316"></a>00316 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc33402dc1719fa20b4a932003286d2e6">ooH323EpSetH323Callbacks</a>(<a class="code" href="structOOH323CALLBACKS.shtml">OOH323CALLBACKS</a> h323Callbacks);
-<a name="l00317"></a>00317
-<a name="l00318"></a>00318
-<a name="l00327"></a>00327 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g3dbb593a69e053731eb1f54cacbdaedd">ooH323EpDestroy</a>(<span class="keywordtype">void</span>);
-<a name="l00328"></a>00328
-<a name="l00329"></a>00329
-<a name="l00336"></a>00336 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb3733d0db86f88a257e1a7ab8d682e71">ooH323EpEnableAutoAnswer</a>(<span class="keywordtype">void</span>);
-<a name="l00337"></a>00337
-<a name="l00344"></a>00344 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge5779b06fb0d74b34bdb74551a30cbea">ooH323EpDisableAutoAnswer</a>(<span class="keywordtype">void</span>);
-<a name="l00345"></a>00345
-<a name="l00354"></a>00354 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g285c86743c0951acd23bf3a1a7ed056e">ooH323EpEnableManualRingback</a>(<span class="keywordtype">void</span>);
-<a name="l00355"></a>00355
-<a name="l00363"></a>00363 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g48ab8dd5e4d41eb8170dd52525851643">ooH323EpDisableManualRingback</a>(<span class="keywordtype">void</span>);
-<a name="l00364"></a>00364
-<a name="l00370"></a>00370 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g78fae40fec3d78c8185cea89ede841df">ooH323EpDisableMediaWaitForConnect</a>(<span class="keywordtype">void</span>);
-<a name="l00371"></a>00371
-<a name="l00377"></a>00377 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g78fae40fec3d78c8185cea89ede841df">ooH323EpDisableMediaWaitForConnect</a>(<span class="keywordtype">void</span>);
-<a name="l00378"></a>00378
-<a name="l00384"></a>00384 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g9f4963546ba03225d8390df188fd7862">ooH323EpEnableFastStart</a>(<span class="keywordtype">void</span>);
-<a name="l00385"></a>00385
-<a name="l00391"></a>00391 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc67bd8125917dccb4e07ab4321cb0587">ooH323EpDisableFastStart</a>(<span class="keywordtype">void</span>);
-<a name="l00392"></a>00392
-<a name="l00398"></a>00398 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc53bd5d7b40a7144877bf9a43370ebb3">ooH323EpEnableH245Tunneling</a>(<span class="keywordtype">void</span>);
-<a name="l00399"></a>00399
-<a name="l00405"></a>00405 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g3a1c50f85cc087db51af9ef9da1c8386">ooH323EpDisableH245Tunneling</a>(<span class="keywordtype">void</span>);
-<a name="l00406"></a>00406
-<a name="l00412"></a>00412 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gfa0ae5f851a9491d1a620f9bf9c21ce3">ooH323EpEnableGkRouted</a>(<span class="keywordtype">void</span>);
-<a name="l00413"></a>00413
-<a name="l00419"></a>00419 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g6492d3ade09d18506381ae2cda7b0e26">ooH323EpDisableGkRouted</a>(<span class="keywordtype">void</span>);
-<a name="l00420"></a>00420
-<a name="l00427"></a>00427 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0db24d1b61b8598a90c8c47860970935">ooH323EpSetProductID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * productID);
-<a name="l00428"></a>00428
-<a name="l00435"></a>00435 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g29b48a7eeb107335209061aba8a5e9b6">ooH323EpSetVersionID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * versionID);
-<a name="l00436"></a>00436
-<a name="l00444"></a>00444 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gaf9ff62e39dc25d72c7f10995cd8f534">ooH323EpSetCallerID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * callerID);
-<a name="l00445"></a>00445
-<a name="l00454"></a>00454 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g43b60a9a71b89910f010673641f84d25">ooH323EpSetCallingPartyNumber</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * number);
-<a name="l00455"></a>00455
-<a name="l00460"></a>00460 <span class="keywordtype">void</span> <a class="code" href="group__h323ep.shtml#gc9b0aa85948f5b4b1ec674966af8614f">ooH323EpPrintConfig</a>(<span class="keywordtype">void</span>);
-<a name="l00461"></a>00461
-<a name="l00462"></a>00462
-<a name="l00476"></a>00476 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g621864def869509037e0c883aa7d003a">ooH323EpAddG728Capability</a>
-<a name="l00477"></a>00477    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
-<a name="l00478"></a>00478     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00479"></a>00479     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00480"></a>00480     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00481"></a>00481     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00482"></a>00482
-<a name="l00496"></a>00496 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc2d33ca5ad41b3b8de2178dd0b47987e">ooH323EpAddG729Capability</a>
-<a name="l00497"></a>00497    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
-<a name="l00498"></a>00498     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00499"></a>00499     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00500"></a>00500     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00501"></a>00501     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00502"></a>00502
-<a name="l00503"></a>00503
-<a name="l00518"></a>00518 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gf0e736a5ccc64b762bd43a12e3ea588e">ooH323EpAddG7231Capability</a>(<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes,
-<a name="l00519"></a>00519                               <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> silenceSuppression, <span class="keywordtype">int</span> dir,
-<a name="l00520"></a>00520                               <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00521"></a>00521                               <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00522"></a>00522                               <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00523"></a>00523                               <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00524"></a>00524
-<a name="l00538"></a>00538 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g037826651dd494071e103a66fbb74b51">ooH323EpAddG711Capability</a>
-<a name="l00539"></a>00539    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
-<a name="l00540"></a>00540     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00541"></a>00541     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00542"></a>00542     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00543"></a>00543     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00544"></a>00544
-<a name="l00545"></a>00545
-<a name="l00560"></a>00560 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g52aac85a50bf6e028bd035663fe1b535">ooH323EpAddGSMCapability</a>(<span class="keywordtype">int</span> cap, <a class="code" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a> framesPerPkt,
-<a name="l00561"></a>00561                              <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> comfortNoise,<a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> scrambled,<span class="keywordtype">int</span> dir,
-<a name="l00562"></a>00562                              <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00563"></a>00563                              <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00564"></a>00564                              <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00565"></a>00565                              <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00590"></a>00590 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge07ea3b67ddbf7e7a40c50d25621afcc">ooH323EpAddH263VideoCapability</a>(<span class="keywordtype">int</span> cap, <span class="keywordtype">unsigned</span> sqcifMPI,
-<a name="l00591"></a>00591                                  <span class="keywordtype">unsigned</span> qcifMPI, <span class="keywordtype">unsigned</span> cifMPI,
-<a name="l00592"></a>00592                                  <span class="keywordtype">unsigned</span> cif4MPI, <span class="keywordtype">unsigned</span> cif16MPI,
-<a name="l00593"></a>00593                                  <span class="keywordtype">unsigned</span> maxBitRate, <span class="keywordtype">int</span> dir,
-<a name="l00594"></a>00594                                  <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
-<a name="l00595"></a>00595                                  <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
-<a name="l00596"></a>00596                                  <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
-<a name="l00597"></a>00597                                  <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
-<a name="l00598"></a>00598
-<a name="l00605"></a>00605 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb86c94f85cf785b6bd02f97fae0b04e3">ooH323EpEnableDTMFRFC2833</a>(<span class="keywordtype">int</span> dynamicRTPPayloadType);
-<a name="l00606"></a>00606
-<a name="l00612"></a>00612 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc27e3cb3ec2c7abb8e9a845b20903813">ooH323EpDisableDTMFRFC2833</a>(<span class="keywordtype">void</span>);
-<a name="l00613"></a>00613
-<a name="l00619"></a>00619 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g217e88873ae1c6dfe7a7b5de4075fe0f">ooH323EpEnableDTMFH245Alphanumeric</a>();
-<a name="l00620"></a>00620
-<a name="l00626"></a>00626 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0ddba6acc9ff2bd9152b67773532d030">ooH323EpDisableDTMFH245Alphanumeric</a>();
-<a name="l00627"></a>00627
-<a name="l00633"></a>00633 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g4f2d622e636a1b016921129931fec9bf">ooH323EpEnableDTMFH245Signal</a>();
-<a name="l00634"></a>00634
-<a name="l00640"></a>00640 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gfd4c5a2a9d267a7d1f59e1b085568680">ooH323EpDisableDTMFH245Signal</a>();
-<a name="l00641"></a>00641
-<a name="l00652"></a>00652 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge11773f7ee641691ad6ece7a7d9e0a1d">ooH323EpSetGkClientCallbacks</a>(<a class="code" href="structOOGKCLIENTCALLBACKS.shtml">OOGKCLIENTCALLBACKS</a> gkClientCallbacks);
-<a name="l00653"></a>00653
-<a name="l00664"></a>00664 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc72b3105ef302f6a762d590dd49d43b5">ooH323EpSetBearerCap</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* configText);
-<a name="l00665"></a>00665
-<a name="l00669"></a>00669 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00670"></a>00670 <span class="preprocessor"></span>}
-<a name="l00671"></a>00671 <span class="preprocessor">#endif</span>
-<a name="l00672"></a>00672 <span class="preprocessor"></span>
-<a name="l00673"></a>00673 <span class="preprocessor">#endif</span>
+<a name="l00150"></a>00150 <span class="preprocessor">#ifdef _WIN32</span>
+<a name="l00151"></a>00151 <span class="preprocessor"></span>   <span class="keywordtype">int</span> cmdPort; <span class="comment">/* default 7575 */</span>
+<a name="l00152"></a>00152 <span class="preprocessor">#endif</span>
+<a name="l00153"></a>00153 <span class="preprocessor"></span>
+<a name="l00157"></a><a class="code" href="structOOH323EndPoint.shtml#78fbd0eaea462172ac2047db23f4e7aa">00157</a>    <span class="keyword">enum</span> <a class="code" href="group__q931.shtml#ge90404998b0e17a023cd619f807f497e">Q931InformationTransferCapability</a> <a class="code" href="structOOH323EndPoint.shtml#78fbd0eaea462172ac2047db23f4e7aa">bearercap</a>;
+<a name="l00158"></a>00158
+<a name="l00159"></a>00159 } <a class="code" href="structOOH323EndPoint.shtml">OOH323EndPoint</a>;
+<a name="l00160"></a>00160
+<a name="l00161"></a><a class="code" href="group__h323ep.shtml#gc54633ae6f3f1a0a47dd375beff523e7">00161</a> <span class="preprocessor">#define ooEndPoint OOH323EndPoint</span>
+<a name="l00162"></a>00162 <span class="preprocessor"></span>
+<a name="l00172"></a>00172 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g9beb2bdd6a005e656e7b91855d623024">ooH323EpInitialize</a>
+<a name="l00173"></a>00173    (<span class="keyword">enum</span> <a class="code" href="group__ootypes.shtml#g40e4bf189dea73f39d4d33036171047f">OOCallMode</a> callMode, <span class="keyword">const</span> <span class="keywordtype">char</span>* tracefile);
+<a name="l00174"></a>00174
+<a name="l00182"></a>00182 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb0dd39563b04c995f95eea2282b4f25a">ooH323EpApplyConfig</a> (<span class="keyword">const</span> <a class="code" href="structOOConfigFile.shtml">OOConfigFile</a>* pconfig);
+<a name="l00183"></a>00183
+<a name="l00184"></a>00184 <span class="preprocessor">#ifdef _WIN32</span>
+<a name="l00185"></a>00185 <span class="preprocessor"></span>
+<a name="l00194"></a>00194 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> ooH323EpCreateCmdListener(<span class="keywordtype">int</span> cmdPort);
+<a name="l00195"></a>00195 <span class="preprocessor">#endif</span>
+<a name="l00196"></a>00196 <span class="preprocessor"></span>
+<a name="l00203"></a>00203 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g8991026c13e646d7c6896ec82284c918">ooH323EpSetAsGateway</a>();
+<a name="l00204"></a>00204
+<a name="l00213"></a>00213 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#geefee4f09560701aa5eaf73705dc1ce3">ooH323EpSetLocalAddress</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* localip, <span class="keywordtype">int</span> listenport);
+<a name="l00214"></a>00214
+<a name="l00223"></a>00223 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g1557a3af1611ddc93f8bfc966f93a9c6">ooH323EpSetTCPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
+<a name="l00224"></a>00224
+<a name="l00233"></a>00233 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g5963a20114febb09eb62f705b053ae4f">ooH323EpSetUDPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
+<a name="l00234"></a>00234
+<a name="l00243"></a>00243 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g402dd23ab3664ee47bf3fcf5907a0137">ooH323EpSetRTPPortRange</a>(<span class="keywordtype">int</span> base, <span class="keywordtype">int</span> max);
+<a name="l00244"></a>00244
+<a name="l00251"></a>00251 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g170352bd48d253961429a08707a9701b">ooH323EpSetTraceLevel</a>(<span class="keywordtype">int</span> traceLevel);
+<a name="l00252"></a>00252
+<a name="l00259"></a>00259 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g408fee6f03c4f96f9d3ffee70f1822e0">ooH323EpAddAliasH323ID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
+<a name="l00260"></a>00260
+<a name="l00268"></a>00268 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g06a5c6ca159f4a14bc8517e576b500e6">ooH323EpAddAliasDialedDigits</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* dialedDigits);
+<a name="l00269"></a>00269
+<a name="l00276"></a>00276 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g819f31676830b17210d4ff4556967d40">ooH323EpAddAliasURLID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* url);
+<a name="l00277"></a>00277
+<a name="l00284"></a>00284 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge452f1828e043597f249498b345885a0">ooH323EpAddAliasEmailID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* email);
+<a name="l00285"></a>00285
+<a name="l00292"></a>00292 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0a3e45f01be84bb2861f45af9a685478">ooH323EpAddAliasTransportID</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* ipaddress);
+<a name="l00293"></a>00293
+<a name="l00300"></a>00300 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g199d6ed2351f9cb39ea09d8077ccce51">ooH323EpClearAllAliases</a>(<span class="keywordtype">void</span>);
+<a name="l00301"></a>00301
+<a name="l00309"></a>00309 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g86c22ecec670ee58c4068e5391cdfcc7">ooH323EpSetH225MsgCallbacks</a>(<a class="code" href="structOOH225MsgCallbacks.shtml">OOH225MsgCallbacks</a> h225Callbacks);
+<a name="l00310"></a>00310
+<a name="l00319"></a>00319 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc33402dc1719fa20b4a932003286d2e6">ooH323EpSetH323Callbacks</a>(<a class="code" href="structOOH323CALLBACKS.shtml">OOH323CALLBACKS</a> h323Callbacks);
+<a name="l00320"></a>00320
+<a name="l00321"></a>00321
+<a name="l00330"></a>00330 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g3dbb593a69e053731eb1f54cacbdaedd">ooH323EpDestroy</a>(<span class="keywordtype">void</span>);
+<a name="l00331"></a>00331
+<a name="l00332"></a>00332
+<a name="l00339"></a>00339 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb3733d0db86f88a257e1a7ab8d682e71">ooH323EpEnableAutoAnswer</a>(<span class="keywordtype">void</span>);
+<a name="l00340"></a>00340
+<a name="l00347"></a>00347 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge5779b06fb0d74b34bdb74551a30cbea">ooH323EpDisableAutoAnswer</a>(<span class="keywordtype">void</span>);
+<a name="l00348"></a>00348
+<a name="l00357"></a>00357 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g285c86743c0951acd23bf3a1a7ed056e">ooH323EpEnableManualRingback</a>(<span class="keywordtype">void</span>);
+<a name="l00358"></a>00358
+<a name="l00366"></a>00366 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g48ab8dd5e4d41eb8170dd52525851643">ooH323EpDisableManualRingback</a>(<span class="keywordtype">void</span>);
+<a name="l00367"></a>00367
+<a name="l00373"></a>00373 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g811da5b2eaf6266c744efd772c5c5a93">ooH323EpEnableMediaWaitForConnect</a>(<span class="keywordtype">void</span>);
+<a name="l00374"></a>00374
+<a name="l00380"></a>00380 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g78fae40fec3d78c8185cea89ede841df">ooH323EpDisableMediaWaitForConnect</a>(<span class="keywordtype">void</span>);
+<a name="l00381"></a>00381
+<a name="l00387"></a>00387 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g9f4963546ba03225d8390df188fd7862">ooH323EpEnableFastStart</a>(<span class="keywordtype">void</span>);
+<a name="l00388"></a>00388
+<a name="l00394"></a>00394 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc67bd8125917dccb4e07ab4321cb0587">ooH323EpDisableFastStart</a>(<span class="keywordtype">void</span>);
+<a name="l00395"></a>00395
+<a name="l00401"></a>00401 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc53bd5d7b40a7144877bf9a43370ebb3">ooH323EpEnableH245Tunneling</a>(<span class="keywordtype">void</span>);
+<a name="l00402"></a>00402
+<a name="l00408"></a>00408 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g3a1c50f85cc087db51af9ef9da1c8386">ooH323EpDisableH245Tunneling</a>(<span class="keywordtype">void</span>);
+<a name="l00409"></a>00409
+<a name="l00415"></a>00415 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gfa0ae5f851a9491d1a620f9bf9c21ce3">ooH323EpEnableGkRouted</a>(<span class="keywordtype">void</span>);
+<a name="l00416"></a>00416
+<a name="l00422"></a>00422 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g6492d3ade09d18506381ae2cda7b0e26">ooH323EpDisableGkRouted</a>(<span class="keywordtype">void</span>);
+<a name="l00423"></a>00423
+<a name="l00430"></a>00430 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0db24d1b61b8598a90c8c47860970935">ooH323EpSetProductID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * productID);
+<a name="l00431"></a>00431
+<a name="l00438"></a>00438 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g29b48a7eeb107335209061aba8a5e9b6">ooH323EpSetVersionID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * versionID);
+<a name="l00439"></a>00439
+<a name="l00447"></a>00447 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gaf9ff62e39dc25d72c7f10995cd8f534">ooH323EpSetCallerID</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> * callerID);
+<a name="l00448"></a>00448
+<a name="l00457"></a>00457 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g43b60a9a71b89910f010673641f84d25">ooH323EpSetCallingPartyNumber</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * number);
+<a name="l00458"></a>00458
+<a name="l00463"></a>00463 <span class="keywordtype">void</span> <a class="code" href="group__h323ep.shtml#gc9b0aa85948f5b4b1ec674966af8614f">ooH323EpPrintConfig</a>(<span class="keywordtype">void</span>);
+<a name="l00464"></a>00464
+<a name="l00465"></a>00465
+<a name="l00479"></a>00479 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g621864def869509037e0c883aa7d003a">ooH323EpAddG728Capability</a>
+<a name="l00480"></a>00480    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
+<a name="l00481"></a>00481     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00482"></a>00482     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00483"></a>00483     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00484"></a>00484     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00485"></a>00485
+<a name="l00499"></a>00499 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc2d33ca5ad41b3b8de2178dd0b47987e">ooH323EpAddG729Capability</a>
+<a name="l00500"></a>00500    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
+<a name="l00501"></a>00501     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00502"></a>00502     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00503"></a>00503     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00504"></a>00504     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00505"></a>00505
+<a name="l00506"></a>00506
+<a name="l00521"></a>00521 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gf0e736a5ccc64b762bd43a12e3ea588e">ooH323EpAddG7231Capability</a>(<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes,
+<a name="l00522"></a>00522                               <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> silenceSuppression, <span class="keywordtype">int</span> dir,
+<a name="l00523"></a>00523                               <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00524"></a>00524                               <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00525"></a>00525                               <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00526"></a>00526                               <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00527"></a>00527
+<a name="l00541"></a>00541 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g037826651dd494071e103a66fbb74b51">ooH323EpAddG711Capability</a>
+<a name="l00542"></a>00542    (<span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes, <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
+<a name="l00543"></a>00543     <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00544"></a>00544     <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00545"></a>00545     <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00546"></a>00546     <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00547"></a>00547
+<a name="l00548"></a>00548
+<a name="l00563"></a>00563 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g52aac85a50bf6e028bd035663fe1b535">ooH323EpAddGSMCapability</a>(<span class="keywordtype">int</span> cap, <a class="code" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a> framesPerPkt,
+<a name="l00564"></a>00564                              <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> comfortNoise,<a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> scrambled,<span class="keywordtype">int</span> dir,
+<a name="l00565"></a>00565                              <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00566"></a>00566                              <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00567"></a>00567                              <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00568"></a>00568                              <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00593"></a>00593 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge07ea3b67ddbf7e7a40c50d25621afcc">ooH323EpAddH263VideoCapability</a>(<span class="keywordtype">int</span> cap, <span class="keywordtype">unsigned</span> sqcifMPI,
+<a name="l00594"></a>00594                                  <span class="keywordtype">unsigned</span> qcifMPI, <span class="keywordtype">unsigned</span> cifMPI,
+<a name="l00595"></a>00595                                  <span class="keywordtype">unsigned</span> cif4MPI, <span class="keywordtype">unsigned</span> cif16MPI,
+<a name="l00596"></a>00596                                  <span class="keywordtype">unsigned</span> maxBitRate, <span class="keywordtype">int</span> dir,
+<a name="l00597"></a>00597                                  <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
+<a name="l00598"></a>00598                                  <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
+<a name="l00599"></a>00599                                  <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
+<a name="l00600"></a>00600                                  <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
+<a name="l00601"></a>00601
+<a name="l00608"></a>00608 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gb86c94f85cf785b6bd02f97fae0b04e3">ooH323EpEnableDTMFRFC2833</a>(<span class="keywordtype">int</span> dynamicRTPPayloadType);
+<a name="l00609"></a>00609
+<a name="l00615"></a>00615 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc27e3cb3ec2c7abb8e9a845b20903813">ooH323EpDisableDTMFRFC2833</a>(<span class="keywordtype">void</span>);
+<a name="l00616"></a>00616
+<a name="l00622"></a>00622 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g217e88873ae1c6dfe7a7b5de4075fe0f">ooH323EpEnableDTMFH245Alphanumeric</a>();
+<a name="l00623"></a>00623
+<a name="l00629"></a>00629 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g0ddba6acc9ff2bd9152b67773532d030">ooH323EpDisableDTMFH245Alphanumeric</a>();
+<a name="l00630"></a>00630
+<a name="l00636"></a>00636 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#g4f2d622e636a1b016921129931fec9bf">ooH323EpEnableDTMFH245Signal</a>();
+<a name="l00637"></a>00637
+<a name="l00643"></a>00643 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gfd4c5a2a9d267a7d1f59e1b085568680">ooH323EpDisableDTMFH245Signal</a>();
+<a name="l00644"></a>00644
+<a name="l00655"></a>00655 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#ge11773f7ee641691ad6ece7a7d9e0a1d">ooH323EpSetGkClientCallbacks</a>(<a class="code" href="structOOGKCLIENTCALLBACKS.shtml">OOGKCLIENTCALLBACKS</a> gkClientCallbacks);
+<a name="l00656"></a>00656
+<a name="l00667"></a>00667 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__h323ep.shtml#gc72b3105ef302f6a762d590dd49d43b5">ooH323EpSetBearerCap</a> (<span class="keyword">const</span> <span class="keywordtype">char</span>* configText);
+<a name="l00668"></a>00668
+<a name="l00672"></a>00672 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00673"></a>00673 <span class="preprocessor"></span>}
+<a name="l00674"></a>00674 <span class="preprocessor">#endif</span>
+<a name="l00675"></a>00675 <span class="preprocessor"></span>
+<a name="l00676"></a>00676 <span class="preprocessor">#endif</span>
 </pre></div><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

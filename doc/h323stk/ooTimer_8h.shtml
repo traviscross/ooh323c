@@ -52,13 +52,13 @@ typedef <a class="el" href="struct__OOTimer.shtml">_OOTimer</a>&nbsp;</td><td cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#56c4016fa3d58a42297a3b8ad9576fe0">ooTimerComputeExpireTime</a> (<a class="el" href="struct__OOTimer.shtml">OOTimer</a> *pTimer)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function computes the relative expiration time from the current time for the given timer object.  <a href="#56c4016fa3d58a42297a3b8ad9576fe0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="struct__OOTimer.shtml">OOTimer</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#0aa795a169cd7fa33907f50c3432cb55">ooTimerCreate</a> (<a class="el" href="structOOCTXT.shtml">OOCTXT</a> *pctxt, DList *pList, <a class="el" href="ooTimer_8h.shtml#42695a0ba0325ecda7231c8c03ac9662">OOTimerCbFunc</a> cb, <a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> deltaSecs, void *data, <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> reRegister)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="struct__OOTimer.shtml">OOTimer</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#0aa795a169cd7fa33907f50c3432cb55">ooTimerCreate</a> (<a class="el" href="structOOCTXT.shtml">OOCTXT</a> *pctxt, DList *pList, <a class="el" href="ooTimer_8h.shtml#42695a0ba0325ecda7231c8c03ac9662">OOTimerCbFunc</a> cb, <a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> deltaSecs, void *data, <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> reRegister)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function creates and initializes a new timer object.  <a href="#0aa795a169cd7fa33907f50c3432cb55"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#fd47e07b2ea1cba96a87548c54215c87">ooTimerDelete</a> (<a class="el" href="structOOCTXT.shtml">OOCTXT</a> *pctxt, DList *pList, <a class="el" href="struct__OOTimer.shtml">OOTimer</a> *pTimer)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function deletes the given timer object.  <a href="#fd47e07b2ea1cba96a87548c54215c87"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#1e69e808886b23328a54849ff6683102">ooTimerExpired</a> (<a class="el" href="struct__OOTimer.shtml">OOTimer</a> *pTimer)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ooTimer_8h.shtml#1e69e808886b23328a54849ff6683102">ooTimerExpired</a> (<a class="el" href="struct__OOTimer.shtml">OOTimer</a> *pTimer)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function checks a timer to determine if it is expired.  <a href="#1e69e808886b23328a54849ff6683102"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="57c59c60ed009be763a1367f5cf61b60"></a><!-- doxytag: member="ooTimer.h::ooTimerFireExpired" ref="57c59c60ed009be763a1367f5cf61b60" args="(OOCTXT *pctxt, DList *pList)" -->
@@ -136,7 +136,7 @@ This function computes the relative expiration time from the current time for th
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td>
           <td class="paramname"> <em>deltaSecs</em>, </td>
         </tr>
         <tr>
@@ -148,7 +148,7 @@ This function computes the relative expiration time from the current time for th
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td>
           <td class="paramname"> <em>reRegister</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -226,7 +226,7 @@ This function deletes the given timer object.
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">EXTERN <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> ooTimerExpired           </td>
+          <td class="memname">EXTERN <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> ooTimerExpired           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct__OOTimer.shtml">OOTimer</a> *&nbsp;</td>
           <td class="paramname"> <em>pTimer</em>          </td>
@@ -419,6 +419,6 @@ This function is used to compare two timeout values.
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

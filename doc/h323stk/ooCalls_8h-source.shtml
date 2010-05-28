@@ -116,7 +116,7 @@
 <a name="l00105"></a><a class="code" href="structOOCallFwdData.shtml#d3f762bfcc844801c2690233d7464cd8">00105</a>    <span class="keywordtype">char</span> <a class="code" href="structOOCallFwdData.shtml#d3f762bfcc844801c2690233d7464cd8">ip</a>[20];
 <a name="l00106"></a><a class="code" href="structOOCallFwdData.shtml#596a1387919bf0e7bdbcd39c498b699a">00106</a>    <span class="keywordtype">int</span> <a class="code" href="structOOCallFwdData.shtml#596a1387919bf0e7bdbcd39c498b699a">port</a>;
 <a name="l00107"></a><a class="code" href="structOOCallFwdData.shtml#9473f841aa872f3e04ece4d2f2a3de01">00107</a>    <span class="keyword">struct </span><a class="code" href="structOOAliases.shtml">OOAliases</a> *<a class="code" href="structOOCallFwdData.shtml#9473f841aa872f3e04ece4d2f2a3de01">aliases</a>;
-<a name="l00108"></a><a class="code" href="structOOCallFwdData.shtml#ae996d7fda7dfc7c4a7a1a4824a020ad">00108</a>    <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="structOOCallFwdData.shtml#ae996d7fda7dfc7c4a7a1a4824a020ad">fwdedByRemote</a>; <span class="comment">/*Set when we are being fwded by remote*/</span>
+<a name="l00108"></a><a class="code" href="structOOCallFwdData.shtml#ae996d7fda7dfc7c4a7a1a4824a020ad">00108</a>    <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> <a class="code" href="structOOCallFwdData.shtml#ae996d7fda7dfc7c4a7a1a4824a020ad">fwdedByRemote</a>; <span class="comment">/*Set when we are being fwded by remote*/</span>
 <a name="l00109"></a>00109 } <a class="code" href="structOOCallFwdData.shtml">OOCallFwdData</a>;
 <a name="l00110"></a>00110
 <a name="l00115"></a><a class="code" href="structOOH323Channel.shtml">00115</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structOOH323Channel.shtml">OOH323Channel</a> {
@@ -125,7 +125,7 @@
 <a name="l00118"></a><a class="code" href="structOOH323Channel.shtml#4812448c594f6f8715e80872935317b9">00118</a>    DList    <a class="code" href="structOOH323Channel.shtml#4812448c594f6f8715e80872935317b9">outQueue</a>; 
 <a name="l00119"></a>00119 } <a class="code" href="structOOH323Channel.shtml">OOH323Channel</a>;
 <a name="l00120"></a>00120
-<a name="l00125"></a><a class="code" href="structFastStartResponse.shtml">00125</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> FastStartResponse {
+<a name="l00125"></a><a class="code" href="structFastStartResponse.shtml">00125</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> FastStartResponse {
 <a name="l00126"></a><a class="code" href="structFastStartResponse.shtml#bf6760267f8d6c079dc68bbc33bc684b">00126</a>    <a class="code" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a> n;
 <a name="l00127"></a><a class="code" href="structFastStartResponse.shtml#8858b1a3587cdbc28a175ee2d4e148a3">00127</a>    <a class="code" href="structASN1DynOctStr.shtml">ASN1DynOctStr</a> *elem;
 <a name="l00128"></a>00128 } FastStartResponse;
@@ -221,70 +221,70 @@
 <a name="l00293"></a><a class="code" href="structOOH323CALLBACKS.shtml#559dac8f8883ba11e1b95ed8001df2b6">00293</a>    <a class="code" href="group__callmgmt.shtml#gd493ae2fbee92c326ab7b2322a11ca0b">cb_OnReceivedDTMF</a> <a class="code" href="structOOH323CALLBACKS.shtml#559dac8f8883ba11e1b95ed8001df2b6">onReceivedDTMF</a>;
 <a name="l00294"></a>00294 } <a class="code" href="structOOH323CALLBACKS.shtml">OOH323CALLBACKS</a>;
 <a name="l00295"></a>00295
-<a name="l00303"></a>00303 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* <a class="code" href="group__callmgmt.shtml#g34c0623adc0c6b1e33226fb5a9df6c77">ooCreateCall</a>(<span class="keywordtype">char</span> *type, <span class="keywordtype">char</span> *callToken);
+<a name="l00303"></a>00303 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* <a class="code" href="group__callmgmt.shtml#g34c0623adc0c6b1e33226fb5a9df6c77">ooCreateCall</a>(<span class="keywordtype">char</span> *type, <span class="keywordtype">char</span> *callToken);
 <a name="l00304"></a>00304
-<a name="l00310"></a>00310 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g9dbb0fc86de40a7986e630a929875b75">ooAddCallToList</a> (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00310"></a>00310 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g9dbb0fc86de40a7986e630a929875b75">ooAddCallToList</a> (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00311"></a>00311
-<a name="l00319"></a>00319 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gf493bd72d0a43a2a738a3447b82ca598">ooCallSetCallerId</a>
+<a name="l00319"></a>00319 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gf493bd72d0a43a2a738a3447b82ca598">ooCallSetCallerId</a>
 <a name="l00320"></a>00320 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* call, <span class="keyword">const</span> <span class="keywordtype">char</span>* callerid);
 <a name="l00321"></a>00321
-<a name="l00329"></a>00329 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6f2a6dda5df5f5cffd96dc29694c5fa9">ooCallSetCallingPartyNumber</a>
+<a name="l00329"></a>00329 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6f2a6dda5df5f5cffd96dc29694c5fa9">ooCallSetCallingPartyNumber</a>
 <a name="l00330"></a>00330 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span> *number);
 <a name="l00331"></a>00331
-<a name="l00340"></a>00340 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g51f425655731d49411c5adde498461a3">ooCallGetCallingPartyNumber</a>
+<a name="l00340"></a>00340 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g51f425655731d49411c5adde498461a3">ooCallGetCallingPartyNumber</a>
 <a name="l00341"></a>00341 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">char</span> *buffer, <span class="keywordtype">int</span> len);
 <a name="l00342"></a>00342
-<a name="l00351"></a>00351 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6a64e3d9ca7fc01ea8ba9a0b10fc341d">ooCallGetCalledPartyNumber</a>
+<a name="l00351"></a>00351 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6a64e3d9ca7fc01ea8ba9a0b10fc341d">ooCallGetCalledPartyNumber</a>
 <a name="l00352"></a>00352 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">char</span> *buffer, <span class="keywordtype">int</span> len);
 <a name="l00353"></a>00353
-<a name="l00361"></a>00361 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g238ab5d81c591e58ac6c04fbab443adf">ooCallSetCalledPartyNumber</a>
+<a name="l00361"></a>00361 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g238ab5d81c591e58ac6c04fbab443adf">ooCallSetCalledPartyNumber</a>
 <a name="l00362"></a>00362 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span> *number);
 <a name="l00363"></a>00363
-<a name="l00370"></a>00370 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g04d2021560b9ccffb623c7b86ecea5df">ooCallClearAliases</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00370"></a>00370 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g04d2021560b9ccffb623c7b86ecea5df">ooCallClearAliases</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00371"></a>00371
-<a name="l00380"></a>00380 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gd8408d649a9330afb957abf1a97458af">ooCallAddAliasH323ID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
+<a name="l00380"></a>00380 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gd8408d649a9330afb957abf1a97458af">ooCallAddAliasH323ID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
 <a name="l00381"></a>00381
-<a name="l00390"></a>00390 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g583f75baa659c649d2336ccdf712ec36">ooCallAddAliasDialedDigits</a>
+<a name="l00390"></a>00390 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g583f75baa659c649d2336ccdf712ec36">ooCallAddAliasDialedDigits</a>
 <a name="l00391"></a>00391                              (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* dialedDigits);
 <a name="l00392"></a>00392
-<a name="l00401"></a>00401 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g7ae3bbd79c27d4d046b4e1639f3cad12">ooCallAddAliasEmailID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* email);
+<a name="l00401"></a>00401 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g7ae3bbd79c27d4d046b4e1639f3cad12">ooCallAddAliasEmailID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* email);
 <a name="l00402"></a>00402
 <a name="l00403"></a>00403
-<a name="l00412"></a>00412 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gebc5c797d6b81eeb6f65d2bf80b5ff65">ooCallAddAliasURLID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* url);
+<a name="l00412"></a>00412 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gebc5c797d6b81eeb6f65d2bf80b5ff65">ooCallAddAliasURLID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* url);
 <a name="l00413"></a>00413
 <a name="l00414"></a>00414
 <a name="l00426"></a>00426 <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g840b0b31142dcf6fd03670a89c57ae93">ooCallAddAlias</a>
-<a name="l00427"></a>00427    (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> aliasType, <span class="keyword">const</span> <span class="keywordtype">char</span> *value, <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> local);
+<a name="l00427"></a>00427    (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> aliasType, <span class="keyword">const</span> <span class="keywordtype">char</span> *value, <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> local);
 <a name="l00428"></a>00428
 <a name="l00429"></a>00429
-<a name="l00438"></a>00438 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g5bb83807981cc1463a2cf1a5434b19f3">ooCallAddRemoteAliasDialedDigits</a>
+<a name="l00438"></a>00438 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g5bb83807981cc1463a2cf1a5434b19f3">ooCallAddRemoteAliasDialedDigits</a>
 <a name="l00439"></a>00439    (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* dialedDigits);
 <a name="l00440"></a>00440
-<a name="l00449"></a>00449 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gcbf13bdbe56372340d9c19c0d1b44c86">ooCallAddRemoteAliasH323ID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
+<a name="l00449"></a>00449 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gcbf13bdbe56372340d9c19c0d1b44c86">ooCallAddRemoteAliasH323ID</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keyword">const</span> <span class="keywordtype">char</span>* h323id);
 <a name="l00450"></a>00450
 <a name="l00451"></a>00451
-<a name="l00469"></a>00469 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gfbec42b2072eb9e0bbf1e11d6710b865">ooCallAddG7231Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
-<a name="l00470"></a>00470                             <span class="keywordtype">int</span> rxframes, <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> silenceSuppression, <span class="keywordtype">int</span> dir,
+<a name="l00469"></a>00469 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gfbec42b2072eb9e0bbf1e11d6710b865">ooCallAddG7231Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
+<a name="l00470"></a>00470                             <span class="keywordtype">int</span> rxframes, <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> silenceSuppression, <span class="keywordtype">int</span> dir,
 <a name="l00471"></a>00471                             <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
 <a name="l00472"></a>00472                             <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
 <a name="l00473"></a>00473                             <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
 <a name="l00474"></a>00474                             <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
 <a name="l00475"></a>00475
-<a name="l00492"></a>00492 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gc4750503c979f0c332ebfed6486b4fce">ooCallAddG728Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
+<a name="l00492"></a>00492 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gc4750503c979f0c332ebfed6486b4fce">ooCallAddG728Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
 <a name="l00493"></a>00493                             <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
 <a name="l00494"></a>00494                             <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
 <a name="l00495"></a>00495                             <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
 <a name="l00496"></a>00496                             <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
 <a name="l00497"></a>00497                             <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
 <a name="l00498"></a>00498
-<a name="l00515"></a>00515 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g4bc59c5c84b1e255e2cbca2674a110c5">ooCallAddG729Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
+<a name="l00515"></a>00515 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g4bc59c5c84b1e255e2cbca2674a110c5">ooCallAddG729Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
 <a name="l00516"></a>00516                             <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
 <a name="l00517"></a>00517                             <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
 <a name="l00518"></a>00518                             <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
 <a name="l00519"></a>00519                             <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
 <a name="l00520"></a>00520                             <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
 <a name="l00521"></a>00521
-<a name="l00538"></a>00538 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gb159ecc1c4d0e53c2b0d566d092c6b32">ooCallAddG711Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
+<a name="l00538"></a>00538 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gb159ecc1c4d0e53c2b0d566d092c6b32">ooCallAddG711Capability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap, <span class="keywordtype">int</span> txframes,
 <a name="l00539"></a>00539                             <span class="keywordtype">int</span> rxframes, <span class="keywordtype">int</span> dir,
 <a name="l00540"></a>00540                             <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
 <a name="l00541"></a>00541                             <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
@@ -292,9 +292,9 @@
 <a name="l00543"></a>00543                             <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
 <a name="l00544"></a>00544
 <a name="l00545"></a>00545
-<a name="l00563"></a>00563 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gcb3d3d1740a43bd46148ee3a2b8ab213">ooCallAddGSMCapability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* call, <span class="keywordtype">int</span> cap,
-<a name="l00564"></a>00564                                   <a class="code" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a> framesPerPkt, <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> comfortNoise,
-<a name="l00565"></a>00565                                   <a class="code" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> scrambled, <span class="keywordtype">int</span> dir,
+<a name="l00563"></a>00563 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gcb3d3d1740a43bd46148ee3a2b8ab213">ooCallAddGSMCapability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* call, <span class="keywordtype">int</span> cap,
+<a name="l00564"></a>00564                                   <a class="code" href="group__cruntime.shtml#g750fa6ea4197d481d6ce00cf805c1506">ASN1USINT</a> framesPerPkt, <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> comfortNoise,
+<a name="l00565"></a>00565                                   <a class="code" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> scrambled, <span class="keywordtype">int</span> dir,
 <a name="l00566"></a>00566                                   <a class="code" href="ooCapability_8h.shtml#f9fde99f5eff50a8743bde162f669ae3">cb_StartReceiveChannel</a> startReceiveChannel,
 <a name="l00567"></a>00567                                   <a class="code" href="ooCapability_8h.shtml#3aca75ffa58081b6f8f45527d9aa363f">cb_StartTransmitChannel</a> startTransmitChannel,
 <a name="l00568"></a>00568                                   <a class="code" href="ooCapability_8h.shtml#284fea9d5f58db005db34586882a9587">cb_StopReceiveChannel</a> stopReceiveChannel,
@@ -303,7 +303,7 @@
 <a name="l00571"></a>00571
 <a name="l00572"></a>00572
 <a name="l00573"></a>00573
-<a name="l00601"></a>00601 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gbbd8ece1ded86140711f12a4316522f4">ooCallAddH263VideoCapability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap,
+<a name="l00601"></a>00601 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gbbd8ece1ded86140711f12a4316522f4">ooCallAddH263VideoCapability</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> cap,
 <a name="l00602"></a>00602                                  <span class="keywordtype">unsigned</span> sqcifMPI, <span class="keywordtype">unsigned</span> qcifMPI,
 <a name="l00603"></a>00603                                  <span class="keywordtype">unsigned</span> cifMPI, <span class="keywordtype">unsigned</span> cif4MPI,
 <a name="l00604"></a>00604                                  <span class="keywordtype">unsigned</span> cif16MPI, <span class="keywordtype">unsigned</span> maxBitRate,
@@ -314,49 +314,49 @@
 <a name="l00609"></a>00609                                  <a class="code" href="ooCapability_8h.shtml#4d25d82b38a28219afb927d87dcc51b0">cb_StopTransmitChannel</a> stopTransmitChannel);
 <a name="l00610"></a>00610
 <a name="l00611"></a>00611
-<a name="l00622"></a>00622 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g43f4d1ba4730fabd02c5aa762a2c66a0">ooCallEnableDTMFRFC2833</a>
+<a name="l00622"></a>00622 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g43f4d1ba4730fabd02c5aa762a2c66a0">ooCallEnableDTMFRFC2833</a>
 <a name="l00623"></a>00623           (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> dynamicRTPPayloadType);
 <a name="l00624"></a>00624
 <a name="l00625"></a>00625
-<a name="l00635"></a>00635 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gae1610602fc38d2c589eef1615fcf047">ooCallDisableDTMFRFC2833</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00635"></a>00635 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gae1610602fc38d2c589eef1615fcf047">ooCallDisableDTMFRFC2833</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00636"></a>00636
 <a name="l00637"></a>00637
-<a name="l00648"></a>00648 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gabeb1026983b3797692d536ae48017a3">ooCallEnableDTMFH245Alphanumeric</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00648"></a>00648 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gabeb1026983b3797692d536ae48017a3">ooCallEnableDTMFH245Alphanumeric</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00649"></a>00649
-<a name="l00660"></a>00660 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g567b5697f0b85aa901439770974cbd61">ooCallDisableDTMFH245Alphanumeric</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00660"></a>00660 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g567b5697f0b85aa901439770974cbd61">ooCallDisableDTMFH245Alphanumeric</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00661"></a>00661
-<a name="l00672"></a>00672 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6f3b8eb7ef845a0ae3e24c1574fbf5a0">ooCallEnableDTMFH245Signal</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00672"></a>00672 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g6f3b8eb7ef845a0ae3e24c1574fbf5a0">ooCallEnableDTMFH245Signal</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00673"></a>00673
 <a name="l00674"></a>00674
-<a name="l00685"></a>00685 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga82856caab91196dca22ad2d6f5c2b0f">ooCallDisableDTMFH245Signal</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00685"></a>00685 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#ga82856caab91196dca22ad2d6f5c2b0f">ooCallDisableDTMFH245Signal</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00686"></a>00686
 <a name="l00687"></a>00687
-<a name="l00698"></a>00698 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gb3414fc60aa0ad441ecb2e4fea5164ba">ooCallEnableDTMFQ931Keypad</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00698"></a>00698 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gb3414fc60aa0ad441ecb2e4fea5164ba">ooCallEnableDTMFQ931Keypad</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00699"></a>00699
-<a name="l00710"></a>00710 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g279382a1953ed11f077e514d76c4c253">ooCallDisableDTMFQ931Keypad</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00710"></a>00710 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g279382a1953ed11f077e514d76c4c253">ooCallDisableDTMFQ931Keypad</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00711"></a>00711
 <a name="l00712"></a>00712
-<a name="l00719"></a>00719 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* <a class="code" href="group__callmgmt.shtml#gbe7dafeaa09bf5195b7b76a1669fdd21">ooFindCallByToken</a>(<span class="keywordtype">char</span> *callToken);
+<a name="l00719"></a>00719 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="structOOH323CallData.shtml">OOH323CallData</a>* <a class="code" href="group__callmgmt.shtml#gbe7dafeaa09bf5195b7b76a1669fdd21">ooFindCallByToken</a>(<span class="keywordtype">char</span> *callToken);
 <a name="l00720"></a>00720
-<a name="l00728"></a>00728 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g5bea445c265bd3d22e2845a2c43088b3">ooEndCall</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00728"></a>00728 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g5bea445c265bd3d22e2845a2c43088b3">ooEndCall</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00729"></a>00729
-<a name="l00736"></a>00736 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g299434bd7eb7aea8e7477523b73cebd4">ooRemoveCallFromList</a> (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00736"></a>00736 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g299434bd7eb7aea8e7477523b73cebd4">ooRemoveCallFromList</a> (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00737"></a>00737
-<a name="l00745"></a>00745 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gd270e945690de5084ce9a6b72d4e9911">ooCleanCall</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
+<a name="l00745"></a>00745 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#gd270e945690de5084ce9a6b72d4e9911">ooCleanCall</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call);
 <a name="l00746"></a>00746
-<a name="l00757"></a>00757 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a> <a class="code" href="group__callmgmt.shtml#g89cce6de8860e8339d826cdd52ec8d62">ooIsSessionEstablished</a>
+<a name="l00757"></a>00757 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <a class="code" href="group__cruntime.shtml#gd5942cacdd859b0c59ec779e6e4dc466">ASN1BOOL</a> <a class="code" href="group__callmgmt.shtml#g89cce6de8860e8339d826cdd52ec8d62">ooIsSessionEstablished</a>
 <a name="l00758"></a>00758 (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <span class="keywordtype">int</span> sessionID, <span class="keywordtype">char</span>* dir);
 <a name="l00759"></a>00759
-<a name="l00771"></a>00771 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g9cc0b64d65d63966eeb31f1a5e896086">ooAddMediaInfo</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="structOOMediaInfo.shtml">OOMediaInfo</a> mediaInfo);
+<a name="l00771"></a>00771 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g9cc0b64d65d63966eeb31f1a5e896086">ooAddMediaInfo</a>(<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="structOOMediaInfo.shtml">OOMediaInfo</a> mediaInfo);
 <a name="l00772"></a>00772
-<a name="l00782"></a>00782 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">unsigned</span> <a class="code" href="group__callmgmt.shtml#gfdff731594daf06e1d2ff6a7ee8dccec">ooCallGenerateSessionID</a>
+<a name="l00782"></a>00782 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">unsigned</span> <a class="code" href="group__callmgmt.shtml#gfdff731594daf06e1d2ff6a7ee8dccec">ooCallGenerateSessionID</a>
 <a name="l00783"></a>00783                     (<a class="code" href="structOOH323CallData.shtml">OOH323CallData</a> *call, <a class="code" href="ooCapability_8h.shtml#d07fd3f1cc0c93d97dfdef3585cb5237">OOCapType</a> type, <span class="keywordtype">char</span> *dir);
 <a name="l00784"></a>00784
-<a name="l00793"></a>00793 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g8bcd00572976674c4016c3065fc426fd">ooCallH245ConnectionRetryTimerExpired</a>(<span class="keywordtype">void</span> *data);
+<a name="l00793"></a>00793 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__callmgmt.shtml#g8bcd00572976674c4016c3065fc426fd">ooCallH245ConnectionRetryTimerExpired</a>(<span class="keywordtype">void</span> *data);
 <a name="l00794"></a>00794
-<a name="l00802"></a>00802 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="group__callmgmt.shtml#gda2e98161ccd1d84ee358f17791d7152">ooGetReasonCodeText</a> (<a class="code" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> code);
+<a name="l00802"></a>00802 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="group__callmgmt.shtml#gda2e98161ccd1d84ee358f17791d7152">ooGetReasonCodeText</a> (<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> code);
 <a name="l00803"></a>00803
-<a name="l00811"></a>00811 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="group__callmgmt.shtml#gdc230019810e0427cf24f4d81be60404">ooGetCallStateText</a> (OOCallState callState);
+<a name="l00811"></a>00811 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="group__callmgmt.shtml#gdc230019810e0427cf24f4d81be60404">ooGetCallStateText</a> (OOCallState callState);
 <a name="l00812"></a>00812
 <a name="l00817"></a>00817 <span class="preprocessor">#ifdef __cplusplus</span>
 <a name="l00818"></a>00818 <span class="preprocessor"></span>}
@@ -368,6 +368,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

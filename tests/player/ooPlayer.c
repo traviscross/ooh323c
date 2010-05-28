@@ -129,8 +129,9 @@ int main(int argc, char ** argv)
    }
 
    ooH323EpSetLocalAddress(gLocalIp, 0);
-
+#ifdef _WIN32
    ooH323EpCreateCmdListener(0);
+#endif
    /* Register callbacks */
 
    h323Callbacks.onNewCallCreated = osEpOnNewCallCreated;

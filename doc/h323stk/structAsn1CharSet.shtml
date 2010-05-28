@@ -40,20 +40,20 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="d02fbd55027dc0590851afc87402145e"></a><!-- doxytag: member="Asn1CharSet::charSet" ref="d02fbd55027dc0590851afc87402145e" args="" -->
 <a class="el" href="structAsn1CharArray.shtml">Asn1CharArray</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#d02fbd55027dc0590851afc87402145e">charSet</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ga5dba3e2befd69528aa069097c9dce78"></a><!-- doxytag: member="Asn1CharSet::canonicalSet" ref="ga5dba3e2befd69528aa069097c9dce78" args="" -->
-const char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#ga5dba3e2befd69528aa069097c9dce78">canonicalSet</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a5dba3e2befd69528aa069097c9dce78"></a><!-- doxytag: member="Asn1CharSet::canonicalSet" ref="a5dba3e2befd69528aa069097c9dce78" args="" -->
+const char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#a5dba3e2befd69528aa069097c9dce78">canonicalSet</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gbd3a997474b87c8f96f4b42e054a99af"></a><!-- doxytag: member="Asn1CharSet::canonicalSetSize" ref="gbd3a997474b87c8f96f4b42e054a99af" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gbd3a997474b87c8f96f4b42e054a99af">canonicalSetSize</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="bd3a997474b87c8f96f4b42e054a99af"></a><!-- doxytag: member="Asn1CharSet::canonicalSetSize" ref="bd3a997474b87c8f96f4b42e054a99af" args="" -->
+int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#bd3a997474b87c8f96f4b42e054a99af">canonicalSetSize</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g9007f206a31ab404f9409a8849614cb2"></a><!-- doxytag: member="Asn1CharSet::canonicalSetBits" ref="g9007f206a31ab404f9409a8849614cb2" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g9007f206a31ab404f9409a8849614cb2">canonicalSetBits</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9007f206a31ab404f9409a8849614cb2"></a><!-- doxytag: member="Asn1CharSet::canonicalSetBits" ref="9007f206a31ab404f9409a8849614cb2" args="" -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#9007f206a31ab404f9409a8849614cb2">canonicalSetBits</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g6752fa3071e59650ab92ddd6f1d77c05"></a><!-- doxytag: member="Asn1CharSet::charSetUnalignedBits" ref="g6752fa3071e59650ab92ddd6f1d77c05" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g6752fa3071e59650ab92ddd6f1d77c05">charSetUnalignedBits</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6752fa3071e59650ab92ddd6f1d77c05"></a><!-- doxytag: member="Asn1CharSet::charSetUnalignedBits" ref="6752fa3071e59650ab92ddd6f1d77c05" args="" -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#6752fa3071e59650ab92ddd6f1d77c05">charSetUnalignedBits</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="g39877cfd4cd66fcf8b71c5903d8a7800"></a><!-- doxytag: member="Asn1CharSet::charSetAlignedBits" ref="g39877cfd4cd66fcf8b71c5903d8a7800" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#g39877cfd4cd66fcf8b71c5903d8a7800">charSetAlignedBits</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="39877cfd4cd66fcf8b71c5903d8a7800"></a><!-- doxytag: member="Asn1CharSet::charSetAlignedBits" ref="39877cfd4cd66fcf8b71c5903d8a7800" args="" -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharSet.shtml#39877cfd4cd66fcf8b71c5903d8a7800">charSetAlignedBits</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -68,6 +68,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00328">328</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

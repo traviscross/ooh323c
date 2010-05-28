@@ -31,23 +31,26 @@
     <li><a href="annotated.shtml"><span>Data&nbsp;Structures</span></a></li>
     <li><a href="functions.shtml"><span>Data&nbsp;Fields</span></a></li>
   </ul></div>
-<h1>_OOMsgBuf Struct Reference</h1><!-- doxytag: class="_OOMsgBuf" --><table border="0" cellpadding="0" cellspacing="0">
+<h1>_OOMsgBuf Struct Reference<br>
+<small>
+[<a class="el" href="group__cruntime.shtml">C Runtime Common Functions</a>]</small>
+</h1><!-- doxytag: class="_OOMsgBuf" --><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Data Fields</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="06b6c541d53fb31217d1913b80c713df"></a><!-- doxytag: member="_OOMsgBuf::pdata" ref="06b6c541d53fb31217d1913b80c713df" args="" -->
-<a class="el" href="ooCommon_8h.shtml#1fa62c076f49506499ea013ca5540741">OOUINT8</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#06b6c541d53fb31217d1913b80c713df">pdata</a></td></tr>
+<a class="el" href="group__cruntime.shtml#g1fa62c076f49506499ea013ca5540741">OOUINT8</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#06b6c541d53fb31217d1913b80c713df">pdata</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="89a983554879b6a011680cd60dd49035"></a><!-- doxytag: member="_OOMsgBuf::bufsiz" ref="89a983554879b6a011680cd60dd49035" args="" -->
-<a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#89a983554879b6a011680cd60dd49035">bufsiz</a></td></tr>
+<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#89a983554879b6a011680cd60dd49035">bufsiz</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="baa9c8bc6076d4ee26b0b43d75b742b5"></a><!-- doxytag: member="_OOMsgBuf::length" ref="baa9c8bc6076d4ee26b0b43d75b742b5" args="" -->
-<a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#baa9c8bc6076d4ee26b0b43d75b742b5">length</a></td></tr>
+<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#baa9c8bc6076d4ee26b0b43d75b742b5">length</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="5991df881c6062d7c296e94507f0ccb3"></a><!-- doxytag: member="_OOMsgBuf::offset" ref="5991df881c6062d7c296e94507f0ccb3" args="" -->
-<a class="el" href="ooCommon_8h.shtml#929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#5991df881c6062d7c296e94507f0ccb3">offset</a></td></tr>
+<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#5991df881c6062d7c296e94507f0ccb3">offset</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c11364a1632c71f5203526dd0429c3de"></a><!-- doxytag: member="_OOMsgBuf::dynamic" ref="c11364a1632c71f5203526dd0429c3de" args="" -->
-<a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#c11364a1632c71f5203526dd0429c3de">dynamic</a></td></tr>
+<a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__OOMsgBuf.shtml#c11364a1632c71f5203526dd0429c3de">dynamic</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -62,6 +65,6 @@ Definition at line <a class="el" href="ooCommon_8h-source.shtml#l00079">79</a> o
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -83,11 +83,11 @@ Here is a list of all documented struct and union fields with links to the struc
 <li>silenceSuppression
 : <a class="el" href="structOOCapParams.shtml#66bbf9035af28e1afd4e9e9784021cdf">OOCapParams</a>
 <li>size
-: <a class="el" href="group__rtmem.shtml#g390b19bd1eb27527cc513b9dbf99dcf1">ASN1BUFFER</a>
+: <a class="el" href="structASN1BUFFER.shtml#390b19bd1eb27527cc513b9dbf99dcf1">ASN1BUFFER</a>
 <li>sock
 : <a class="el" href="structOOH323Channel.shtml#2db7d3f747f99b98a13c6eaf97a83743">OOH323Channel</a>
 <li>spare
-: <a class="el" href="group__rtmem.shtml#gc524313f18e1390224648a4c3569e3f3">OOCTXT</a>
+: <a class="el" href="structOOCTXT.shtml#c524313f18e1390224648a4c3569e3f3">OOCTXT</a>
 <li>stack
 : <a class="el" href="structASN1ErrInfo.shtml#6718fbde547f89359c983b9ada77e05a">ASN1ErrInfo</a>
 <li>stackSocket
@@ -102,23 +102,23 @@ Here is a list of all documented struct and union fields with links to the struc
 : <a class="el" href="structooGkClient.shtml#098f68e11344ff5324028652bf379dbf">ooGkClient</a>
 , <a class="el" href="structOOLogicalChannel.shtml#8e27d34993fe132e1209c0abdc767b34">OOLogicalChannel</a>
 <li>status
-: <a class="el" href="group__rtmem.shtml#g10239854ee5381550db3489af2ea95fe">ASN1ErrInfo</a>
+: <a class="el" href="structASN1ErrInfo.shtml#10239854ee5381550db3489af2ea95fe">ASN1ErrInfo</a>
 <li>statusDeterminationNumber
 : <a class="el" href="structOOH323CallData.shtml#ce24e61bcd62683ceef1cc972ead36f6">OOH323CallData</a>
 <li>stkx
-: <a class="el" href="group__rtmem.shtml#ga6697ce1625b7d7d9c36f5de26deac6b">ASN1ErrInfo</a>
+: <a class="el" href="structASN1ErrInfo.shtml#a6697ce1625b7d7d9c36f5de26deac6b">ASN1ErrInfo</a>
 <li>stopReceiveChannel
 : <a class="el" href="structooH323EpCapability.shtml#64671158b556a81ceaac8bbb7990ffb8">ooH323EpCapability</a>
 <li>stopTransmitChannel
 : <a class="el" href="structooH323EpCapability.shtml#0b80e2f6c23925c30a1e7293c3c173c9">ooH323EpCapability</a>
 <li>subid
-: <a class="el" href="group__rtmem.shtml#ge3dc6fb9c997c102089454e03bb11fba">ASN1OBJID</a>
+: <a class="el" href="structASN1OBJID.shtml#e3dc6fb9c997c102089454e03bb11fba">ASN1OBJID</a>
 </ul>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

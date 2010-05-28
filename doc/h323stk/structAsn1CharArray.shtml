@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a96a8f09635e1d6b7c41d428ab8ff92f"></a><!-- doxytag: member="Asn1CharArray::nchars" ref="a96a8f09635e1d6b7c41d428ab8ff92f" args="" -->
 int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharArray.shtml#a96a8f09635e1d6b7c41d428ab8ff92f">nchars</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gb169fb4d0de7dc50234a4dfa7f0e11be"></a><!-- doxytag: member="Asn1CharArray::data" ref="gb169fb4d0de7dc50234a4dfa7f0e11be" args="[255]" -->
-char&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gb169fb4d0de7dc50234a4dfa7f0e11be">data</a> [255]</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b169fb4d0de7dc50234a4dfa7f0e11be"></a><!-- doxytag: member="Asn1CharArray::data" ref="b169fb4d0de7dc50234a4dfa7f0e11be" args="[255]" -->
+char&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAsn1CharArray.shtml#b169fb4d0de7dc50234a4dfa7f0e11be">data</a> [255]</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00323">323</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

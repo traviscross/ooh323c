@@ -47,7 +47,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOAliases.shtml#99e25f81fc487e9c088822800924d32b">value</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="0904a62ae1f95addd9cb6c786144dfe7"></a><!-- doxytag: member="OOAliases::registered" ref="0904a62ae1f95addd9cb6c786144dfe7" args="" -->
-<a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOAliases.shtml#0904a62ae1f95addd9cb6c786144dfe7">registered</a></td></tr>
+<a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOAliases.shtml#0904a62ae1f95addd9cb6c786144dfe7">registered</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9614c7b639a7286b78901de4daae112e"></a><!-- doxytag: member="OOAliases::next" ref="9614c7b639a7286b78901de4daae112e" args="" -->
 <a class="el" href="structOOAliases.shtml">OOAliases</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOOAliases.shtml#9614c7b639a7286b78901de4daae112e">next</a></td></tr>
@@ -100,6 +100,6 @@ Definition at line <a class="el" href="ooq931_8h-source.shtml#l00257">257</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

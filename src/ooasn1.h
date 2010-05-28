@@ -781,12 +781,10 @@ errSetData(&(ctxt)->errInfo,stat,__FILE__,__LINE__)
 ((ctxt)->errInfo.status = stat, stat)
 #endif
 
-
-
 #define LOG_ASN1ERR_AND_FREE(pctxt,stat,lctxt) \
 freeContext ((lctxt)), LOG_ASN1ERR(pctxt, stat)
 /**
- * @}
+ * @} errfp
  */
 
 #define RT_MH_DONTKEEPFREE 0x1
@@ -1012,6 +1010,9 @@ EXTERN ASN1UINT memHeapGetDefBlkSize (OOCTXT* pctxt);
 #ifdef _STATIC_HEAP
 EXTERN void memSetStaticBuf (void* memHeapBuf, ASN1UINT blkSize);
 #endif
+/**
+ * @} rtmem
+ */
 
 /* PER encode/decode related items */
 
@@ -1290,6 +1291,9 @@ EXTERN int decodeLength (OOCTXT* pctxt, ASN1UINT* pvalue);
  *                       variables that must be maintained between function
  *                       calls.
  * @param bitOffset    The bit offset inside the message buffer.
+ * @return             Completion status of operation:
+ *                       - 0 (ASN_OK) = success,
+ *                       - negative return value is error.
  */
 EXTERN int moveBitCursor (OOCTXT* pctxt, int bitOffset);
 
@@ -1831,6 +1835,10 @@ EXTERN ASN1BOOL isExtendableSize (Asn1SizeCnst* pSizeList);
 
 EXTERN void set16BitCharSet
 (OOCTXT* pctxt, Asn116BitCharSet* pCharSet, Asn116BitCharSet* pAlphabet);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

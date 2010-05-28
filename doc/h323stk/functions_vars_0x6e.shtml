@@ -90,7 +90,7 @@
 , <a class="el" href="structOOAliases.shtml#9614c7b639a7286b78901de4daae112e">OOAliases</a>
 , <a class="el" href="structOOMediaInfo.shtml#46c40a51617cc25eefa49a7a032c4a9c">OOMediaInfo</a>
 , <a class="el" href="structOOLogicalChannel.shtml#92965679358fa73b0f48d8513835f96d">OOLogicalChannel</a>
-, <a class="el" href="group__rtmem.shtml#g30d1ed6056a2fe9e30d64c51326bdadf">_Asn1SizeCnst</a>
+, <a class="el" href="struct__Asn1SizeCnst.shtml#30d1ed6056a2fe9e30d64c51326bdadf">_Asn1SizeCnst</a>
 , <a class="el" href="structOOInterface.shtml#456df578e6b5b3de62c529db9a2255a3">OOInterface</a>
 <li>nextSessionID
 : <a class="el" href="structOOH323CallData.shtml#c9e4e718fc42c241a10bd537fa6de773">OOH323CallData</a>
@@ -113,6 +113,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

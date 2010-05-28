@@ -332,10 +332,11 @@ int main (int argc, char** argv)
    ooH323EpSetLocalAddress(localIPAddr, localPort);
 
    /* Make sure that multiple instances of h323peer use separate cmdPort*/
+#ifdef _WIN32
    srand(getpid());
    cmdPort = 7575 + rand()%100;
    ooH323EpCreateCmdListener(cmdPort);
-
+#endif
    /* Register callbacks */
    h323Callbacks.onNewCallCreated = onNewCallCreated;
    h323Callbacks.onAlerting = onAlerting;

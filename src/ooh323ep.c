@@ -27,8 +27,10 @@
 /** Global endpoint structure */
 ooEndPoint gH323ep;
 
+#ifdef _WIN32
 extern int gCmdPort;
 extern char gCmdIP[20];
+#endif
 extern DList g_TimerList;
 
 static int setTraceFilename (const char* tracefile)
@@ -139,9 +141,11 @@ int ooH323EpInitialize
    ooSetTraceThreshold(OOTRCLVLINFO);
    OO_SETFLAG(gH323ep.flags, OO_M_ENDPOINTCREATED);
 
-   gH323ep.cmdListener = 0;
    gH323ep.cmdSock = 0;
+#ifdef _WIN32
+   gH323ep.cmdListener = 0;
    gH323ep.cmdPort = OO_DEFAULT_CMDLISTENER_PORT;
+#endif
    return OO_OK;
 }
 
@@ -213,7 +217,9 @@ int ooH323EpApplyConfig (const OOConfigFile* pconfig)
                /* local IP address */
                else if (!strcasecmp (pnvp->name, "bindaddr")) {
                   strcpy (gH323ep.signallingIP, pnvp->value);
+#ifdef _WIN32
                   strcpy (gCmdIP, pnvp->value);
+#endif
                   OOTRACEINFO2 ("Signalling IP address set to %s\n",
                                 gH323ep.signallingIP);
                }
@@ -341,7 +347,9 @@ int ooH323EpSetLocalAddress(const char* localip, int listenport)
    if(localip)
    {
       strcpy(gH323ep.signallingIP, localip);
+#ifdef _WIN32
       strcpy(gCmdIP, localip);
+#endif
       OOTRACEINFO2("Signalling IP address is set to %s\n", localip);
    }
 
@@ -353,6 +361,7 @@ int ooH323EpSetLocalAddress(const char* localip, int listenport)
    return OO_OK;
 }
 
+#ifdef _WIN32
 int ooH323EpCreateCmdListener(int cmdPort)
 {
    if(cmdPort != 0)
@@ -365,6 +374,7 @@ int ooH323EpCreateCmdListener(int cmdPort)
 
    return OO_OK;
 }
+#endif
 
 int ooH323EpAddAliasH323ID(const char *h323id)
 {
@@ -568,13 +578,13 @@ int ooH323EpDestroy(void)
          ooSocketClose(*(gH323ep.listener));
          gH323ep.listener = NULL;
       }
-
+#ifdef _WIN32
       if(gH323ep.cmdListener != 0)
       {
          ooSocketClose(gH323ep.cmdListener);
          gH323ep.cmdListener = 0;
       }
-
+#endif
       ooGkClientDestroy();
 
       if(gH323ep.fptraceFile)

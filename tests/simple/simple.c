@@ -294,13 +294,15 @@ int main (int argc, char ** argv)
       ooH323EpSetTraceLevel(OOTRCLVLDBGC);
   
    ooH323EpSetLocalAddress(ourip, ourport);
+
    /* CmdListener should always be created after local address is set*/
+#ifdef _WIN32
    if(ooH323EpCreateCmdListener(0) != OO_OK)
    {
       printf("Failed to initialize Command Listener\n");
       return -1; 
    }
-
+#endif
    if(bAutoAnswer)
       ooH323EpEnableAutoAnswer();
    else

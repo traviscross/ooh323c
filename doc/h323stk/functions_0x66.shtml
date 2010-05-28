@@ -71,12 +71,12 @@ Here is a list of all documented struct and union fields with links to the struc
 <li>fastStart
 : <a class="el" href="structooCallOptions.shtml#46fd9d424bea476325a63514a35d195e">ooCallOptions</a>
 <li>firstChar
-: <a class="el" href="group__rtmem.shtml#g76da7fc487575dce24263af815ebc423">Asn116BitCharSet</a>
+: <a class="el" href="structAsn116BitCharSet.shtml#76da7fc487575dce24263af815ebc423">Asn116BitCharSet</a>
 <li>flags
-: <a class="el" href="group__rtmem.shtml#g66e90c6349993b04eb35ab63931f7462">ASN1BUFSAVE</a>
+: <a class="el" href="structASN1BUFSAVE.shtml#66e90c6349993b04eb35ab63931f7462">ASN1BUFSAVE</a>
 , <a class="el" href="structOOH323EndPoint.shtml#e2fb79d9169127d504a2c083e684db2e">OOH323EndPoint</a>
 , <a class="el" href="structOOH323CallData.shtml#2310d4735697835dfa80be5ef31b4dd8">OOH323CallData</a>
-, <a class="el" href="group__rtmem.shtml#gecf50fa915a26893f7d0200e95bee2a9">OOCTXT</a>
+, <a class="el" href="structOOCTXT.shtml#ecf50fa915a26893f7d0200e95bee2a9">OOCTXT</a>
 <li>fptraceFile
 : <a class="el" href="structOOH323EndPoint.shtml#330095b9551a3a603523d5c5b9bd321f">OOH323EndPoint</a>
 <li>fromDestination
@@ -89,6 +89,6 @@ Here is a list of all documented struct and union fields with links to the struc
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

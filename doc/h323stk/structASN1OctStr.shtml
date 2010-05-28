@@ -40,8 +40,8 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2cfb0900009b120e8a762e62893bea06"></a><!-- doxytag: member="ASN1OctStr::numocts" ref="2cfb0900009b120e8a762e62893bea06" args="" -->
 <a class="el" href="group__cruntime.shtml#g4f87fdfc7cb076157d6efd758b056c4f">ASN1UINT</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1OctStr.shtml#2cfb0900009b120e8a762e62893bea06">numocts</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="gf472278103777e9a9647c8d5732b2bca"></a><!-- doxytag: member="ASN1OctStr::data" ref="gf472278103777e9a9647c8d5732b2bca" args="[1]" -->
-<a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__rtmem.shtml#gf472278103777e9a9647c8d5732b2bca">data</a> [1]</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f472278103777e9a9647c8d5732b2bca"></a><!-- doxytag: member="ASN1OctStr::data" ref="f472278103777e9a9647c8d5732b2bca" args="[1]" -->
+<a class="el" href="group__cruntime.shtml#gd45df98231e0a493f3ff759d6d435e5c">ASN1OCTET</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structASN1OctStr.shtml#f472278103777e9a9647c8d5732b2bca">data</a> [1]</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -56,6 +56,6 @@ Definition at line <a class="el" href="ooasn1_8h-source.shtml#l00256">256</a> of
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

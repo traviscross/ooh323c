@@ -65,18 +65,18 @@
 <a name="l00039"></a>00039
 <a name="l00040"></a><a class="code" href="ooCmdChannel_8h.shtml#5d425084e0595f2f44476d96235231c6">00040</a> <span class="preprocessor">#define OO_DEFAULT_CMDLISTENER_PORT 7575</span>
 <a name="l00041"></a>00041 <span class="preprocessor"></span>
-<a name="l00054"></a>00054 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g8bc9a4bbd4b566e19dafbebcfd3476f9">ooCreateCmdListener</a>();
+<a name="l00054"></a>00054 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g8bc9a4bbd4b566e19dafbebcfd3476f9">ooCreateCmdListener</a>();
 <a name="l00055"></a>00055
-<a name="l00062"></a>00062 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a>  <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gffe6aab1afc74aa639cd6dd44c9268b3">ooAcceptCmdConnection</a>();
+<a name="l00062"></a>00062 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a>  <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gffe6aab1afc74aa639cd6dd44c9268b3">ooAcceptCmdConnection</a>();
 <a name="l00063"></a>00063
-<a name="l00071"></a>00071 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gc5bb8f12c23c5fb47dac65dc2dd996e0">ooCreateCmdConnection</a>();
+<a name="l00071"></a>00071 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gc5bb8f12c23c5fb47dac65dc2dd996e0">ooCreateCmdConnection</a>();
 <a name="l00072"></a>00072
-<a name="l00079"></a>00079 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gdb809d39b8de2eb6b7b1b726476771bf">ooCloseCmdConnection</a>();
+<a name="l00079"></a>00079 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#gdb809d39b8de2eb6b7b1b726476771bf">ooCloseCmdConnection</a>();
 <a name="l00080"></a>00080
 <a name="l00081"></a>00081
-<a name="l00088"></a>00088 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g974c5a9aa025db42e0c44efeb700df1e">ooWriteStackCommand</a> (<a class="code" href="structOOStackCommand.shtml">OOStackCommand</a> *cmd);
+<a name="l00088"></a>00088 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g974c5a9aa025db42e0c44efeb700df1e">ooWriteStackCommand</a> (<a class="code" href="structOOStackCommand.shtml">OOStackCommand</a> *cmd);
 <a name="l00089"></a>00089
-<a name="l00096"></a>00096 <a class="code" href="ooCommon_8h.shtml#77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g06e323a674471a537aa3705f16dbaefc">ooProcessStackCommand</a> (<a class="code" href="structOOStackCommand.shtml">OOStackCommand</a>* pcmd);
+<a name="l00096"></a>00096 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">int</span> <a class="code" href="group__channels.shtml#g06e323a674471a537aa3705f16dbaefc">ooProcessStackCommand</a> (<a class="code" href="structOOStackCommand.shtml">OOStackCommand</a>* pcmd);
 <a name="l00097"></a>00097
 <a name="l00102"></a>00102 <span class="preprocessor">#ifdef __cplusplus</span>
 <a name="l00103"></a>00103 <span class="preprocessor"></span>}
@@ -88,6 +88,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -27,9 +27,14 @@
 extern OOH323EndPoint gH323ep;
 
 OOSOCKET gCmdChan = 0;
+#ifdef _WIN32
 char gCmdIP[20];
 int gCmdPort = OO_DEFAULT_CMDLISTENER_PORT;
+#else
+pthread_mutex_t gCmdChanLock;
+#endif
 
+#ifdef _WIN32
 int ooCreateCmdListener()
 {
    int ret=0;
@@ -58,10 +63,12 @@ int ooCreateCmdListener()
 
    return OO_OK;
 }
+#endif
 
 int ooCreateCmdConnection()
 {
    int ret=0;
+#ifdef _WIN32
    if((ret=ooSocketCreate (&gCmdChan))!=ASN_OK)
    {
       return OO_FAILED;
@@ -78,11 +85,7 @@ int ooCreateCmdConnection()
          setting SO_REUSEADDR, hence in windows we just allow os to bind
          to any random port.
       */
-#ifndef _WIN32
-      ret = ooBindPort(OOTCP,gCmdChan, gCmdIP);
-#else
       ret = ooBindOSAllocatedPort(gCmdChan, gCmdIP);
-#endif
 
       if(ret == OO_FAILED)
       {
@@ -95,38 +98,67 @@ int ooCreateCmdConnection()
          return OO_FAILED;
 
    }
+#else /* Linux/UNIX - use pipe */
+   int thePipe[2];
+
+   if ((ret = pipe(thePipe)) == -1) {
+      return OO_FAILED;
+   }
+   pthread_mutex_init(&gCmdChanLock, NULL);
+
+   gH323ep.cmdSock = dup(thePipe[0]);
+   close(thePipe[0]);
+   gCmdChan = dup(thePipe[1]);
+   close(thePipe[1]);
+#endif
+
    return OO_OK;
 }
 
 
 int ooCloseCmdConnection()
 {
+#ifdef _WIN32
    ooSocketClose(gH323ep.cmdSock);
+#else
+   close (gH323ep.cmdSock);
+   close (gCmdChan);
+   gCmdChan = 0;
+   pthread_mutex_destroy(&gCmdChanLock);
+#endif
    gH323ep.cmdSock = 0;
 
    return OO_OK;
 }
 
+#ifdef _WIN32
 int ooAcceptCmdConnection()
 {
-   int ret;
+   int ret = ooSocketAccept
+      (gH323ep.cmdListener, &gH323ep.cmdSock, NULL, NULL);
 
-   ret = ooSocketAccept (gH323ep.cmdListener, &gH323ep.cmdSock,
-                         NULL, NULL);
-   if(ret != ASN_OK)
-   {
-      OOTRACEERR1("Error:Accepting CMD connection\n");
+   if(ret != ASN_OK) {
+      OOTRACEERR1 ("Error:Accepting CMD connection\n");
       return OO_FAILED;
    }
    OOTRACEINFO1("Cmd connection accepted\n");
    return OO_OK;
 }
+#endif
 
 int ooWriteStackCommand (OOStackCommand *cmd)
 {
-   return (0 == ooSocketSend
-           (gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand))) ?
-      OO_OK : OO_FAILED;
+   int stat;
+#ifdef _WIN32
+   stat = ooSocketSend
+      (gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand));
+#else
+   /* lock and write to pipe */
+   pthread_mutex_lock (&gCmdChanLock);
+   stat = write (gCmdChan, (char*)cmd, sizeof(OOStackCommand));
+   pthread_mutex_unlock(&gCmdChanLock);
+#endif
+   return (0 == stat) ? OO_OK : OO_FAILED;
 }
 
 int ooProcessStackCommand (OOStackCommand* pcmd)

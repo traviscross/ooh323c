@@ -410,8 +410,6 @@
 : <a class="el" href="group__h323ep.shtml#gb0dd39563b04c995f95eea2282b4f25a">ooh323ep.h</a>
 <li>ooH323EpClearAllAliases()
 : <a class="el" href="group__h323ep.shtml#g199d6ed2351f9cb39ea09d8077ccce51">ooh323ep.h</a>
-<li>ooH323EpCreateCmdListener()
-: <a class="el" href="group__h323ep.shtml#gdf9e2a14284932b01b96e86362177e87">ooh323ep.h</a>
 <li>ooH323EpDestroy()
 : <a class="el" href="group__h323ep.shtml#g3dbb593a69e053731eb1f54cacbdaedd">ooh323ep.h</a>
 <li>ooH323EpDisableAutoAnswer()
@@ -448,6 +446,8 @@
 : <a class="el" href="group__h323ep.shtml#gc53bd5d7b40a7144877bf9a43370ebb3">ooh323ep.h</a>
 <li>ooH323EpEnableManualRingback()
 : <a class="el" href="group__h323ep.shtml#g285c86743c0951acd23bf3a1a7ed056e">ooh323ep.h</a>
+<li>ooH323EpEnableMediaWaitForConnect()
+: <a class="el" href="group__h323ep.shtml#g811da5b2eaf6266c744efd772c5c5a93">ooh323ep.h</a>
 <li>ooH323EpInitialize()
 : <a class="el" href="group__h323ep.shtml#g9beb2bdd6a005e656e7b91855d623024">ooh323ep.h</a>
 <li>ooH323EpPrintConfig()
@@ -766,6 +766,6 @@
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

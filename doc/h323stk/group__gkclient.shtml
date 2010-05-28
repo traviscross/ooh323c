@@ -180,7 +180,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gkclient.shtml#gea8866285833c4d75ae0886a81cdcbc3">ooGkClientHandleClientOrGkFailure</a> (<a class="el" href="structooGkClient.shtml">ooGkClient</a> *pGkClient)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to handle gatekeeper client failure or gatekeeper failure which can be detected by unresponsiveness of gk.  <a href="#gea8866285833c4d75ae0886a81cdcbc3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gkclient.shtml#g6dd194964a16fa11dacba159f79d314f">ooGkClientUpdateRegisteredAliases</a> (<a class="el" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225_SeqOfH225AliasAddress *pAddresses, <a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a> registered)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gkclient.shtml#g6dd194964a16fa11dacba159f79d314f">ooGkClientUpdateRegisteredAliases</a> (<a class="el" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, H225_SeqOfH225AliasAddress *pAddresses, <a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a> registered)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to update the registration status of aliases.  <a href="#g6dd194964a16fa11dacba159f79d314f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gkclient.shtml#ga588c5c057a13b0cb6e7658c36d489be">ooGkClientSetCallbacks</a> (<a class="el" href="structooGkClient.shtml">ooGkClient</a> *pGkClient, <a class="el" href="structOOGKCLIENTCALLBACKS.shtml">OOGKCLIENTCALLBACKS</a> callbacks)</td></tr>
@@ -1352,7 +1352,7 @@ This function is used to handle gatekeeper client failure or gatekeeper failure 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="ooCommon_8h.shtml#d31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="group__cruntime.shtml#gd31556a43467443733eebb2e2b802c30">OOBOOL</a>&nbsp;</td>
           <td class="paramname"> <em>registered</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1421,6 +1421,6 @@ Note: This functionality is not yet fully supported <dl compact><dt><b>Parameter
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    10 Mar 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>
