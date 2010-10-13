@@ -149,16 +149,30 @@ int ooAcceptCmdConnection()
 int ooWriteStackCommand (OOStackCommand *cmd)
 {
    int stat;
+   OOTRACEDBGA5 ("write stack cmd: t=%d, p1=%x, p2=%x, p3=%x\n",
+                 cmd->type, cmd->param1, cmd->param2, cmd->param3);
 #ifdef _WIN32
    stat = ooSocketSend
       (gCmdChan, (const ASN1OCTET*)cmd, sizeof(OOStackCommand));
+
+   if (0 != stat) {
+      OOTRACEERR2 ("ERROR: write stack command %d\n", stat);
+      return OO_FAILED;
+   }
 #else
    /* lock and write to pipe */
    pthread_mutex_lock (&gCmdChanLock);
+
    stat = write (gCmdChan, (char*)cmd, sizeof(OOStackCommand));
-   pthread_mutex_unlock(&gCmdChanLock);
+
+   pthread_mutex_unlock (&gCmdChanLock);
+
+   if (stat < 0) {
+      OOTRACEERR2 ("ERROR: write stack command %d\n", stat);
+      return OO_FAILED;
+   }
 #endif
-   return (0 == stat) ? OO_OK : OO_FAILED;
+   return OO_OK;
 }
 
 int ooProcessStackCommand (OOStackCommand* pcmd)
@@ -257,9 +271,10 @@ int ooProcessStackCommand (OOStackCommand* pcmd)
    default: OOTRACEERR2 ("ERROR: unknown command %d\n", pcmd->type);
    }
 
-   if (0 != pcmd->param1) free (pcmd->param1);
-   if (0 != pcmd->param2) free (pcmd->param2);
-   if (0 != pcmd->param3) free (pcmd->param3);
+   // These items are freed elsewhere if an error occurs
+   // if (0 != pcmd->param1) free (pcmd->param1);
+   // if (0 != pcmd->param2) free (pcmd->param2);
+   // if (0 != pcmd->param3) free (pcmd->param3);
 
    return OO_OK;
 }

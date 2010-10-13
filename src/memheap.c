@@ -14,8 +14,12 @@
  *
  *****************************************************************************/
 
+// #define _MEMDEBUG
 #include <stdlib.h>
 #include "memheap.h"
+#ifdef _MEMDEBUG
+#include "ootrace.h"
+#endif
 
 ASN1UINT      g_defBlkSize = XM_K_MEMBLKSIZ;
 OSMallocFunc  g_malloc_func = malloc;
@@ -115,6 +119,383 @@ pMemBlk->freeElemOff = (ASN1USINT)(QOFFSETOF (pElem, pMemBlk->data) + 1); \
 #define SET_FREE_ELEM(pMemBlk, pElem) setLastElem (pMemBlk, pElem)
 
 /* Memory debugging macros */
+#ifdef _MEMDEBUG
+#define RTMEMDIAG1(msg)         ooTrace(OOTRCLVLINFO,msg)
+#define RTMEMDIAG2(msg,a)       ooTrace(OOTRCLVLINFO,msg,a)
+#define RTMEMDIAG3(msg,a,b)     ooTrace(OOTRCLVLINFO,msg,a,b)
+#define RTMEMDIAG4(msg,a,b,c)   ooTrace(OOTRCLVLINFO,msg,a,b,c)
+#define FILLFREEMEM(mem,size)   memset (mem, 0xFE, size)
+#define FILLNEWMEM(mem,size)    memset (mem, 0xA0, size)
+#define CHECKMEMELEM(memblk,elem) \
+_rtMemCheckElement (memblk, elem, __FILE__, __LINE__)
+#define CHECKMEMBLOCK(memheap,memblk) \
+_rtMemCheckBlock (memheap,memblk, __FILE__, __LINE__)
+#define CHECKMEMHEAP(memheap)   _rtMemCheckHeap (memheap, __FILE__, __LINE__)
+#define DEBUG_BREAK abort ()
+
+void _rtMemPrintMemBlk (OSMemBlk* pMemBlk)
+{
+   RTMEMDIAG2 ("pMemBlk = %p\n", pMemBlk);
+   RTMEMDIAG2 ("pMemBlk->nunits *8      = %i\n", pMemBlk->nunits*8);
+   RTMEMDIAG2 ("pMemBlk->free_x *8      = %i\n", pMemBlk->free_x*8);
+   RTMEMDIAG2 ("pMemBlk->freeMem *8     = %i\n", pMemBlk->freeMem*8);
+   RTMEMDIAG2 ("pMemBlk->lastElemOff *8 = %i\n", pMemBlk->lastElemOff*8);
+   RTMEMDIAG2 ("pMemBlk->freeElemOff *8 = %i\n", pMemBlk->freeElemOff*8);
+   RTMEMDIAG2 ("pMemBlk->nsaved         = %i\n", pMemBlk->nsaved);
+}
+
+void _rtMemPrintMemElem
+(OSMemBlk* pMemBlk, OSMemElemDescr* pElem, const char* elemName)
+{
+   if (pElem == 0) {
+      RTMEMDIAG2 ("pMemBlk = %p\n", pMemBlk);
+      RTMEMDIAG2 ("%s == NULL\n", elemName);
+      fflush (stderr);
+      return;
+   }
+   RTMEMDIAG4 ("Offset of %s is %i (%i units)\n", elemName,
+               OFFSETOF (pElem, pMemBlk->data),
+               QOFFSETOF (pElem, pMemBlk->data));
+   RTMEMDIAG3 ("%s->flags            = 0x%x\n", elemName, pElem_flags (pElem));
+   RTMEMDIAG3 ("%s->nunits *8        = %d\n", elemName, pElem_nunits (pElem)*8);
+   RTMEMDIAG3 ("%s->prevOff *8       = %d\n", elemName,
+               pElem_prevOff (pElem)*8);
+
+   if (ISFREE(pElem))
+      RTMEMDIAG3 ("%s->u.nextFreeOff *8 = %d\n", elemName,
+                  pElem_nextFreeOff (pElem) *8);
+   else
+      RTMEMDIAG3 ("%s->u.beginOff *8    = %d\n", elemName,
+                  pElem_beginOff (pElem) *8);
+}
+
+void _rtMemPrintMemBlkAndElems (OSMemBlk* pMemBlk)
+{
+   OSMemElemDescr* pElem;
+
+   _rtMemPrintMemBlk (pMemBlk);
+   RTMEMDIAG1 ("\n-!-\n");
+
+   pElem = (OSMemElemDescr*) pMemBlk->data;
+   for (; pElem != 0; pElem = GETNEXT (pElem)) {
+      RTMEMDIAG2 ("Element @ 0x%x:\n", pElem);
+      _rtMemPrintMemElem (pMemBlk, pElem, "pElem");
+      RTMEMDIAG1 ("\n");
+   }
+}
+
+void _rtMemCheckReport (OSMemBlk* pMemBlk, OSMemElemDescr* pElem,
+   const char* file, int line)
+{
+   RTMEMDIAG3 ("Memory report at %s, line %i\n", file, line);
+   _rtMemPrintMemBlk (pMemBlk);
+   RTMEMDIAG1 ("\n");
+
+   if (pElem != 0) {
+      _rtMemPrintMemElem (pMemBlk, pElem, "pElem");
+      RTMEMDIAG1 ("\n");
+   }
+}
+
+void _rtMemCheckElement (OSMemBlk* pMemBlk, OSMemElemDescr* pElem,
+                         const char* file, int line)
+{
+   OSMemElemDescr* pPrevElem;
+   OSMemElemDescr* pCurElem;
+
+   if (pElem == 0) return;
+
+   if (pElem_flags (pElem) > 8 ||
+      (char*)pElem < (char*)pMemBlk->data ||
+      (char*)pElem > (char*)pMemBlk->data +
+      (((ASN1UINT)(pMemBlk->nunits - pElem_nunits (pElem) - 1)) * 8u))
+   {
+      RTMEMDIAG3 ("Element outside block error @ %s, line %i\n",
+                  file, line);
+      _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+      DEBUG_BREAK;
+   }
+  
+   pPrevElem = GETPREV (pElem);
+   if (pPrevElem != 0 && GETNEXT (pPrevElem) != pElem) {
+      RTMEMDIAG3 ("Bad prev link error @ %s, line %i\n", file, line);
+      _rtMemCheckReport (pMemBlk, pPrevElem, __FILE__, __LINE__);
+      DEBUG_BREAK;
+   }
+
+   /* check is element inside the memblk and is it legal? */
+   pCurElem = (OSMemElemDescr*) pMemBlk->data;
+   for (; pCurElem != 0; pCurElem = GETNEXT (pCurElem)) {
+      if (pElem == pCurElem)
+         break;
+   }
+   if (pCurElem == 0) {
+      /* not found! */
+      RTMEMDIAG4 ("Element 0x%x not found in mem block @ %s, line %i\n",
+                  pElem, file, line);
+      _rtMemPrintMemElem (pMemBlk, pElem, "pElem");
+      _rtMemPrintMemBlkAndElems (pMemBlk);
+      DEBUG_BREAK;
+   }
+
+   if (ISFREE (pElem)) {
+      OSMemElemDescr* pNextElem = GET_NEXT_FREE (pElem);
+
+      if (pElem_nextFreeOff (pElem) != 0 &&
+         pElem_nextFreeOff (pElem) < pElem_nunits (pElem) + 1)
+      {
+         RTMEMDIAG3 ("Bad next free offset @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+
+      if (pNextElem != 0 && (pNextElem < pElem ||
+         (char*)pNextElem < (char*)pMemBlk->data ||
+         (char*)pNextElem > (char*)pMemBlk->data +
+         (((ASN1UINT)(pMemBlk->nunits - pElem_nunits (pNextElem) - 1)) * 8u)))
+      {
+         RTMEMDIAG3 ("Bad next element @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         _rtMemPrintMemElem (pMemBlk, pNextElem, "pNextElem");
+         DEBUG_BREAK;
+      }
+
+      pNextElem = GETNEXT (pElem);
+      if ((pNextElem != 0 && ISFREE (pNextElem)) ||
+          (pPrevElem != 0 && ISFREE (pPrevElem)))
+      {
+         RTMEMDIAG3 ("Free prev or next element @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         _rtMemPrintMemElem (pMemBlk, pPrevElem, "pPrevElem");
+         _rtMemPrintMemElem (pMemBlk, pNextElem, "pNextElem");
+         DEBUG_BREAK;
+      }
+
+      pNextElem = GET_FREE_ELEM (pMemBlk);
+      if (pNextElem == 0 || (pNextElem > pElem &&
+         (ASN1OCTET*)pNextElem < pElem_data (pElem) +
+         (((ASN1UINT)pElem_nunits (pElem)) * 8u)))
+      {
+         RTMEMDIAG3 ("Free element outside mem block @  %s, line %i\n",
+                     file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         _rtMemPrintMemElem (pMemBlk, pNextElem, "pFreeElem");
+         DEBUG_BREAK;
+      }
+   }
+   else {
+      OSMemElemDescr* pNextElem = GET_FREE_ELEM (pMemBlk);
+      if (pNextElem != 0 &&
+         (pNextElem == pElem ||
+         (pNextElem > pElem &&
+         (ASN1OCTET*)pNextElem <
+          pElem_data (pElem)
+           + (((ASN1UINT)pElem_nunits (pElem)) * 8u))))
+      {
+         RTMEMDIAG3 ("Next free element error @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+      if (pElem_beginOff (pElem) != QOFFSETOF (pElem, pMemBlk->data)) {
+         RTMEMDIAG3 ("Element offset error @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+   }
+}
+
+void _rtMemCheckBlock (OSMemHeap* pMemHeap, OSMemBlk* pMemBlk,
+                       const char* file, int line)
+{
+   OSMemElemDescr* pLastElem, *pElem, *pRealLast = 0, *pNextFree = 0;
+   int first = 1, found;
+   unsigned freeMem = 0;
+   OSMemLink* pMemLink;
+
+   pMemLink = pMemHeap->phead;
+
+   /* check, is this pMemBlk inside the specified pMemHeap? */
+
+   for (found = 0; pMemLink != 0; pMemLink = pMemLink->pnext) {
+      if (pMemLink->pMemBlk == pMemBlk)
+         found = 1;
+   }
+   if (found == 0) {
+      RTMEMDIAG3 ("Mem block not within mem heap @ %s, line %i\n", file, line);
+      _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+      DEBUG_BREAK;
+   }
+
+   if (pMemBlk->free_x > pMemBlk->nunits ||
+       pMemBlk->freeMem >= pMemBlk->nunits)
+   {
+      RTMEMDIAG3 ("Free index > nunits @ %s, line %i\n", file, line);
+      _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+      DEBUG_BREAK;
+   }
+  
+   pLastElem = GET_LAST_ELEM (pMemBlk);
+   if (pLastElem == 0) {
+      if (pMemBlk->free_x != 0 || pMemBlk->freeMem != 0 ||
+          pMemBlk->freeElemOff != 0 || pMemBlk->lastElemOff != 0)
+      {
+         /* pLastElem is NULL, but not all other vars are NULL */
+         RTMEMDIAG3 ("Null last element @ %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+   }
+   else {
+      int nsaved = 0;
+
+      if (!ISLAST (pLastElem)) {
+         RTMEMDIAG3 ("Error 6 occurred from %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, pLastElem, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+
+      pElem = GET_FREE_ELEM (pMemBlk);
+      if (pElem != 0) {
+         if (!ISFREE (pElem) || ISLAST (pElem)) {
+            RTMEMDIAG3 ("Error 17 occurred from %s, line %i\n", file, line);
+            _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+            DEBUG_BREAK;
+         }
+         _rtMemCheckElement (pMemBlk, pElem, __FILE__, __LINE__);
+
+         for (; pElem != 0; pElem = GET_NEXT_FREE (pElem)) {
+            if (!ISFREE (pElem)) {
+               RTMEMDIAG3 ("Error 18 occurred from %s, line %i\n",
+                  file, line);
+               _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+               DEBUG_BREAK;
+            }
+            _rtMemCheckElement (pMemBlk, pElem, __FILE__, __LINE__);
+         }
+      }
+
+      pElem = (OSMemElemDescr*) pMemBlk->data;
+      for (; pElem != 0; pElem = GETNEXT (pElem)) {
+         _rtMemCheckElement (pMemBlk, pElem, file, line);
+         pRealLast = pElem;
+         if (ISFREE (pElem)) {
+            if (first &&
+               QOFFSETOF (pElem, pMemBlk->data) != pMemBlk->freeElemOff - 1)
+            {
+               RTMEMDIAG3 ("Error 7 occurred from %s, line %i\n", file, line);
+               _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+               DEBUG_BREAK;
+            }
+
+            if (pNextFree != 0 && pElem != pNextFree) {
+               RTMEMDIAG3 ("Error 14 occurred from %s, line %i\n",
+                  file, line);
+               _rtMemCheckReport (pMemBlk, pElem, __FILE__, __LINE__);
+               _rtMemPrintMemElem (pMemBlk, pNextFree, "pNextFree");
+               DEBUG_BREAK;
+            }
+
+            pNextFree = GET_NEXT_FREE (pElem);
+            first = 0;  
+            freeMem += pElem_nunits (pElem);
+         }
+         if (ISSAVED (pElem))
+            nsaved++;
+      }
+
+      if (pRealLast == 0 || ISFREE (pRealLast) || pRealLast != pLastElem)
+      {
+         RTMEMDIAG3 ("Error 12 occurred from %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+         _rtMemPrintMemElem (pMemBlk, pRealLast, "pRealLast");
+         _rtMemPrintMemElem (pMemBlk, pLastElem, "pLastElem");
+         DEBUG_BREAK;
+      }
+
+      if (freeMem != (unsigned)pMemBlk->freeMem) {
+         RTMEMDIAG3 ("Error 8 occurred from %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+
+      if (nsaved != pMemBlk->nsaved) {
+         RTMEMDIAG3 ("Error 20 occurred from %s, line %i\n", file, line);
+         _rtMemCheckReport (pMemBlk, 0, __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+   }
+}
+
+void _rtMemCheckHeap (OSMemHeap* pMemHeap, const char* file, int line) {
+   OSMemLink* cur, *prev = 0;
+
+   for (cur = pMemHeap->phead; cur; prev = cur, cur = cur->pnext) {
+      if (prev != cur->pprev) {
+         RTMEMDIAG1 ("Invalid MemLink!\n");
+         RTMEMDIAG3 ("Error 9 occurred from %s, line %i\n", file, line);
+         DEBUG_BREAK;
+      }
+
+      if (cur->blockType &
+         (ASN1OCTET)(~(RTMEMSTD | RTMEMRAW | RTMEMMALLOC | RTMEMSAVED | RTMEMLINK)))
+      {
+         RTMEMDIAG2 ("Invalid MemLink blockType = %i\n", cur->blockType);
+         RTMEMDIAG3 ("Error 10 occurred from %s, line %i\n", file, line);
+         DEBUG_BREAK;
+      }
+
+      if (!(cur->blockType & RTMEMSTD))
+         continue;
+
+      if (((OSMemBlk*)cur->pMemBlk)->nsaved != 0 &&
+         !(cur->blockType & RTMEMSAVED))
+      {
+         RTMEMDIAG3 ("Error 21 occurred from %s, line %i\n", file, line);
+         _rtMemCheckReport (((OSMemBlk*)cur->pMemBlk), 0,
+                            __FILE__, __LINE__);
+         DEBUG_BREAK;
+      }
+
+      _rtMemCheckBlock (pMemHeap, (OSMemBlk*)cur->pMemBlk, __FILE__, __LINE__);
+   }
+}
+
+void rtMemCheckHeap (OSMemHeap* pMemHeap)
+{
+   _rtMemCheckHeap (pMemHeap, __FILE__, __LINE__);
+}
+
+void rtMemPrintHeap (OSMemHeap* pMemHeap)
+{
+   OSMemLink* cur;
+
+   for (cur = pMemHeap->phead; cur; cur = cur->pnext) {
+      if (!(cur->blockType & RTMEMSTD)) {
+         size_t sz = *(size_t*)(((char*)cur) + sizeof (OSMemLink));
+         RTMEMDIAG3 ("Raw mem block, ptr = %p, size = %i\n",
+                     cur->pMemBlk, sz);
+      }
+      else {
+         _rtMemPrintMemBlkAndElems (cur->pMemBlk);
+      }
+
+      RTMEMDIAG1 ("\n-----\n\n");
+   }
+}
+
+#ifdef _MEMTRACE
+#define TRACEMEMELEM(memblk, elem, name) do { \
+   _rtMemPrintMemElem (memblk, elem, name); RTMEMDIAG1 ("\n"); \
+   } while (0)
+#define TRACEFREE(memlink,name) do { \
+   RTMEMDIAG3 ("%s 0x%X\n", name, memlink); \
+   } while (0)
+#else
+#define TRACEMEMELEM(memblk, elem, name)
+#define TRACEFREE(memlink,name)
+#endif /* _MEMTRACE */
+
+#else
 #define RTMEMDIAG1(msg)
 #define RTMEMDIAG2(msg,a)
 #define RTMEMDIAG3(msg,a,b)
@@ -127,7 +508,7 @@ pMemBlk->freeElemOff = (ASN1USINT)(QOFFSETOF (pElem, pMemBlk->data) + 1); \
 #define CHECKMEMHEAP(memheap)
 #define TRACEMEMELEM(memblk, elem, name)
 #define TRACEFREE(memlink,name)
-
+#endif
 
 static void setLastElem (OSMemBlk* pMemBlk, OSMemElemDescr* pElem)
 {
@@ -210,7 +591,8 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
             &pMemBlk->data [((ASN1UINT)pMemBlk->free_x) * 8u];
          OSMemElemDescr* pPrevElem;
 
-         RTMEMDIAG1 ("memHeapAlloc: found existing slot..\n");
+         RTMEMDIAG3 ("memHeapAlloc: found existing slot 0x%x in "
+                     "MemBlk 0x%x..\n", pElem, pMemBlk);
 
          /* if block is clean, set some vars in heap */
          if (pMemBlk->free_x == 0) {
@@ -379,10 +761,8 @@ void* memHeapAlloc (void** ppvMemHeap, int nbytes)
    }
    RTMEMDIAG2 ("memHeapAlloc: pMemBlk = 0x%x\n", pMemBlk);
    RTMEMDIAG2 ("memHeapAlloc: pMemBlk->free_x = %d\n", pMemBlk->free_x);
-   RTMEMDIAG2 ("memHeapAlloc: pMemBlk->size = %d\n",
-                    pMemBlk->nunits * 8u);
+   RTMEMDIAG2 ("memHeapAlloc: pMemBlk->size = %d\n", pMemBlk->nunits * 8u);
    RTMEMDIAG2 ("memHeapAlloc: mem_p = 0x%x\n", mem_p);
-   RTMEMDIAG2 ("memHeapAlloc: sizeof (short) = %d\n", sizeof(short));
 
    return (mem_p);
 }
@@ -1162,14 +1542,19 @@ void* memHeapMarkSaved (void** ppvMemHeap, const void* mem_p,
 void memHeapReset (void** ppvMemHeap)
 {
    OSMemHeap* pMemHeap;
-   OSMemLink *pMemLink;
+   OSMemLink *pMemLink, *pNextMemLink;
 
    if (ppvMemHeap == 0 || *ppvMemHeap == 0) return;
    pMemHeap = *(OSMemHeap**)ppvMemHeap;
 
    pMemLink = pMemHeap->phead;
+
+   RTMEMDIAG3 ("memHeap reset called; heap = 0x%x, first link = 0x%x\n",
+               pMemHeap, pMemLink);
+
    TRACEFREE (pMemHeap, "memHeapReset\n\n");
    while (pMemLink) {
+      pNextMemLink = pMemLink->pnext;
       if (!(pMemLink->blockType & RTMEMSAVED)) {
          if (pMemLink->blockType & RTMEMSTD) {
             OSMemBlk* pMemBlk = (OSMemBlk*) pMemLink->pMemBlk;
@@ -1188,7 +1573,7 @@ void memHeapReset (void** ppvMemHeap)
             memHeapFreePtr (ppvMemHeap, pMemLink->pMemBlk);
          }
       }
-      pMemLink = pMemLink->pnext;
+      pMemLink = pNextMemLink;
    }
 }
 
@@ -1326,6 +1711,9 @@ int memHeapCreate (void** ppvMemHeap)
    pMemHeap->refCnt = 1;
    pMemHeap->flags = RT_MH_FREEHEAPDESC;
    *ppvMemHeap = (void*)pMemHeap;
+
+   RTMEMDIAG2 ("new MemHeap created at 0x%x\n", pMemHeap);
+
    return ASN_OK;
 }
 

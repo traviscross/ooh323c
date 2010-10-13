@@ -58,7 +58,7 @@ They override options set in the H.323 endpoint structure.
 <p>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00236">236</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr><h2>Field Documentation</h2>
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00235">235</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.<hr><h2>Field Documentation</h2>
 <a class="anchor" name="46fd9d424bea476325a63514a35d195e"></a><!-- doxytag: member="ooCallOptions::fastStart" ref="46fd9d424bea476325a63514a35d195e" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -73,7 +73,7 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00236">236</a> o
 <p>
 Use FastStart signaling
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00237">237</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00236">236</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <a class="anchor" name="dc42b09b06b098ca3015ba41d6baec69"></a><!-- doxytag: member="ooCallOptions::tunneling" ref="dc42b09b06b098ca3015ba41d6baec69" args="" -->
@@ -90,7 +90,7 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00237">237</a> o
 <p>
 Use H.245 tunneling
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00238">238</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00237">237</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <a class="anchor" name="60a8a366e850f304f0f40f674f2cdb27"></a><!-- doxytag: member="ooCallOptions::disableGk" ref="60a8a366e850f304f0f40f674f2cdb27" args="" -->
@@ -107,7 +107,7 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00238">238</a> o
 <p>
 Disable use of gatekeeper
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00239">239</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00238">238</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <a class="anchor" name="96621d714a1e16bad3bf346fb6a3742d"></a><!-- doxytag: member="ooCallOptions::callMode" ref="96621d714a1e16bad3bf346fb6a3742d" args="" -->
@@ -124,7 +124,7 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00239">239</a> o
 <p>
 Type of channel to setup with FastStart
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00240">240</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00239">239</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
@@ -134,6 +134,6 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00240">240</a> o
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 Jul 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

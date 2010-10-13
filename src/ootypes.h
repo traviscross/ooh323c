@@ -60,8 +60,7 @@
 #endif
 
 
-
-#define OOH323C_VERSION "v0.9.2"
+#define OOH323C_VERSION "v0.9.3"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL

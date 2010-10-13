@@ -121,7 +121,7 @@ extern "C" {
 EXTERN void ooSetTraceThreshold(OOUINT32 traceLevel);
 
 /**
- * This function is used to write the messages to the trace file.
+ * This function is used to write messages to the trace file.
  *
  * @param traceLevel  Trace level for the message.
  * @param fmtspec     Printf style format spec.
@@ -131,21 +131,13 @@ EXTERN void ooSetTraceThreshold(OOUINT32 traceLevel);
  */
 EXTERN void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...);
 
-/**
- * Helper function for the trace function. This function performs actual
- * writing to file.
- * @param logMessage  Log message to be writted to file.
- *
- * @return            - none
- */
-void ooTraceLogMessage(const char * logMessage);
+void ooTraceHexDump
+(OOUINT32 traceLevel, const OOUCHAR* data, OOUINT32 numocts);
 
-/**
- *
- */
 void ooChangeIPToNWOrder(char * internetIP, char* networkIP);
 
 int ooLogAsn1Error(int stat, const char * fname, int lno);
+
 #ifdef __cplusplus
 }
 #endif

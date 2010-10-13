@@ -372,7 +372,7 @@ int ooCapabilityAddSimpleCapability
                   "epCap/params\n");
       return OO_FAILED;
    }
-
+   OOTRACEDBGA2 ("New H323EpCapability record allocated (%x)\n", epCap);
 
    params->txframes = txframes;
    params->rxframes = rxframes;

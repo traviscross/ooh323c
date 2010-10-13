@@ -311,7 +311,7 @@ Terminal type of the endpoint.
 <p>
 Default is 60.
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00138">138</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00137">137</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <hr><h2>Enumeration Type Documentation</h2>
@@ -345,7 +345,7 @@ Fax transmission </td></tr>
 </dl>
 
 <p>
-Definition at line <a class="el" href="ootypes_8h-source.shtml#l00207">207</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
+Definition at line <a class="el" href="ootypes_8h-source.shtml#l00206">206</a> of file <a class="el" href="ootypes_8h-source.shtml">ootypes.h</a>.
 </div>
 </div><p>
 <!--END DOXYGEN -->
@@ -353,6 +353,6 @@ Definition at line <a class="el" href="ootypes_8h-source.shtml#l00207">207</a> o
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 Jul 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

@@ -840,8 +840,6 @@ Here is a list of all documented functions, variables, defines, enums, and typed
 : <a class="el" href="ooTimer_8h.shtml#02e5e34d7fe508a1907f046899c741b3">ooTimer.h</a>
 <li>ooTrace()
 : <a class="el" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ootrace.h</a>
-<li>ooTraceLogMessage()
-: <a class="el" href="ootrace_8h.shtml#0e22ffb7d4d0238441b39cc7e2b9f110">ootrace.h</a>
 <li>OOUCHAR
 : <a class="el" href="group__cruntime.shtml#g0ff9bb296c6e6667c9e03d9cc7d37a1a">ooCommon.h</a>
 <li>OOUINT16
@@ -868,6 +866,6 @@ Here is a list of all documented functions, variables, defines, enums, and typed
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 Jul 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

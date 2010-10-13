@@ -149,10 +149,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to set the trace level.  <a href="#1e925e521df9ffb85a70adc1b8f6faf8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">EXTERN void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a> (<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, const char *fmtspec,...)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to write the messages to the trace file.  <a href="#c2b1f1cda58cd2d529bd831410efaa73"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="ootrace_8h.shtml#0e22ffb7d4d0238441b39cc7e2b9f110">ooTraceLogMessage</a> (const char *logMessage)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function is used to write messages to the trace file.  <a href="#c2b1f1cda58cd2d529bd831410efaa73"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="380ce0841342d2a6638a86276565f888"></a><!-- doxytag: member="ootrace.h::ooTraceHexDump" ref="380ce0841342d2a6638a86276565f888" args="(OOUINT32 traceLevel, const OOUCHAR *data, OOUINT32 numocts)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><b>ooTraceHexDump</b> (<a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, const <a class="el" href="group__cruntime.shtml#g0ff9bb296c6e6667c9e03d9cc7d37a1a">OOUCHAR</a> *data, <a class="el" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> numocts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Helper function for the trace function.  <a href="#0e22ffb7d4d0238441b39cc7e2b9f110"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="572f135e5b0f6a9ead1ca26e9fbaeeaf"></a><!-- doxytag: member="ootrace.h::ooChangeIPToNWOrder" ref="572f135e5b0f6a9ead1ca26e9fbaeeaf" args="(char *internetIP, char *networkIP)" -->
 void&nbsp;</td><td class="memItemRight" valign="bottom"><b>ooChangeIPToNWOrder</b> (char *internetIP, char *networkIP)</td></tr>
 
@@ -226,7 +226,7 @@ This function is used to set the trace level.
 <div class="memdoc">
 
 <p>
-This function is used to write the messages to the trace file.
+This function is used to write messages to the trace file.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -239,39 +239,11 @@ This function is used to write the messages to the trace file.
 
 </div>
 </div><p>
-<a class="anchor" name="0e22ffb7d4d0238441b39cc7e2b9f110"></a><!-- doxytag: member="ootrace.h::ooTraceLogMessage" ref="0e22ffb7d4d0238441b39cc7e2b9f110" args="(const char *logMessage)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ooTraceLogMessage           </td>
-          <td>(</td>
-          <td class="paramtype">const char *&nbsp;</td>
-          <td class="paramname"> <em>logMessage</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Helper function for the trace function.
-<p>
-This function performs actual writing to file. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>logMessage</em>&nbsp;</td><td>Log message to be writted to file.</td></tr>
-  </table>
-</dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>- none </dd></dl>
-
-</div>
-</div><p>
 <!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 Jul 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

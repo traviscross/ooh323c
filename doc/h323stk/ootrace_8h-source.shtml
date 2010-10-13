@@ -142,20 +142,22 @@
 <a name="l00122"></a>00122
 <a name="l00132"></a>00132 <a class="code" href="group__cruntime.shtml#g77366c1bd428629dc898e188bfd182a3">EXTERN</a> <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#c2b1f1cda58cd2d529bd831410efaa73">ooTrace</a>(<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, <span class="keyword">const</span> <span class="keywordtype">char</span> * fmtspec, ...);
 <a name="l00133"></a>00133
-<a name="l00141"></a>00141 <span class="keywordtype">void</span> <a class="code" href="ootrace_8h.shtml#0e22ffb7d4d0238441b39cc7e2b9f110">ooTraceLogMessage</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * logMessage);
-<a name="l00142"></a>00142
-<a name="l00146"></a>00146 <span class="keywordtype">void</span> ooChangeIPToNWOrder(<span class="keywordtype">char</span> * internetIP, <span class="keywordtype">char</span>* networkIP);
-<a name="l00147"></a>00147
-<a name="l00148"></a>00148 <span class="keywordtype">int</span> ooLogAsn1Error(<span class="keywordtype">int</span> stat, <span class="keyword">const</span> <span class="keywordtype">char</span> * fname, <span class="keywordtype">int</span> lno);
-<a name="l00149"></a>00149 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00150"></a>00150 <span class="preprocessor"></span>}
-<a name="l00151"></a>00151 <span class="preprocessor">#endif</span>
-<a name="l00152"></a>00152 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00134"></a>00134 <span class="keywordtype">void</span> ooTraceHexDump
+<a name="l00135"></a>00135 (<a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> traceLevel, <span class="keyword">const</span> <a class="code" href="group__cruntime.shtml#g0ff9bb296c6e6667c9e03d9cc7d37a1a">OOUCHAR</a>* data, <a class="code" href="group__cruntime.shtml#g929d152869a7fc3a63ebf2495c0fa7b7">OOUINT32</a> numocts);
+<a name="l00136"></a>00136
+<a name="l00137"></a>00137 <span class="keywordtype">void</span> ooChangeIPToNWOrder(<span class="keywordtype">char</span> * internetIP, <span class="keywordtype">char</span>* networkIP);
+<a name="l00138"></a>00138
+<a name="l00139"></a>00139 <span class="keywordtype">int</span> ooLogAsn1Error(<span class="keywordtype">int</span> stat, <span class="keyword">const</span> <span class="keywordtype">char</span> * fname, <span class="keywordtype">int</span> lno);
+<a name="l00140"></a>00140
+<a name="l00141"></a>00141 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00142"></a>00142 <span class="preprocessor"></span>}
+<a name="l00143"></a>00143 <span class="preprocessor">#endif</span>
+<a name="l00144"></a>00144 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 </pre></div><!--END DOXYGEN -->
 
 </td></tr></table>
 <HR WIDTH="80%" COLOR="#080A9A">
   <CENTER><FONT FACE="Arial" SIZE="-2">This file was last modified on
-    28 May 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
+    28 Jul 2010.<BR> Objective Open H.323 Stack, 0.9.1 </FONT></CENTER></td>
 </tr> </table></center></BODY>
 </HTML>

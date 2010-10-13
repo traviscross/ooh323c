@@ -1,4 +1,4 @@
-Copyright (C) 2004-2009 by Objective Systems, Inc.
+Copyright (C) 2004-2010 by Objective Systems, Inc.
 
 Objective Open H.323 README
 
@@ -6,8 +6,8 @@ Introduction
 ============
 
 Thank you for downloading the Objective Open H.323 software. This
-package contains a simple H.323 stack developed in C.  The ASN.1
-messaging code was developed using the Objective Systems ASN1C
+package contains linux binaries of  H.323 stack developed in C. 
+The ASN.1 messaging code was developed using the Objective Systems ASN1C
 compiler to implement the core H.323 specifications (H.225, H.235,
 and H.245).  Additional code was then developed which makes use of
 the compiler generated code for presenting a comparatively high level
@@ -70,96 +70,13 @@ Features supported in this package include the following:
 Getting Started
 ===============
 
-This section describes how to build the complete package on Linux and
-Windows systems respectively.
-  
-Building on Linux:
------------------ 
-1. Change directory to the package root directory.
-
-        cd ooh323c-0.9.0
-
-   (note: the version number may be different depending on what distribution
-    you are working with).
-
-2. Generate the makefiles:
-
-        ./configure --prefix=<install-dir>
-
-   The configure script will generate the requred makefiles. The
-   <install-dir> is where the libraries will be installed. By default
-   the libraries are installed in /usr/local/lib. Static and shared
-   versions of all of the different object libraries are installed.
-
-   Note that if wish to use the libraries in your home directory, it is
-   necessary to set <install-dir> to the location in which the package
-   was installed prior to running the installation step (step 4).  For
-   example:
-
-        ./configure --prefix=$HOME/ooh323c-0.9.0
-
-3. Execute the generated makefile:
-
-        make
-
-   This will build all the libraries and sample applications.  By default,
-   an optimized version is built.  This can also be done explciitly by
-   executing the following make command:
-  
-        make opt
-
-   If you wish to build a debug version, execute the following command:
-
-        make debug
-
-4. To install the libraries, execute the following command:
-
-        make install
-
-   Note that it is necessary to do this even if the libraries are to be
-   used in your home directory.  If this is the case, configure must have
-   been run using --prefix as described in step 2.
-
-
-Building on Windows:
--------------------
-
-The package includes Visual Studio 6 based workspace and project files.
-
-1. Open the package root directory ooh323c-0.9.0 (or whatever version
-   you have).
-  
-2. Open the ooh323c.dsw workspace which includes all the projects within
-   the package.
-
-3. You can now do a batch build to build the complete package.
-
-4. To build individual projects, dependencies are as follows:
-
-      oostk.dsp - none
-      oomedia.dsp - none
-      simple.dsp - oostk.dsp, oomedia.dsp
-      ooPlayer.dsp - oostk.dsp, oomedia.dsp
-      ooReceiver.dsp - oostk.dsp, oomedia.dsp
-      oochansetup.dsp - oostk.dsp
-
-5. After a successful build, the libraries will be installed in
-   ooh323c-0.9.0\lib\release and ooh323c-0.9.0\lib\debug directories.
-
-
 Sample Programs
-===============
 
-To run the sample programs,
-        On Linux, make sure the path to the media shared object library
-        (liboomedia.so) is set in LD_LIBRARY_PATH:
+To run the sample programs, first make sure the path to the media shared
+object library (liboomedia.so) is set in LD_LIBRARY_PATH:
 
         LD_LIBRARY_PATH=<install-dir>/lib
         export LD_LIBRARY_PATH
-
-        On Windows, make sure the path to the media plug-in library DLL
-        (oomedia.dll) is in your PATH.  The DLL is located in the
-        ooh323c-0.9.0\lib\release and ooh323c-0.9.0\lib\debug directories.
 
 The sample programs are locates in the 'tests' subdirectory.  The following
 programs are available:
@@ -195,17 +112,13 @@ The receiver and player program must be run in parallel as follows:
    be created in the same directory (media.log).
 
 2. Run the player:
-   Note: Player supports wave file format on windows and raw audio format on
-   linux.
 
         cd ../player
-        ./ooPlayer --audio-file space.raw [--use-ip <ip>] (linux)
-        ./ooPlayer --audio-file states.wav [--use-ip <ip>] (win32)
-       
+        ./ooPlayer --audio-file space.raw [--use-ip <ip>]
 
    where, --audio-file is used to specify the audio file to be played.
    [--use-ip <ip>] is used to specify local ip address. By deafault, player
-   application tries to determine ip address on it's own.space.raw
+   application tries to determine ip address on it's own.
 
    A log file will be created in the tests/player directory
    (ooPlayer.log). Also, a log file for the media plug-in will be
@@ -235,10 +148,6 @@ To run the H.323 endpoint sample application:
 
    You will find simple.log and media.log in the current directory.
      
-
-5. For testing against ohphone, make sure the -n option for ohphone
-   is enabled. If you want to use a gatekeeper, you will have to enable
-   the gatekeeper mode in simple.c
 
 To run the stack test application chansetup
 
@@ -272,9 +181,6 @@ Reporting Problems:
 
 Report problems you encounter by sending E-mail to
 ooh323c-devel@lists.sourceforge.net.
-
-The ooh323c problem newsgroup can be found at
-http://www.sourceforge.net/projects/ooh323c
 
 If you have any further questions or comments on what you would like to
 see in the product or what is difficult to use or understand, please

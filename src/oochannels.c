@@ -796,6 +796,12 @@ int ooMonitorChannels()
             continue;
          }
          else if ((ASN1UINT)recvLen == nbytesToRead) {
+            OOTRACEDBGA5 ("read stack cmd: t=%d, p1=%x, p2=%x, p3=%x\n",
+                          ((OOStackCommand*)stackCmd)->type,
+                          ((OOStackCommand*)stackCmd)->param1,
+                          ((OOStackCommand*)stackCmd)->param2,
+                          ((OOStackCommand*)stackCmd)->param3);
+
             /* Received complete stack command */
             ooProcessStackCommand ((OOStackCommand*)stackCmd);
 

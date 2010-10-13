@@ -33,7 +33,6 @@
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-
 static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };
@@ -2029,11 +2028,12 @@ int ooH323CallAdmitted(OOH323CallData *call)
 
 int ooH323MakeCall_helper(OOH323CallData *call)
 {
-   int ret=0,i=0, k;
+   int ret=0, k;
    Q931Message *q931msg = NULL;
    H225Setup_UUIE *setup;
 
    ASN1DynOctStr *pFS=NULL;
+   DList fastStartList; /* list of encoded fast start elements */
    H225TransportAddress_ipAddress *destCallSignalIpAddress;
 
    H225TransportAddress_ipAddress *srcCallSignalIpAddress;
@@ -2042,6 +2042,8 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    H245OpenLogicalChannel *olc, printOlc;
    ASN1BOOL aligned = 1;
    ooAliases *pAlias = NULL;
+
+   dListInit (&fastStartList);
 
    pctxt = &gH323ep.msgctxt;
 
@@ -2258,17 +2260,8 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    }
    else{
       setup->m.fastStartPresent = TRUE;
-      pFS = (ASN1DynOctStr*)memAlloc(pctxt, gH323ep.noOfCaps*
-                                       sizeof(ASN1DynOctStr));
-      if(!pFS)
-      {
-         OOTRACEERR3("Error:Memory - ooH323MakeCall_helper - pFS(%s, %s)\n",
-                     call->callType, call->callToken);
-         return OO_FAILED;
-      }
 
       /* Use preference order of codecs */
-      i=0;
       for(k=0; k< call->capPrefs.index; k++)
       {
          OOTRACEDBGC5("Preffered capability at index %d is %s. (%s, %s)\n",
@@ -2342,11 +2335,16 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                }
                return OO_FAILED;
             }
-            pFS[i].data = encodeGetMsgPtr(pctxt, (int*)&(pFS[i].numocts));
-
+            pFS = memAllocType (pctxt, ASN1DynOctStr);
+            if (0 == pFS) {
+               OOTRACEERR1 ("ERROR: No memory available\n");
+               return OO_FAILED;
+            }
+            pFS->data = encodeGetMsgPtr(pctxt, (int*)&(pFS->numocts));
+            dListAppend (pctxt, &fastStartList, (void*)pFS);
 
             /* Dump faststart element in logfile for debugging purpose */
-            setPERBuffer (pctxt, (ASN1OCTET*)pFS[i].data, pFS[i].numocts, 1);
+            setPERBuffer (pctxt, (ASN1OCTET*)pFS->data, pFS->numocts, 1);
             initializePrintHandler(&printHandler, "FastStart Element");
             setEventHandler (pctxt, &printHandler);
             memset(&printOlc, 0, sizeof(printOlc));
@@ -2366,18 +2364,15 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             finishPrint();
             removeEventHandler(pctxt);
 
-
             olc = NULL;
-            i++;
-            OOTRACEDBGC5("Added RX fs element %d with capability %s(%s, %s)\n",
-                          i, ooGetCapTypeText(epCap->cap), call->callType,
+            OOTRACEDBGC4("Added RX fs element with capability %s(%s, %s)\n",
+                          ooGetCapTypeText(epCap->cap), call->callType,
                           call->callToken);
          }
 
          if(epCap->dir & OOTX)
          {
-            olc = (H245OpenLogicalChannel*)memAlloc(pctxt,
-                                             sizeof(H245OpenLogicalChannel));
+            olc = memAllocTypeZ (pctxt, H245OpenLogicalChannel);
             if(!olc)
             {
                OOTRACEERR3("ERROR:Memory - ooH323MakeCall_helper - olc(%s, %s)"
@@ -2390,7 +2385,6 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                }
                return OO_FAILED;
             }
-            memset(olc, 0, sizeof(H245OpenLogicalChannel));
             olc->forwardLogicalChannelNumber = call->logicalChanNoCur++;
             if(call->logicalChanNoCur > call->logicalChanNoMax)
                call->logicalChanNoCur = call->logicalChanNoBase;
@@ -2410,10 +2404,16 @@ int ooH323MakeCall_helper(OOH323CallData *call)
                }
                return OO_FAILED;
             }
-            pFS[i].data = encodeGetMsgPtr(pctxt, (int*)&(pFS[i].numocts));
+            pFS = memAllocType (pctxt, ASN1DynOctStr);
+            if (0 == pFS) {
+               OOTRACEERR1 ("ERROR: No memory available\n");
+               return OO_FAILED;
+            }
+            pFS->data = encodeGetMsgPtr(pctxt, (int*)&(pFS->numocts));
+            dListAppend (pctxt, &fastStartList, (void*)pFS);
 
             /* Dump faststart element in logfile for debugging purpose */
-            setPERBuffer (pctxt, (ASN1OCTET*)pFS[i].data, pFS[i].numocts, 1);
+            setPERBuffer (pctxt, (ASN1OCTET*)pFS->data, pFS->numocts, 1);
             initializePrintHandler(&printHandler, "FastStart Element");
             setEventHandler (pctxt, &printHandler);
             memset(&printOlc, 0, sizeof(printOlc));
@@ -2433,22 +2433,34 @@ int ooH323MakeCall_helper(OOH323CallData *call)
             finishPrint();
             removeEventHandler(pctxt);
 
-
             olc = NULL;
-            i++;
-            OOTRACEDBGC5("Added TX fs element %d with capability %s(%s, %s)\n",
-                          i, ooGetCapTypeText(epCap->cap), call->callType,
+            OOTRACEDBGC4("Added TX fs element with capability %s(%s, %s)\n",
+                          ooGetCapTypeText(epCap->cap), call->callType,
                           call->callToken);
          }
 
       }
       OOTRACEDBGA4("Added %d fast start elements to SETUP message (%s, %s)\n",
-                   i, call->callType, call->callToken);
-      setup->fastStart.n = i;
-      setup->fastStart.elem = pFS;
+                   fastStartList.count, call->callType, call->callToken);
+
+      setup->fastStart.elem = (ASN1DynOctStr*)
+         memAlloc (pctxt, fastStartList.count * sizeof(ASN1DynOctStr));
+
+      if (0 == setup->fastStart.elem) {
+         OOTRACEERR1 ("ERROR: No memory available\n");
+         return OO_FAILED;
+      }
+
+      /* Add fast start elements to setup structure */
+      setup->fastStart.n = 0;
+      while (0 != (pFS = dListDeleteHead (pctxt, &fastStartList))) {
+         setup->fastStart.elem[setup->fastStart.n].numocts = pFS->numocts;
+         setup->fastStart.elem[setup->fastStart.n++].data = pFS->data;
+         memFreePtr (pctxt, pFS);
+      }
    }
 
-   setup->conferenceID.numocts= call->confIdentifier.numocts;
+   setup->conferenceID.numocts = call->confIdentifier.numocts;
    memcpy(setup->conferenceID.data, call->confIdentifier.data,
           call->confIdentifier.numocts);
 

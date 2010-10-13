@@ -1,3 +1,9 @@
+Release 0.9.3
+* Fixed a subtle memory bug that would cause an intermittent crash under
+  heavy volume of calls.
+* Fixed a bug in checking pipe write command status that would cause an
+  error condition to always exist when using the stack with Asterisk.
+
 Release 0.9.1
 * Added a configuration parameter for bearer capability (bearercap).
 * Added capability to read a configuration file in the simple test program.

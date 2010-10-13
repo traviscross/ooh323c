@@ -323,7 +323,13 @@ int ooRemoveLogicalChannel(OOH323CallData *call, int ChannelNo)
       {
          if(!prev)   call->logicalChans = temp->next;
          else   prev->next = temp->next;
+         /* A double-free may occur here because the capability record
+            may be shared between receive and transmit logical channel
+            records.  Commenting out for now. Added diags to determine
+            how frequently this record is allocated in order to allow
+            proper clean-up. (ED, 7/14/2010)
          memFreePtr(call->pctxt, temp->chanCap);
+         */
          memFreePtr(call->pctxt, temp);
          OOTRACEDBGC4("Removed logical channel %d (%s, %s)\n", ChannelNo,
                        call->callType, call->callToken);
