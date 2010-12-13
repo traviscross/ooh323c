@@ -37,8 +37,8 @@ static ASN1OBJID gProtocolID = {
    6, { 0, 0, 8, 2250, 0, 4 }
 };
 
-EXTERN int ooQ931Decode
-   (OOH323CallData *call, Q931Message* msg, int length, ASN1OCTET *data)
+EXTERN int ooQ931Decode (OOH323CallData *call,
+   Q931Message* msg, int length, ASN1OCTET *data, OOBOOL doCallbacks)
 {
    int offset, x;
    int rv = ASN_OK;
@@ -161,9 +161,9 @@ EXTERN int ooQ931Decode
       if(ie->discriminator == Q931KeypadIE)
       {
          OOTRACEDBGB1("   Keypad IE = {\n");
-         OOTRACEDBGB2("      %s\n", ie->data);
+         OOTRACEDBGB2("      %c\n", ((char*)ie->data)[0]);
          OOTRACEDBGB1("   }\n");
-         if(gH323ep.h323Callbacks.onReceivedDTMF)
+         if(doCallbacks && gH323ep.h323Callbacks.onReceivedDTMF)
          {
            gH323ep.h323Callbacks.onReceivedDTMF(call, (char*)ie->data);
          }
@@ -614,7 +614,7 @@ static void ooQ931PrintMessage
 
    setPERBuffer (pctxt, msgbuf, msglen, TRUE);
 
-   ret = ooQ931Decode (call, &q931Msg, msglen, msgbuf);
+   ret = ooQ931Decode (call, &q931Msg, msglen, msgbuf, FALSE);
    if(ret != OO_OK)
    {
       OOTRACEERR3("Error:Failed decoding Q931 message. (%s, %s)\n",
@@ -625,8 +625,6 @@ static void ooQ931PrintMessage
 
 }
 #endif
-
-
 
 int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
                         ASN1OCTET* msgbuf, size_t size)
@@ -660,6 +658,9 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
    else if(pq931Msg->messageType == Q931InformationMsg){
       msgbuf[i++] = OOInformationMessage;
    }
+   else if(pq931Msg->messageType == Q931StatusMsg){
+      msgbuf[i++] = OOStatus;
+   }
    else if(pq931Msg->messageType == Q931FacilityMsg){
       msgbuf[i++] = OOFacility;
       msgbuf[i++] = pq931Msg->tunneledMsgType;
@@ -667,8 +668,8 @@ int ooEncodeH225Message(OOH323CallData *call, Q931Message *pq931Msg,
       msgbuf[i++] = pq931Msg->logicalChannelNo;
    }
    else{
-      OOTRACEERR3("Error:Unknow Q931 message type. (%s, %s)\n", call->callType,
-                   call->callToken);
+      OOTRACEERR3("ERROR: Unknown Q931 message type. (%s, %s)\n",
+                  call->callType, call->callToken);
       return OO_FAILED;
    }
 
@@ -1191,42 +1192,105 @@ int ooSetFastStartResponse(OOH323CallData *pCall, Q931Message *pQ931msg,
    return ASN_OK;
 }
 
+static Q931Message* new_Q931_UUIE
+(OOCTXT* pctxt, OOH323CallData* call, int msgType)
+{
+   Q931Message* q931msg;
 
-/*
+   if (ooCreateQ931Message (&q931msg, msgType) != OO_OK) {
+      OOTRACEERR1 ("Error allocating memory for Q.931 message\n");
+      return 0;
+   }
 
-*/
+   q931msg->callReference = call->callReference;
+
+   q931msg->userInfo = memAllocTypeZ (pctxt, H225H323_UserInformation);
+   if (0 == q931msg->userInfo) {
+      OOTRACEERR1 ("Error allocating memory for H323_UserInformation\n");
+      memFreePtr (pctxt, q931msg);
+      return 0;
+   }
+
+   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent = 1;
+
+   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
+      OO_TESTFLAG (gH323ep.flags, OO_M_TUNNELING);
+
+   return q931msg;
+}
+
+int ooSendStatus (OOH323CallData* call)
+{
+   int ret;
+   H225Status_UUIE* pStatusUUIE;
+   Q931Message* q931msg;
+   OOCTXT *pctxt = &gH323ep.msgctxt;
+
+   OOTRACEDBGC3 ("Building Status-UUIE (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   q931msg = new_Q931_UUIE (pctxt, call, Q931StatusMsg);
+   if (0 == q931msg) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendStatus - userInfo\n");
+      return OO_FAILED;
+   }
+
+   q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
+      T_H225H323_UU_PDU_h323_message_body_status;
+
+   pStatusUUIE = memAllocTypeZ (pctxt, H225Status_UUIE);
+   if (0 == pStatusUUIE) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendStatus - pStatusUUIE\n");
+      memFreePtr (pctxt, q931msg);
+      return OO_FAILED;
+   }
+
+   q931msg->userInfo->
+      h323_uu_pdu.h323_message_body.u.status = pStatusUUIE;
+
+   pStatusUUIE->protocolIdentifier = gProtocolID;
+
+   if (call->callIdentifier.guid.numocts > 0) {
+      pStatusUUIE->callIdentifier.guid.numocts =
+         call->callIdentifier.guid.numocts;
+
+      memcpy (pStatusUUIE->callIdentifier.guid.data,
+              call->callIdentifier.guid.data,
+              call->callIdentifier.guid.numocts);
+   }
+
+   OOTRACEDBGA3 ("Built Status (%s, %s)\n",
+                 call->callType, call->callToken);
+
+   ret = ooSendH225Msg (call, q931msg);
+   if (ret != OO_OK) {
+      OOTRACEERR3
+         ("ERROR: Failed to enqueue Status message to outbound "
+          "queue.(%s, %s)\n", call->callType, call->callToken);
+   }
+
+   memReset (&gH323ep.msgctxt);
+
+   return ret;
+}
 
 int ooSendCallProceeding(OOH323CallData *call)
 {
    int ret;
    H225VendorIdentifier *vendor;
    H225CallProceeding_UUIE *callProceeding;
-   Q931Message *q931msg=NULL;
+   Q931Message *q931msg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
    OOTRACEDBGC3("Building CallProceeding (%s, %s)\n", call->callType,
                  call->callToken);
-   ret = ooCreateQ931Message(&q931msg, Q931CallProceedingMsg);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR1("Error: In allocating memory for - H225 Call "
-                           "Proceeding message\n");
+
+   q931msg = new_Q931_UUIE (pctxt, call, Q931CallProceedingMsg);
+   if (0 == q931msg) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendCallProceeding - userInfo\n");
       return OO_FAILED;
    }
 
-   q931msg->callReference = call->callReference;
-
-   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
-                             sizeof(H225H323_UserInformation));
-   if(!q931msg->userInfo)
-   {
-      OOTRACEERR1("ERROR:Memory - ooSendCallProceeding - userInfo\n");
-      return OO_FAILED;
-   }
-   memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
-   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling =
-                                   OO_TESTFLAG(gH323ep.flags, OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_callProceeding;
 
@@ -1305,30 +1369,15 @@ int ooSendAlerting(OOH323CallData *call)
    int ret;
    H225Alerting_UUIE *alerting;
    H225VendorIdentifier *vendor;
-   Q931Message *q931msg=NULL;
+   Q931Message *q931msg;
    OOCTXT *pctxt = &gH323ep.msgctxt;
 
-   ret = ooCreateQ931Message(&q931msg, Q931AlertingMsg);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR1("Error: In allocating memory for - H225 "
-                  "Alerting message\n");
+   q931msg = new_Q931_UUIE (pctxt, call, Q931AlertingMsg);
+   if (0 == q931msg) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendAlerting - userInfo\n");
       return OO_FAILED;
    }
 
-   q931msg->callReference = call->callReference;
-
-   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
-                             sizeof(H225H323_UserInformation));
-   if(!q931msg->userInfo)
-   {
-      OOTRACEERR1("ERROR:Memory -  ooSendAlerting - userInfo\n");
-      return OO_FAILED;
-   }
-   memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
-   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
-                                                              OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_alerting;
 
@@ -1441,30 +1490,12 @@ int ooSendFacility(OOH323CallData *call)
 
    OOTRACEDBGA3("Building Facility message (%s, %s)\n", call->callType,
                  call->callToken);
-   ret = ooCreateQ931Message(&pQ931Msg, Q931FacilityMsg);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR3
-         ("ERROR: In allocating memory for facility message (%s, %s)\n",
-          call->callType, call->callToken);
+
+   pQ931Msg = new_Q931_UUIE (pctxt, call, Q931FacilityMsg);
+   if (0 == pQ931Msg) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendFacility - userInfo\n");
       return OO_FAILED;
    }
-
-   pQ931Msg->callReference = call->callReference;
-
-   pQ931Msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
-                             sizeof(H225H323_UserInformation));
-   if(!pQ931Msg->userInfo)
-   {
-      OOTRACEERR3("ERROR:Memory - ooSendFacility - userInfo(%s, %s)\n",
-                   call->callType, call->callToken);
-      return OO_FAILED;
-   }
-   memset (pQ931Msg->userInfo, 0, sizeof(H225H323_UserInformation));
-   pQ931Msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-
-   pQ931Msg->userInfo->h323_uu_pdu.h245Tunneling =
-      OO_TESTFLAG (call->flags, OO_M_TUNNELING);
 
    pQ931Msg->userInfo->h323_uu_pdu.h323_message_body.t =
       T_H225H323_UU_PDU_h323_message_body_facility;
@@ -1517,15 +1548,15 @@ int ooSendReleaseComplete(OOH323CallData *call)
    H225ReleaseComplete_UUIE *releaseComplete;
    enum Q931CauseValues cause = Q931ErrorInCauseIE;
    unsigned h225ReasonCode = T_H225ReleaseCompleteReason_undefinedReason;
-
    OOCTXT *pctxt = &gH323ep.msgctxt;
+
    OOTRACEDBGA3("Building Release Complete message to send(%s, %s)\n",
                 call->callType, call->callToken);
-   ret = ooCreateQ931Message(&q931msg, Q931ReleaseCompleteMsg);
-   if(ret != OO_OK)
-   {
-      OOTRACEERR3("Error: In ooCreateQ931Message - H225 Release Complete "
-                  "message(%s, %s)\n", call->callType, call->callToken);
+
+   q931msg = new_Q931_UUIE (pctxt, call, Q931ReleaseCompleteMsg);
+   if (0 == q931msg) {
+      OOTRACEERR1 ("ERROR: Memory - ooSendReleaseComplete - userInfo\n");
+
       if(call->callState < OO_CALL_CLEAR)
       {
          call->callEndReason = OO_REASON_LOCAL_CLEARED;
@@ -1533,17 +1564,6 @@ int ooSendReleaseComplete(OOH323CallData *call)
       }
       return OO_FAILED;
    }
-
-   q931msg->callReference = call->callReference;
-
-   q931msg->userInfo = (H225H323_UserInformation*)memAlloc(pctxt,
-                             sizeof(H225H323_UserInformation));
-   if(!q931msg->userInfo)
-   {
-      OOTRACEERR1("ERROR:Memory - ooSendReleaseComplete - userInfo\n");
-      return OO_FAILED;
-   }
-   memset (q931msg->userInfo, 0, sizeof(H225H323_UserInformation));
 
    releaseComplete = (H225ReleaseComplete_UUIE*)memAlloc(pctxt,
                                              sizeof(H225ReleaseComplete_UUIE));
@@ -1554,9 +1574,6 @@ int ooSendReleaseComplete(OOH323CallData *call)
       return OO_FAILED;
    }
    memset(releaseComplete, 0, sizeof(H225ReleaseComplete_UUIE));
-   q931msg->userInfo->h323_uu_pdu.m.h245TunnelingPresent=1;
-   q931msg->userInfo->h323_uu_pdu.h245Tunneling = OO_TESTFLAG(gH323ep.flags,
-                                                              OO_M_TUNNELING);
    q931msg->userInfo->h323_uu_pdu.h323_message_body.t =
          T_H225H323_UU_PDU_h323_message_body_releaseComplete;
 
@@ -3453,7 +3470,9 @@ const char* ooGetMsgTypeText (int msgType)
       "OORequestChannelCloseAck",
       "OORequestChannelCloseReject",
       "OORequestChannelCloseRelease",
-      "OOEndSessionCommand"
+      "OOEndSessionCommand",
+      "OOUserInputIndication",
+      "OORequestDelayResponse"
    };
    int idx = msgType - OO_MSGTYPE_MIN;
    return ooUtilsGetText (idx, msgTypeText, OONUMBEROF(msgTypeText));

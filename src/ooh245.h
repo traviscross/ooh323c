@@ -626,6 +626,10 @@ int ooRequestChannelCloseTimerExpired(void *pdata);
  * @return                 OO_OK, on success. OO_FAILED, otherwise.
  */
 int ooSessionTimerExpired(void *pdata);
+
+int ooOnReceivedRoundTripDelayRequest
+(OOH323CallData *call, H245SequenceNumber sequenceNumber);
+
 /**
  * @}
  */

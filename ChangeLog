@@ -1,3 +1,8 @@
+Release 0.9.4
+* Added support for StatusEnquiry message response.
+* Added configuration parameter 'bandwidth' to allow bandwidth to be
+  configured.
+
 Release 0.9.3
 * Fixed a subtle memory bug that would cause an intermittent crash under
   heavy volume of calls.

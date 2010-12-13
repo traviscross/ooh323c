@@ -331,11 +331,13 @@ typedef struct OOH225MsgCallbacks {
  * @param msg      Pointer to the Q931 message
  * @param length   Length of the encoded data
  * @param data     Pointer to the data to be decoded
+ * @param doCallbacks  Exec DTMF callback function
  *
  * @return         Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooQ931Decode
-(struct OOH323CallData *call, Q931Message* msg, int length, ASN1OCTET *data);
+(struct OOH323CallData *call, Q931Message* msg, int length,
+ ASN1OCTET *data, OOBOOL doCallbacks);
 
 /**
  * This function is used to decode the UUIE of the message from the list of
@@ -499,6 +501,17 @@ EXTERN int ooQ931SendDTMFAsKeyPadIE
  * @return          Completion status - 0 on success, -1 on failure
  */
 EXTERN int ooSendConnect(struct OOH323CallData *call);
+
+/**
+ * This function is invoked to send a Status message in response to a
+ * received StatusInquiry message.
+ *
+ * @param call      Pointer to the call for which connect message has to be
+ *                  sent.
+ *
+ * @return          Completion status - 0 on success, -1 on failure
+ */
+EXTERN int ooSendStatus (struct OOH323CallData *call);
 
 /**
  * This function is used to send a SETUP message for outgoing call. It first

@@ -315,6 +315,7 @@ int ooSendTermCapMsg(OOH323CallData *call)
    H245RequestMessage *request=NULL;
    OOCTXT *pctxt=NULL;
    ooH323EpCapability *epCap=NULL;
+   ooH323EpCapability *pListHeadCap=NULL;
    H245TerminalCapabilitySet *termCap=NULL;
    H245AudioCapability *audioCap=NULL;
    H245AudioTelephonyEventCapability *ateCap=NULL;
@@ -333,8 +334,8 @@ int ooSendTermCapMsg(OOH323CallData *call)
       return OO_OK;
    }
 
-   ret = ooCreateH245Message(&ph245msg,
-                             T_H245MultimediaSystemControlMessage_request);
+   ret = ooCreateH245Message
+      (&ph245msg, T_H245MultimediaSystemControlMessage_request);
 
    if(ret == OO_FAILED)
    {
@@ -347,13 +348,13 @@ int ooSendTermCapMsg(OOH323CallData *call)
    request = ph245msg->h245Msg.u.request;
    pctxt = &gH323ep.msgctxt;
    ph245msg->msgType = OOTerminalCapabilitySet;
-   memset(request, 0, sizeof(H245RequestMessage));
    if(request == NULL)
    {
       OOTRACEERR3("ERROR: No memory allocated for request message (%s, %s)\n",
                    call->callType, call->callToken);
       return OO_FAILED;
    }
+   memset(request, 0, sizeof(H245RequestMessage));
 
    request->t = T_H245RequestMessage_terminalCapabilitySet;
    request->u.terminalCapabilitySet = (H245TerminalCapabilitySet*)
@@ -369,12 +370,22 @@ int ooSendTermCapMsg(OOH323CallData *call)
    /* Add audio Capabilities */
 
    dListInit(&(termCap->capabilityTable));
-   for(k=0; k<(int)call->capPrefs.index; k++)
+
+   OOTRACEINFO2 ("Populating capabilityTable, number of preferred "
+                 "capabilities = %d\n", call->capPrefs.index);
+
+   if (0 != call->ourCaps) {
+      OOTRACEINFO1 ("Using call-specific capabilities.\n");
+      pListHeadCap = call->ourCaps;
+   }
+   else {
+      OOTRACEINFO1 ("Using endpoint capabilities.\n");
+      pListHeadCap = gH323ep.myCaps;
+   }
+
+   for (k = 0; k < (int)call->capPrefs.index; k++)
    {
-      if(call->ourCaps)
-         epCap = call->ourCaps;
-      else
-         epCap = gH323ep.myCaps;
+      epCap = pListHeadCap;
       while(epCap) {
          if(epCap->cap == call->capPrefs.order[k])
             break;
@@ -1971,6 +1982,54 @@ int ooOnReceivedRequestChannelClose(OOH323CallData *call,
    return ret;
 }
 
+int ooOnReceivedRoundTripDelayRequest(OOH323CallData *call,
+                                     H245SequenceNumber sequenceNumber)
+{
+   int ret=0;
+   H245Message *ph245msg=NULL;
+   H245ResponseMessage *response = NULL;
+   OOCTXT *pctxt=NULL;
+   H245RoundTripDelayResponse *rtdr;
+
+   ret = ooCreateH245Message(&ph245msg,
+                             T_H245MultimediaSystemControlMessage_response);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("ERROR:Memory allocation for RoundTripDelayResponse message "
+                  "failed (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+
+   pctxt = &gH323ep.msgctxt;
+   ph245msg->msgType = OORequestDelayResponse;
+   response = ph245msg->h245Msg.u.response;
+   response->t = T_H245ResponseMessage_roundTripDelayResponse;
+   response->u.roundTripDelayResponse = (H245RoundTripDelayResponse *)ASN1MALLOC
+                                   (pctxt, sizeof(H245RoundTripDelayResponse));
+   if(!response->u.roundTripDelayResponse)
+   {
+      OOTRACEERR3("ERROR:Failed to allocate memory for H245RoundTripDelayResponse "
+                  "message (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   rtdr = response->u.roundTripDelayResponse;
+   memset(rtdr, 0, sizeof(H245RoundTripDelayResponse));
+   rtdr->sequenceNumber = sequenceNumber;
+
+   OOTRACEDBGA3("Built RoundTripDelayResponse message (%s, %s)\n",
+                 call->callType, call->callToken);
+   ret = ooSendH245Msg(call, ph245msg);
+   if(ret != OO_OK)
+   {
+      OOTRACEERR3("Error:Failed to enqueue RoundTripDelayResponse to outbound queue. (%s, %s)\n",
+        call->callType, call->callToken);
+   }
+
+   ooFreeH245Message(call, ph245msg);
+  
+   return ret;
+}
+
 /*
   We clear channel here. Ideally the remote endpoint should send
   CloseLogicalChannel and then the channel should be cleared. But there's no
@@ -2428,7 +2487,8 @@ int ooOnReceivedTerminalCapabilitySet(OOH323CallData *call, H245Message *pmsg)
    H245CapabilityTableEntry *capEntry = NULL;
 
    tcs =  pmsg->h245Msg.u.request->u.terminalCapabilitySet;
-   if(call->remoteTermCapSeqNo >= tcs->sequenceNumber)
+   if (call->remoteTermCapSeqNo >= tcs->sequenceNumber &&
+       call->remoteTermCapSeqNo != 0)
    {
       OOTRACEINFO4("Rejecting TermCapSet message with SeqNo %d, as already "
                    "acknowledged message with this SeqNo (%s, %s)\n",

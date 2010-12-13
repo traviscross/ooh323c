@@ -57,7 +57,7 @@ int ooInitializePlugin()
 /* Create a transmit RTP channel. This creates a UDP socket for transmit
    and initializes the seqNo, timeStamp and ssrc for transmit session
 */
-int ooCreateTransmitRTPChannel(int* channelId, char * destip, int port)
+int ooCreateTransmitRTPChannel(int* channelId, const char* destip, int port)
 {
    int ret;
    OOLOG4(1, "StartOf:CreateTransmitRTPChannel:Destination %s:%d", destip,
@@ -155,7 +155,7 @@ int ooCloseTransmitRTPChannel(int channelId)
    will be communicated to the remote endpoint via H.245 signalling
 */
 
-int ooCreateReceiveRTPChannel(int* channelId, char * localip, int localport)
+int ooCreateReceiveRTPChannel(int* channelId, const char* localip, int localport)
 {
    int ret;
    OOIPADDR ipAddr;
@@ -241,7 +241,7 @@ int ooCloseReceiveRTPChannel(int channelId)
 /* Start transmitting wave file. Note that a transmit RTP channel
    has to be created before using this function.
 */
-int ooStartTransmitWaveFile(int channelId, char * filename)
+int ooStartTransmitWaveFile(int channelId, const char* filename)
 {
    int ret =0;
    OOLOG2(1, "StartOf:StartTransmitWaveFile");

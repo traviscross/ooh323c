@@ -27,7 +27,7 @@
 #include "ootrace.h"
 #include "ooports.h"
 #include "ooStackCmds.h"
-#include "oosndrtp.h"
+#include "ooMediaLibIF.h"
 #include "ooCalls.h"
 #include "ooCapability.h"
 #include "ooUtils.h"

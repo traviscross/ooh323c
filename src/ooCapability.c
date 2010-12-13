@@ -302,47 +302,28 @@ int ooCapabilityAddH263VideoCapability_helper(ooCallData *call,
 
    epCap->next = NULL;
 
-   if(!call)
+   if (0 == call)
    {/*Add as local capability */
       OOTRACEDBGC2("Adding endpoint H263 video capability %s.\n", pictureType);
-      if(!gH323ep.myCaps)
-         gH323ep.myCaps = epCap;
-      else{
-         cur = gH323ep.myCaps;
-         while(cur->next) cur = cur->next;
-         cur->next = epCap;
-      }
-      ooAppendCapToCapPrefs(NULL, cap);
+      ooAppendCapToCapList (&gH323ep.myCaps, epCap);
+      ooAppendCapToCapPrefs (NULL, cap);
       gH323ep.noOfCaps++;
    }
-   else{
-      if(remote)
-      {
-         /*Add as remote capability */
-         if(!call->remoteCaps)
-            call->remoteCaps = epCap;
-         else{
-            cur = call->remoteCaps;
-            while(cur->next) cur = cur->next;
-            cur->next = epCap;
-         }
-     }
-     else{
-        /*Add as our capability */
-        OOTRACEDBGC4("Adding call specific H263 video capability %s. "
-                     "(%s, %s)\n", pictureType, call->callType,
-                     call->callToken);
-        if(!call->ourCaps){
-           call->ourCaps = epCap;
-           ooResetCapPrefs(call);
-        }
-        else{
-           cur = call->ourCaps;
-           while(cur->next) cur = cur->next;
-           cur->next = epCap;
-        }
-        ooAppendCapToCapPrefs(call, cap);
-     }
+   else if (remote) {
+      /*Add as remote capability */
+      ooAppendCapToCapList (&call->remoteCaps, epCap);
+   }
+   else {
+      /*Add as our capability */
+      OOTRACEDBGC4("Adding call specific H263 video capability %s. "
+                   "(%s, %s)\n", pictureType, call->callType,
+                   call->callToken);
+
+      if (0 == call->ourCaps) {
+         ooResetCapPrefs (call);
+      }
+      ooAppendCapToCapList (&call->ourCaps, epCap);
+      ooAppendCapToCapPrefs (call, cap);
    }
 
    return OO_OK;
@@ -399,51 +380,36 @@ int ooCapabilityAddSimpleCapability
    epCap->stopTransmitChannel = stopTransmitChannel;
    epCap->next = NULL;
 
-   if(!call)
+   if (0 == call)
    {
       /* Add as local capability */
-      OOTRACEDBGC2("Adding endpoint capability %s. \n",
-                     ooGetCapTypeText(epCap->cap));
-      if(!gH323ep.myCaps) {
-         gH323ep.myCaps = epCap;
-      }
-      else{
-         cur = gH323ep.myCaps;
-         while(cur->next) cur = cur->next;
-         cur->next = epCap;
-      }
-      ooAppendCapToCapPrefs(NULL, cap);
+      OOTRACEDBGC2 ("Adding endpoint capability %s. \n",
+                    ooGetCapTypeText(epCap->cap));
+
+      ooAppendCapToCapList (&gH323ep.myCaps, epCap);
+      ooAppendCapToCapPrefs (NULL, cap);
       gH323ep.noOfCaps++;
    }
-   else{
-      if(remote)
-      {
-         /* Add as remote capability */
-         if(!call->remoteCaps) {
-            call->remoteCaps = epCap;
-         }
-         else{
-            cur = call->remoteCaps;
-            while(cur->next) cur = cur->next;
-            cur->next = epCap;
-         }
+   else if (remote)
+   {
+      /* Add as remote capability */
+      OOTRACEDBGC4 ("Adding remote call-specific capability %s. (%s, %s)\n",
+                    ooGetCapTypeText(epCap->cap), call->callType,
+                    call->callToken);
+
+      ooAppendCapToCapList (&call->remoteCaps, epCap);
+   }
+   else {
+      /* Add as our capability */
+      OOTRACEDBGC4 ("Adding call-specific capability %s. (%s, %s)\n",
+                    ooGetCapTypeText(epCap->cap), call->callType,
+                    call->callToken);
+
+      if(!call->ourCaps){
+         ooResetCapPrefs (call);
       }
-      else{
-         /* Add as our capability */
-         OOTRACEDBGC4("Adding call specific capability %s. (%s, %s)\n",
-                      ooGetCapTypeText(epCap->cap), call->callType,
-                      call->callToken);
-         if(!call->ourCaps){
-            call->ourCaps = epCap;
-            ooResetCapPrefs(call);
-         }
-         else{
-            cur = call->ourCaps;
-            while(cur->next) cur = cur->next;
-            cur->next = epCap;
-         }
-         ooAppendCapToCapPrefs(call, cap);
-      }
+      ooAppendCapToCapList (&call->ourCaps, epCap);
+      ooAppendCapToCapPrefs (call, cap);
    }
 
    return OO_OK;
@@ -634,28 +600,28 @@ void* ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt)
    switch(cap)
    {
    case OO_CAP_DTMF_RFC2833:
-      pATECap = (H245AudioTelephonyEventCapability*)memAlloc(pctxt,
-                                   sizeof(H245AudioTelephonyEventCapability));
+      pATECap = memAllocTypeZ (pctxt, H245AudioTelephonyEventCapability);
       if(!pATECap)
       {
-         OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - pATECap\n");
+         OOTRACEERR1
+            ("Error:Memory - ooCapabilityCreateDTMFCapability - pATECap\n");
          return NULL;
       }
-      memset(pATECap, 0, sizeof(H245AudioTelephonyEventCapability));
       pATECap->dynamicRTPPayloadType = giDynamicRTPPayloadType;
-      events = (char*)memAlloc(pctxt, strlen("0-16")+1);
+      events = (char*)memAlloc(pctxt, 5 /*strlen("0-16")+1*/);
       if(!events)
       {
-         OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - events\n");
+         OOTRACEERR1
+            ("Error:Memory - ooCapabilityCreateDTMFCapability - events\n");
          memFreePtr(pctxt, pATECap);
          return NULL;
       }
-      strncpy(events, "0-16", strlen("0-16"));
+      strcpy (events, "0-16");
       pATECap->audioTelephoneEvent = events;
       return pATECap;
+
    case OO_CAP_DTMF_H245_alphanumeric:
-      userInput = (H245UserInputCapability*)memAllocZ(pctxt,
-                                          sizeof(H245UserInputCapability));
+      userInput = memAllocTypeZ (pctxt, H245UserInputCapability);
       if(!userInput)
       {
          OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - "
@@ -664,9 +630,9 @@ void* ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt)
       }
       userInput->t = T_H245UserInputCapability_basicString;
       return userInput;
+
    case OO_CAP_DTMF_H245_signal:
-      userInput = (H245UserInputCapability*)memAllocZ(pctxt,
-                                          sizeof(H245UserInputCapability));
+      userInput = memAllocTypeZ (pctxt, H245UserInputCapability);
       if(!userInput)
       {
          OOTRACEERR1("Error:Memory - ooCapabilityCreateDTMFCapability - "
@@ -675,9 +641,11 @@ void* ooCapabilityCreateDTMFCapability(int cap, OOCTXT *pctxt)
       }
       userInput->t = T_H245UserInputCapability_dtmf;
       return userInput;
+
    default:
      OOTRACEERR1("Error:unknown dtmf capability type\n");
    }
+
    return NULL;
 }
 
@@ -1855,14 +1823,18 @@ ooH323EpCapability* ooIsDataTypeSupported
    return NULL;
 }
 
-int ooResetCapPrefs(OOH323CallData *call)
+int ooResetCapPrefs (OOH323CallData *call)
 {
-   OOCapPrefs *capPrefs=NULL;
-   if(call)
-      capPrefs = &call->capPrefs;
-   else
-      capPrefs = &gH323ep.capPrefs;
-   memset(capPrefs, 0, sizeof(OOCapPrefs));
+   if (0 != call) {
+      OOTRACEINFO3 ("Reset capabilities preferences. (%s, %s)\n",
+                    call->callType, call->callToken);
+      memset (&call->capPrefs, 0, sizeof(OOCapPrefs));
+   }
+   else {
+      OOTRACEINFO1 ("Reset capabilities preferences in endpoint\n");
+      memset (&gH323ep.capPrefs, 0, sizeof(OOCapPrefs));
+   }
+
    return OO_OK;
 }
 
@@ -1886,16 +1858,27 @@ int ooRemoveCapFromCapPrefs(OOH323CallData *call, int cap)
    return OO_OK;
 }
 
-
-int ooAppendCapToCapPrefs(OOH323CallData *call, int cap)
+void ooAppendCapToCapList
+(ooH323EpCapability** pphead, ooH323EpCapability* pcap)
 {
-   OOCapPrefs *capPrefs=NULL;
-   if(call)
-      capPrefs = &call->capPrefs;
-   else
-      capPrefs = &gH323ep.capPrefs;
+   if (0 == *pphead) {
+      *pphead = pcap;
+   }
+   else {
+      ooH323EpCapability* p = *pphead;
+      while (0 != p->next) p = p->next;
+      p->next = pcap;
+   }
+}
 
+int ooAppendCapToCapPrefs (OOH323CallData *call, int cap)
+{
+   OOCapPrefs* capPrefs = (0 != call) ? &call->capPrefs : &gH323ep.capPrefs;
    capPrefs->order[capPrefs->index++] = cap;
+
+   OOTRACEINFO3 ("Appended %d to capPrefs, count = %d\n",
+                 cap, capPrefs->index);
+
    return OO_OK;
 }
 
@@ -2373,4 +2356,24 @@ const char* ooGetCapTypeText (OOCapabilities cap)
       "OO_EXTELEMVIDEO"
    };
    return ooUtilsGetText (cap, capTypes, OONUMBEROF(capTypes));
+}
+
+void ooCapabilityDiagPrint (const ooH323EpCapability* pvalue)
+{
+   OOTRACEINFO2 ("Capability: %s\n", ooGetCapTypeText(pvalue->cap));
+
+   OOTRACEINFO1 ("  direction:");
+   if (pvalue->dir & OORX) { OOTRACEINFO1 (" receive"); }
+   if (pvalue->dir & OOTX) { OOTRACEINFO1 (" transmit"); }
+   OOTRACEINFO1 ("\n");
+
+   OOTRACEINFO1 ("  type:");
+   switch (pvalue->capType) {
+   case OO_CAP_TYPE_AUDIO: OOTRACEINFO1 (" audio\n"); break;
+   case OO_CAP_TYPE_VIDEO: OOTRACEINFO1 (" video\n"); break;
+   case OO_CAP_TYPE_DATA:  OOTRACEINFO1 (" data\n"); break;
+   default: OOTRACEINFO2 (" ? (%d)\n", pvalue->capType);
+   }
+
+   /* TODO: print params specific to each capability type */
 }

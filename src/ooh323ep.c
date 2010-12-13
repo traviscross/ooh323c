@@ -804,6 +804,23 @@ void ooH323EpPrintConfig(void)
                    gH323ep.logicalChannelTimeout);
 
    OOTRACEINFO2("\tSession Timeout - %d seconds\n", gH323ep.sessionTimeout);
+   OOTRACEINFO2 ("Number of preferred capabilities = %d\n",
+                 gH323ep.capPrefs.index);
+
+   /* Print capabilities */
+   if (0 != gH323ep.myCaps) {
+      ooH323EpCapability* epCap = gH323ep.myCaps;
+      while (0 != epCap) {
+         OOTRACEINFO1 ("\n");
+         ooCapabilityDiagPrint (epCap);
+         epCap = epCap->next;
+      }
+   }
+   else {
+      OOTRACEINFO1 ("\tNo configured endpoint capabilities\n");
+   }
+
+   OOTRACEINFO1 ("\n");
 
    return;
 }

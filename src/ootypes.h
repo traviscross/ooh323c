@@ -60,7 +60,7 @@
 #endif
 
 
-#define OOH323C_VERSION "v0.9.3"
+#define OOH323C_VERSION "v0.9.4"
 
 #ifndef EXTERN
 #ifdef MAKE_DLL
@@ -179,8 +179,10 @@ typedef enum OOCallClearReason {
 #define OORequestChannelCloseRelease       128
 #define OOEndSessionCommand                129
 #define OOUserInputIndication              130
+#define OORequestDelayResponse             131
+#define OOStatus                           132
 
-#define OO_MSGTYPE_MAX                     130
+#define OO_MSGTYPE_MAX                     132
 
 /* Timer types */
 #define OO_CALLESTB_TIMER  (1<<0)

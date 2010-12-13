@@ -672,6 +672,15 @@ EXTERN  int ooResetCapPrefs(struct OOH323CallData *call);
 EXTERN  int ooRemoveCapFromCapPrefs(struct OOH323CallData *call, int cap);
 
 /**
+ * This function appends a capability record to the given capability list.
+ *
+ * @param pphead   Pointer to pointer to head records in list.
+ * @param pcap     Pointer to capability record to append.
+ */
+EXTERN void ooAppendCapToCapList
+(ooH323EpCapability** pphead, ooH323EpCapability* pcap);
+
+/**
  * This function is used to append a particular capability to preference
  * list.
  * @param call     Handle to call, if call's preference list has to be modified
@@ -713,6 +722,13 @@ EXTERN int ooPreppendCapToCapPrefs(struct OOH323CallData *call, int cap);
  */
 EXTERN const char* ooGetCapTypeText (OOCapabilities cap);
 
+
+/**
+ * This function prints diagnostic information on the given capability
+ * to the log.
+ * @param pvalue  Pointer to capability structure.
+ */
+EXTERN void ooCapabilityDiagPrint (const ooH323EpCapability* pvalue);
 
 /**
  * @}

@@ -101,13 +101,14 @@ HWAVEOUT ghWaveOut;
 CRITICAL_SECTION gPlayMutex, gReadMutex;
 
 /**
- * Opens a WaveFile for read and traverses upto the data chunk,
+ * Opens a WaveFile for read and traverses up to the data chunk,
  * so that next mmioRead will return wavedata.
+ *
  * @param filename    Name of the wave file to be opened.
  *
  * @return            Completion status - 0 on success, -1 on failure.
 */
-int ooOpenWaveFileForRead(char *filename);
+int ooOpenWaveFileForRead (const char* filename);
 
 /**
  * Closes the open WaveFile.
@@ -124,7 +125,7 @@ int ooCloseWaveFile();
  *
  *  @return           Number of bytes read on success, -1 on failure  
  */
-int ooReadWaveFileData(char * buffer, int size);
+int ooReadWaveFileData (char* buffer, int size);
 
 /**
  * Opens a waveOut device, i.e., speaker for playback. waveFormat specifies

@@ -55,7 +55,11 @@ print `cp -f ./src/h323/*.h ./channels/ooh323c/src/h323`;
 print `cp -f ./src/h323/*.c ./channels/ooh323c/src/h323`;
 print `cp -f ./src/h323_v6/*.h ./channels/ooh323c/src/h323`;
 print `cp -f ./src/h323_v6/*.c ./channels/ooh323c/src/h323`;
+print `cp -f ./asterisk/README ./channels/ooh323c`;
+print `cp -f ./asterisk/ooh323.conf.sample ./channels/ooh323c`;
 
 # tar and gzip
 `tar -cf ${pkgname}.tar channels`;
 `gzip ${pkgname}.tar`;
+
+print "distribution file ../${pkgname}.tar.gz created\n";

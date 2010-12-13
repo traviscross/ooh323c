@@ -19,7 +19,7 @@
 /* Open the wave file for read and seek to the data chunk
    in the open file.
 */
-int ooOpenWaveFileForRead(char* filename)
+int ooOpenWaveFileForRead (const char* filename)
 {
    MMCKINFO mmckinfoParent;   /* for the Group Header */
    MMCKINFO mmckinfoSubchunk;   /* for finding chunks within the Group */
@@ -32,7 +32,8 @@ int ooOpenWaveFileForRead(char* filename)
 
    strcpy(gWaveFile.filename, filename);
    /* Open the file */
-   if (!(gWaveFile.hWaveFile = mmioOpen(filename, 0, MMIO_READ|MMIO_ALLOCBUF)))
+   if (!(gWaveFile.hWaveFile =
+         mmioOpen (gWaveFile.filename, 0, MMIO_READ|MMIO_ALLOCBUF)))
    {
       OOLOG2(1, "ERROR: Failed to open the wave file");
       return -1;

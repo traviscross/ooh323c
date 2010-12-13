@@ -204,6 +204,7 @@ typedef struct ooGkClient{
    ASN1UINT arqTimeout;
    ASN1UINT drqTimeout;
    enum OOGkClientState  state;
+   int gkBandwidth;
 } ooGkClient;
 
 struct OOAliases;
@@ -262,6 +263,27 @@ EXTERN int ooGkClientStart(ooGkClient *pGkClient);
 EXTERN int ooGkClientSetGkMode(ooGkClient *pGkClient,
                                enum RasGatekeeperMode eGkMode, char *szGkAddr,
                                int iGkPort );
+
+/**
+ * This function is invoked to set the gatekeeper ID.  This will be
+ * included in the initial gatekeeper registration request message.
+ * This ID only has meaning if gatekeeper mode is RasUseSpecificGatekeeper.
+ * The ID is set in the gatekeeper client structure contained in the global
+ * endpoint.  This structure must be initialized via ooGkClientInit
+ * before calling this function.
+ *
+ * @param id        Gatekeeper ID string.
+ * @return          Completion status - OO_OK on success, OO_FAILED on failure
+ */
+EXTERN int ooGkClientSetGkId (const char* id);
+
+/**
+ * This function is invoked to set the bandwidth.
+ *
+ * @param value     Bandwidth value.
+ * @return          Completion status - OO_OK on success, OO_FAILED on failure
+ */
+EXTERN int ooGkClientSetBandwidth (int value);
 
 /**
  * This function is used to create a RAS channel for the gatekeeper.

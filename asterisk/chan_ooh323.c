@@ -208,6 +208,7 @@ static int  gCapability = AST_FORMAT_ULAW;
 static struct ast_codec_pref gPrefs;
 static int  gDTMFMode = H323_DTMF_RFC2833;
 static char gGatekeeper[100];
+static char gGatekeeperID[100];
 static enum RasGatekeeperMode gRasGkMode = RasNoGatekeeper;
 
 static int  gIsGateway = 0;
@@ -221,6 +222,7 @@ static int  gAMAFLAGS;
 static char gContext[AST_MAX_EXTENSION] = DEFAULT_CONTEXT;
 static int  gIncomingLimit = 4;
 static int  gOutgoingLimit = 4;
+static int  gBandwidth = 0;
 OOBOOL gH323Debug = FALSE;
 
 static struct ooh323_config
@@ -393,7 +395,7 @@ static struct ooh323_pvt *ooh323_alloc(int callref, char *callToken)
 
         /* whether to use gk for this call */
         if (gRasGkMode == RasNoGatekeeper)
-                OO_SETFLAG(pvt->flags, H323_DISABLEGK);
+           OO_SETFLAG(pvt->flags, H323_DISABLEGK);
 
         pvt->dtmfmode = gDTMFMode;
         ast_copy_string(pvt->context, gContext, sizeof(pvt->context));
@@ -718,10 +720,10 @@ static int ooh323_call(struct ast_channel *ast, char *dest, int timeout)
         int res = 0;
         const char *val = NULL;
         ooCallOptions opts = {
-                .fastStart = TRUE,
-                .tunneling = TRUE,
-                .disableGk = TRUE,
-                .callMode = OO_CALLMODE_AUDIOCALL
+           .fastStart = gFastStart, /* was TRUE */
+           .tunneling = gTunneling, /* was TRUE */
+           .disableGk = TRUE,
+           .callMode = OO_CALLMODE_AUDIOCALL
         };
         if (gH323Debug)
                 ast_verbose("---   ooh323_call- %s\n", dest);
@@ -886,6 +888,8 @@ static struct ast_frame *ooh323_read(struct ast_channel *ast)
         struct ast_frame *fr;
         static struct ast_frame null_frame = { AST_FRAME_NULL, };
         struct ooh323_pvt *p = ast->tech_pvt;
+
+        if (0 == p) return &null_frame;
 
         ast_mutex_lock(&p->lock);
         if (p->rtp)
@@ -1311,7 +1315,7 @@ int onNewCallCreated(ooCallData *call)
                                 ast_verbose("Setting dialed digits %s\n", p->caller_dialedDigits);
                         }
                         ooCallAddAliasDialedDigits(call, p->caller_dialedDigits);
-                } else if (p->callerid_num) {
+                } else if (!ast_strlen_zero(p->callerid_num)) {
                         if (ooIsDialedDigit(p->callerid_num)) {
                                 if (gH323Debug) {
                                         ast_verbose("setting callid number %s\n", p->callerid_num);
@@ -1770,6 +1774,7 @@ int reload_config(int reload)
         gDTMFMode = H323_DTMF_RFC2833;
         gRasGkMode = RasNoGatekeeper;
         gGatekeeper[0] = '\0';
+        gGatekeeperID[0] = '\0';
         gRTPTimeout = 60;
         strcpy(gAccountcode, DEFAULT_H323ACCNT);
         gFastStart = 1;
@@ -1874,7 +1879,15 @@ int reload_config(int reload)
                                 gRasGkMode = RasUseSpecificGatekeeper;
                                 ast_copy_string(gGatekeeper, v->value, sizeof(gGatekeeper));
                         }
-                } else if (!strcasecmp(v->name, "logfile")) {
+                }
+                else if (!strcasecmp(v->name, "gatekeeperid")) {
+                   ast_copy_string
+                      (gGatekeeperID, v->value, sizeof(gGatekeeperID));
+                }
+                else if (!strcasecmp(v->name, "bandwidth")) {
+                   gBandwidth = (int)strtol(v->value, NULL, 10);
+                }
+                else if (!strcasecmp(v->name, "logfile")) {
                         ast_copy_string(gLogFile, v->value, sizeof(gLogFile));
                 } else if (!strcasecmp(v->name, "context")) {
                         ast_copy_string(gContext, v->value, sizeof(gContext));
@@ -2290,6 +2303,9 @@ static char *handle_cli_ooh323_show_config(struct ast_cli_entry *e, int cmd, str
                 snprintf(value, sizeof(value), "%s", gGatekeeper);
 
         ast_cli(a->fd, "%-20s%s\n", "Gatekeeper:", value);
+        ast_cli(a->fd, "%-20s%s\n", "GatekeeperID:", gGatekeeperID);
+        snprintf(value, sizeof(value), "%d", gBandwidth);
+        ast_cli(a->fd, "%-20s%s\n", "Bandwidth:", value);
         ast_cli(a->fd, "%-20s%s\n", "H.323 LogFile:", gLogFile);
         ast_cli(a->fd, "%-20s%s\n", "Context:", gContext);
         ast_cli(a->fd, "%-20s%s\n", "Capability:", ast_getformatname_multiple(value, sizeof(value), gCapability));
@@ -2448,10 +2464,17 @@ static int load_module(void)
                         ooH323EpDisableH245Tunneling();
 
                 /* Gatekeeper */
-                if (gRasGkMode == RasUseSpecificGatekeeper)
-                        ooGkClientInit(gRasGkMode, gGatekeeper, 0);
+                if (gRasGkMode == RasUseSpecificGatekeeper) {
+                   ooGkClientInit (gRasGkMode, gGatekeeper, 0);
+
+                   if (0 != gGatekeeperID[0]) {
+                      ooGkClientSetGkId (gGatekeeperID);
+                   }
+                }
                 else if (gRasGkMode == RasDiscoverGatekeeper)
-                        ooGkClientInit(gRasGkMode, 0, 0);
+                   ooGkClientInit(gRasGkMode, 0, 0);
+
+                ooGkClientSetBandwidth (gBandwidth);
 
                 /* Register callbacks */
                 ooH323EpSetH323Callbacks(h323Callbacks);

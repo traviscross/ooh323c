@@ -22,7 +22,7 @@
 #include "ooCapability.h"
 #include "ooConfig.h"
 #include "ooStackCmds.h"
-#include "oosndrtp.h"
+#include "ooMediaLibIF.h"
 #include "ooGkClient.h"
 #include "ooUtils.h"
 #include "ooLogChan.h"

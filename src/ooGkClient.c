@@ -45,7 +45,7 @@ static ASN1OBJID gProtocolID = {
 };
 
 int ooGkClientInit(enum RasGatekeeperMode eGkMode,
-              char *szGkAddr, int iGkPort )
+                    char *szGkAddr, int iGkPort )
 {
    ooGkClient *pGkClient=NULL;
    OOInterface *cur=NULL;
@@ -154,6 +154,12 @@ void ooGkClientPrintConfig(ooGkClient *pGkClient)
       OOTRACEINFO1("\tGatekeeper mode - UseSpecificGatekeeper\n");
       OOTRACEINFO3("\tGatekeeper To Use - %s:%d\n", pGkClient->gkRasIP,
                                                     pGkClient->gkRasPort);
+
+      if (pGkClient->gkId.nchars > 0) {
+         OOTRACEINFO1("\tGatekeeper ID:\n");
+         ooTraceHexDump (OOTRCLVLINFO, (const OOUCHAR*)pGkClient->gkId.data,
+                         pGkClient->gkId.nchars * sizeof(ASN116BITCHAR));
+      }
    }
    else if(pGkClient->gkMode == RasDiscoverGatekeeper) {
       OOTRACEINFO1("\tGatekeeper mode - UseSpecificGatekeeper\n");
@@ -239,12 +245,56 @@ int ooGkClientSetGkMode(ooGkClient *pGkClient, enum RasGatekeeperMode eGkMode,
    return OO_OK;
 }
 
+int ooGkClientSetBandwidth (int value)
+{
+   ooGkClient* pGkClient = gH323ep.gkClient;
+
+   if (0 == pGkClient) {
+      OOTRACEERR1 ("ERROR: gatekeeper client not initialized in endpoint\n");
+      return OO_FAILED;
+   }
+
+   pGkClient->gkBandwidth = value;
+
+   OOTRACEINFO2 ("Bandwidth set to '%d'\n", value);
+
+   return 0;
+}
+
+int ooGkClientSetGkId (const char* id)
+{
+   ooGkClient* pGkClient = gH323ep.gkClient;
+   size_t i, idlen = strlen (id);
+
+   if (0 == pGkClient) {
+      OOTRACEERR1 ("ERROR: gatekeeper client not initialized in endpoint\n");
+      return OO_FAILED;
+   }
+   if (0 != pGkClient->gkId.data) {
+      memFreePtr (&pGkClient->ctxt, pGkClient->gkId.data);
+   }
+   pGkClient->gkId.nchars = idlen;
+   pGkClient->gkId.data = (ASN116BITCHAR*)
+      memAlloc (&pGkClient->ctxt, sizeof(ASN116BITCHAR)*idlen);
+
+   if (0 == pGkClient->gkId.data) {
+      OOTRACEERR1 ("Error:Failed to allocate memory for GK ID data\n");
+      pGkClient->state = GkClientFailed;
+      return OO_FAILED;
+   }
+
+   for (i = 0; i < idlen; i++) {
+      pGkClient->gkId.data[i] = id[i];
+   }
+
+   OOTRACEINFO2 ("Gatekeeper ID set to '%s'\n", id);
+
+   return 0;
+}
 
 /**
  * Create the RAS channel (socket).
- *
  */
-
 int ooGkClientCreateChannel(ooGkClient *pGkClient)
 {
    int ret=0;
@@ -600,8 +650,6 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    OOCTXT *pctxt = &pGkClient->msgCtxt;
    ooGkClientTimerCb *cbData=NULL;
 
-
-
    /* Allocate memory for RAS message */
    pRasMsg = (H225RasMessage*)memAlloc(pctxt, sizeof(H225RasMessage));
    if(!pRasMsg)
@@ -611,8 +659,8 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
       return OO_FAILED;
    }
 
-   pGkReq = (H225GatekeeperRequest*)memAlloc(pctxt,
-                                                sizeof(H225GatekeeperRequest));
+   pGkReq = (H225GatekeeperRequest*)
+      memAlloc (pctxt, sizeof(H225GatekeeperRequest));
    if(!pGkReq)
    {
       OOTRACEERR1("Error:Memory allocation for GRQ failed\n");
@@ -644,7 +692,8 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
    }
 
    ooSocketConvertIpToNwAddr
-     (pGkClient->localRASIP, pRasAddress->ip.data, sizeof(pRasAddress->ip.data));
+      (pGkClient->localRASIP, pRasAddress->ip.data,
+       sizeof(pRasAddress->ip.data));
 
    pRasAddress->ip.numocts = 4;
    pRasAddress->port = pGkClient->localRASPort;
@@ -658,6 +707,22 @@ int ooGkClientSendGRQ(ooGkClient *pGkClient)
 
    pGkReq->endpointType.m.nonStandardDataPresent=0;
    pGkReq->endpointType.m.vendorPresent=1;
+
+   if (pGkClient->gkId.nchars > 0) {
+      pGkReq->m.gatekeeperIdentifierPresent=TRUE;
+      pGkReq->gatekeeperIdentifier.nchars = pGkClient->gkId.nchars;
+      pGkReq->gatekeeperIdentifier.data = (ASN116BITCHAR*)memAlloc
+         (pctxt, pGkClient->gkId.nchars*sizeof(ASN116BITCHAR));
+      if(!pGkReq->gatekeeperIdentifier.data) {
+         OOTRACEERR1("Error: Failed to allocate memory for GKIdentifier in "
+                     "GRQ message.\n");
+         memReset(pctxt);
+         pGkClient->state = GkClientFailed;
+         return OO_FAILED;
+      }
+      memcpy(pGkReq->gatekeeperIdentifier.data, pGkClient->gkId.data,
+             pGkClient->gkId.nchars*sizeof(ASN116BITCHAR));
+   }
 
    ooGkClientFillVendor(pGkClient, &pGkReq->endpointType.vendor);
 
@@ -779,27 +844,40 @@ int ooGkClientHandleGatekeeperConfirm
       return OO_OK;
    }
 
-   if(pGatekeeperConfirm->m.gatekeeperIdentifierPresent)
+   /* Note: in the case of using a configued gatekeeper ID, the following
+      line can be uncommented to ignore the ID returned in the gatekeeper
+      confirm message and always use the configured ID. */
+   /* if (pGkClient->gkId.nchars == 0) */
    {
-      pGkClient->gkId.nchars = pGatekeeperConfirm->gatekeeperIdentifier.nchars;
-      pGkClient->gkId.data = (ASN116BITCHAR*)memAlloc(&pGkClient->ctxt,
-                              sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);
-      if(!pGkClient->gkId.data)
-      {
-         OOTRACEERR1("Error:Failed to allocate memory for GK ID data\n");
-         pGkClient->state = GkClientFailed;
+      if (pGatekeeperConfirm->m.gatekeeperIdentifierPresent) {
+         if (0 != pGkClient->gkId.data) {
+            memFreePtr (&pGkClient->ctxt, pGkClient->gkId.data);
+         }
+         pGkClient->gkId.nchars =
+            pGatekeeperConfirm->gatekeeperIdentifier.nchars;
+
+         pGkClient->gkId.data = (ASN116BITCHAR*)
+            memAlloc (&pGkClient->ctxt,
+                      sizeof(ASN116BITCHAR)*pGkClient->gkId.nchars);
+
+         if(!pGkClient->gkId.data) {
+            OOTRACEERR1("Error:Failed to allocate memory for GK ID data\n");
+            pGkClient->state = GkClientFailed;
+            return OO_FAILED;
+         }
+
+         memcpy(pGkClient->gkId.data,
+                pGatekeeperConfirm->gatekeeperIdentifier.data,
+                sizeof(ASN116BITCHAR)* pGkClient->gkId.nchars);
+      }
+      else{
+         OOTRACEERR1
+            ("ERROR: No Gatekeeper ID present in received "
+             "GKConfirmed message\n");
+         OOTRACEINFO1
+            ("Ignoring message and will retransmit GRQ after timeout\n");
          return OO_FAILED;
       }
-
-      memcpy(pGkClient->gkId.data,
-             pGatekeeperConfirm->gatekeeperIdentifier.data,
-             sizeof(ASN116BITCHAR)* pGkClient->gkId.nchars);
-   }
-   else{
-      OOTRACEERR1("ERROR:No Gatekeeper ID present in received GKConfirmed "
-                  "message\n");
-      OOTRACEINFO1("Ignoring message and will retransmit GRQ after timeout\n");
-      return OO_FAILED;
    }
 
    /* Extract Gatekeeper's RAS address */
@@ -999,7 +1077,7 @@ int ooGkClientSendRRQ(ooGkClient *pGkClient, ASN1BOOL keepAlive)
          allocate storage for endpoint-identifier, and populate it from what the
          GK told us from the previous RCF. Only allocate on the first pass thru here */
       pRegReq->endpointIdentifier.data =
-           (ASN116BITCHAR*)memAlloc(pctxt, pGkClient->gkId.nchars*sizeof(ASN116BITCHAR));
+           (ASN116BITCHAR*)memAlloc(pctxt, pGkClient->endpointId.nchars*sizeof(ASN116BITCHAR));
       if (pRegReq->endpointIdentifier.data) {
          pRegReq->endpointIdentifier.nchars = pGkClient->endpointId.nchars;
          pRegReq->m.endpointIdentifierPresent = TRUE;
@@ -1659,7 +1737,9 @@ int ooGkClientSendAdmissionRequest
    }
 
    /* Populate bandwidth*/
-   pAdmReq->bandWidth = DEFAULT_BW_REQUEST;
+   pAdmReq->bandWidth = (pGkClient->gkBandwidth == 0) ?
+      DEFAULT_BW_REQUEST : pGkClient->gkBandwidth;
+
    /* Populate call Reference */
    pAdmReq->callReferenceValue = call->callReference;
 

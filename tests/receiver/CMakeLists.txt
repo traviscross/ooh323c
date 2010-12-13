@@ -1,12 +1,13 @@
 set(ooReceiver_SOURCES
     ooReceiver.c
-    oosndrtp.c
+    ../../media/ooMediaLibIF.c
     )
    
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/src/h323_v6)
 include_directories(${CMAKE_SOURCE_DIR}/src/h323)
+include_directories(${CMAKE_SOURCE_DIR}/media)
 
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)   

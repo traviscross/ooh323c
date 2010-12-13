@@ -86,7 +86,8 @@ EXTERN int ooInitializePlugin();
  *
  * @return              Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooCreateTransmitRTPChannel(int* channelId, char * destip, int port);
+EXTERN int ooCreateTransmitRTPChannel
+(int* channelId, const char* destip, int port);
 
 /**
  * This function is invoked to close the Transmit RTP channel.
@@ -110,8 +111,8 @@ EXTERN int ooCloseTransmitRTPChannel(int channelId);
  *
  * @return              Completion status - 0 on success, -1 on failure
  */
-EXTERN int ooCreateReceiveRTPChannel(int* channelId, char* localip,
-                                     int localport);
+EXTERN int ooCreateReceiveRTPChannel
+(int* channelId, const char* localip, int localport);
 
 /**
  * This function is invoked to close the Receive RTP channel.
@@ -135,7 +136,7 @@ EXTERN int ooCloseReceiveRTPChannel(int channelId);
  *
  * @return           Completion status - 0 on success, -1 on failure.
  */
-EXTERN int ooStartTransmitWaveFile(int channelId, char * filename);
+EXTERN int ooStartTransmitWaveFile(int channelId, const char* filename);
 
 /**
  * This function is used to stop transmitting the wave file.

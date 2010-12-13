@@ -1109,6 +1109,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
 
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931AlertingMsg:/* Alerting message received */
          OOTRACEINFO3("H.225 Alerting message received (%s, %s)\n",
                       call->callType, call->callToken);
@@ -1119,6 +1120,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
             gH323ep.h323Callbacks.onAlerting(call);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931ConnectMsg:/* Connect message received */
          OOTRACEINFO3("H.225 Connect message received (%s, %s)\n",
                       call->callType, call->callToken);
@@ -1152,11 +1154,13 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
          }
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931InformationMsg:
          OOTRACEINFO3("H.225 Information msg received (%s, %s)\n",
                        call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931ReleaseCompleteMsg:/* Release complete message received */
          OOTRACEINFO3("H.225 Release Complete message received (%s, %s)\n",
                       call->callType, call->callToken);
@@ -1165,6 +1169,7 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
 
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931FacilityMsg:
          OOTRACEINFO3("H.225 Facility message Received (%s, %s)\n",
                        call->callType, call->callToken);
@@ -1172,31 +1177,42 @@ int ooHandleH2250Message(OOH323CallData *call, Q931Message *q931Msg)
          ooOnReceivedFacility(call, q931Msg);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931ProgressMsg:
          OOTRACEINFO3("H.225 Progress message received (%s, %s)\n",
                        call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931StatusMsg:
          OOTRACEINFO3("H.225 Status message received (%s, %s)\n",
                        call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931StatusEnquiryMsg:
          OOTRACEINFO3("H.225 Status Inquiry message Received (%s, %s)\n",
                        call->callType, call->callToken);
+
          ooFreeQ931Message(q931Msg);
+
+         /* Send status response */
+         ooSendStatus (call);  /* Send status message */
+
          break;
+
       case Q931SetupAckMsg:
          OOTRACEINFO3("H.225 Setup Ack message received (%s, %s)\n",
                        call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
          break;
+
       case Q931NotifyMsg:
          OOTRACEINFO3("H.225 Notify message Received (%s, %s)\n",
                        call->callType, call->callToken);
          ooFreeQ931Message(q931Msg);
          break;
+
       default:
          OOTRACEWARN3("Invalid H.225 message type received (%s, %s)\n",
                       call->callType, call->callToken);
