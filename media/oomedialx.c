@@ -22,7 +22,9 @@
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#ifndef __APPLE__
 #include <linux/soundcard.h>
+#endif
 #include <pthread.h>
 #include "oomedialx.h"
 #include "ooCommon.h"
@@ -38,11 +40,13 @@ int ooOpenAudioDevice()
       return -1;
    }
    OOLOG2(1, "Audio device open successful");
+#ifndef __APPLE__
    ioctl(ghSoundDevice, SOUND_PCM_READ_BITS, &sampleSize);
    /*   sampleSize =8; */
    /*   ioctl(context->ooSoundDevice, SOUND_PCM_WRITE_BITS, &sampleSize);*/
    ioctl(ghSoundDevice, SOUND_PCM_READ_CHANNELS, &numChannels);
    ioctl(ghSoundDevice, SOUND_PCM_READ_RATE, &rate);
+#endif
    /*   ioctl(context->ooSoundDevice, FIONBIO, &on);*/
    OOLOG5(1, "Sampe size %d bits, channels %d, rate %d",
           sampleSize, numChannels, rate);
