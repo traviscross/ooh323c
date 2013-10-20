@@ -532,8 +532,15 @@ int ooSocketConvertIpToNwAddr
    if (bufsiz >= sizeof(unsigned long)) {
      memcpy (netIp, (char*)&sin.sin_addr.s_addr, sizeof(unsigned long));
      return ASN_OK;
+   } else {
+     /* return the right data anyway, even we are returning a ASN_E_BUFOVFLW
+        I found sizeof(unsigned long) = 8 on Mac,
+        this is not a complete fix but it works now because
+        everywhere uses this function but never checkes it's return value
+      */
+     memcpy (netIp, (char*)&sin.sin_addr.s_addr, bufsiz);
+     return ASN_E_BUFOVFLW;
    }
-   else return ASN_E_BUFOVFLW;
 }
 
 int ooSocketAddrToStr (OOIPADDR ipAddr, char* pbuf, int bufsize)
