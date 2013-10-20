@@ -395,7 +395,7 @@ int main (int argc, char** argv)
          }
          ooGenerateOutgoingCallToken (callToken, sizeof(callToken));
 
-         call = ooCreateCall ("outgoing", callToken);
+         call = ooCreateCall ("outgoing", callToken, NULL);
 
          tmp[0] = '\0';
          ooParseDestination (call, gDest, tmp, 30, &call->remoteAliases);

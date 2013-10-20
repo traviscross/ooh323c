@@ -392,7 +392,7 @@ int ooAcceptH225Connection()
    }
    ooGenerateCallToken(callToken, sizeof(callToken));
 
-   call = ooCreateCall("incoming", callToken);
+   call = ooCreateCall("incoming", callToken, NULL);
    if(!call)
    {
       OOTRACEERR1("ERROR:Failed to create an incoming call\n");

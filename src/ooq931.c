@@ -1857,7 +1857,7 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
    /* Note: We keep same callToken, for new call which is going
       to replace an existing call, thus treating it as a single call.*/
 
-   fwdedCall = ooCreateCall("outgoing", call->callToken);
+   fwdedCall = ooCreateCall("outgoing", call->callToken, NULL);
 
    pctxt = fwdedCall->pctxt;
 
@@ -1931,7 +1931,12 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
       return OO_FAILED;
    }
 
-   call = ooCreateCall("outgoing", callToken);
+   if (opts && opts->usrData) {
+      call = ooCreateCall("outgoing", callToken, opts->usrData);
+   } else {
+      call = ooCreateCall("outgoing", callToken, NULL);
+   }
+
    pctxt = call->pctxt;
    if(opts)
    {

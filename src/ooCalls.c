@@ -29,7 +29,7 @@
 /** Global endpoint structure */
 extern OOH323EndPoint gH323ep;
 
-OOH323CallData* ooCreateCall(char* type, char*callToken)
+OOH323CallData* ooCreateCall(char* type, char*callToken, void *usrData)
 {
    OOH323CallData *call=NULL;
    OOCTXT *pctxt=NULL;
@@ -146,7 +146,7 @@ OOH323CallData* ooCreateCall(char* type, char*callToken)
    dListInit(&call->timerList);
    call->msdRetries = 0;
    call->pFastStartRes = NULL;
-   call->usrData = NULL;
+   call->usrData = usrData;
 
    OOTRACEINFO3("Created a new call (%s, %s)\n", call->callType,
                  call->callToken);

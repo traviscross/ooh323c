@@ -239,6 +239,7 @@ typedef struct ooCallOptions {
    OOBOOL tunneling;    /*!< Use H.245 tunneling */
    OOBOOL disableGk;    /*!< Disable use of gatekeeper */
    OOCallMode callMode; /*!< Type of channel to setup with FastStart */
+   void *usrData;
 }ooCallOptions;
 
 

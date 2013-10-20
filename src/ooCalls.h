@@ -300,7 +300,7 @@ typedef struct OOH323CALLBACKS {
  *
  * @return             Pointer to a newly created call
  */
-EXTERN OOH323CallData* ooCreateCall(char *type, char *callToken);
+EXTERN OOH323CallData* ooCreateCall(char *type, char *callToken, void *usrData);
 
 /**
  * This function is used to add a call to the list of existing calls.
