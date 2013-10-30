@@ -3459,6 +3459,8 @@ EXTERN int asn1PD_H245NoPTAudioToneCapability (OOCTXT* pctxt, H245NoPTAudioToneC
 #define T_H245AudioCapability_audioTone 25
 #define T_H245AudioCapability_extElem1  26
 
+extern const char *ooH245AudioCapText(int t);
+
 typedef struct EXTERN H245AudioCapability {
    int t;
    union {

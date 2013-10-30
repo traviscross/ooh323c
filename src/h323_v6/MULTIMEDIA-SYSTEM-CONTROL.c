@@ -26,3 +26,39 @@ EXTERN const char* gs_MULTIMEDIA_SYSTEM_CONTROL_NetworkAccessParameters_networkA
 EXTERN const char* gs_MULTIMEDIA_SYSTEM_CONTROL_UserInputIndication_signal_signalType_CharSet =
 "!#*0123456789ABCD";
 
+
+static *H245_AUDIO_CAPACITY_NAMES[] = {
+        "T_H245AudioCapability_0"
+        "T_H245AudioCapability_nonStandard",
+        "T_H245AudioCapability_g711Alaw64k",
+        "T_H245AudioCapability_g711Alaw56k",
+        "T_H245AudioCapability_g711Ulaw64k",
+        "T_H245AudioCapability_g711Ulaw56k",
+        "T_H245AudioCapability_g722_64k",
+        "T_H245AudioCapability_g722_56k",
+        "T_H245AudioCapability_g722_48k",
+        "T_H245AudioCapability_g7231",
+        "T_H245AudioCapability_g728",
+        "T_H245AudioCapability_g729",
+        "T_H245AudioCapability_g729AnnexA",
+        "T_H245AudioCapability_is11172AudioCapability",
+        "T_H245AudioCapability_is13818AudioCapability",
+        "T_H245AudioCapability_g729wAnnexB",
+        "T_H245AudioCapability_g729AnnexAwAnnexB",
+        "T_H245AudioCapability_g7231AnnexCCapability",
+        "T_H245AudioCapability_gsmFullRate",
+        "T_H245AudioCapability_gsmHalfRate",
+        "T_H245AudioCapability_gsmEnhancedFullRate",
+        "T_H245AudioCapability_genericAudioCapability",
+        "T_H245AudioCapability_g729Extensions",
+        "T_H245AudioCapability_vbd",
+        "T_H245AudioCapability_audioTelephonyEvent",
+        "T_H245AudioCapability_audioTone",
+        "T_H245AudioCapability_extElem1"
+};
+
+const char *ooH245AudioCapText(int t)
+{
+        if (t > sizeof(H245_AUDIO_CAPACITY_NAMES)) return "OVERFLOW";
+        return H245_AUDIO_CAPACITY_NAMES[t];
+}
