@@ -3208,6 +3208,8 @@ EXTERN int asn1PD_H245ExtendedVideoCapability (OOCTXT* pctxt, H245ExtendedVideoC
 #define T_H245VideoCapability_extendedVideoCapability 7
 #define T_H245VideoCapability_extElem1  8
 
+extern const char *ooH245VideoCapText(int t);
+
 typedef struct EXTERN H245VideoCapability {
    int t;
    union {

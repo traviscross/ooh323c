@@ -62,3 +62,22 @@ const char *ooH245AudioCapText(int t)
         if (t > sizeof(H245_AUDIO_CAPACITY_NAMES)) return "OVERFLOW";
         return H245_AUDIO_CAPACITY_NAMES[t];
 }
+
+
+static *H245_VIDEO_CAPACITY_NAMES[] = {
+        "T_H245VideoCapability_0",
+        "T_H245VideoCapability_nonStandard",
+        "T_H245VideoCapability_h261VideoCapability",
+        "T_H245VideoCapability_h262VideoCapability",
+        "T_H245VideoCapability_h263VideoCapability",
+        "T_H245VideoCapability_is11172VideoCapability",
+        "T_H245VideoCapability_genericVideoCapability",
+        "T_H245VideoCapability_extendedVideoCapability",
+        "T_H245VideoCapability_extElem1"
+};
+
+const char *ooH245VideoCapText(int t)
+{
+        if (t > sizeof(H245_VIDEO_CAPACITY_NAMES)) return "OVERFLOW";
+        return H245_VIDEO_CAPACITY_NAMES[t];
+}
