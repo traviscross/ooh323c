@@ -276,7 +276,7 @@ int decodeConsUInt8
    range_value = upper - lower + 1;
 
    if (lower != upper) {
-      ASN1UINT range_bitcnt;
+      ASN1UINT range_bitcnt = 0;
 
       /* If range is <= 255, bit-field case (10.5.7a) */
 

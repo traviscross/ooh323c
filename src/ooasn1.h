@@ -1022,9 +1022,9 @@ EXTERN void memSetStaticBuf (void* memHeapBuf, ASN1UINT blkSize);
 ((pctxt)->buffer.bitOffset = 7, ASN_OK)) : ASN_OK)
 
 #define DECODEBIT(pctxt,pvalue) \
-((INCRBITIDX (pctxt) != ASN_OK) ? ((*(pvalue) = 0), ASN_E_ENDOFBUF) : \
+((INCRBITIDX (pctxt) != ASN_OK) ? ((*(pvalue) = 0), ASN_E_ENDOFBUF) : ( \
 ((*(pvalue) = (((pctxt)->buffer.data[(pctxt)->buffer.byteIndex]) & \
-(1 << (pctxt)->buffer.bitOffset)) != 0), ASN_OK))
+(1 << (pctxt)->buffer.bitOffset)) != 0), ASN_OK) ))
 
 /*
 #define SETCHARSET(csetvar, canset, abits, ubits) \
