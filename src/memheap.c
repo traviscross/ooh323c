@@ -120,10 +120,10 @@ pMemBlk->freeElemOff = (ASN1USINT)(QOFFSETOF (pElem, pMemBlk->data) + 1); \
 
 /* Memory debugging macros */
 #ifdef _MEMDEBUG
-#define RTMEMDIAG1(msg)         ooTrace(OOTRCLVLINFO,msg)
-#define RTMEMDIAG2(msg,a)       ooTrace(OOTRCLVLINFO,msg,a)
-#define RTMEMDIAG3(msg,a,b)     ooTrace(OOTRCLVLINFO,msg,a,b)
-#define RTMEMDIAG4(msg,a,b,c)   ooTrace(OOTRCLVLINFO,msg,a,b,c)
+#define RTMEMDIAG1(msg)         ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,msg)
+#define RTMEMDIAG2(msg,a)       ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,msg,a)
+#define RTMEMDIAG3(msg,a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,msg,a,b)
+#define RTMEMDIAG4(msg,a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,msg,a,b,c)
 #define FILLFREEMEM(mem,size)   memset (mem, 0xFE, size)
 #define FILLNEWMEM(mem,size)    memset (mem, 0xA0, size)
 #define CHECKMEMELEM(memblk,elem) \

@@ -99,14 +99,28 @@ void ooSetTraceThreshold(OOUINT32 traceLevel)
    gs_traceLevel = traceLevel;
 }
 
-void ooTrace (OOUINT32 traceLevel, const char * fmtspec, ...)
+void ooTrace (char *file, long line, OOUINT32 traceLevel, const char * fmtspec, ...)
 {
+   char *filename;
    va_list arglist;
    if (traceLevel > gs_traceLevel) return;
 
    logDateTime();
 
+   if (gs_printTime) {
+      filename = strrchr(file, '/');
+
+      if (filename) {
+         filename++;
+      } else {
+         filename = file;
+      }
+
+      fprintf (gH323ep.fptraceFile, "%s:%-4ld ", filename, line);
+   }
+
    va_start (arglist, fmtspec);
+
 
    vfprintf (gH323ep.fptraceFile, fmtspec, arglist);
 

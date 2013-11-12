@@ -52,35 +52,35 @@
 #define TRACELVL 1
 #endif
 
-#define OOTRACEERR1(a)        ooTrace(OOTRCLVLERR,a)
-#define OOTRACEERR2(a,b)      ooTrace(OOTRCLVLERR,a,b)
-#define OOTRACEERR3(a,b,c)    ooTrace(OOTRCLVLERR,a,b,c)
-#define OOTRACEERR4(a,b,c,d)  ooTrace(OOTRCLVLERR,a,b,c,d)
-#define OOTRACEWARN1(a)       ooTrace(OOTRCLVLWARN,a)
-#define OOTRACEWARN2(a,b)     ooTrace(OOTRCLVLWARN,a,b)
-#define OOTRACEWARN3(a,b,c)   ooTrace(OOTRCLVLWARN,a,b,c)
-#define OOTRACEWARN4(a,b,c,d) ooTrace(OOTRCLVLWARN,a,b,c,d)
-#define OOTRACEINFO1(a)       ooTrace(OOTRCLVLINFO, a)
-#define OOTRACEINFO2(a,b)     ooTrace(OOTRCLVLINFO,a,b)
-#define OOTRACEINFO3(a,b,c)   ooTrace(OOTRCLVLINFO,a,b,c)
-#define OOTRACEINFO4(a,b,c,d) ooTrace(OOTRCLVLINFO,a,b,c,d)
-#define OOTRACEINFO5(a,b,c,d,e) ooTrace(OOTRCLVLINFO,a,b,c,d,e)
-#define OOTRACEINFO6(a,b,c,d,e,f) ooTrace(OOTRCLVLINFO,a,b,c,d,e, f)
+#define OOTRACEERR1(a)        ooTrace(__FILE__, __LINE__, OOTRCLVLERR,a)
+#define OOTRACEERR2(a,b)      ooTrace(__FILE__, __LINE__, OOTRCLVLERR,a,b)
+#define OOTRACEERR3(a,b,c)    ooTrace(__FILE__, __LINE__, OOTRCLVLERR,a,b,c)
+#define OOTRACEERR4(a,b,c,d)  ooTrace(__FILE__, __LINE__, OOTRCLVLERR,a,b,c,d)
+#define OOTRACEWARN1(a)       ooTrace(__FILE__, __LINE__, OOTRCLVLWARN,a)
+#define OOTRACEWARN2(a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLWARN,a,b)
+#define OOTRACEWARN3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLWARN,a,b,c)
+#define OOTRACEWARN4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLWARN,a,b,c,d)
+#define OOTRACEINFO1(a)       ooTrace(__FILE__, __LINE__, OOTRCLVLINFO, a)
+#define OOTRACEINFO2(a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,a,b)
+#define OOTRACEINFO3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,a,b,c)
+#define OOTRACEINFO4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,a,b,c,d)
+#define OOTRACEINFO5(a,b,c,d,e) ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,a,b,c,d,e)
+#define OOTRACEINFO6(a,b,c,d,e,f) ooTrace(__FILE__, __LINE__, OOTRCLVLINFO,a,b,c,d,e, f)
 #ifndef _COMPACT
-#define OOTRACEDBGA1(a)       ooTrace(OOTRCLVLDBGA,a)
-#define OOTRACEDBGA2(a,b)     ooTrace(OOTRCLVLDBGA,a,b)
-#define OOTRACEDBGA3(a,b,c)   ooTrace(OOTRCLVLDBGA,a,b,c)
-#define OOTRACEDBGA4(a,b,c,d) ooTrace(OOTRCLVLDBGA,a,b,c,d)
-#define OOTRACEDBGA5(a,b,c,d,e) ooTrace(OOTRCLVLDBGA,a,b,c,d,e)
-#define OOTRACEDBGB1(a)       ooTrace(OOTRCLVLDBGB,a)
-#define OOTRACEDBGB2(a,b)     ooTrace(OOTRCLVLDBGB,a,b)
-#define OOTRACEDBGB3(a,b,c)   ooTrace(OOTRCLVLDBGB,a,b,c)
-#define OOTRACEDBGB4(a,b,c,d) ooTrace(OOTRCLVLDBGB,a,b,c,d)
-#define OOTRACEDBGC1(a)       ooTrace(OOTRCLVLDBGC,a)
-#define OOTRACEDBGC2(a,b)     ooTrace(OOTRCLVLDBGC,a,b)
-#define OOTRACEDBGC3(a,b,c)   ooTrace(OOTRCLVLDBGC,a,b,c)
-#define OOTRACEDBGC4(a,b,c,d) ooTrace(OOTRCLVLDBGC,a,b,c,d)
-#define OOTRACEDBGC5(a,b,c,d,e) ooTrace(OOTRCLVLDBGC,a,b,c,d,e)
+#define OOTRACEDBGA1(a)       ooTrace(__FILE__, __LINE__, OOTRCLVLDBGA,a)
+#define OOTRACEDBGA2(a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLDBGA,a,b)
+#define OOTRACEDBGA3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLDBGA,a,b,c)
+#define OOTRACEDBGA4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGA,a,b,c,d)
+#define OOTRACEDBGA5(a,b,c,d,e) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGA,a,b,c,d,e)
+#define OOTRACEDBGB1(a)       ooTrace(__FILE__, __LINE__, OOTRCLVLDBGB,a)
+#define OOTRACEDBGB2(a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLDBGB,a,b)
+#define OOTRACEDBGB3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLDBGB,a,b,c)
+#define OOTRACEDBGB4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGB,a,b,c,d)
+#define OOTRACEDBGC1(a)       ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a)
+#define OOTRACEDBGC2(a,b)     ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b)
+#define OOTRACEDBGC3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c)
+#define OOTRACEDBGC4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c,d)
+#define OOTRACEDBGC5(a,b,c,d,e) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c,d,e)
 #else
 #define OOTRACEDBGA1(a)
 #define OOTRACEDBGA2(a,b)
@@ -129,7 +129,7 @@ EXTERN void ooSetTraceThreshold(OOUINT32 traceLevel);
  *
  * @return            - none
  */
-EXTERN void ooTrace(OOUINT32 traceLevel, const char * fmtspec, ...);
+EXTERN void ooTrace(char *file, long line, OOUINT32 traceLevel, const char * fmtspec, ...);
 
 void ooTraceHexDump
 (OOUINT32 traceLevel, const OOUCHAR* data, OOUINT32 numocts);
