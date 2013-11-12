@@ -1671,9 +1671,12 @@ int ooHandleH245Command(OOH323CallData *call,
          OOTRACEWARN3("Warning: Flow control command received - Not handled "
                       "(%s, %s)\n", call->callType, call->callToken);
          break;
-      default:
-         OOTRACEWARN3("Warning: Unhandled H245 command message received "
+      case T_H245CommandMessage_miscellaneousCommand:
+         OOTRACEWARN3("Warning: miscellaneous command received - Not handled "
                       "(%s, %s)\n", call->callType, call->callToken);
+      default:
+         OOTRACEWARN4("Warning: Unhandled H245 command message [%d] received "
+                      "(%s, %s)\n", command->t, call->callType, call->callToken);
    }
    OOTRACEDBGC3("Handling H.245 command message done. (%s, %s)\n",
                  call->callType, call->callToken);
