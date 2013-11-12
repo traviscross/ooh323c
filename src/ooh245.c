@@ -1171,8 +1171,8 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
 
    if(!(epCap=ooIsDataTypeSupported(call, &flcp->dataType, OORX)))
    {
-      OOTRACEERR3("ERROR:HandleOpenLogicalChannel_helper - capability not "
-                  "supported (%s, %s)\n", call->callType, call->callToken);
+      OOTRACEERR4("ERROR:HandleOpenLogicalChannel_helper - capability %d not "
+                  "supported (%s, %s)\n", flcp->dataType.t, call->callType, call->callToken);
       ooSendOpenLogicalChannelReject(call, olc->forwardLogicalChannelNumber,
           T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       return OO_FAILED;
