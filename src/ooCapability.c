@@ -1962,8 +1962,8 @@ int ooAddRemoteCapability(OOH323CallData *call, H245Capability *cap)
      return ooAddRemoteAudioCapability(call,
                              cap->u.receiveAndTransmitAudioCapability, OORXTX);
    default:
-     OOTRACEDBGA3("Unsupported cap type encountered. Ignoring. (%s, %s)\n",
-                   call->callType, call->callToken);
+     OOTRACEDBGA4("Unsupported cap type [%d] encountered. Ignoring. (%s, %s)\n",
+                   cap->t, call->callType, call->callToken);
    }
    return OO_OK;
 }
@@ -2083,7 +2083,8 @@ int ooAddRemoteAudioCapability(OOH323CallData *call,
                                 dir, NULL, NULL, NULL, NULL, TRUE);
 
    default:
-     OOTRACEDBGA1("Unsupported audio capability type\n");
+     OOTRACEDBGA3("Unsupported audio capability type %d:%s\n",
+                  audioCap->t, ooH245AudioCapText(audioCap->t));
 
    }
 
@@ -2158,8 +2159,8 @@ int ooCapabilityUpdateJointCapabilities
       break;
 
    default:
-     OOTRACEDBGA3("Unsupported cap type encountered. Ignoring. (%s, %s)\n",
-                   call->callType, call->callToken);
+     OOTRACEDBGA4("Unsupported cap type [%d] encountered. Ignoring. (%s, %s)\n",
+                   cap->t, call->callType, call->callToken);
    }
 
    if(epCap)
