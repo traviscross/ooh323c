@@ -63,7 +63,7 @@ void finishPrint()
    OOTRACEDBGB1 ("}\n");
    gIndentSpaces -= 3;
    if (gIndentSpaces != 0) {
-      OOTRACEDBGB1 ("ERROR: unbalanced structure\n");
+      OOTRACEDBGB2 ("ERROR: unbalanced structure %d\n", gIndentSpaces);
    }
 }
 
