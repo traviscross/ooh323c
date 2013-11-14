@@ -1648,6 +1648,8 @@ int ooSendVideoFastUpdateCommand(OOH323CallData *call)
    OOTRACEDBGA4("Built videoFastUpdate Command channelNo=%d (%s, %s)\n",
          videoChannelNo, call->callType, call->callToken);
 
+   ret = ooSendH245Msg(call, ph245msg);
+
    if(ret != OO_OK) {
       OOTRACEERR3("Error:Failed to enqueue videoFastUpdate message to outbound "
                   "queue.(%s, %s)\n", call->callType, call->callToken);
