@@ -245,6 +245,16 @@ int ooOnReceivedOpenLogicalChannelRejected(struct OOH323CallData *call,
 EXTERN int ooSendEndSessionCommand(struct OOH323CallData *call);
 
 /**
+ * This message is used to send an videoFastUpdate command. It builds a videoFastUpdate
+ * command message and queues it into the calls outgoing queue.
+ * @param call          Pointer to call for which videoFastUpdate command has to be
+ *                      sent.
+ * @return              OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooSendVideoFastUpdateCommand(struct OOH323CallData *call);
+
+
+/**
  * This function is used to handle a received H245Command message.
  * @param call          Pointer to call for which an H245Command is received.
  * @param command       Pointer to a command message.

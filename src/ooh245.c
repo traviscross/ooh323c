@@ -1609,6 +1609,55 @@ int ooSendEndSessionCommand(OOH323CallData *call)
    return ret;
 }
 
+int ooSendVideoFastUpdateCommand(OOH323CallData *call)
+{
+   int ret;
+   H245CommandMessage * command;
+   OOCTXT *pctxt;
+   H245Message *ph245msg=NULL;
+   OOLogicalChannel * pChannel = NULL;
+   int videoChannelNo = 0;
+
+   if (!call) return OO_FAILED;
+
+   pChannel = call->logicalChans;
+   while(pChannel) {
+      if (pChannel->type == OO_CAP_TYPE_VIDEO && (!strcmp(pChannel->dir, "receive"))) {
+         videoChannelNo = pChannel->channelNo;
+      }
+      pChannel = pChannel->next;
+   }
+
+   ret = ooCreateH245Message(&ph245msg,
+                      T_H245MultimediaSystemControlMessage_command);
+   if(ret != OO_OK) {
+      OOTRACEERR3("Error: H245 message creation failed for - videoFastUpdate "
+                  "Command (%s, %s)\n", call->callType, call->callToken);
+      return OO_FAILED;
+   }
+   ph245msg->msgType = OOH245MSG;
+
+   command = ph245msg->h245Msg.u.command;
+   pctxt = &gH323ep.msgctxt;
+   memset(command, 0, sizeof(H245CommandMessage));
+   command->t = T_H245CommandMessage_miscellaneousCommand;;
+   command->u.miscellaneousCommand = (H245MiscellaneousCommand*) ASN1MALLOC(pctxt,
+                                  sizeof(H245MiscellaneousCommand));
+   command->u.miscellaneousCommand->logicalChannelNumber = videoChannelNo;
+   command->u.miscellaneousCommand->type.t = T_H245MiscellaneousCommand_type_videoFastUpdatePicture;
+   OOTRACEDBGA4("Built videoFastUpdate Command channelNo=%d (%s, %s)\n",
+         videoChannelNo, call->callType, call->callToken);
+
+   if(ret != OO_OK) {
+      OOTRACEERR3("Error:Failed to enqueue videoFastUpdate message to outbound "
+                  "queue.(%s, %s)\n", call->callType, call->callToken);
+   }
+
+   ooFreeH245Message(call, ph245msg);
+
+   return ret;
+}
+
 int ooH245CommandVideoFastUpdate(OOH323CallData *call,
                                        H245CommandMessage *command)
 {
