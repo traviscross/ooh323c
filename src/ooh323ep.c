@@ -547,6 +547,8 @@ int ooH323EpSetH323Callbacks(OOH323CALLBACKS h323Callbacks)
    gH323ep.h323Callbacks.onCallCleared = h323Callbacks.onCallCleared;
    gH323ep.h323Callbacks.openLogicalChannels = h323Callbacks.openLogicalChannels;
    gH323ep.h323Callbacks.onReceivedDTMF = h323Callbacks.onReceivedDTMF;
+   gH323ep.h323Callbacks.onReceivedCommand = h323Callbacks.onReceivedCommand;
+   gH323ep.h323Callbacks.onReceivedVideoFastUpdate = h323Callbacks.onReceivedVideoFastUpdate;
    return OO_OK;
 }
 

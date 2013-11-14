@@ -254,6 +254,15 @@ EXTERN int ooSendEndSessionCommand(struct OOH323CallData *call);
 EXTERN int ooHandleH245Command
 (struct OOH323CallData *call, H245CommandMessage *command);
 
+/**
+ * This function is used to handle a received H245Command videoFastUpdate.
+ * @param call          Pointer to call for which an H245Command videoFastUpdate is received.
+ * @param command       Pointer to a command message.
+ *
+ * @return              OO_OK, on success. OO_FAILED, on failure
+ */
+EXTERN int ooOnH245CommandVideoFastUpdate
+(struct OOH323CallData *call, H245CommandMessage *command);
 
 /**
  * This function is used to handle a received UserInput Indication message.

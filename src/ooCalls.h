@@ -277,6 +277,19 @@ typedef int (*cb_OnReceivedDTMF)
    (struct OOH323CallData *call, const char *dtmf);
 
 /**
+ * This callback function is triggered when h245 command is received.
+ */
+typedef int (*cb_OnReceivedCommand)
+   (struct OOH323CallData *call, H245CommandMessage *command);
+
+/**
+ * This callback function is triggered when h245 command videoFastUpdate is received.
+ */
+typedef int (*cb_OnReceivedVideoFastUpdate)
+   (struct OOH323CallData *call, int channelNo);
+
+
+/**
  * This structure holds all of the H.323 signaling callback function
  * addresses.
  * @see ooH323EpSetH323Callbacks
@@ -291,6 +304,8 @@ typedef struct OOH323CALLBACKS {
    cb_OnCallCleared onCallCleared;
    cb_OpenLogicalChannels openLogicalChannels;
    cb_OnReceivedDTMF onReceivedDTMF;
+   cb_OnReceivedCommand onReceivedCommand;
+   cb_OnReceivedVideoFastUpdate onReceivedVideoFastUpdate;
 } OOH323CALLBACKS;
 
 /**

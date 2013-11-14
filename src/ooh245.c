@@ -1609,6 +1609,13 @@ int ooSendEndSessionCommand(OOH323CallData *call)
    return ret;
 }
 
+int ooH245CommandVideoFastUpdate(OOH323CallData *call,
+                                       H245CommandMessage *command)
+{
+   if (!gH323ep.h323Callbacks.onReceivedVideoFastUpdate) return OO_OK;
+   /* TODO maybe we need the logical channel number? hard codec as 0 for now */
+   return gH323ep.h323Callbacks.onReceivedVideoFastUpdate(call, 0);
+}
 
 int ooHandleH245Command(OOH323CallData *call,
                         H245CommandMessage *command)
@@ -1672,8 +1679,13 @@ int ooHandleH245Command(OOH323CallData *call,
                       "(%s, %s)\n", call->callType, call->callToken);
          break;
       case T_H245CommandMessage_miscellaneousCommand:
-         OOTRACEWARN3("Warning: miscellaneous command received - Not handled "
+         OOTRACEWARN3("Received miscellaneous command - videoFastUpdate "
                       "(%s, %s)\n", call->callType, call->callToken);
+         ooH245CommandVideoFastUpdate(call, command);
+         if (gH323ep.h323Callbacks.onReceivedCommand) {
+            gH323ep.h323Callbacks.onReceivedCommand(call, command);
+         }
+         break;
       default:
          OOTRACEWARN4("Warning: Unhandled H245 command message [%d] received "
                       "(%s, %s)\n", command->t, call->callType, call->callToken);
