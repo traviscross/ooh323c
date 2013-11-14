@@ -29,6 +29,8 @@
 #define INCL_WINSOCK_API_TYPEDEFS   1
 #define INCL_WINSOCK_API_PROTOTYPES 0
 #include <winsock2.h>
+#include <WS2tcpip.h>
+
 #else
 #include <sys/types.h>
 #include "sys/time.h"
@@ -369,8 +371,7 @@ EXTERN int ooSocketStrToAddr (const char* pIPAddrStr, OOIPADDR* pIPAddr);
  */
 EXTERN int ooGetLocalIPAddress(char * pIPAddrs);
 
-EXTERN int ooSocketGetSockName
-(OOSOCKET socket, struct sockaddr_in *name, socklen_t* size);
+EXTERN int ooSocketGetSockName(OOSOCKET socket, struct sockaddr_in *name, socklen_t* size);
 
 EXTERN long ooSocketHTONL(long val);
 
