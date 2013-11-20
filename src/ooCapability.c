@@ -851,7 +851,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
                                             sizeof(H245GenericParameter));
            profile->parameterIdentifier.t = 1;
            profile->parameterIdentifier.u.standard = 41;
-           profile->parameterValue.t = 1;
+           profile->parameterValue.t = 2;
            profile->parameterValue.u.booleanArray = 64;
          
            level = (H245GenericParameter*) memAllocZ(pctxt,
