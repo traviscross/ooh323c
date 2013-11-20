@@ -63,11 +63,12 @@ typedef enum OOCapabilities{
    OO_H261VIDEO           = 29,
    OO_H262VIDEO           = 30,
    OO_H263VIDEO           = 31,
-   OO_H264VIDEO           = 32,
-   OO_IS11172VIDEO        = 33,  /* mpeg */
-   OO_GENERICVIDEO        = 34,
-   OO_EXTELEMVIDEO        = 35
+   OO_IS11172VIDEO        = 32,  /* mpeg */
+   OO_GENERICVIDEO        = 33,
+   OO_EXTELEMVIDEO        = 34
 } OOCapabilities;
+
+#define OO_H264VIDEO OO_GENERICVIDEO
 
 /* Various types of generic video type. Note that not all
    supported */
@@ -116,6 +117,10 @@ typedef struct OOH263CapParams {
    unsigned MPI; /* !< Minimum Picture Interval */
   unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
 } OOH263CapParams;
+
+typedef struct OOH264CapParams {
+  unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
+} OOH264CapParams;
 
 typedef struct OOGenericCapParams{
         int type;

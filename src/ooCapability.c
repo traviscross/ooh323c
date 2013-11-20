@@ -607,14 +607,13 @@ struct H245VideoCapability* ooCapabilityCreateVideoCapability
    {
    case OO_H263VIDEO:
      return ooCapabilityCreateH263VideoCapability(epCap, pctxt, dir);
-
+   case OO_H264VIDEO: // = OO_GENERICVIDEO
+      return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
    case OO_NONSTDVIDEO:
    case OO_H261VIDEO:
    case OO_H262VIDEO:
    case OO_IS11172VIDEO:
-           break;
-   case OO_GENERICVIDEO:
-           return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
+   // case OO_GENERICVIDEO: // H264
    case OO_EXTELEMVIDEO:
    default:
       OOTRACEERR2("ERROR: Don't know how to create video capability %s\n",
@@ -1910,6 +1909,108 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
 
 }
 
+/* copied from the H263 equavalent, lacks some more detailed params check for now */
+ooH323EpCapability* ooIsVideoDataTypeH264Supported
+   (OOH323CallData *call, H245GenericCapability* pH264Cap, int dir)
+{
+   int cap;
+   ooH323EpCapability *cur=NULL, *epCap=NULL;
+   OOH264CapParams *params= NULL;
+
+   cap = OO_H264VIDEO;
+   cap = OO_GENERICVIDEO;
+
+   OOTRACEDBGA3("Looking for H264 video capability. (%s, %s)\n",
+                 call->callType, call->callToken);
+
+  /* If we have call specific caps, we use them; otherwise use general
+      endpoint caps
+   */
+   if(call->ourCaps)
+     cur = call->ourCaps;
+   else
+     cur = gH323ep.myCaps;
+
+   while(cur)
+   {
+      OOTRACEDBGC4("Local cap being compared %s. (%s, %s)\n",
+              ooGetCapTypeText(cur->cap), call->callType, call->callToken);
+
+      if(cur->cap == cap && (cur->dir & dir))
+      {
+         break; //todo: compare other params
+      }
+      cur = cur->next;
+   }
+
+   if(!cur) return NULL;
+
+   OOTRACEDBGC4("Found matching H.264 video capability type %s. Comparing"
+                " other parameters. (%s, %s)\n", ooGetCapTypeText(cap),
+                call->callType, call->callToken);
+   if(dir & OORX)
+   {
+      {
+         epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                   sizeof(ooH323EpCapability));
+         params = (OOH264CapParams*) memAlloc(call->pctxt,
+                                                      sizeof(OOH264CapParams));
+         if(!epCap || !params)
+         {
+            OOTRACEERR3("Error:Memory - ooIsVideoDataTypeH264Supported - "
+                       "epCap/params. (%s, %s)\n", call->callType,
+                        call->callToken);
+            return NULL;
+         }
+         epCap->params = params;
+         epCap->cap = cur->cap;
+         epCap->dir = cur->dir;
+         epCap->capType = cur->capType;
+         epCap->startReceiveChannel = cur->startReceiveChannel;
+         epCap->startTransmitChannel= cur->startTransmitChannel;
+         epCap->stopReceiveChannel = cur->stopReceiveChannel;
+         epCap->stopTransmitChannel = cur->stopTransmitChannel;
+         epCap->next = NULL;
+         memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
+         OOTRACEDBGC4("Returning copy of matched receive capability %s. "
+                     "(%s, %s)\n", ooGetCapTypeText(cur->cap), call->callType,
+                     call->callToken);
+         return epCap;
+      }
+   }
+   if(dir & OOTX)
+   {
+      epCap = (ooH323EpCapability*)memAlloc(call->pctxt,
+                                                  sizeof(ooH323EpCapability));
+      params = (OOH264CapParams*) memAlloc(call->pctxt,
+                                                      sizeof(OOH264CapParams));
+      if(!epCap || !params)
+      {
+         OOTRACEERR3("Error:Memory - ooIsVideoDataTypeH264Supported - "
+                     "epCap/params. (%s, %s)\n", call->callType,
+                     call->callToken);
+         return NULL;
+      }
+      epCap->params = params;
+      epCap->cap = cur->cap;
+      epCap->dir = cur->dir;
+      epCap->capType = cur->capType;
+      epCap->startReceiveChannel = cur->startReceiveChannel;
+      epCap->startTransmitChannel= cur->startTransmitChannel;
+      epCap->stopReceiveChannel = cur->stopReceiveChannel;
+      epCap->stopTransmitChannel = cur->stopTransmitChannel;
+      epCap->next = NULL;
+      memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
+
+      OOTRACEDBGC4("Returning copy of matched receive capability %s. "
+                  "(%s, %s)\n", ooGetCapTypeText(cur->cap), call->callType,
+                  call->callToken);
+      return epCap;
+   }
+   return NULL;
+
+}
+
 ooH323EpCapability* ooIsVideoDataTypeSupported
    (OOH323CallData *call, H245VideoCapability* pVideoCap, int dir)
 {
@@ -1932,13 +2033,13 @@ ooH323EpCapability* ooIsVideoDataTypeSupported
         return ooIsVideoDataTypeH263Supported(call,
                     pVideoCap->u.h263VideoCapability, dir, OO_PICFORMAT_CIF16);
       break;
+   case T_H245VideoCapability_genericVideoCapability:
+      return ooIsVideoDataTypeH264Supported(call, pVideoCap->u.genericVideoCapability, dir);
+      break;
    case T_H245VideoCapability_nonStandard:
    case T_H245VideoCapability_h261VideoCapability:
    case T_H245VideoCapability_h262VideoCapability:
    case T_H245VideoCapability_is11172VideoCapability:
-          break;
-   case T_H245VideoCapability_genericVideoCapability:
-          break;
    case T_H245VideoCapability_extElem1:
    default:
      OOTRACEDBGA1("Unsupported video capability type in "
@@ -2523,7 +2624,7 @@ const char* ooGetCapTypeText (OOCapabilities cap)
       "OO_H262VIDEO",
       "OO_H263VIDEO",
       "OO_IS11172VIDEO",  /* mpeg */
-      "OO_GENERICVIDEO",
+      "OO_GENERICVIDEO (H264)",
       "OO_EXTELEMVIDEO"
    };
    return ooUtilsGetText (cap, capTypes, OONUMBEROF(capTypes));
