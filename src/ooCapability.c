@@ -434,7 +434,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
    params = (OOH264CapParams*) memAllocZ(pctxt, sizeof(OOH264CapParams));
    if(!epCap || !params)
    {
-      OOTRACEERR1("Error:Memory - ooCapabilityAddH263Capability - epCap/params"
+      OOTRACEERR1("Error:Memory - ooCapabilityAddH264Capability - epCap/params"
                   ".\n");
       return OO_FAILED;
    }

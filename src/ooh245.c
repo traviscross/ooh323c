@@ -3060,6 +3060,7 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
    case OO_G7231:
    case OO_GSMFULLRATE:
    case OO_H263VIDEO:
+   case OO_H264VIDEO:
       ooOpenChannel(call, epCap);
       break;
    case OO_GSMHALFRATE:
