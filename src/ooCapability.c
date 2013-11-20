@@ -612,8 +612,9 @@ struct H245VideoCapability* ooCapabilityCreateVideoCapability
    case OO_H261VIDEO:
    case OO_H262VIDEO:
    case OO_IS11172VIDEO:
+           break;
    case OO_GENERICVIDEO:
-            return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
+           return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
    case OO_EXTELEMVIDEO:
    default:
       OOTRACEERR2("ERROR: Don't know how to create video capability %s\n",
@@ -1883,7 +1884,9 @@ ooH323EpCapability* ooIsVideoDataTypeSupported
    case T_H245VideoCapability_h261VideoCapability:
    case T_H245VideoCapability_h262VideoCapability:
    case T_H245VideoCapability_is11172VideoCapability:
+          break;
    case T_H245VideoCapability_genericVideoCapability:
+          break;
    case T_H245VideoCapability_extElem1:
    default:
      OOTRACEDBGA1("Unsupported video capability type in "
