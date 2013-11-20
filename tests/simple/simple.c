@@ -346,7 +346,7 @@ int main (int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-   ooH323EpAddH264VideoCapability(10240, OORXANDTX,
+   ooH323EpAddH264VideoCapability(OO_H264VIDEO, 10240, OORXANDTX,
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 

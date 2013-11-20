@@ -623,6 +623,29 @@ EXTERN int ooCallAddH263VideoCapability(OOH323CallData *call, int cap,
                                  cb_StopReceiveChannel stopReceiveChannel,
                                  cb_StopTransmitChannel stopTransmitChannel);
 
+/**
+ * This function is used to add H264 video capability for the call. The
+ * "ooCallAdd...Capability" functions allow to override the global endpoint
+ * capabilities and use specific capabilities for specific calls.
+ * @param call                 Call for which capability has to be added.
+ * @param cap                  Capability type - OO_H264VIDEO
+ * @param maxBitRate           Maximum bit rate in units of 100 bits/s at
+ *                             which a transmitter can transmit video or a
+ *                             receiver can receive video.
+ * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
+ * @param startReceiveChannel  Callback function to start receive channel.
+ * @param startTransmitChannel Callback function to start transmit channel.
+ * @param stopReceiveChannel   Callback function to stop receive channel.
+ * @param stopTransmitChannel  Callback function to stop transmit channel.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCallAddH264VideoCapability(OOH323CallData *call, int cap,
+                                 unsigned maxBitRate, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel);
 
 /**
  * This function is used to enable rfc 2833 capability for the call. By default

@@ -1628,6 +1628,8 @@ int ooSendVideoFastUpdateCommand(OOH323CallData *call)
       pChannel = pChannel->next;
    }
 
+   if (videoChannelNo == 0) return OO_OK;
+
    ret = ooCreateH245Message(&ph245msg,
                       T_H245MultimediaSystemControlMessage_command);
    if(ret != OO_OK) {

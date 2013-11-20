@@ -63,9 +63,10 @@ typedef enum OOCapabilities{
    OO_H261VIDEO           = 29,
    OO_H262VIDEO           = 30,
    OO_H263VIDEO           = 31,
-   OO_IS11172VIDEO        = 32,  /* mpeg */
-   OO_GENERICVIDEO        = 33,
-   OO_EXTELEMVIDEO        = 34
+   OO_H264VIDEO           = 32,
+   OO_IS11172VIDEO        = 33,  /* mpeg */
+   OO_GENERICVIDEO        = 34,
+   OO_EXTELEMVIDEO        = 35
 } OOCapabilities;
 
 /* Various types of generic video type. Note that not all

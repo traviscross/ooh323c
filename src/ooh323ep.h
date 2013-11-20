@@ -603,7 +603,7 @@ EXTERN int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
  *
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
-EXTERN int ooH323EpAddH264VideoCapability(unsigned maxBitRate, int dir,
+EXTERN int ooH323EpAddH264VideoCapability(int cap, unsigned maxBitRate, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,

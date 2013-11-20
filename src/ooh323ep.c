@@ -907,7 +907,7 @@ int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
 
 }
 
-int ooH323EpAddH264VideoCapability(unsigned maxBitRate, int dir,
+int ooH323EpAddH264VideoCapability(int cap, unsigned maxBitRate, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,
