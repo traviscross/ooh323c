@@ -415,6 +415,78 @@ int ooCapabilityAddSimpleCapability
    return OO_OK;
 }
 
+int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
+                                                           unsigned maxBitRate, int dir,
+                               cb_StartReceiveChannel startReceiveChannel,
+                               cb_StartTransmitChannel startTransmitChannel,
+                               cb_StopReceiveChannel stopReceiveChannel,
+                               cb_StopTransmitChannel stopTransmitChannel,
+                               OOBOOL remote){
+   ooH323EpCapability *epCap = NULL, *cur=NULL;
+   OOGenericCapParams *params=NULL;
+   OOCTXT *pctxt=NULL;
+   char *pictureType = NULL;
+   int cap = OO_GENERICVIDEO;
+
+   if(!call) pctxt = &gH323ep.ctxt;
+   else pctxt = call->pctxt;
+
+   epCap = (ooH323EpCapability*)memAllocZ(pctxt, sizeof(ooH323EpCapability));
+   params = (OOGenericCapParams*) memAllocZ(pctxt, sizeof(OOGenericCapParams));
+   if(!epCap || !params)
+   {
+      OOTRACEERR1("Error:Memory - ooCapabilityAddH263Capability - epCap/params"
+                  ".\n");
+      return OO_FAILED;
+   }
+
+   params->maxBitRate = maxBitRate;
+   params->type = OO_GENERICVIDEO_H264;
+
+   if(dir & OORXANDTX)
+   {
+      epCap->dir = OORX;
+      epCap->dir |= OOTX;
+   }
+   else
+      epCap->dir = dir;
+
+   epCap->cap = OO_GENERICVIDEO;
+   epCap->capType = OO_CAP_TYPE_VIDEO;
+   epCap->params = (void*)params;
+   epCap->startReceiveChannel = startReceiveChannel;
+   epCap->startTransmitChannel = startTransmitChannel;
+   epCap->stopReceiveChannel = stopReceiveChannel;
+   epCap->stopTransmitChannel = stopTransmitChannel;
+
+   epCap->next = NULL;
+
+   if (0 == call)
+   {/*Add as local capability */
+      OOTRACEDBGC2("Adding endpoint H264 video capability %s.\n", pictureType);
+      ooAppendCapToCapList (&gH323ep.myCaps, epCap);
+      ooAppendCapToCapPrefs (NULL, cap);
+      gH323ep.noOfCaps++;
+   }
+   else if (remote) {
+      /*Add as remote capability */
+      ooAppendCapToCapList (&call->remoteCaps, epCap);
+   }
+   else {
+      /*Add as our capability */
+      OOTRACEDBGC4("Adding call specific H264 video capability %s. "
+                   "(%s, %s)\n", pictureType, call->callType,
+                   call->callToken);
+
+      if (0 == call->ourCaps) {
+         ooResetCapPrefs (call);
+      }
+      ooAppendCapToCapList (&call->ourCaps, epCap);
+      ooAppendCapToCapPrefs (call, cap);
+   }
+
+   return OO_OK;
+}
 
 int ooCapabilityAddGSMCapability(OOH323CallData *call, int cap,
                                 unsigned framesPerPkt, OOBOOL comfortNoise,
@@ -541,6 +613,7 @@ struct H245VideoCapability* ooCapabilityCreateVideoCapability
    case OO_H262VIDEO:
    case OO_IS11172VIDEO:
    case OO_GENERICVIDEO:
+            return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
    case OO_EXTELEMVIDEO:
    default:
       OOTRACEERR2("ERROR: Don't know how to create video capability %s\n",
@@ -717,6 +790,48 @@ struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
    pH263Cap->slowCif4MPI = FALSE;
    pH263Cap->slowCif16MPI = FALSE;
    pH263Cap->errorCompensation = FALSE;
+   return pVideo;
+}
+
+
+struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
+   (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir)
+{
+   H245VideoCapability *pVideo=NULL;
+   OOGenericCapParams *params=NULL;
+   H245GenericCapability *pGenericCap=NULL;
+
+   if(!epCap || !epCap->params)
+   {
+     OOTRACEERR1("Error:Invalid capability parameters to "
+                 "ooCapabilityCreateH263VideoCapability.\n");
+     return NULL;
+   }
+   params =(OOGenericCapParams*)epCap->params;
+
+   pVideo = (H245VideoCapability*)memAllocZ(pctxt,
+                                                  sizeof(H245VideoCapability));
+   pGenericCap = (H245GenericCapability*) memAllocZ(pctxt,
+                                             sizeof(H245GenericCapability));
+   if(!pVideo || !pGenericCap)
+   {
+      OOTRACEERR1("ERROR:Memory - ooCapabilityCreateGenericVideoCapability - "
+                  "pVideo/pGenericCap\n");
+      return NULL;
+   }
+
+   pVideo->t = T_H245VideoCapability_genericVideoCapability;
+   pVideo->u.genericVideoCapability = pGenericCap;
+   pGenericCap->maxBitRate = params->maxBitRate;
+   pGenericCap->capabilityIdentifier.t = 1;
+   pGenericCap->capabilityIdentifier.u.standard = memAllocTypeZ (pctxt, ASN1OBJID);
+   pGenericCap->capabilityIdentifier.u.standard->numids = 6;
+   pGenericCap->capabilityIdentifier.u.standard->subid[0] = 0;
+   pGenericCap->capabilityIdentifier.u.standard->subid[1] = 0;
+   pGenericCap->capabilityIdentifier.u.standard->subid[2] = 8;
+   pGenericCap->capabilityIdentifier.u.standard->subid[3] = 245;
+   pGenericCap->capabilityIdentifier.u.standard->subid[4] = 0;
+   pGenericCap->capabilityIdentifier.u.standard->subid[5] = 13;
    return pVideo;
 }
 

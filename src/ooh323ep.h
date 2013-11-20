@@ -598,6 +598,16 @@ EXTERN int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,
                                  cb_StopTransmitChannel stopTransmitChannel);
+/**
+ * This function is used to add H264 video capability to the H323 endpoint.
+ *
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooH323EpAddH264VideoCapability(unsigned maxBitRate, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel);
 
 /**
  * This function is used to enable rfc 2833 support for the endpoint.

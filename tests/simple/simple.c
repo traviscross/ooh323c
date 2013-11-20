@@ -47,7 +47,7 @@ void * osEpHandleCommand(void*);
 static OOBOOL bActive;
 static char callToken[20];
 static char ourip[20];
-static int ourport = 1720;
+static int ourport = 2720;
 static OOBOOL gCmdThrd;
 static OOBOOL bAutoAnswer=FALSE;
 static OOBOOL bRinging=FALSE;
@@ -346,6 +346,10 @@ int main (int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
+   ooH323EpAddH264VideoCapability(10240, OORXANDTX,
+                       &osEpStartReceiveChannel, &osEpStartTransmitChannel,
+                       &osEpStopReceiveChannel, &osEpStopTransmitChannel);
+
    /* To use a gatekeeper */
    if(gkMode != RasNoGatekeeper)
    {
@@ -527,9 +531,10 @@ int osEpOnIncomingCall(ooCallData* call )
 
 int osEpOnNewCallCreated(ooCallData* call )
 {
-   ooMediaInfo mediaInfo1, mediaInfo2;
+   ooMediaInfo mediaInfo1, mediaInfo2, mediaInfo3;
    memset(&mediaInfo1, 0, sizeof(ooMediaInfo));
    memset(&mediaInfo2, 0, sizeof(ooMediaInfo));
+   memset(&mediaInfo3, 0, sizeof(ooMediaInfo));
 
    /* Configure mediainfo for transmit media channel of type G711 */
    mediaInfo1.lMediaCntrlPort = 5001;
@@ -546,7 +551,15 @@ int osEpOnNewCallCreated(ooCallData* call )
    strcpy(mediaInfo2.dir, "receive");
    mediaInfo2.cap = OO_G711ULAW64K;
    ooAddMediaInfo(call, mediaInfo2);
-    
+   
+      /* Configure mediainfo for receive media channel of type G711 */
+   mediaInfo3.lMediaCntrlPort = 6001;
+   mediaInfo3.lMediaPort = 6000;
+   strcpy(mediaInfo3.lMediaIP, call->localIP);
+   strcpy(mediaInfo3.dir, "receive");
+   mediaInfo3.cap = OO_GENERICVIDEO;
+   ooAddMediaInfo(call, mediaInfo3);
+
    strcpy(callToken, call->callToken);
 
    return OO_OK;

@@ -68,6 +68,11 @@ typedef enum OOCapabilities{
    OO_EXTELEMVIDEO        = 34
 } OOCapabilities;
 
+/* Various types of generic video type. Note that not all
+   supported */
+typedef enum OOGenericVideoType{
+        OO_GENERICVIDEO_H264 = 0,
+}OOGenericVideoType;
 
 /*DTMF capabilities*/
 #define OO_CAP_DTMF_RFC2833              (1<<0)
@@ -110,6 +115,11 @@ typedef struct OOH263CapParams {
    unsigned MPI; /* !< Minimum Picture Interval */
   unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
 } OOH263CapParams;
+
+typedef struct OOGenericCapParams{
+        int type;
+        unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
+}OOGenericCapParams;
 
 struct OOH323CallData;
 struct OOLogicalChannel;
@@ -380,6 +390,19 @@ EXTERN int ooCapabilityAddH263VideoCapability(struct OOH323CallData *call,
                                cb_StopTransmitChannel stopTransmitChannel,
                                OOBOOL remote);
 
+/**
+ * This function is used to add H264 video capability to local endpoints
+ * capability list or to remote endpoints capability list or to a call's
+ * capability list.
+ * @return                     OO_OK, on success. OO_FAILED, on failure.
+ */
+EXTERN int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
+                                                           unsigned maxBitRate, int dir,
+                               cb_StartReceiveChannel startReceiveChannel,
+                               cb_StartTransmitChannel startTransmitChannel,
+                               cb_StopReceiveChannel stopReceiveChannel,
+                               cb_StopTransmitChannel stopTransmitChannel,
+                               OOBOOL remote);
 
 /**
  * This function is an helper function to ooCapabilityAddH263VideoCapability.
@@ -596,6 +619,20 @@ struct H245AudioCapability* ooCapabilityCreateSimpleCapability
 struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
 (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
+/**
+ * This function is used to create a Generic video capability
+ * structure.
+ * @param epCap       Handle to the endpoint capability
+ * @param pctxt       Handle to OOCTXT which will be used to allocate memory
+ *                    for new video capability.
+ * @param dir         Direction in which the newly created capability will be
+ *                    used.
+ *
+ * @return            Newly created video capability on success, NULL on
+ *                    failure.
+ */
+struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
+(ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 /**
  * This function is used to determine whether a particular capability

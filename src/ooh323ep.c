@@ -907,6 +907,18 @@ int ooH323EpAddH263VideoCapability(int cap, unsigned sqcifMPI,
 
 }
 
+int ooH323EpAddH264VideoCapability(unsigned maxBitRate, int dir,
+                                 cb_StartReceiveChannel startReceiveChannel,
+                                 cb_StartTransmitChannel startTransmitChannel,
+                                 cb_StopReceiveChannel stopReceiveChannel,
+                                 cb_StopTransmitChannel stopTransmitChannel){
+
+  return ooCapabilityAddH264VideoCapability(NULL, maxBitRate,dir,
+                                     startReceiveChannel, startTransmitChannel,
+                                     stopReceiveChannel, stopTransmitChannel,
+                                     FALSE);
+
+}
 
 int ooH323EpEnableDTMFRFC2833(int dynamicRTPPayloadType)
 {
