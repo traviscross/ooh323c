@@ -821,19 +821,27 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
       return NULL;
    }
 
-   pVideo->t = T_H245VideoCapability_genericVideoCapability;
-   pVideo->u.genericVideoCapability = pGenericCap;
-   pGenericCap->maxBitRate = params->maxBitRate;
-   pGenericCap->capabilityIdentifier.t = 1;
-   pGenericCap->capabilityIdentifier.u.standard = memAllocTypeZ (pctxt, ASN1OBJID);
-   pGenericCap->capabilityIdentifier.u.standard->numids = 6;
-   pGenericCap->capabilityIdentifier.u.standard->subid[0] = 0;
-   pGenericCap->capabilityIdentifier.u.standard->subid[1] = 0;
-   pGenericCap->capabilityIdentifier.u.standard->subid[2] = 8;
-   pGenericCap->capabilityIdentifier.u.standard->subid[3] = 245;
-   pGenericCap->capabilityIdentifier.u.standard->subid[4] = 0;
-   pGenericCap->capabilityIdentifier.u.standard->subid[5] = 13;
-   return pVideo;
+   if( params->type == OO_GENERICVIDEO_H264)
+   {
+           pVideo->t = T_H245VideoCapability_genericVideoCapability;
+           pVideo->u.genericVideoCapability = pGenericCap;
+           pGenericCap->maxBitRate = params->maxBitRate;
+           pGenericCap->capabilityIdentifier.t = 1;
+           pGenericCap->capabilityIdentifier.u.standard = memAllocTypeZ (pctxt, ASN1OBJID);
+           pGenericCap->capabilityIdentifier.u.standard->numids = 8;
+           pGenericCap->capabilityIdentifier.u.standard->subid[0] = 0;
+           pGenericCap->capabilityIdentifier.u.standard->subid[1] = 0;
+           pGenericCap->capabilityIdentifier.u.standard->subid[2] = 8;
+           pGenericCap->capabilityIdentifier.u.standard->subid[3] = 241;
+           pGenericCap->capabilityIdentifier.u.standard->subid[4] = 0;
+           pGenericCap->capabilityIdentifier.u.standard->subid[5] = 0;
+           pGenericCap->capabilityIdentifier.u.standard->subid[6] = 1;
+           return pVideo;
+   }
+
+   OOTRACEERR1("ERROR:Unknown Video Capability - ooCapabilityCreateGenericVideoCapability - "
+                  "pVideo/pGenericCap\n");
+   return NULL;
 }
 
 struct H245AudioCapability* ooCapabilityCreateGSMFullRateCapability
