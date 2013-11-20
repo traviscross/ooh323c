@@ -801,6 +801,12 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
    H245VideoCapability *pVideo=NULL;
    OOGenericCapParams *params=NULL;
    H245GenericCapability *pGenericCap=NULL;
+ 
+   DList* collapsing = NULL;
+   H245GenericParameter *profile;
+   H245GenericParameter *level;
+   H245GenericParameter *customMaxBRandCPB;
+   H245GenericParameter *sampleAspectRatiosSupported;
 
    if(!epCap || !epCap->params)
    {
@@ -828,7 +834,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
            pGenericCap->maxBitRate = params->maxBitRate;
            pGenericCap->capabilityIdentifier.t = 1;
            pGenericCap->capabilityIdentifier.u.standard = memAllocTypeZ (pctxt, ASN1OBJID);
-           pGenericCap->capabilityIdentifier.u.standard->numids = 8;
+           pGenericCap->capabilityIdentifier.u.standard->numids = 7;
            pGenericCap->capabilityIdentifier.u.standard->subid[0] = 0;
            pGenericCap->capabilityIdentifier.u.standard->subid[1] = 0;
            pGenericCap->capabilityIdentifier.u.standard->subid[2] = 8;
@@ -836,6 +842,44 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
            pGenericCap->capabilityIdentifier.u.standard->subid[4] = 0;
            pGenericCap->capabilityIdentifier.u.standard->subid[5] = 0;
            pGenericCap->capabilityIdentifier.u.standard->subid[6] = 1;
+           pGenericCap->m.maxBitRatePresent = 1;
+           pGenericCap->m.collapsingPresent = TRUE;
+           collapsing = &pGenericCap->collapsing;
+           dListInit(collapsing);
+
+           profile = (H245GenericParameter*) memAllocZ(pctxt,
+                                            sizeof(H245GenericParameter));
+           profile->parameterIdentifier.t = 1;
+           profile->parameterIdentifier.u.standard = 41;
+           profile->parameterValue.t = 1;
+           profile->parameterValue.u.booleanArray = 64;
+         
+           level = (H245GenericParameter*) memAllocZ(pctxt,
+                                        sizeof(H245GenericParameter));
+           level->parameterIdentifier.t = 1;
+           level->parameterIdentifier.u.standard = 42;
+           level->parameterValue.t = 2;
+           level->parameterValue.u.unsignedMin = 71;
+
+          
+           customMaxBRandCPB = (H245GenericParameter*) memAllocZ(pctxt,
+                                        sizeof(H245GenericParameter));
+           customMaxBRandCPB->parameterIdentifier.t = 1;
+           customMaxBRandCPB->parameterIdentifier.u.standard = 6;
+           customMaxBRandCPB->parameterValue.t = 2;
+           customMaxBRandCPB->parameterValue.u.unsignedMin = 667;
+
+           sampleAspectRatiosSupported = (H245GenericParameter*) memAllocZ(pctxt,
+                                    sizeof(H245GenericParameter));
+           level->parameterIdentifier.t = 1;
+           level->parameterIdentifier.u.standard = 10;
+           level->parameterValue.t = 2;
+           level->parameterValue.u.unsignedMin = 13;
+
+           dListAppend(pctxt, collapsing, profile);
+           dListAppend(pctxt, collapsing, level);
+           dListAppend(pctxt, collapsing, customMaxBRandCPB);
+           dListAppend(pctxt, collapsing, sampleAspectRatiosSupported);
            return pVideo;
    }
 
