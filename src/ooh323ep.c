@@ -913,7 +913,7 @@ int ooH323EpAddH264VideoCapability(int cap, unsigned maxBitRate, int dir,
                                  cb_StopReceiveChannel stopReceiveChannel,
                                  cb_StopTransmitChannel stopTransmitChannel){
 
-  return ooCapabilityAddH264VideoCapability(NULL, maxBitRate,dir,
+  return ooCapabilityAddH264VideoCapability(NULL, maxBitRate, dir,
                                      startReceiveChannel, startTransmitChannel,
                                      stopReceiveChannel, stopTransmitChannel,
                                      FALSE);

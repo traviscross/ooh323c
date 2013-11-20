@@ -70,12 +70,6 @@ typedef enum OOCapabilities{
 
 #define OO_H264VIDEO OO_GENERICVIDEO
 
-/* Various types of generic video type. Note that not all
-   supported */
-typedef enum OOGenericVideoType{
-        OO_GENERICVIDEO_H264 = 0,
-}OOGenericVideoType;
-
 /*DTMF capabilities*/
 #define OO_CAP_DTMF_RFC2833              (1<<0)
 #define OO_CAP_DTMF_Q931                 (1<<1)
@@ -517,6 +511,20 @@ EXTERN int ooCapabilityUpdateJointCapabilitiesVideo
 EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH263
    (struct OOH323CallData *call, H245H263VideoCapability *pH263Cap, int dir);
 
+/**
+ * This function is used to update joint video H264 capabilities for call. It
+ * checks whether remote capability can be supported by local capabilities for
+ * the call and if supported makes entry into the joint capability list for the
+ * call.
+ * @param call           Handle to the call
+ * @param pH264Cap       Remote H2634video capability which will be tested for
+ *                       compatibility.
+ * @param dir            Direction of the H264 capability
+ *
+ * @return               returns OO_OK, if updated else OO_FAILED;
+ */
+EXTERN int ooCapabilityUpdateJointCapabilitiesVideoH264
+   (struct OOH323CallData *call, H245GenericCapability *pH264Cap, int dir);
 
 /**
  * This function is used to test whether the endpoint capability in the
@@ -637,7 +645,7 @@ struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
  * @return            Newly created video capability on success, NULL on
  *                    failure.
  */
-struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
+struct H245VideoCapability* ooCapabilityCreateH264VideoCapability
 (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir);
 
 /**

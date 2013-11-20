@@ -423,16 +423,15 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
                                cb_StopTransmitChannel stopTransmitChannel,
                                OOBOOL remote){
    ooH323EpCapability *epCap = NULL, *cur=NULL;
-   OOGenericCapParams *params=NULL;
+   OOH264CapParams *params=NULL;
    OOCTXT *pctxt=NULL;
-   char *pictureType = NULL;
    int cap = OO_GENERICVIDEO;
 
    if(!call) pctxt = &gH323ep.ctxt;
    else pctxt = call->pctxt;
 
    epCap = (ooH323EpCapability*)memAllocZ(pctxt, sizeof(ooH323EpCapability));
-   params = (OOGenericCapParams*) memAllocZ(pctxt, sizeof(OOGenericCapParams));
+   params = (OOH264CapParams*) memAllocZ(pctxt, sizeof(OOH264CapParams));
    if(!epCap || !params)
    {
       OOTRACEERR1("Error:Memory - ooCapabilityAddH263Capability - epCap/params"
@@ -441,7 +440,6 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
    }
 
    params->maxBitRate = maxBitRate;
-   params->type = OO_GENERICVIDEO_H264;
 
    if(dir & OORXANDTX)
    {
@@ -451,7 +449,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
    else
       epCap->dir = dir;
 
-   epCap->cap = OO_GENERICVIDEO;
+   epCap->cap = OO_H264VIDEO;
    epCap->capType = OO_CAP_TYPE_VIDEO;
    epCap->params = (void*)params;
    epCap->startReceiveChannel = startReceiveChannel;
@@ -463,7 +461,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
 
    if (0 == call)
    {/*Add as local capability */
-      OOTRACEDBGC2("Adding endpoint H264 video capability %s.\n", pictureType);
+      OOTRACEDBGC1("Adding endpoint H264 video capability.\n");
       ooAppendCapToCapList (&gH323ep.myCaps, epCap);
       ooAppendCapToCapPrefs (NULL, cap);
       gH323ep.noOfCaps++;
@@ -474,8 +472,8 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
    }
    else {
       /*Add as our capability */
-      OOTRACEDBGC4("Adding call specific H264 video capability %s. "
-                   "(%s, %s)\n", pictureType, call->callType,
+      OOTRACEDBGC3("Adding call specific H264 video capability. "
+                   "(%s, %s)\n", call->callType,
                    call->callToken);
 
       if (0 == call->ourCaps) {
@@ -608,7 +606,7 @@ struct H245VideoCapability* ooCapabilityCreateVideoCapability
    case OO_H263VIDEO:
      return ooCapabilityCreateH263VideoCapability(epCap, pctxt, dir);
    case OO_H264VIDEO: // = OO_GENERICVIDEO
-      return ooCapabilityCreateGenericVideoCapability(epCap, pctxt, dir);
+      return ooCapabilityCreateH264VideoCapability(epCap, pctxt, dir);
    case OO_NONSTDVIDEO:
    case OO_H261VIDEO:
    case OO_H262VIDEO:
@@ -794,11 +792,11 @@ struct H245VideoCapability* ooCapabilityCreateH263VideoCapability
 }
 
 
-struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
+struct H245VideoCapability* ooCapabilityCreateH264VideoCapability
    (ooH323EpCapability *epCap, OOCTXT* pctxt, int dir)
 {
    H245VideoCapability *pVideo=NULL;
-   OOGenericCapParams *params=NULL;
+   OOH264CapParams *params=NULL;
    H245GenericCapability *pGenericCap=NULL;
  
    DList* collapsing = NULL;
@@ -813,7 +811,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
                  "ooCapabilityCreateH263VideoCapability.\n");
      return NULL;
    }
-   params =(OOGenericCapParams*)epCap->params;
+   params =(OOH264CapParams*)epCap->params;
 
    pVideo = (H245VideoCapability*)memAllocZ(pctxt,
                                                   sizeof(H245VideoCapability));
@@ -821,12 +819,10 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
                                              sizeof(H245GenericCapability));
    if(!pVideo || !pGenericCap)
    {
-      OOTRACEERR1("ERROR:Memory - ooCapabilityCreateGenericVideoCapability - "
+      OOTRACEERR1("ERROR:Memory - ooCapabilityCreateH264VideoCapability - "
                   "pVideo/pGenericCap\n");
       return NULL;
    }
-
-   if( params->type == OO_GENERICVIDEO_H264)
    {
            pVideo->t = T_H245VideoCapability_genericVideoCapability;
            pVideo->u.genericVideoCapability = pGenericCap;
@@ -882,7 +878,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
            return pVideo;
    }
 
-   OOTRACEERR1("ERROR:Unknown Video Capability - ooCapabilityCreateGenericVideoCapability - "
+   OOTRACEERR1("ERROR:Unknown Video Capability - ooCapabilityCreateH264VideoCapability - "
                   "pVideo/pGenericCap\n");
    return NULL;
 }
@@ -2465,6 +2461,30 @@ int ooCapabilityUpdateJointCapabilitiesVideo
    case T_H245VideoCapability_h263VideoCapability:
       return ooCapabilityUpdateJointCapabilitiesVideoH263(call,
                                         videoCap->u.h263VideoCapability, dir);
+   case T_H245VideoCapability_genericVideoCapability: // treat as H264
+      if (videoCap->u.genericVideoCapability->capabilityIdentifier.t == 1 ) {// standard
+         if (7 == videoCap->u.genericVideoCapability->capabilityIdentifier.u.standard->numids) {
+            ASN1UINT *subid = videoCap->u.genericVideoCapability->capabilityIdentifier.u.standard->subid;
+
+            // printf("capacityIdentifer: %d.%d.%d.%d.%d.%d.%d\n",
+            //    subid[0], subid[1], subid[2], subid[3], subid[4], subid[5], subid[6]);
+
+            if (subid[0] == 0 && subid[1] == 0 && subid[2] == 8 && subid[3] == 241 &&
+                subid[4] == 0 && subid[5] == 0 && subid[6] == 1) { //0.0.8.241.0.0.1 = H264
+               OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Received H264 "
+                   "capability type. (%s, %s)\n", call->callType, call->callToken);
+               return ooCapabilityUpdateJointCapabilitiesVideoH264(call,
+                                     videoCap->u.genericVideoCapability, dir);
+            }
+         } else {
+            OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Unsupported"
+                   "capability type. (%s, %s)\n", call->callType, call->callToken);
+         }
+      } else {
+         OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Unsupported"
+               "capability type. (%s, %s)\n", call->callType, call->callToken);
+
+      }
    default:
       OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Unsupported"
                    "capability type. (%s, %s)\n", call->callType,
@@ -2572,6 +2592,32 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
       if(epCap)
       {
          OOTRACEDBGC3("Adding H263-CIF16 to joint capabilities(%s, %s)\n",
+                      call->callType, call->callToken);
+         /* Note:we add jointCaps in remote endpoints preference order.*/
+         if(!call->jointCaps)
+            call->jointCaps = epCap;
+         else {
+            cur = call->jointCaps;
+            while(cur->next) cur = cur->next;
+            cur->next = epCap;
+         }
+
+      }
+   }
+
+   return OO_OK;
+}
+
+int ooCapabilityUpdateJointCapabilitiesVideoH264
+   (OOH323CallData *call, H245GenericCapability *pH264Cap, int dir)
+{
+   ooH323EpCapability *epCap = NULL, *cur = NULL;
+   if(1)
+   {
+      epCap =  ooIsVideoDataTypeH264Supported(call, pH264Cap, dir);
+      if(epCap)
+      {
+         OOTRACEDBGC3("Adding H264 to joint capabilities(%s, %s)\n",
                       call->callType, call->callToken);
          /* Note:we add jointCaps in remote endpoints preference order.*/
          if(!call->jointCaps)

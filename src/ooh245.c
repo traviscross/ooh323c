@@ -3033,7 +3033,7 @@ int ooOpenLogicalChannel(OOH323CallData *call, enum OOCapType capType )
       epCap = call->jointCaps;
 
       while(epCap){
-         if(epCap->capType == capType && epCap->dir & OOTX) { break; }
+       if(epCap->capType == capType && epCap->dir & OOTX) { break; }
          epCap = epCap->next;
       }
       if(!epCap)
