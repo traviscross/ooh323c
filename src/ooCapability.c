@@ -843,7 +843,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
            pGenericCap->capabilityIdentifier.u.standard->subid[5] = 0;
            pGenericCap->capabilityIdentifier.u.standard->subid[6] = 1;
            pGenericCap->m.maxBitRatePresent = 1;
-           pGenericCap->m.collapsingPresent = TRUE;
+           pGenericCap->m.collapsingPresent = 1;
            collapsing = &pGenericCap->collapsing;
            dListInit(collapsing);
 
@@ -858,7 +858,7 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
                                         sizeof(H245GenericParameter));
            level->parameterIdentifier.t = 1;
            level->parameterIdentifier.u.standard = 42;
-           level->parameterValue.t = 2;
+           level->parameterValue.t = 3;
            level->parameterValue.u.unsignedMin = 71;
 
           
@@ -866,15 +866,15 @@ struct H245VideoCapability* ooCapabilityCreateGenericVideoCapability
                                         sizeof(H245GenericParameter));
            customMaxBRandCPB->parameterIdentifier.t = 1;
            customMaxBRandCPB->parameterIdentifier.u.standard = 6;
-           customMaxBRandCPB->parameterValue.t = 2;
+           customMaxBRandCPB->parameterValue.t = 3;
            customMaxBRandCPB->parameterValue.u.unsignedMin = 667;
 
            sampleAspectRatiosSupported = (H245GenericParameter*) memAllocZ(pctxt,
                                     sizeof(H245GenericParameter));
-           level->parameterIdentifier.t = 1;
-           level->parameterIdentifier.u.standard = 10;
-           level->parameterValue.t = 2;
-           level->parameterValue.u.unsignedMin = 13;
+           sampleAspectRatiosSupported->parameterIdentifier.t = 1;
+           sampleAspectRatiosSupported->parameterIdentifier.u.standard = 10;
+           sampleAspectRatiosSupported->parameterValue.t = 3;
+           sampleAspectRatiosSupported->parameterValue.u.unsignedMin = 13;
 
            dListAppend(pctxt, collapsing, profile);
            dListAppend(pctxt, collapsing, level);
