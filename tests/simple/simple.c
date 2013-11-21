@@ -557,7 +557,7 @@ int osEpOnNewCallCreated(ooCallData* call )
    mediaInfo3.lMediaPort = 6000;
    strcpy(mediaInfo3.lMediaIP, call->localIP);
    strcpy(mediaInfo3.dir, "receive");
-   mediaInfo3.cap = OO_GENERICVIDEO;
+   mediaInfo3.cap = OO_H264VIDEO;
    ooAddMediaInfo(call, mediaInfo3);
 
    strcpy(callToken, call->callToken);
