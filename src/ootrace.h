@@ -81,6 +81,7 @@
 #define OOTRACEDBGC3(a,b,c)   ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c)
 #define OOTRACEDBGC4(a,b,c,d) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c,d)
 #define OOTRACEDBGC5(a,b,c,d,e) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c,d,e)
+#define OOTRACEDBGC6(a,b,c,d,e,f) ooTrace(__FILE__, __LINE__, OOTRCLVLDBGC,a,b,c,d,e,f)
 #else
 #define OOTRACEDBGA1(a)
 #define OOTRACEDBGA2(a,b)
@@ -96,6 +97,7 @@
 #define OOTRACEDBGC3(a,b,c)
 #define OOTRACEDBGC4(a,b,c,d)
 #define OOTRACEDBGC5(a,b,c,d,e)
+#define OOTRACEDBGC6(a,b,c,d,e,f)
 #endif
 
 #ifdef __cplusplus

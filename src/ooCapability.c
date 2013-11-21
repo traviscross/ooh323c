@@ -425,7 +425,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
    ooH323EpCapability *epCap = NULL, *cur=NULL;
    OOH264CapParams *params=NULL;
    OOCTXT *pctxt=NULL;
-   int cap = OO_GENERICVIDEO;
+   int cap = OO_H264VIDEO;
 
    if(!call) pctxt = &gH323ep.ctxt;
    else pctxt = call->pctxt;
@@ -605,13 +605,13 @@ struct H245VideoCapability* ooCapabilityCreateVideoCapability
    {
    case OO_H263VIDEO:
      return ooCapabilityCreateH263VideoCapability(epCap, pctxt, dir);
-   case OO_H264VIDEO: // = OO_GENERICVIDEO
+   case OO_H264VIDEO:
       return ooCapabilityCreateH264VideoCapability(epCap, pctxt, dir);
    case OO_NONSTDVIDEO:
    case OO_H261VIDEO:
    case OO_H262VIDEO:
    case OO_IS11172VIDEO:
-   // case OO_GENERICVIDEO: // H264
+   case OO_GENERICVIDEO:
    case OO_EXTELEMVIDEO:
    default:
       OOTRACEERR2("ERROR: Don't know how to create video capability %s\n",
@@ -1817,8 +1817,8 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
 
    while(cur)
    {
-      OOTRACEDBGC4("Local cap being compared %s. (%s, %s)\n",
-              ooGetCapTypeText(cur->cap),call->callType, call->callToken);
+      OOTRACEDBGC6("Local cap being compared %d/%d:%s. (%s, %s)\n",
+              cap, cur->cap, ooGetCapTypeText(cur->cap),call->callType, call->callToken);
 
       if(cur->cap == cap && (cur->dir & dir))
       {
@@ -1914,7 +1914,6 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
    OOH264CapParams *params= NULL;
 
    cap = OO_H264VIDEO;
-   cap = OO_GENERICVIDEO;
 
    OOTRACEDBGA3("Looking for H264 video capability. (%s, %s)\n",
                  call->callType, call->callToken);
@@ -1929,8 +1928,8 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
 
    while(cur)
    {
-      OOTRACEDBGC4("Local cap being compared %s. (%s, %s)\n",
-              ooGetCapTypeText(cur->cap), call->callType, call->callToken);
+      OOTRACEDBGC6("Local cap being compared %d/%d:%s. (%s, %s)\n",
+              cap, cur->cap, ooGetCapTypeText(cur->cap), call->callType, call->callToken);
 
       if(cur->cap == cap && (cur->dir & dir))
       {
@@ -2007,6 +2006,36 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
 
 }
 
+int IsGenericH264Video(H245GenericCapability *pGenCap)
+{
+   if (pGenCap->capabilityIdentifier.t == 1 ) {// standard
+      if (7 == pGenCap->capabilityIdentifier.u.standard->numids) {
+         ASN1UINT *subid = pGenCap->capabilityIdentifier.u.standard->subid;
+
+         // printf("capacityIdentifer: %d.%d.%d.%d.%d.%d.%d\n",
+         //    subid[0], subid[1], subid[2], subid[3], subid[4], subid[5], subid[6]);
+
+         if (subid[0] == 0 && subid[1] == 0 && subid[2] == 8 && subid[3] == 241 &&
+             subid[4] == 0 && subid[5] == 0 && subid[6] == 1) { //0.0.8.241.0.0.1 = H264
+            return 1;
+         }
+      }
+   }
+   return 0;
+}
+
+ooH323EpCapability* ooIsVideoDataTypeGenericSupported
+   (OOH323CallData *call, H245GenericCapability* pGenCap, int dir)
+{
+   if (IsGenericH264Video(pGenCap)) {
+      return ooIsVideoDataTypeH264Supported(call, pGenCap, dir);
+   }
+
+   return NULL;
+}
+
+
+
 ooH323EpCapability* ooIsVideoDataTypeSupported
    (OOH323CallData *call, H245VideoCapability* pVideoCap, int dir)
 {
@@ -2030,7 +2059,7 @@ ooH323EpCapability* ooIsVideoDataTypeSupported
                     pVideoCap->u.h263VideoCapability, dir, OO_PICFORMAT_CIF16);
       break;
    case T_H245VideoCapability_genericVideoCapability:
-      return ooIsVideoDataTypeH264Supported(call, pVideoCap->u.genericVideoCapability, dir);
+      return ooIsVideoDataTypeGenericSupported(call, pVideoCap->u.genericVideoCapability, dir);
       break;
    case T_H245VideoCapability_nonStandard:
    case T_H245VideoCapability_h261VideoCapability:
@@ -2461,25 +2490,12 @@ int ooCapabilityUpdateJointCapabilitiesVideo
    case T_H245VideoCapability_h263VideoCapability:
       return ooCapabilityUpdateJointCapabilitiesVideoH263(call,
                                         videoCap->u.h263VideoCapability, dir);
-   case T_H245VideoCapability_genericVideoCapability: // treat as H264
-      if (videoCap->u.genericVideoCapability->capabilityIdentifier.t == 1 ) {// standard
-         if (7 == videoCap->u.genericVideoCapability->capabilityIdentifier.u.standard->numids) {
-            ASN1UINT *subid = videoCap->u.genericVideoCapability->capabilityIdentifier.u.standard->subid;
-
-            // printf("capacityIdentifer: %d.%d.%d.%d.%d.%d.%d\n",
-            //    subid[0], subid[1], subid[2], subid[3], subid[4], subid[5], subid[6]);
-
-            if (subid[0] == 0 && subid[1] == 0 && subid[2] == 8 && subid[3] == 241 &&
-                subid[4] == 0 && subid[5] == 0 && subid[6] == 1) { //0.0.8.241.0.0.1 = H264
-               OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Received H264 "
-                   "capability type. (%s, %s)\n", call->callType, call->callToken);
-               return ooCapabilityUpdateJointCapabilitiesVideoH264(call,
-                                     videoCap->u.genericVideoCapability, dir);
-            }
-         } else {
-            OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Unsupported"
-                   "capability type. (%s, %s)\n", call->callType, call->callToken);
-         }
+   case T_H245VideoCapability_genericVideoCapability:
+      if (IsGenericH264Video(videoCap->u.genericVideoCapability)) {
+            OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Received H264 "
+                "capability type. (%s, %s)\n", call->callType, call->callToken);
+            return ooCapabilityUpdateJointCapabilitiesVideoH264(call,
+                                  videoCap->u.genericVideoCapability, dir);
       } else {
          OOTRACEDBGC3("ooCapabilityUpdateJointCapabilitiesVideo - Unsupported"
                "capability type. (%s, %s)\n", call->callType, call->callToken);
@@ -2669,10 +2685,12 @@ const char* ooGetCapTypeText (OOCapabilities cap)
       "OO_H261VIDEO",
       "OO_H262VIDEO",
       "OO_H263VIDEO",
+      "OO_H264VIDEO",
       "OO_IS11172VIDEO",  /* mpeg */
-      "OO_GENERICVIDEO (H264)",
+      "OO_GENERICVIDEO",
       "OO_EXTELEMVIDEO"
    };
+
    return ooUtilsGetText (cap, capTypes, OONUMBEROF(capTypes));
 }
 
