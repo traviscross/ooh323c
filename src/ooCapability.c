@@ -1905,9 +1905,20 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
 
 }
 
+
+int parseGenericH264Params(H245GenericCapability* pGenCap, OOH264CapParams *params)
+{
+   /*TODO FIXME Hardcoded values*/
+   params->maxBitRate = 5120;
+   params->profile = 0x41;
+   params->pt = 96;
+
+   return OO_OK;
+}
+
 /* copied from the H263 equavalent, lacks some more detailed params check for now */
 ooH323EpCapability* ooIsVideoDataTypeH264Supported
-   (OOH323CallData *call, H245GenericCapability* pH264Cap, int dir)
+   (OOH323CallData *call, H245GenericCapability* pGenCap, int dir)
 {
    int cap;
    ooH323EpCapability *cur=NULL, *epCap=NULL;
@@ -1957,6 +1968,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
                         call->callToken);
             return NULL;
          }
+         parseGenericH264Params(pGenCap, params);
          epCap->params = params;
          epCap->cap = cur->cap;
          epCap->dir = cur->dir;
@@ -1966,7 +1978,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
          epCap->stopReceiveChannel = cur->stopReceiveChannel;
          epCap->stopTransmitChannel = cur->stopTransmitChannel;
          epCap->next = NULL;
-         memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
+         // memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
          OOTRACEDBGC4("Returning copy of matched receive capability %s. "
                      "(%s, %s)\n", ooGetCapTypeText(cur->cap), call->callType,
                      call->callToken);
@@ -1986,6 +1998,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
                      call->callToken);
          return NULL;
       }
+      params = parseGenericH264Params(pGenCap, params);
       epCap->params = params;
       epCap->cap = cur->cap;
       epCap->dir = cur->dir;
@@ -1995,7 +2008,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
       epCap->stopReceiveChannel = cur->stopReceiveChannel;
       epCap->stopTransmitChannel = cur->stopTransmitChannel;
       epCap->next = NULL;
-      memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
+      // memcpy(epCap->params, cur->params, sizeof(OOH264CapParams));
 
       OOTRACEDBGC4("Returning copy of matched receive capability %s. "
                   "(%s, %s)\n", ooGetCapTypeText(cur->cap), call->callType,

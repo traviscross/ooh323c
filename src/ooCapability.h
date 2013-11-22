@@ -115,6 +115,8 @@ typedef struct OOH263CapParams {
 
 typedef struct OOH264CapParams {
   unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
+  unsigned profile;
+  unsigned pt;
 } OOH264CapParams;
 
 typedef struct OOGenericCapParams{
