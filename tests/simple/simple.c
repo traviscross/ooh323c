@@ -346,9 +346,15 @@ int main (int argc, char ** argv)
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
 
-   ooH323EpAddH264VideoCapability(OO_H264VIDEO, 10240, OORXANDTX,
+   {
+      /* H264 has much more params */
+      OOH264CapParams params = { 0 };
+      params.maxBitRate = 10240;
+      ooH323EpAddH264VideoCapability(OO_H264VIDEO, &params, OORXANDTX,
                        &osEpStartReceiveChannel, &osEpStartTransmitChannel,
                        &osEpStopReceiveChannel, &osEpStopTransmitChannel);
+
+   }
 
    /* To use a gatekeeper */
    if(gkMode != RasNoGatekeeper)

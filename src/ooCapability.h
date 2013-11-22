@@ -116,6 +116,8 @@ typedef struct OOH263CapParams {
 typedef struct OOH264CapParams {
   unsigned maxBitRate; /* !< Maximum bit rate for transmission/reception in units of 100 bits/sec */
   unsigned profile;
+  unsigned constaint;
+  unsigned level;
   unsigned pt;
 } OOH264CapParams;
 
@@ -400,7 +402,7 @@ EXTERN int ooCapabilityAddH263VideoCapability(struct OOH323CallData *call,
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
-                                                           unsigned maxBitRate, int dir,
+                               OOH264CapParams *capParams, int dir,
                                cb_StartReceiveChannel startReceiveChannel,
                                cb_StartTransmitChannel startTransmitChannel,
                                cb_StopReceiveChannel stopReceiveChannel,

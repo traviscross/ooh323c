@@ -416,7 +416,7 @@ int ooCapabilityAddSimpleCapability
 }
 
 int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
-                                                           unsigned maxBitRate, int dir,
+                               OOH264CapParams *capParams, int dir,
                                cb_StartReceiveChannel startReceiveChannel,
                                cb_StartTransmitChannel startTransmitChannel,
                                cb_StopReceiveChannel stopReceiveChannel,
@@ -439,7 +439,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
       return OO_FAILED;
    }
 
-   params->maxBitRate = maxBitRate;
+   memcpy(params, capParams, sizeof(params));
 
    if(dir & OORXANDTX)
    {
