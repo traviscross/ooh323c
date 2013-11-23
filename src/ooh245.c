@@ -1177,6 +1177,16 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
           T_H245OpenLogicalChannelReject_cause_dataTypeNotSupported);
       return OO_FAILED;
    }
+
+   if (epCap->cap == OO_H264VIDEO && epCap->params) { /* find payload type */
+      OOH264CapParams *params = (OOH264CapParams *)epCap->params;
+      if (h2250lcp->m.dynamicRTPPayloadTypePresent == 1) {
+         params->pt = h2250lcp->dynamicRTPPayloadType;
+         OOTRACEERR4("Channel DynamicPT: %d - OO_H264VIDEO (%s, %s)\n",
+            params->pt, call->callType, call->callToken);
+      }
+   }
+
    /* Generate an Ack for the open channel request */
    ret = ooCreateH245Message(&ph245msg,
                              T_H245MultimediaSystemControlMessage_response);
@@ -3241,7 +3251,7 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
          h2250lcp->m.mediaPacketizationPresent = 1;
          h2250lcp->mediaPacketization.t = 2;
          h2250lcp->mediaPacketization.u.rtpPayloadType = params->pt;
-         /**/
+         */
       }
    }
 

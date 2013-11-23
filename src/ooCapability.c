@@ -1914,7 +1914,6 @@ int parseGenericH264Params(H245GenericCapability* pGenCap, OOH264CapParams *para
 
    params->maxBitRate = 192400;
    params->profile = 0x41;
-   params->pt = 109;
 
    if (pGenCap->m.maxBitRatePresent == 1)
    {
@@ -2003,6 +2002,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
                         call->callToken);
             return NULL;
          }
+         memset(params, 0, sizeof(*params));
          parseGenericH264Params(pGenCap, params);
          epCap->params = params;
          epCap->cap = cur->cap;
@@ -2033,6 +2033,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
                      call->callToken);
          return NULL;
       }
+      memset(params, 0, sizeof(*params));
       parseGenericH264Params(pGenCap, params);
       epCap->params = params;
       epCap->cap = cur->cap;
