@@ -1909,10 +1909,42 @@ ooH323EpCapability* ooIsVideoDataTypeH263Supported
 int parseGenericH264Params(H245GenericCapability* pGenCap, OOH264CapParams *params)
 {
    /*TODO FIXME Hardcoded values*/
-   params->maxBitRate = 5120;
+   H245GenericParameter *h245GenericParameter = NULL;
+   unsigned int i = 0;
+   DListNode* curNode = NULL;
+
+   params->profile = 5120;
    params->profile = 0x41;
    params->pt = 109;
 
+   if (pGenCap->m.maxBitRatePresent == 1)
+   {
+           params->maxBitRate = pGenCap->maxBitRate;
+   }
+
+   if (pGenCap->m.collapsingPresent == 1)
+   {
+           for (i =0; i < pGenCap->collapsing.count; i++)
+           {
+                   curNode= dListFindByIndex(&pGenCap->collapsing, i);
+                   if (curNode != NULL){
+                           h245GenericParameter = (H245GenericParameter*)curNode->data;
+                           if (h245GenericParameter != NULL)
+                           {
+                                   if (h245GenericParameter->parameterIdentifier.t == 1)
+                                   {
+                                           switch (h245GenericParameter->parameterIdentifier.u.standard)
+                                           {
+                                           case 41://profile
+                                                   params->profile = h245GenericParameter->parameterValue.u.booleanArray;
+                                           case 42://level
+                                                   params->level = h245GenericParameter->parameterValue.u.unsignedMin;
+                                           }
+                                   }
+                           }
+                   }
+           }
+   }
    return OO_OK;
 }
 
