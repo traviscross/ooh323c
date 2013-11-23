@@ -3223,6 +3223,28 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtcpPort;
+
+   if (epCap->cap == OO_H264VIDEO)
+   {
+      OOH264CapParams *params = (OOH264CapParams *)epCap->params;
+
+      OOTRACEDBGC6("Building OpenLogicalChannel-%s H264(br=%d, pt=%d) (%s, %s)\n",
+                    ooGetCapTypeText(epCap->cap), params->maxBitRate, params->pt,
+                    call->callType, call->callToken);
+
+      if (params->pt && params->pt >= 96 && params->pt <= 127) {
+         h2250lcp->m.dynamicRTPPayloadTypePresent = 1;
+         h2250lcp->dynamicRTPPayloadType = params->pt;
+
+         /* the following code causing crash */
+         /*
+         h2250lcp->m.mediaPacketizationPresent = 1;
+         h2250lcp->mediaPacketization.t = 2;
+         h2250lcp->mediaPacketization.u.rtpPayloadType = params->pt;
+         /**/
+      }
+   }
+
    pLogicalChannel->state = OO_LOGICALCHAN_PROPOSED;
    OOTRACEDBGA4("Built OpenLogicalChannel-%s (%s, %s)\n",
                  ooGetCapTypeText(epCap->cap), call->callType,
