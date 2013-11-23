@@ -439,7 +439,7 @@ int ooCapabilityAddH264VideoCapability(struct OOH323CallData *call,
       return OO_FAILED;
    }
 
-   memcpy(params, capParams, sizeof(params));
+   memcpy(params, capParams, sizeof(*params));
 
    if(dir & OORXANDTX)
    {
@@ -808,7 +808,7 @@ struct H245VideoCapability* ooCapabilityCreateH264VideoCapability
    if(!epCap || !epCap->params)
    {
      OOTRACEERR1("Error:Invalid capability parameters to "
-                 "ooCapabilityCreateH263VideoCapability.\n");
+                 "ooCapabilityCreateH264VideoCapability.\n");
      return NULL;
    }
    params =(OOH264CapParams*)epCap->params;
@@ -1911,7 +1911,7 @@ int parseGenericH264Params(H245GenericCapability* pGenCap, OOH264CapParams *para
    /*TODO FIXME Hardcoded values*/
    params->maxBitRate = 5120;
    params->profile = 0x41;
-   params->pt = 96;
+   params->pt = 109;
 
    return OO_OK;
 }
@@ -1998,7 +1998,7 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
                      call->callToken);
          return NULL;
       }
-      params = parseGenericH264Params(pGenCap, params);
+      parseGenericH264Params(pGenCap, params);
       epCap->params = params;
       epCap->cap = cur->cap;
       epCap->dir = cur->dir;
@@ -2638,12 +2638,12 @@ int ooCapabilityUpdateJointCapabilitiesVideoH263
 }
 
 int ooCapabilityUpdateJointCapabilitiesVideoH264
-   (OOH323CallData *call, H245GenericCapability *pH264Cap, int dir)
+   (OOH323CallData *call, H245GenericCapability *pGenCap, int dir)
 {
    ooH323EpCapability *epCap = NULL, *cur = NULL;
    if(1)
    {
-      epCap =  ooIsVideoDataTypeH264Supported(call, pH264Cap, dir);
+      epCap =  ooIsVideoDataTypeH264Supported(call, pGenCap, dir);
       if(epCap)
       {
          OOTRACEDBGC3("Adding H264 to joint capabilities(%s, %s)\n",

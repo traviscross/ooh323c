@@ -588,14 +588,14 @@ int ooCallAddH263VideoCapability
 }
 
 int ooCallAddH264VideoCapability
-   (OOH323CallData *call, int cap, unsigned maxBitRate, int dir,
+   (OOH323CallData *call, int cap, OOH264CapParams *params, int dir,
     cb_StartReceiveChannel startReceiveChannel,
     cb_StartTransmitChannel startTransmitChannel,
     cb_StopReceiveChannel stopReceiveChannel,
     cb_StopTransmitChannel stopTransmitChannel)
 {
 
-   return ooCapabilityAddH264VideoCapability(call, maxBitRate, dir,
+   return ooCapabilityAddH264VideoCapability(call, params, dir,
                                      startReceiveChannel, startTransmitChannel,
                                      stopReceiveChannel, stopTransmitChannel,
                                      FALSE);

@@ -629,9 +629,7 @@ EXTERN int ooCallAddH263VideoCapability(OOH323CallData *call, int cap,
  * capabilities and use specific capabilities for specific calls.
  * @param call                 Call for which capability has to be added.
  * @param cap                  Capability type - OO_H264VIDEO
- * @param maxBitRate           Maximum bit rate in units of 100 bits/s at
- *                             which a transmitter can transmit video or a
- *                             receiver can receive video.
+ * @param params               OOH264CapParams - maxBitRate, profile, pt ...
  * @param dir                  Direction of capability.OORX, OOTX, OORXANDTX
  * @param startReceiveChannel  Callback function to start receive channel.
  * @param startTransmitChannel Callback function to start transmit channel.
@@ -641,7 +639,7 @@ EXTERN int ooCallAddH263VideoCapability(OOH323CallData *call, int cap,
  * @return                     OO_OK, on success. OO_FAILED, on failure.
  */
 EXTERN int ooCallAddH264VideoCapability(OOH323CallData *call, int cap,
-                                 unsigned maxBitRate, int dir,
+                                 OOH264CapParams *params, int dir,
                                  cb_StartReceiveChannel startReceiveChannel,
                                  cb_StartTransmitChannel startTransmitChannel,
                                  cb_StopReceiveChannel stopReceiveChannel,
