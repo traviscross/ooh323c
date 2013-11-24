@@ -65,6 +65,7 @@ typedef enum OOStackCmdID {
    OO_CMD_HANGCALL,          /*!< Terminate call */
    OO_CMD_SENDDIGIT,         /*!< Send dtmf */
    OO_CMD_MANUALRINGBACK,    /*!< Send Alerting - ringback */
+   OO_CMD_VIDEOFASTUPDATE,   /*!< Send Video Fast Update */
    OO_CMD_STOPMONITOR        /*!< Stop the event monitor */
 
 } OOStackCmdID;
@@ -143,6 +144,13 @@ EXTERN OOStkCmdStat ooHangCall(const char* callToken, OOCallClearReason reason);
  */
 EXTERN OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* alpha);
 
+/**
+ * This function is used to send VideoFastUpdate request to a call
+ * @param callToken   Unique token for the call
+ *
+ * @return            Returns OOStkCmdStat value indication success or failure.
+ */
+EXTERN OOStkCmdStat ooSendVideoFastUpdate(const char *callToken);
 
 /**
  * This function is used by the user application to stop stack thread.

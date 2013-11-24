@@ -263,6 +263,19 @@ int ooProcessStackCommand (OOStackCommand* pcmd)
 
       break;
 
+   case OO_CMD_VIDEOFASTUPDATE:
+      pCall = ooFindCallByToken((char*)pcmd->param1);
+      if(!pCall) {
+         OOTRACEINFO2("Call \"%s\" does not exist\n", (char*)pcmd->param1);
+         OOTRACEINFO1("Call might be cleared/closed\n");
+      }
+      else {
+         OOTRACEINFO2("Processing Answer Call command for %s\n",
+                      (char*)pcmd->param1);
+         ooSendVideoFastUpdateCommand(pCall);
+      }
+      break;
+
    case OO_CMD_STOPMONITOR:
       OOTRACEINFO1 ("Processing StopMonitor command\n");
       ooStopMonitorCalls();

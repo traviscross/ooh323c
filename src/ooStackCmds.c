@@ -314,6 +314,39 @@ OOStkCmdStat ooSendDTMFDigit(const char *callToken, const char* dtmf)
    return OO_STKCMD_SUCCESS;
 }
 
+OOStkCmdStat ooSendVideoFastUpdate(const char *callToken)
+{
+   OOStackCommand cmd;
+
+   if(!callToken)
+   {
+      return OO_STKCMD_INVALIDPARAM;
+   }
+
+   if(gCmdChan == 0)
+   {
+      if(ooCreateCmdConnection() != OO_OK)
+         return OO_STKCMD_CONNECTIONERR;
+   }
+
+   memset(&cmd, 0, sizeof(OOStackCommand));
+   cmd.type = OO_CMD_VIDEOFASTUPDATE;
+
+   cmd.param1 = (void*) malloc(strlen(callToken)+1);
+   if(!cmd.param1)
+   {
+      return OO_STKCMD_MEMERR;
+   }
+   strcpy((char*)cmd.param1, callToken);
+
+   if(ooWriteStackCommand(&cmd) != OO_OK)
+   {
+      free(cmd.param1);
+      return OO_STKCMD_WRITEERR;
+   }
+
+   return OO_STKCMD_SUCCESS;
+}
 
 const char* ooGetStkCmdStatusCodeTxt(OOStkCmdStat stat)
 {
