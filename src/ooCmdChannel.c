@@ -31,6 +31,7 @@ OOSOCKET gCmdChan = 0;
 char gCmdIP[20];
 int gCmdPort = OO_DEFAULT_CMDLISTENER_PORT;
 #else
+#include "pthread.h"
 pthread_mutex_t gCmdChanLock;
 #endif
 
