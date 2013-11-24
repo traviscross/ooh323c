@@ -1648,7 +1648,7 @@ int ooOnSendMsg
       else
          OOTRACEINFO3("Sent Message - EndSessionCommand (%s, %s)\n",
                                            call->callType, call->callToken);
-      if((call->h245SessionState == OO_H245SESSION_ACTIVE))
+      if(call->h245SessionState == OO_H245SESSION_ACTIVE)
       {
          /* Start EndSession timer */
          call->h245SessionState = OO_H245SESSION_ENDSENT;

@@ -27,7 +27,7 @@ EXTERN const char* gs_MULTIMEDIA_SYSTEM_CONTROL_UserInputIndication_signal_signa
 "!#*0123456789ABCD";
 
 
-static *H245_AUDIO_CAPACITY_NAMES[] = {
+static char *H245_AUDIO_CAPACITY_NAMES[] = {
         "T_H245AudioCapability_0"
         "T_H245AudioCapability_nonStandard",
         "T_H245AudioCapability_g711Alaw64k",
@@ -64,7 +64,7 @@ const char *ooH245AudioCapText(int t)
 }
 
 
-static *H245_VIDEO_CAPACITY_NAMES[] = {
+static char *H245_VIDEO_CAPACITY_NAMES[] = {
         "T_H245VideoCapability_0",
         "T_H245VideoCapability_nonStandard",
         "T_H245VideoCapability_h261VideoCapability",

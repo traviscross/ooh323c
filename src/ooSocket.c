@@ -173,7 +173,7 @@ int ooSocketsInit ()
 defined(_HP_UX) || defined(__hpux) || defined(_HPUX_SOURCE)
 typedef int OOSOCKLEN;
 #else
-typedef size_t OOSOCKLEN;
+typedef socklen_t OOSOCKLEN;
 #endif
 
 int ooSocketCreate (OOSOCKET* psocket)

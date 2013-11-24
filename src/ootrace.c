@@ -89,7 +89,7 @@ static void logDateTime ()
       struct timeval systemTime;
       gettimeofday(&systemTime, NULL);
       fprintf (gH323ep.fptraceFile, "%s:%03ld  ", timeString,
-               systemTime.tv_usec/1000);
+               (long)systemTime.tv_usec/1000);
    }
 #endif
 }
