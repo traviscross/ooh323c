@@ -69,7 +69,7 @@ int ooGetMicAudioBuffer(unsigned char * buff, long size)
    return ret;
 }
 
-int ooOpenWaveFileForRead(char * filename)
+int ooOpenWaveFileForRead(const char * filename)
 {
    ghSndFile = 0;
    ghSndFile = open(filename, O_RDONLY);

@@ -70,7 +70,7 @@ void ooLog(int level,const char * fmtspec, ...)
       fprintf(fpLog, "---------Date %s---------\n", dateString);
    }
    fprintf(fpLog, "%s:%03ld  %s\n", timeString,
-           systemTime.tv_usec/1000, logMessage);
+           (long)systemTime.tv_usec/1000, logMessage);
 #endif
    fflush(fpLog);
    va_end(arglist);

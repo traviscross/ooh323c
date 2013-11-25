@@ -168,7 +168,7 @@ int ooSocketsInit ()
 defined(_HP_UX) || defined(__hpux) || defined(_HPUX_SOURCE)
 typedef int OOSOCKLEN;
 #else
-typedef size_t OOSOCKLEN;
+typedef socklen_t OOSOCKLEN;
 #endif
 
 int ooSocketCreate (OOSOCKET* psocket)
@@ -344,7 +344,8 @@ int ooSocketRecvFrom (OOSOCKET socket, ASN1OCTET* pbuf, ASN1UINT bufsize,
                         char * remotehost, int * remoteport)
 {
    struct sockaddr_in m_addr;
-   int len, addrlen;
+   int len;
+   socklen_t addrlen;
    addrlen = sizeof(struct sockaddr_in);
    if (socket == OOSOCKET_INVALID) return ASN_E_INVSOCKET;
   

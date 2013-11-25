@@ -44,7 +44,7 @@ int ghSndFile;
  *
  * @returns         Completion status - 0 on success, -1 on failure
  */
-int ooOpenWaveFileForRead(char * filename);
+int ooOpenWaveFileForRead(const char * filename);
 
 /**
  * Reads data from the opened raw audio file. The number of
