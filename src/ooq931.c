@@ -1656,7 +1656,7 @@ int ooAcceptCall(OOH323CallData *call)
    if (gH323ep.bearercap == Q931TransferUnrestrictedDigital) {
       ret = ooSetBearerCapabilityIE
          (q931msg, Q931CCITTStd, Q931TransferUnrestrictedDigital,
-          Q931TransferPacketMode, Q931TransferPacketMode,
+          Q931TransferPacketMode, Q931TransferRatePacketMode,
           Q931UserInfoLayer1G722G725);
    }
    else {
@@ -2083,7 +2083,7 @@ int ooH323MakeCall_helper(OOH323CallData *call)
    if (gH323ep.bearercap == Q931TransferUnrestrictedDigital) {
       ret = ooSetBearerCapabilityIE
          (q931msg, Q931CCITTStd, Q931TransferUnrestrictedDigital,
-          Q931TransferPacketMode, Q931TransferPacketMode,
+          Q931TransferPacketMode, Q931TransferRatePacketMode,
           Q931UserInfoLayer1G722G725);
    }
    else {

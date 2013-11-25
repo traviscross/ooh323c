@@ -195,12 +195,13 @@ enum Q931TransferMode {
 };
 
 enum Q931TransferRate{
-  Q931TransferRatePacketMode = 0x00,  /* 00000 */
+  Q931TransferRatePacketMode = 0x00,  /* 00000 This code shall be used for packet-mode calls */
   Q931TransferRate64Kbps     = 0x10,  /* 10000 */
   Q931TransferRate128kbps    = 0x11,  /* 10001 */
   Q931TransferRate384kbps    = 0x13,  /* 10011 */
   Q931TransferRate1536kbps   = 0x15,  /* 10101 */
-  Q931TransferRate1920kbps   = 0x17   /* 10111 */
+  Q931TransferRate1920kbps   = 0x17,  /* 10111 */
+  Q931TransferRateMultirate  = 0x18   /* 11000 */
 };
 
 enum Q931UserInfoLayer1Protocol{
