@@ -10,7 +10,8 @@ find_package(Threads)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Set defines
-ADD_DEFINITIONS(-DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -D_COMPACT)
+#ADD_DEFINITIONS(-DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -D_COMPACT)
+ADD_DEFINITIONS(-DGNU -D_GNU_SOURCE -D_OOINFO -D_REENTRANT -fPIC -ggdb)
 
 # tell cmake to process CMakeLists.txt in the subdirectories
 add_subdirectory(src)
