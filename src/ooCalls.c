@@ -152,9 +152,17 @@ OOH323CallData* ooCreateCall(char* type, char*callToken, void *usrData)
                  call->callToken);
    /* Add new call to calllist */
    ooAddCallToList (call);
-   if(gH323ep.h323Callbacks.onNewCallCreated)
-     gH323ep.h323Callbacks.onNewCallCreated(call);
-   return call;
+   if(gH323ep.h323Callbacks.onNewCallCreated &&
+      gH323ep.h323Callbacks.onNewCallCreated(call) == OO_OK)
+   {
+      return call;
+   } else {
+      OOTRACEINFO3("ERROR:onNewCallCreated returned error (%s, %s)\n",
+                   call->callType, call->callToken);
+      ooRemoveCallFromList(call);
+      freeContext(pctxt);
+      return NULL;
+   }
 }
 
 int ooAddCallToList(OOH323CallData *call)

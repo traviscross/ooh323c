@@ -1859,6 +1859,8 @@ int ooH323HandleCallFwdRequest(OOH323CallData *call)
 
    fwdedCall = ooCreateCall("outgoing", call->callToken, NULL);
 
+   if (!fwdedCall) return OO_FAILED;
+
    pctxt = fwdedCall->pctxt;
 
    /* Retrieve new destination info from original call */
@@ -1936,6 +1938,8 @@ int ooH323MakeCall(char *dest, char *callToken, ooCallOptions *opts)
    } else {
       call = ooCreateCall("outgoing", callToken, NULL);
    }
+
+   if (!call) return OO_FAILED;
 
    pctxt = call->pctxt;
    if(opts)
