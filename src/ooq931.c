@@ -1790,7 +1790,13 @@ int ooAcceptCall(OOH323CallData *call)
         call->remoteFastStartOLCs.count == 0) &&
        !OO_TESTFLAG (call->flags, OO_M_TUNNELING))
    {
-      ooCreateH245Listener(call); /* First create an H.245 listener */
+      ret = ooCreateH245Listener(call); /* First create an H.245 listener */
+
+      if (ret != OO_OK)
+      {
+         return ret;
+      }
+
       connect->m.h245AddressPresent = TRUE;
       connect->h245Address.t = T_H225TransportAddress_ipAddress;
 
