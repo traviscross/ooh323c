@@ -1104,7 +1104,7 @@ int ooH245Receive(OOH323CallData *call)
 
    OOTRACEDBGC3("Complete H245 message received (%s, %s)\n",
                  call->callType, call->callToken);
-   setPERBuffer(pctxt, pmsgbuf, recvLen, TRUE);
+   setPERBuffer(pctxt, pmsgbuf, total, TRUE);
    initializePrintHandler(&printHandler, "Received H.245 Message");
 
    /* Set event handler */
