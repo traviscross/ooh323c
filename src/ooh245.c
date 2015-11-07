@@ -2297,6 +2297,9 @@ int ooHandleH245Message(OOH323CallData *call, H245Message * pmsg)
                ooOnReceivedRequestChannelClose(call,
                                                request->u.requestChannelClose);
                break;
+            case T_H245RequestMessage_roundTripDelayRequest:
+               ooOnReceivedRoundTripDelayRequest(call, request->u.roundTripDelayRequest->sequenceNumber);
+               break;
             default:
                ;
          } /* End of Request Message */
