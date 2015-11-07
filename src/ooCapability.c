@@ -2469,6 +2469,10 @@ int ooCapabilityUpdateJointCapabilities
       return ooCapabilityUpdateJointCapabilitiesVideo
          (call, cap->u.transmitVideoCapability, OORX);
 
+   case T_H245Capability_receiveAndTransmitVideoCapability:
+      return ooCapabilityUpdateJointCapabilitiesVideo
+         (call, cap->u.receiveAndTransmitVideoCapability, OORX | OOTX);
+
    case T_H245Capability_receiveUserInputCapability:
       if((cap->u.receiveUserInputCapability->t ==
           T_H245UserInputCapability_basicString) &&
