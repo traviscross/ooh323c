@@ -2036,6 +2036,8 @@ ooH323EpCapability* ooIsVideoDataTypeH264Supported
       memset(params, 0, sizeof(*params));
       parseGenericH264Params(pGenCap, params);
       epCap->params = params;
+      memcpy(params, cur->params, sizeof(*params));
+
       epCap->cap = cur->cap;
       epCap->dir = cur->dir;
       epCap->capType = cur->capType;

@@ -118,7 +118,8 @@ typedef struct OOH264CapParams {
   unsigned profile;
   unsigned constaint;
   unsigned level;
-  unsigned pt;
+  unsigned char send_pt;
+  unsigned char recv_pt;
 } OOH264CapParams;
 
 typedef struct OOGenericCapParams{

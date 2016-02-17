@@ -1180,10 +1180,11 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
 
    if (epCap->cap == OO_H264VIDEO && epCap->params) { /* find payload type */
       OOH264CapParams *params = (OOH264CapParams *)epCap->params;
+
       if (h2250lcp->m.dynamicRTPPayloadTypePresent == 1) {
-         params->pt = h2250lcp->dynamicRTPPayloadType;
+         params->recv_pt = h2250lcp->dynamicRTPPayloadType;
          OOTRACEERR4("Channel DynamicPT: %d - OO_H264VIDEO (%s, %s)\n",
-            params->pt, call->callType, call->callToken);
+            params->recv_pt, call->callType, call->callToken);
       }
    }
 
@@ -3240,21 +3241,26 @@ int ooOpenChannel(OOH323CallData* call, ooH323EpCapability *epCap)
    if (epCap->cap == OO_H264VIDEO)
    {
       OOH264CapParams *params = (OOH264CapParams *)epCap->params;
-
       OOTRACEDBGC6("Building OpenLogicalChannel-%s H264(br=%d, pt=%d) (%s, %s)\n",
-                    ooGetCapTypeText(epCap->cap), params->maxBitRate, params->pt,
+                    ooGetCapTypeText(epCap->cap), params->maxBitRate, params->send_pt,
                     call->callType, call->callToken);
 
-      if (params->pt && params->pt >= 96 && params->pt <= 127) {
+      if (params->send_pt && params->send_pt >= 96 && params->send_pt <= 127) {
          h2250lcp->m.dynamicRTPPayloadTypePresent = 1;
-         h2250lcp->dynamicRTPPayloadType = params->pt;
+         h2250lcp->dynamicRTPPayloadType = params->send_pt;
 
-         /* the following code causing crash */
-         /*
-         h2250lcp->m.mediaPacketizationPresent = 1;
-         h2250lcp->mediaPacketization.t = 2;
-         h2250lcp->mediaPacketization.u.rtpPayloadType = params->pt;
-         */
+         h2250lcp->mediaPacketization.u.rtpPayloadType = (H245RTPPayloadType *)memAlloc(pctxt, sizeof(H245RTPPayloadType));
+
+         if (h2250lcp->mediaPacketization.u.rtpPayloadType) {
+            static ASN1OBJID oid = {8, { 0, 0, 8, 241, 0, 0, 0, 0} };  //single NALU mode
+
+            h2250lcp->m.mediaPacketizationPresent = 1;
+            h2250lcp->mediaPacketization.t = 2;
+            h2250lcp->mediaPacketization.u.rtpPayloadType->m.payloadTypePresent = 1;
+            h2250lcp->mediaPacketization.u.rtpPayloadType->payloadDescriptor.t = 3;
+            h2250lcp->mediaPacketization.u.rtpPayloadType->payloadDescriptor.u.oid = &oid;
+            h2250lcp->mediaPacketization.u.rtpPayloadType->payloadType = params->send_pt;
+         }
       }
    }
 
