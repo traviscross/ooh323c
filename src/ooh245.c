@@ -1255,7 +1255,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
       return OO_FAILED;
    }
    ooSocketConvertIpToNwAddr
-     (call->localIP, iPAddress->network.data, sizeof(iPAddress->network.data));
+     (call->mediaInfo->lMediaIP, iPAddress->network.data, sizeof(iPAddress->network.data));
 
    iPAddress->network.numocts = 4;
    iPAddress->tsapIdentifier = pLogicalChannel->localRtpPort;
@@ -1275,7 +1275,7 @@ int ooHandleOpenLogicalChannel_helper(OOH323CallData *call,
    memset(iPAddress1, 0, sizeof(H245UnicastAddress_iPAddress));
 
    ooSocketConvertIpToNwAddr
-     (call->localIP, iPAddress1->network.data, sizeof(iPAddress1->network.data));
+     (call->mediaInfo->lMediaIP, iPAddress1->network.data, sizeof(iPAddress1->network.data));
 
    iPAddress1->network.numocts = 4;
    iPAddress1->tsapIdentifier = pLogicalChannel->localRtcpPort;
