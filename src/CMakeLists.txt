@@ -5,6 +5,8 @@ set(ooh323c_SOURCES
     ooUtils.h
     ooGkClient.h
     ooGkClient.c
+    ooGkServer.h
+    ooGkServer.c
     context.c
     ooCommon.h
     ooDateTime.h
